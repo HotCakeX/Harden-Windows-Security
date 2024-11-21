@@ -514,11 +514,19 @@ namespace WDACConfig.Pages
             if (Zero == true)
             {
                 TotalCountOfTheFilesTextBox.Text = $"Total logs: 0";
+
+                // Update the InfoBadge for the top menu
+                AllowNewApps.Instance.UpdateLocalFilesInfoBadge(0, 1);
             }
             else
             {
                 TotalCountOfTheFilesTextBox.Text = $"Total logs: {AllowNewAppsStart.Instance.LocalFilesFileIdentities.Count}";
+
+                // Update the InfoBadge for the top menu
+                AllowNewApps.Instance.UpdateLocalFilesInfoBadge(AllowNewAppsStart.Instance.LocalFilesFileIdentities.Count, 1);
             }
+
+
         }
 
 

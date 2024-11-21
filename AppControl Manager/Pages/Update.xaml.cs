@@ -1,9 +1,19 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Management;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.Management.Deployment;
+
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
@@ -142,191 +152,142 @@ namespace WDACConfig.Pages
                     // Run the update check in a separate thread and asynchronously wait for its completion
                     await Task.Run(() =>
                     {
+                        // Random password to temporarily encrypt the private key of the newly generated certificate
+                        string PassWord = Guid.NewGuid().ToString().Replace("-", "");
 
-                        string script = """
-[System.String]$MSIXPath = '{MSIXPath}'
-[System.String]$SignTool = '{SignTool}'
-[System.String]$MSIXDownloadURL = '{MSIXDownloadURL}'
-$ErrorActionPreference = 'Stop'
-$VerbosePreference = 'Continue'
-Write-Verbose -Message 'Detecting the CPU Arch'
-switch ($Env:PROCESSOR_ARCHITECTURE) {
-    'AMD64' { [System.String]$CPUArch = 'x64'; break }
-    'ARM64' { [System.String]$CPUArch = 'arm64'; break }
-    default { Throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
-}
+                        // Common name of the certificate
+                        string commonName = "SelfSignedCertForAppControlManager";
 
-Add-Type -TypeDefinition @'
-using System;
-using System.Security;
-using System.Security.Cryptography;
+                        // Path where the .cer file will be saved
+                        string CertificateOutputPath = Path.Combine(stagingArea, $"{commonName}.cer");
 
-public static class SecureStringGenerator
-{
-    private static readonly char[] allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
-    public static SecureString GenerateSecureString(int length)
-    {
-        SecureString secureString = new();
-        using RandomNumberGenerator rng = RandomNumberGenerator.Create();
-        byte[] randomNumber = new byte[4]; // Buffer for generating secure random numbers
-        for (int i = 0; i < length; i++)
-        {
-            rng.GetBytes(randomNumber);
-            int randomIndex = BitConverter.ToInt32(randomNumber, 0) & int.MaxValue; // Ensure non-negative index
-            randomIndex %= allowedChars.Length; // Fit within allowedChars length
+                        // Remove any certificates with the specified common name that may already exist on the system form previos attempts
+                        CertificateGenerator.DeleteCertificateByCN(commonName);
 
-            char randomChar = allowedChars[randomIndex];
-            secureString.AppendChar(randomChar);
-        }
-        secureString.MakeReadOnly();
-        return secureString;
-    }
-}
-'@ -Language CSharp
+                        // Generate a new certificate
+                        X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
+                        subjectName: commonName,
+                        validityInYears: 100,
+                        keySize: 4096,
+                        hashAlgorithm: HashAlgorithmName.SHA512,
+                        storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
+                        cerExportFilePath: CertificateOutputPath,
+                        friendlyName: commonName);
 
-Write-Verbose -Message 'Creating the working directory in the TEMP directory'
-[System.String]$CommonName = 'SelfSignedCertForAppControlManager'
-[System.String]$WorkingDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $CommonName)
-[System.String]$CertificateOutputPath = [System.IO.Path]::Combine($WorkingDir, "$CommonName.cer")
-[System.String]$PFXCertificateOutputPath = [System.IO.Path]::Combine($WorkingDir, "$CommonName.pfx")
-[System.Security.SecureString]$PassWord = [SecureStringGenerator]::GenerateSecureString(100)
-[System.String]$HashingAlgorithm = 'Sha512'
+                        // Pattern for AppControl Manager version and architecture extraction from file path and download link URL
+                        string pattern = @"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$";
 
-if ([System.IO.Directory]::Exists($WorkingDir)) {
-    [System.IO.Directory]::Delete($WorkingDir, $true)
-}
-$null = [System.IO.Directory]::CreateDirectory($WorkingDir)
+                        // Create a Regex object
+                        Regex regex = new(pattern);
 
-try {
-    Write-Verbose -Message "Checking if a certificate with the common name '$CommonName' already exists."
-    [System.String[]]$CertStoresToCheck = @('Cert:\LocalMachine\My', 'Cert:\LocalMachine\Root', 'Cert:\LocalMachine\CA', 'Cert:\LocalMachine\TrustedPublisher', 'Cert:\CurrentUser\My', 'Cert:\CurrentUser\Root', 'Cert:\CurrentUser\CA', 'Cert:\CurrentUser\TrustedPublisher')
-    foreach ($Store in $CertStoresToCheck) {
-        foreach ($Item in (Get-ChildItem -Path $Store)) {
-            if ($Item.Subject -ieq "CN=$CommonName") {
-                Write-Verbose -Message "A certificate with the common name '$CommonName' in the store '$Store' already exists. Removing it."
-                $Item | Remove-Item -Force
-            }
-        }
-    }
+                        // Get the version and architecture of the installing MSIX package app from the provided file path
+                        Match RegexMatch = regex.Match(onlineDownloadURL);
 
-    Write-Verbose -Message 'Building the certificate'
-    [System.Collections.Hashtable]$Params = @{
-        Subject           = "CN=$CommonName"
-        FriendlyName      = $CommonName
-        CertStoreLocation = 'Cert:\CurrentUser\My'
-        KeyExportPolicy   = 'ExportableEncrypted'
-        KeyLength         = '4096'
-        KeyAlgorithm      = 'RSA'
-        HashAlgorithm     = $HashingAlgorithm
-        KeySpec           = 'Signature'
-        KeyUsage          = 'DigitalSignature'
-        KeyUsageProperty  = 'Sign'
-        Type              = 'CodeSigningCert'
-        NotAfter          = [System.DateTime](Get-Date).AddYears(100)
-        TextExtension     = @('2.5.29.19={text}CA:FALSE', '2.5.29.37={text}1.3.6.1.5.5.7.3.3', '1.3.6.1.4.1.311.21.10={text}oid=1.3.6.1.5.5.7.3.3')
-    }
-    [System.Security.Cryptography.X509Certificates.X509Certificate2]$NewCertificate = New-SelfSignedCertificate @params
+                        string InstallingAppVersion;
+                        string InstallingAppArchitecture;
 
-    # Save the thumbprint of the certificate to a variable
-    [System.String]$NewCertificateThumbprint = $NewCertificate.Thumbprint
-
-    Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
-    [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
-        if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
-            $Cert
-        }
-    }
-
-    Write-Verbose -Message 'Exporting the certificate (public key only)'
-    $null = Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force
-
-    Write-Verbose -Message 'Exporting the certificate (public and private keys)'
-    $null = Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $PassWord -ChainOption 'BuildChain' -FilePath $PFXCertificateOutputPath -Force
-
-    Write-Verbose -Message "Removing the certificate from the 'Current User/Personal' store"
-    $TheCert | Remove-Item -Force
-
-    try {
-        Write-Verbose -Message "Importing the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)"
-        $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath $PFXCertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root' -Password $PassWord
-    }
-    catch {
-        Write-Verbose -Message "Importing the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with the private key without VSM protection since it's most likely not available on the system. Happens usually in VMs with not nested-virtualization feature enabled."
-        $null = Import-PfxCertificate -FilePath $PFXCertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root' -Password $PassWord
-    }
-
-    # Pattern for AppControl Manager version and architecture extraction from file path and download link URL
-    [regex]$RegexPattern = '_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$'
-
-    # Get the version and architecture of the installing MSIX package app from the provided file path
-    $RegexMatch = $RegexPattern.Match($MSIXDownloadURL)
-
-    if ($RegexMatch.Success) {
-        $InstallingAppVersion = $RegexMatch.Groups['Version'].Value
-        $InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value
-    }
-    else {
-        throw 'Could not get the version of the installing app'
-    }
-
-    Write-Verbose -Message 'Signing the App Control Manager MSIX package'
-
-    # In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
-    . $SignTool sign /debug /n $CommonName /fd $HashingAlgorithm /sm /s 'Root' /sha1 $NewCertificateThumbprint $MSIXPath
-
-    if ($LASTEXITCODE -ne 0) {
-        throw "SignTool Failed. Exit Code: $LASTEXITCODE"
-    }
-
-    $PossibleExistingApp = Get-AppxPackage -Name 'AppControlManager'
-    if ($null -ne $PossibleExistingApp) {
-        # Get the details of the currently installed app before attempting to install the new one
-        [System.String]$InstalledAppVersionBefore = $PossibleExistingApp.Version
-        [System.String]$InstalledAppArchitectureBefore = $PossibleExistingApp.Architecture
-    }
-
-    Write-Verbose -Message "Installing AppControl Manager MSIX package version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
-    Add-AppPackage -Path $MSIXPath -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse # -ForceTargetApplicationShutdown will shutdown the application if its open.
-
-    Write-Verbose -Message "Finding the certificate that was just created by its thumbprint again from the 'Local Machine/Trusted Root Certification Authorities' store"
-    [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert2 = foreach ($Cert2 in (Get-ChildItem -Path 'Cert:\LocalMachine\Root' -CodeSigningCert)) {
-        if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
-            $Cert2
-        }
-    }
-
-    Write-Verbose -Message 'Removing the certificate that has private + public keys'
-    $TheCert2 | Remove-Item -Force
-
-    Write-Verbose -Message "Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else."
-    $null = Import-Certificate -FilePath $CertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root'
-
-    [System.String]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
-    Write-Verbose -Message "Adding the new app install's files To the ASR Rules exclusions."
-    Add-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstallingAppLocationToAdd + 'AppControlManager.exe'), ($InstallingAppLocationToAdd + 'AppControlManager.dll'))
-
-    # Remove ASR rule exclusions that belong to the previous app version if it existed
-    if (![string]::IsNullOrWhiteSpace($InstalledAppVersionBefore) -and ![string]::IsNullOrWhiteSpace($InstalledAppArchitectureBefore)) {
-        Write-Verbose -Message 'Removing ASR Rules exclusions that belong to the previous app version.'
-        [System.String]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02\'
-        Remove-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstalledAppLocationToRemove + 'AppControlManager.exe'), ($InstalledAppLocationToRemove + 'AppControlManager.dll'))
-    }
-}
-finally {
-    Write-Verbose -Message 'Cleaning up the working directory in the TEMP directory'
-    [System.IO.Directory]::Delete($WorkingDir, $true)
-}
-
-""";
-
-                        // Replace placeholders in the script with actual values
-                        script = script.Replace("{MSIXPath}", AppControlManagerSavePath, StringComparison.OrdinalIgnoreCase)
-                                       .Replace("{SignTool}", signToolPath, StringComparison.OrdinalIgnoreCase)
-                                       .Replace("{MSIXDownloadURL}", onlineDownloadURL, StringComparison.OrdinalIgnoreCase);
+                        if (RegexMatch.Success)
+                        {
+                            InstallingAppVersion = RegexMatch.Groups["Version"].Value;
+                            InstallingAppArchitecture = RegexMatch.Groups["Architecture"].Value;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Could not get the version of the installing app");
+                        }
 
 
-                        // Run the PowerShell script to check for updates and save the output code
-                        _ = PowerShellExecutor.ExecuteScript(script);
+                        // Signing the App Control Manager MSIX package
+                        // In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
+                        ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{commonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
+
+                        PackageManager packageManager = new();
+                        IEnumerable<Package> PossibleExistingApp = packageManager.FindPackages("AppControlManager", "CN=SelfSignedCertForAppControlManager");
+
+                        // Get the version of the first matching package
+                        string? InstalledAppVersionBefore = PossibleExistingApp.FirstOrDefault()?.Id.Version.ToString();
+
+                        // Get the architecture of the first matching package
+                        string? InstalledAppArchitectureBefore = PossibleExistingApp.FirstOrDefault()?.Id.Architecture.ToString();
+
+                        Logger.Write($"Installing AppControl Manager MSIX package version '{InstallingAppVersion}' with architecture '{InstallingAppArchitecture}'");
+
+                        // https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
+                        AddPackageOptions options = new()
+                        {
+                            DeferRegistrationWhenPackagesAreInUse = true,
+                            ForceUpdateFromAnyVersion = true
+                        };
+
+                        _ = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
+
+
+                        // Remove any certificates with the specified common name again
+                        // Because the existing one contains private keys and don't want that
+                        CertificateGenerator.DeleteCertificateByCN(commonName);
+
+                        // Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else
+                        CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
+
+
+                        // Connect to the WMI namespace
+                        ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
+                        scope.Connect();
+
+                        // Create an instance of the MSFT_MpPreference class for Add method
+                        using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
+
+
+                        StringBuilder InstallingAppLocationToAdd = new();
+                        _ = InstallingAppLocationToAdd.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
+                        _ = InstallingAppLocationToAdd.Append(InstallingAppVersion);
+                        _ = InstallingAppLocationToAdd.Append('_');
+                        _ = InstallingAppLocationToAdd.Append(InstallingAppArchitecture);
+                        _ = InstallingAppLocationToAdd.Append("__sadt7br7jpt02\\");
+
+                        string path1 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.exe");
+                        string path2 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.dll");
+
+
+                        // Get the available methods for the class
+                        ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
+
+                        methodParams["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
+
+                        // Invoke the method to apply the settings
+                        _ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
+
+
+                        // Remove ASR rule exclusions that belong to the previous app version if it existed
+                        if (!string.IsNullOrWhiteSpace(InstalledAppVersionBefore) && !string.IsNullOrWhiteSpace(InstalledAppArchitectureBefore))
+                        {
+
+                            // Removing ASR Rules exclusions that belong to the previous app version.
+
+                            StringBuilder InstalledAppLocationToRemove = new();
+                            _ = InstalledAppLocationToRemove.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
+                            _ = InstalledAppLocationToRemove.Append(InstalledAppVersionBefore);
+                            _ = InstalledAppLocationToRemove.Append('_');
+                            _ = InstalledAppLocationToRemove.Append(InstalledAppArchitectureBefore);
+                            _ = InstalledAppLocationToRemove.Append("__sadt7br7jpt02\\");
+
+                            // Create an instance of the MSFT_MpPreference class for Remove Method
+                            using ManagementClass mpPreferenceClass2 = new(scope, new ManagementPath("MSFT_MpPreference"), null);
+
+
+                            path1 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.exe");
+                            path2 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.dll");
+
+
+                            // Get the available methods for the class
+                            ManagementBaseObject methodParams2 = mpPreferenceClass2.GetMethodParameters("Remove");
+
+                            methodParams2["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
+
+                            // Invoke the method to apply the settings
+                            _ = mpPreferenceClass2.InvokeMethod("Remove", methodParams2, null);
+
+                        }
 
                     });
 

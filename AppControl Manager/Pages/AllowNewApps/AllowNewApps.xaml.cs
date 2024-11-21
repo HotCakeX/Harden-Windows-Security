@@ -37,10 +37,8 @@ namespace WDACConfig.Pages
             DisableAllowNewAppsNavigationItem("EventLogs");
         }
 
-
         // Public property to access the singleton instance from other classes
         public static AllowNewApps Instance => _instance ?? throw new InvalidOperationException("AllowNewApps is not initialized.");
-
 
         // Event handler for the navigation menu
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -67,7 +65,6 @@ namespace WDACConfig.Pages
                 }
             }
         }
-
 
         /// <summary>
         /// Disables a navigation item by its tag.
@@ -100,6 +97,31 @@ namespace WDACConfig.Pages
                 item.IsEnabled = true;
             }
         }
+
+
+
+        /// <summary>
+        /// Updates the value and opacity of the LocalFiles InfoBadge.
+        /// </summary>
+        /// <param name="value">The new value for the InfoBadge. Use null to remove the value.</param>
+        /// <param name="opacity">The new opacity for the InfoBadge (0.0 to 1.0).</param>
+        public void UpdateLocalFilesInfoBadge(int? value, double opacity)
+        {
+            LocalFilesCountInfoBadge.Value = value ?? 0; // Default to 0 if value is null
+            LocalFilesCountInfoBadge.Opacity = opacity;
+        }
+
+        /// <summary>
+        /// Updates the value and opacity of the EventLogs InfoBadge.
+        /// </summary>
+        /// <param name="value">The new value for the InfoBadge. Use null to remove the value.</param>
+        /// <param name="opacity">The new opacity for the InfoBadge (0.0 to 1.0).</param>
+        public void UpdateEventLogsInfoBadge(int? value, double opacity)
+        {
+            EventLogsCountInfoBadge.Value = value ?? 0; // Default to 0 if value is null
+            EventLogsCountInfoBadge.Opacity = opacity;
+        }
+
 
     }
 }

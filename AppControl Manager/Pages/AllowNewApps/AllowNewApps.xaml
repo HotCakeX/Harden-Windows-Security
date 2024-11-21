@@ -39,12 +39,33 @@
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE83D;" />
                     </NavigationViewItem.Icon>
+
+                    <NavigationViewItem.InfoBadge>
+                        <InfoBadge x:Name="LocalFilesCountInfoBadge"
+                Value="0" Opacity="0"
+                Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                            <InfoBadge.IconSource>
+                                <FontIconSource Glyph="&#xEA6A;"/>
+                            </InfoBadge.IconSource>
+                        </InfoBadge>
+                    </NavigationViewItem.InfoBadge>
+
                 </NavigationViewItem>
 
                 <NavigationViewItem Content="Review the Event Logs" ToolTipService.ToolTip="Event Logs" Tag="EventLogs" >
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE964;" />
                     </NavigationViewItem.Icon>
+
+                    <NavigationViewItem.InfoBadge>
+                        <InfoBadge x:Name="EventLogsCountInfoBadge"
+                Value="0" Opacity="0"
+                Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                            <InfoBadge.IconSource>
+                                <FontIconSource Glyph="&#xEA6A;"/>
+                            </InfoBadge.IconSource>
+                        </InfoBadge>
+                    </NavigationViewItem.InfoBadge>
                 </NavigationViewItem>
 
             </NavigationView.MenuItems>

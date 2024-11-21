@@ -48,9 +48,10 @@ namespace WDACConfig.Pages
         // Save the current log size that is user input from the number box UI element
         private ulong LogSize;
 
-        // HashSet to store the output of both local files and event logs scans
-        private readonly static HashSet<FileIdentity> fileIdentities = new(new FileIdentityComparer());
-
+        // Custom HashSet to store the output of both local files and event logs scans
+        // If the same file is detected in event logs And local file scans, the one with IsECCSigned property set to true will be kept
+        // So that the respective methods will make Hash based rule for that file since AppControl doesn't support ECC Signed files yet
+        private readonly static FileIdentityECCBasedHashSet fileIdentities = new();
 
         #region
 
@@ -289,6 +290,7 @@ namespace WDACConfig.Pages
                 EnableStep2();
                 DisableStep3();
 
+                // Capture the current time so that the audit logs that will be displayed will be newer than that
                 LogsScanStartTime = DateTime.Now;
             }
             catch
@@ -400,6 +402,9 @@ namespace WDACConfig.Pages
                 // If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
                 AllowNewAppsLocalFilesDataGrid.Instance?.UpdateTotalLogs();
 
+                // Update the InfoBadge for the top menu
+                AllowNewApps.Instance.UpdateLocalFilesInfoBadge(LocalFilesFileIdentities.Count, 1);
+
 
                 Step2InfoBar.Message = "Scanning the event logs";
 
@@ -433,6 +438,9 @@ namespace WDACConfig.Pages
                 // If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
                 AllowNewAppsEventLogsDataGrid.Instance?.UpdateTotalLogs();
 
+                // Update the InfoBadge for the top menu
+                AllowNewApps.Instance.UpdateEventLogsInfoBadge(EventLogsFileIdentities.Count, 1);
+
 
                 DisableStep1();
                 DisableStep2();
@@ -454,7 +462,7 @@ namespace WDACConfig.Pages
                 {
                     GoToStep3Button.IsEnabled = true;
 
-                    // When an error occurrs before the disable methods run, we need to clear them manually here
+                    // When an error occurs before the disable methods run, we need to clear them manually here
                     Step2InfoBar.IsOpen = false;
                     Step2InfoBar.Message = null;
                 }
@@ -473,12 +481,6 @@ namespace WDACConfig.Pages
             {
 
                 ResetProgressRing.IsActive = true;
-
-                // Delete the enforced mode CIP file from the user config directory if it exists
-                if (Path.Exists(EnforcedModeCIP))
-                {
-                    File.Delete(EnforcedModeCIP);
-                }
 
                 // Disable all steps
                 DisableStep1();
@@ -504,6 +506,11 @@ namespace WDACConfig.Pages
                 AllowNewApps.Instance.DisableAllowNewAppsNavigationItem("LocalFiles");
                 AllowNewApps.Instance.DisableAllowNewAppsNavigationItem("EventLogs");
 
+
+                // Update the InfoBadges for the top menu
+                AllowNewApps.Instance.UpdateEventLogsInfoBadge(0, 0);
+                AllowNewApps.Instance.UpdateLocalFilesInfoBadge(0, 0);
+
                 // Reset the UI inputs back to their default states
                 DeployToggleButton.IsChecked = true;
                 SelectedDirectoriesTextBox.Text = null;
@@ -520,9 +527,12 @@ namespace WDACConfig.Pages
                     {
                         Logger.Write("Deploying the Enforced mode policy because user decided to reset the operation");
                         CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+
+                        // Delete the enforced mode CIP file from the user config directory after deploying it
+                        File.Delete(EnforcedModeCIP);
                     }
 
-                    // Remove the snap back guarantee task if it exists
+                    // Remove the snap back guarantee task and .bat file if it exists
                     SnapBackGuarantee.Remove();
                 });
 
@@ -578,7 +588,9 @@ namespace WDACConfig.Pages
 
         private void BrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFolder = FileSystemPicker.ShowDirectoryPicker();
+
+            string? selectedFolder = FileDialogHelper.ShowDirectoryPickerDialog();
+
             if (!string.IsNullOrEmpty(selectedFolder))
             {
                 selectedDirectoriesToScan.Add(selectedFolder);
@@ -588,12 +600,13 @@ namespace WDACConfig.Pages
             }
         }
 
+
         private void BrowseForXMLPolicyButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFile = FileSystemPicker.ShowFilePicker(
-            "Select an XML file",
-            ("XML Files", "*.xml"));
+            string filter = "XML Document|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
 
             if (!string.IsNullOrWhiteSpace(selectedFile))
             {
@@ -697,7 +710,7 @@ namespace WDACConfig.Pages
                     string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
                     // Separate the signed and unsigned data
-                    FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities], level: scanLevel);
+                    FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: scanLevel);
 
                     // Insert the data into the empty policy file
                     XMLOps.Initiate(DataPackage, EmptyPolicyPath);

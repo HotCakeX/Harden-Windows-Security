@@ -217,6 +217,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                                 <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
                                 <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
                                 <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
+                                <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>

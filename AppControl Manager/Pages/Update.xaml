@@ -31,6 +31,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -60,8 +61,22 @@ Style="{StaticResource BodyTextBlockStyle}">
                 </InfoBar.ActionButton>
             </InfoBar>
 
+            <InfoBar Grid.Row="2" x:Name="WhatsNewInfoBar"
+    Title="Release Notes"
+    Message="Check out the GitHub releases for full release notes"
+                     IsOpen="False"
+                     Severity="Success"
+                     IsClosable="True">
+                <InfoBar.IconSource>
+                    <FontIconSource Glyph="&#xE8A7;"/>
+                </InfoBar.IconSource>
+                <InfoBar.ActionButton>
+                    <HyperlinkButton Content="See What's New" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/releases" HorizontalAlignment="Right"/>
+                </InfoBar.ActionButton>
+            </InfoBar>
+
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -88,8 +103,13 @@ Style="{StaticResource BodyTextBlockStyle}">
 
 
                 <controls:SettingsCard Description="Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it."
-Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
-                    <ToggleSwitch x:Name="AutoUpdateCheckToggle" Toggled="AutoUpdateCheckToggle_Toggled" />
+Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="AutoUpdateCheckToggleSettingsCard_Click" IsActionIconVisible="False">
+                    <ToggleSwitch x:Name="AutoUpdateCheckToggle" Toggled="AutoUpdateCheckToggle_Toggled"/>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user's account, requiring confirmation of prompts before it can be used for signing."
+Header="Hardened Update Procedure" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" IsClickEnabled="True" IsActionIconVisible="False" Click="HardenedUpdateProcedureToggleSettingsCard_Click">
+                    <ToggleSwitch x:Name="HardenedUpdateProcedureToggle" Toggled="HardenedUpdateProcedureToggle_Toggled" />
                 </controls:SettingsCard>
 
             </StackPanel>

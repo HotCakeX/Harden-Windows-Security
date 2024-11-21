@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Management.Deployment;
+using Microsoft.UI.Xaml;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
@@ -21,6 +22,9 @@ namespace WDACConfig.Pages
 
     public sealed partial class Update : Page
     {
+
+        // Track whether hardened update procedure must be used
+        private bool useHardenedUpdateProcedure;
 
         public Update()
         {
@@ -31,7 +35,7 @@ namespace WDACConfig.Pages
         }
 
         // Event handler for check for update button
-        private async void CheckForUpdateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void CheckForUpdateButton_Click(object sender, RoutedEventArgs e)
         {
 
             try
@@ -55,6 +59,8 @@ namespace WDACConfig.Pages
                     Logger.Write(msg1);
                     UpdateStatusInfoBar.Message = msg1;
 
+                    WhatsNewInfoBar.IsOpen = true;
+
                     string onlineDownloadURL;
 
                     using (HttpClient client = new())
@@ -69,7 +75,7 @@ namespace WDACConfig.Pages
 
                     UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
 
-                    DownloadProgressRingForMSIXFile.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+                    DownloadProgressRingForMSIXFile.Visibility = Visibility.Visible;
 
                     using (HttpClient client = new())
                     {
@@ -168,7 +174,7 @@ namespace WDACConfig.Pages
                         storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
                         cerExportFilePath: CertificateOutputPath,
                         friendlyName: commonName,
-                        UserProtectedPrivateKey: false,
+                        UserProtectedPrivateKey: useHardenedUpdateProcedure,
                         ExportablePrivateKey: false);
 
                         // Pattern for AppControl Manager version and architecture extraction from file path and download link URL
@@ -316,6 +322,8 @@ namespace WDACConfig.Pages
 
                 CheckForUpdateButton.IsEnabled = true;
 
+                WhatsNewInfoBar.IsOpen = false;
+
                 throw;
             }
 
@@ -323,13 +331,13 @@ namespace WDACConfig.Pages
             {
                 UpdateStatusInfoBar.IsClosable = true;
 
-                DownloadProgressRingForMSIXFile.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                DownloadProgressRingForMSIXFile.Visibility = Visibility.Collapsed;
             }
         }
 
 
         // Event handler for the Auto Update Check Toggle Button to modify the User Configurations file
-        private void AutoUpdateCheckToggle_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void AutoUpdateCheckToggle_Toggled(object sender, RoutedEventArgs e)
         {
             _ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
         }
@@ -351,6 +359,43 @@ namespace WDACConfig.Pages
 
             // Grab the latest text for the CheckForUpdateButton button
             CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
+        }
+
+
+        /// <summary>
+        /// Event handler for the Hardened Update Procedure Toggle Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HardenedUpdateProcedureToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            useHardenedUpdateProcedure = ((ToggleSwitch)sender).IsOn;
+        }
+
+
+        /// <summary>
+        /// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AutoUpdateCheckToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+        {
+            _ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
+
+            AutoUpdateCheckToggle.IsOn = !AutoUpdateCheckToggle.IsOn;
+        }
+
+
+        /// <summary>
+        /// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HardenedUpdateProcedureToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+        {
+            useHardenedUpdateProcedure = HardenedUpdateProcedureToggle.IsOn;
+
+            HardenedUpdateProcedureToggle.IsOn = !HardenedUpdateProcedureToggle.IsOn;
         }
     }
 }

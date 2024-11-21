@@ -80,7 +80,7 @@
     <AssemblyName>AppControlManager</AssemblyName>
     <PublishAot>False</PublishAot>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.4.0.0</FileVersion>
+    <FileVersion>1.5.0.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -90,7 +90,8 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
     <Version>$(FileVersion)</Version>
-
+    <Copyright>© 2024–Present</Copyright>
+    <Title>AppControl Manager</Title>
   </PropertyGroup>
 
   <!--

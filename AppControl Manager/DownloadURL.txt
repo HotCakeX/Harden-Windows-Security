@@ -1,1 +1,1 @@
-https://github.com/HotCakeX/Harden-Windows-Security/releases/download/WDACConfigv0.4.9/AppControl.Manager_1.3.0.0_x64.msix
+https://github.com/HotCakeX/Harden-Windows-Security/releases/download/AppControlManager/AppControl.Manager_1.4.0.0_x64.msix

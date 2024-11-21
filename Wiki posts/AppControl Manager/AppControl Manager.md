@@ -1,6 +1,6 @@
 # AppControl Manager
 
-AppControl Manager is a modern secure app that provides easy to use graphical user interface to mange App Control and Code Integrity on your device.
+AppControl Manager is a modern secure app that provides easy to use graphical user interface to manage App Control and Code Integrity on your device.
 
 The short-term goal is for the AppControl manager to reach feature parity with the [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) Powershell module, as fast as possible, and then to surpass it with new unique features and improvements.
 

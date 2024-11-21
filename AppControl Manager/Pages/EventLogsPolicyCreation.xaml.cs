@@ -234,10 +234,14 @@ namespace WDACConfig.Pages
         /// <param name="e"></param>
         private void SelectCodeIntegrityEVTXFiles_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker();
+
+            string filter = "EVTX log file|*.evtx";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
-                // Store the selected XML file path
+                // Store the selected evtx file path
                 CodeIntegrityEVTX = selectedFile;
 
                 Logger.Write($"Selected {selectedFile} for Code Integrity EVTX log scanning");
@@ -252,10 +256,14 @@ namespace WDACConfig.Pages
         /// <param name="e"></param>
         private void SelectAppLockerEVTXFiles_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker();
+
+            string filter = "EVTX log file|*.evtx";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
-                // Store the selected XML file path
+                // Store the selected EVTX file path
                 AppLockerEVTX = selectedFile;
 
                 Logger.Write($"Selected {selectedFile} for AppLocker EVTX log scanning");
@@ -676,7 +684,10 @@ namespace WDACConfig.Pages
         private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFile = FileSystemPicker.ShowFilePicker(title: "Select a XML file", ("XML Files", "*.xml"));
+            string filter = "XML file|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Store the selected XML file path
@@ -698,7 +709,10 @@ namespace WDACConfig.Pages
         private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFile = FileSystemPicker.ShowFilePicker(title: "Select a XML file", ("XML Files", "*.xml"));
+            string filter = "XML file|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Store the selected XML file path

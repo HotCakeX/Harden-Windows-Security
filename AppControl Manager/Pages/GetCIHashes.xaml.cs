@@ -2,8 +2,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-#pragma warning disable CA1401
-
 namespace WDACConfig.Pages
 {
     public sealed partial class GetCIHashes : Page
@@ -20,7 +18,10 @@ namespace WDACConfig.Pages
 
         private void PickFile_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = WDACConfig.FileSystemPicker.ShowFilePicker();
+            string filter = "Any file (*.*)|*.*";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Call the method that generates the hashes

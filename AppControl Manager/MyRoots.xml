@@ -1,0 +1,10 @@
+﻿<linker>
+  <assembly fullname="CommunityToolkit.WinUI.Extensions" preserve="all" />
+  <assembly fullname="CommunityToolkit.WinUI.UI.Controls.DataGrid" preserve="all" />
+  <assembly fullname="Microsoft.Web.WebView2.Core.Projection" preserve="all" />
+  <assembly fullname="Microsoft.Windows.SDK.NET" preserve="all" />
+  <assembly fullname="Microsoft.Xaml.Interactions" preserve="all" />
+  <assembly fullname="System.CodeDom" preserve="all" />
+  <assembly fullname="System.Management" preserve="all" />
+  <assembly fullname="WinRT.Runtime" preserve="all" />
+</linker>

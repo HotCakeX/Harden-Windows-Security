@@ -152,11 +152,11 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard Description="Mostly suitable when using MicaAlt as the background." Header="Darker Background" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
-                            <ToggleSwitch x:Name="NavigationViewBackgroundToggle"/>
+                            <ToggleSwitch x:Name="NavigationViewBackgroundToggle" ToolTipService.ToolTip="It will remove the extra light shadow from the background, giving an overal darker look to the AppControl Manager's appearance."/>
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Customize the App Background Style" Header="Background Style" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
-                            <ComboBox x:Name="BackgroundComboBox">
+                            <ComboBox x:Name="BackgroundComboBox" ToolTipService.ToolTip="This is the backdrop of the AppControl Manager. The changes you notice will be visible in the background.">
                                 <ComboBoxItem>MicaAlt</ComboBoxItem>
                                 <ComboBoxItem>Mica</ComboBoxItem>
                                 <ComboBoxItem>Acrylic</ComboBoxItem>
@@ -165,15 +165,23 @@ Style="{StaticResource BodyTextBlockStyle}">
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Customize the Theme" Header="Theme" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
-                            <ComboBox x:Name="ThemeComboBox">
+                            <ComboBox x:Name="ThemeComboBox" ToolTipService.ToolTip="Select a theme for the AppControl Manager">
                                 <ComboBoxItem>Use System Setting</ComboBoxItem>
                                 <ComboBoxItem>Dark</ComboBoxItem>
                                 <ComboBoxItem>Light</ComboBoxItem>
                             </ComboBox>
                         </controls:SettingsCard>
 
+                        <controls:SettingsCard Description="Choose a style for the main navigation icons" Header="Icons Style" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
+                            <ComboBox x:Name="IconsStyleComboBox" ToolTipService.ToolTip="Pick a style for the main navigation's icons.">
+                                <ComboBoxItem>Animated</ComboBoxItem>
+                                <ComboBoxItem>Windows Accent</ComboBoxItem>
+                                <ComboBoxItem>Monochromatic</ComboBoxItem>
+                            </ComboBox>
+                        </controls:SettingsCard>
+
                         <controls:SettingsCard Description="Customize the Navigation Menu location" Header="Navigation Menu" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
-                            <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
+                            <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation" ToolTipService.ToolTip="Select a location for the navigation menu">
                                 <ComboBoxItem>Left</ComboBoxItem>
                                 <ComboBoxItem>Top</ComboBoxItem>
                             </ComboBox>

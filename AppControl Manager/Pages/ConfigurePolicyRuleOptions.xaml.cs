@@ -65,8 +65,10 @@ namespace WDACConfig.Pages
         // Event handler for the browse button
         private void PickPolicyFileButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker(
-                "Choose a Configuration File", ("XML Files", "*.xml"));
+
+            string filter = "XML Document|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
 
             if (!string.IsNullOrEmpty(selectedFile))
             {

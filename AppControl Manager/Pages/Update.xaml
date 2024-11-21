@@ -80,7 +80,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                         <Button x:Name="CheckForUpdateButton"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
                                 Click="CheckForUpdateButton_Click"
-                                ToolTipService.ToolTip="Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approxmitate download size is 140 MB."/>
+                                ToolTipService.ToolTip="Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approxmitate download size is 85 MB."/>
 
                     </controls:WrapPanel>
 

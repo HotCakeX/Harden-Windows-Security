@@ -143,9 +143,10 @@ namespace WDACConfig.Pages
         // Event handler for the Select XML File button
         private void SelectXmlFileButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker(
-            "Select an XML file",
-            ("XML Files", "*.xml"));
+
+            string filter = "XML file|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
 
             if (!string.IsNullOrEmpty(selectedFile))
             {
@@ -160,7 +161,11 @@ namespace WDACConfig.Pages
         // Event handler for the Select Files button
         private void SelectFilesButton_Click(object sender, RoutedEventArgs e)
         {
-            List<string>? selectedFiles = FileSystemPicker.ShowMultiFilePicker();
+
+            string filter = "Any file (*.*)|*.*";
+
+            List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+
             if (selectedFiles is not null && selectedFiles.Count != 0)
             {
                 filePaths = [.. selectedFiles];
@@ -170,22 +175,27 @@ namespace WDACConfig.Pages
         // Event handler for the Select Folders button
         private void SelectFoldersButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFolder = FileSystemPicker.ShowDirectoryPicker();
+
+            string? selectedFolder = FileDialogHelper.ShowDirectoryPickerDialog();
+
             if (!string.IsNullOrEmpty(selectedFolder))
             {
                 folderPaths.Add(selectedFolder);
             }
         }
 
+
         // Event handler for the Cat Root Paths button
         private void CatRootPathsButton_Click(object sender, RoutedEventArgs e)
         {
-            List<string>? selectedCatRoots = FileSystemPicker.ShowMultiFilePicker();
-            if (selectedCatRoots is not null && selectedCatRoots.Count != 0)
+            List<string>? selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+
+            if (selectedCatRoots is not null && selectedCatRoots.Count > 0)
             {
-                catRootPaths = [.. selectedCatRoots];
+                catRootPaths = selectedCatRoots;
             }
         }
+
 
         // Event handler for RadialGauge ValueChanged
         private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)

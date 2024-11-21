@@ -4,7 +4,7 @@ using System;
 using System.Globalization;
 using static WDACConfig.AppSettings;
 
-#nullable enable
+
 
 namespace WDACConfig.Pages
 {
@@ -47,6 +47,15 @@ namespace WDACConfig.Pages
                 _ => 0
             };
 
+
+            IconsStyleComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.IconsStyle)) switch
+            {
+                "Animated" => 0,
+                "Windows Accent" => 1,
+                "Monochromatic" => 2,
+                _ => 2
+            };
+
             #endregion
 
 
@@ -59,8 +68,34 @@ namespace WDACConfig.Pages
             ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
             NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
             SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
-
+            IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
         }
+
+
+
+        /// <summary>
+        /// Event handler for the IconsStyle ComboBox selection change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void IconsStyleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the ComboBox that triggered the event
+            ComboBox? comboBox = sender as ComboBox;
+
+            // Get the selected item from the ComboBox
+            string? selectedIconsStyle = (comboBox?.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            if (selectedIconsStyle is not null)
+            {
+                // Raise the global BackgroundChanged event
+                IconsStyleManager.OnIconsStylesChanged(selectedIconsStyle);
+            }
+
+            AppSettings.SaveSetting(AppSettings.SettingKeys.IconsStyle, selectedIconsStyle);
+        }
+
+
 
 
         /// <summary>
@@ -154,6 +189,9 @@ namespace WDACConfig.Pages
 
             AppSettings.SaveSetting(AppSettings.SettingKeys.NavViewBackground, isBackgroundOn);
         }
+
+
+
 
 
 
@@ -331,16 +369,16 @@ namespace WDACConfig.Pages
             switch (fieldName)
             {
                 case "SignedPolicyPath":
-                    SignedPolicyPathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose a Signed Policy XML File path", ("XML Files", "*.xml"));
+                    SignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("XML file|*.xml");
                     break;
                 case "UnsignedPolicyPath":
-                    UnsignedPolicyPathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose an Unsigned Policy XML File path", ("XML Files", "*.xml"));
+                    UnsignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("XML file|*.xml");
                     break;
                 case "SignToolCustomPath":
-                    SignToolCustomPathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose the SignTool.exe path", ("Exe Files", "*.exe"));
+                    SignToolCustomPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("EXE file|*.exe");
                     break;
                 case "CertificatePath":
-                    CertificatePathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose the Certificate file path", ("Cert Files", "*.cer"));
+                    CertificatePathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("Certificate file|*.cer");
                     break;
                 default:
                     break;

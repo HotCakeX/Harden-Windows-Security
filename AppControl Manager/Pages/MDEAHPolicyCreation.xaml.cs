@@ -251,10 +251,14 @@ namespace WDACConfig.Pages
         /// <param name="e"></param>
         private void BrowseForLogs_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker();
+
+            string filter = "CSV file|*.csv";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
-                // Store the selected XML file path
+                // Store the selected csv file path
                 MDEAdvancedHuntingLogs = selectedFile;
 
                 Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
@@ -690,7 +694,10 @@ namespace WDACConfig.Pages
         private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFile = FileSystemPicker.ShowFilePicker(title: "Select a XML file", ("XML Files", "*.xml"));
+            string filter = "XML file|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Store the selected XML file path
@@ -712,7 +719,10 @@ namespace WDACConfig.Pages
         private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFile = FileSystemPicker.ShowFilePicker(title: "Select a XML file", ("XML Files", "*.xml"));
+            string filter = "XML file|*.xml";
+
+            string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Store the selected XML file path

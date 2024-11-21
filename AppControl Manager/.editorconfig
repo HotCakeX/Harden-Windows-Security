@@ -365,3 +365,18 @@ dotnet_diagnostic.SYSLIB1092.severity = error
 
 # CA2263: Prefer generic overload when type is known
 dotnet_diagnostic.CA2263.severity = error
+
+# Default severity for analyzer diagnostics with category 'AOT'
+dotnet_analyzer_diagnostic.category-AOT.severity = error
+
+# SYSLIB1096: Convert to 'GeneratedComInterface'
+dotnet_diagnostic.SYSLIB1096.severity = error
+
+# Default severity for analyzer diagnostics with category 'Interoperability'
+dotnet_analyzer_diagnostic.category-Interoperability.severity = error
+
+# SYSLIB0057: Type or member is obsolete
+dotnet_diagnostic.SYSLIB0057.severity = error
+
+# CS0162: Unreachable code detected
+dotnet_diagnostic.CS0162.severity = error

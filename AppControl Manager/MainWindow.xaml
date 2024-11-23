@@ -57,12 +57,11 @@
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
-                    SelectionChanged="NavigationView_SelectionChanged"
+                    ItemInvoked="MainNavigation_ItemInvoked"
                     PaneTitle="Menu"
                     IsBackButtonVisible="Auto"
                     IsBackEnabled="True"
                     BackRequested="NavView_BackRequested"
-                    ItemInvoked="NavigationView_ItemInvoked"
                     AlwaysShowHeader="True">
 
             <!--

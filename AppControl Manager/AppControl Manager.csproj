@@ -298,6 +298,11 @@
     <Folder Include="Pages\AllowNewApps\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\UpdatePageCustomMSIXPath.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\AllowNewAppsStart.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -86,7 +86,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                 <controls:SettingsCard x:Name="CheckForUpdate"
                            Description="Once the updates are downloaded and installed, the next time you open the AppControl Manager you will use the new version."
                            Header="Check for AppControl Manager update"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}">
+                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" Click="CheckForUpdate_Click">
 
                     <controls:WrapPanel Orientation="Horizontal">
 

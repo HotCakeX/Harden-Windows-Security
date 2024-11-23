@@ -637,7 +637,7 @@ TestMode: TestMode);
 
         }
 
-        [GeneratedRegex(@"<VersionEx>(.*?)<\/VersionEx>")]
+        [GeneratedRegex(@"<VersionEx>(.*?)<\/VersionEx>", RegexOptions.Compiled)]
         private static partial Regex MyRegex();
     }
 }

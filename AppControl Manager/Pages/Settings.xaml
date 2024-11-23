@@ -147,7 +147,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                 <!--  'Appearance' section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Appearance" />
-                <controls:SettingsExpander Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+                <controls:SettingsExpander IsExpanded="True" Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
 
                     <controls:SettingsExpander.Items>
 
@@ -205,6 +205,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                            Text="About" />
                 <controls:SettingsExpander x:Name="CopyRightSettingsExpander"
                                            Header="AppControl Manager"
+                                           IsExpanded="True"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
                     <TextBlock x:Name="VersionTextBlock" win:IsTextSelectionEnabled="True"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />

@@ -4,6 +4,8 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,10 +21,15 @@ namespace WDACConfig
         // Dictionary to store the display names and associated NavigationViewItems
         private readonly Dictionary<string, NavigationViewItem> menuItems = [];
 
+        // A static instance of the MainWindow class which will hold the single, shared instance of it
+        private static MainWindow? _instance;
 
         public MainWindow()
         {
             this.InitializeComponent();
+
+            // Assign this instance to the static field
+            _instance = this;
 
             // Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
             GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -114,6 +121,8 @@ namespace WDACConfig
 
         }
 
+        // Public property to access the singleton instance from other classes
+        public static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
 
 
         /// <summary>
@@ -211,7 +220,7 @@ namespace WDACConfig
                         LogsNavItem.Icon = new AnimatedIcon
                         {
                             Margin = new Thickness(0, -8, -8, -8),
-                            Source = new Timeline()
+                            Source = new AnimatedVisuals.Timeline()
                         };
 
                         // GitHub Documentation
@@ -734,89 +743,135 @@ namespace WDACConfig
 
                     if (selectedTag is not null)
                     {
-                        NavigateToMenuItem(selectedTag);
+                        Navigate_ToPage(MainNavigation, selectedTag, null);
                     }
                 }
             }
         }
 
 
+
         /// <summary>
-        /// Event handler for main navigation menu selection change
+        /// Main navigation event of the Nav View
+        /// ItemInvoked event is much better than SelectionChanged because it allows click/tap on the same selected menu on main navigation
+        /// which is necessary if the same main page is selected but user has navigated to inner pages and then wants to go back by selecting the already selected main navigation item again.
+        /// The duplicate-loading logic is implemented manually in code behind.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void MainNavigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs? args)
         {
-            if (args.SelectedItem is NavigationViewItem selectedItem)
+            // If any other page was invoked
+            if (args?.InvokedItemContainer is not null)
             {
-                // Play sound for selection change
-                ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
-
-                string selectedTag = selectedItem.Tag?.ToString()!;
-                NavigateToMenuItem(selectedTag);
+                Navigate_ToPage(sender, args.InvokedItemContainer.Tag.ToString()!, args?.RecommendedNavigationTransitionInfo);
             }
         }
 
 
         /// <summary>
-        /// Separate method to handle navigation based on the selected tag
+        /// Used by the main navigation's event, AutoSuggestBox and through the current class's singleton instance by other pages
+        /// to navigate to sub-pages that aren't included in the main navigation menu
         /// </summary>
-        /// <param name="selectedTag"></param>
-        private void NavigateToMenuItem(string selectedTag)
+        /// <param name="sender"></param>
+        /// <param name="tag"></param>
+        /// <param name="transitionInfo"></param>
+        internal void Navigate_ToPage(NavigationView? sender, string tag, NavigationTransitionInfo? transitionInfo, string? Header = null)
         {
-            switch (selectedTag)
+
+            // Find the page type based on the tag and send it to another method for final navigation action
+            switch (tag)
             {
                 case "CreatePolicy":
-                    _ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
+                    NavView_Navigate(typeof(Pages.CreatePolicy), transitionInfo);
                     break;
                 case "GetCIHashes":
-                    _ = ContentFrame.Navigate(typeof(Pages.GetCIHashes));
+                    NavView_Navigate(typeof(Pages.GetCIHashes), transitionInfo);
+                    break;
+                case "GitHubDocumentation":
+                    NavView_Navigate(typeof(Pages.GitHubDocumentation), transitionInfo);
+                    break;
+                case "MicrosoftDocumentation":
+                    NavView_Navigate(typeof(Pages.MicrosoftDocumentation), transitionInfo);
+                    break;
+                case "GetSecurePolicySettings":
+                    NavView_Navigate(typeof(Pages.GetSecurePolicySettings), transitionInfo);
                     break;
                 // Doesn't need XAML nav item because it's included by default in the navigation view
                 case "Settings":
-                    _ = ContentFrame.Navigate(typeof(Pages.Settings));
-                    break;
-                case "GitHubDocumentation":
-                    _ = ContentFrame.Navigate(typeof(Pages.GitHubDocumentation));
-                    break;
-                case "MicrosoftDocumentation":
-                    _ = ContentFrame.Navigate(typeof(Pages.MicrosoftDocumentation));
-                    break;
-                case "GetSecurePolicySettings":
-                    _ = ContentFrame.Navigate(typeof(Pages.GetSecurePolicySettings));
+                    NavView_Navigate(typeof(Pages.Settings), transitionInfo);
                     break;
                 case "SystemInformation":
-                    _ = ContentFrame.Navigate(typeof(Pages.SystemInformation));
+                    NavView_Navigate(typeof(Pages.SystemInformation), transitionInfo);
                     break;
                 case "ConfigurePolicyRuleOptions":
-                    _ = ContentFrame.Navigate(typeof(Pages.ConfigurePolicyRuleOptions));
+                    NavView_Navigate(typeof(Pages.ConfigurePolicyRuleOptions), transitionInfo);
                     break;
                 case "Logs":
-                    _ = ContentFrame.Navigate(typeof(Pages.Logs));
+                    NavView_Navigate(typeof(Pages.Logs), transitionInfo);
                     break;
                 case "Simulation":
-                    _ = ContentFrame.Navigate(typeof(Pages.Simulation));
+                    NavView_Navigate(typeof(Pages.Simulation), transitionInfo);
                     break;
                 case "Update":
-                    _ = ContentFrame.Navigate(typeof(Pages.Update));
+                    NavView_Navigate(typeof(Pages.Update), transitionInfo);
                     break;
                 case "Deployment":
-                    _ = ContentFrame.Navigate(typeof(Pages.Deployment));
+                    NavView_Navigate(typeof(Pages.Deployment), transitionInfo);
                     break;
                 case "EventLogsPolicyCreation":
-                    _ = ContentFrame.Navigate(typeof(Pages.EventLogsPolicyCreation));
+                    NavView_Navigate(typeof(Pages.EventLogsPolicyCreation), transitionInfo);
                     break;
                 case "MDEAHPolicyCreation":
-                    _ = ContentFrame.Navigate(typeof(Pages.MDEAHPolicyCreation));
+                    NavView_Navigate(typeof(Pages.MDEAHPolicyCreation), transitionInfo);
                     break;
                 case "AllowNewApps":
-                    _ = ContentFrame.Navigate(typeof(Pages.AllowNewApps));
+                    NavView_Navigate(typeof(Pages.AllowNewApps), transitionInfo);
+                    break;
+                // Sub-Page
+                case "UpdatePageCustomMSIXPath":
+                    NavView_Navigate(typeof(Pages.UpdatePageCustomMSIXPath), transitionInfo);
                     break;
                 default:
                     break;
             }
+
+            // Set the NavigationView's header to the Navigation view item's content
+            if (MainNavigation.SelectedItem is NavigationViewItem item)
+            {
+                if (sender is not null)
+                {
+                    // Must be nullable because when NavigationViewPaneDisplayMode is top, this is null.
+                    sender.Header = item.Content?.ToString();
+                }
+                else if (Header is not null)
+                {
+                    MainNavigation.Header = Header;
+                }
+            }
         }
+
+
+
+        private void NavView_Navigate(Type navPageType, NavigationTransitionInfo? transitionInfo)
+        {
+            // Get the page's type before navigation so we can prevent duplicate
+            // entries in the BackStack
+            // This will prevent reloading the same page if we're already on it and works with sub-pages to navigate back to the main page
+            Type preNavPageType = ContentFrame.CurrentSourcePageType;
+
+            // Only navigate if the selected page isn't currently loaded.
+            if (navPageType is not null && !Type.Equals(preNavPageType, navPageType))
+            {
+
+                // Play sound
+                ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
+
+                _ = ContentFrame.Navigate(navPageType, null, transitionInfo);
+            }
+        }
+
+
 
 
         /// <summary>
@@ -842,23 +897,6 @@ namespace WDACConfig
                 ContentFrame.GoBack();
             }
         }
-
-
-        /// <summary>
-        /// Set the NavigationView's header to the Navigation view item's content
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            if (MainNavigation.SelectedItem is NavigationViewItem item)
-            {
-
-                // Must be nullable because when NavigationViewPaneDisplayMode is top, this is null.
-                sender.Header = item.Content?.ToString();
-            }
-        }
-
 
     }
 }

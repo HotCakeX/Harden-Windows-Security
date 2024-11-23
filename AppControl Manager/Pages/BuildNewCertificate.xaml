@@ -12,12 +12,40 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
+        <!--  Spacing between cards  -->
+        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+        <!--  Style (inc. the correct spacing) of a section header  -->
+        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
+        BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+        TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,30,0,6" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+
     <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <Style x:Key="GridCardStyle" TargetType="Border">
+                    <Style.Setters>
+                        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                        <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                    </Style.Setters>
+                </Style>
+
+            </Grid.Resources>
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
 
@@ -31,8 +59,92 @@ Style="{StaticResource BodyTextBlockStyle}">
                 </TextBlock>
 
             </controls:WrapPanel>
-            
-            
+
+            <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="BuildCertificateButton"
+                    HorizontalContentAlignment="Center" Margin="15" Click="BuildCertificateButton_Click">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressRing Visibility="Collapsed" x:Name="ProgressRing" Margin="5,5,15,5" Value="0" IsIndeterminate="True" Minimum="0" Maximum="100"/>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <FontIcon Glyph="&#xEB77;" Margin="5" />
+                            <TextBlock Text="Build Certificate" Margin="5"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <InfoBar
+                x:Name="StatusInfoBar"
+                IsOpen="False"
+                Visibility="Collapsed"
+                Severity="Informational"
+                Grid.Row="2">
+                <InfoBar.ActionButton>
+                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" Click="CopyInfoBarToClipboardButton_Click" Content="Copy ThumbPrint To Clipboard" />
+                </InfoBar.ActionButton>
+
+            </InfoBar>
+
+
+            <StackPanel HorizontalAlignment="Stretch"
+             Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
+
+                <win:StackPanel.ChildrenTransitions>
+                    <win:EntranceThemeTransition FromVerticalOffset="50" />
+                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                </win:StackPanel.ChildrenTransitions>
+
+                <controls:SettingsCard x:Name="KeySizeSettingsCard" Click="KeySizeSettingsCard_Click"
+                Description="The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate."
+                Header="Key Size" HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
+
+                    <ComboBox SelectedIndex="0" x:Name="KeySizeComboBox">
+                        <ComboBoxItem Content="4096"/>
+                        <ComboBoxItem Content="8192"/>
+                        <ComboBoxItem Content="16384"/>
+                    </ComboBox>
+
+                </controls:SettingsCard>
+
+                <controls:SettingsCard x:Name="CommonNameSettingsCard"
+                Description="The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for."
+                Header="Common Name"
+                HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name" TextChanged="CommonNameTextBox_TextChanged" MinWidth="200"/>
+
+                </controls:SettingsCard>
+
+
+
+                <controls:SettingsCard x:Name="ValiditySettingsCard"
+                Description="The time period (in years) during which a certificate is considered valid and trusted."
+                Header="Validity"
+                HeaderIcon="{ui:FontIcon Glyph=&#xE787;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                    <NumberBox x:Name="ValidityNumberBox" Value="100" SpinButtonPlacementMode="Inline"
+SmallChange="10" LargeChange="100" Minimum="1" MaxHeight="3000"/>
+
+
+                </controls:SettingsCard>
+
+
+                <controls:SettingsCard x:Name="PFXPasswordSettingsCard"
+                Description="A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file."
+                Header="PFX Encryption Password"
+                HeaderIcon="{ui:FontIcon Glyph=&#xF78D;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="PFXEncryptionPasswordBox_PasswordChanged"
+                        MinWidth="250" PasswordChar="#" PasswordRevealMode="Peek" PlaceholderText="Type a password..." />
+
+                    </StackPanel>
+                </controls:SettingsCard>
+
+            </StackPanel>
 
         </Grid>
     </ScrollViewer>

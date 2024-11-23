@@ -15,7 +15,7 @@ namespace WDACConfig
         /// </summary>
         /// <param name="CommonName"></param>
         /// <param name="Password"></param>
-        public static void BuildAppControlCertificate(string CommonName, string Password)
+        public static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize)
         {
             // Paths for .cer and .pfx files
             string cerFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.cer");
@@ -41,10 +41,10 @@ namespace WDACConfig
                 store.Close();
             }
 
-            _ = GenerateSelfSignedCertificate(
+            X509Certificate2 generatedCertificate = GenerateSelfSignedCertificate(
                 subjectName: CommonName,
-                validityInYears: 100,
-                keySize: 4096,
+                validityInYears: validity,
+                keySize: keySize,
                 hashAlgorithm: HashAlgorithmName.SHA512,
                 storeLocation: CertificateStoreLocation.User,
                 cerExportFilePath: cerFilePath,
@@ -52,8 +52,7 @@ namespace WDACConfig
                 pfxExportFilePath: pfxFilePath,
                 pfxPassword: Password,
                 UserProtectedPrivateKey: true,
-                ExportablePrivateKey: true
-                 );
+                ExportablePrivateKey: true);
 
             // Save the newly created certificate's details in the user config JSON file
             _ = UserConfiguration.Set(
@@ -61,6 +60,8 @@ namespace WDACConfig
                 CertificateCommonName: CommonName
                 );
 
+
+            return generatedCertificate;
         }
 
 

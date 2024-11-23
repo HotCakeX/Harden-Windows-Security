@@ -93,10 +93,20 @@ Style="{StaticResource BodyTextBlockStyle}">
                                 </controls:WrapPanel>
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Certificate Common Name:" x:Name="CertificateCommonNameTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
+                                    <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
+                                        Header="Certificate Common Name:"
+                                        QueryIcon="Find"
+                                        AutomationProperties.Name="Search"
+                                        GotFocus="CertificateCommonNameAutoSuggestBox_GotFocus"
+                                        TextChanged="CertificateCNAutoSuggestBox_TextChanged"
+                                        PlaceholderText="Find Certificate Common Names"
+                                        MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificateCommonName"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Refresh" Label="Refresh" Click="CertificateCommonNameSuggestionsRefresh_Click" Tag="CertificateCommonName" ToolTipService.ToolTip="Fetches the latest certificate common names from the User's personal certificate store"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Certificate Path -->

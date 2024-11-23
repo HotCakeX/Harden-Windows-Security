@@ -1,21 +1,28 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using static WDACConfig.AppSettings;
-
 
 
 namespace WDACConfig.Pages
 {
     public sealed partial class Settings : Page
     {
+
+        // To store the selectable Certificate common names
+        private HashSet<string> CertCommonNames = [];
+
         public Settings()
         {
             this.InitializeComponent();
 
             // Make sure navigating to/from this page maintains its state
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             // Set the version in the settings card to the current app version
             VersionTextBlock.Text = $"Version {App.currentAppVersion}";
@@ -23,6 +30,7 @@ namespace WDACConfig.Pages
             // Set the year for the copyright section
             CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
 
+            FetchLatestCertificateCNs();
 
             #region Load the user configurations in the UI elements
 
@@ -222,7 +230,7 @@ namespace WDACConfig.Pages
             SignedPolicyPathTextBox.Text = userConfig.SignedPolicyPath ?? string.Empty;
             UnsignedPolicyPathTextBox.Text = userConfig.UnsignedPolicyPath ?? string.Empty;
             SignToolCustomPathTextBox.Text = userConfig.SignToolCustomPath ?? string.Empty;
-            CertificateCommonNameTextBox.Text = userConfig.CertificateCommonName ?? string.Empty;
+            CertificateCommonNameAutoSuggestBox.Text = userConfig.CertificateCommonName ?? string.Empty;
             CertificatePathTextBox.Text = userConfig.CertificatePath ?? string.Empty;
             StrictKernelPolicyGUIDTextBox.Text = userConfig.StrictKernelPolicyGUID?.ToString() ?? string.Empty;
             StrictKernelNoFlightRootsPolicyGUIDTextBox.Text = userConfig.StrictKernelNoFlightRootsPolicyGUID?.ToString() ?? string.Empty;
@@ -250,7 +258,7 @@ namespace WDACConfig.Pages
                     newValue = SignToolCustomPathTextBox.Text;
                     break;
                 case "CertificateCommonName":
-                    newValue = CertificateCommonNameTextBox.Text;
+                    newValue = CertificateCommonNameAutoSuggestBox.Text;
                     break;
                 case "CertificatePath":
                     newValue = CertificatePathTextBox.Text;
@@ -316,7 +324,7 @@ namespace WDACConfig.Pages
                     SignToolCustomPathTextBox.Text = string.Empty;
                     break;
                 case "CertificateCommonName":
-                    CertificateCommonNameTextBox.Text = string.Empty;
+                    CertificateCommonNameAutoSuggestBox.Text = string.Empty;
                     break;
                 case "CertificatePath":
                     CertificatePathTextBox.Text = string.Empty;
@@ -384,6 +392,63 @@ namespace WDACConfig.Pages
                     break;
             }
 
+        }
+
+
+
+        /// <summary>
+        /// Event handler for AutoSuggestBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void CertificateCNAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text.ToLowerInvariant();
+
+                // Filter menu items based on the search query
+                List<string> suggestions = CertCommonNames
+                    .Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                // Set the filtered items as suggestions in the AutoSuggestBox
+                sender.ItemsSource = suggestions;
+            }
+        }
+
+        /// <summary>
+        /// Start suggesting when tap or mouse click happens
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CertificateCommonNameAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Set the filtered items as suggestions in the AutoSuggestBox
+            ((AutoSuggestBox)sender).ItemsSource = CertCommonNames;
+        }
+
+
+        /// <summary>
+        /// When the Refresh button is pressed for certificate common name selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CertificateCommonNameSuggestionsRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            FetchLatestCertificateCNs();
+        }
+
+
+        /// <summary>
+        /// Get all of the common names of the certificates in the user/my certificate store over time
+        /// </summary>
+        private async void FetchLatestCertificateCNs()
+        {
+            await Task.Run(() =>
+            {
+                CertCommonNames = CertCNFetcher.GetCertCNs();
+            });
         }
     }
 }

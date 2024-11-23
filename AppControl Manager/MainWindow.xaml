@@ -94,6 +94,7 @@
                 <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options" Tag="ConfigurePolicyRuleOptions"/>
                 <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies" Tag="Simulation"/>
                 <NavigationViewItem x:Name="AllowNewAppsNavItem" Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running." Tag="AllowNewApps"/>
+                <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies" Tag="BuildNewCertificate"/>
 
                 <!-- Make it expanded by default to show the import feature to the user at first sight -->
                 <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create AppControl policy either from the local event logs or EVTX files" Tag="EventLogsPolicyCreation">

@@ -255,6 +255,12 @@ namespace WDACConfig
                             };
                         }
 
+                        BuildNewCertificateNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Certificate()
+                        };
+
                         break;
                     }
                 case "Windows Accent":
@@ -353,6 +359,12 @@ namespace WDACConfig
                             Foreground = accentBrush
                         };
 
+                        BuildNewCertificateNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB95",
+                            Foreground = accentBrush
+                        };
+
                         break;
                     }
 
@@ -437,6 +449,11 @@ namespace WDACConfig
                         UpdateNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uEB52"
+                        };
+
+                        BuildNewCertificateNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB95"
                         };
 
                         break;
@@ -709,11 +726,11 @@ namespace WDACConfig
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                string query = sender.Text.ToLower();
+                string query = sender.Text.ToLowerInvariant();
 
                 // Filter menu items based on the search query
                 List<string> suggestions = menuItems.Keys
-                    .Where(name => name.Contains(query, System.StringComparison.OrdinalIgnoreCase))
+                    .Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
 
@@ -827,6 +844,9 @@ namespace WDACConfig
                     break;
                 case "AllowNewApps":
                     NavView_Navigate(typeof(Pages.AllowNewApps), transitionInfo);
+                    break;
+                case "BuildNewCertificate":
+                    NavView_Navigate(typeof(Pages.BuildNewCertificate), transitionInfo);
                     break;
                 // Sub-Page
                 case "UpdatePageCustomMSIXPath":

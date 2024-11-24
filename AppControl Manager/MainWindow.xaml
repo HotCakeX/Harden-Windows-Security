@@ -107,6 +107,8 @@
 
                 <NavigationViewItemSeparator/>
 
+                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy AppControl Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system" Tag="Deployment"/>
+
                 <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes"/>
 
                 <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies" Tag="GetSecurePolicySettings"/>

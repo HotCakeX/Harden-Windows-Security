@@ -160,7 +160,7 @@ namespace WDACConfig
             int width = AppSettings.GetSetting<int>(SettingKeys.MainWindowWidth);
             int height = AppSettings.GetSetting<int>(SettingKeys.MainWindowHeight);
 
-            // If the previous window size was smaller than 200 pixels with/height then do not use it, let it use the natural window size
+            // If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
             if (width > 200 && height > 200)
             {
                 // Apply to the current AppWindow
@@ -309,10 +309,18 @@ namespace WDACConfig
                             };
                         }
 
+                        // Build New Certificate
                         BuildNewCertificateNavItem.Icon = new AnimatedIcon
                         {
                             Margin = new Thickness(0, -8, -8, -8),
                             Source = new Certificate()
+                        };
+
+                        // Deployment
+                        DeploymentNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Deployment()
                         };
 
                         break;
@@ -413,9 +421,17 @@ namespace WDACConfig
                             Foreground = accentBrush
                         };
 
+                        // Build New Certificate
                         BuildNewCertificateNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uEB95",
+                            Foreground = accentBrush
+                        };
+
+                        // Deployment
+                        DeploymentNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uF32A",
                             Foreground = accentBrush
                         };
 
@@ -505,9 +521,16 @@ namespace WDACConfig
                             Glyph = "\uEB52"
                         };
 
+                        // Build New Certificate
                         BuildNewCertificateNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uEB95"
+                        };
+
+                        // Deployment
+                        DeploymentNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uF32A"
                         };
 
                         break;

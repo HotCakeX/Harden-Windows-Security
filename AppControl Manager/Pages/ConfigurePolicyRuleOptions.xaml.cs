@@ -1,6 +1,7 @@
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using static WDACConfig.CiRuleOptions;
@@ -16,7 +17,7 @@ namespace WDACConfig.Pages
         {
             this.InitializeComponent();
 
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             // Initialize the keys property with dictionary keys
             PolicyRuleOptionsKeys = [.. CiRuleOptions.PolicyRuleOptionsActual.Keys];

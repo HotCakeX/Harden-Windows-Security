@@ -20,7 +20,7 @@ namespace WDACConfig.Pages
 
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
-            checkFieldContents();
+            CheckFieldContents();
         }
 
 
@@ -38,7 +38,7 @@ namespace WDACConfig.Pages
         /// <summary>
         /// Method to ensure all the required fields are filled with content before the build button will be enabled
         /// </summary>
-        private void checkFieldContents()
+        private void CheckFieldContents()
         {
             if (string.IsNullOrWhiteSpace(CommonNameTextBox.Text) || string.IsNullOrWhiteSpace(PFXEncryptionPasswordBox.Password))
             {
@@ -143,12 +143,12 @@ namespace WDACConfig.Pages
 
         private void CommonNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            checkFieldContents();
+            CheckFieldContents();
         }
 
         private void PFXEncryptionPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            checkFieldContents();
+            CheckFieldContents();
         }
 
 

@@ -22,7 +22,7 @@
             Logger.Write($"PowerShell code that will be executed: {script}");
 
             // Execute the command
-            ProcessStarter.RunCommand("powershell.exe", $"-Command \"{script}\"");
+            ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script}\"");
         }
 
     }

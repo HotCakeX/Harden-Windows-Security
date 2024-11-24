@@ -171,7 +171,7 @@ namespace WDACConfig.Pages
                              // Add unhighlighted text before the search term
                              if (index > lastIndex)
                              {
-                                 LogContentTextBox.Inlines.Add(new Run { Text = content.Substring(lastIndex, index - lastIndex) });
+                                 LogContentTextBox.Inlines.Add(new Run { Text = content[lastIndex..index] });
                              }
 
                              // Add highlighted text for the search term
@@ -190,7 +190,7 @@ namespace WDACConfig.Pages
                          // Add the remaining text if any
                          if (lastIndex < content.Length)
                          {
-                             LogContentTextBox.Inlines.Add(new Run { Text = content.Substring(lastIndex) });
+                             LogContentTextBox.Inlines.Add(new Run { Text = content[lastIndex..] });
                          }
                      }
                  });

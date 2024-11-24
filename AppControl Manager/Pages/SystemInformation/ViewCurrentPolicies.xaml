@@ -10,7 +10,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
-     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
 
     <Grid>
@@ -38,7 +38,7 @@
                 <CheckBox x:Name="IncludeBasePolicies" Content="Base Policies" IsChecked="True" />
                 <CheckBox x:Name="IncludeSupplementalPolicies" Content="Supplemental Policies" IsChecked="True" />
 
-                <Button Name="RetrievePoliciesButton" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Name="RetrievePoliciesButton" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Retrieve the latest deployed policies on the system">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -51,13 +51,13 @@
                     </Button.Content>
                 </Button>
 
-                <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="The count of all of the displayed policies"/>
 
-                <Button x:Name="RemoveUnsignedPolicy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button x:Name="RemoveUnsignedOrSupplementalPolicyButton" Click="RemoveUnsignedOrSupplementalPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Unsigned Base policies as well as any Supplemental policy can be removed with this button">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE74D;" />
-                            <TextBlock Text="Remove Unsigned Policy" Margin="5,0,0,0" />
+                            <TextBlock Text="Remove Unsigned/Supplemental Policy" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>

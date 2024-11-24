@@ -46,7 +46,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 </Span>
                 </TextBlock>
 
-                <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
+                <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
 
                 <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
 

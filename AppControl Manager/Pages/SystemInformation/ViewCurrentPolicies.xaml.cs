@@ -1,6 +1,7 @@
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,10 +28,10 @@ namespace WDACConfig.Pages
             this.InitializeComponent();
 
             // Make sure navigating to/from this page maintains its state
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
-            // Initially disable the RemoveUnsignedPolicy button
-            RemoveUnsignedPolicy.IsEnabled = false;
+            // Initially disable the RemoveUnsignedOrSupplementalPolicyButton
+            RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
 
             AllPolicies = [];
             AllPoliciesOutput = [];
@@ -134,33 +135,37 @@ namespace WDACConfig.Pages
             // Get the selected policy from the DataGrid
             selectedPolicy = (CiPolicyInfo)DeployedPolicies.SelectedItem;
 
-            // Check if a policy was actually selected and if it's unsigned
-            if (selectedPolicy is not null && !selectedPolicy.IsSignedPolicy)
+            // Check if a non-system policy was actually selected and if it's unsigned or supplemental
+            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
             {
-                // Enable the RemoveUnsignedPolicy button for unsigned policies
-                RemoveUnsignedPolicy.IsEnabled = true;
+                // Enable the RemoveUnsignedOrSupplementalPolicyButton for unsigned policies
+                RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = true;
             }
             else
             {
                 // Disable the button if no unsigned policy is selected
-                RemoveUnsignedPolicy.IsEnabled = false;
+                RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
             }
         }
 
 
 
-        // Event handler for the RemoveUnsignedPolicy button click
-        private async void RemoveUnsignedPolicy_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Event handler for the RemoveUnsignedOrSupplementalPolicyButton click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void RemoveUnsignedOrSupplementalPolicy_Click(object sender, RoutedEventArgs e)
         {
 
             // Disable the remove button while the selected policy is being processed
             // It will stay disabled until user selected another removable policy
-            RemoveUnsignedPolicy.IsEnabled = false;
+            RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
 
             string AppControlPolicyName = "AppControlManagerSupplementalPolicy";
 
-            // Make sure we have a valid selected policy that is unsigned
-            if (selectedPolicy is not null && !selectedPolicy.IsSignedPolicy)
+            // Make sure we have a valid selected non-system policy that is unsigned or supplemental
+            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
             {
 
                 // Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
@@ -198,7 +203,7 @@ namespace WDACConfig.Pages
                 }
 
 
-                // Remove the selected unsigned policy using the CiToolHelper
+                // Remove the selected unsigned/supplemental policy using the CiToolHelper
                 await Task.Run(() => CiToolHelper.RemovePolicy(selectedPolicy.PolicyID!));
 
                 // Update the UI or log the action

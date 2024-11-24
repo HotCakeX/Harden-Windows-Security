@@ -76,7 +76,6 @@
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="SearchBox"
                         QueryIcon="Find"
-                        AutomationProperties.Name="Search"
                         TextChanged="SearchBox_TextChanged"
                         SuggestionChosen="SearchBox_SuggestionChosen"
                         PlaceholderText="Search menu items..."/>
@@ -90,6 +89,7 @@
 
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="CreatePolicyNavItem" Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics" Tag="CreatePolicy"/>
+                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" Content="Create Supplemental Policy" ToolTipService.ToolTip="Create Supplemental AppControl Policies" Tag="CreateSupplementalPolicy"/>
                 <NavigationViewItem x:Name="SystemInformationNavItem" Content="System Information" ToolTipService.ToolTip="View information about the system" Tag="SystemInformation"/>
                 <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options" Tag="ConfigurePolicyRuleOptions"/>
                 <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies" Tag="Simulation"/>

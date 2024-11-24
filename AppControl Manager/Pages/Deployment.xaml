@@ -75,6 +75,12 @@ Style="{StaticResource BodyTextBlockStyle}">
                 </Button.Content>
             </Button>
 
+            <TeachingTip x:Name="DeployButtonTeachingTip"
+            Target="{x:Bind DeployButton}"
+            Title="No File was selected"
+            Subtitle="You need to select some files to deploy first.">
+            </TeachingTip>
+
             <InfoBar
                 x:Name="StatusInfoBar"
                 IsOpen="False"

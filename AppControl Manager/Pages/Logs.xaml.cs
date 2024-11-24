@@ -76,7 +76,8 @@ namespace WDACConfig.Pages
 
             // Clear existing items and add sorted files to the ComboBox
             LogFileComboBox.Items.Clear();
-            foreach (var logFile in logFiles)
+
+            foreach (FileInfo logFile in logFiles)
             {
                 LogFileComboBox.Items.Add(logFile.FullName);
             }

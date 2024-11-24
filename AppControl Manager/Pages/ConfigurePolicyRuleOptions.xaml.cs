@@ -127,7 +127,7 @@ namespace WDACConfig.Pages
             }
 
             // Gather selected rules to remove
-            var selectedOptions = GetSelectedPolicyRuleOptions();
+            PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
 
             // Call the Set method with selected options to remove
             CiRuleOptions.Set(filePath, rulesToRemove: selectedOptions);

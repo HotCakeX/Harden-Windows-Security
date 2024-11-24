@@ -19,13 +19,13 @@ namespace WDACConfig
         {
 
             // Create UNICODE_STRING structures
-            var ProviderUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(provider);
-            var KeyUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(key);
-            var ValueNameUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(valueName);
+            UNICODE_STRING ProviderUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(provider);
+            UNICODE_STRING KeyUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(key);
+            UNICODE_STRING ValueNameUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(valueName);
 
             // Prepare output variables
             uint ValueSize = 1024;  // Changed to uint to match the P/Invoke declaration
-            var Value = Marshal.AllocHGlobal((int)ValueSize);
+            nint Value = Marshal.AllocHGlobal((int)ValueSize);
 
             int result = WldpQuerySecurityPolicyWrapper.WldpQuerySecurityPolicy(
                 ref ProviderUS,

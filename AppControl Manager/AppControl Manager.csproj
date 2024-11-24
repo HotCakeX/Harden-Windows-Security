@@ -176,6 +176,8 @@
     <None Remove="Pages\AllowNewAppsStart.xaml" />
     <None Remove="Pages\BuildNewCertificate.xaml" />
     <None Remove="Pages\ConfigurePolicyRuleOptions.xaml" />
+    <None Remove="Pages\CreateSupplementalPolicy.xaml" />
+    <None Remove="Pages\CreateSupplementalPolicyFilesAndFoldersScanResults.xaml" />
     <None Remove="Pages\Deployment.xaml" />
     <None Remove="Pages\EventLogsPolicyCreation.xaml" />
     <None Remove="Pages\GetCIHashes.xaml" />
@@ -297,6 +299,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\CreateSupplementalPolicyFilesAndFoldersScanResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\CreateSupplementalPolicy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\BuildNewCertificate.xaml">

@@ -33,7 +33,7 @@ namespace WDACConfig.Pages
         {
             if (XMLFiles.Count == 0 && CIPFiles.Count == 0)
             {
-                Logger.Write("No file selected for deployment");
+                DeployButtonTeachingTip.IsOpen = true;
                 return;
             }
 

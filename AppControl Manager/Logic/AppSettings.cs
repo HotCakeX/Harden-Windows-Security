@@ -16,7 +16,7 @@ namespace WDACConfig
         // Retrieve setting from local storage with a specific key
         public static T? GetSetting<T>(SettingKeys key)
         {
-            var localSettings = ApplicationData.Current.LocalSettings;
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
             // Check if the key exists and get the value
             if (localSettings.Values.TryGetValue(key.ToString(), out object? value))
@@ -41,7 +41,8 @@ namespace WDACConfig
             BackDropBackground,
             IconsStyle,
             MainWindowWidth,
-            MainWindowHeight
+            MainWindowHeight,
+            MainWindowIsMaximized
         }
     }
 }

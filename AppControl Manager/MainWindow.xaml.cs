@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Graphics;
-using static WDACConfig.AppSettings;
 
 namespace WDACConfig
 {
+
     public sealed partial class MainWindow : Window
     {
 
@@ -23,8 +23,36 @@ namespace WDACConfig
         // Dictionary to store the display names and associated NavigationViewItems
         private readonly Dictionary<string, NavigationViewItem> menuItems = [];
 
+
+        // Static pre-made dictionary for navigation page-to-item content mapping
+        // Used for the back button in order to set the correct header
+        private static readonly Dictionary<Type, string> NavigationPageToItemContentMap = new()
+        {
+            { typeof(Pages.CreatePolicy), "Create Policy" },
+            { typeof(Pages.GetCIHashes), "Get Code Integrity Hashes" },
+            { typeof(Pages.GitHubDocumentation), "GitHub Documentation" },
+            { typeof(Pages.MicrosoftDocumentation), "Microsoft Documentation" },
+            { typeof(Pages.GetSecurePolicySettings), "Get Secure Policy Settings" },
+            { typeof(Pages.Settings), "Settings" },
+            { typeof(Pages.SystemInformation), "System Information" },
+            { typeof(Pages.ConfigurePolicyRuleOptions), "Configure Policy Rule Options" },
+            { typeof(Pages.Logs), "Logs" },
+            { typeof(Pages.Simulation), "Simulation" },
+            { typeof(Pages.Update), "Update" },
+            { typeof(Pages.Deployment), "Deploy AppControl Policy" },
+            { typeof(Pages.EventLogsPolicyCreation), "Create policy from Event Logs" },
+            { typeof(Pages.MDEAHPolicyCreation), "Create policy from MDE Advanced Hunting" },
+            { typeof(Pages.AllowNewApps), "Allow New Apps" },
+            { typeof(Pages.BuildNewCertificate), "Build New Certificate" },
+            { typeof(Pages.UpdatePageCustomMSIXPath), "Custom MSIX Path" }, // sub-page
+            { typeof(Pages.CreateSupplementalPolicy), "Create Supplemental Policy" },
+            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" } // sub-page
+        };
+
+
         // A static instance of the MainWindow class which will hold the single, shared instance of it
         private static MainWindow? _instance;
+
 
         public MainWindow()
         {
@@ -110,16 +138,16 @@ namespace WDACConfig
 
 
             // Set the initial background setting based on the user's settings
-            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(SettingKeys.NavViewBackground));
+            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground));
 
             // Set the initial BackDrop setting based on the user's settings
-            OnBackgroundChanged(AppSettings.GetSetting<string>(SettingKeys.BackDropBackground));
+            OnBackgroundChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground));
 
             // Set the initial App Theme based on the user's settings
-            OnAppThemeChanged(AppSettings.GetSetting<string>(SettingKeys.AppTheme));
+            OnAppThemeChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme));
 
             // Set the initial Icons styles abased on the user's settings
-            OnIconsStylesChanged(AppSettings.GetSetting<string>(SettingKeys.IconsStyle));
+            OnIconsStylesChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle));
 
             // Restore window size on startup
             RestoreWindowSize();
@@ -146,8 +174,23 @@ namespace WDACConfig
             SizeInt32 size = appWindow.Size;
 
             // Save to window width and height to the app settings
-            AppSettings.SaveSetting(SettingKeys.MainWindowWidth, size.Width);
-            AppSettings.SaveSetting(SettingKeys.MainWindowHeight, size.Height);
+            AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowWidth, size.Width);
+            AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowHeight, size.Height);
+
+            Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
+
+            // Check if the window is maximized
+            _ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+
+            // Save the maximized status of the window before closing to the app settings
+            if (windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED)
+            {
+                AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowIsMaximized, true);
+            }
+            else
+            {
+                AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowIsMaximized, false);
+            }
         }
 
 
@@ -156,17 +199,29 @@ namespace WDACConfig
         /// </summary>
         private static void RestoreWindowSize()
         {
-            // Retrieve stored values
-            int width = AppSettings.GetSetting<int>(SettingKeys.MainWindowWidth);
-            int height = AppSettings.GetSetting<int>(SettingKeys.MainWindowHeight);
 
-            // If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
-            if (width > 200 && height > 200)
+            AppWindow appWindow = GetAppWindowForCurrentWindow();
+
+            // If the window was last maximized then restore it to maximized
+            if (AppSettings.GetSetting<bool>(AppSettings.SettingKeys.MainWindowIsMaximized))
             {
-                // Apply to the current AppWindow
-                AppWindow appWindow = GetAppWindowForCurrentWindow();
+                // Set the presenter to maximized
+                ((OverlappedPresenter)appWindow.Presenter).Maximize();
+            }
 
-                appWindow?.Resize(new SizeInt32(width, height));
+            // Else set its size to its previous size before closing
+            else
+            {
+                // Retrieve stored values
+                int width = AppSettings.GetSetting<int>(AppSettings.SettingKeys.MainWindowWidth);
+                int height = AppSettings.GetSetting<int>(AppSettings.SettingKeys.MainWindowHeight);
+
+                // If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
+                if (width > 200 && height > 200)
+                {
+                    // Apply to the current AppWindow
+                    appWindow?.Resize(new SizeInt32(width, height));
+                }
             }
         }
 
@@ -323,6 +378,13 @@ namespace WDACConfig
                             Source = new Deployment()
                         };
 
+                        // Create Supplemental Policy
+                        CreateSupplementalPolicyNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(-5, -28, -28, -28),
+                            Source = new SupplementalPolicy()
+                        };
+
                         break;
                     }
                 case "Windows Accent":
@@ -435,6 +497,13 @@ namespace WDACConfig
                             Foreground = accentBrush
                         };
 
+                        // Create Supplemental Policy
+                        CreateSupplementalPolicyNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8F9",
+                            Foreground = accentBrush
+                        };
+
                         break;
                     }
 
@@ -531,6 +600,12 @@ namespace WDACConfig
                         DeploymentNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uF32A"
+                        };
+
+                        // Create Supplemental Policy
+                        CreateSupplementalPolicyNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8F9"
                         };
 
                         break;
@@ -672,7 +747,7 @@ namespace WDACConfig
                         RootGrid.RequestedTheme = ElementTheme.Light;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -697,7 +772,7 @@ namespace WDACConfig
                         RootGrid.RequestedTheme = ElementTheme.Dark;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -726,7 +801,7 @@ namespace WDACConfig
                         if (currentColorMode is ElementTheme.Dark)
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -747,7 +822,7 @@ namespace WDACConfig
                         else
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -925,9 +1000,14 @@ namespace WDACConfig
                 case "BuildNewCertificate":
                     NavView_Navigate(typeof(Pages.BuildNewCertificate), transitionInfo);
                     break;
-                // Sub-Page
                 case "UpdatePageCustomMSIXPath":
-                    NavView_Navigate(typeof(Pages.UpdatePageCustomMSIXPath), transitionInfo);
+                    NavView_Navigate(typeof(Pages.UpdatePageCustomMSIXPath), transitionInfo); // Sub-Page
+                    break;
+                case "CreateSupplementalPolicy":
+                    NavView_Navigate(typeof(Pages.CreateSupplementalPolicy), transitionInfo);
+                    break;
+                case "CreateSupplementalPolicyFilesAndFoldersScanResults":
+                    NavView_Navigate(typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), transitionInfo); // Sub-Page
                     break;
                 default:
                     break;
@@ -991,7 +1071,20 @@ namespace WDACConfig
                 // Play sound for back navigation
                 ElementSoundPlayer.Play(ElementSoundKind.GoBack);
 
+
+
+                // Go back to the previous page
                 ContentFrame.GoBack();
+
+                // Get the current page after navigating back
+                Type preNavPageType = ContentFrame.CurrentSourcePageType;
+
+                // Extract the navigation item content from the dictionary
+                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out var item);
+
+                // Set the correct header after back navigation has been completed
+                MainNavigation.Header = item;
+
             }
         }
 

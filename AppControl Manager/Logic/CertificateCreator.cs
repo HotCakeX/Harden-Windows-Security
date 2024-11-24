@@ -86,7 +86,7 @@ namespace WDACConfig
             string? pfxExportFilePath = null,
             string? pfxPassword = null)
         {
-            var distinguishedName = new X500DistinguishedName($"CN={subjectName}");
+            X500DistinguishedName distinguishedName = new($"CN={subjectName}");
 
             using RSA rsa = RSA.Create(keySize);
 
@@ -263,7 +263,7 @@ namespace WDACConfig
                 store.Open(OpenFlags.MaxAllowed | OpenFlags.IncludeArchived | OpenFlags.OpenExistingOnly);
 
                 // Loop through the certificates in the store and find the one with the matching CN
-                foreach (var cert in store.Certificates)
+                foreach (X509Certificate2 cert in store.Certificates)
                 {
                     if (cert.SubjectName.Name.Contains($"CN={subjectName}", StringComparison.OrdinalIgnoreCase))
                     {

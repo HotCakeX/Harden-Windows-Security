@@ -1,6 +1,7 @@
 using AnimatedVisuals;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Graphics;
 using static WDACConfig.AppSettings;
 
 namespace WDACConfig
@@ -119,10 +121,62 @@ namespace WDACConfig
             // Set the initial Icons styles abased on the user's settings
             OnIconsStylesChanged(AppSettings.GetSetting<string>(SettingKeys.IconsStyle));
 
+            // Restore window size on startup
+            RestoreWindowSize();
+
+            // Subscribe to Closed event of the main Window
+            this.Closed += MainWindow_Closed;
         }
 
         // Public property to access the singleton instance from other classes
         public static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
+
+
+        /// <summary>
+        /// Main Window close event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            // Get the AppWindow from the current Window
+            AppWindow appWindow = GetAppWindowForCurrentWindow();
+
+            // Get the current size of the window
+            SizeInt32 size = appWindow.Size;
+
+            // Save to window width and height to the app settings
+            AppSettings.SaveSetting(SettingKeys.MainWindowWidth, size.Width);
+            AppSettings.SaveSetting(SettingKeys.MainWindowHeight, size.Height);
+        }
+
+
+        /// <summary>
+        /// Event handler to run at Window launch to restore its size to the one before closing
+        /// </summary>
+        private static void RestoreWindowSize()
+        {
+            // Retrieve stored values
+            int width = AppSettings.GetSetting<int>(SettingKeys.MainWindowWidth);
+            int height = AppSettings.GetSetting<int>(SettingKeys.MainWindowHeight);
+
+            // If the previous window size was smaller than 200 pixels with/height then do not use it, let it use the natural window size
+            if (width > 200 && height > 200)
+            {
+                // Apply to the current AppWindow
+                AppWindow appWindow = GetAppWindowForCurrentWindow();
+
+                appWindow?.Resize(new SizeInt32(width, height));
+            }
+        }
+
+
+        private static AppWindow GetAppWindowForCurrentWindow()
+        {
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(GlobalVars.hWnd);
+            return AppWindow.GetFromWindowId(windowId);
+        }
+
 
 
         /// <summary>

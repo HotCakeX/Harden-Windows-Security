@@ -1,33 +1,18 @@
 Function New-SupplementalWDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = 'Normal',
+        DefaultParameterSetName = 'Folder Path With WildCards',
         PositionalBinding = $false,
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
     Param(
-        [Alias('N')][Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$Normal,
         [Alias('W')][Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$PathWildCards,
         [Alias('P')][parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
-        [Alias('C')][Parameter(Mandatory = $false, ParameterSetName = 'Certificate')][switch]$Certificates,
-
-        [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
-        [System.String]$PackageName,
-
-        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
-        [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a folder path.')]
-        [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
-        [System.IO.DirectoryInfo]$ScanLocation,
-
+        [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages')][System.String]$PackageName,
         [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPickerWithWildcard])]
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
-
-        [ArgumentCompleter([WDACConfig.ArgCompleter.MultipleCerFilePicker])]
-        [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
-        [parameter(Mandatory = $true, ParameterSetName = 'Certificate', ValueFromPipelineByPropertyName = $true)]
-        [System.IO.FileInfo[]]$CertificatePaths,
 
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
@@ -40,29 +25,7 @@ Function New-SupplementalWDACConfig {
         [System.IO.FileInfo]$PolicyPath,
 
         [parameter(Mandatory = $false)][switch]$Deploy,
-
-        [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$SpecificFileNameLevel,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoUserPEs,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoScript,
-
-        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
-        [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$Level = 'WHQLFilePublisher',
-
-        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
-        [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
-        [switch]$Force,
-
-        [ValidateSet('UserMode', 'KernelMode')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Certificate')]
-        [System.String]$SigningScenario = 'UserMode'
+        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$Force
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -112,62 +75,6 @@ Function New-SupplementalWDACConfig {
     process {
 
         try {
-
-            if ($PSBoundParameters['Normal']) {
-
-                # The total number of the main steps for the progress bar to render
-                $TotalSteps = $Deploy ? 3us : 2us
-                $CurrentStep = 0us
-
-                $CurrentStep++
-                Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Processing Program Folder From User input')
-                # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                    FilePath               = $FinalSupplementalPath
-                    ScanPath               = $ScanLocation
-                    Level                  = $Level
-                    Fallback               = $Fallbacks
-                    MultiplePolicyFormat   = $true
-                    UserWriteablePaths     = $true
-                    AllowFileNameFallbacks = $true
-                }
-                # Assess user input parameters and add the required parameters to the hash table
-                if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
-                if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
-
-                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
-                $PolicyMakerHashTable
-                Write-Host -Object ''
-
-                # Create the supplemental policy via parameter splatting
-                New-CIPolicy @PolicyMakerHashTable
-
-                $CurrentStep++
-                Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID')
-                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
-
-                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
-
-                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
-
-                [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
-                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
-
-                if ($Deploy) {
-                    $CurrentStep++
-                    Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
-                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
-                }
-                Write-Progress -Id 19 -Activity 'Complete.' -Completed
-            }
-
             if ($PSBoundParameters['PathWildCards']) {
 
                 # The total number of the main steps for the progress bar to render
@@ -203,7 +110,6 @@ Function New-SupplementalWDACConfig {
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
             }
-
             if ($PSBoundParameters['InstalledAppXPackages']) {
                 try {
                     # The total number of the main steps for the progress bar to render
@@ -287,71 +193,6 @@ Function New-SupplementalWDACConfig {
                     Write-Progress -Id 21 -Activity 'Complete.' -Completed
                 }
             }
-
-            if ($PSBoundParameters['Certificates']) {
-
-                # The total number of the main steps for the progress bar to render
-                $TotalSteps = $Deploy ? 5us : 4us
-                $CurrentStep = 0us
-
-                $CurrentStep++
-                Write-Progress -Id 33 -Activity 'Preparing the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Copying the template policy to the staging area')
-                Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $FinalSupplementalPath -Force
-
-                [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                [WDACConfig.ClearCiPolicySemantic]::Clear($FinalSupplementalPath)
-
-                $CurrentStep++
-                Write-Progress -Id 33 -Activity 'Extracting details from the selected certificate files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                # a variable to hold the output signer data
-                $OutputSignerData = New-Object -TypeName System.Collections.Generic.List[WDACConfig.CertificateSignerCreator]
-
-                foreach ($CertPath in $CertificatePaths) {
-
-                    # Create a certificate object from the .cer file
-                    [System.Security.Cryptography.X509Certificates.X509Certificate2]$SignedFileSigDetails = [System.Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromSignedFile($CertPath)
-
-                    # Create rule for the certificate based on the first element in its chain
-                    $OutputSignerData.Add([WDACConfig.CertificateSignerCreator]::New(
-                            [WDACConfig.CertificateHelper]::GetTBSCertificate($SignedFileSigDetails),
-                            ([WDACConfig.CryptoAPI]::GetNameString($SignedFileSigDetails.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)),
-                            ($SigningScenario -eq 'UserMode' ? '1' :  '0')
-                        ))
-                }
-
-                $CurrentStep++
-                Write-Progress -Id 33 -Activity 'Generating signer rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                if ($null -ne $OutputSignerData -and $OutputSignerData.count -gt 0) {
-                    [WDACConfig.NewCertificateSignerRules]::Create($FinalSupplementalPath, $OutputSignerData)
-                }
-
-                $CurrentStep++
-                Write-Progress -Id 33 -Activity 'Finalizing the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID')
-                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
-
-                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
-
-                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
-
-                [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
-                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
-
-                if ($Deploy) {
-                    $CurrentStep++
-                    Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
-                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
-                }
-
-                Write-Progress -Id 33 -Activity 'Complete.' -Completed
-            }
         }
         Catch {
             $NoCopy = $true
@@ -399,34 +240,13 @@ Function New-SupplementalWDACConfig {
 .PARAMETER SuppPolicyName
     Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
     It is used by the entire Cmdlet.
-.PARAMETER Certificates
-    Make a Supplemental policy based on a certificate.
-    If you select a root CA certificate, it will generate Signer rules based on RootCertificate level which contains TBS Hash only.
-    If you select a non-root CA certificate such as Leaf Certificate or Intermediate certificate, it will generate Signer rules based on LeafCertificate level which contains TBS Hash as well as the subject name of the selected certificate.
 .PARAMETER PolicyPath
     Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports file picker GUI by showing only .xml files.
     Press tab to open the GUI.
     It is used by the entire Cmdlet.
-.PARAMETER CertificatePaths
-    Browse for the certificate file(s) that you want to use to create the Supplemental policy. Supports file picker GUI by showing only .cer files.
-.PARAMETER SigningScenario
-    You can choose one of the following options: "UserMode", "KernelMode"
-    It is available only when creating Supplemental policy based on certificates.
 .PARAMETER Deploy
     Indicates that the module will automatically deploy the Supplemental policy after creation.
     It is used by the entire Cmdlet.
-.PARAMETER SpecificFileNameLevel
-    You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath"
-.PARAMETER NoUserPEs
-    By default the module includes user PEs in the scan, but when you use this switch parameter, they won't be included.
-.PARAMETER NoScript
-    Refer to this page for more info: https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript
-.PARAMETER Level
-    The level that determines how the selected folder will be scanned.
-    The default value for it is FilePublisher.
-.PARAMETER Fallbacks
-    The fallback level(s) that determine how the selected folder will be scanned.
-    The default value for it is Hash.
 .PARAMETER Force
     It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
 .INPUTS
@@ -438,13 +258,5 @@ Function New-SupplementalWDACConfig {
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
-.EXAMPLE
-    New-SupplementalWDACConfig -Normal -SuppPolicyName 'MyPolicy' -PolicyPath 'C:\MyPolicy.xml' -ScanLocation 'C:\Program Files\MyApp' -Deploy
-
-    This example will create a Supplemental policy named MyPolicy based on the Base policy located at C:\MyPolicy.xml and will scan the 'C:\Program Files\MyApp' folder for files that will be allowed to run by the Supplemental policy.
-.EXAMPLE
-    New-SupplementalWDACConfig -Certificates -CertificatePaths "certificate 1 .cer", "certificate 2 .cer" -Verbose -SuppPolicyName 'certs' -PolicyPath "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml"
-
-    This example will create a Supplemental policy named certs based on the certificates located at "certificate 1 .cer" and "certificate 2 .cer" and the Base policy located at "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml".
 #>
 }

@@ -1,11 +1,9 @@
 Function Edit-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = 'AllowNewApps',
+        DefaultParameterSetName = 'MergeSupplementalPolicies',
         PositionalBinding = $false
     )]
     Param(
-        [Alias('A')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][switch]$AllowNewApps,
         [Alias('M')]
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')][switch]$MergeSupplementalPolicies,
         [Alias('U')]
@@ -13,7 +11,6 @@ Function Edit-WDACConfig {
 
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'AllowNewApps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
@@ -21,8 +18,6 @@ Function Edit-WDACConfig {
         [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][switch]$BoostedSecurity,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
@@ -35,34 +30,11 @@ Function Edit-WDACConfig {
                 # Send $true to set it as valid if no errors were thrown before
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')]
         [switch]$KeepOldSupplementalPolicies,
-
-        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
-        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.String]$Level = 'WHQLFilePublisher',
-
-        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
-        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
-
-        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [switch]$NoScript,
-
-        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [switch]$NoUserPEs,
-
-        [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
-        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.String]$SpecificFileNameLevel,
-
-        [ValidateRange(1024KB, 18014398509481983KB)]
-        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.UInt64]$LogSize,
 
         [ArgumentCompleter({
                 foreach ($Item in [WDACConfig.BasePolicyNamez]::New().GetValidValues()) {
@@ -102,7 +74,7 @@ Function Edit-WDACConfig {
 
         #Region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
-        if ($PSCmdlet.ParameterSetName -in 'AllowNewApps', 'MergeSupplementalPolicies') {
+        if ($PSCmdlet.ParameterSetName -in 'MergeSupplementalPolicies') {
             # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
                 if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath))) {
@@ -130,15 +102,8 @@ Function Edit-WDACConfig {
             }
         }
     }
-
     process {
-
         try {
-
-            if ($AllowNewApps) {
-                Write-Host -ForegroundColor Green -Object "This parameter's job has been completely added to the new AppControl Manager app. It offers a complete graphical user interface (GUI) for easy usage. Please refer to this GitHub page to see how to install and use it:`nhttps://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
-            }
-
             if ($MergeSupplementalPolicies) {
 
                 # The total number of the main steps for the progress bar to render
@@ -379,24 +344,10 @@ Function Edit-WDACConfig {
     This cmdlet offers various options for managing the deployed Application Control (WDAC) policies.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig
-.PARAMETER AllowNewApps
-    While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
-    This parameter also scans the Code Integrity and AppLocker logs during the audit mode phase to detect the audited files.
-    It has the ability to detect and create rules for kernel-protected files, such as the main executables of the Xbox games.
 .PARAMETER MergeSupplementalPolicies
     Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one.
 .PARAMETER UpdateBasePolicy
     It can rebootlessly change the type of the deployed base policy.
-.PARAMETER Level
-    The level that determines how the selected folder will be scanned.
-    The default value for it is WHQLFilePublisher.
-.PARAMETER Fallbacks
-    The fallback level(s) that determine how the selected folder will be scanned.
-    The default value for it is (FilePublisher, Hash).
-.PARAMETER LogSize
-    The log size to set for Code Integrity/Operational event logs
-    The accepted values are between 1024 KB and 18014398509481983 KB
-    The max range is the maximum allowed log size by Windows Event viewer
 .PARAMETER SuppPolicyName
     The name of the Supplemental policy that will be created
 .PARAMETER PolicyPath
@@ -405,14 +356,6 @@ Function Edit-WDACConfig {
     The path(s) to the Supplemental policy XML file(s) that will be used in the merge operation.
 .PARAMETER KeepOldSupplementalPolicies
     Keep the old Supplemental policies that are going to be merged into a single policy
-.PARAMETER NoScript
-    If specified, scripts will not be scanned
-.PARAMETER BoostedSecurity
-    If specified, reinforced rules will be created that offer pseudo-sandbox capabilities
-.PARAMETER NoUserPEs
-    If specified, user mode binaries will not be scanned
-.PARAMETER SpecificFileNameLevel
-    The more specific level that determines how the selected file will be scanned.
 .PARAMETER CurrentBasePolicyName
     The name of the currently deployed base policy that will be used
 .PARAMETER NewBasePolicyType

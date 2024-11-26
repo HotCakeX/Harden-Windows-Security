@@ -132,7 +132,7 @@ Function Edit-SignedWDACConfig {
                 [System.IO.FileInfo]$CertPath = [WDACConfig.UserConfiguration]::Get().CertificatePath
             }
             else {
-                throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
+                throw 'CertPath parameter cannot be empty and no valid user configuration was found for it.'
             }
         }
 

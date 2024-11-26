@@ -2,7 +2,7 @@
     # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
     RootModule           = 'WDACConfig.psm1'
-    ModuleVersion        = '0.4.9'
+    ModuleVersion        = '0.5.0'
     CompatiblePSEditions = @('Core')
     GUID                 = '79920947-efb5-48c1-a567-5b02ebe74793'
     Author               = 'HotCakeX'
@@ -18,6 +18,7 @@
 
 🟢This module is being transitioned to AppControl Manager application which is a modern GUI-based MSIX-packaged open-source Windows application. Check it out here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
 
+🩷 AppControl Manager is very high performance and offers a lot of new features and improvements.
 
 Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
 
@@ -51,11 +52,7 @@ Please see the GitHub page for Full details and everything about the module: htt
 
 ✔️ Assert-WDACConfigIntegrity: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity
 
-✔️ Build-WDACCertificate: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate
-
 ✔️ Test-CiPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
-
-✔️ Get-CiFileHashes: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 
 ✔️ Get-CIPolicySetting: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
 
@@ -77,7 +74,6 @@ Please see the GitHub page for Full details and everything about the module: htt
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Build-WDACCertificate.psm1',
         'Core\Test-CiPolicy.psm1',
-        'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
         'Core\Get-CIPolicySetting.psm1')
 
@@ -97,7 +93,6 @@ Please see the GitHub page for Full details and everything about the module: htt
         'Assert-WDACConfigIntegrity',
         'Build-WDACCertificate',
         'Test-CiPolicy',
-        'ConvertTo-WDACPolicy',
         'Get-CiFileHashes',
         'Get-CIPolicySetting',
         'Update-WDACConfigPSModule')

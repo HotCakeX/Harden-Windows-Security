@@ -1,12 +1,3 @@
 Function Get-CommonWDACConfig {
-    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    [WDACConfig.UserConfiguration]::Get()
-    <#
-.SYNOPSIS
-    Query and Read common values for parameters used by WDACConfig module
-.LINK
-    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig
-.DESCRIPTION
-    Reads and gets the values from the User Config JSON file.
-#>
+    Write-Host -ForegroundColor Green -Object "This function's job has been completely added to the new AppControl Manager app. It offers a complete graphical user interface (GUI) for easy usage. Please refer to this GitHub page to see how to install and use it:`nhttps://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
 }

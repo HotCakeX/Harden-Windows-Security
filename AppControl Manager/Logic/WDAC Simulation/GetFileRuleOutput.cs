@@ -56,7 +56,7 @@ namespace WDACConfig
             }
 
             // Only keep the Authenticode Hash SHA256
-            outputHashInfoProcessing = new HashSet<PolicyHashObj>(outputHashInfoProcessing.Where(obj => string.Equals(obj.HashType, "Hash Sha256", StringComparison.OrdinalIgnoreCase)));
+            outputHashInfoProcessing = [.. outputHashInfoProcessing.Where(obj => string.Equals(obj.HashType, "Hash Sha256", StringComparison.OrdinalIgnoreCase))];
 
             Logger.Write($"Returning {outputHashInfoProcessing.Count} file rules that are based on file hashes");
 

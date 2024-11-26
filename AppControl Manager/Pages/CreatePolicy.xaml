@@ -69,7 +69,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                            Header="Create Allow Microsoft Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="AllowMicrosoftCreate" Content="Create"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="AllowMicrosoftCreate_Click" />
@@ -139,7 +139,7 @@ LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.
                            Header="Create Signed And Reputable Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="SignedAndReputableCreate" Content="Create"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="SignedAndReputableCreate_Click" />
@@ -206,11 +206,11 @@ Style="{StaticResource AccentButtonStyle}" Click="SignedAndReputableCreateAndDep
                 <!-- Microsoft Recommended Driver Block Rules -->
 
                 <controls:SettingsExpander x:Name="RecommendedDriverBlockRulesSettings"
-                           Description="This policy will create the Microsoft Recommended Driver Block Rules"
+                           Description="This policy will create the Microsoft Recommended Driver Block Rules."
                            Header="Create Microsoft Recommended Driver Block Rules"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="RecommendedDriverBlockRulesCreate" Content="Create"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedDriverBlockRulesCreate_Click" />
@@ -240,11 +240,11 @@ Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesCre
                 <!-- Microsoft Recommended User Mode Block Rules -->
 
                 <controls:SettingsCard x:Name="RecommendedUserModeBlockRulesSettings"
-                           Description="This policy will create the Microsoft Recommended User Mode Block Rules"
+                           Description="This policy will create the Microsoft Recommended User Mode Block Rules."
                            Header="Create Microsoft Recommended User Mode Block Rules"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="RecommendedUserModeBlockRulesCreate" Content="Create"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedUserModeBlockRulesCreate_Click" />

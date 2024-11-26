@@ -57,16 +57,16 @@ namespace WDACConfig
 
             try
             {
-                var spanData = new Span<byte>(versionData);
+                Span<byte> spanData = new(versionData);
 
                 // Extract version from the version data
-                if (!TryGetVersion(spanData, out var version))
+                if (!TryGetVersion(spanData, out Version? version))
                     throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
 
                 ExFileInfo.Version = version; // Set the Version property
 
                 // Extract locale and encoding information
-                if (!TryGetLocaleAndEncoding(spanData, out var locale, out var encoding))
+                if (!TryGetLocaleAndEncoding(spanData, out string? locale, out string? encoding))
                     throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
 
                 // Retrieve various file information based on locale and encoding
@@ -92,7 +92,7 @@ namespace WDACConfig
         {
             version = null;
             // Query the root block for version info
-            if (!VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\", out var buffer, out _))
+            if (!VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\", out nint buffer, out _))
                 return false;
 
             // Marshal the version info structure
@@ -114,7 +114,7 @@ namespace WDACConfig
             locale = null;
             encoding = null;
             // Query the translation block for locale and encoding
-            if (!VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\VarFileInfo\\Translation", out var buffer, out _))
+            if (!VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\VarFileInfo\\Translation", out nint buffer, out _))
                 return false;
 
             // Copy the translation values
@@ -136,7 +136,7 @@ namespace WDACConfig
             {
                 string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
 
-                if (VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out var buffer, out _))
+                if (VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out nint buffer, out _))
                     return Marshal.PtrToStringAuto(buffer);
 
                 // If error is not resource type not found, throw the error

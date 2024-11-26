@@ -118,7 +118,7 @@ namespace WDACConfig
             // Parse the JSON into a JsonElement for easy traversal
             using JsonDocument document = JsonDocument.Parse(Encoding.UTF8.GetBytes(jsonOutput));
 
-            var rootElement = document.RootElement;
+            JsonElement rootElement = document.RootElement;
 
             // If "Policies" property exists and is an array, start processing each policy
             if (rootElement.TryGetProperty("Policies", out JsonElement policiesElement) && policiesElement.ValueKind == JsonValueKind.Array)
@@ -360,7 +360,7 @@ namespace WDACConfig
                     List<string> options = [];
 
                     // Iterate through each item in the array.
-                    foreach (var item in value.EnumerateArray())
+                    foreach (JsonElement item in value.EnumerateArray())
                     {
                         // Get the string representation of the item.
                         string? str = item.GetString();

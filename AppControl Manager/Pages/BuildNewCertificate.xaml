@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WDACConfig.Pages.Deployment"
+    x:Class="WDACConfig.Pages.BuildNewCertificate"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WDACConfig.Pages"
@@ -54,32 +54,26 @@ TextWrapping="WrapWholeWords"
 Style="{StaticResource BodyTextBlockStyle}">
 
 <Span>
-    Deploy <Bold>unsigned</Bold> <Run Foreground="{ThemeResource SystemAccentColor}">App Control</Run> Policies.
+    Build <Bold>Code Signing</Bold> Certificates that are suitable for signing <Run Foreground="{ThemeResource SystemAccentColor}">App Control</Run> Policies.
 </Span>
                 </TextBlock>
 
             </controls:WrapPanel>
 
-            <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="DeployButton"
-                    HorizontalContentAlignment="Center" Margin="15" Click="DeployButton_Click">
+            <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="BuildCertificateButton"
+                    HorizontalContentAlignment="Center" Margin="15" Click="BuildCertificateButton_Click">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <ProgressRing Visibility="Collapsed" x:Name="ProgressRing" Margin="5,5,15,5" Value="0" IsIndeterminate="True" Minimum="0" Maximum="100"/>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <FontIcon Glyph="&#xE8B6;" Margin="5" />
-                            <TextBlock Text="Deploy" Margin="5"/>
+                            <FontIcon Glyph="&#xEB77;" Margin="5" />
+                            <TextBlock Text="Build Certificate" Margin="5"/>
                         </StackPanel>
 
                     </StackPanel>
                 </Button.Content>
             </Button>
-
-            <TeachingTip x:Name="DeployButtonTeachingTip"
-            Target="{x:Bind DeployButton}"
-            Title="No File was selected"
-            Subtitle="You need to select some files to deploy first.">
-            </TeachingTip>
 
             <InfoBar
                 x:Name="StatusInfoBar"
@@ -87,6 +81,9 @@ Style="{StaticResource BodyTextBlockStyle}">
                 Visibility="Collapsed"
                 Severity="Informational"
                 Grid.Row="2">
+                <InfoBar.ActionButton>
+                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" Click="CopyInfoBarToClipboardButton_Click" Content="Copy ThumbPrint To Clipboard" />
+                </InfoBar.ActionButton>
 
             </InfoBar>
 
@@ -99,22 +96,52 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Name="BrowseForXMLPolicyFilesSettingsCard"
-                Description="Browse for XML policy file(s) to deploy on the system"
-                Header="Select XML policy file(s)"
-                HeaderIcon="{ui:FontIcon Glyph=&#xE8E5;}" IsClickEnabled="True" IsActionIconVisible="False" Click="BrowseForXMLPolicyFilesSettingsCard_Click">
+                <controls:SettingsCard x:Name="KeySizeSettingsCard" Click="KeySizeSettingsCard_Click"
+                Description="The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate."
+                Header="Key Size" HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
 
-                    <Button Content="Browse" x:Name="BrowseForXMLPolicyFilesButton" Click="BrowseForXMLPolicyFilesButton_Click" />
+                    <ComboBox SelectedIndex="0" x:Name="KeySizeComboBox">
+                        <ComboBoxItem Content="4096"/>
+                        <ComboBoxItem Content="8192"/>
+                        <ComboBoxItem Content="16384"/>
+                    </ComboBox>
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Name="BrowseForCIPBinaryFilesSettingsCard"
-Description="Browse for CIP Binary file(s) to deploy on the system"
-Header="Select CIP Binary file(s)"
-HeaderIcon="{ui:FontIcon Glyph=&#xE8E5;}" IsClickEnabled="True" IsActionIconVisible="False" Click="BrowseForCIPBinaryFilesSettingsCard_Click" >
+                <controls:SettingsCard x:Name="CommonNameSettingsCard"
+                Description="The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for."
+                Header="Common Name"
+                HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
 
-                    <Button Content="Browse" x:Name="BrowseForCIPBinaryFilesButton" Click="BrowseForCIPBinaryFilesButton_Click" />
+                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name" TextChanged="CommonNameTextBox_TextChanged" MinWidth="200"/>
 
+                </controls:SettingsCard>
+
+
+
+                <controls:SettingsCard x:Name="ValiditySettingsCard"
+                Description="The time period (in years) during which a certificate is considered valid and trusted."
+                Header="Validity"
+                HeaderIcon="{ui:FontIcon Glyph=&#xE787;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                    <NumberBox x:Name="ValidityNumberBox" Value="100" SpinButtonPlacementMode="Inline"
+SmallChange="10" LargeChange="100" Minimum="1" MaxHeight="3000"/>
+
+
+                </controls:SettingsCard>
+
+
+                <controls:SettingsCard x:Name="PFXPasswordSettingsCard"
+                Description="A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file."
+                Header="PFX Encryption Password"
+                HeaderIcon="{ui:FontIcon Glyph=&#xF78D;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="PFXEncryptionPasswordBox_PasswordChanged"
+                        MinWidth="250" PasswordChar="#" PasswordRevealMode="Peek" PlaceholderText="Type a password..." />
+
+                    </StackPanel>
                 </controls:SettingsCard>
 
             </StackPanel>

@@ -251,7 +251,7 @@ namespace WDACConfig
         private static UserConfiguration ParseJson(string json)
         {
             using JsonDocument doc = JsonDocument.Parse(json);
-            var root = doc.RootElement;
+            JsonElement root = doc.RootElement;
 
             return new UserConfiguration(
                 TryGetStringProperty(root, nameof(SignedPolicyPath)),

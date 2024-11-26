@@ -61,7 +61,7 @@ namespace WDACConfig
 
             // Set the default folder to "My Documents".
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Path to the folder.
+                GlobalVars.UserConfigDir, // Path to the folder.
                 null, // No binding context needed.
                 typeof(IShellItem).GUID, // GUID for the IShellItem interface.
                 out var directoryShellItem // Output reference to the IShellItem instance.
@@ -160,7 +160,7 @@ namespace WDACConfig
             // Optionally set a default folder and starting directory.
             // Retrieves a shell item representing the "My Documents" directory.
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Folder path to "My Documents".
+                GlobalVars.UserConfigDir, // Path to the folder.
                 null,  // No binding context.
                 typeof(IShellItem).GUID, // GUID for IShellItem interface.
                 out var directoryShellItem // Output shell item.
@@ -254,7 +254,7 @@ namespace WDACConfig
             // Optionally set a default folder and starting directory.
             // Retrieves a shell item representing the "My Documents" directory.
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Folder path to "My Documents".
+                GlobalVars.UserConfigDir, // Path to the folder.
                 null,  // No binding context.
                 typeof(IShellItem).GUID, // GUID for IShellItem interface.
                 out var directoryShellItem // Output shell item.
@@ -330,7 +330,7 @@ namespace WDACConfig
             // Optionally set a default folder and starting directory.
             // Retrieves a shell item representing the "My Documents" directory.
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Folder path to "My Documents".
+                GlobalVars.UserConfigDir, // Path to the folder.
                 null,  // No binding context.
                 typeof(IShellItem).GUID, // GUID for IShellItem interface.
                 out var directoryShellItem // Output shell item.

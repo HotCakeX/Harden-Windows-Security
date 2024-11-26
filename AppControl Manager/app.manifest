@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- INFO: https://learn.microsoft.com/en-us/windows/win32/sbscs/application-manifests -->
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <assemblyIdentity version="1.4.0.0" name="AppControlManager"/>
+  <assemblyIdentity version="1.5.0.0" name="AppControlManager"/>
 
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
@@ -14,14 +15,15 @@
   <application xmlns="urn:schemas-microsoft-com:asm.v3">
     <windowsSettings>
       <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
     </windowsSettings>
   </application>
 
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
-  <security>
-    <requestedPrivileges>
-      <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
-    </requestedPrivileges>
-  </security>
-</trustInfo>
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
 </assembly>

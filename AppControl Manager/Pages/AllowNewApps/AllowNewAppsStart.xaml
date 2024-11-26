@@ -46,7 +46,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 </Span>
                 </TextBlock>
 
-                <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
+                <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
 
                 <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
 
@@ -126,9 +126,9 @@ LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_Va
 
                                         <TextBlock Text="View the directories you selected."  TextWrapping="WrapWholeWords" Width="400" />
 
-                                        <TextBox x:Name="SelectedDirectoriesTextBox" AutomationProperties.Name="multi-line TextBox"
+                                        <TextBox x:Name="SelectedDirectoriesTextBox"
 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"
-SelectionHighlightColor="Green" MinWidth="400" IsReadOnly="True" />
+SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
 
                                     </controls:WrapPanel>
 

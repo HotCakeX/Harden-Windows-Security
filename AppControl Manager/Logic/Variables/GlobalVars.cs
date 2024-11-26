@@ -39,5 +39,14 @@ namespace WDACConfig
 
         // Handle of the main Window - acquired in the MainWindow.xaml.cs
         internal static nint hWnd;
+
+        static GlobalVars()
+        {
+            // Ensure the directory exists
+            if (!Directory.Exists(UserConfigDir))
+            {
+                _ = Directory.CreateDirectory(UserConfigDir);
+            }
+        }
     }
 }

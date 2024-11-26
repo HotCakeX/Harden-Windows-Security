@@ -57,12 +57,11 @@
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
-                    SelectionChanged="NavigationView_SelectionChanged"
+                    ItemInvoked="MainNavigation_ItemInvoked"
                     PaneTitle="Menu"
                     IsBackButtonVisible="Auto"
                     IsBackEnabled="True"
                     BackRequested="NavView_BackRequested"
-                    ItemInvoked="NavigationView_ItemInvoked"
                     AlwaysShowHeader="True">
 
             <!--
@@ -77,7 +76,6 @@
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="SearchBox"
                         QueryIcon="Find"
-                        AutomationProperties.Name="Search"
                         TextChanged="SearchBox_TextChanged"
                         SuggestionChosen="SearchBox_SuggestionChosen"
                         PlaceholderText="Search menu items..."/>
@@ -91,10 +89,12 @@
 
             <NavigationView.MenuItems>
                 <NavigationViewItem x:Name="CreatePolicyNavItem" Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics" Tag="CreatePolicy"/>
+                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" Content="Create Supplemental Policy" ToolTipService.ToolTip="Create Supplemental AppControl Policies" Tag="CreateSupplementalPolicy"/>
                 <NavigationViewItem x:Name="SystemInformationNavItem" Content="System Information" ToolTipService.ToolTip="View information about the system" Tag="SystemInformation"/>
                 <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options" Tag="ConfigurePolicyRuleOptions"/>
                 <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies" Tag="Simulation"/>
                 <NavigationViewItem x:Name="AllowNewAppsNavItem" Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running." Tag="AllowNewApps"/>
+                <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies" Tag="BuildNewCertificate"/>
 
                 <!-- Make it expanded by default to show the import feature to the user at first sight -->
                 <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create AppControl policy either from the local event logs or EVTX files" Tag="EventLogsPolicyCreation">
@@ -106,6 +106,8 @@
                 </NavigationViewItem>
 
                 <NavigationViewItemSeparator/>
+
+                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy AppControl Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system" Tag="Deployment"/>
 
                 <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes"/>
 

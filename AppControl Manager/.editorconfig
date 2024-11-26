@@ -256,7 +256,7 @@ dotnet_diagnostic.IDE0058.severity = error
 dotnet_diagnostic.CA2201.severity = error
 
 # IDE0240: Remove redundant nullable directive
-dotnet_diagnostic.IDE0240.severity = silent
+dotnet_diagnostic.IDE0240.severity = error
 
 # IDE0040: Add accessibility modifiers
 dotnet_diagnostic.IDE0040.severity = error
@@ -380,3 +380,12 @@ dotnet_diagnostic.SYSLIB0057.severity = error
 
 # CS0162: Unreachable code detected
 dotnet_diagnostic.CS0162.severity = error
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = error
+
+# IDE0057: Use range operator
+dotnet_diagnostic.IDE0057.severity = error
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = silent

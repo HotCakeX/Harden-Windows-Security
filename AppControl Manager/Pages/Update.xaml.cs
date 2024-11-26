@@ -1,3 +1,4 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
@@ -21,17 +22,42 @@ namespace WDACConfig.Pages
 
     public sealed partial class Update : Page
     {
+        // Pattern for AppControl Manager version and architecture extraction from file path and download link URL
+        [GeneratedRegex(@"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        private static partial Regex MyRegex();
+
+        // Create a Regex object
+        internal readonly Regex regex = MyRegex();
+
+        // Track whether hardened update procedure must be used
+        private bool useHardenedUpdateProcedure;
+
+        internal bool useCustomMSIXPath;
+
+        internal string? customMSIXPath;
+
+        // A static instance of the Update class which will hold the single, shared instance of it
+        private static Update? _instance;
 
         public Update()
         {
             this.InitializeComponent();
 
+            // Assign this instance to the static field
+            _instance = this;
+
             // Cache the page in the memory so that when the user navigates back to this page, it does not go through the entire initialization process again, which improves performance.
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
+
+        // Public property to access the singleton instance from other classes
+        public static Update Instance => _instance ?? throw new InvalidOperationException("Update is not initialized.");
+
+
+
         // Event handler for check for update button
-        private async void CheckForUpdateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void CheckForUpdateButton_Click(object sender, RoutedEventArgs e)
         {
 
             try
@@ -47,93 +73,117 @@ namespace WDACConfig.Pages
                 // Check for update asynchronously using the AppUpdate class's singleton instance
                 UpdateCheckResponse updateCheckResult = await Task.Run(() => AppUpdate.Instance.Check());
 
-                // If a new version is available
-                if (updateCheckResult.IsNewVersionAvailable)
+                // If a new version is available or user supplied a custom MSIX path to be installed
+                if (updateCheckResult.IsNewVersionAvailable || useCustomMSIXPath)
                 {
+                    string msg1;
 
-                    string msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult.OnlineVersion}, updating the application...";
+                    if (useCustomMSIXPath)
+                    {
+                        msg1 = $"Installing the MSIX path that you selected: {customMSIXPath}";
+                    }
+                    else
+                    {
+                        msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult.OnlineVersion}, updating the application...";
+                    }
+
                     Logger.Write(msg1);
                     UpdateStatusInfoBar.Message = msg1;
 
-                    string onlineDownloadURL;
-
-                    using (HttpClient client = new())
-                    {
-                        // Store the download link to the latest available version
-                        onlineDownloadURL = await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL);
-                    }
+                    WhatsNewInfoBar.IsOpen = true;
 
                     string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
 
-                    string AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msix");
+                    string onlineDownloadURL;
 
-                    UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
+                    string AppControlManagerSavePath;
 
-                    DownloadProgressRingForMSIXFile.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+                    DownloadProgressRingForMSIXFile.Visibility = Visibility.Visible;
 
-                    using (HttpClient client = new())
+                    if (!useCustomMSIXPath)
                     {
-                        // Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
-                        using (HttpResponseMessage response = await client.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))
+
+                        using (HttpClient client = new())
                         {
-                            // Ensure that the response is successful (status code 2xx); otherwise, throw an exception
-                            _ = response.EnsureSuccessStatusCode();
+                            // Store the download link to the latest available version
+                            onlineDownloadURL = await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL);
+                        }
 
-                            // Retrieve the total file size from the Content-Length header (if available)
-                            long? totalBytes = response.Content.Headers.ContentLength;
+                        AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msix");
 
-                            // Open a stream to read the response content asynchronously
-                            await using (Stream contentStream = await response.Content.ReadAsStreamAsync())
+                        UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
+
+                        using (HttpClient client = new())
+                        {
+                            // Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
+                            using (HttpResponseMessage response = await client.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))
                             {
-                                // Open a file stream to save the downloaded data locally
-                                await using (FileStream fileStream = new(
-                                    AppControlManagerSavePath,       // Path to save the file
-                                    FileMode.Create,                 // Create a new file or overwrite if it exists
-                                    FileAccess.Write,                // Write-only access
-                                    FileShare.None,                  // Do not allow other processes to access the file
-                                    bufferSize: 8192,                // Set buffer size to 8 KB
-                                    useAsync: true))                 // Enable asynchronous operations for the file stream
+                                // Ensure that the response is successful (status code 2xx); otherwise, throw an exception
+                                _ = response.EnsureSuccessStatusCode();
+
+                                // Retrieve the total file size from the Content-Length header (if available)
+                                long? totalBytes = response.Content.Headers.ContentLength;
+
+                                // Open a stream to read the response content asynchronously
+                                await using (Stream contentStream = await response.Content.ReadAsStreamAsync())
                                 {
-                                    // Define a buffer to hold data chunks as they are read
-                                    byte[] buffer = new byte[8192];
-                                    long totalReadBytes = 0;         // Track the total number of bytes read
-                                    int readBytes;                   // Holds the count of bytes read in each iteration
-                                    double lastReportedProgress = 0; // Tracks the last reported download progress
-
-                                    // Loop to read from the content stream in chunks until no more data is available
-                                    while ((readBytes = await contentStream.ReadAsync(buffer)) > 0)
+                                    // Open a file stream to save the downloaded data locally
+                                    await using (FileStream fileStream = new(
+                                        AppControlManagerSavePath,       // Path to save the file
+                                        FileMode.Create,                 // Create a new file or overwrite if it exists
+                                        FileAccess.Write,                // Write-only access
+                                        FileShare.None,                  // Do not allow other processes to access the file
+                                        bufferSize: 8192,                // Set buffer size to 8 KB
+                                        useAsync: true))                 // Enable asynchronous operations for the file stream
                                     {
-                                        // Write the buffer to the file stream
-                                        await fileStream.WriteAsync(buffer.AsMemory(0, readBytes));
-                                        totalReadBytes += readBytes;  // Update the total bytes read so far
+                                        // Define a buffer to hold data chunks as they are read
+                                        byte[] buffer = new byte[8192];
+                                        long totalReadBytes = 0;         // Track the total number of bytes read
+                                        int readBytes;                   // Holds the count of bytes read in each iteration
+                                        double lastReportedProgress = 0; // Tracks the last reported download progress
 
-                                        // If the total file size is known, calculate and report progress
-                                        if (totalBytes.HasValue)
+                                        // Loop to read from the content stream in chunks until no more data is available
+                                        while ((readBytes = await contentStream.ReadAsync(buffer)) > 0)
                                         {
-                                            // Calculate the current download progress as a percentage
-                                            double progressPercentage = (double)totalReadBytes / totalBytes.Value * 100;
+                                            // Write the buffer to the file stream
+                                            await fileStream.WriteAsync(buffer.AsMemory(0, readBytes));
+                                            totalReadBytes += readBytes;  // Update the total bytes read so far
 
-                                            // Only update the ProgressBar if progress has increased by at least 1% to avoid constantly interacting with the UI thread
-                                            if (progressPercentage - lastReportedProgress >= 1)
+                                            // If the total file size is known, calculate and report progress
+                                            if (totalBytes.HasValue)
                                             {
-                                                // Update the last reported progress
-                                                lastReportedProgress = progressPercentage;
+                                                // Calculate the current download progress as a percentage
+                                                double progressPercentage = (double)totalReadBytes / totalBytes.Value * 100;
 
-                                                // Update the UI ProgressBar value on the dispatcher thread
-                                                _ = DownloadProgressRingForMSIXFile.DispatcherQueue.TryEnqueue(() =>
+                                                // Only update the ProgressBar if progress has increased by at least 1% to avoid constantly interacting with the UI thread
+                                                if (progressPercentage - lastReportedProgress >= 1)
                                                 {
-                                                    DownloadProgressRingForMSIXFile.Value = progressPercentage;
-                                                });
+                                                    // Update the last reported progress
+                                                    lastReportedProgress = progressPercentage;
+
+                                                    // Update the UI ProgressBar value on the dispatcher thread
+                                                    _ = DownloadProgressRingForMSIXFile.DispatcherQueue.TryEnqueue(() =>
+                                                    {
+                                                        DownloadProgressRingForMSIXFile.Value = progressPercentage;
+                                                    });
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+
+
+                        Logger.Write($"The AppControl Manager MSIX package has been successfully downloaded to {AppControlManagerSavePath}");
+
                     }
 
-
-                    Logger.Write($"The AppControl Manager MSIX package has been successfully downloaded to {AppControlManagerSavePath}");
+                    else
+                    {
+                        onlineDownloadURL = customMSIXPath ?? throw new InvalidOperationException("No MSIX path was selected");
+                        AppControlManagerSavePath = customMSIXPath;
+                    }
 
                     DownloadProgressRingForMSIXFile.IsIndeterminate = true;
 
@@ -168,14 +218,8 @@ namespace WDACConfig.Pages
                         storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
                         cerExportFilePath: CertificateOutputPath,
                         friendlyName: commonName,
-                        UserProtectedPrivateKey: false,
+                        UserProtectedPrivateKey: useHardenedUpdateProcedure,
                         ExportablePrivateKey: false);
-
-                        // Pattern for AppControl Manager version and architecture extraction from file path and download link URL
-                        string pattern = @"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$";
-
-                        // Create a Regex object
-                        Regex regex = new(pattern);
 
                         // Get the version and architecture of the installing MSIX package app from the provided file path
                         Match RegexMatch = regex.Match(onlineDownloadURL);
@@ -316,6 +360,8 @@ namespace WDACConfig.Pages
 
                 CheckForUpdateButton.IsEnabled = true;
 
+                WhatsNewInfoBar.IsOpen = false;
+
                 throw;
             }
 
@@ -323,13 +369,13 @@ namespace WDACConfig.Pages
             {
                 UpdateStatusInfoBar.IsClosable = true;
 
-                DownloadProgressRingForMSIXFile.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                DownloadProgressRingForMSIXFile.Visibility = Visibility.Collapsed;
             }
         }
 
 
         // Event handler for the Auto Update Check Toggle Button to modify the User Configurations file
-        private void AutoUpdateCheckToggle_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void AutoUpdateCheckToggle_Toggled(object sender, RoutedEventArgs e)
         {
             _ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
         }
@@ -352,5 +398,54 @@ namespace WDACConfig.Pages
             // Grab the latest text for the CheckForUpdateButton button
             CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
         }
+
+
+        /// <summary>
+        /// Event handler for the Hardened Update Procedure Toggle Button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HardenedUpdateProcedureToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            useHardenedUpdateProcedure = ((ToggleSwitch)sender).IsOn;
+        }
+
+
+        /// <summary>
+        /// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AutoUpdateCheckToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+        {
+            _ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
+
+            AutoUpdateCheckToggle.IsOn = !AutoUpdateCheckToggle.IsOn;
+        }
+
+
+        /// <summary>
+        /// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HardenedUpdateProcedureToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+        {
+            useHardenedUpdateProcedure = HardenedUpdateProcedureToggle.IsOn;
+
+            HardenedUpdateProcedureToggle.IsOn = !HardenedUpdateProcedureToggle.IsOn;
+        }
+
+
+        /// <summary>
+        /// Navigate to the extra sub-page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CheckForUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.Instance.Navigate_ToPage(null, "UpdatePageCustomMSIXPath", null, "Update - Custom MSIX Path");
+        }
+
     }
 }

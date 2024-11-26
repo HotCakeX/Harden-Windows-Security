@@ -93,10 +93,19 @@ Style="{StaticResource BodyTextBlockStyle}">
                                 </controls:WrapPanel>
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Certificate Common Name:" x:Name="CertificateCommonNameTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
+                                    <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
+                                        Header="Certificate Common Name:"
+                                        QueryIcon="Find"
+                                        GotFocus="CertificateCommonNameAutoSuggestBox_GotFocus"
+                                        TextChanged="CertificateCNAutoSuggestBox_TextChanged"
+                                        PlaceholderText="Find Certificate Common Names"
+                                        MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificateCommonName"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Refresh" Label="Refresh" Click="CertificateCommonNameSuggestionsRefresh_Click" Tag="CertificateCommonName" ToolTipService.ToolTip="Fetches the latest certificate common names from the User's personal certificate store"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Certificate Path -->
@@ -147,7 +156,24 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                 <!--  'Appearance' section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Appearance" />
-                <controls:SettingsExpander Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+                <controls:SettingsExpander IsExpanded="True" Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="LackOfAnimationsNoticeInfoBar"
+                            Title="Windows Animations are Disabled"
+                            Message="For an improved experience with DataGrids in AppControl Manager, consider enabling 'Always Show Scrollbars' in Windows Settings -> Accessibility -> Visual Effects."
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            IsOpen="False"
+                            IsClosable="False"
+                            Severity="Warning">
+                            <InfoBar.ActionButton>
+                                <HyperlinkButton Content="Learn more about this issue on GitHub" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/415" />
+                            </InfoBar.ActionButton>
+                        </InfoBar>
+
+                    </controls:SettingsExpander.ItemsHeader>
 
                     <controls:SettingsExpander.Items>
 
@@ -205,6 +231,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                            Text="About" />
                 <controls:SettingsExpander x:Name="CopyRightSettingsExpander"
                                            Header="AppControl Manager"
+                                           IsExpanded="True"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
                     <TextBlock x:Name="VersionTextBlock" win:IsTextSelectionEnabled="True"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -217,6 +244,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                                 <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
                                 <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
                                 <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
+                                <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>

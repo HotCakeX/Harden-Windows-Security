@@ -1,16 +1,20 @@
 using AnimatedVisuals;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static WDACConfig.AppSettings;
+using Windows.Graphics;
 
 namespace WDACConfig
 {
+
     public sealed partial class MainWindow : Window
     {
 
@@ -20,9 +24,42 @@ namespace WDACConfig
         private readonly Dictionary<string, NavigationViewItem> menuItems = [];
 
 
+        // Static pre-made dictionary for navigation page-to-item content mapping
+        // Used for the back button in order to set the correct header
+        private static readonly Dictionary<Type, string> NavigationPageToItemContentMap = new()
+        {
+            { typeof(Pages.CreatePolicy), "Create Policy" },
+            { typeof(Pages.GetCIHashes), "Get Code Integrity Hashes" },
+            { typeof(Pages.GitHubDocumentation), "GitHub Documentation" },
+            { typeof(Pages.MicrosoftDocumentation), "Microsoft Documentation" },
+            { typeof(Pages.GetSecurePolicySettings), "Get Secure Policy Settings" },
+            { typeof(Pages.Settings), "Settings" },
+            { typeof(Pages.SystemInformation), "System Information" },
+            { typeof(Pages.ConfigurePolicyRuleOptions), "Configure Policy Rule Options" },
+            { typeof(Pages.Logs), "Logs" },
+            { typeof(Pages.Simulation), "Simulation" },
+            { typeof(Pages.Update), "Update" },
+            { typeof(Pages.Deployment), "Deploy AppControl Policy" },
+            { typeof(Pages.EventLogsPolicyCreation), "Create policy from Event Logs" },
+            { typeof(Pages.MDEAHPolicyCreation), "Create policy from MDE Advanced Hunting" },
+            { typeof(Pages.AllowNewApps), "Allow New Apps" },
+            { typeof(Pages.BuildNewCertificate), "Build New Certificate" },
+            { typeof(Pages.UpdatePageCustomMSIXPath), "Custom MSIX Path" }, // sub-page
+            { typeof(Pages.CreateSupplementalPolicy), "Create Supplemental Policy" },
+            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" } // sub-page
+        };
+
+
+        // A static instance of the MainWindow class which will hold the single, shared instance of it
+        private static MainWindow? _instance;
+
+
         public MainWindow()
         {
             this.InitializeComponent();
+
+            // Assign this instance to the static field
+            _instance = this;
 
             // Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
             GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -101,17 +138,98 @@ namespace WDACConfig
 
 
             // Set the initial background setting based on the user's settings
-            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(SettingKeys.NavViewBackground));
+            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground));
 
             // Set the initial BackDrop setting based on the user's settings
-            OnBackgroundChanged(AppSettings.GetSetting<string>(SettingKeys.BackDropBackground));
+            OnBackgroundChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground));
 
             // Set the initial App Theme based on the user's settings
-            OnAppThemeChanged(AppSettings.GetSetting<string>(SettingKeys.AppTheme));
+            OnAppThemeChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme));
 
             // Set the initial Icons styles abased on the user's settings
-            OnIconsStylesChanged(AppSettings.GetSetting<string>(SettingKeys.IconsStyle));
+            OnIconsStylesChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle));
 
+            // Restore window size on startup
+            RestoreWindowSize();
+
+            // Subscribe to Closed event of the main Window
+            this.Closed += MainWindow_Closed;
+        }
+
+        // Public property to access the singleton instance from other classes
+        public static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
+
+
+        /// <summary>
+        /// Main Window close event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            // Get the AppWindow from the current Window
+            AppWindow appWindow = GetAppWindowForCurrentWindow();
+
+            // Get the current size of the window
+            SizeInt32 size = appWindow.Size;
+
+            // Save to window width and height to the app settings
+            AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowWidth, size.Width);
+            AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowHeight, size.Height);
+
+            Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
+
+            // Check if the window is maximized
+            _ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+
+            // Save the maximized status of the window before closing to the app settings
+            if (windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED)
+            {
+                AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowIsMaximized, true);
+            }
+            else
+            {
+                AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowIsMaximized, false);
+            }
+        }
+
+
+        /// <summary>
+        /// Event handler to run at Window launch to restore its size to the one before closing
+        /// </summary>
+        private static void RestoreWindowSize()
+        {
+
+            AppWindow appWindow = GetAppWindowForCurrentWindow();
+
+            // If the window was last maximized then restore it to maximized
+            if (AppSettings.GetSetting<bool>(AppSettings.SettingKeys.MainWindowIsMaximized))
+            {
+                // Set the presenter to maximized
+                ((OverlappedPresenter)appWindow.Presenter).Maximize();
+            }
+
+            // Else set its size to its previous size before closing
+            else
+            {
+                // Retrieve stored values
+                int width = AppSettings.GetSetting<int>(AppSettings.SettingKeys.MainWindowWidth);
+                int height = AppSettings.GetSetting<int>(AppSettings.SettingKeys.MainWindowHeight);
+
+                // If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
+                if (width > 200 && height > 200)
+                {
+                    // Apply to the current AppWindow
+                    appWindow?.Resize(new SizeInt32(width, height));
+                }
+            }
+        }
+
+
+        private static AppWindow GetAppWindowForCurrentWindow()
+        {
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(GlobalVars.hWnd);
+            return AppWindow.GetFromWindowId(windowId);
         }
 
 
@@ -211,7 +329,7 @@ namespace WDACConfig
                         LogsNavItem.Icon = new AnimatedIcon
                         {
                             Margin = new Thickness(0, -8, -8, -8),
-                            Source = new Timeline()
+                            Source = new AnimatedVisuals.Timeline()
                         };
 
                         // GitHub Documentation
@@ -245,6 +363,27 @@ namespace WDACConfig
                                 Source = new HeartPulse()
                             };
                         }
+
+                        // Build New Certificate
+                        BuildNewCertificateNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Certificate()
+                        };
+
+                        // Deployment
+                        DeploymentNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Deployment()
+                        };
+
+                        // Create Supplemental Policy
+                        CreateSupplementalPolicyNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(-5, -28, -28, -28),
+                            Source = new SupplementalPolicy()
+                        };
 
                         break;
                     }
@@ -344,6 +483,27 @@ namespace WDACConfig
                             Foreground = accentBrush
                         };
 
+                        // Build New Certificate
+                        BuildNewCertificateNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB95",
+                            Foreground = accentBrush
+                        };
+
+                        // Deployment
+                        DeploymentNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uF32A",
+                            Foreground = accentBrush
+                        };
+
+                        // Create Supplemental Policy
+                        CreateSupplementalPolicyNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8F9",
+                            Foreground = accentBrush
+                        };
+
                         break;
                     }
 
@@ -428,6 +588,24 @@ namespace WDACConfig
                         UpdateNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uEB52"
+                        };
+
+                        // Build New Certificate
+                        BuildNewCertificateNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB95"
+                        };
+
+                        // Deployment
+                        DeploymentNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uF32A"
+                        };
+
+                        // Create Supplemental Policy
+                        CreateSupplementalPolicyNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8F9"
                         };
 
                         break;
@@ -569,7 +747,7 @@ namespace WDACConfig
                         RootGrid.RequestedTheme = ElementTheme.Light;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -594,7 +772,7 @@ namespace WDACConfig
                         RootGrid.RequestedTheme = ElementTheme.Dark;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -623,7 +801,7 @@ namespace WDACConfig
                         if (currentColorMode is ElementTheme.Dark)
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -644,7 +822,7 @@ namespace WDACConfig
                         else
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -700,11 +878,11 @@ namespace WDACConfig
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                string query = sender.Text.ToLower();
+                string query = sender.Text.ToLowerInvariant();
 
                 // Filter menu items based on the search query
                 List<string> suggestions = menuItems.Keys
-                    .Where(name => name.Contains(query, System.StringComparison.OrdinalIgnoreCase))
+                    .Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
 
@@ -734,89 +912,143 @@ namespace WDACConfig
 
                     if (selectedTag is not null)
                     {
-                        NavigateToMenuItem(selectedTag);
+                        Navigate_ToPage(MainNavigation, selectedTag, null);
                     }
                 }
             }
         }
 
 
+
         /// <summary>
-        /// Event handler for main navigation menu selection change
+        /// Main navigation event of the Nav View
+        /// ItemInvoked event is much better than SelectionChanged because it allows click/tap on the same selected menu on main navigation
+        /// which is necessary if the same main page is selected but user has navigated to inner pages and then wants to go back by selecting the already selected main navigation item again.
+        /// The duplicate-loading logic is implemented manually in code behind.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void MainNavigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs? args)
         {
-            if (args.SelectedItem is NavigationViewItem selectedItem)
+            // If any other page was invoked
+            if (args?.InvokedItemContainer is not null)
             {
-                // Play sound for selection change
-                ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
-
-                string selectedTag = selectedItem.Tag?.ToString()!;
-                NavigateToMenuItem(selectedTag);
+                Navigate_ToPage(sender, args.InvokedItemContainer.Tag.ToString()!, args?.RecommendedNavigationTransitionInfo);
             }
         }
 
 
         /// <summary>
-        /// Separate method to handle navigation based on the selected tag
+        /// Used by the main navigation's event, AutoSuggestBox and through the current class's singleton instance by other pages
+        /// to navigate to sub-pages that aren't included in the main navigation menu
         /// </summary>
-        /// <param name="selectedTag"></param>
-        private void NavigateToMenuItem(string selectedTag)
+        /// <param name="sender"></param>
+        /// <param name="tag"></param>
+        /// <param name="transitionInfo"></param>
+        internal void Navigate_ToPage(NavigationView? sender, string tag, NavigationTransitionInfo? transitionInfo, string? Header = null)
         {
-            switch (selectedTag)
+
+            // Find the page type based on the tag and send it to another method for final navigation action
+            switch (tag)
             {
                 case "CreatePolicy":
-                    _ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
+                    NavView_Navigate(typeof(Pages.CreatePolicy), transitionInfo);
                     break;
                 case "GetCIHashes":
-                    _ = ContentFrame.Navigate(typeof(Pages.GetCIHashes));
+                    NavView_Navigate(typeof(Pages.GetCIHashes), transitionInfo);
+                    break;
+                case "GitHubDocumentation":
+                    NavView_Navigate(typeof(Pages.GitHubDocumentation), transitionInfo);
+                    break;
+                case "MicrosoftDocumentation":
+                    NavView_Navigate(typeof(Pages.MicrosoftDocumentation), transitionInfo);
+                    break;
+                case "GetSecurePolicySettings":
+                    NavView_Navigate(typeof(Pages.GetSecurePolicySettings), transitionInfo);
                     break;
                 // Doesn't need XAML nav item because it's included by default in the navigation view
                 case "Settings":
-                    _ = ContentFrame.Navigate(typeof(Pages.Settings));
-                    break;
-                case "GitHubDocumentation":
-                    _ = ContentFrame.Navigate(typeof(Pages.GitHubDocumentation));
-                    break;
-                case "MicrosoftDocumentation":
-                    _ = ContentFrame.Navigate(typeof(Pages.MicrosoftDocumentation));
-                    break;
-                case "GetSecurePolicySettings":
-                    _ = ContentFrame.Navigate(typeof(Pages.GetSecurePolicySettings));
+                    NavView_Navigate(typeof(Pages.Settings), transitionInfo);
                     break;
                 case "SystemInformation":
-                    _ = ContentFrame.Navigate(typeof(Pages.SystemInformation));
+                    NavView_Navigate(typeof(Pages.SystemInformation), transitionInfo);
                     break;
                 case "ConfigurePolicyRuleOptions":
-                    _ = ContentFrame.Navigate(typeof(Pages.ConfigurePolicyRuleOptions));
+                    NavView_Navigate(typeof(Pages.ConfigurePolicyRuleOptions), transitionInfo);
                     break;
                 case "Logs":
-                    _ = ContentFrame.Navigate(typeof(Pages.Logs));
+                    NavView_Navigate(typeof(Pages.Logs), transitionInfo);
                     break;
                 case "Simulation":
-                    _ = ContentFrame.Navigate(typeof(Pages.Simulation));
+                    NavView_Navigate(typeof(Pages.Simulation), transitionInfo);
                     break;
                 case "Update":
-                    _ = ContentFrame.Navigate(typeof(Pages.Update));
+                    NavView_Navigate(typeof(Pages.Update), transitionInfo);
                     break;
                 case "Deployment":
-                    _ = ContentFrame.Navigate(typeof(Pages.Deployment));
+                    NavView_Navigate(typeof(Pages.Deployment), transitionInfo);
                     break;
                 case "EventLogsPolicyCreation":
-                    _ = ContentFrame.Navigate(typeof(Pages.EventLogsPolicyCreation));
+                    NavView_Navigate(typeof(Pages.EventLogsPolicyCreation), transitionInfo);
                     break;
                 case "MDEAHPolicyCreation":
-                    _ = ContentFrame.Navigate(typeof(Pages.MDEAHPolicyCreation));
+                    NavView_Navigate(typeof(Pages.MDEAHPolicyCreation), transitionInfo);
                     break;
                 case "AllowNewApps":
-                    _ = ContentFrame.Navigate(typeof(Pages.AllowNewApps));
+                    NavView_Navigate(typeof(Pages.AllowNewApps), transitionInfo);
+                    break;
+                case "BuildNewCertificate":
+                    NavView_Navigate(typeof(Pages.BuildNewCertificate), transitionInfo);
+                    break;
+                case "UpdatePageCustomMSIXPath":
+                    NavView_Navigate(typeof(Pages.UpdatePageCustomMSIXPath), transitionInfo); // Sub-Page
+                    break;
+                case "CreateSupplementalPolicy":
+                    NavView_Navigate(typeof(Pages.CreateSupplementalPolicy), transitionInfo);
+                    break;
+                case "CreateSupplementalPolicyFilesAndFoldersScanResults":
+                    NavView_Navigate(typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), transitionInfo); // Sub-Page
                     break;
                 default:
                     break;
             }
+
+            // Set the NavigationView's header to the Navigation view item's content
+            if (MainNavigation.SelectedItem is NavigationViewItem item)
+            {
+                if (sender is not null)
+                {
+                    // Must be nullable because when NavigationViewPaneDisplayMode is top, this is null.
+                    sender.Header = item.Content?.ToString();
+                }
+                else if (Header is not null)
+                {
+                    MainNavigation.Header = Header;
+                }
+            }
         }
+
+
+
+        private void NavView_Navigate(Type navPageType, NavigationTransitionInfo? transitionInfo)
+        {
+            // Get the page's type before navigation so we can prevent duplicate
+            // entries in the BackStack
+            // This will prevent reloading the same page if we're already on it and works with sub-pages to navigate back to the main page
+            Type preNavPageType = ContentFrame.CurrentSourcePageType;
+
+            // Only navigate if the selected page isn't currently loaded.
+            if (navPageType is not null && !Type.Equals(preNavPageType, navPageType))
+            {
+
+                // Play sound
+                ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
+
+                _ = ContentFrame.Navigate(navPageType, null, transitionInfo);
+            }
+        }
+
+
 
 
         /// <summary>
@@ -839,26 +1071,22 @@ namespace WDACConfig
                 // Play sound for back navigation
                 ElementSoundPlayer.Play(ElementSoundKind.GoBack);
 
+
+
+                // Go back to the previous page
                 ContentFrame.GoBack();
+
+                // Get the current page after navigating back
+                Type preNavPageType = ContentFrame.CurrentSourcePageType;
+
+                // Extract the navigation item content from the dictionary
+                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out var item);
+
+                // Set the correct header after back navigation has been completed
+                MainNavigation.Header = item;
+
             }
         }
-
-
-        /// <summary>
-        /// Set the NavigationView's header to the Navigation view item's content
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
-        {
-            if (MainNavigation.SelectedItem is NavigationViewItem item)
-            {
-
-                // Must be nullable because when NavigationViewPaneDisplayMode is top, this is null.
-                sender.Header = item.Content?.ToString();
-            }
-        }
-
 
     }
 }

@@ -1,21 +1,31 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.ViewManagement;
 using static WDACConfig.AppSettings;
-
 
 
 namespace WDACConfig.Pages
 {
     public sealed partial class Settings : Page
     {
+        // To store the selectable Certificate common names
+        private HashSet<string> CertCommonNames = [];
+
+        // To store an instance of UISettings
+        private readonly UISettings uiSettings;
+
         public Settings()
         {
             this.InitializeComponent();
 
             // Make sure navigating to/from this page maintains its state
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             // Set the version in the settings card to the current app version
             VersionTextBlock.Text = $"Version {App.currentAppVersion}";
@@ -23,6 +33,7 @@ namespace WDACConfig.Pages
             // Set the year for the copyright section
             CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
 
+            FetchLatestCertificateCNs();
 
             #region Load the user configurations in the UI elements
 
@@ -69,7 +80,70 @@ namespace WDACConfig.Pages
             NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
             SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
             IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
+
+
+            #region
+
+            // Create an instance of UISettings
+            uiSettings = new UISettings();
+
+            // Event handler for when Animations are turned on/off in Windows Settings
+            uiSettings.AnimationsEnabledChanged += AnimationsInfoBarStateManagement;
+
+            // Event handler for when Always Show Scrollbars changes in Windows Settings
+            uiSettings.AutoHideScrollBarsChanged += AnimationsInfoBarStateManagement;
+
+            AnimationsInfoBarStateManagementMainMethod();
+
+            #endregion
+
         }
+
+
+        #region
+
+        private void AnimationsInfoBarStateManagement(UISettings sender, UISettingsAutoHideScrollBarsChangedEventArgs e)
+        {
+            AnimationsInfoBarStateManagementMainMethod();
+        }
+
+        private void AnimationsInfoBarStateManagement(UISettings sender, UISettingsAnimationsEnabledChangedEventArgs e)
+        {
+            AnimationsInfoBarStateManagementMainMethod();
+        }
+
+        private void AnimationsInfoBarStateManagementMainMethod()
+        {
+            _ = DispatcherQueue.TryEnqueue(() =>
+            {
+
+                // If animations are enabled then don't show the InfoBars
+                if (uiSettings.AnimationsEnabled)
+                {
+                    LackOfAnimationsNoticeInfoBar.IsOpen = false;
+                    LackOfAnimationsNoticeInfoBar.Visibility = Visibility.Collapsed;
+                }
+
+                // If animations are disabled
+                else
+                {
+                    // If Always show scrollbars is enabled in Windows Settings (i.e. AutoHideScrollBars is false)
+                    if (!uiSettings.AutoHideScrollBars)
+                    {
+                        LackOfAnimationsNoticeInfoBar.IsOpen = false;
+                        LackOfAnimationsNoticeInfoBar.Visibility = Visibility.Collapsed;
+                    }
+                    // If Always show scrollbars is disabled in Windows Settings (i.e. AutoHideScrollBars is true)
+                    else
+                    {
+                        LackOfAnimationsNoticeInfoBar.IsOpen = true;
+                        LackOfAnimationsNoticeInfoBar.Visibility = Visibility.Visible;
+                    }
+                }
+            });
+        }
+
+        #endregion
 
 
 
@@ -203,7 +277,7 @@ namespace WDACConfig.Pages
         private void SoundToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             // Get the state of the toggle switch (on or off)
-            var toggleSwitch = sender as ToggleSwitch;
+            ToggleSwitch? toggleSwitch = sender as ToggleSwitch;
             bool isSoundOn = toggleSwitch?.IsOn ?? false;
 
             // Raise the event to notify the app of the sound setting change
@@ -222,7 +296,7 @@ namespace WDACConfig.Pages
             SignedPolicyPathTextBox.Text = userConfig.SignedPolicyPath ?? string.Empty;
             UnsignedPolicyPathTextBox.Text = userConfig.UnsignedPolicyPath ?? string.Empty;
             SignToolCustomPathTextBox.Text = userConfig.SignToolCustomPath ?? string.Empty;
-            CertificateCommonNameTextBox.Text = userConfig.CertificateCommonName ?? string.Empty;
+            CertificateCommonNameAutoSuggestBox.Text = userConfig.CertificateCommonName ?? string.Empty;
             CertificatePathTextBox.Text = userConfig.CertificatePath ?? string.Empty;
             StrictKernelPolicyGUIDTextBox.Text = userConfig.StrictKernelPolicyGUID?.ToString() ?? string.Empty;
             StrictKernelNoFlightRootsPolicyGUIDTextBox.Text = userConfig.StrictKernelNoFlightRootsPolicyGUID?.ToString() ?? string.Empty;
@@ -250,7 +324,7 @@ namespace WDACConfig.Pages
                     newValue = SignToolCustomPathTextBox.Text;
                     break;
                 case "CertificateCommonName":
-                    newValue = CertificateCommonNameTextBox.Text;
+                    newValue = CertificateCommonNameAutoSuggestBox.Text;
                     break;
                 case "CertificatePath":
                     newValue = CertificatePathTextBox.Text;
@@ -316,7 +390,7 @@ namespace WDACConfig.Pages
                     SignToolCustomPathTextBox.Text = string.Empty;
                     break;
                 case "CertificateCommonName":
-                    CertificateCommonNameTextBox.Text = string.Empty;
+                    CertificateCommonNameAutoSuggestBox.Text = string.Empty;
                     break;
                 case "CertificatePath":
                     CertificatePathTextBox.Text = string.Empty;
@@ -363,7 +437,7 @@ namespace WDACConfig.Pages
         // When the browse button of any field is pressed
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
+            Button? button = sender as Button;
             string? fieldName = button!.Tag.ToString();
 
             switch (fieldName)
@@ -384,6 +458,63 @@ namespace WDACConfig.Pages
                     break;
             }
 
+        }
+
+
+
+        /// <summary>
+        /// Event handler for AutoSuggestBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void CertificateCNAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                string query = sender.Text.ToLowerInvariant();
+
+                // Filter menu items based on the search query
+                List<string> suggestions = CertCommonNames
+                    .Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                // Set the filtered items as suggestions in the AutoSuggestBox
+                sender.ItemsSource = suggestions;
+            }
+        }
+
+        /// <summary>
+        /// Start suggesting when tap or mouse click happens
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CertificateCommonNameAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Set the filtered items as suggestions in the AutoSuggestBox
+            ((AutoSuggestBox)sender).ItemsSource = CertCommonNames;
+        }
+
+
+        /// <summary>
+        /// When the Refresh button is pressed for certificate common name selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CertificateCommonNameSuggestionsRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            FetchLatestCertificateCNs();
+        }
+
+
+        /// <summary>
+        /// Get all of the common names of the certificates in the user/my certificate store over time
+        /// </summary>
+        private async void FetchLatestCertificateCNs()
+        {
+            await Task.Run(() =>
+            {
+                CertCommonNames = CertCNFetcher.GetCertCNs();
+            });
         }
     }
 }

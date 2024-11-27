@@ -55,29 +55,19 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ## Features Implemented So Far
 
-* Creating, configuring and deploying AllowMicrosoft policy
-* Creating, configuring and deploying SignedAndReputable policy (based on ISG)
-* Creating and deploying Microsoft recommended driver block rules
-* Creating and deploying Microsoft recommended user-mode block rules
-* Checking for secure policy settings on the system
-* Getting the Code Integrity hashes of the files (Authenticode hash and Page hash)
-* Adding/Changing/Removing User Configurations
-* Configure policy rule options
-* View deployed policies on the system (with filtering search)
-* Remove unsigned Base policies and signed/unsigned Supplemental policies from the system
-* Quick access to App Control resources and documentations right within the app
-* Self-updating the app
-* Displaying advanced Code Integrity information about the system
-* Complete App Control Simulation feature
-* Create policy from Microsoft Defender for Endpoint Advanced Hunting
-* Create policy from Local event logs
-* Create policy from EVTX files
-* Create policy by scanning local files
-* Change application appearance in multiple ways
-* Creating Supplemental Policy by scanning files and folders.
-* Creating Supplemental policy by scanning certificate `.cer` files.
-* Deploying XML and CIP files on the system.
-* Build App Control compatible Code Signing Certificate.
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Policy.gif" alt="AppControl Manager Menu Item" width="20"> [Create AppControl Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Supplemental%20Policy.gif" alt="AppControl Manager Menu Item" width="20"> [Create Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/System%20Information.gif" alt="AppControl Manager Menu Item" width="20"> [System Information](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Configure%20Policy%20Rule%20Options.gif" alt="AppControl Manager Menu Item" width="20"> [Configure Policy Rule Options](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Simulation.gif" alt="AppControl Manager Menu Item" width="20"> [Simulation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Allow%20New%20Apps.gif" alt="AppControl Manager Menu Item" width="20"> [Allow New Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Build%20new%20certificate.gif" alt="AppControl Manager Menu Item" width="20"> [Build New Certificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20policy%20from%20Event%20Logs.gif" alt="AppControl Manager Menu Item" width="20"> [Create Policy From Event Logs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20policy%20from%20MDE%20Advanced%20Hunting.gif" alt="AppControl Manager Menu Item" width="20"> [Create Policy From MDE Advanced Hunting](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Deployment.gif" alt="AppControl Manager Menu Item" width="20"> [Deploy App Control Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Get%20CI%20Hahses.gif" alt="AppControl Manager Menu Item" width="20"> [Get Code Integrity Hashes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Get%20Secure%20policy%20settings.gif" alt="AppControl Manager Menu Item" width="20"> [Get Secure Policy Settings](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Secure-Policy-Settings)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Update.gif" alt="AppControl Manager Menu Item" width="20"> [Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update)
 
 More features will come very quickly in the near future.
 

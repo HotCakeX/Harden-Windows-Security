@@ -6,6 +6,8 @@ The short-term goal is for the AppControl manager to reach feature parity with t
 
 > [!IMPORTANT]\
 > The AppControl Manager application is built publicly using a [GitHub action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with [SLSA](https://slsa.dev/spec/v1.0/levels) level 2 and [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds). The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
+>
+> **What is App Control for business? [check out this article](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)**
 
 <br>
 

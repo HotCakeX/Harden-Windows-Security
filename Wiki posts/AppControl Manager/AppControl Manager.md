@@ -24,7 +24,7 @@ Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Window
 
 <br>
 
-Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks.
+Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager)
 
 <br>
 
@@ -120,7 +120,7 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 | https://api.nuget.org/v3-flatcontainer/ | To access Microsoft NuGet repository to download SignTool.exe |
 | https://aka.ms/VulnerableDriverBlockList | To download the Microsoft Recommended Drivers Block List |
 | https://api.github.com/repos/MicrosoftDocs/windows-itpro-docs/commits | To check the latest commit details of the Microsoft Recommended Drivers Block List and display them to the user on the UI |
-| https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md | Source for the Microsoft Recommended USer-Mode Block Rules |
+| https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md | Source for the Microsoft Recommended User-Mode Block Rules |
 | https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md | Source for the Microsoft Recommended Drivers Block Rules |
 | https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt | The file on this repository that contains the download link to the latest version of the AppControl Manager. That text file is updated via automated GitHub action workflow that securely builds and uploads the MSIX package to the GitHub releases. |
 | https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt | The latest available version of the AppControl Manager application. That text file is updated via automated GitHub action workflow that securely builds and uploads the MSIX package to the GitHub releases. |

@@ -1,4 +1,4 @@
-# What is Windows Defender Application Control?
+# What is Application Control for Business?
 
 <div align="center">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Application%20Control%20for%20Business.gif" alt="App Control for Business introduction and WDACConfig Module">
@@ -13,33 +13,13 @@ Devices where Application Control policies are deployed on can either be central
 <br>
 
 > [!IMPORTANT]\
-> This repository provides 2 main methods that allows you to manage App Control in Windows. The primary method is the **AppControl Manager** app, and the other one is the WDACConfig PowerShell module. They are one-stop shops for all your Application Control (WDAC) needs. they are scalable, easy to use, enterprise-ready, Azure VM ready and more importantly, they are free and always will be that way. [**Check it out here**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
+> Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) for all of your Application Control and Code Integrity management needs. It is scalable, easy to use, enterprise-ready, Azure VM ready and more importantly, it is free, open-source and always will be that way.
 
 <br>
 
-## App Control for Business wiki posts
+App Control puts the power of security directly in your hands, giving you complete control over your system and the systems you manage. Unlike other solutions that create dependency on other people, App Control eliminates the need to constantly chase and block new malware variants. Once you configure your system and define the apps and files that are permitted to run, everything else is automatically blocked.
 
-* [Introduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
-* [WDAC for Lightly managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices)
-* [WDAC for Fully managed device - Variant 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices)
-* [WDAC for Fully managed device - Variant 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices--Variant-2)
-* [WDAC for Fully managed device - Variant 3](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3)
-* [WDAC for Fully managed device - Variant 4](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-4)
-* [WDAC Notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes)
-* [How to Create and Deploy a Signed WDAC Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
-* [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
-* [WDAC policy for BYOVD Kernel mode only protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
-* [EKUs in WDAC, App Control for Business, Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/EKUs-in-WDAC,-App-Control-for-Business,-Policies)
-* [WDAC Rule Levels Comparison and Guide](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
-* [Script Enforcement and PowerShell Constrained Language Mode in WDAC App Control Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Script-Enforcement-and-PowerShell-Constrained-Language-Mode-in-WDAC-App-Control-Policies)
-* [How to Use Microsoft Defender for Endpoint Advanced Hunting With WDAC App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control)
-* [Application Control (WDAC) Frequently Asked Questions (FAQs)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Application-Control-(WDAC)-Frequently-Asked-Questions-(FAQs))
-
-<br>
-
-## WDACConfig Module
-
-[**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) is an advanced PowerShell module designed with the aim of automating [Application and File whitelisting in Windows](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/appcontrol) using App Control for Business. It is available in [PowerShell gallery](https://www.powershellgallery.com/packages/WDACConfig/).
+**It's time to shift from a reactive approach to a proactive one.**
 
 <br>
 
@@ -74,31 +54,11 @@ There are many ways you can utilize Application Control features and here they a
 
 <br>
 
-## Methods we can use to create an Application Control policy (WDAC)
-
-* Using [PowerShell cmdlets](https://learn.microsoft.com/en-us/powershell/module/configci)
-* Using [WDACConfig PowerShell module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) - **Recommended**
-* Using [WDAC Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
-
-<br>
-
 ## Plan for App Control for Business lifecycle policy management
 
 Microsoft provides the [following official document](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/plan-appcontrol-management) to understand the decisions you need to make to establish the processes for managing and maintaining Application Control policies. The rest of them are mentioned below at the **Resources** section.
 
 <br>
-
-## Resources
-
-*There are a lot more WDAC resources and cmdlets available on Microsoft's websites.*
-
-## Cmdlets
-
-* [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy)
-* [New-CIPolicyRule](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicyrule)
-* [Merge-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/merge-cipolicy)
-* [Set-RuleOption](https://learn.microsoft.com/en-us/powershell/module/configci/set-ruleoption)
-* [Set-CIPolicyIdInfo](https://learn.microsoft.com/en-us/powershell/module/configci/set-cipolicyidinfo)
 
 ## Documents
 

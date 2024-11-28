@@ -4,7 +4,7 @@ namespace WDACConfig
     public static class XMLOps
     {
         /// <summary>
-        /// Uses the scan data to generate an AppControl policy and makes sure the data are unique
+        /// Uses the scan data to generate an App Control policy and makes sure the data are unique
         /// </summary>
         /// <param name="incomingData"></param>
         /// <param name="xmlFilePath"></param>

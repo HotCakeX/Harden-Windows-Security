@@ -35,7 +35,7 @@
             </Grid.RowDefinitions>
 
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
                 <TextBlock
 TextWrapping="WrapWholeWords"
@@ -50,6 +50,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 </Span>
                 </TextBlock>
 
+                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy" />
 
             </controls:WrapPanel>
 
@@ -83,7 +84,7 @@ Style="{StaticResource AccentButtonStyle}" Click="AllowMicrosoftCreateAndDeploy_
 
                         <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
                                Header="Audit">
-                            <ToggleSwitch x:Name="AllowMicrosoftAudit" />
+                            <ToggleSwitch x:Name="AllowMicrosoftAudit" Toggled="AllowMicrosoftAudit_Toggled" />
 
                         </controls:SettingsCard>
 
@@ -95,13 +96,14 @@ Style="{StaticResource AccentButtonStyle}" Click="AllowMicrosoftCreateAndDeploy_
 
                                 <NumberBox x:Name="AllowMicrosoftLogSizeInput"
     Header="Enter a number for Log Size in MB"
-Value="2"
-SpinButtonPlacementMode="Inline"
-SmallChange="1"
-LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
+    Value="2"
+    SpinButtonPlacementMode="Inline"
+    SmallChange="1"
+    IsEnabled="False"                                      
+    LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
 
 
-                                <ToggleSwitch x:Name="AllowMicrosoftLogSizeInputEnabled" Toggled="AllowMicrosoftLogSizeInputEnabled_Toggled" />
+                                <ToggleSwitch x:Name="AllowMicrosoftLogSizeInputEnabled" IsEnabled="False" Toggled="AllowMicrosoftLogSizeInputEnabled_Toggled" />
 
                             </controls:WrapPanel>
 
@@ -132,6 +134,80 @@ LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.
 
 
 
+
+                <!-- Default Windows -->
+
+                <controls:SettingsExpander x:Name="DefaultWindowsSettings"
+                           Description="This policy will allow files that come by default with Windows OS to run (including Office products) and everything else will be blocked."
+                           Header="Create Default Windows Policy"
+                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button x:Name="DefaultWindowsCreate" Content="Create"
+            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="DefaultWindowsCreate_Click" />
+
+                        <Button x:Name="DefaultWindowsCreateAndDeploy" Content="Create And Deploy"
+Style="{StaticResource AccentButtonStyle}" Click="DefaultWindowsCreateAndDeploy_Click" Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
+                               Header="Audit">
+
+                            <ToggleSwitch x:Name="DefaultWindowsAudit" Toggled="DefaultWindowsAudit_Toggled" />
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events."
+         Header="Log Size">
+
+                            <controls:WrapPanel Orientation="Horizontal">
+
+
+                                <NumberBox x:Name="DefaultWindowsLogSizeInput"
+                    Header="Enter a number for Log Size in MB"
+                    IsEnabled="False"
+                    Value="2"
+                    SpinButtonPlacementMode="Inline"
+                    SmallChange="1"
+                    LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
+
+
+                                <ToggleSwitch x:Name="DefaultWindowsLogSizeInputEnabled" IsEnabled="False" Toggled="DefaultWindowsLogSizeInputEnabled_Toggled" />
+
+                            </controls:WrapPanel>
+
+
+                        </controls:SettingsCard>
+
+
+
+                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run."
+         Header="Require EVSigners">
+                            <ToggleSwitch x:Name="DefaultWindowsRequireEVSigners" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run."
+         Header="Enable Script Enforcement">
+                            <ToggleSwitch x:Name="DefaultWindowsEnableScriptEnforcement" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons."
+         Header="Test Mode">
+                            <ToggleSwitch x:Name="DefaultWindowsTestMode" />
+                        </controls:SettingsCard>
+
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+
+
+
                 <!-- Signed and Reputable -->
 
                 <controls:SettingsExpander x:Name="SignedAndReputableSettings"
@@ -154,7 +230,8 @@ Style="{StaticResource AccentButtonStyle}" Click="SignedAndReputableCreateAndDep
 
                         <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
                                Header="Audit">
-                            <ToggleSwitch x:Name="SignedAndReputableAudit" />
+
+                            <ToggleSwitch x:Name="SignedAndReputableAudit" Toggled="SignedAndReputableAudit_Toggled" />
 
                         </controls:SettingsCard>
 
@@ -166,14 +243,15 @@ Style="{StaticResource AccentButtonStyle}" Click="SignedAndReputableCreateAndDep
 
 
                                 <NumberBox x:Name="SignedAndReputableLogSizeInput"
-    Header="Enter a number for Log Size in MB"
-    Value="2"
-    SpinButtonPlacementMode="Inline"
-    SmallChange="1"
-    LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
+                        Header="Enter a number for Log Size in MB"
+                        IsEnabled="False"
+                        Value="2"
+                        SpinButtonPlacementMode="Inline"
+                        SmallChange="1"
+                        LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
 
 
-                                <ToggleSwitch x:Name="SignedAndReputableLogSizeInputEnabled" Toggled="SignedAndReputableLogSizeInputEnabled_Toggled" />
+                                <ToggleSwitch x:Name="SignedAndReputableLogSizeInputEnabled" IsEnabled="False" Toggled="SignedAndReputableLogSizeInputEnabled_Toggled" />
 
                             </controls:WrapPanel>
 

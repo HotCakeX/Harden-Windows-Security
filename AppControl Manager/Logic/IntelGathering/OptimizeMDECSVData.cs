@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -51,14 +52,24 @@ namespace WDACConfig.IntelGathering
             // Read the CSV file line by line
             using StreamReader reader = new(filePath);
 
-            // Read the header line
+            // Read the header line which is the first line
             string? header = reader.ReadLine() ?? throw new InvalidDataException("CSV file is empty or header is missing.");
+
+            // Parse the header line
+            string[] headers = ParseCsvLine(header);
+
+            // Map header names to their indices so columns can be located precisely regardless of their positions in the CSV file
+            Dictionary<string, int> headerMap = headers
+                .Select((name, index) => new { name, index })
+                .ToDictionary(x => x.name, x => x.index);
 
             // Read the remaining lines of the CSV file until the end of the stream is reached (EOF)
             while (!reader.EndOfStream)
             {
                 // Read the next line
                 string? line = reader.ReadLine();
+
+                // Skip empty lines
                 if (line is null) continue;
 
                 // Split the line by commas
@@ -68,44 +79,47 @@ namespace WDACConfig.IntelGathering
                 // P.S not all rows have the same properties
                 MDEAdvancedHuntingData record = new()
                 {
-                    Timestamp = values.Length > 0 ? values[0] : null,
-                    DeviceId = values.Length > 1 ? values[1] : null,
-                    DeviceName = values.Length > 2 ? values[2] : null,
-                    ActionType = values.Length > 3 ? values[3] : null,
-                    FileName = values.Length > 4 ? values[4] : null,
-                    FolderPath = values.Length > 5 ? values[5] : null,
-                    SHA1 = values.Length > 6 ? values[6] : null,
-                    SHA256 = values.Length > 7 ? values[7] : null,
-                    InitiatingProcessSHA1 = values.Length > 8 ? values[8] : null,
-                    InitiatingProcessSHA256 = values.Length > 9 ? values[9] : null,
-                    InitiatingProcessMD5 = values.Length > 10 ? values[10] : null,
-                    InitiatingProcessFileName = values.Length > 11 ? values[11] : null,
-                    InitiatingProcessFileSize = values.Length > 12 ? values[12] : null,
-                    InitiatingProcessFolderPath = values.Length > 13 ? values[13] : null,
-                    InitiatingProcessId = values.Length > 14 ? values[14] : null,
-                    InitiatingProcessCommandLine = values.Length > 15 ? values[15] : null,
-                    InitiatingProcessCreationTime = values.Length > 16 ? values[16] : null,
-                    InitiatingProcessAccountDomain = values.Length > 17 ? values[17] : null,
-                    InitiatingProcessAccountName = values.Length > 18 ? values[18] : null,
-                    InitiatingProcessAccountSid = values.Length > 19 ? values[19] : null,
-                    InitiatingProcessVersionInfoCompanyName = values.Length > 20 ? values[20] : null,
-                    InitiatingProcessVersionInfoProductName = values.Length > 21 ? values[21] : null,
-                    InitiatingProcessVersionInfoProductVersion = values.Length > 22 ? values[22] : null,
-                    InitiatingProcessVersionInfoInternalFileName = values.Length > 23 ? values[23] : null,
-                    InitiatingProcessVersionInfoOriginalFileName = values.Length > 24 ? values[24] : null,
-                    InitiatingProcessVersionInfoFileDescription = values.Length > 25 ? values[25] : null,
-                    InitiatingProcessParentId = values.Length > 26 ? values[26] : null,
-                    InitiatingProcessParentFileName = values.Length > 27 ? values[27] : null,
-                    InitiatingProcessParentCreationTime = values.Length > 28 ? values[28] : null,
-                    InitiatingProcessLogonId = values.Length > 29 ? values[29] : null,
-                    ReportId = values.Length > 30 ? values[30] : null
+                    Timestamp = GetValue(values, headerMap, "Timestamp"),
+                    DeviceId = GetValue(values, headerMap, "DeviceId"),
+                    DeviceName = GetValue(values, headerMap, "DeviceName"),
+                    ActionType = GetValue(values, headerMap, "ActionType"),
+                    FileName = GetValue(values, headerMap, "FileName"),
+                    FolderPath = GetValue(values, headerMap, "FolderPath"),
+                    SHA1 = GetValue(values, headerMap, "SHA1"),
+                    SHA256 = GetValue(values, headerMap, "SHA256"),
+                    InitiatingProcessSHA1 = GetValue(values, headerMap, "InitiatingProcessSHA1"),
+                    InitiatingProcessSHA256 = GetValue(values, headerMap, "InitiatingProcessSHA256"),
+                    InitiatingProcessMD5 = GetValue(values, headerMap, "InitiatingProcessMD5"),
+                    InitiatingProcessFileName = GetValue(values, headerMap, "InitiatingProcessFileName"),
+                    InitiatingProcessFileSize = GetValue(values, headerMap, "InitiatingProcessFileSize"),
+                    InitiatingProcessFolderPath = GetValue(values, headerMap, "InitiatingProcessFolderPath"),
+                    InitiatingProcessId = GetValue(values, headerMap, "InitiatingProcessId"),
+                    InitiatingProcessCommandLine = GetValue(values, headerMap, "InitiatingProcessCommandLine"),
+                    InitiatingProcessCreationTime = GetValue(values, headerMap, "InitiatingProcessCreationTime"),
+                    InitiatingProcessAccountDomain = GetValue(values, headerMap, "InitiatingProcessAccountDomain"),
+                    InitiatingProcessAccountName = GetValue(values, headerMap, "InitiatingProcessAccountName"),
+                    InitiatingProcessAccountSid = GetValue(values, headerMap, "InitiatingProcessAccountSid"),
+                    InitiatingProcessVersionInfoCompanyName = GetValue(values, headerMap, "InitiatingProcessVersionInfoCompanyName"),
+                    InitiatingProcessVersionInfoProductName = GetValue(values, headerMap, "InitiatingProcessVersionInfoProductName"),
+                    InitiatingProcessVersionInfoProductVersion = GetValue(values, headerMap, "InitiatingProcessVersionInfoProductVersion"),
+                    InitiatingProcessVersionInfoInternalFileName = GetValue(values, headerMap, "InitiatingProcessVersionInfoInternalFileName"),
+                    InitiatingProcessVersionInfoOriginalFileName = GetValue(values, headerMap, "InitiatingProcessVersionInfoOriginalFileName"),
+                    InitiatingProcessVersionInfoFileDescription = GetValue(values, headerMap, "InitiatingProcessVersionInfoFileDescription"),
+                    InitiatingProcessParentId = GetValue(values, headerMap, "InitiatingProcessParentId"),
+                    InitiatingProcessParentFileName = GetValue(values, headerMap, "InitiatingProcessParentFileName"),
+                    InitiatingProcessParentCreationTime = GetValue(values, headerMap, "InitiatingProcessParentCreationTime"),
+                    InitiatingProcessLogonId = GetValue(values, headerMap, "InitiatingProcessLogonId"),
+                    ReportId = GetValue(values, headerMap, "ReportId")
                 };
 
+
+                // Get the JSON string from the CSV which is in the AdditionalFields property
+                string? additionalFieldsString = GetValue(values, headerMap, "AdditionalFields");
+
+
                 // Parse the AdditionalFields JSON if it exists
-                if (values.Length > 31 && !string.IsNullOrWhiteSpace(values[31]))
+                if (additionalFieldsString is not null && !string.IsNullOrWhiteSpace(additionalFieldsString))
                 {
-                    // Get the JSON string from the CSV which is in the AdditionalFields property
-                    string additionalFieldsString = values[31];
 
                     // Format the JSON string so the next method won't throw error
                     string FormattedJSONString = EnsureAllValuesAreQuoted(additionalFieldsString);
@@ -248,6 +262,22 @@ namespace WDACConfig.IntelGathering
         }
 
 
+        /// <summary>
+        /// Gets the value of a column from the CSV row and returns it
+        /// Returns null if the column does not exist or the value is empty
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="headerMap"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        private static string? GetValue(string[] values, Dictionary<string, int> headerMap, string columnName)
+        {
+            if (headerMap.TryGetValue(columnName, out int index) && index < values.Length)
+            {
+                return values[index];
+            }
+            return null;
+        }
 
 
         // 1. (?<=:)

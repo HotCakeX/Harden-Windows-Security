@@ -41,7 +41,7 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard 
+                <controls:SettingsCard
                            Description="Browse for the AppControl Manager MSIX file path on your device and then go back to the update page to install it. Its file name must match the following patterns: (FileName_x.x.x.x_x64.msix) or (FileName_x.x.x.x_arm64.msix)"
                            Header="Optional: select MSIX file path"
                            HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" IsActionIconVisible="False" Click="BrowseForCustomMSIXPathButton_Click">

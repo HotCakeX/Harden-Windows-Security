@@ -459,6 +459,84 @@ namespace WDACConfig
 
 
         /// <summary>
+        /// Creates a base policy based on the DefaultWindows template
+        /// </summary>
+        /// <param name="StagingArea"></param>
+        /// <param name="IsAudit"></param>
+        /// <param name="LogSize"></param>
+        /// <param name="deploy"></param>
+        /// <param name="RequireEVSigners"></param>
+        /// <param name="EnableScriptEnforcement"></param>
+        /// <param name="TestMode"></param>
+        public static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+        {
+
+            string policyName;
+
+            if (IsAudit)
+            {
+                EventLogUtility.SetLogSize(LogSize ?? 0);
+
+                policyName = "DefaultWindowsAudit";
+            }
+            else
+            {
+                policyName = "DefaultWindows";
+            }
+
+            // Paths only used during staging area processing
+            string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
+            string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
+
+            // Final Policy Path
+            string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+            // Get/Deploy the block rules
+            GetBlockRules(StagingArea, deploy);
+
+            Logger.Write("Copying the DefaultWindows.xml from Windows directory to the Staging Area");
+
+            File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml", tempPolicyPath, true);
+
+            Logger.Write("Resetting the policy ID and assigning policy name");
+
+            // Get the policy ID of the policy being created
+            string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+
+            if (deployAppControlSupplementalPolicy == true)
+            {
+                // Supply the policy ID of the policy being deployed to this method
+                SupplementalForSelf.Deploy(StagingArea, policyID);
+            }
+
+            SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
+
+            CiRuleOptions.Set(
+                tempPolicyPath,
+                template: CiRuleOptions.PolicyTemplate.Base,
+                EnableAuditMode: IsAudit,
+                RequireEVSigners: RequireEVSigners,
+                ScriptEnforcement: EnableScriptEnforcement,
+                TestMode: TestMode);
+
+
+            if (deploy)
+            {
+                Logger.Write("Converting the policy file to .CIP binary");
+
+                PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+
+                CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+            }
+
+            File.Copy(tempPolicyPath, finalPolicyPath, true);
+
+        }
+
+
+
+
+        /// <summary>
         /// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
         /// It generates a XML file compliant with CI Policies Schema.
         /// </summary>

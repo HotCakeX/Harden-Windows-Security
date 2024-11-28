@@ -75,7 +75,7 @@ namespace WDACConfig.IntelGathering
                 if (fileIsSigned)
                 {
 
-                    // The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that AppControl policy uses for EKU-based authorization
+                    // The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
                     // Only the leaf certificate of the primary signer has EKUs, others such as root or intermediate have KUs only.
                     ekuOIDs = FileSignatureResults
                        .Where(p => p.Signer?.SignerInfos is not null)

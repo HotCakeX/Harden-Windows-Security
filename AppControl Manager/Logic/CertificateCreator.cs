@@ -10,7 +10,7 @@ namespace WDACConfig
     {
 
         /// <summary>
-        /// Build a self-signed on-device certificate for the purpose of AppControl policy signing
+        /// Build a self-signed on-device certificate for the purpose of App Control policy signing
         /// Use certutil -dump -v '.\codesign.cer' to view the certificate properties, such as encoding of the certificate fields like the subject
         /// </summary>
         /// <param name="CommonName"></param>

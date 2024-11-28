@@ -12,6 +12,11 @@ While much of the process is automated, you remain in full control. With just a 
 
 Rest assured, no unauthorized software or malware can make its way into your Supplemental policy. Every file and event is accompanied by highly detailed information, eliminating any guesswork and ensuring only trusted elements are included.
 
+If something like a power outage occurs during the audit mode phase, on the next reboot, the enforced mode base policy will be automatically deployed using a scheduled task that acts as a "snapback guarantee".
+
+> [!NOTE]\
+> This feature can also detect and create supplemental policy for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode so that it can capture those executables.
+
 <br>
 
 ## Configuration Details

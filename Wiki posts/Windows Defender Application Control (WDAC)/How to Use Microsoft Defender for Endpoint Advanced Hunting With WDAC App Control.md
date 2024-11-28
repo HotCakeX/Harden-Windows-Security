@@ -4,7 +4,7 @@ App Control for Business is a highly effective security feature that empowers yo
 
 The application whitelisting approach serves as a potent defense against emerging and unknown threats. By emphasizing the identification of trusted applications, it automatically blocks any software that falls outside this trusted realm.
 
-Microsoft Defender for Endpoint (MDE) is one of the tools that can be used by enterprises and organizations to develop the trusted applications policy and mange it at scale. MDE provides the intelligence and insights needed to create and maintain a robust application control policy through its Advanced Hunting feature. This feature uses KQL [(Kusto Query Language)](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/) to query the data collected by MDE and using the WDACConfig module, we can turn this actionable data into App Control policies. We can then use Intune to deploy these policies to our endpoints. All of these tools are built for scalability.
+Microsoft Defender for Endpoint (MDE) is one of the tools that can be used by enterprises and organizations to develop the trusted applications policy and mange it at scale. MDE provides the intelligence and insights needed to create and maintain a robust application control policy through its Advanced Hunting feature. This feature uses KQL [(Kusto Query Language)](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/) to query the data collected by MDE and using the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager), we can turn this actionable data into App Control policies. We can then use Intune to deploy these policies to our endpoints. All of these tools are built for scalability.
 
 <br>
 
@@ -17,27 +17,11 @@ Microsoft Defender for Endpoint (MDE) is one of the tools that can be used by en
 
 To start, we need our endpoints to be generating data and intelligence we can work with. These data points are the Code Integrity and AppLocker events. These events are generated when an application or file is blocked or audited by App Control, or when a script or MSI file is blocked or audited by AppLocker. We can trigger the data generation by deploying App Control policies to our endpoints in Audit mode. This mode will not block any applications, instead it will generate data points for any application, file, script, MSI file and so on that would have been blocked if the policy was in Enforce mode.
 
-You can create Audit mode policies using the WDACConfig module based on different levels of trust.
+You can create Audit mode policies using the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) based on different levels of trust. [Use this page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) to see what kind of audit events each base policy template generates when deployed in audit mode.
 
-For instance, the following command will create an Audit mode policy that once deployed on an endpoint, starts generating Audit logs for any file that runs but is not part of the Windows by default.
+For instance, once the DefaultWindows template is deployed on an endpoint, it starts generating Audit logs for any file that runs but is not part of the Windows by default. On the other hand, deploying the AllowMicrosoft base policy in Audit mode starts generating Audit logs for any file that runs but is not signed by Microsoft certificates.
 
-```powershell
-New-WDACConfig -PolicyType DefaultWindows -Audit
-```
-
-<br>
-
-Another option would be the following command, which will create an Audit mode policy that once deployed, starts generating Audit logs for any file that runs but is not signed by Microsoft certificates.
-
-```powershell
-New-WDACConfig -PolicyType AllowMicrosoft -Audit
-```
-
-<br>
-
-Please refer to [this document](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig) for further info about the commands.
-
-You will then use Intune to deploy the generated policies to as many endpoints as you want.
+After generating the policy files using the app, you will then use Intune to deploy them to as many endpoints as you want.
 
 > [!TIP]\
 > [Deploy App Control policies using Mobile Device Management (MDM)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune)
@@ -46,7 +30,7 @@ You will then use Intune to deploy the generated policies to as many endpoints a
 
 ## Collecting the Data from MDE Advanced Hunting
 
-Now we need to collect the data from MDE Advanced Hunting. We can customize this query to be more specific to our environment, for instance by targeting specific devices and so on, but the following query will give us a good starting point by collecting all of the Code Integrity and AppLocker events:
+Now we need to collect the data from MDE Advanced Hunting. The following query will give us a good starting point by collecting all of the Code Integrity and AppLocker events:
 
 ```kql
 DeviceEvents
@@ -57,12 +41,27 @@ DeviceEvents
 
 <br>
 
+We can customize the query to be more specific to our environment, for instance by targeting an specific device among all the devices:
+
+```kql
+
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "mainframe"
+```
+
+`mainframe` in this example is the name of our device.
+
+<br>
+
 > [!NOTE]\
 > You can access Microsoft Defender for Endpoint's portal by navigating to: [https://security.microsoft.com](https://security.microsoft.com)
 
 <br>
 
-That query generates a standard output of the data in CSV file format which is compatible with what the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) requires in order to generate App Control policies. If you want to customize the query further, make sure the subsequent filters are applied after the initial query to ensure correct data format.
+That query generates a standard output of the data in CSV file format which is compatible with what the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) requires in order to generate App Control policies. If you want to customize the query further, make sure the subsequent filters are applied after the initial query to ensure correct data format.
 
 <br>
 
@@ -85,28 +84,20 @@ That query generates a standard output of the data in CSV file format which is c
 
 ## Generating the App Control Policies
 
-After exporting the data from MDE Advanced Hunting, we can use the [**WDACConfig module**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to generate App Control policies. We need to feed the CSV file(s) we collected MDE Advanced Hunting data into the module like so:
-
-```powershell
-ConvertTo-WDACPolicy -Source MDEAdvancedHunting -MDEAHLogs <Path to one or more CSV files> -BasePolicyGUID <Base policy GUID>
-```
-
-It is only one example of how you can utilize the WDACConfig for policy generation based on MDE AH data, for more information about the cmdlet please refer to its [**documentations available here**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy).
-
-The command we used above will process the CSV file(s) and open a GUI window where you can filter the logs based on many criteria, and then either select all or only select some of the logs to be included in the App Control policy.
-
-Note that the generated policy will be a Supplemental policy.
+After exporting the data from MDE Advanced Hunting, we can use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting) to generate App Control policies. We need to feed the exported CSV file(s) we collected to the application by simply browsing for them. The app will quickly scan them and display them with full details. It provides controls that allow you to filter or sort the logs based on different properties. You can search through the scan results, remove unwanted logs and once you're happy with the results, you can generate the supplemental App Control policy.
 
 <br>
 
-### WDACConfig Features For MDE Advanced Hunting
+### AppControl Manager Features For MDE Advanced Hunting
 
 * Systematic approach for converting the MDE AH data to App Control policy with high precision and performance
 * Uses parallel processing to speed up the policy generation process
 * Provides a GUI for filtering the logs based on various criteria
 * Never includes duplicate rules in the policy, regardless of the number of the duplicate logs you give it
 
-### The Module Can Create 3 Types of Rules for Files:
+### The App Can Create 3 Types of Rules for Files:
+
+You can choose the level based on which the logs will be scanned. By default, the following rules apply to the scan:
 
 * If a file is unsigned then a hash rule will be created for it.
 * If a file is signed then there are multiple possibilities:
@@ -117,29 +108,9 @@ These levels are selected based on their security. You can read more about the l
 
 <br>
 
-### Video Demonstration
-
-The following video demonstrates the process of collecting the data from MDE Advanced Hunting and generating App Control policies using the WDACConfig module
-
-<a href="https://youtu.be/oyz0jFzOOGA?si=tJbFbzRJNy79lUo7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/MDE%20Advanced%20Hunting%20YouTube%20Thumbnail.png" alt="MDE AH Demo"></a>
-
-<br>
-
 ## Deploying the App Control Policies
 
-After generating the Supplemental policies based off of the MDE Advanced Hunting data, you need to remove the Audit mode policies you deployed to your endpoints initially and replace them with Enforced mode policies.
-
-#### [Generate Allow Microsoft Base Policy (Enforced Mode)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--policytype)
-
-```powershell
-New-WDACConfig -PolicyType AllowMicrosoft
-```
-
-#### [Generate Default Windows Base Policy (Enforced Mode)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--policytype)
-
-```powershell
-New-WDACConfig -PolicyType DefaultWindows
-```
+After generating the Supplemental policies based off of the MDE Advanced Hunting data, you need to remove the Audit mode policies you deployed to your endpoints initially and replace them with Enforced mode policies. [AppControl Manager offers an easy way to do so.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information)
 
 <br>
 

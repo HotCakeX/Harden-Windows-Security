@@ -43,7 +43,7 @@
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif" alt="Indicator for App Control for Business Resources"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction"> App Control for Business Resources </a>
 >
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The WDACConfig Module for App Control for Business"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig"> The WDACConfig Module for App Control for Business </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The AppControl Manager app"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"> AppControl Manager application </a>
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif" alt="Indicator for the Rationale Behind This GitHub Repository"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale Behind This GitHub Repository </a>
 
@@ -1414,7 +1414,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> **T**o combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying a [WDAC](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/feature-availability) in the Downloads folder, using the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig).
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> **T**o combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying an [App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/feature-availability) in the Downloads folder.
 
 This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.
 
@@ -1432,7 +1432,7 @@ They are [insecure](https://textslashplain.com/2024/05/20/attack-techniques-full
 
 <br>
 
-All of the policies can be easily removed using the [**Unprotect-WindowsSecurity**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#unprotect-windowssecurity-cmdlet) or [**Remove-WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig) cmdlets.
+All of the policies can be easily removed using the [**Unprotect-WindowsSecurity**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#unprotect-windowssecurity-cmdlet) or [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager).
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

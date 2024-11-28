@@ -89,6 +89,18 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * The AppControl Manager always uses the latest .NET and SDK versions, ensuring all the security patches released by Microsoft will be included.
 
+* The entire codebase is thoroughly commented, allowing code reviewers to effortlessly examine and verify every aspect of AppControl Manager's source code.
+
+<br>
+
+### Why Does AppControl Manager Require Administrator Privileges?
+
+* AppControl Manager operates exclusively within the "WDACConfig" directory located in the `Program Files` directory for all read and write operations. No data is accessed or modified outside this directory. This design ensures that non-elevated processes, unauthorized software, or unprivileged malware on the system cannot alter the policies you create, the certificates you generate, or the CIP binary files you deploy.
+
+* Administrator privileges are required for scanning Code Integrity and AppLocker logs. These scans are integral to several application functions, providing enhanced insights and enabling the generation of precise supplemental policies tailored to your needs.
+
+* Deploying, removing, modifying, or checking the status of policies also necessitates Administrator privileges to ensure secure and reliable execution of these operations.
+
 <br>
 
 ## About the Installation Process

@@ -1,0 +1,97 @@
+using System;
+using System.Management;
+
+namespace HardwareSecurityAnalyzer
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hardware Security Analyzer");
+            Console.WriteLine("==========================");
+            Console.WriteLine();
+
+            GetCPUInfo();
+            GetRAMInfo();
+            GetStorageInfo();
+            GetMotherboardInfo();
+            GetBIOSInfo();
+
+            Console.WriteLine("\nSecurity Recommendations:");
+            Console.WriteLine("- Ensure BIOS is up to date.");
+            Console.WriteLine("- Check for any unauthorized hardware changes.");
+            Console.WriteLine("- Regularly monitor hardware configurations.");
+        }
+
+        static void GetCPUInfo()
+        {
+            Console.WriteLine("CPU Information:");
+            var searcher = new ManagementObjectSearcher("select * from Win32_Processor");
+            foreach (var obj in searcher.Get())
+            {
+                Console.WriteLine($"- Name: {obj["Name"]}");
+                Console.WriteLine($"- Manufacturer: {obj["Manufacturer"]}");
+                Console.WriteLine($"- Cores: {obj["NumberOfCores"]}");
+                Console.WriteLine($"- Threads: {obj["NumberOfLogicalProcessors"]}");
+            }
+            Console.WriteLine();
+        }
+
+        static void GetRAMInfo()
+        {
+            Console.WriteLine("RAM Information:");
+            var searcher = new ManagementObjectSearcher("select * from Win32_PhysicalMemory");
+            foreach (var obj in searcher.Get())
+            {
+                Console.WriteLine($"- Capacity: {Convert.ToInt64(obj["Capacity"]) / (1024 * 1024)} MB");
+                Console.WriteLine($"- Speed: {obj["Speed"]} MHz");
+                Console.WriteLine($"- Manufacturer: {obj["Manufacturer"]}");
+            }
+            Console.WriteLine();
+        }
+
+        static void GetStorageInfo()
+        {
+            Console.WriteLine("Storage Devices:");
+            var searcher = new ManagementObjectSearcher("select * from Win32_DiskDrive");
+            foreach (var obj in searcher.Get())
+            {
+                Console.WriteLine($"- Model: {obj["Model"]}");
+                Console.WriteLine($"- Size: {Convert.ToInt64(obj["Size"]) / (1024 * 1024 * 1024)} GB");
+                Console.WriteLine($"- Type: {obj["InterfaceType"]}");
+            }
+            Console.WriteLine();
+        }
+
+        static void GetMotherboardInfo()
+        {
+            Console.WriteLine("Motherboard Information:");
+            var searcher = new ManagementObjectSearcher("select * from Win32_BaseBoard");
+            foreach (var obj in searcher.Get())
+            {
+                Console.WriteLine($"- Manufacturer: {obj["Manufacturer"]}");
+                Console.WriteLine($"- Product: {obj["Product"]}");
+            }
+            Console.WriteLine();
+        }
+
+        static void GetBIOSInfo()
+        {
+            Console.WriteLine("BIOS Information:");
+            var searcher = new ManagementObjectSearcher("select * from Win32_BIOS");
+            foreach (var obj in searcher.Get())
+            {
+                Console.WriteLine($"- Version: {obj["Version"]}");
+                Console.WriteLine($"- Release Date: {ManagementDateTimeConverter.ToDateTime(obj["ReleaseDate"].ToString())}");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+
+
+
+Write-Up
+
+The Hardware Security Analyzer (HSA) is designed to provide a comprehensive overview of the hardware configuration of a computer system. 
+By gathering detailed information about the CPU, RAM, storage devices, motherboard, and BIOS, the tool helps security professionals assess the security posture of the hardware.

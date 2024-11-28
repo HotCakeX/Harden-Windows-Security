@@ -97,17 +97,17 @@
                 <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies" Tag="BuildNewCertificate"/>
 
                 <!-- Make it expanded by default to show the import feature to the user at first sight -->
-                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create AppControl policy either from the local event logs or EVTX files" Tag="EventLogsPolicyCreation">
+                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create App Control policy either from the local event logs or EVTX files" Tag="EventLogsPolicyCreation">
 
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="Create policy from MDE Advanced Hunting" ToolTipService.ToolTip="Create AppControl policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs" Tag="MDEAHPolicyCreation"/>
+                        <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="MDE Advanced Hunting" ToolTipService.ToolTip="Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs" Tag="MDEAHPolicyCreation" />
                     </NavigationViewItem.MenuItems>
 
                 </NavigationViewItem>
 
                 <NavigationViewItemSeparator/>
 
-                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy AppControl Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system" Tag="Deployment"/>
+                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system" Tag="Deployment"/>
 
                 <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes"/>
 

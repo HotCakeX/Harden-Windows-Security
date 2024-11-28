@@ -43,7 +43,8 @@ Style="{StaticResource BodyTextBlockStyle}">
      on the system. </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Check out this page for more info" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting" />
+                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Secure-Policy-Settings" />
+
             </controls:WrapPanel>
 
         <Border

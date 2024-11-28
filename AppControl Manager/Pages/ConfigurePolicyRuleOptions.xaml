@@ -46,7 +46,7 @@ Style="{StaticResource BodyTextBlockStyle}">
   </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Refer to this chart for more info about each rule option" NavigateUri="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options" />
+                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
 
             </controls:WrapPanel>
 

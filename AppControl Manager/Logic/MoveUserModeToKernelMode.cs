@@ -8,7 +8,7 @@ namespace WDACConfig
         /// <summary>
         /// Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
         /// deletes the entire User mode signing scenario block
-        /// This is used during the creation of Strict Kernel-mode AppControl policy for complete BYOVD protection scenario.
+        /// This is used during the creation of Strict Kernel-mode App Control policy for complete BYOVD protection scenario.
         /// It doesn't consider <FileRulesRef> node in the SigningScenario 12 when deleting it because for kernel-mode policy everything is signed and we don't deal with unsigned files.
         /// </summary>
         /// <param name="filePath">The path to the XML file</param>

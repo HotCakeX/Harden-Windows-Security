@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using System;
 using System.Threading.Tasks;
-using static WDACConfig.BasePolicyCreator;
 
 namespace WDACConfig.Pages
 {
@@ -16,6 +15,9 @@ namespace WDACConfig.Pages
 
             // Initially set it to disabled until the switch is toggled
             AllowMicrosoftLogSizeInput.IsEnabled = false;
+
+            // Initially set it to disabled until the switch is toggled
+            DefaultWindowsLogSizeInput.IsEnabled = false;
 
             // Initially set it to disabled until the switch is toggled
             SignedAndReputableLogSizeInput.IsEnabled = false;
@@ -30,6 +32,7 @@ namespace WDACConfig.Pages
         private void DisableDeployButtons()
         {
             AllowMicrosoftCreateAndDeploy.IsEnabled = false;
+            DefaultWindowsCreateAndDeploy.IsEnabled = false;
             SignedAndReputableCreateAndDeploy.IsEnabled = false;
             RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
             RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
@@ -38,6 +41,7 @@ namespace WDACConfig.Pages
         private void EnableDeployButtons()
         {
             AllowMicrosoftCreateAndDeploy.IsEnabled = true;
+            DefaultWindowsCreateAndDeploy.IsEnabled = true;
             SignedAndReputableCreateAndDeploy.IsEnabled = true;
             RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
             RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
@@ -182,7 +186,164 @@ namespace WDACConfig.Pages
             }
         }
 
+
+
+        private void AllowMicrosoftAudit_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            AllowMicrosoftLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
+            AllowMicrosoftLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
+        }
+
         #endregion
+
+
+
+        #region For Default Windows Policy
+
+        // Event handler for creating DefaultWindows policy
+        private async void DefaultWindowsCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
+            try
+            {
+
+                // Disable the buttons to prevent multiple clicks (on the UI thread)
+                DefaultWindowsCreate.IsEnabled = false;
+                DefaultWindowsCreateAndDeploy.IsEnabled = false;
+
+                string stagingArea = StagingArea.NewStagingArea("BuildDefaultWindows").ToString();
+
+                // Capture the values from the UI elements (on the UI thread)
+                bool auditEnabled = DefaultWindowsAudit.IsOn;
+                bool requireEVSigners = DefaultWindowsRequireEVSigners.IsOn;
+                bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
+                bool testMode = DefaultWindowsTestMode.IsOn;
+
+                #region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
+                ulong? logSize = null;
+
+                if (DefaultWindowsLogSizeInput.IsEnabled)
+                {
+                    // Get the NumberBox value which is a double (entered in megabytes)
+                    double inputValue = DefaultWindowsLogSizeInput.Value;
+
+                    // Convert the value from megabytes to bytes
+                    double bytesValue = inputValue * 1024 * 1024;
+
+                    // Convert the value to ulong
+                    logSize = Convert.ToUInt64(bytesValue);
+                }
+                #endregion
+
+                // Run the background operation using captured values
+                await Task.Run(() =>
+                {
+                    BasePolicyCreator.BuildDefaultWindows(stagingArea,
+                        auditEnabled,
+                        logSize,
+                        false, // Do not deploy, only create
+                        requireEVSigners,
+                        enableScriptEnforcement,
+                        testMode,
+                        false
+                    );
+                });
+
+            }
+
+            finally
+            {
+
+                // Re-enable the buttons once the work is done (back on the UI thread)
+                DefaultWindowsCreate.IsEnabled = true;
+                DefaultWindowsCreateAndDeploy.IsEnabled = true;
+            }
+        }
+
+
+        // Event handler for creating & deploying DefaultWindows policy
+        private async void DefaultWindowsCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
+            try
+            {
+
+                // Disable the buttons to prevent multiple clicks
+                DefaultWindowsCreate.IsEnabled = false;
+                DisableDeployButtons();
+
+                string stagingArea = StagingArea.NewStagingArea("BuildDefaultWindows").ToString();
+
+                // Capture UI values
+                bool auditEnabled = DefaultWindowsAudit.IsOn;
+                bool requireEVSigners = DefaultWindowsRequireEVSigners.IsOn;
+                bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
+                bool testMode = DefaultWindowsTestMode.IsOn;
+
+                #region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
+                ulong? logSize = null;
+
+                if (DefaultWindowsLogSizeInput.IsEnabled)
+                {
+                    // Get the NumberBox value which is a double (entered in megabytes)
+                    double inputValue = DefaultWindowsLogSizeInput.Value;
+
+                    // Convert the value from megabytes to bytes
+                    double bytesValue = inputValue * 1024 * 1024;
+
+                    // Convert the value to ulong
+                    logSize = Convert.ToUInt64(bytesValue);
+                }
+                #endregion
+
+                // Run background work using captured values
+                await Task.Run(() =>
+                {
+                    BasePolicyCreator.BuildDefaultWindows(stagingArea,
+                        auditEnabled,
+                        logSize,
+                        true, // Deploy it as well
+                        requireEVSigners,
+                        enableScriptEnforcement,
+                        testMode,
+                        true
+                    );
+
+                });
+
+            }
+            finally
+            {
+
+                // Re-enable the buttons once the work is done
+                DefaultWindowsCreate.IsEnabled = true;
+                EnableDeployButtons();
+
+            }
+        }
+
+        // Event handler for the ToggleSwitch to enable/disable the log size input
+        private void DefaultWindowsLogSizeInputEnabled_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            if (DefaultWindowsLogSizeInputEnabled.IsOn)
+            {
+                DefaultWindowsLogSizeInput.IsEnabled = true;
+            }
+            else
+            {
+                DefaultWindowsLogSizeInput.IsEnabled = false;
+            }
+        }
+
+
+        private void DefaultWindowsAudit_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            DefaultWindowsLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
+            DefaultWindowsLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
+        }
+
+        #endregion
+
 
 
         #region For Signed and Reputable Policy
@@ -316,6 +477,13 @@ namespace WDACConfig.Pages
             }
         }
 
+
+        private void SignedAndReputableAudit_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            SignedAndReputableLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
+            SignedAndReputableLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
+        }
+
         #endregion
 
 
@@ -333,7 +501,7 @@ namespace WDACConfig.Pages
             TextBlock formattedTextBlock = new();
 
             // Gather driver block list info asynchronously
-            DriverBlockListInfo? driverBlockListInfo = await Task.Run(() => BasePolicyCreator.DriversBlockListInfoGathering());
+            BasePolicyCreator.DriverBlockListInfo? driverBlockListInfo = await Task.Run(() => BasePolicyCreator.DriversBlockListInfoGathering());
 
             // Prepare the text to display
             if (driverBlockListInfo is not null)
@@ -518,7 +686,10 @@ namespace WDACConfig.Pages
             }
         }
 
+
+
         #endregion
+
 
     }
 }

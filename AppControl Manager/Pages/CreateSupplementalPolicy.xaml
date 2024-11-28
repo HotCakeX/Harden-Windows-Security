@@ -46,7 +46,7 @@
 
             </Grid.Resources>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
                 <TextBlock
 TextWrapping="WrapWholeWords"
@@ -56,6 +56,8 @@ Style="{StaticResource BodyTextBlockStyle}">
     Create a <Bold>Supplemental</Bold> policy that will <Run Foreground="{ThemeResource SystemAccentColor}">expand</Run> the scope of a base policy. Supplemental policies can only allow files, they cannot have deny rules in them.
 </Span>
                 </TextBlock>
+
+                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
 
             </controls:WrapPanel>
 
@@ -267,7 +269,7 @@ Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Clic
                                 <RadioButton Content="User Mode" IsChecked="True" Checked="UserModeRadioButton_Checked"/>
                                 <RadioButton Content="Kernel Mode" Checked="KernelModeRadioButton_Checked"/>
                             </RadioButtons>
-                            
+
                         </controls:SettingsCard>
 
                     </controls:SettingsExpander.Items>

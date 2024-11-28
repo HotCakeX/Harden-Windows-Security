@@ -39,9 +39,9 @@ namespace WDACConfig
             { typeof(Pages.Logs), "Logs" },
             { typeof(Pages.Simulation), "Simulation" },
             { typeof(Pages.Update), "Update" },
-            { typeof(Pages.Deployment), "Deploy AppControl Policy" },
+            { typeof(Pages.Deployment), "Deploy App Control Policy" },
             { typeof(Pages.EventLogsPolicyCreation), "Create policy from Event Logs" },
-            { typeof(Pages.MDEAHPolicyCreation), "Create policy from MDE Advanced Hunting" },
+            { typeof(Pages.MDEAHPolicyCreation), "MDE Advanced Hunting" },
             { typeof(Pages.AllowNewApps), "Allow New Apps" },
             { typeof(Pages.BuildNewCertificate), "Build New Certificate" },
             { typeof(Pages.UpdatePageCustomMSIXPath), "Custom MSIX Path" }, // sub-page
@@ -304,7 +304,7 @@ namespace WDACConfig
                             Source = new Scan()
                         };
 
-                        // Create Policy from MDE Advanced Hunting
+                        // MDE Advanced Hunting
                         CreatePolicyFromMDEAHNavItem.Icon = new AnimatedIcon
                         {
                             Margin = new Thickness(0, -8, -8, -8),
@@ -434,7 +434,7 @@ namespace WDACConfig
                             Foreground = accentBrush
                         };
 
-                        // Create Policy from MDE Advanced Hunting
+                        // MDE Advanced Hunting
                         CreatePolicyFromMDEAHNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uEB44",
@@ -548,7 +548,7 @@ namespace WDACConfig
                             Glyph = "\uEA18"
                         };
 
-                        // Create Policy from MDE Advanced Hunting
+                        // MDE Advanced Hunting
                         CreatePolicyFromMDEAHNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uEB44"

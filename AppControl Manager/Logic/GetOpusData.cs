@@ -4,28 +4,25 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 
-#pragma warning disable SYSLIB1054
-
 namespace WDACConfig
 {
-    public static class Opus
+    public static partial class Opus
     {
-        internal static class Crypt32
+        internal static partial class Crypt32
         {
 
             // More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
-            [DllImport("crypt32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-            internal static extern bool CryptDecodeObject(
-                        uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
-                        IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
-                        [In] byte[] pbEncoded,          // Pointer to a buffer that contains the encoded structure
-                        uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
-                        uint dwFlags,                   // Flags that modify the behavior of the function
-                        [Out] IntPtr pvStructInto,      // Pointer to a buffer that receives the decoded structure
-                        ref uint pcbStructInfo          // Pointer to a variable that specifies the size, in bytes, of the pvStructInfo buffer
-                    );
-
-
+            [LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static partial bool CryptDecodeObject(
+                uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
+                IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
+               [In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
+                uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
+                uint dwFlags,                   // Flags that modify the behavior of the function
+                IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure
+                ref uint pcbStructInfo          // Pointer to a variable that specifies the size, in bytes, of the pvStructInfo buffer
+            );
         }
 
         // More info about this at the end of the code

@@ -1,22 +1,18 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
-
-#pragma warning disable CA1838 // Avoid 'StringBuilder' parameters for P/Invoke methods
 
 namespace WDACConfig
 {
-    public static class CryptoAPI
+    public static partial class CryptoAPI
     {
-        // Importing function from crypt32.dll to access certificate information
-        // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringa
-        [DllImport("crypt32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern bool CertGetNameString(
-            IntPtr pCertContext, // the handle property of the certificate object
+        // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringw
+        [LibraryImport("crypt32.dll", EntryPoint = "CertGetNameStringW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+        private static partial int CertGetNameString(
+            IntPtr pCertContext, // The handle property of the certificate object
             int dwType,
             int dwFlags,
             IntPtr pvTypePara,
-            StringBuilder pszNameString,
+            [Out] char[] pszNameString,
             int cchNameString
         );
 
@@ -25,42 +21,58 @@ namespace WDACConfig
         public const int CERT_NAME_ATTR_TYPE = 3; // Display type for attributes
         public const int CERT_NAME_ISSUER_FLAG = 0x1; // Flag indicating that the issuer name should be retrieved
 
-        // Define a helper method to get the name string
+        /// <summary>
+        /// The main method of the class to get the name string
+        /// </summary>
+        /// <param name="pCertContext"></param>
+        /// <param name="dwType"></param>
+        /// <param name="pvTypePara"></param>
+        /// <param name="isIssuer"></param>
+        /// <returns></returns>
         public static string GetNameString(IntPtr pCertContext, int dwType, string? pvTypePara, bool isIssuer)
         {
-            // Allocate a buffer for the name string, setting it big to handle longer names if needed
+            // Allocate a buffer for the name string
             const int bufferSize = 1024;
-            StringBuilder nameString = new(bufferSize);
+            char[] nameBuffer = new char[bufferSize];
 
             // Convert the pvTypePara to a pointer if needed
             IntPtr pvTypeParaPtr = IntPtr.Zero;
-            if (!string.IsNullOrEmpty(pvTypePara))
+
+            try
             {
-                // Using Unicode encoding for better compatibility
-                pvTypeParaPtr = Marshal.StringToHGlobalUni(pvTypePara);
+
+                if (!string.IsNullOrEmpty(pvTypePara))
+                {
+                    // Using Unicode encoding for better compatibility
+                    pvTypeParaPtr = Marshal.StringToHGlobalUni(pvTypePara);
+                }
+
+                // Set flags to retrieve issuer name if needed
+                int flags = isIssuer ? CERT_NAME_ISSUER_FLAG : 0;
+
+                // Call the CertGetNameString function to get the name string
+                int result = CertGetNameString(
+                    pCertContext,
+                    dwType,
+                    flags,
+                    pvTypeParaPtr,
+                    nameBuffer,
+                    nameBuffer.Length
+                );
+
+                // Return the name string or an empty string if failed
+                return result > 0 ? new string(nameBuffer, 0, result - 1) : string.Empty; // Exclude null terminator
+
             }
-
-            // Set flags to retrieve issuer name if needed
-            int flags = isIssuer ? CERT_NAME_ISSUER_FLAG : 0;
-
-            // Call the CertGetNameString function to get the name string
-            bool result = CertGetNameString(
-                pCertContext,
-                dwType,
-                flags,
-                pvTypeParaPtr,
-                nameString,
-                nameString.Capacity
-            );
-
-            // Free the pointer if allocated
-            if (pvTypeParaPtr != IntPtr.Zero)
+            finally
             {
-                Marshal.FreeHGlobal(pvTypeParaPtr);
-            }
+                // Free the pointer if allocated
+                if (pvTypeParaPtr != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(pvTypeParaPtr);
+                }
 
-            // Return the name string or an empty string if failed
-            return result ? nameString.ToString() : string.Empty;
+            }
         }
     }
 }

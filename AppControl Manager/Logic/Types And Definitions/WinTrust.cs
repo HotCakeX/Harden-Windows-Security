@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-#pragma warning disable SYSLIB1054
-
 namespace WDACConfig
 {
     // This class contains all of the WinTrust related functions and codes
@@ -113,17 +111,15 @@ namespace WDACConfig
         // Constants related to WinTrust
         internal const uint StateActionVerify = 1;
         internal const uint StateActionClose = 2;
-        internal static readonly Guid GenericWinTrustVerifyActionGuid = new("{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}");
+        internal static Guid GenericWinTrustVerifyActionGuid = new("{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}");
 
-
-        // External method declarations for WinVerifyTrust and WTHelperProvDataFromStateData
-        [DllImport("wintrust.dll", CharSet = CharSet.Unicode)]
 
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-winverifytrust
+        [LibraryImport("wintrust.dll", EntryPoint = "WinVerifyTrust")]
         // Set to return a WinVerifyTrustResult enum
-        internal static extern WinVerifyTrustResult WinVerifyTrust(
+        internal static partial WinVerifyTrustResult WinVerifyTrust(
             IntPtr hwnd,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid pgActionID,
+            ref Guid pgActionID,
             IntPtr pWVTData);
 
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-wthelperprovdatafromstatedata

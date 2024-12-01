@@ -107,6 +107,30 @@ Unprotect-WindowsSecurity
 
 <br>
 
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/WDACConfig/Icon%20smaller.png" alt="GitHub logo pink SVG"> [Install the AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+
+* [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
+* [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+
+```powershell
+(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
+```
+
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/APNGs/AppControl%20Manager%20Readme.apng" alt="AppControl Manager app">
+
+
+</div>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Requirements <a href="#requirements">![RequirementsIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Requirements.png)</a>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> PowerShell (latest version), Install it from [🛍️ Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D) or using Winget: `Winget install Microsoft.PowerShell`

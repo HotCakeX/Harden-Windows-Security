@@ -207,7 +207,7 @@ namespace WDACConfig
                     // Call WinVerifyTrust to verify trust on the file
                     WinTrust.WinVerifyTrustResult verifyTrustResult = WinTrust.WinVerifyTrust(
                         IntPtr.Zero,
-                        WinTrust.GenericWinTrustVerifyActionGuid,
+                        ref WinTrust.GenericWinTrustVerifyActionGuid,
                         winTrustDataPointer
                     );
 
@@ -314,7 +314,7 @@ namespace WDACConfig
 
                         // Convert TrustedData back to pointer and call WinVerifyTrust to close the structure
                         Marshal.StructureToPtr(TrustedData, winTrustDataPointer, false);
-                        _ = WinTrust.WinVerifyTrust(IntPtr.Zero, WinTrust.GenericWinTrustVerifyActionGuid, winTrustDataPointer);
+                        _ = WinTrust.WinVerifyTrust(IntPtr.Zero, ref WinTrust.GenericWinTrustVerifyActionGuid, winTrustDataPointer);
                     }
 
                     // Free memory allocated to winTrustDataPointer

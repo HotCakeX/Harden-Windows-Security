@@ -1,4 +1,4 @@
-# Script Enforcement and PowerShell Constrained Language Mode in WDAC App Control Policies
+# Script Enforcement and PowerShell Constrained Language Mode in App Control Policies
 
 ## Introduction
 
@@ -102,23 +102,22 @@ As you can see, we need the TBS Hash value of the root certificate.
 
 <br>
 
-### Use the WDACConfig Module to Automatically Allow Certificates
+### Use the AppControl Manager to Automatically Allow Certificates
 
-You can use the WDACConfig module to create a supplemental policy that allows the certificates you select to be allowed by App Control. To do that, you can use the following command:
+You can use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create a supplemental policy that allows the certificates you select to be allowed by App Control.
 
-```powershell
-New-SupplementalWDACConfig -Certificates -CertificatePaths "certificate.cer" -SuppPolicyName '<Certificate Name>' -PolicyPath "<Path to Base policy XML file>"
-```
-
-[**More info regarding the cmdlet is available here**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig#new-supplementalwdacconfig--certificates)
+***[Refer to this page for more information](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy#create-a-supplemental-policy-from-certificate-files)***
 
 <br>
 
-A manual way to get the TBS Hash value of a certificate is using the following command, which also works for signed files and will show the details of the certificates in the chain as well.
 
-```powershell
-certutil.exe –v <Path To .cer file>
-```
+> [!TIP]\
+> A manual way to get the TBS Hash value of a certificate is using the following command, which also works for signed files and will show the details of the certificates in the chain as well.
+>
+> ```powershell
+> certutil.exe –v <Path To .cer file>
+> ```
+>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Screenshot%20TBS%20Hash%20CertUtil.png" alt="TBS Hash value using certutil.exe -v">
 
@@ -131,10 +130,5 @@ When an App Control policy with script enforcement is deployed and you try to im
 * The module you're trying to load is not signed
 * The module you're trying to load is signed but the certificate's root is not trusted by the system
 * The module you're trying to load is signed but at least one of its files is tampered with and has a hash mismatch. Even adding a single space on an empty line causes hash mismatch, **which is expected**.
-
-<br>
-
-> [!IMPORTANT]\
-> WDACConfig module is currently not compatible with constrained language mode due to using advanced PowerShell features that are not allowed in that mode.
 
 <br>

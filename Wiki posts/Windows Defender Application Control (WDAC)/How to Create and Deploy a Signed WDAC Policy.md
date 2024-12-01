@@ -1,7 +1,7 @@
 # Create and Deploy Signed Application Control (WDAC) Policies
 
 > [!IMPORTANT]\
-> [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate) can easily and quickly generate a Code Signing certificate to be used for signing App Control policies.
+> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) can easily and quickly generate a Code Signing certificate to be used for signing App Control policies.
 >
 > This guide is only for those who want to learn how to setup a Windows Server with Active Directory and Certification Authority roles and create their own CA.
 
@@ -14,7 +14,7 @@
 * [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about App Control itself and how to create a customized App Control policy for your own environment.
 
 * Always test and deploy your App Control policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
-    - The [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) module has an optional parameter called `-TestMode` that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
+    - The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) has a ***Test Mode*** feature that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
 
 * Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed if you decide to disable or modify the signed deployed App Control policy later on.
 
@@ -288,30 +288,14 @@ The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/win
 
 <br>
 
-## Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) to sign and deploy App Control policies
+## Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to sign and deploy App Control policies
 
-<br>
+It supports creating certificates and signing, deploying and removing signed policies.
 
-WDACConfig module with the `Deploy-SignedWDACConfig` [cmdlet](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) can automate the entire process of signing and deploying a signed App Control policy.
+You don't need to manually download SignTool.exe but here are some of the sources that it can be retrieved from:
 
-```powershell
-Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> -CertCN <String>
-```
-
-**[Cmdlet Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)**
-
-<br>
-
-> [!NOTE]\
-> The `Deploy-SignedWDACConfig` cmdlet will offer to automatically download the `SignTool.exe` from the Microsoft server if it cannot find it on your system.
-
-If you want to manually download it, here are the steps:
-
-* [Download the latest Windows stable SDK **installer**](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
-* [Download the latest Windows Insider SDK **ISO**](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewSDK)
-
-Run it and only select `Windows SDK Signing Tools for Desktop Apps` to install. After that `signtool.exe` will be placed at `C:\Program Files (x86)\Windows Kits\10\bin` and the WDACConfig module will automatically detect and use it for signing. You can even copy the executable to another location for later usage on another system where SDK is not installed and then use the optional `-SignToolPath <String>` parameter of WDACConfig module to browse for executable.
-
+* [Windows stable SDK **installer**](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
+* [Windows Insider SDK **ISO**](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewSDK)
 * *SignTool is also included in the [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install) but the one in SDK is the newest and recommended place to get it.*
 
 <br>

@@ -1,4 +1,4 @@
-# EKUs in WDAC, App Control for Business, Policies
+# EKUs in App Control for Business Policies
 
 <p align="Center">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/ef5d1.png" alt="AI generated cat girl on the root in a rainy cloudy day" height="600">
@@ -355,9 +355,9 @@ In every Signer, the `CertEKU` node should only be placed directly after `CertRo
 
 ## Continue Reading
 
+* [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 * [App Control Policy for BYOVD Kernel Mode Only Protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 * [WDAC Notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes)
-* [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/thankyou.gif" alt="Thank You Gif">

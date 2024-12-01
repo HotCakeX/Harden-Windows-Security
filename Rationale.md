@@ -42,11 +42,11 @@ It uses the same security features built into your device and Windows operating 
 
 [App Control for Business resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
-When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats [^1], either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
+When a proper App Control policy is deployed on your device, it will be secure against 99.999% of the threats [^1], either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
-I've created a PowerShell module called [**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig), designed with the aim of automating Application and File whitelisting in Windows using App Control for Business feature. It's an alternative to [WDAC Wizard](https://webapp-wdac-wizard.azurewebsites.net/) which only has a fraction of the features that WDACConfig module offers.
+I've created an application called [**AppControl Manager**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager), designed with the aim of automating Application and File whitelisting in Windows using App Control for Business feature.
 
-Full details, guides and videos available [here on GitHub](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) and on [my website.](https://spynetgirl.github.io/WDACConfig%20Module/WDACConfig/)
+Full details, guides and [videos](https://www.youtube.com/watch?v=SzMs13n7elE) available [here on GitHub](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) and on [my website.](https://spynetgirl.github.io/AppControl%20Manager/AppControl%20Manager/)
 
 <br>
 
@@ -56,9 +56,9 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 ### If you want even more security and control, you have at least 2 more options:
 
-1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based WDAC policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
+1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based App Control policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
 
-2. Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy an App Control for Business policy and have even more control over the operation of the Windows Application Control.
+2. Use [AppControl Manager](https://spynetgirl.github.io/AppControl%20Manager/AppControl%20Manager/) to deploy an App Control for Business policy and have even more control over the operation of the Windows Application Control.
 
 These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [**Kernel-level Zero-Trust strategy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
@@ -171,19 +171,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include App Control for Business, ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
-* Use [Strict Kernel-mode WDAC policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
-
-<br>
-
-<p align="center">
-<b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows</b><br><br>
-  <a href="https://www.youtube.com/watch?v=SQCo9l2P7uw">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoBYOVD.png" width="500"
-         alt="YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows - Windows Defender">
-  </a>
-  </p>
-
-<br>
+* Use [Strict Kernel-mode App Control policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
 <br>
 
@@ -220,7 +208,7 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/en-us/windows-server/remote/multipoint-services/create-a-standard-user-account).
    * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
 
-2. First apply the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) WDAC policy.
+2. First apply the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) App Control policy.
 
 <br>
 

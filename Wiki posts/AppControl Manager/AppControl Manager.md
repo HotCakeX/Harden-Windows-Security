@@ -32,7 +32,15 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ## Preview of the App
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControlManager.gif" alt="AppControl Manager preview"/>
+<div align="center">
+
+<a href="https://www.youtube.com/watch?v=SzMs13n7elE"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControlManager.gif" alt="AppControl Manager preview"/> </a>
+
+<br>
+
+<a href="https://www.youtube.com/watch?v=SzMs13n7elE"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20video%20Demo%20Thumbnail.png" alt="AppControl Manager YouTube Video demo thumbnail" width="700"> </a>
+
+</div>
 
 <br>
 
@@ -88,6 +96,18 @@ AppControl Manager is engineered with a security-first approach from the ground 
 * The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/en-us/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity` and so on.
 
 * The AppControl Manager always uses the latest .NET and SDK versions, ensuring all the security patches released by Microsoft will be included.
+
+* The entire codebase is thoroughly commented, allowing code reviewers to effortlessly examine and verify every aspect of AppControl Manager's source code.
+
+<br>
+
+### Why Does AppControl Manager Require Administrator Privileges?
+
+* AppControl Manager operates exclusively within the "WDACConfig" directory located in the `Program Files` directory for all read and write operations. No data is accessed or modified outside this directory. This design ensures that non-elevated processes, unauthorized software, or unprivileged malware on the system cannot alter the policies you create, the certificates you generate, or the CIP binary files you deploy.
+
+* Administrator privileges are required for scanning Code Integrity and AppLocker logs. These scans are integral to several application functions, providing enhanced insights and enabling the generation of precise supplemental policies tailored to your needs.
+
+* Deploying, removing, modifying, or checking the status of policies also necessitates Administrator privileges to ensure secure and reliable execution of these operations.
 
 <br>
 

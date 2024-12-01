@@ -1,4 +1,4 @@
-# Important Notes and Tips about WDAC policies
+# Important Notes and Tips about App Control policies
 
 * App Control for Business was formerly known as WDAC (Windows Defender Application Control)
 * It's used for Application and File whitelisting in Windows.
@@ -466,7 +466,7 @@ In order to automatically remove unnecessary things from a policy file, such as 
 Merge-CIPolicy .\Policy.xml -OutputFilePath .\Policy1.xml
 ```
 
-It essentially merges a policy with itself, adding `_0` to each ID and SignerID of the xml nodes which is easily removable using WDACConfig module, **although it's not necessary to remove them at all, they are perfectly fine.**
+It essentially merges a policy with itself, adding `_0` to each ID and SignerID of the xml nodes.
 
 <br>
 

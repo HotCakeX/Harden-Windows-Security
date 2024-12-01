@@ -1,4 +1,4 @@
-# WDAC Rule Levels Comparison and Guide
+# App Control Rule Levels Comparison and Guide
 
 This document lists all of the levels of App Control rules. **From Top to bottom, from the most secure to the least secure**, the levels are:
 

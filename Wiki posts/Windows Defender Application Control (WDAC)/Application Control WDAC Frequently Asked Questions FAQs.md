@@ -70,16 +70,6 @@ There is no limit on how many App Control policies you can deploy on a system.
 
 <br>
 
-## What Are The Tools I Need To Get Started With App Control Policies?
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Are%20The%20Tools%20I%20Need%20To%20Get%20Started%20With%20Application%20Control%20(WDAC)%20Policies.png" alt="What Are The Tools I Need To Get Started With App Control Policies">
-
-<br>
-
-[WDACConfig PowerShell module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) and [WDAC Wizard](https://webapp-wdac-wizard.azurewebsites.net/) are all you need to begin your Application Control journey and create a robust security policy for your environment. They provide many advanced features that you can explore further when you're ready.
-
-<br>
-
 ## What Is ISG And How Can I Use It In An App Control Policy?
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Is%20ISG%20And%20How%20Can%20I%20Use%20It%20In%20An%20Application%20Control%20(WDAC)%20Policy.png" alt="What Is ISG And How Can I Use It In An App Control Policy">

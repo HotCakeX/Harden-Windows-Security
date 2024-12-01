@@ -134,7 +134,6 @@ Style="{StaticResource BodyTextBlockStyle}">
                 <tk7controls:DataGrid.Columns>
                     <tk7controls:DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="Auto" Tag="FileName"/>
                     <tk7controls:DataGridTextColumn Header="Signature Status" Binding="{Binding SignatureStatus}" Tag="SignatureStatus" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="Auto" Tag="Action"/>
                     <tk7controls:DataGridTextColumn Header="Original File Name" Binding="{Binding OriginalFileName}" Width="Auto" Tag="OriginalFileName"/>
                     <tk7controls:DataGridTextColumn Header="InternalName" Binding="{Binding InternalName}" Width="Auto" Tag="InternalName"/>
                     <tk7controls:DataGridTextColumn Header="File Description" Binding="{Binding FileDescription}" Width="Auto" Tag="FileDescription"/>
@@ -142,9 +141,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <tk7controls:DataGridTextColumn Header="File Version" Binding="{Binding FileVersion}" Width="Auto" Tag="FileVersion"/>
                     <tk7controls:DataGridTextColumn Header="Package Family Name" Binding="{Binding PackageFamilyName}" Width="Auto" Tag="PackageFamilyName"/>
                     <tk7controls:DataGridTextColumn Header="SHA256 Hash" Binding="{Binding SHA256Hash}" Width="Auto" Tag="SHA256Hash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA1 Hash" Binding="{Binding SHA1Hash}" Width="Auto" Tag="SHA1Hash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA256 Flat Hash" Binding="{Binding SHA256FlatHash}" Width="Auto" Tag="SHA256FlatHash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA1 Flat Hash" Binding="{Binding SHA1FlatHash}" Width="Auto" Tag="SHA1FlatHash"/>
+                    <tk7controls:DataGridTextColumn Header="SHA1 Hash" Binding="{Binding SHA1Hash}" Width="Auto" Tag="SHA1Hash"/>                    
                     <tk7controls:DataGridTextColumn Header="Signing Scenario" Binding="{Binding SISigningScenario}" Width="Auto" Tag="SISigningScenario"/>
                     <tk7controls:DataGridTextColumn Header="File Path" Binding="{Binding FilePath}" Width="Auto" Tag="FilePath"/>
                     <tk7controls:DataGridTextColumn Header="SHA1 Page Hash" Binding="{Binding SHA1PageHash}" Width="Auto" Tag="SHA1PageHash"/>
@@ -152,6 +149,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <tk7controls:DataGridTextColumn Header="Has WHQL Signer" Binding="{Binding HasWHQLSigner}" Width="Auto" Tag="HasWHQLSigner"/>
                     <tk7controls:DataGridTextColumn Header="File Publishers" Binding="{Binding FilePublishersToDisplay}" Width="Auto" Tag="FilePublishersToDisplay"/>
                     <tk7controls:DataGridTextColumn Header="Is ECC Signed" Binding="{Binding IsECCSigned}" Width="Auto" Tag="IsECCSigned"/>
+                    <tk7controls:DataGridTextColumn Header="Opus Data" Binding="{Binding Opus}" Width="Auto" Tag="Opus"/>
                 </tk7controls:DataGrid.Columns>
             </tk7controls:DataGrid>
         </Border>

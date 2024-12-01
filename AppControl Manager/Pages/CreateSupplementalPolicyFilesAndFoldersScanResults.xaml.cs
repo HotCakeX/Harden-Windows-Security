@@ -79,7 +79,6 @@ namespace WDACConfig.Pages
                 filteredResults = filteredResults.Where(output =>
                     (output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-                    (output.Action.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -88,9 +87,9 @@ namespace WDACConfig.Pages
                     (output.PackageFamilyName is not null && output.PackageFamilyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.SHA1PageHash is not null && output.SHA1PageHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-                    (output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-                    output.FilePublishersToDisplay.Contains(searchTerm)
+                    output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                    output.Opus.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
                 );
             }
 
@@ -141,10 +140,6 @@ namespace WDACConfig.Pages
             {
                 SortColumn(e, output => output.SignatureStatus);
             }
-            else if (string.Equals(e.Column.Tag?.ToString(), "Action", StringComparison.OrdinalIgnoreCase))
-            {
-                SortColumn(e, output => output.Action);
-            }
             else if (string.Equals(e.Column.Tag?.ToString(), "OriginalFileName", StringComparison.OrdinalIgnoreCase))
             {
                 SortColumn(e, output => output.OriginalFileName);
@@ -177,14 +172,6 @@ namespace WDACConfig.Pages
             {
                 SortColumn(e, output => output.SHA1Hash);
             }
-            else if (string.Equals(e.Column.Tag?.ToString(), "SHA256FlatHash", StringComparison.OrdinalIgnoreCase))
-            {
-                SortColumn(e, output => output.SHA256FlatHash);
-            }
-            else if (string.Equals(e.Column.Tag?.ToString(), "SHA1FlatHash", StringComparison.OrdinalIgnoreCase))
-            {
-                SortColumn(e, output => output.SHA1FlatHash);
-            }
             else if (string.Equals(e.Column.Tag?.ToString(), "SISigningScenario", StringComparison.OrdinalIgnoreCase))
             {
                 SortColumn(e, output => output.SISigningScenario);
@@ -213,6 +200,11 @@ namespace WDACConfig.Pages
             {
                 SortColumn(e, output => output.IsECCSigned);
             }
+            else if (string.Equals(e.Column.Tag?.ToString(), "Opus", StringComparison.OrdinalIgnoreCase))
+            {
+                SortColumn(e, output => output.Opus);
+            }
+
 
             // Clear SortDirection for other columns
             foreach (DataGridColumn column in FileIdentitiesDataGrid.Columns)
@@ -343,7 +335,6 @@ namespace WDACConfig.Pages
             return new StringBuilder()
                 .AppendLine($"File Name: {row.FileName}")
                 .AppendLine($"Signature Status: {row.SignatureStatus}")
-                .AppendLine($"Action: {row.Action}")
                 .AppendLine($"Original File Name: {row.OriginalFileName}")
                 .AppendLine($"Internal Name: {row.InternalName}")
                 .AppendLine($"File Description: {row.FileDescription}")
@@ -352,8 +343,6 @@ namespace WDACConfig.Pages
                 .AppendLine($"Package Family Name: {row.PackageFamilyName}")
                 .AppendLine($"SHA256 Hash: {row.SHA256Hash}")
                 .AppendLine($"SHA1 Hash: {row.SHA1Hash}")
-                .AppendLine($"SHA256 Flat Hash: {row.SHA256FlatHash}")
-                .AppendLine($"SHA1 Flat Hash: {row.SHA1FlatHash}")
                 .AppendLine($"Signing Scenario: {row.SISigningScenario}")
                 .AppendLine($"File Path: {row.FilePath}")
                 .AppendLine($"SHA1 Page Hash: {row.SHA1PageHash}")
@@ -361,6 +350,7 @@ namespace WDACConfig.Pages
                 .AppendLine($"Has WHQL Signer: {row.HasWHQLSigner}")
                 .AppendLine($"File Publishers: {row.FilePublishersToDisplay}")
                 .AppendLine($"Is ECC Signed: {row.IsECCSigned}")
+                .AppendLine($"Opus Data: {row.Opus}")
                 .ToString();
         }
 
@@ -387,7 +377,6 @@ namespace WDACConfig.Pages
             {
                 { "File Name", CopyFileName_Click },
                 { "Signature Status", CopySignatureStatus_Click },
-                { "Action", CopyAction_Click },
                 { "Original File Name", CopyOriginalFileName_Click },
                 { "Internal Name", CopyInternalName_Click },
                 { "File Description", CopyFileDescription_Click },
@@ -396,15 +385,14 @@ namespace WDACConfig.Pages
                 { "Package Family Name", CopyPackageFamilyName_Click },
                 { "SHA256 Hash", CopySHA256Hash_Click },
                 { "SHA1 Hash", CopySHA1Hash_Click },
-                { "SHA256 Flat Hash", CopySHA256FlatHash_Click },
-                { "SHA1 Flat Hash", CopySHA1FlatHash_Click },
                 { "Signing Scenario", CopySigningScenario_Click },
                 { "File Path", CopyFilePath_Click },
                 { "SHA1 Page Hash", CopySHA1PageHash_Click },
                 { "SHA256 Page Hash", CopySHA256PageHash_Click },
                 { "Has WHQL Signer", CopyHasWHQLSigner_Click },
                 { "File Publishers", CopyFilePublishersToDisplay_Click },
-                { "Is ECC Signed", CopyIsECCSigned_Click }
+                { "Is ECC Signed", CopyIsECCSigned_Click },
+                { "Opus Data", CopyOpus_Click }
             };
 
             // Add menu items with specific click events for each column
@@ -429,7 +417,6 @@ namespace WDACConfig.Pages
         // Click event handlers for each property
         private void CopyFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileName);
         private void CopySignatureStatus_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignatureStatus.ToString());
-        private void CopyAction_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Action.ToString());
         private void CopyOriginalFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.OriginalFileName);
         private void CopyInternalName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.InternalName);
         private void CopyFileDescription_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileDescription);
@@ -438,15 +425,14 @@ namespace WDACConfig.Pages
         private void CopyPackageFamilyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PackageFamilyName);
         private void CopySHA256Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256Hash);
         private void CopySHA1Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1Hash);
-        private void CopySHA256FlatHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256FlatHash);
-        private void CopySHA1FlatHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1FlatHash);
         private void CopySigningScenario_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SISigningScenario.ToString());
         private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePath);
         private void CopySHA1PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1PageHash);
         private void CopySHA256PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256PageHash);
         private void CopyHasWHQLSigner_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.HasWHQLSigner.ToString());
-        private void CopyFilePublishersToDisplay_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePublishersToDisplay.ToString());
+        private void CopyFilePublishersToDisplay_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePublishersToDisplay);
         private void CopyIsECCSigned_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsECCSigned.ToString());
+        private void CopyOpus_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Opus);
 
 
         /// <summary>

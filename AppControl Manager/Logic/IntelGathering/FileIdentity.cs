@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WDACConfig.IntelGathering
 {
@@ -64,6 +65,13 @@ namespace WDACConfig.IntelGathering
         // Determines whether the file is signed by ECC algorithm or not
         // AppControl does not support ECC Signed files yet
         public bool? IsECCSigned { get; set; }
+
+
+        // Computed property to gather all OPUSInfo from FileSignerInfos and save them in a comma-separated string for displaying purposes only
+        public string Opus => string.Join(", ", FileSignerInfos
+            .Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo))
+            .Select(signerInfo => signerInfo.OPUSInfo));
+
     }
 
 }

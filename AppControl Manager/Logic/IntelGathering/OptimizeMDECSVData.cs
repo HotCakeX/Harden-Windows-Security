@@ -246,13 +246,13 @@ namespace WDACConfig.IntelGathering
                 string field = fields[i];
 
                 // If the field is a JSON field, we don't want to remove quotes
-                if (field.StartsWith("{", StringComparison.OrdinalIgnoreCase) && field.EndsWith("}", StringComparison.OrdinalIgnoreCase))
+                if (field.StartsWith('{') && field.EndsWith('}'))
                 {
                     continue; // Skip JSON fields
                 }
 
                 // Remove leading and trailing quotes if they exist (for non-JSON fields)
-                if (field.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && field.EndsWith("\"", StringComparison.OrdinalIgnoreCase) && field.Length > 1)
+                if (field.StartsWith('"') && field.EndsWith('"') && field.Length > 1)
                 {
                     fields[i] = field[1..^1];
                 }

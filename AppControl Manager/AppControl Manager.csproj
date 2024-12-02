@@ -3,7 +3,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/standard/frameworks#support-older-os-versions -->
+    <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
     <EnablePackageValidation>true</EnablePackageValidation>
@@ -53,7 +56,6 @@
     <!-- <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings> -->
     <!-- <TrimmerSingleWarn>false</TrimmerSingleWarn> -->
 
-    <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>An application that simplifies management of Application Control in Windows.</Description>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
@@ -85,6 +87,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <StartupObject>WDACConfig.Program</StartupObject>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code -->
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>

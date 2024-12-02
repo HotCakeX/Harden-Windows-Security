@@ -1074,17 +1074,17 @@ namespace WDACConfig.IntelGathering
                 Task<HashSet<FileIdentity>> appLockerTask = Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath));
 
                 // Await both tasks to complete
-                _ = await Task.WhenAll(codeIntegrityTask, appLockerTask);
+                HashSet<FileIdentity>[] results = await Task.WhenAll(codeIntegrityTask, appLockerTask);
 
-                // Keep the Code Integrity task's HashSet output since it's the main category and will have the majority of the events
-                combinedResult = codeIntegrityTask.Result;
+                // Assign the Code Integrity task's HashSet output since it's the main category and will have the majority of the events
+                combinedResult = results[0];
 
                 // If there are AppLocker logs
-                if (appLockerTask.Result.Count > 0)
+                if (results[1].Count > 0)
                 {
 
                     // Add elements from the AppLocker task's result, using Add to preserve uniqueness since the HashSet has its custom comparer
-                    foreach (FileIdentity item in appLockerTask.Result)
+                    foreach (FileIdentity item in results[1])
                     {
                         _ = combinedResult.Add(item);
                     }

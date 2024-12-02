@@ -137,7 +137,7 @@ namespace WDACConfig.Pages
                     (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                     (output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-                    output.FilePublishersToDisplay.Contains(searchTerm)
+                    output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
                 );
             }
 

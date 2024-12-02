@@ -135,8 +135,8 @@ namespace WDACConfig.Pages
             // Get the selected policy from the DataGrid
             selectedPolicy = (CiPolicyInfo)DeployedPolicies.SelectedItem;
 
-            // Check if a non-system policy was actually selected and if it's unsigned or supplemental
-            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
+            // Check if a non-system policy was actually selected and if it's unsigned or supplemental and if it exists on the disk
+            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
             {
                 // Enable the RemoveUnsignedOrSupplementalPolicyButton for unsigned policies
                 RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = true;
@@ -164,8 +164,8 @@ namespace WDACConfig.Pages
 
             string AppControlPolicyName = "AppControlManagerSupplementalPolicy";
 
-            // Make sure we have a valid selected non-system policy that is unsigned or supplemental
-            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
+            // Make sure we have a valid selected non-system policy that is unsigned or supplemental and is on disk
+            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
             {
 
                 // Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"

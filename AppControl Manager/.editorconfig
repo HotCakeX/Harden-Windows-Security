@@ -31,7 +31,7 @@ dotnet_diagnostic.CA1309.severity = error
 dotnet_diagnostic.CA1311.severity = error
 
 # CA1416: Validate platform compatibility
-dotnet_diagnostic.CA1416.severity = silent
+dotnet_diagnostic.CA1416.severity = error
 
 # CA5384: Do Not Use Digital Signature Algorithm (DSA)
 dotnet_diagnostic.CA5384.severity = error
@@ -389,3 +389,84 @@ dotnet_diagnostic.IDE0057.severity = error
 
 # IDE0130: Namespace does not match folder structure
 dotnet_diagnostic.IDE0130.severity = silent
+
+# CsWinRT1028: Class is not marked partial
+dotnet_diagnostic.CsWinRT1028.severity = error
+
+# CA1044: Properties should not be write only
+dotnet_diagnostic.CA1044.severity = error
+
+# CsWinRT1029: Class not trimming / AOT compatible
+dotnet_diagnostic.CsWinRT1029.severity = error
+
+# CA5404: Do not disable token validation checks
+dotnet_diagnostic.CA5404.severity = error
+
+# CA5379: Ensure Key Derivation Function algorithm is sufficiently strong
+dotnet_diagnostic.CA5379.severity = error
+
+# CA1867: Use char overload
+dotnet_diagnostic.CA1867.severity = error
+
+# CA1070: Do not declare event fields as virtual
+dotnet_diagnostic.CA1070.severity = error
+
+# CA1054: URI-like parameters should not be strings
+dotnet_diagnostic.CA1054.severity = error
+
+# CA1850: Prefer static 'HashData' method over 'ComputeHash'
+dotnet_diagnostic.CA1850.severity = error
+
+# CA3004: Review code for information disclosure vulnerabilities
+dotnet_diagnostic.CA3004.severity = error
+
+# CA1056: URI-like properties should not be strings
+dotnet_diagnostic.CA1056.severity = error
+
+# CA1055: URI-like return values should not be strings
+dotnet_diagnostic.CA1055.severity = error
+
+# CA2301: Do not call BinaryFormatter.Deserialize without first setting BinaryFormatter.Binder
+dotnet_diagnostic.CA2301.severity = error
+
+# CA3010: Review code for XAML injection vulnerabilities
+dotnet_diagnostic.CA3010.severity = error
+
+# CA1837: Use 'Environment.ProcessId'
+dotnet_diagnostic.CA1837.severity = error
+
+# CA3009: Review code for XML injection vulnerabilities
+dotnet_diagnostic.CA3009.severity = error
+
+# CA3006: Review code for process command injection vulnerabilities
+dotnet_diagnostic.CA3006.severity = error
+
+# CA2328: Ensure that JsonSerializerSettings are secure
+dotnet_diagnostic.CA2328.severity = error
+
+# CA3008: Review code for XPath injection vulnerabilities
+dotnet_diagnostic.CA3008.severity = error
+
+# CA3001: Review code for SQL injection vulnerabilities
+dotnet_diagnostic.CA3001.severity = error
+
+# CA3002: Review code for XSS vulnerabilities
+dotnet_diagnostic.CA3002.severity = error
+
+# CA5385: Use Rivest-Shamir-Adleman (RSA) Algorithm With Sufficient Key Size
+dotnet_diagnostic.CA5385.severity = error
+
+# CA5387: Do Not Use Weak Key Derivation Function With Insufficient Iteration Count
+dotnet_diagnostic.CA5387.severity = error
+
+# CA1842: Do not use 'WhenAll' with a single task
+dotnet_diagnostic.CA1842.severity = error
+
+# CA1849: Call async methods when in an async method
+dotnet_diagnostic.CA1849.severity = error
+
+# CA1843: Do not use 'WaitAll' with a single task
+dotnet_diagnostic.CA1843.severity = error
+
+# CA3007: Review code for open redirect vulnerabilities
+dotnet_diagnostic.CA3007.severity = error

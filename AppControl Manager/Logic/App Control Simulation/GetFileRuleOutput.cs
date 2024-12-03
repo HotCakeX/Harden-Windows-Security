@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public partial class GetFileRuleOutput
     {

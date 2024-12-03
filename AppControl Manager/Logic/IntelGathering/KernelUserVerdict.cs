@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal sealed class KernelUserVerdict
     {

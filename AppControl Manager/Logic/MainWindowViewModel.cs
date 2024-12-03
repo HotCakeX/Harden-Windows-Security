@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Dispatching;
 using System.ComponentModel;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// ViewModel for the MainWindow, responsible for managing UI properties and
@@ -67,14 +67,15 @@ namespace WDACConfig
         /// </summary>
         /// <param name="sender">Sender of the event, in this case, AppUpdate instance.</param>
         /// <param name="isUpdateAvailable">Boolean indicating whether an update is available.</param>
-        private void OnUpdateAvailable(object sender, bool isUpdateAvailable)
+        private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             // Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
             _ = _dispatcher.TryEnqueue(() =>
-             {
-                 // Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
-                 InfoBadgeOpacity = isUpdateAvailable ? 1 : 0;
-             });
+            {
+                // Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
+                InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
+            });
         }
+
     }
 }

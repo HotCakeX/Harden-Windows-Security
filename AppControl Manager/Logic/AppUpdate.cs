@@ -1,8 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Net.Http;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// AppUpdate class is responsible for checking for application updates.
@@ -18,8 +17,11 @@ namespace WDACConfig
         // The Instance property returns the one and only instance of this class.
         public static AppUpdate Instance => _instance.Value;
 
-        // Event triggered when an update is available
-        public event EventHandler<bool>? UpdateAvailable;
+        /// <summary>
+        /// Event triggered when an update is available.
+        /// Includes details about the availability status and the version.
+        /// </summary>
+        public event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
 
         // Private constructor prevents instantiation from outside, ensuring only one instance.
         private AppUpdate() { }
@@ -38,13 +40,32 @@ namespace WDACConfig
             Version onlineAvailableVersion = new(versionsResponse);
             bool isUpdateAvailable = onlineAvailableVersion > App.currentAppVersion;
 
-            // Raise the UpdateAvailable event if there's an update and there are subscribers
-            UpdateAvailable?.Invoke(this, isUpdateAvailable);
+            // Raise the UpdateAvailable event if there are subscribers
+            UpdateAvailable?.Invoke(
+                this,
+                new UpdateAvailableEventArgs(isUpdateAvailable, onlineAvailableVersion)
+            );
 
             return new UpdateCheckResponse(
                 isUpdateAvailable,
                 onlineAvailableVersion
             );
         }
+    }
+
+    /// <summary>
+    /// EventArgs class to provide data for the UpdateAvailable event.
+    /// </summary>
+    public class UpdateAvailableEventArgs(bool isUpdateAvailable, Version availableVersion) : EventArgs
+    {
+        /// <summary>
+        /// Indicates whether an update is available.
+        /// </summary>
+        public bool IsUpdateAvailable { get; } = isUpdateAvailable;
+
+        /// <summary>
+        /// The version of the available update.
+        /// </summary>
+        public Version AvailableVersion { get; } = availableVersion;
     }
 }

@@ -1,12 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static partial class CryptoAPI
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringw
         [LibraryImport("crypt32.dll", EntryPoint = "CertGetNameStringW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial int CertGetNameString(
             IntPtr pCertContext, // The handle property of the certificate object
             int dwType,

@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class Logs : Page
     {
@@ -69,7 +69,7 @@ namespace WDACConfig.Pages
         private void LoadLogFiles()
         {
             // Get all log files matching the syntax and sort them by creation time
-            List<FileInfo> logFiles = [.. Directory.GetFiles(Logger.LogsDirectory, "WDACConfig_AppLogs_*.txt")
+            List<FileInfo> logFiles = [.. Directory.GetFiles(Logger.LogsDirectory, "AppControlManager_Logs_*.txt")
                 .Select(f => new FileInfo(f))
                 .Where(f => f.Length <= 409600) // Filter files that are 400KB or smaller to prevent UI from freezing. ItemsRepeater element should be used for virtualized content display.
                 .OrderByDescending(f => f.CreationTime)];

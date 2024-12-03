@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // Class to represent a policy with various attributes
     public sealed class CiPolicyInfo

@@ -16,7 +16,7 @@
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
     <InvariantGlobalization>true</InvariantGlobalization>
 
-    <RootNamespace>WDACConfig</RootNamespace>
+    <RootNamespace>AppControlManager</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
@@ -33,6 +33,7 @@
     -->
     <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
 
+
     <!--
     By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
     so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK
@@ -43,9 +44,11 @@
     -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
+
     <!-- Publish Properties -->
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+
 
     <!-- Disabling trimming temporarily -->
     <!-- There should be absolutely no trim warnings before this can be enabled
@@ -56,12 +59,14 @@
     <!-- <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings> -->
     <!-- <TrimmerSingleWarn>false</TrimmerSingleWarn> -->
 
+
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>An application that simplifies management of Application Control in Windows.</Description>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
-    <PackageTags>App Control,WDAC,WDACConfig,AppControl For Business, AppControl Manager</PackageTags>
+    <PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
+
 
     <!-- Automatically created for packing -->
     <!-- https://learn.microsoft.com/en-us/windows/msix/app-installer/create-appinstallerfile-vs -->
@@ -70,6 +75,7 @@
     <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
     <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+
 
     <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
     <AppxPackageDir>MSIXOutput\</AppxPackageDir>
@@ -86,15 +92,21 @@
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <StartupObject>WDACConfig.Program</StartupObject>
+    <StartupObject>AppControlManager.Program</StartupObject>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+
 
     <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code -->
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
+
     <Version>$(FileVersion)</Version>
     <Copyright>© 2024–Present</Copyright>
     <Title>AppControl Manager</Title>
+
+
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+
   </PropertyGroup>
 
   <!--
@@ -163,13 +175,6 @@
   -->
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,3 +1,4 @@
+using AppControlManager.IntelGathering;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -6,10 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WDACConfig.IntelGathering;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
 
     public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page

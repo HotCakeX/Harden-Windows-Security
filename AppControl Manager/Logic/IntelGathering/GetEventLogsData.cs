@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal static class GetEventLogsData
     {

@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class ViewCurrentPolicies : Page
     {

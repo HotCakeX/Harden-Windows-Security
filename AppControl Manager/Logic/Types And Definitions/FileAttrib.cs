@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // This class represents a <FileAttrib> node within a Code Integrity XML file
     public sealed class FileAttrib

@@ -1,5 +1,5 @@
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// Used by AppControl Simulations, the output of the comparer function/method

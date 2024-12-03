@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class SecureStringComparer
     {

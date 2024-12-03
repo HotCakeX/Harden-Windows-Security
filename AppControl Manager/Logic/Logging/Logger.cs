@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class Logger
     {
@@ -9,7 +9,7 @@ namespace WDACConfig
         internal static readonly string LogsDirectory = Path.Combine(GlobalVars.UserConfigDir, "Logs");
 
         // The Logs file path
-        private static readonly string LogFileName = Path.Combine(LogsDirectory, $"WDACConfig_AppLogs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+        private static readonly string LogFileName = Path.Combine(LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
         static Logger()
         {

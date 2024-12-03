@@ -17,7 +17,7 @@ using Windows.Management.Deployment;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
 
     public sealed partial class Update : Page
@@ -32,9 +32,15 @@ namespace WDACConfig.Pages
         // Track whether hardened update procedure must be used
         private bool useHardenedUpdateProcedure;
 
+        // To determine whether to use the user-supplied MSIX path or continue with downloading the MSIX from GitHub
+        // It's changed by the UI toggle
         internal bool useCustomMSIXPath;
 
+        // The custom MSIX path that the user supplied
         internal string? customMSIXPath;
+
+        // Could be a URL or file path, will be used by Regex to detect version and architecture
+        private string? sourceForRegex;
 
         // A static instance of the Update class which will hold the single, shared instance of it
         private static Update? _instance;
@@ -94,24 +100,32 @@ namespace WDACConfig.Pages
 
                     string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
 
-                    string onlineDownloadURL;
+                    // To store the latest MSIX version download link after retrieving it from GitHub text file
+                    Uri onlineDownloadURL;
 
+                    // Location of the MSIX package where it will be saved after download it from GitHub
+                    // Or in case user supplied a custom path, it will be assigned to this
                     string AppControlManagerSavePath;
 
                     DownloadProgressRingForMSIXFile.Visibility = Visibility.Visible;
 
+                    // If user did not supply a custom MSIX file path
                     if (!useCustomMSIXPath)
                     {
 
                         using (HttpClient client = new())
                         {
                             // Store the download link to the latest available version
-                            onlineDownloadURL = await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL);
+                            onlineDownloadURL = new Uri(await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
                         }
+
+                        // The Uri will be used to detect the version and architecture of the MSIX package being installed
+                        sourceForRegex = onlineDownloadURL.ToString();
 
                         AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msix");
 
                         UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
+
 
                         using (HttpClient client = new())
                         {
@@ -181,7 +195,10 @@ namespace WDACConfig.Pages
 
                     else
                     {
-                        onlineDownloadURL = customMSIXPath ?? throw new InvalidOperationException("No MSIX path was selected");
+                        // Use the user-supplied MSIX file path to detect the version and architecture
+                        sourceForRegex = customMSIXPath ?? throw new InvalidOperationException("No MSIX path was selected");
+
+                        // Use the user-supplied MSIX file path for installation source
                         AppControlManagerSavePath = customMSIXPath;
                     }
 
@@ -221,8 +238,8 @@ namespace WDACConfig.Pages
                         UserProtectedPrivateKey: useHardenedUpdateProcedure,
                         ExportablePrivateKey: false);
 
-                        // Get the version and architecture of the installing MSIX package app from the provided file path
-                        Match RegexMatch = regex.Match(onlineDownloadURL);
+                        // Get the version and architecture of the installing MSIX package app
+                        Match RegexMatch = regex.Match(sourceForRegex);
 
                         string InstallingAppVersion;
                         string InstallingAppArchitecture;

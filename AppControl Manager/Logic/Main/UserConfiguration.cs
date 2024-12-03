@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     // This is to ensure the Serialize method works when trimming is enabled

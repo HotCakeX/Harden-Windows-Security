@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.IO;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WDACConfig.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults"
+    x:Class="AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WDACConfig.Pages"
+    xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -141,7 +141,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <tk7controls:DataGridTextColumn Header="File Version" Binding="{Binding FileVersion}" Width="Auto" Tag="FileVersion"/>
                     <tk7controls:DataGridTextColumn Header="Package Family Name" Binding="{Binding PackageFamilyName}" Width="Auto" Tag="PackageFamilyName"/>
                     <tk7controls:DataGridTextColumn Header="SHA256 Hash" Binding="{Binding SHA256Hash}" Width="Auto" Tag="SHA256Hash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA1 Hash" Binding="{Binding SHA1Hash}" Width="Auto" Tag="SHA1Hash"/>                    
+                    <tk7controls:DataGridTextColumn Header="SHA1 Hash" Binding="{Binding SHA1Hash}" Width="Auto" Tag="SHA1Hash"/>
                     <tk7controls:DataGridTextColumn Header="Signing Scenario" Binding="{Binding SISigningScenario}" Width="Auto" Tag="SISigningScenario"/>
                     <tk7controls:DataGridTextColumn Header="File Path" Binding="{Binding FilePath}" Width="Auto" Tag="FilePath"/>
                     <tk7controls:DataGridTextColumn Header="SHA1 Page Hash" Binding="{Binding SHA1PageHash}" Width="Auto" Tag="SHA1PageHash"/>

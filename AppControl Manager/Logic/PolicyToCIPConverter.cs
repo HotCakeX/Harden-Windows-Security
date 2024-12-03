@@ -1,4 +1,4 @@
-﻿namespace WDACConfig
+﻿namespace AppControlManager
 {
     public static class PolicyToCIPConverter
     {

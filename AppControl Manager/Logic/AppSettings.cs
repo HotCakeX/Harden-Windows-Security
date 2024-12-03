@@ -1,6 +1,6 @@
 ﻿using Windows.Storage;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // https://learn.microsoft.com/en-us/uwp/api/windows.storage.applicationdata.localsettings
 

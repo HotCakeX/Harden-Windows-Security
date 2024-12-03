@@ -3,7 +3,7 @@ using System.Formats.Asn1;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // A class to throw a custom exception when the certificate collection cannot be obtained during App Control Simulation
     public sealed class FailedToGetCertificateCollectionException(string message, string functionName) : Exception($"{functionName}: {message}")

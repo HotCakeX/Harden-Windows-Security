@@ -4,9 +4,9 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using static WDACConfig.CiRuleOptions;
+using static AppControlManager.CiRuleOptions;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class ConfigurePolicyRuleOptions : Page
     {

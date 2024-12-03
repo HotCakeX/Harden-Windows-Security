@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal static class GetMDEAdvancedHuntingLogsData
     {

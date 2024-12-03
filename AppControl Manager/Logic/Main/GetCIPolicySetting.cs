@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     public sealed class SecurePolicySetting(object? Value, WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)

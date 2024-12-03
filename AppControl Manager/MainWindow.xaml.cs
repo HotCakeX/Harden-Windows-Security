@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Graphics;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     public sealed partial class MainWindow : Window
@@ -138,16 +138,16 @@ namespace WDACConfig
 
 
             // Set the initial background setting based on the user's settings
-            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground));
+            OnNavigationBackgroundChanged(null, new(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground)));
 
             // Set the initial BackDrop setting based on the user's settings
-            OnBackgroundChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground));
+            OnBackgroundChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground)));
 
             // Set the initial App Theme based on the user's settings
-            OnAppThemeChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme));
+            OnAppThemeChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme)));
 
             // Set the initial Icons styles abased on the user's settings
-            OnIconsStylesChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle));
+            OnIconsStylesChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle)));
 
             // Restore window size on startup
             RestoreWindowSize();
@@ -237,8 +237,9 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for the global Icons Style change event
         /// </summary>
-        /// <param name="newIconsStyle"></param>
-        private void OnIconsStylesChanged(string? newIconsStyle)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnIconsStylesChanged(object? sender, IconsStyleChangedEventArgs e)
         {
 
             // Get the current theme
@@ -246,7 +247,7 @@ namespace WDACConfig
 
 
             // Set the Icons Style
-            switch (newIconsStyle)
+            switch (e.NewIconsStyle)
             {
                 case "Animated":
                     {
@@ -620,11 +621,12 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for the global NavigationView location change event
         /// </summary>
-        /// <param name="newLocation"></param>
-        private void OnNavigationViewLocationChanged(string newLocation)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnNavigationViewLocationChanged(object? sender, NavigationViewLocationChangedEventArgs e)
         {
             // Set the NavigationView's location based on the event
-            switch (newLocation)
+            switch (e.NewLocation)
             {
                 case "Left":
                     {
@@ -659,8 +661,9 @@ namespace WDACConfig
         /// Changing it during runtime is not possible without trigger a theme change: Light/Dark.
         /// Application.RequestedTheme is read-only, so we us RootGrid which is the origin of all other elements.
         /// </summary>
-        /// <param name="isBackgroundOn"></param>
-        private void OnNavigationBackgroundChanged(bool isBackgroundOn)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnNavigationBackgroundChanged(object? sender, NavigationBackgroundChangedEventArgs e)
         {
             // Get the current theme
             ElementTheme currentTheme = RootGrid.ActualTheme;
@@ -672,7 +675,7 @@ namespace WDACConfig
             RootGrid.RequestedTheme = oppositeTheme;
 
             // Perform NavigationView background changes based on the settings' page's button
-            if (isBackgroundOn)
+            if (e.IsBackgroundOn)
             {
                 MainNavigation.Resources["NavigationViewContentBackground"] = new SolidColorBrush(Colors.Transparent);
             }
@@ -692,12 +695,14 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for the global BackgroundChanged event. When user selects a different background for the app, this will be triggered.
         /// </summary>
-        /// <param name="selectedBackdrop"></param>
-        private void OnBackgroundChanged(string? selectedBackdrop)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundChanged(object? sender, BackgroundChangedEventArgs e)
         {
+
             // Update the SystemBackdrop based on the selected background
             // The Default is set in the XAML
-            switch (selectedBackdrop)
+            switch (e.NewBackground)
             {
                 case "MicaAlt":
                     this.SystemBackdrop = new MicaBackdrop { Kind = MicaKind.BaseAlt };
@@ -719,9 +724,11 @@ namespace WDACConfig
         /// Event handler for the global AppThemeChanged event
         /// Also changes the AnimatedIcons based on the theme to maintain their accessibility
         /// </summary>
-        /// <param name="newTheme"></param>
-        private void OnAppThemeChanged(string? newTheme)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
         {
+
 
             // Get the current system color mode
             // UISettings uiSettings = new();
@@ -739,7 +746,7 @@ namespace WDACConfig
             // Set the requested theme based on the event
             // If "Use System Setting" is used, the current system color mode will be assigned which can be either light/dark
             // Also performs animated icon switch based on theme
-            switch (newTheme)
+            switch (e.NewTheme)
             {
                 case "Light":
                     {

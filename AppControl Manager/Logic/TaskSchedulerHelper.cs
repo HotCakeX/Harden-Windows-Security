@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Management;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal static class TaskSchedulerHelper
     {

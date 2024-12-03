@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class SignToolHelper
     {
@@ -85,7 +85,7 @@ namespace WDACConfig
             Logger.Write("Finding the latest version of the microsoft.windows.sdk.buildtools package from NuGet");
 
             // Get the list of versions
-            string versionsUrl = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
+            Uri versionsUrl = new($"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json");
             string versionsResponse = client.GetStringAsync(versionsUrl).GetAwaiter().GetResult();
 
             // Parse the JSON to get the latest version
@@ -94,7 +94,7 @@ namespace WDACConfig
             string? latestVersion = versions[versions.GetArrayLength() - 1].GetString() ?? throw new InvalidOperationException("Failed to get the latest version of the package.");
 
             // Construct the download link for the latest version's .nupkg
-            string downloadUrl = $"https://api.nuget.org/v3-flatcontainer/{packageName}/{latestVersion}/{packageName}.{latestVersion}.nupkg";
+            Uri downloadUrl = new($"https://api.nuget.org/v3-flatcontainer/{packageName}/{latestVersion}/{packageName}.{latestVersion}.nupkg");
 
             Logger.Write($"Downloading the latest .nupkg package file version '{latestVersion}' from the following URL: {downloadUrl}");
 

@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class CiFileHash
     {

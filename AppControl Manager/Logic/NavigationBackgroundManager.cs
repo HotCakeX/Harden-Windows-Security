@@ -1,16 +1,26 @@
 ﻿using System;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class NavigationBackgroundManager
+    // Custom EventArgs class for navigation background changes
+    internal sealed class NavigationBackgroundChangedEventArgs(bool isBackgroundOn) : EventArgs
+    {
+        internal bool IsBackgroundOn { get; } = isBackgroundOn;
+    }
+
+    internal static class NavigationBackgroundManager
     {
         // Event for when the NavigationView background changes
-        public static event Action<bool>? NavViewBackgroundChange;
+        internal static event EventHandler<NavigationBackgroundChangedEventArgs>? NavViewBackgroundChange;
 
         // Method to invoke the event
-        public static void OnNavigationBackgroundChanged(bool isBackgroundOn)
+        internal static void OnNavigationBackgroundChanged(bool isBackgroundOn)
         {
-            NavViewBackgroundChange?.Invoke(isBackgroundOn);
+            // Raise the NavViewBackgroundChange event with the new background status
+            NavViewBackgroundChange?.Invoke(
+                null,
+                new NavigationBackgroundChangedEventArgs(isBackgroundOn)
+            );
         }
     }
 }

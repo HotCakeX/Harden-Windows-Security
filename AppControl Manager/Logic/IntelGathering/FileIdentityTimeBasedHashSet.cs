@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     /// <summary>
     /// A custom collection that manages a set of FileIdentity objects,

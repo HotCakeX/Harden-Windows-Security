@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed partial class ExFileInfo
     {
@@ -22,15 +22,18 @@ namespace WDACConfig
         // Importing external functions from Version.dll to work with file version info
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
         [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoSizeExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-verqueryvaluea
         [LibraryImport("Version.dll", EntryPoint = "VerQueryValueW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfoexa
         [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, [Out] byte[] data);
 

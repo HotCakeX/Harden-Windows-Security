@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class PolicyEditor
     {

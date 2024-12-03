@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static partial class BasePolicyCreator
     {
@@ -189,7 +189,7 @@ namespace WDACConfig
                 string repo = "windows-itpro-docs";
                 string path = "windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md";
 
-                string apiUrl = $"https://api.github.com/repos/{owner}/{repo}/commits?path={path}";
+                Uri apiUrl = new($"https://api.github.com/repos/{owner}/{repo}/commits?path={path}");
 
                 using HttpClient httpClient = new();
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
@@ -217,8 +217,7 @@ namespace WDACConfig
                 }
 
                 // Fetch the content of the Markdown file
-                string markdownUrl = GlobalVars.MSFTRecommendedDriverBlockRulesURL;
-                string markdownContent = httpClient.GetStringAsync(markdownUrl).GetAwaiter().GetResult();
+                string markdownContent = httpClient.GetStringAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
 
                 // Use Regex to find the version
                 string version = string.Empty;
@@ -264,7 +263,7 @@ namespace WDACConfig
             string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
 
             // The link to download the zip file
-            string DriversBlockListZipDownloadLink = "https://aka.ms/VulnerableDriverBlockList";
+            Uri DriversBlockListZipDownloadLink = new("https://aka.ms/VulnerableDriverBlockList");
 
             // Get the system drive
             string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");

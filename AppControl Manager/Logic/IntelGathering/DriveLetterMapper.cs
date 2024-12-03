@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public static partial class DriveLetterMapper
     {
         [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "FindFirstVolumeW")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial IntPtr FindFirstVolume(
             [MarshalUsing(CountElementName = "cchBufferLength")][Out] char[] lpszVolumeName,
             uint cchBufferLength);
 
         [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "FindNextVolumeW")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool FindNextVolume(
             IntPtr hFindVolume,
@@ -20,12 +22,14 @@ namespace WDACConfig.IntelGathering
             uint cchBufferLength);
 
         [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "QueryDosDeviceW")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial uint QueryDosDevice(
             string lpDeviceName,
             [MarshalUsing(CountElementName = "ucchMax")][Out] char[] lpTargetPath,
             int ucchMax);
 
         [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "GetVolumePathNamesForVolumeNameW")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool GetVolumePathNamesForVolumeNameW(
             [MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,

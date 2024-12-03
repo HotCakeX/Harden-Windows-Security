@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Documents;
 using System;
 using System.Threading.Tasks;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class CreatePolicy : Page
     {

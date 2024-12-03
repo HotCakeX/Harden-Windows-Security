@@ -7,7 +7,7 @@ using Windows.Win32.System.Com;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.UI.Shell.Common;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100

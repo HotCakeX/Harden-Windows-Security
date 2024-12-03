@@ -1,5 +1,5 @@
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class CertificateDetailsCreator(string intermediateCertTBS, string intermediateCertName, string leafCertTBS, string leafCertName)
     {

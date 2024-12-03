@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class CiPolicyUtility
     {

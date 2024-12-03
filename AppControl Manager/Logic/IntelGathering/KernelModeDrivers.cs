@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 #pragma warning disable CS0649
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal static class KernelModeDrivers
     {

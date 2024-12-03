@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using static WDACConfig.AppSettings;
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -14,7 +14,7 @@ using static WDACConfig.AppSettings;
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -56,7 +56,7 @@ namespace WDACConfig
             #region
 
             // Check for the SoundSetting in the local settings
-            bool soundSetting = AppSettings.GetSetting<bool>(SettingKeys.SoundSetting);
+            bool soundSetting = AppSettings.GetSetting<bool>(AppControlManager.AppSettings.SettingKeys.SoundSetting);
 
             if (soundSetting)
             {
@@ -81,11 +81,12 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for when the sound setting is changed.
         /// </summary>
-        /// <param name="isSoundOn"></param>
-        private void OnSoundSettingChanged(bool isSoundOn)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnSoundSettingChanged(object? sender, SoundSettingChangedEventArgs e)
         {
             // Set the global sound state based on the event
-            if (isSoundOn)
+            if (e.IsSoundOn)
             {
                 ElementSoundPlayer.State = ElementSoundPlayerState.On;
                 ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;

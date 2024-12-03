@@ -7,10 +7,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
-using static WDACConfig.AppSettings;
+using static AppControlManager.AppSettings;
 
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class Settings : Page
     {
@@ -31,7 +31,7 @@ namespace WDACConfig.Pages
             VersionTextBlock.Text = $"Version {App.currentAppVersion}";
 
             // Set the year for the copyright section
-            CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
+            CopyRightSettingsExpander.Description = $"ï¿½ {DateTime.Now.Year}. All rights reserved.";
 
             FetchLatestCertificateCNs();
 

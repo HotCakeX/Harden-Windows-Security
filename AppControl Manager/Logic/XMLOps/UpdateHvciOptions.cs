@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class UpdateHvciOptions
     {

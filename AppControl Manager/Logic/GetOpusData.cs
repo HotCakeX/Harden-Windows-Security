@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static partial class Opus
     {
@@ -13,11 +13,12 @@ namespace WDACConfig
 
             // More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
             [LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+            [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static partial bool CryptDecodeObject(
                 uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
                 IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
-               [In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
+                [In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
                 uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
                 uint dwFlags,                   // Flags that modify the behavior of the function
                 IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// A custom equality comparer for the FileAttrib class.

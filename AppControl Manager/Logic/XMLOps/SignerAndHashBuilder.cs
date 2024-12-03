@@ -1,7 +1,7 @@
+using AppControlManager.IntelGathering;
 using System.Collections.Generic;
-using WDACConfig.IntelGathering;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class SignerAndHashBuilder
     {

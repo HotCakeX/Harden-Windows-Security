@@ -15,7 +15,7 @@ using Windows.ApplicationModel;
            }
 */
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public class PackageDetails
     {

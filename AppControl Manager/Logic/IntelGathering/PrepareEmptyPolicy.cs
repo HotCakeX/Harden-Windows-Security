@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public static class PrepareEmptyPolicy
     {

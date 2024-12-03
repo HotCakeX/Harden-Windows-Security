@@ -2,7 +2,7 @@
 using System.IO;
 using System.Management;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class SnapBackGuarantee
     {

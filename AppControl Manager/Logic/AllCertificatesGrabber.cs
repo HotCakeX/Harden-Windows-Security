@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 
 // The following functions and methods use the Windows APIs to grab all of the certificates from a signed file
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     // a class to throw a custom exception when the certificate has HashMismatch
@@ -170,6 +170,7 @@ namespace WDACConfig
 
             // External method declaration for CryptMsgGetParam
             [LibraryImport("crypt32.dll", SetLastError = true)]
+            [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
             [return: MarshalAs(UnmanagedType.Bool)]
             // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
             internal static partial bool CryptMsgGetParam(

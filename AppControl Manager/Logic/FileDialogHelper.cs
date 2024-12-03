@@ -7,7 +7,7 @@ using Windows.Win32.System.Com;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.UI.Shell.Common;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100
@@ -62,7 +62,7 @@ namespace WDACConfig
 
             // Set the default folder to "My Documents".
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                GlobalVars.UserConfigDir,
                 null,
                 typeof(IShellItem).GUID,
                 out void* pDirectoryShellItem
@@ -192,7 +192,7 @@ namespace WDACConfig
 
             // Set default folder to My Documents
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                GlobalVars.UserConfigDir,
                 null,
                 typeof(IShellItem).GUID,
                 out void* directoryShellItem
@@ -320,7 +320,7 @@ namespace WDACConfig
 
             // Set default folder to "My Documents"
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                GlobalVars.UserConfigDir,
                 null,
                 typeof(IShellItem).GUID,
                 out void* directoryShellItem
@@ -413,7 +413,7 @@ namespace WDACConfig
 
             // Set default folder to "My Documents"
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                GlobalVars.UserConfigDir,
                 null,
                 typeof(IShellItem).GUID,
                 out void* directoryShellItem

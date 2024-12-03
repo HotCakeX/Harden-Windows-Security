@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal static class Arbitrator
     {

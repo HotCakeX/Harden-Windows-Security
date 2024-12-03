@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class Signer(
         string id,

@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class CodeIntegrityInfo : Page
     {

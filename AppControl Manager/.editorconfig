@@ -22,7 +22,7 @@ dotnet_diagnostic.CA1310.severity = error
 dotnet_diagnostic.CA1401.severity = error
 
 # CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = silent
+dotnet_diagnostic.CA1303.severity = error
 
 # CA1309: Use ordinal string comparison
 dotnet_diagnostic.CA1309.severity = error
@@ -194,9 +194,6 @@ dotnet_diagnostic.CA1805.severity = error
 
 # CA1806: Do not ignore method results
 dotnet_diagnostic.CA1806.severity = error
-
-# CA1819: Properties should not return arrays
-dotnet_diagnostic.CA1819.severity = silent
 
 # CA1834: Consider using 'StringBuilder.Append(char)' when applicable
 dotnet_diagnostic.CA1834.severity = error
@@ -557,3 +554,195 @@ dotnet_diagnostic.CA5396.severity = error
 
 # CA5398: Avoid hardcoded SslProtocols values
 dotnet_diagnostic.CA5398.severity = error
+
+# CA1857: A constant is expected for the parameter
+dotnet_diagnostic.CA1857.severity = error
+
+# CA1870: Use a cached 'SearchValues' instance
+dotnet_diagnostic.CA1870.severity = error
+
+# CA2234: Pass system uri objects instead of strings
+dotnet_diagnostic.CA2234.severity = error
+
+# CA2352: Unsafe DataSet or DataTable in serializable type can be vulnerable to remote code execution attacks
+dotnet_diagnostic.CA2352.severity = error
+
+# CA2353: Unsafe DataSet or DataTable in serializable type
+dotnet_diagnostic.CA2353.severity = error
+
+# CA2354: Unsafe DataSet or DataTable in deserialized object graph can be vulnerable to remote code execution attacks
+dotnet_diagnostic.CA2354.severity = error
+
+# CA2355: Unsafe DataSet or DataTable type found in deserializable object graph
+dotnet_diagnostic.CA2355.severity = error
+
+# CA2362: Unsafe DataSet or DataTable in auto-generated serializable type can be vulnerable to remote code execution attacks
+dotnet_diagnostic.CA2362.severity = error
+
+# CA2356: Unsafe DataSet or DataTable type in web deserializable object graph
+dotnet_diagnostic.CA2356.severity = error
+
+# CA2260: Use correct type parameter
+dotnet_diagnostic.CA2260.severity = error
+
+# CA1824: Mark assemblies with NeutralResourcesLanguageAttribute
+dotnet_diagnostic.CA1824.severity = error
+
+# CA2016: Forward the 'CancellationToken' parameter to methods
+dotnet_diagnostic.CA2016.severity = error
+
+# CA2020: Prevent behavioral change
+dotnet_diagnostic.CA2020.severity = error
+
+# CsWinRT1030: Project does not enable unsafe blocks
+dotnet_diagnostic.CsWinRT1030.severity = error
+
+# CA1000: Do not declare static members on generic types
+dotnet_diagnostic.CA1000.severity = error
+
+# CA1003: Use generic event handler instances
+dotnet_diagnostic.CA1003.severity = error
+
+# CA1005: Avoid excessive parameters on generic types
+dotnet_diagnostic.CA1005.severity = error
+
+# CA1008: Enums should have zero value
+dotnet_diagnostic.CA1008.severity = error
+
+# CA1014: Mark assemblies with CLSCompliant
+dotnet_diagnostic.CA1014.severity = error
+
+# CA1027: Mark enums with FlagsAttribute
+dotnet_diagnostic.CA1027.severity = error
+
+# CA5358: Review cipher mode usage with cryptography experts
+dotnet_diagnostic.CA5358.severity = error
+
+# CA1833: Use AsSpan or AsMemory instead of Range-based indexers when appropriate
+dotnet_diagnostic.CA1833.severity = error
+
+# CA1844: Provide memory-based overrides of async methods when subclassing 'Stream'
+dotnet_diagnostic.CA1844.severity = error
+
+# CA2351: Do not use DataSet.ReadXml() with untrusted data
+dotnet_diagnostic.CA2351.severity = error
+
+# CA3003: Review code for file path injection vulnerabilities
+dotnet_diagnostic.CA3003.severity = error
+
+# CA2361: Ensure auto-generated class containing DataSet.ReadXml() is not used with untrusted data
+dotnet_diagnostic.CA2361.severity = error
+
+# CA2350: Do not use DataTable.ReadXml() with untrusted data
+dotnet_diagnostic.CA2350.severity = error
+
+# CA2329: Do not deserialize with JsonSerializer using an insecure configuration
+dotnet_diagnostic.CA2329.severity = error
+
+# CA2322: Ensure JavaScriptSerializer is not initialized with SimpleTypeResolver before deserializing
+dotnet_diagnostic.CA2322.severity = error
+
+# CA2330: Ensure that JsonSerializer has a secure configuration when deserializing
+dotnet_diagnostic.CA2330.severity = error
+
+# CA2305: Do not use insecure deserializer LosFormatter
+dotnet_diagnostic.CA2305.severity = error
+
+# CA2326: Do not use TypeNameHandling values other than None
+dotnet_diagnostic.CA2326.severity = error
+
+# CA2321: Do not deserialize with JavaScriptSerializer using a SimpleTypeResolver
+dotnet_diagnostic.CA2321.severity = error
+
+# CA2249: Consider using 'string.Contains' instead of 'string.IndexOf'
+dotnet_diagnostic.CA2249.severity = error
+
+# CA2315: Do not use insecure deserializer ObjectStateFormatter
+dotnet_diagnostic.CA2315.severity = error
+
+# CA3061: Do Not Add Schema By URL
+dotnet_diagnostic.CA3061.severity = error
+
+# CA5391: Use antiforgery tokens in ASP.NET Core MVC controllers
+dotnet_diagnostic.CA5391.severity = error
+
+# CA5392: Use DefaultDllImportSearchPaths attribute for P/Invokes
+dotnet_diagnostic.CA5392.severity = error
+
+# CA5393: Do not use unsafe DllImportSearchPath value
+dotnet_diagnostic.CA5393.severity = error
+
+# CA5376: Use SharedAccessProtocol HttpsOnly
+dotnet_diagnostic.CA5376.severity = error
+
+# CA5377: Use Container Level Access Policy
+dotnet_diagnostic.CA5377.severity = error
+
+# CA5378: Do not disable ServicePointManagerSecurityProtocols
+dotnet_diagnostic.CA5378.severity = error
+
+# CA5375: Do Not Use Account Shared Access Signature
+dotnet_diagnostic.CA5375.severity = error
+
+# CA5372: Use XmlReader for XPathDocument constructor
+dotnet_diagnostic.CA5372.severity = error
+
+# CA5369: Use XmlReader for 'XmlSerializer.Deserialize()'
+dotnet_diagnostic.CA5369.severity = error
+
+# CA5368: Set ViewStateUserKey For Classes Derived From Page
+dotnet_diagnostic.CA5368.severity = error
+
+# CA5367: Do Not Serialize Types With Pointer Fields
+dotnet_diagnostic.CA5367.severity = error
+
+# CA5365: Do Not Disable HTTP Header Checking
+dotnet_diagnostic.CA5365.severity = error
+
+# CA5363: Do Not Disable Request Validation
+dotnet_diagnostic.CA5363.severity = error
+
+# CA1859: Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1859.severity = error
+
+# CA5399: HttpClients should enable certificate revocation list checks
+dotnet_diagnostic.CA5399.severity = error
+
+# CA5395: Miss HttpVerb attribute for action methods
+dotnet_diagnostic.CA5395.severity = error
+
+# CA5389: Do Not Add Archive Item's Path To The Target File System Path
+dotnet_diagnostic.CA5389.severity = error
+
+# CA5374: Do Not Use XslTransform
+dotnet_diagnostic.CA5374.severity = error
+
+# CA5359: Do Not Disable Certificate Validation
+dotnet_diagnostic.CA5359.severity = error
+
+# CA2310: Do not use insecure deserializer NetDataContractSerializer
+dotnet_diagnostic.CA2310.severity = error
+
+# CA2119: Seal methods that satisfy private interfaces
+dotnet_diagnostic.CA2119.severity = error
+
+# CA2211: Non-constant fields should not be visible
+dotnet_diagnostic.CA2211.severity = error
+
+# CA2311: Do not deserialize without first setting NetDataContractSerializer.Binder
+dotnet_diagnostic.CA2311.severity = error
+
+# CA3147: Mark Verb Handlers With Validate Antiforgery Token
+dotnet_diagnostic.CA3147.severity = error
+
+# CA2100: Review SQL queries for security vulnerabilities
+dotnet_diagnostic.CA2100.severity = error
+
+# CA2216: Disposable types should declare finalizer
+dotnet_diagnostic.CA2216.severity = error
+
+# CA1017: Mark assemblies with ComVisible
+dotnet_diagnostic.CA1017.severity = error
+
+# CA1016: Mark assemblies with assembly version
+dotnet_diagnostic.CA1016.severity = error

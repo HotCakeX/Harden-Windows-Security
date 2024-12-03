@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     // Comparer for XmlNode objects based on their "RuleID" attribute

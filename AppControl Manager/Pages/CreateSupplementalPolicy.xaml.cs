@@ -1,3 +1,5 @@
+using AppControlManager.IntelGathering;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -9,9 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using WDACConfig.IntelGathering;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
 
     public sealed partial class CreateSupplementalPolicy : Page
@@ -355,6 +356,10 @@ namespace WDACConfig.Pages
                 filesAndFoldersScanResultsList.Clear();
                 filesAndFoldersScanResults.Clear();
 
+                double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
+
+                ScalabilityRadialGauge.IsEnabled = false;
+
                 await Task.Run(() =>
                 {
 
@@ -400,7 +405,7 @@ namespace WDACConfig.Pages
 
 
                     // Scan all of the detected files from the user selected directories
-                    HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories);
+                    HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
 
                     // Add the results of the directories scans to the DataGrid
                     foreach (FileIdentity item in LocalFilesResults)
@@ -514,9 +519,6 @@ namespace WDACConfig.Pages
                 // Clear variables and UI fields for the next round
                 filesAndFoldersFilePaths.Clear();
                 filesAndFoldersFolderPaths.Clear();
-                filesAndFoldersBasePolicyPath = null;
-                filesAndFoldersSupplementalPolicyName = null;
-                FilesAndFoldersPolicyNameTextBox.Text = null;
 
 
                 // Clear the TextBoxes in the Flyouts
@@ -525,9 +527,22 @@ namespace WDACConfig.Pages
 
 
                 CreateCertificatesSupplementalPolicyButton.IsEnabled = true;
+
+
+                ScalabilityRadialGauge.IsEnabled = true;
             }
         }
 
+
+        // Event handler for RadialGauge ValueChanged
+        private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (sender is RadialGauge gauge)
+            {
+                // Update the button content with the current value of the gauge
+                ScalabilityButton.Content = $"Scalability: {gauge.Value:N0}";
+            }
+        }
 
         #endregion
 
@@ -744,7 +759,8 @@ namespace WDACConfig.Pages
                     CloseEmptyXmlNodesSemantic.Close(EmptyPolicyPath);
                     RemoveDuplicateFileAttribSemantic.Remove(EmptyPolicyPath);
                     CloseEmptyXmlNodesSemantic.Close(EmptyPolicyPath);
-                    PolicyMerger.Merge([EmptyPolicyPath], EmptyPolicyPath);
+                    MergeSignersSemantic.Merge(EmptyPolicyPath);
+                    MergeSignersSemantic.Merge(EmptyPolicyPath);
                     CloseEmptyXmlNodesSemantic.Close(EmptyPolicyPath);
 
 

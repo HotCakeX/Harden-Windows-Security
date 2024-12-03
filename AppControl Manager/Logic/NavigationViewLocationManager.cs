@@ -1,17 +1,27 @@
 ﻿using System;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class NavigationViewLocationManager
+    // Custom EventArgs class for navigation view location changes
+    internal sealed class NavigationViewLocationChangedEventArgs(string newLocation) : EventArgs
+    {
+        internal string NewLocation { get; } = newLocation;
+    }
+
+    internal static class NavigationViewLocationManager
     {
         // The static event for NavigationView location changes
         // MainWindow listens to this to set the NavigationView's location
-        public static event Action<string>? NavigationViewLocationChanged;
+        internal static event EventHandler<NavigationViewLocationChangedEventArgs>? NavigationViewLocationChanged;
 
-        // Method to raise the event when the background is changed
-        public static void OnNavigationViewLocationChanged(string newLocation)
+        // Method to raise the event when the location changes
+        internal static void OnNavigationViewLocationChanged(string newLocation)
         {
-            NavigationViewLocationChanged?.Invoke(newLocation);
+            // Raise the NavigationViewLocationChanged event with the new location
+            NavigationViewLocationChanged?.Invoke(
+                null,
+                new NavigationViewLocationChangedEventArgs(newLocation)
+            );
         }
     }
 }

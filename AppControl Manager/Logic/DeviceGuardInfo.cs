@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Management;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     public sealed class DeviceGuardStatus

@@ -1,6 +1,6 @@
 using System;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class VersionIncrementer
     {

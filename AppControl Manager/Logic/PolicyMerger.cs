@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class PolicyMerger
     {

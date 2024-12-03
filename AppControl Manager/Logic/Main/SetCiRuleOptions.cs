@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class CiRuleOptions
     {
@@ -163,7 +163,7 @@ namespace WDACConfig
 
            // Load the CI Schema content
            XmlDocument schemaData = new();
-           schemaData.Load(Path.Combine(WDACConfig.GlobalVars.CISchemaPath));
+           schemaData.Load(Path.Combine(AppControlManager.GlobalVars.CISchemaPath));
 
            // Create a namespace manager to handle namespaces
            XmlNamespaceManager nsManager = new(schemaData.NameTable);

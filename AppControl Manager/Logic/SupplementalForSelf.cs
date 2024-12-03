@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     internal static class SupplementalForSelf

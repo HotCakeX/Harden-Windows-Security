@@ -1,3 +1,4 @@
+using AppControlManager.IntelGathering;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -9,11 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WDACConfig.IntelGathering;
 using Windows.ApplicationModel.DataTransfer;
 
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

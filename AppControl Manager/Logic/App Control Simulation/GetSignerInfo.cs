@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class GetSignerInfo
     {
@@ -11,7 +11,7 @@ namespace WDACConfig
         /// The output contains as much info as possible about each signer
         /// </summary>
         /// <param name="xmlContent"></param>
-        /// <returns> List<WDACConfig.Signer> </returns>
+        /// <returns> List<AppControlManager.Signer> </returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static List<Signer> Get(XmlDocument xmlContent)
         {

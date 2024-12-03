@@ -1,4 +1,4 @@
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// Used by AppControl Simulations

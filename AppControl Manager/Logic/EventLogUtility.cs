@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class EventLogUtility
     {

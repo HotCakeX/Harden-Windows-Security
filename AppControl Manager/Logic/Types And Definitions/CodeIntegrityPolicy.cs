@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // This class represents a single Code Integrity XML policy
     // It Makes sure PolicyType attribute, BasePolicyID node and PolicyID nodes exist and remove PolicyTypeID node if it exists

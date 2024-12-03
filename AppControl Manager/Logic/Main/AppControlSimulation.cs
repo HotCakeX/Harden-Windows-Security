@@ -13,9 +13,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class InvokeWDACSimulation
+    public static class AppControlSimulation
     {
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace WDACConfig
 
             Logger.Write("Looping through each supported file");
 
-            // Rhe counter variable to track processed files
+            // The counter variable to track processed files
             int processedFilesCount = 0;
 
             // The count of all of the files that are going to be processed

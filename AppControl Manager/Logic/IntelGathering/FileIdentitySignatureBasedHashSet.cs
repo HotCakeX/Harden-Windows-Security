@@ -42,7 +42,7 @@ namespace WDACConfig.IntelGathering
             if (_set.TryGetValue(item, out FileIdentity? existingItem))
             {
                 // If an equivalent unsigned item exists, replace it with the signed item
-                if (existingItem.SignatureStatus == SignatureStatus.Unsigned && item.SignatureStatus == SignatureStatus.Signed)
+                if (existingItem.SignatureStatus == SignatureStatus.IsUnsigned && item.SignatureStatus == SignatureStatus.IsSigned)
                 {
                     Logger.Write($"Replacing an unsigned FileIdentity item with a signed one in MDE Advanced Hunting Logs for the file with name {existingItem.FileName} and SHA256 hash {existingItem.SHA256Hash}.");
 

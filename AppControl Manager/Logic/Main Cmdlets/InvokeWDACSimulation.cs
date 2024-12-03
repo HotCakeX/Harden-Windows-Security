@@ -267,7 +267,7 @@ namespace WDACConfig
 
             HashSet<string> SHA256HashesFromXML = GetFileRuleOutput.Get(XMLData).Select(i => i.HashValue).ToHashSet();
 
-            Logger.Write("Getting all of the file paths of the files that WDAC supports, from the user provided directory");
+            Logger.Write("Getting all of the file paths of the files that App Control supports, from the user provided directory");
 
             List<FileInfo> CollectedFiles = FileUtility.GetFilesFast(
                 folderPaths?.Select(dir => new DirectoryInfo(dir)).ToArray(),
@@ -277,7 +277,7 @@ namespace WDACConfig
             // Make sure the selected directories and files contain files with the supported extensions
             if (CollectedFiles.Count == 0)
             {
-                throw new InvalidOperationException("There are no files in the selected directory that are supported by the WDAC engine.");
+                throw new InvalidOperationException("There are no files in the selected directory that are supported by the App Control engine.");
             }
 
             Logger.Write("Looping through each supported file");
@@ -522,7 +522,7 @@ namespace WDACConfig
                                 {
                                     // Use the Compare method to process it
 
-                                    // The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
+                                    // The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
                                     string[] ekuOIDs = FileSignatureResults
                                         .Where(p => p.Signer?.SignerInfos is not null)
                                         .SelectMany(p => p.Signer.SignerInfos.Cast<SignerInfo>())
@@ -535,7 +535,7 @@ namespace WDACConfig
                                     SimulationInput inPutSim = new(
                                         CurrentFilePath, // Path of the signed file
                                         [.. GetCertificateDetails.Get([.. FileSignatureResults])], //  Get all of the details of all certificates of the signed file
-                                        [.. SignerInfo], // The entire Signer Info of the WDAC Policy file
+                                        [.. SignerInfo], // The entire Signer Info of the App Control Policy file
                                         ekuOIDs);
 
                                     SimulationOutput ComparisonResult = Arbitrator.Compare(inPutSim);
@@ -543,7 +543,7 @@ namespace WDACConfig
                                     _ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName, ComparisonResult);
                                 }
                             }
-                            catch (ExceptionHashMismatchInCertificate)
+                            catch (HashMismatchInCertificateException)
                             {
                                 _ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
                                     new SimulationOutput(

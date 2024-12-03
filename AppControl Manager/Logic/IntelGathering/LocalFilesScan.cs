@@ -57,7 +57,7 @@ namespace WDACConfig.IntelGathering
                 FileIdentity currentFileIdentity = new()
                 {
                     Origin = FileIdentityOrigin.DirectFileScan,
-                    SignatureStatus = fileIsSigned ? SignatureStatus.Signed : SignatureStatus.Unsigned,
+                    SignatureStatus = fileIsSigned ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned,
                     FilePath = fileString,
                     FileName = file.Name,
                     SHA1Hash = fileHashes.SHa1Authenticode,

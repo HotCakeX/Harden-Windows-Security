@@ -281,7 +281,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -472,7 +472,7 @@ namespace WDACConfig.IntelGathering
                     }
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
                     // Add the populated EventData instance to the list
                     _ = fileIdentities.Add(eventData);
@@ -721,7 +721,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -882,7 +882,7 @@ namespace WDACConfig.IntelGathering
                     }
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
                     // Add the populated EventData instance to the list
                     _ = fileIdentities.Add(eventData);

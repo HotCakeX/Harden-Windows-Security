@@ -3,7 +3,7 @@ namespace WDACConfig
 {
     /// <summary>
     /// Used by AppControl Simulations, the output of the comparer function/method
-    /// This class holds the details of the current file in the WDAC Simulation comparer
+    /// This class holds the details of the current file in the App Control Simulation comparer
     /// </summary>
     public sealed class SimulationOutput(
         string? path,

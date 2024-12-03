@@ -76,7 +76,7 @@ namespace WDACConfig
 
 
         /// <summary>
-        /// Gets a list of WDAC policies on the system with filtering
+        /// Gets a list of App Control policies on the system with filtering
         /// </summary>
         /// <param name="SystemPolicies">Will include System policies in the output</param>
         /// <param name="BasePolicies">Will include Base policies in the output</param>
@@ -163,7 +163,7 @@ namespace WDACConfig
 
 
         /// <summary>
-        /// Removes a deployed WDAC policy from the system
+        /// Removes a deployed App Control policy from the system
         /// </summary>
         /// <param name="policyId">The GUID which is the policy ID of the policy to be removed.</param>
         /// <exception cref="ArgumentException"></exception>
@@ -186,7 +186,7 @@ namespace WDACConfig
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a WDAC policy
+                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove an App Control policy
                 RedirectStandardOutput = true, // Capture the standard output
                 UseShellExecute = false,   // Do not use the OS shell to start the process
                 CreateNoWindow = true      // Run the process without creating a window
@@ -237,7 +237,7 @@ namespace WDACConfig
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the WDAC policy
+                Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the App Control policy
                 RedirectStandardOutput = true, // Capture the standard output
                 UseShellExecute = false,   // Do not use the OS shell to start the process
                 CreateNoWindow = true      // Run the process without creating a window
@@ -272,7 +272,7 @@ namespace WDACConfig
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = "--refresh -json",  // Arguments to refresh WDAC policies
+                Arguments = "--refresh -json",  // Arguments to refresh App Control policies
                 RedirectStandardOutput = true,  // Capture the standard output
                 UseShellExecute = false,        // Do not use the OS shell to start the process
                 CreateNoWindow = true           // Run the process without creating a window

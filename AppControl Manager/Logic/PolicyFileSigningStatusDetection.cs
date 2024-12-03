@@ -7,19 +7,13 @@ namespace WDACConfig
     public static class PolicyFileSigningStatusDetection
     {
 
-        public enum SigningStatus
-        {
-            Signed,
-            Unsigned
-        }
-
         /// <summary>
-        /// Check the signing status of a WDAC policy file
+        /// Check the signing status of an App Control policy file
         /// </summary>
         /// <param name="policyXMLPath"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static SigningStatus Check(string policyXMLPath)
+        public static IntelGathering.SignatureStatus Check(string policyXMLPath)
         {
 
             // Make sure the policy file is valid first
@@ -56,7 +50,7 @@ namespace WDACConfig
             }
 
             // Return a status
-            return (supplementalSignerIDs.Count > 0 || updatePolicySignerIDs.Count > 0) ? SigningStatus.Signed : SigningStatus.Unsigned;
+            return (supplementalSignerIDs.Count > 0 || updatePolicySignerIDs.Count > 0) ? IntelGathering.SignatureStatus.IsSigned : IntelGathering.SignatureStatus.IsUnsigned;
         }
     }
 }

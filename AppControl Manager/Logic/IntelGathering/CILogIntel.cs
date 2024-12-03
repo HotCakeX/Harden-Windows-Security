@@ -64,7 +64,7 @@ namespace WDACConfig.IntelGathering
             { 23 ,   "Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError."},
             { 24 ,   "Flight root not allowed; indicates trying to run flight-signed code on production OS."},
             { 25 ,   "Anti-cheat policy violation."},
-            { 26 ,   "Explicitly denied by WDAC policy."},
+            { 26 ,   "Explicitly denied by App Control policy."},
             { 27 ,   "The signing chain appears to be tampered / invalid."},
             { 28 ,   "Resource page hash mismatch."}
         };

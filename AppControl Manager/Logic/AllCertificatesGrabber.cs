@@ -12,7 +12,7 @@ namespace WDACConfig
 {
 
     // a class to throw a custom exception when the certificate has HashMismatch
-    public sealed class ExceptionHashMismatchInCertificate(string message, string functionName) : Exception($"{functionName}: {message}")
+    public sealed class HashMismatchInCertificateException(string message, string functionName) : Exception($"{functionName}: {message}")
     {
     }
 
@@ -241,7 +241,7 @@ namespace WDACConfig
                     if (verifyTrustResult == WinTrust.WinVerifyTrustResult.HashMismatch)
                     {
                         // Throw a custom exception
-                        throw new ExceptionHashMismatchInCertificate($"WinTrust return code: {verifyTrustResult}", $"The file '{FilePath}' is tampered with and there is a Hash Mismatch.");
+                        throw new HashMismatchInCertificateException($"WinTrust return code: {verifyTrustResult}", $"The file '{FilePath}' is tampered with and there is a Hash Mismatch.");
                     }
 
                     // If there is valid state data

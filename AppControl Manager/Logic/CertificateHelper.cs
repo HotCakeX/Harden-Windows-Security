@@ -5,8 +5,8 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace WDACConfig
 {
-    // A class to throw a custom exception when the certificate collection cannot be obtained during WDAC Simulation
-    public sealed class ExceptionFailedToGetCertificateCollection(string message, string functionName) : Exception($"{functionName}: {message}")
+    // A class to throw a custom exception when the certificate collection cannot be obtained during App Control Simulation
+    public sealed class FailedToGetCertificateCollectionException(string message, string functionName) : Exception($"{functionName}: {message}")
     {
     }
 
@@ -66,7 +66,7 @@ namespace WDACConfig
 
         public static string ConvertHexToOID(string hex)
         // Converts a hexadecimal string to an OID
-        // Used for converting hexadecimal values found in the EKU sections of the WDAC policies to their respective OIDs.
+        // Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
         {
             if (string.IsNullOrEmpty(hex))
             {

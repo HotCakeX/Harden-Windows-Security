@@ -307,7 +307,7 @@ namespace WDACConfig
             // Move the SiPolicy file to the final destination, renaming it in the process
             File.Move(SiPolicyPath, SiPolicyFinalDestination);
 
-            Logger.Write("Refreshing the system WDAC policies");
+            Logger.Write("Refreshing the system App Control policies");
             CiToolHelper.RefreshPolicy();
 
             Logger.Write("SiPolicy.p7b has been deployed and policies refreshed.");

@@ -1,10 +1,11 @@
+using AppControlManager.Logging;
 using System;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 
 namespace AppControlManager
 {
-    public static class EventLogUtility
+    internal static class EventLogUtility
     {
 
 
@@ -17,7 +18,7 @@ namespace AppControlManager
         /// This is to prevent infinitely expanding the max log size automatically.
         /// </summary>
         /// <param name="logSize">Size of the Code Integrity Operational Event Log</param>
-        public static void SetLogSize(ulong logSize = 0)
+        internal static void SetLogSize(ulong logSize = 0)
         {
             Logger.Write("Setting the Code Integrity Log Size");
 
@@ -63,7 +64,7 @@ namespace AppControlManager
         /// Gets the Code Integrity Operational Log Max capacity in Double
         /// </summary>
         /// <returns></returns>
-        public static double GetCurrentLogSize()
+        internal static double GetCurrentLogSize()
         {
             Logger.Write("Getting the Code Integrity Log Capacity");
 

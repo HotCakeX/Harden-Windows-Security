@@ -4,17 +4,17 @@ namespace AppControlManager
 {
     // https://learn.microsoft.com/en-us/uwp/api/windows.storage.applicationdata.localsettings
 
-    public static class AppSettings
+    internal static class AppSettings
     {
         // Save setting to local storage with a specific key and value
-        public static void SaveSetting(SettingKeys key, object? value)
+        internal static void SaveSetting(SettingKeys key, object? value)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             localSettings.Values[key.ToString()] = value;
         }
 
         // Retrieve setting from local storage with a specific key
-        public static T? GetSetting<T>(SettingKeys key)
+        internal static T? GetSetting<T>(SettingKeys key)
         {
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
@@ -32,7 +32,7 @@ namespace AppControlManager
 
         // Enum for the setting keys
         // Used when saving and retrieving settings
-        public enum SettingKeys
+        internal enum SettingKeys
         {
             SoundSetting,
             NavViewBackground,

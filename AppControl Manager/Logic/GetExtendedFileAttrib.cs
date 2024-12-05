@@ -13,11 +13,11 @@ namespace AppControlManager
         public const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
 
         // Properties to hold file information
-        public string? OriginalFileName { get; private set; }
-        public string? InternalName { get; private set; }
-        public string? ProductName { get; private set; }
-        public Version? Version { get; private set; }
-        public string? FileDescription { get; private set; }
+        public string? OriginalFileName { get; set; }
+        public string? InternalName { get; set; }
+        public string? ProductName { get; set; }
+        public Version? Version { get; set; }
+        public string? FileDescription { get; set; }
 
         // Importing external functions from Version.dll to work with file version info
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa

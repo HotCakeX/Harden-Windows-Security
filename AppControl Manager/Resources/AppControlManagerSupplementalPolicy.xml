@@ -10,20 +10,13 @@
       <Option>Disabled:Runtime FilePath Rule Protection</Option>
     </Rule>
   </Rules>
-  <!--EKUS-->
   <EKUs />
-  <!--File Rules-->
   <FileRules>
-    <Allow ID="ID_ALLOW_A_1" FriendlyName="AppControlManager_sadt7br7jpt02 FileRule" MinimumFileVersion="0.0.0.0" PackageFamilyName="AppControlManager_sadt7br7jpt02" />
+    <Allow ID="ID_ALLOW_A_1" FriendlyName="AppControlManager_sadt7br7jpt02 FileRule" MinimumFileVersion="1.0.0.0" PackageFamilyName="AppControlManager_sadt7br7jpt02" />
   </FileRules>
-  <!--Signers-->
   <Signers />
-  <!--Driver Signing Scenarios-->
   <SigningScenarios>
-    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on 10-10-2024">
-      <ProductSigners />
-    </SigningScenario>
-    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on 10-10-2024">
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Signing Scenario">
       <ProductSigners>
         <FileRulesRef>
           <FileRuleRef RuleID="ID_ALLOW_A_1" />
@@ -40,11 +33,6 @@
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>
         <String>AppControlManagerSupplementalPolicy</String>
-      </Value>
-    </Setting>
-    <Setting Provider="AppControlManager" Key="AppControlManagerAuthCheck" ValueName="IsAppControlManagerAllowed">
-      <Value>
-        <Boolean>1</Boolean>
       </Value>
     </Setting>
   </Settings>

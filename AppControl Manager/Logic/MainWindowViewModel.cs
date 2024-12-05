@@ -27,7 +27,7 @@ namespace AppControlManager
         /// Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
         /// When set to 0, the badge is hidden.
         /// </summary>
-        public double InfoBadgeOpacity
+        internal double InfoBadgeOpacity
         {
             get => _infoBadgeOpacity;
             set
@@ -48,7 +48,7 @@ namespace AppControlManager
         /// and subscribes to the update notification event.
         /// </summary>
         /// <param name="updateService">Instance of AppUpdate service used for update checks.</param>
-        public MainWindowViewModel(AppUpdate updateService)
+        internal MainWindowViewModel(AppUpdate updateService)
         {
             _updateService = updateService; // Store AppUpdate service instance
 

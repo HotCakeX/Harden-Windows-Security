@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace AppControlManager
 {
 
-    public static class CheckPolicyDeploymentStatus
+    internal static class CheckPolicyDeploymentStatus
     {
 
         /// <summary>
@@ -12,7 +12,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="policyXMLFile"></param>
         /// <returns></returns>
-        public static bool IsDeployed(string policyXMLFile)
+        internal static bool IsDeployed(string policyXMLFile)
         {
 
             // Create a new HashSet with case-insensitive string comparison

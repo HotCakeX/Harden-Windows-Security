@@ -1,3 +1,4 @@
+using AppControlManager.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Xml;
 
 namespace AppControlManager
 {
-    public partial class GetFileRuleOutput
+    public static partial class GetFileRuleOutput
     {
         /// <summary>
         /// A function that accepts an App Control policy XML content and creates an output array that contains the file rules that are based on file hashes.

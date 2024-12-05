@@ -2,7 +2,7 @@ using System.IO;
 
 namespace AppControlManager
 {
-    public static class PolicyEditor
+    internal static class PolicyEditor
     {
         /// <summary>
         /// Swaps the PolicyID and BasePolicyID GUIDs in an App Control for Business policy XML file for Base policies.
@@ -10,7 +10,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="policyIdInput"></param>
         /// <param name="policyFilePathInput"></param>
-        public static void EditGuids(string policyIdInput, FileInfo policyFilePathInput)
+        internal static void EditGuids(string policyIdInput, FileInfo policyFilePathInput)
 
         {
             // Instantiate the policy

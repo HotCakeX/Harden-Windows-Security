@@ -8,9 +8,9 @@ using System.Xml.Schema;
 
 namespace AppControlManager
 {
-    public static class CiPolicyTest
+    internal static class CiPolicyTest
     {
-        public static object? TestCiPolicy(string? xmlFilePath, string? cipFilePath)
+        internal static object? TestCiPolicy(string? xmlFilePath, string? cipFilePath)
         {
             // Make sure the parameters are mutually exclusive
             if (!string.IsNullOrEmpty(xmlFilePath) && !string.IsNullOrEmpty(cipFilePath))

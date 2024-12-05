@@ -3,19 +3,19 @@
 namespace AppControlManager
 {
 
-    public sealed class SecurePolicySetting(object? Value, WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
+    internal sealed class SecurePolicySetting(object? Value, WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
     {
-        public object? Value { get; set; } = Value;
-        public WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
-        public uint ValueSize { get; set; } = ValueSize;
-        public bool Status { get; set; } = Status;
-        public int StatusCode { get; set; } = StatusCode;
+        internal object? Value { get; set; } = Value;
+        internal WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
+        internal uint ValueSize { get; set; } = ValueSize;
+        internal bool Status { get; set; } = Status;
+        internal int StatusCode { get; set; } = StatusCode;
     }
 
-    public static class GetCIPolicySetting
+    internal static class GetCIPolicySetting
     {
 
-        public static SecurePolicySetting Invoke(string provider, string key, string valueName)
+        internal static SecurePolicySetting Invoke(string provider, string key, string valueName)
         {
 
             // Create UNICODE_STRING structures

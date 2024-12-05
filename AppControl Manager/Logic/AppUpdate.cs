@@ -8,20 +8,20 @@ namespace AppControlManager
     /// This class is implemented as a Singleton to ensure only one instance is created and used throughout the app.
     /// Providing a single access point for update-related operations.
     /// </summary>
-    public class AppUpdate
+    internal sealed class AppUpdate
     {
         // Singleton instance of AppUpdate, created lazily to optimize memory usage and control instantiation.
         private static readonly Lazy<AppUpdate> _instance = new(() => new AppUpdate());
 
-        // Public property to access the single AppUpdate instance, enforcing Singleton pattern.
+        // property to access the single AppUpdate instance, enforcing Singleton pattern.
         // The Instance property returns the one and only instance of this class.
-        public static AppUpdate Instance => _instance.Value;
+        internal static AppUpdate Instance => _instance.Value;
 
         /// <summary>
         /// Event triggered when an update is available.
         /// Includes details about the availability status and the version.
         /// </summary>
-        public event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
+        internal event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
 
         // Private constructor prevents instantiation from outside, ensuring only one instance.
         private AppUpdate() { }
@@ -31,7 +31,7 @@ namespace AppControlManager
         /// Checks the online version against the current app version,
         /// and raises the UpdateAvailable event if an update is found.
         /// </summary>
-        public UpdateCheckResponse Check()
+        internal UpdateCheckResponse Check()
         {
             using HttpClient client = new();
 
@@ -56,16 +56,16 @@ namespace AppControlManager
     /// <summary>
     /// EventArgs class to provide data for the UpdateAvailable event.
     /// </summary>
-    public class UpdateAvailableEventArgs(bool isUpdateAvailable, Version availableVersion) : EventArgs
+    internal sealed class UpdateAvailableEventArgs(bool isUpdateAvailable, Version availableVersion) : EventArgs
     {
         /// <summary>
         /// Indicates whether an update is available.
         /// </summary>
-        public bool IsUpdateAvailable { get; } = isUpdateAvailable;
+        internal bool IsUpdateAvailable { get; } = isUpdateAvailable;
 
         /// <summary>
         /// The version of the available update.
         /// </summary>
-        public Version AvailableVersion { get; } = availableVersion;
+        internal Version AvailableVersion { get; } = availableVersion;
     }
 }

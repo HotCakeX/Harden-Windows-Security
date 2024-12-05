@@ -1,4 +1,5 @@
 using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -227,7 +228,7 @@ namespace AppControlManager.Pages
                 AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
 
                 // Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
-                EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.NewGuid().ToString().Replace("-", "")}.cip");
+                EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID()}.cip");
 
                 Step1InfoBar.IsOpen = true;
                 Step1InfoBar.Message = "Deploying the selected policy in Audit mode, please wait";
@@ -673,6 +674,7 @@ namespace AppControlManager.Pages
                 ResetStepsButton.IsEnabled = false;
 
                 Step3InfoBar.IsOpen = true;
+                Step3InfoBar.Severity = InfoBarSeverity.Informational;
                 Step3InfoBar.Message = "Creating the policy using any available event logs or file scan results in other tabs.";
 
 

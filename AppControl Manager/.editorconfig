@@ -132,10 +132,10 @@ dotnet_diagnostic.CA1822.severity = error
 # CA1050: Declare types in namespaces
 dotnet_diagnostic.CA1050.severity = error
 
-# IDE0290: Use primary constructor | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0290
+# IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = error
 
-# IDE0220: Add explicit cast in foreach loop | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0220
+# IDE0220: Add explicit cast in foreach loop
 dotnet_diagnostic.IDE0220.severity = error
 
 # CA1868: Unnecessary call to 'Contains(item)'
@@ -144,10 +144,10 @@ dotnet_diagnostic.CA1868.severity = error
 # CA1869: Cache and reuse 'JsonSerializerOptions' instances
 dotnet_diagnostic.CA1869.severity = error
 
-# IDE0090: Simplify new expression | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090
+# IDE0090: Simplify new expression
 dotnet_diagnostic.IDE0090.severity = error
 
-# IDE0059: Remove unnecessary value assignment | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0059
+# IDE0059: Remove unnecessary value assignment
 dotnet_diagnostic.IDE0059.severity = error
 
 # CA1829: Use Length/Count property instead of Count() when available
@@ -384,9 +384,6 @@ dotnet_diagnostic.IDE1006.severity = error
 # IDE0057: Use range operator
 dotnet_diagnostic.IDE0057.severity = error
 
-# IDE0130: Namespace does not match folder structure
-dotnet_diagnostic.IDE0130.severity = silent
-
 # CsWinRT1028: Class is not marked partial
 dotnet_diagnostic.CsWinRT1028.severity = error
 
@@ -470,9 +467,6 @@ dotnet_diagnostic.CA3007.severity = error
 
 # CA1066: Implement IEquatable when overriding Object.Equals
 dotnet_diagnostic.CA1066.severity = error
-
-# CA1505: Avoid unmaintainable code
-dotnet_diagnostic.CA1505.severity = error
 
 # CA1721: Property names should not match get methods
 dotnet_diagnostic.CA1721.severity = error
@@ -746,3 +740,325 @@ dotnet_diagnostic.CA1017.severity = error
 
 # CA1016: Mark assemblies with assembly version
 dotnet_diagnostic.CA1016.severity = error
+
+# CA5405: Do not always skip token validation in delegates
+dotnet_diagnostic.CA5405.severity = error
+
+# CA5402: Use CreateEncryptor with the default IV
+dotnet_diagnostic.CA5402.severity = error
+
+# CA5401: Do not use CreateEncryptor with non-default IV
+dotnet_diagnostic.CA5401.severity = error
+
+# CA5390: Do not hard-code encryption key
+dotnet_diagnostic.CA5390.severity = error
+
+# CA5386: Avoid hardcoding SecurityProtocolType value
+dotnet_diagnostic.CA5386.severity = error
+
+# CA5362: Potential reference cycle in deserialized object graph
+dotnet_diagnostic.CA5362.severity = error
+
+# CA5361: Do Not Disable SChannel Use of Strong Crypto
+dotnet_diagnostic.CA5361.severity = error
+
+# CA2312: Ensure NetDataContractSerializer.Binder is set before deserializing
+dotnet_diagnostic.CA2312.severity = error
+
+# CA2262: Set 'MaxResponseHeadersLength' properly
+dotnet_diagnostic.CA2262.severity = error
+
+# CA2261: Do not use ConfigureAwaitOptions.SuppressThrowing with Task<TResult>
+dotnet_diagnostic.CA2261.severity = error
+
+# CA2248: Provide correct 'enum' argument to 'Enum.HasFlag'
+dotnet_diagnostic.CA2248.severity = error
+
+# CA2019: Improper 'ThreadStatic' field initialization
+dotnet_diagnostic.CA2019.severity = error
+
+# CA2021: Do not call Enumerable.Cast<T> or Enumerable.OfType<T> with incompatible types
+dotnet_diagnostic.CA2021.severity = error
+
+# CA1840: Use 'Environment.CurrentManagedThreadId'
+dotnet_diagnostic.CA1840.severity = error
+
+# CA1847: Use char literal for a single character lookup
+dotnet_diagnostic.CA1847.severity = error
+
+# CA1018: Mark attributes with AttributeUsageAttribute
+dotnet_diagnostic.CA1018.severity = error
+
+# CA1019: Define accessors for attribute arguments
+dotnet_diagnostic.CA1019.severity = error
+
+# CA1041: Provide ObsoleteAttribute message
+dotnet_diagnostic.CA1041.severity = error
+
+# CA1043: Use Integral Or String Argument For Indexers
+dotnet_diagnostic.CA1043.severity = error
+
+# CA1045: Do not pass types by reference
+dotnet_diagnostic.CA1045.severity = error
+
+# CA1052: Static holder types should be Static or NotInheritable
+dotnet_diagnostic.CA1052.severity = error
+
+# CA1058: Types should not extend certain base types
+dotnet_diagnostic.CA1058.severity = error
+
+# CA1065: Do not raise exceptions in unexpected locations
+dotnet_diagnostic.CA1065.severity = error
+
+# CA1067: Override Object.Equals(object) when implementing IEquatable<T>
+dotnet_diagnostic.CA1067.severity = error
+
+# CA1061: Do not hide base class methods
+dotnet_diagnostic.CA1061.severity = error
+
+# CA2002: Do not lock on objects with weak identity
+dotnet_diagnostic.CA2002.severity = error
+
+# CA2214: Do not call overridable methods in constructors
+dotnet_diagnostic.CA2214.severity = error
+
+# CA2225: Operator overloads have named alternates
+dotnet_diagnostic.CA2225.severity = error
+
+# CA2226: Operators should have symmetrical overloads
+dotnet_diagnostic.CA2226.severity = error
+
+# CA2231: Overload operator equals on overriding value type Equals
+dotnet_diagnostic.CA2231.severity = error
+
+# CA2242: Test for NaN correctly
+dotnet_diagnostic.CA2242.severity = error
+
+# CA2264: Do not pass a non-nullable value to 'ArgumentNullException.ThrowIfNull'
+dotnet_diagnostic.CA2264.severity = error
+
+# CA2254: Template should be a static expression
+dotnet_diagnostic.CA2254.severity = error
+
+# CA2253: Named placeholders should not be numeric values
+dotnet_diagnostic.CA2253.severity = error
+
+# CA2250: Use 'ThrowIfCancellationRequested'
+dotnet_diagnostic.CA2250.severity = error
+
+# CA2255: The 'ModuleInitializer' attribute should not be used in libraries
+dotnet_diagnostic.CA2255.severity = error
+
+# CA2257: Members defined on an interface with the 'DynamicInterfaceCastableImplementationAttribute' should be 'static'
+dotnet_diagnostic.CA2257.severity = error
+
+# CA2258: Providing a 'DynamicInterfaceCastableImplementation' interface in Visual Basic is unsupported
+dotnet_diagnostic.CA2258.severity = error
+
+# CA1700: Do not name enum values 'Reserved'
+dotnet_diagnostic.CA1700.severity = error
+
+# CA1513: Use ObjectDisposedException throw helper
+dotnet_diagnostic.CA1513.severity = error
+
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1711.severity = error
+
+# CA1712: Do not prefix enum values with type name
+dotnet_diagnostic.CA1712.severity = error
+
+# CA1713: Events should not have 'Before' or 'After' prefix
+dotnet_diagnostic.CA1713.severity = error
+
+# CA2241: Provide correct arguments to formatting methods
+dotnet_diagnostic.CA2241.severity = error
+
+# CA2243: Attribute string literals should parse correctly
+dotnet_diagnostic.CA2243.severity = error
+
+# CA2244: Do not duplicate indexed element initializations
+dotnet_diagnostic.CA2244.severity = error
+
+# CA2245: Do not assign a property to itself
+dotnet_diagnostic.CA2245.severity = error
+
+# CA2247: Argument passed to TaskCompletionSource constructor should be TaskCreationOptions enum instead of TaskContinuationOptions enum
+dotnet_diagnostic.CA2247.severity = error
+
+# CA2256: All members declared in parent interfaces must have an implementation in a DynamicInterfaceCastableImplementation-attributed interface
+dotnet_diagnostic.CA2256.severity = error
+
+# CA1012: Abstract types should not have public constructors
+dotnet_diagnostic.CA1012.severity = error
+
+# CA1010: Generic interface should also be implemented
+dotnet_diagnostic.CA1010.severity = error
+
+# CA1036: Override methods on comparable types
+dotnet_diagnostic.CA1036.severity = error
+
+# CA1046: Do not overload equality operator on reference types
+dotnet_diagnostic.CA1046.severity = error
+
+# CA2235: Mark all non-serializable fields
+dotnet_diagnostic.CA2235.severity = error
+
+# CA2246: Assigning symbol and its member in the same statement
+dotnet_diagnostic.CA2246.severity = error
+
+# CA1814: Prefer jagged arrays over multidimensional
+dotnet_diagnostic.CA1814.severity = error
+
+# CA1813: Avoid unsealed attributes
+dotnet_diagnostic.CA1813.severity = error
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = error
+
+# CA1030: Use events where appropriate
+dotnet_diagnostic.CA1030.severity = error
+
+# CA1033: Interface methods should be callable by child types
+dotnet_diagnostic.CA1033.severity = error
+
+# CA1308: Normalize strings to uppercase
+dotnet_diagnostic.CA1308.severity = error
+
+# CA1810: Initialize reference type static fields inline
+dotnet_diagnostic.CA1810.severity = error
+
+# CA1848: Use the LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = error
+
+# CA2008: Do not create tasks without passing a TaskScheduler
+dotnet_diagnostic.CA2008.severity = error
+
+# CA1727: Use PascalCase for named placeholders
+dotnet_diagnostic.CA1727.severity = error
+
+# CA1028: Enum Storage should be Int32
+dotnet_diagnostic.CA1028.severity = error
+
+# CA1021: Avoid out parameters
+dotnet_diagnostic.CA1021.severity = error
+
+# CA1725: Parameter names should match base declaration
+dotnet_diagnostic.CA1725.severity = error
+
+# CA1024: Use properties where appropriate
+dotnet_diagnostic.CA1024.severity = error
+
+# CA1856: Incorrect usage of ConstantExpected attribute
+dotnet_diagnostic.CA1856.severity = error
+
+# CA2252: This API requires opting into preview features
+dotnet_diagnostic.CA2252.severity = error
+
+# CA1068: CancellationToken parameters must come last
+dotnet_diagnostic.CA1068.severity = error
+
+# CA1418: Use valid platform string
+dotnet_diagnostic.CA1418.severity = error
+
+# CA1419: Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
+dotnet_diagnostic.CA1419.severity = error
+
+# CA1420: Property, type, or attribute requires runtime marshalling
+dotnet_diagnostic.CA1420.severity = error
+
+# CA1422: Validate platform compatibility
+dotnet_diagnostic.CA1422.severity = error
+
+# CA2012: Use ValueTasks correctly
+dotnet_diagnostic.CA2012.severity = error
+
+# CA1417: Do not use 'OutAttribute' on string parameters for P/Invokes
+dotnet_diagnostic.CA1417.severity = error
+
+# CA1421: This method uses runtime marshalling even when the 'DisableRuntimeMarshallingAttribute' is applied
+dotnet_diagnostic.CA1421.severity = error
+
+# SYSLIB1054: Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+dotnet_diagnostic.SYSLIB1054.severity = error
+
+# SYSLIB1055: Invalid 'CustomMarshallerAttribute' usage
+dotnet_diagnostic.SYSLIB1055.severity = error
+
+# SYSLIB1056: Specified marshaller type is invalid
+dotnet_diagnostic.SYSLIB1056.severity = error
+
+# SYSLIB1057: Marshaller type does not have the required shape
+dotnet_diagnostic.SYSLIB1057.severity = error
+
+# SYSLIB1058: Invalid 'NativeMarshallingAttribute' usage
+dotnet_diagnostic.SYSLIB1058.severity = error
+
+# SYSLIB1060: Specified marshaller type is invalid
+dotnet_diagnostic.SYSLIB1060.severity = error
+
+# SYSLIB1061: Marshaller type has incompatible method signatures
+dotnet_diagnostic.SYSLIB1061.severity = error
+
+# SYSLIB1090: 'GeneratedComInterfaceType' does not support the 'ComInterfaceType' value supplied to 'InterfaceTypeAttribute' on the same type.
+dotnet_diagnostic.SYSLIB1090.severity = error
+
+# SYSLIB1097: Add 'GeneratedComClassAttribute' to enable passing objects of this type to COM
+dotnet_diagnostic.SYSLIB1097.severity = error
+
+# SYSLIB1098: .NET COM hosting with 'EnableComHosting' does not support interfaces with the 'GeneratedComInterfaceAttribute'
+dotnet_diagnostic.SYSLIB1098.severity = error
+
+# CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = error
+
+# IDE0301: Simplify collection initialization
+dotnet_diagnostic.IDE0301.severity = error
+
+# IDE0002: Simplify member access
+dotnet_diagnostic.IDE0002.severity = error
+
+# IDE0330: Prefer 'System.Threading.Lock'
+dotnet_diagnostic.IDE0330.severity = error
+
+# IDE0304: Use collection expression for builder
+dotnet_diagnostic.IDE0304.severity = error
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/language-rules#option-format
+dotnet_style_prefer_collection_expression = when_types_loosely_match:error
+
+# IDE0303: Use collection expression for Create()
+dotnet_diagnostic.IDE0303.severity = error
+dotnet_style_prefer_collection_expression = when_types_loosely_match:error
+
+# IDE0302: Use collection expression for stackalloc
+dotnet_diagnostic.IDE0302.severity = error
+dotnet_style_prefer_collection_expression = when_types_exactly_match:error
+
+# IDE0280: Use 'nameof'
+dotnet_diagnostic.IDE0280.severity = error
+
+# IDE0029, IDE0030, IDE0270: Null check can be simplified
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0029-ide0030-ide0270
+dotnet_diagnostic.IDE0029.severity = error
+dotnet_diagnostic.IDE0030.severity = error
+dotnet_diagnostic.IDE0270.severity = error
+
+# IDE0251: Member can be made 'readonly'
+dotnet_diagnostic.IDE0251.severity = error
+
+# IDE0250: Struct can be made 'readonly'
+dotnet_diagnostic.IDE0250.severity = error
+
+# IDE0230: Use UTF-8 string literal
+dotnet_diagnostic.IDE0230.severity = error
+
+# IDE0200: Remove unnecessary lambda expression
+dotnet_diagnostic.IDE0200.severity = error
+
+# IDE0150: Prefer 'null' check over type check
+dotnet_diagnostic.IDE0150.severity = error
+
+# IDE0084: Use pattern matching (IsNot operator)
+dotnet_diagnostic.IDE0084.severity = error
+
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = error

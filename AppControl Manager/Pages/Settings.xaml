@@ -249,8 +249,13 @@ Style="{StaticResource BodyTextBlockStyle}">
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <HyperlinkButton Margin="0,8,0,0"
-                                 Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
+                    <HyperlinkButton Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+                    <HyperlinkButton Content="Icons8 website for all of the Icons used in this app" NavigateUri="https://icons8.com" />
+                    <HyperlinkButton Content="Source Code" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager" />
+                </controls:WrapPanel>
+
             </StackPanel>
 
         </Grid>

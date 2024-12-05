@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -82,7 +83,7 @@ namespace AppControlManager
         /// <param name="AutoUpdateCheck"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static UserConfiguration Set(
+        internal static UserConfiguration Set(
             string? SignedPolicyPath = null,
             string? UnsignedPolicyPath = null,
             string? SignToolCustomPath = null,
@@ -152,7 +153,7 @@ namespace AppControlManager
         /// Gets the current user configuration settings from the JSON file and return them
         /// </summary>
         /// <returns></returns>
-        public static UserConfiguration Get()
+        internal static UserConfiguration Get()
         {
             // Read the current configuration
             UserConfiguration currentConfig = ReadUserConfiguration();
@@ -173,7 +174,7 @@ namespace AppControlManager
         /// <param name="LastUpdateCheck"></param>
         /// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
         /// <param name="AutoUpdateCheck"></param>
-        public static void Remove(
+        internal static void Remove(
         bool SignedPolicyPath = false,
         bool UnsignedPolicyPath = false,
         bool SignToolCustomPath = false,

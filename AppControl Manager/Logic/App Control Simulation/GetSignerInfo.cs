@@ -13,7 +13,7 @@ namespace AppControlManager
         /// <param name="xmlContent"></param>
         /// <returns> List<AppControlManager.Signer> </returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static List<Signer> Get(XmlDocument xmlContent)
+        public static List<SignerX> Get(XmlDocument xmlContent)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(null, xmlContent);
@@ -44,7 +44,7 @@ namespace AppControlManager
             string whqlEKUHex = "010A2B0601040182370A0305";
 
             // An empty list to store the output
-            List<Signer> output = [];
+            List<SignerX> output = [];
 
 
             #region
@@ -372,7 +372,7 @@ namespace AppControlManager
 
                     // Add the current signer's info to the output array
                     output.Add(
-                        new Signer(
+                        new SignerX(
                            id: signerId,
                             name: signerName,
                             certRoot: certRootValue!,

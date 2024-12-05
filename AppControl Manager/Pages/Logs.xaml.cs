@@ -1,3 +1,4 @@
+using AppControlManager.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

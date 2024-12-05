@@ -1,10 +1,11 @@
+using AppControlManager.Logging;
 using System;
 using System.Collections.Generic;
 using System.Xml;
 
 namespace AppControlManager
 {
-    public static class CiPolicyHandler
+    internal static class CiPolicyHandler
     {
         /// <summary>
         /// Removes the entire SupplementalPolicySigners block
@@ -20,7 +21,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="path">The path to the CI policy XML file</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void RemoveSupplementalSigners(string path)
+        internal static void RemoveSupplementalSigners(string path)
         {
 
             // Validate input XML file compliance with CI policy schema

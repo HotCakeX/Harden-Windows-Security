@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.IO;
 using System.Management;
 
 namespace AppControlManager
 {
-    public static class SnapBackGuarantee
+    internal static class SnapBackGuarantee
     {
 
         private static readonly string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
@@ -15,7 +16,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="path">The path to the EnforcedMode.cip file that will be used to revert the base policy to enforced mode in case of a reboot.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Create(string path)
+        internal static void Create(string path)
         {
 
             if (string.IsNullOrWhiteSpace(path))
@@ -184,7 +185,7 @@ del ""%~f0""
         /// <summary>
         /// Removes the SnapBack guarantee scheduled task and the related .bat file
         /// </summary>
-        public static void Remove()
+        internal static void Remove()
         {
             TaskSchedulerHelper.Delete("EnforcedModeSnapBack", @"\");
 

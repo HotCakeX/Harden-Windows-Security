@@ -8,7 +8,7 @@ namespace AppControlManager
     /// This comparer is used to determine the uniqueness of FileAttrib instances
     /// based on specific properties.
     /// </summary>
-    public sealed class FileAttribComparer : IEqualityComparer<FileAttrib>
+    public sealed class FileAttribComparer : IEqualityComparer<FileAttribX>
     {
         /// <summary>
         /// Determines whether two FileAttrib instances are equal.
@@ -28,7 +28,7 @@ namespace AppControlManager
         /// <param name="x">The first FileAttrib instance to compare.</param>
         /// <param name="y">The second FileAttrib instance to compare.</param>
         /// <returns>true if the instances are equal; otherwise, false.</returns>
-        public bool Equals(FileAttrib? x, FileAttrib? y)
+        public bool Equals(FileAttribX? x, FileAttribX? y)
         {
             // If both are null, they are considered equal
             if (x is null && y is null)
@@ -53,7 +53,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="obj">The FileAttrib instance for which to get the hash code.</param>
         /// <returns>A hash code for the given FileAttrib instance.</returns>
-        public int GetHashCode(FileAttrib? obj)
+        public int GetHashCode(FileAttribX? obj)
         {
             // Return a default hash code (0) if obj is null to avoid exceptions
             if (obj is null) return 0;

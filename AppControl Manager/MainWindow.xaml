@@ -106,6 +106,10 @@
                 </NavigationViewItem>
 
                 <NavigationViewItemSeparator/>
+                
+                <NavigationViewItemHeader Content="Miscellaneous"/>
+
+                <NavigationViewItem x:Name="MergePoliciesNavItem" Content="Merge App Control Policies" ToolTipService.ToolTip="Merge 2 App Control policeis together or deduplicate a single policy" Tag="MergePolicies"/>
 
                 <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system" Tag="Deployment"/>
 

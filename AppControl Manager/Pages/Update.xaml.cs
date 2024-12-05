@@ -1,3 +1,4 @@
+using AppControlManager.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -77,7 +78,7 @@ namespace AppControlManager.Pages
 
 
                 // Check for update asynchronously using the AppUpdate class's singleton instance
-                UpdateCheckResponse updateCheckResult = await Task.Run(() => AppUpdate.Instance.Check());
+                UpdateCheckResponse updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
 
                 // If a new version is available or user supplied a custom MSIX path to be installed
                 if (updateCheckResult.IsNewVersionAvailable || useCustomMSIXPath)
@@ -215,7 +216,7 @@ namespace AppControlManager.Pages
                     await Task.Run(() =>
                     {
                         // Random password to temporarily encrypt the private key of the newly generated certificate
-                        string PassWord = Guid.NewGuid().ToString().Replace("-", "");
+                        string PassWord = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID();
 
                         // Common name of the certificate
                         string commonName = "SelfSignedCertForAppControlManager";

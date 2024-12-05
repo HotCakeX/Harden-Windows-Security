@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using AppControlManager.Logging;
+using System.IO;
 
 namespace AppControlManager.IntelGathering
 {

@@ -3,7 +3,7 @@
 namespace AppControlManager
 {
     // This class represents a <FileAttrib> node within a Code Integrity XML file
-    public sealed class FileAttrib
+    public sealed class FileAttribX
     {
         public required XmlNode Node { get; set; }
         public required XmlNode Signer { get; set; }

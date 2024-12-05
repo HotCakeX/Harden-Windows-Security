@@ -57,7 +57,7 @@ namespace AppControlManager
                 foreach (CryptographicAttributeObject signedAttribute in signerInfo.SignedAttributes)
                 {
                     // Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
-                    if (string.Equals(signedAttribute.Oid.Value, Opus.SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(signedAttribute.Oid.Value, SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
                     {
                         // Initializing pcbStructInfo to 0
                         uint pcbStructInfo = 0;
@@ -69,7 +69,7 @@ namespace AppControlManager
                             AsnEncodedData asnEncodedData = signedAttribute.Values[0];  // Retrieving the first value from the signed attribute's Values collection
 
                             // Decoding ASN.1-encoded data using CryptDecodeObject
-                            if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)Opus.SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
+                            if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
                             {
                                 // If CryptDecodeObject fails, ignore
                             }
@@ -79,7 +79,7 @@ namespace AppControlManager
                                 decodedDataPtr = Marshal.AllocCoTaskMem((int)pcbStructInfo);
 
                                 // Decoding ASN.1-encoded data again into decodedDataPtr
-                                if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)Opus.SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
+                                if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
                                 {
                                     // If CryptDecodeObject fails, ignore
                                 }

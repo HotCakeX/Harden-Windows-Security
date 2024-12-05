@@ -20,7 +20,7 @@ namespace AppControlManager.Pages
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             // Initialize the keys property with dictionary keys
-            PolicyRuleOptionsKeys = [.. CiRuleOptions.PolicyRuleOptionsActual.Keys];
+            PolicyRuleOptionsKeys = [.. PolicyRuleOptionsActual.Keys];
 
             // Call the method to generate SettingsCards dynamically
             GenerateSettingsCards();
@@ -110,7 +110,7 @@ namespace AppControlManager.Pages
             PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
 
             // Call the Set method with selected options to add
-            CiRuleOptions.Set(filePath, rulesToAdd: selectedOptions);
+            Set(filePath, rulesToAdd: selectedOptions);
         }
 
 
@@ -130,7 +130,7 @@ namespace AppControlManager.Pages
             PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
 
             // Call the Set method with selected options to remove
-            CiRuleOptions.Set(filePath, rulesToRemove: selectedOptions);
+            Set(filePath, rulesToRemove: selectedOptions);
         }
 
 
@@ -163,7 +163,7 @@ namespace AppControlManager.Pages
             }
 
             // Call the Set method with only the filePath and template parameters
-            CiRuleOptions.Set(filePath, template: template);
+            Set(filePath, template: template);
         }
 
 
@@ -180,7 +180,7 @@ namespace AppControlManager.Pages
                     // Get the content of the checkbox, which is the dictionary key
                     string? key = checkBox.Content?.ToString();
 
-                    if (!string.IsNullOrEmpty(key) && CiRuleOptions.PolicyRuleOptionsActual.TryGetValue(key, out int value))
+                    if (!string.IsNullOrEmpty(key) && PolicyRuleOptionsActual.TryGetValue(key, out int value))
                     {
                         // Convert to PolicyRuleOptions enum and add to the list
                         selectedRules.Add((PolicyRuleOptions)value);

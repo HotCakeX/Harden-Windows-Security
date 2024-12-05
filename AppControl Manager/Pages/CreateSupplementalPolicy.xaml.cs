@@ -1,4 +1,5 @@
 using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -300,6 +301,11 @@ namespace AppControlManager.Pages
         /// <param name="e"></param>
         private async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, RoutedEventArgs e)
         {
+
+            // Close the teaching tip if it's open when user presses the button
+            // it will be opened again if necessary
+            CreateSupplementalPolicyTeachingTip.IsOpen = false;
+
 
             if (filesAndFoldersFilePaths.Count == 0 && filesAndFoldersFolderPaths.Count == 0)
             {
@@ -755,14 +761,7 @@ namespace AppControlManager.Pages
                         return;
                     }
 
-
-                    CloseEmptyXmlNodesSemantic.Close(EmptyPolicyPath);
-                    RemoveDuplicateFileAttribSemantic.Remove(EmptyPolicyPath);
-                    CloseEmptyXmlNodesSemantic.Close(EmptyPolicyPath);
-                    MergeSignersSemantic.Merge(EmptyPolicyPath);
-                    MergeSignersSemantic.Merge(EmptyPolicyPath);
-                    CloseEmptyXmlNodesSemantic.Close(EmptyPolicyPath);
-
+                    SiPolicy.Merger.Merge(EmptyPolicyPath, [EmptyPolicyPath]);
 
                     string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CertificatesBasedSupplementalPolicyName}.xml");
 

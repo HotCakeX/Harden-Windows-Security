@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 
-namespace AppControlManager
+namespace AppControlManager.Logging
 {
-    public static class Logger
+    internal static class Logger
     {
         // The Logs directory
         internal static readonly string LogsDirectory = Path.Combine(GlobalVars.UserConfigDir, "Logs");
@@ -30,7 +30,7 @@ namespace AppControlManager
         /// https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.host.pshostuserinterface
         /// </summary>
         /// <param name="message"></param>
-        public static void Write(string message)
+        internal static void Write(string message)
         {
             try
             {

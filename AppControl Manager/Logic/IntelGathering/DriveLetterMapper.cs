@@ -5,7 +5,7 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace AppControlManager.IntelGathering
 {
-    public static partial class DriveLetterMapper
+    internal static partial class DriveLetterMapper
     {
         [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "FindFirstVolumeW")]
         [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -39,14 +39,14 @@ namespace AppControlManager.IntelGathering
 
 
         // Class to store drive mapping information
-        public sealed class DriveMapping
+        internal sealed class DriveMapping
         {
             // Property to store drive letter
-            public string? DriveLetter { get; set; }
+            internal string? DriveLetter { get; set; }
             // Property to store device path
-            public string? DevicePath { get; set; }
+            internal string? DevicePath { get; set; }
             // Property to store volume name
-            public string? VolumeName { get; set; }
+            internal string? VolumeName { get; set; }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace AppControlManager.IntelGathering
         /// </summary>
         /// <returns>A list of DriveMapping objects containing drive information</returns>
         /// <exception cref="System.ComponentModel.Win32Exception"></exception>
-        public static List<DriveMapping> GetGlobalRootDrives()
+        internal static List<DriveMapping> GetGlobalRootDrives()
         {
             // List to store drive mappings
             List<DriveMapping> drives = [];

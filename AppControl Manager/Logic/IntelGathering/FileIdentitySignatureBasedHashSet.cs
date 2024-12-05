@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AppControlManager.Logging;
+using System.Collections.Generic;
 
 namespace AppControlManager.IntelGathering
 {

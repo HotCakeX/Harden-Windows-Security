@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Xml;
 
 namespace AppControlManager
 {
-    public static class SetCiPolicyInfo
+    internal static class SetCiPolicyInfo
     {
         /// <summary>
         /// Configures a XML Code Integrity policy by modifying its details.
@@ -34,7 +35,7 @@ namespace AppControlManager
         ///
         /// <returns> Returns the final policy ID of the XML policy. It will have curly brackets. </returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static string Set(string filePath, bool? resetPolicyID, string? policyName, string? basePolicyID, string? basePolicyToSupplementPath)
+        internal static string Set(string filePath, bool? resetPolicyID, string? policyName, string? basePolicyID, string? basePolicyToSupplementPath)
         {
 
             // Instantiate the policy
@@ -133,7 +134,7 @@ namespace AppControlManager
             if (resetPolicyID == true)
             {
                 // Generate a new GUID
-                Guid newRandomGUID = System.Guid.NewGuid();
+                Guid newRandomGUID = Guid.CreateVersion7();
 
                 // Convert it to string
                 string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
@@ -245,7 +246,7 @@ namespace AppControlManager
         /// <param name="filePath"></param>
         /// <param name="version"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Set(string filePath, Version version)
+        internal static void Set(string filePath, Version version)
         {
 
             // Instantiate the policy

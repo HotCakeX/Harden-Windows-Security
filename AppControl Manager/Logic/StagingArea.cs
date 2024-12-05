@@ -3,7 +3,7 @@ using System.IO;
 
 namespace AppControlManager
 {
-    public static class StagingArea
+    internal static class StagingArea
     {
         /// <summary>
         /// Creating a directory as a staging area for a job and returns the path to that directory
@@ -11,7 +11,7 @@ namespace AppControlManager
         /// <param name="cmdletName"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static DirectoryInfo NewStagingArea(string cmdletName)
+        internal static DirectoryInfo NewStagingArea(string cmdletName)
         {
             if (string.IsNullOrWhiteSpace(cmdletName))
             {

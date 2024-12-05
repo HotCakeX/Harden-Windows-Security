@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.WinUI;
+﻿using AppControlManager.Logging;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -56,7 +57,7 @@ namespace AppControlManager
             #region
 
             // Check for the SoundSetting in the local settings
-            bool soundSetting = AppSettings.GetSetting<bool>(AppControlManager.AppSettings.SettingKeys.SoundSetting);
+            bool soundSetting = AppSettings.GetSetting<bool>(AppSettings.SettingKeys.SoundSetting);
 
             if (soundSetting)
             {

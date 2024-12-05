@@ -6,14 +6,14 @@ using System.Text;
 
 namespace AppControlManager
 {
-    public static class CiFileHash
+    internal static class CiFileHash
     {
         /// <summary>
         /// Method that outputs all 4 kinds of hashes
         /// </summary>
         /// <param name="filePath">The path to the file that is going to be hashed</param>
         /// <returns>CodeIntegrityHashes object that contains all 4 kinds of hashes</returns>
-        public static CodeIntegrityHashes GetCiFileHashes(string filePath)
+        internal static CodeIntegrityHashes GetCiFileHashes(string filePath)
         {
             return new CodeIntegrityHashes(
                 PageHashCalculator.GetPageHash("SHA1", filePath),

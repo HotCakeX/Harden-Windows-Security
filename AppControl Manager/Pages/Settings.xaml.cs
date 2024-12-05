@@ -1,3 +1,4 @@
+using AppControlManager.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -31,17 +32,17 @@ namespace AppControlManager.Pages
             VersionTextBlock.Text = $"Version {App.currentAppVersion}";
 
             // Set the year for the copyright section
-            CopyRightSettingsExpander.Description = $"� {DateTime.Now.Year}. All rights reserved.";
+            CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
 
             FetchLatestCertificateCNs();
 
             #region Load the user configurations in the UI elements
 
-            NavigationViewBackgroundToggle.IsOn = AppSettings.GetSetting<bool>(SettingKeys.NavViewBackground);
+            NavigationViewBackgroundToggle.IsOn = GetSetting<bool>(SettingKeys.NavViewBackground);
 
-            SoundToggleSwitch.IsOn = AppSettings.GetSetting<bool>(SettingKeys.SoundSetting);
+            SoundToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.SoundSetting);
 
-            BackgroundComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.BackDropBackground)) switch
+            BackgroundComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.BackDropBackground)) switch
             {
                 "MicaAlt" => 0,
                 "Mica" => 1,
@@ -50,7 +51,7 @@ namespace AppControlManager.Pages
             };
 
 
-            ThemeComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.AppTheme)) switch
+            ThemeComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.AppTheme)) switch
             {
                 "Use System Setting" => 0,
                 "Dark" => 1,
@@ -59,7 +60,7 @@ namespace AppControlManager.Pages
             };
 
 
-            IconsStyleComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.IconsStyle)) switch
+            IconsStyleComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.IconsStyle)) switch
             {
                 "Animated" => 0,
                 "Windows Accent" => 1,
@@ -166,7 +167,7 @@ namespace AppControlManager.Pages
                 IconsStyleManager.OnIconsStylesChanged(selectedIconsStyle);
             }
 
-            AppSettings.SaveSetting(AppSettings.SettingKeys.IconsStyle, selectedIconsStyle);
+            SaveSetting(SettingKeys.IconsStyle, selectedIconsStyle);
         }
 
 
@@ -191,7 +192,7 @@ namespace AppControlManager.Pages
                 ThemeManager.OnBackgroundChanged(selectedBackdrop);
             }
 
-            AppSettings.SaveSetting(AppSettings.SettingKeys.BackDropBackground, selectedBackdrop);
+            SaveSetting(SettingKeys.BackDropBackground, selectedBackdrop);
         }
 
 
@@ -240,7 +241,7 @@ namespace AppControlManager.Pages
             }
 
 
-            AppSettings.SaveSetting(AppSettings.SettingKeys.AppTheme, selectedTheme);
+            SaveSetting(SettingKeys.AppTheme, selectedTheme);
         }
 
 
@@ -261,7 +262,7 @@ namespace AppControlManager.Pages
             // Notify NavigationBackgroundManager when the toggle switch is changed
             NavigationBackgroundManager.OnNavigationBackgroundChanged(isBackgroundOn);
 
-            AppSettings.SaveSetting(AppSettings.SettingKeys.NavViewBackground, isBackgroundOn);
+            SaveSetting(SettingKeys.NavViewBackground, isBackgroundOn);
         }
 
 
@@ -284,7 +285,7 @@ namespace AppControlManager.Pages
             SoundManager.OnSoundSettingChanged(isSoundOn);
 
             // Save the sound setting to the local app settings
-            AppSettings.SaveSetting(AppSettings.SettingKeys.SoundSetting, isSoundOn);
+            SaveSetting(SettingKeys.SoundSetting, isSoundOn);
         }
 
 
@@ -421,7 +422,7 @@ namespace AppControlManager.Pages
             if (string.IsNullOrWhiteSpace(input))
                 return null;
 
-            return Guid.TryParse(input, out var result) ? result : null;
+            return Guid.TryParse(input, out Guid result) ? result : null;
         }
 
         private static DateTime? TryParseDateTime(string? input)
@@ -429,7 +430,7 @@ namespace AppControlManager.Pages
             if (string.IsNullOrWhiteSpace(input))
                 return null;
 
-            return DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result) ? result : null;
+            return DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result) ? result : null;
         }
         #endregion
 

@@ -12,23 +12,45 @@ namespace AppControlManager
 {
 
     // a class to throw a custom exception when the certificate has HashMismatch
-    public sealed class HashMismatchInCertificateException(string message, string functionName) : Exception($"{functionName}: {message}")
+    internal sealed class HashMismatchInCertificateException : Exception
     {
+        // Constructor with no parameters
+        internal HashMismatchInCertificateException()
+        {
+        }
+
+        // Constructor with a message parameter
+        internal HashMismatchInCertificateException(string message)
+            : base(message)
+        {
+        }
+
+        // Constructor with message and functionName, calling the base constructor
+        internal HashMismatchInCertificateException(string message, string functionName)
+            : base($"{functionName}: {message}")
+        {
+        }
+
+        // Constructor with message and inner exception, calling the base constructor
+        internal HashMismatchInCertificateException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 
     // Represents a signed CMS and its certificate chain
-    public sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
+    internal sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
     {
-        public SignedCms Signer { get; } = signerCertificate;
-        public X509Chain Chain { get; } = certificateChain;
+        internal SignedCms Signer { get; } = signerCertificate;
+        internal X509Chain Chain { get; } = certificateChain;
     }
 
-    public partial class AllCertificatesGrabber
+    internal static partial class AllCertificatesGrabber
     {
         // Structure defining signer information for cryptographic providers
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct CryptProviderSigner
+        internal struct CryptProviderSigner
         {
             private readonly uint cbStruct;   // Size of structure
             private System.Runtime.InteropServices.ComTypes.FILETIME sftVerifyAsOf;   // Verification time
@@ -39,13 +61,13 @@ namespace AppControlManager
             private readonly uint dwError;   // Error code
             internal uint csCounterSigners;   // Number of countersigners
             internal IntPtr pasCounterSigners;   // Pointer to countersigners
-            public IntPtr pChainContext;   // Pointer to chain context
+            internal IntPtr pChainContext;   // Pointer to chain context
         }
 
         // Structure defining provider data for cryptographic operations
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-crypt_provider_data
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct CryptProviderData
+        internal struct CryptProviderData
         {
             private readonly uint cbStruct;   // Size of structure
             private readonly IntPtr pWintrustData;   // Pointer to WinTrustData
@@ -62,30 +84,30 @@ namespace AppControlManager
             private readonly uint chStores;   // Number of stores
             private readonly IntPtr pahStores;   // Pointer to stores
             private readonly uint dwEncoding;   // Encoding type
-            public IntPtr hMsg;   // Handle to message
-            public uint csSigners;   // Number of signers
-            public IntPtr pasSigners;   // Pointer to signers
+            internal IntPtr hMsg;   // Handle to message
+            internal uint csSigners;   // Number of signers
+            internal IntPtr pasSigners;   // Pointer to signers
         }
 
         // Structure defining signature settings for WinTrust
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public class WinTrustSignatureSettings
+        internal sealed class WinTrustSignatureSettings
         {
-            public uint cbStruct = (uint)Marshal.SizeOf<WinTrustSignatureSettings>();   // Size of structure
-            public uint dwIndex;   // Index of the signature
-            public uint dwFlags = 3;   // Flags for signature verification
-            public uint SecondarySignersCount;   // Number of secondary signatures
-            public uint dwVerifiedSigIndex;   // Index of verified signature
-            public IntPtr pCryptoPolicy = IntPtr.Zero;   // Pointer to cryptographic policy
+            internal uint cbStruct = (uint)Marshal.SizeOf<WinTrustSignatureSettings>();   // Size of structure
+            internal uint dwIndex;   // Index of the signature
+            internal uint dwFlags = 3;   // Flags for signature verification
+            internal uint SecondarySignersCount;   // Number of secondary signatures
+            internal uint dwVerifiedSigIndex;   // Index of verified signature
+            internal IntPtr pCryptoPolicy = IntPtr.Zero;   // Pointer to cryptographic policy
 
             // Default constructor initializes dwIndex to unsigned integer 0
-            public WinTrustSignatureSettings()
+            internal WinTrustSignatureSettings()
             {
                 dwIndex = 0U;
             }
 
             // Constructor initializes with given index
-            public WinTrustSignatureSettings(uint index)
+            internal WinTrustSignatureSettings(uint index)
             {
                 dwIndex = index;
             }
@@ -93,7 +115,7 @@ namespace AppControlManager
 
         // Structure defining file information for WinTrust
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public class FileInfoForWinTrust
+        internal sealed class FileInfoForWinTrust
         {
             private readonly uint StructSize = (uint)Marshal.SizeOf<FileInfoForWinTrust>();   // Size of structure
             private readonly IntPtr FilePath;   // File path pointer
@@ -101,13 +123,13 @@ namespace AppControlManager
             private readonly IntPtr pgKnownSubject = IntPtr.Zero;   // Pointer to known subject
 
             // Default constructor initializes FilePath to null
-            public FileInfoForWinTrust()
+            internal FileInfoForWinTrust()
             {
                 FilePath = IntPtr.Zero;
             }
 
             // Constructor initializes FilePath with the given filePath
-            public FileInfoForWinTrust(string filePath)
+            internal FileInfoForWinTrust(string filePath)
             {
                 FilePath = Marshal.StringToCoTaskMemAuto(filePath);
             }
@@ -122,25 +144,25 @@ namespace AppControlManager
         // Structure defining overall trust data for WinTrust
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-wintrust_data
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public class WinTrustData
+        internal sealed class WinTrustData
         {
-            public uint StructSize = (uint)Marshal.SizeOf<WinTrustData>();   // Size of structure
-            public IntPtr PolicyCallbackData = IntPtr.Zero;   // Pointer to policy callback data
-            public IntPtr SIPClientData = IntPtr.Zero;   // Pointer to SIP client data
-            public uint UIChoice = 2;   // UI choice for trust verification
-            public uint RevocationChecks;   // Revocation checks
-            public uint UnionChoice = 1;   // Union choice for trust verification
-            public IntPtr FileInfoPtr;   // Pointer to file information
-            public uint StateAction = WinTrust.StateActionVerify;   // State action for trust verification
-            public IntPtr StateData = IntPtr.Zero;   // Pointer to state data
+            internal uint StructSize = (uint)Marshal.SizeOf<WinTrustData>();   // Size of structure
+            internal IntPtr PolicyCallbackData = IntPtr.Zero;   // Pointer to policy callback data
+            internal IntPtr SIPClientData = IntPtr.Zero;   // Pointer to SIP client data
+            internal uint UIChoice = 2;   // UI choice for trust verification
+            internal uint RevocationChecks;   // Revocation checks
+            internal uint UnionChoice = 1;   // Union choice for trust verification
+            internal IntPtr FileInfoPtr;   // Pointer to file information
+            internal uint StateAction = WinTrust.StateActionVerify;   // State action for trust verification
+            internal IntPtr StateData = IntPtr.Zero;   // Pointer to state data
             [MarshalAs(UnmanagedType.LPTStr)]
             private readonly string? URLReference;   // URL reference for trust verification
-            public uint ProvFlags = 4112;   // Provider flags for trust verification
-            public uint UIContext;   // UI context for trust verification
-            public IntPtr pSignatureSettings;   // Pointer to signature settings
+            internal uint ProvFlags = 4112;   // Provider flags for trust verification
+            internal uint UIContext;   // UI context for trust verification
+            internal IntPtr pSignatureSettings;   // Pointer to signature settings
 
             // Constructor initializes with file path and index
-            public WinTrustData(string filepath, uint Index)
+            internal WinTrustData(string filepath, uint Index)
             {
                 // Initialize FileInfoForWinTrust
                 FileInfoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf<FileInfoForWinTrust>());
@@ -184,7 +206,7 @@ namespace AppControlManager
 
 
         // This is the main method used to retrieve all signers for a given file
-        public static List<AllFileSigners> GetAllFileSigners(string FilePath)
+        internal static List<AllFileSigners> GetAllFileSigners(string FilePath)
         {
             // List to hold all file signers
             List<AllFileSigners> AllFileSigners = [];

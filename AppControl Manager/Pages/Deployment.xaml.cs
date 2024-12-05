@@ -92,7 +92,7 @@ namespace AppControlManager.Pages
                                 }
 
 
-                                string randomString = Guid.NewGuid().ToString().Replace("-", "");
+                                string randomString = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID();
 
                                 string xmlFileName = Path.GetFileName(file);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,13 +13,13 @@ using System.Xml;
 
 namespace AppControlManager
 {
-    public static partial class BasePolicyCreator
+    internal static partial class BasePolicyCreator
     {
         /// <summary>
         /// Creates scheduled task that keeps the Microsoft recommended driver block rules up to date on the system
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void SetAutoUpdateDriverBlockRules()
+        internal static void SetAutoUpdateDriverBlockRules()
         {
             Logger.Write("Creating scheduled task for fast weekly Microsoft recommended driver block list update");
 
@@ -167,10 +168,10 @@ namespace AppControlManager
 
         }
 
-        public sealed class DriverBlockListInfo
+        internal sealed class DriverBlockListInfo
         {
-            public string? Version { get; set; }
-            public DateTime LastUpdated { get; set; }
+            internal string? Version { get; set; }
+            internal DateTime LastUpdated { get; set; }
         }
 
 
@@ -178,7 +179,7 @@ namespace AppControlManager
         /// Used to supply extra information regarding Microsoft recommended driver block rules
         /// </summary>
         /// <returns></returns>
-        public static DriverBlockListInfo? DriversBlockListInfoGathering()
+        internal static DriverBlockListInfo? DriversBlockListInfoGathering()
         {
             try
             {
@@ -254,7 +255,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="StagingArea">The directory to use for temporary files</param>
         /// <exception cref="Exception"></exception>
-        public static void DeployDriversBlockRules(string StagingArea)
+        internal static void DeployDriversBlockRules(string StagingArea)
         {
             // The location where the downloaded zip file will be saved
             string DownloadSaveLocation = Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
@@ -321,7 +322,7 @@ namespace AppControlManager
         /// And creates a valid Code Integrity XML policy file from it.
         /// </summary>
         /// <param name="StagingArea">The directory where the XML file will be saved to.</param>
-        public static void GetDriversBlockRules(string StagingArea)
+        internal static void GetDriversBlockRules(string StagingArea)
         {
             string name = "Microsoft Recommended Driver Block Rules";
 
@@ -390,7 +391,7 @@ namespace AppControlManager
         /// <param name="RequireEVSigners"></param>
         /// <param name="EnableScriptEnforcement"></param>
         /// <param name="TestMode"></param>
-        public static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+        internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
         {
 
             string policyName;
@@ -467,7 +468,7 @@ namespace AppControlManager
         /// <param name="RequireEVSigners"></param>
         /// <param name="EnableScriptEnforcement"></param>
         /// <param name="TestMode"></param>
-        public static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+        internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
         {
 
             string policyName;
@@ -540,7 +541,7 @@ namespace AppControlManager
         /// It generates a XML file compliant with CI Policies Schema.
         /// </summary>
         /// <param name="StagingArea"></param>
-        public static void GetBlockRules(string StagingArea, bool deploy)
+        internal static void GetBlockRules(string StagingArea, bool deploy)
         {
 
             string policyName = "Microsoft Windows Recommended User Mode BlockList";
@@ -646,7 +647,7 @@ namespace AppControlManager
         /// <param name="RequireEVSigners"></param>
         /// <param name="EnableScriptEnforcement"></param>
         /// <param name="TestMode"></param>
-        public static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+        internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
         {
 
             string policyName;

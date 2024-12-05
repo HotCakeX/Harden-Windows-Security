@@ -4,7 +4,7 @@ using System.IO;
 
 namespace AppControlManager
 {
-    public static class FileUtility
+    internal static class FileUtility
     {
         /// <summary>
         /// A flexible and fast method that can accept directory paths and file paths as input and return a list of FileInfo objects that are compliant with the App Control policy.
@@ -14,7 +14,7 @@ namespace AppControlManager
         /// <param name="files">Files to process.</param>
         /// <param name="extensionsToFilterBy">Extensions to filter by. If null or empty, default App Control supported extensions are used.</param>
         /// <returns>List of FileInfo objects.</returns>
-        public static List<FileInfo> GetFilesFast(
+        internal static List<FileInfo> GetFilesFast(
             DirectoryInfo[]? directories,
             FileInfo[]? files,
             string[]? extensionsToFilterBy)

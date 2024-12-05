@@ -1,4 +1,5 @@
 using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -112,7 +113,7 @@ namespace AppControlManager.Pages
 
             // Start with all items from the complete list, 'AllFileIdentities'
             // This list is used as the base set for filtering to preserve original data
-            var filteredResults = AllFileIdentities.AsEnumerable();
+            IEnumerable<FileIdentity> filteredResults = AllFileIdentities.AsEnumerable();
 
             // Apply the date filter if a date is selected in the CalendarDatePicker
             if (selectedDate.HasValue)
@@ -855,7 +856,7 @@ namespace AppControlManager.Pages
                         CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
 
                         // Merge the created policy with the user-selected policy which will result in adding the new rules to it
-                        PolicyMerger.Merge([PolicyToAddLogsTo, EmptyPolicyPath], PolicyToAddLogsTo);
+                        SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
                         UpdateHvciOptions.Update(PolicyToAddLogsTo);
 

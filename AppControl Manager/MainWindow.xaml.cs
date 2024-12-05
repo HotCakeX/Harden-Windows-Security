@@ -1,4 +1,5 @@
 using AnimatedVisuals;
+using AppControlManager.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
@@ -46,7 +47,8 @@ namespace AppControlManager
             { typeof(Pages.BuildNewCertificate), "Build New Certificate" },
             { typeof(Pages.UpdatePageCustomMSIXPath), "Custom MSIX Path" }, // sub-page
             { typeof(Pages.CreateSupplementalPolicy), "Create Supplemental Policy" },
-            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" } // sub-page
+            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" }, // sub-page
+            { typeof(Pages.MergePolicies), "Merge App Control Policies" }
         };
 
 
@@ -386,6 +388,13 @@ namespace AppControlManager
                             Source = new SupplementalPolicy()
                         };
 
+                        // Merge App Control Policies
+                        MergePoliciesNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -9, -9, -9),
+                            Source = new Merge()
+                        };
+
                         break;
                     }
                 case "Windows Accent":
@@ -505,6 +514,13 @@ namespace AppControlManager
                             Foreground = accentBrush
                         };
 
+                        // Merge App Control Policies
+                        MergePoliciesNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEE49",
+                            Foreground = accentBrush
+                        };
+
                         break;
                     }
 
@@ -607,6 +623,12 @@ namespace AppControlManager
                         CreateSupplementalPolicyNavItem.Icon = new FontIcon
                         {
                             Glyph = "\uE8F9"
+                        };
+
+                        // Merge App Control Policies
+                        MergePoliciesNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEE49"
                         };
 
                         break;
@@ -754,7 +776,7 @@ namespace AppControlManager
                         RootGrid.RequestedTheme = ElementTheme.Light;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -779,7 +801,7 @@ namespace AppControlManager
                         RootGrid.RequestedTheme = ElementTheme.Dark;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -808,7 +830,7 @@ namespace AppControlManager
                         if (currentColorMode is ElementTheme.Dark)
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -829,7 +851,7 @@ namespace AppControlManager
                         else
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -1016,6 +1038,9 @@ namespace AppControlManager
                 case "CreateSupplementalPolicyFilesAndFoldersScanResults":
                     NavView_Navigate(typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), transitionInfo); // Sub-Page
                     break;
+                case "MergePolicies":
+                    NavView_Navigate(typeof(Pages.MergePolicies), transitionInfo);
+                    break;
                 default:
                     break;
             }
@@ -1045,7 +1070,7 @@ namespace AppControlManager
             Type preNavPageType = ContentFrame.CurrentSourcePageType;
 
             // Only navigate if the selected page isn't currently loaded.
-            if (navPageType is not null && !Type.Equals(preNavPageType, navPageType))
+            if (navPageType is not null && !Equals(preNavPageType, navPageType))
             {
 
                 // Play sound
@@ -1087,7 +1112,7 @@ namespace AppControlManager
                 Type preNavPageType = ContentFrame.CurrentSourcePageType;
 
                 // Extract the navigation item content from the dictionary
-                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out var item);
+                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out string? item);
 
                 // Set the correct header after back navigation has been completed
                 MainNavigation.Header = item;

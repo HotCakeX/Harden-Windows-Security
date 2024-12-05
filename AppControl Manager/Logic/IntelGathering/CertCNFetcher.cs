@@ -4,9 +4,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager
 {
-    public static class CertCNFetcher
+    internal static class CertCNFetcher
     {
-        public static HashSet<string> GetCertCNs()
+        internal static HashSet<string> GetCertCNs()
         {
 
             HashSet<string> output = [];

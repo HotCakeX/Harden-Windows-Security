@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 
 namespace AppControlManager
 {
-    public static class NewHashLevelRules
+    internal static class NewHashLevelRules
     {
         /// <summary>
         /// Creates new Hash level rules in an XML file
@@ -14,7 +15,7 @@ namespace AppControlManager
         /// <param name="xmlFilePath"></param>
         /// <param name="hashes"> The Hashes to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Create(string xmlFilePath, List<HashCreator> hashes)
+        internal static void Create(string xmlFilePath, List<HashCreator> hashes)
         {
 
             if (hashes is null || hashes.Count == 0)
@@ -38,7 +39,7 @@ namespace AppControlManager
 
             // Find FileRulesRef node in each ProductSigners node
             XmlNode? UMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-            XmlNode? KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
 
             // Check if FileRulesRef node exists, if not, create it
             if (UMCI_ProductSigners_FileRulesRef_Node is null)
@@ -58,8 +59,8 @@ namespace AppControlManager
             if (KMCI_ProductSigners_FileRulesRef_Node is null)
             {
                 XmlElement KMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-                _ = codeIntegrityPolicy.KMCI_ProductSignersNode.AppendChild(KMCI_FileRulesRefNew);
-                KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
+                _ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_FileRulesRefNew);
+                KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
             }
 
             if (KMCI_ProductSigners_FileRulesRef_Node is null)
@@ -75,7 +76,7 @@ namespace AppControlManager
             // Loop through each hash and create a new rule for it
             foreach (HashCreator hash in hashes)
             {
-                string guid = Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase).ToUpperInvariant();
+                string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
 
                 // Create a unique ID for the rule
                 string HashSHA256RuleID = $"ID_ALLOW_A_{guid}";

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager
 {
-    public enum WLDP_SECURE_SETTING_VALUE_TYPE
+    internal enum WLDP_SECURE_SETTING_VALUE_TYPE
     {
         WldpBoolean = 0,
         WldpInteger = 1,
@@ -13,14 +13,14 @@ namespace AppControlManager
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct UNICODE_STRING
+    internal struct UNICODE_STRING
     {
         public ushort Length;
         public ushort MaximumLength;
         public IntPtr Buffer;
     }
 
-    public static partial class WldpQuerySecurityPolicyWrapper
+    internal static partial class WldpQuerySecurityPolicyWrapper
     {
         [LibraryImport("Wldp.dll")]
         [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -32,7 +32,7 @@ namespace AppControlManager
             IntPtr Value,
             ref uint ValueSize);
 
-        public static UNICODE_STRING InitUnicodeString(string s)
+        internal static UNICODE_STRING InitUnicodeString(string s)
         {
             UNICODE_STRING us;
             us.Length = (ushort)(s.Length * 2);

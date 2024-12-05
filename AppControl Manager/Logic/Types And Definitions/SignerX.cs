@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace AppControlManager
 {
-    public sealed class Signer(
+    public sealed class SignerX(
         string id,
         string name,
         string certRoot,

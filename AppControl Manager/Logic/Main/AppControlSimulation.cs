@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using AppControlManager.Logging;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ using System.Xml;
 
 namespace AppControlManager
 {
-    public static class AppControlSimulation
+    internal static class AppControlSimulation
     {
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace AppControlManager
         /// <param name="xmlFilePath"></param>
         /// <param name="noCatalogScanning"></param>
         /// <returns></returns>
-        public static bool Invoke(List<string>? filePaths, string xmlFilePath, bool noCatalogScanning)
+        internal static bool Invoke(List<string>? filePaths, string xmlFilePath, bool noCatalogScanning)
         {
             // Call the main method to get the verdicts
             ConcurrentDictionary<string, SimulationOutput> Results = (Invoke(filePaths, null, xmlFilePath, noCatalogScanning, false, null, 2));
@@ -41,7 +42,7 @@ namespace AppControlManager
         // Using reflection which isn't what we want
 
         /*
-        public static void ExportToCsv(ConcurrentDictionary<string, SimulationOutput> finalResults, string filePath)
+        internal static void ExportToCsv(ConcurrentDictionary<string, SimulationOutput> finalResults, string filePath)
         {
             // Get the properties of SimulationOutput class
             var properties = typeof(SimulationOutput).GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -75,7 +76,7 @@ namespace AppControlManager
         }
         */
 
-        public static void ExportToCsv(ConcurrentDictionary<string, SimulationOutput> finalResults, string filePath)
+        internal static void ExportToCsv(ConcurrentDictionary<string, SimulationOutput> finalResults, string filePath)
         {
             // Create a list for CSV lines
             List<string> csvLines = [];
@@ -129,7 +130,7 @@ namespace AppControlManager
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public static ConcurrentDictionary<string, SimulationOutput> Invoke(
+        internal static ConcurrentDictionary<string, SimulationOutput> Invoke(
             List<string>? filePaths,
             List<string>? folderPaths,
             string? xmlFilePath,
@@ -201,7 +202,7 @@ namespace AppControlManager
             #endregion
 
             // Get the signer information from the XML
-            List<Signer> SignerInfo = GetSignerInfo.Get(XMLData);
+            List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
 
             // Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
             HashSet<string> unsignedExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -315,7 +316,6 @@ namespace AppControlManager
                             {
                                 double progressPercentage = (processedFilesCount / AllFilesCount) * 100;
 
-                                // Assuming SimulationProgress is accessible here
                                 UIProgressBar.Value = Math.Min(progressPercentage, 100);
                             });
                         }

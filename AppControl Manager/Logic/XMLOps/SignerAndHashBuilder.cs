@@ -1,9 +1,10 @@
 using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using System.Collections.Generic;
 
 namespace AppControlManager
 {
-    public static class SignerAndHashBuilder
+    internal static class SignerAndHashBuilder
     {
         /// <summary>
         /// Creates Signer and Hash objects from the input data
@@ -39,7 +40,7 @@ namespace AppControlManager
         /// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
         /// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
         /// <returns></returns>
-        public static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false)
+        internal static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false)
         {
             // To store the Signers created with FilePublisher Level
             List<FilePublisherSignerCreator> filePublisherSigners = [];

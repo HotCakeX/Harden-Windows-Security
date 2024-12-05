@@ -18,8 +18,8 @@
 
     <RootNamespace>AppControlManager</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x64</Platforms>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <Platforms>x64;arm64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
@@ -61,7 +61,7 @@
 
 
     <ImplicitUsings>disable</ImplicitUsings>
-    <Description>An application that simplifies management of Application Control in Windows.</Description>
+    <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
     <PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
@@ -81,8 +81,8 @@
     <AppxPackageDir>MSIXOutput\</AppxPackageDir>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundle>Auto</AppxBundle>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AssemblyName>AppControlManager</AssemblyName>
@@ -108,6 +108,10 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 
   </PropertyGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.0" />
+  </ItemGroup>
 
   <!--
   For trimming to exclude incompatible assemblies, but currently not working
@@ -143,6 +147,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
+    <PackageReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.0" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.0" />
     <PackageReference Include="System.Management" Version="9.0.0" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0" />
@@ -193,6 +198,7 @@
     <None Remove="Pages\GitHubDocumentation.xaml" />
     <None Remove="Pages\Logs.xaml" />
     <None Remove="Pages\MDEAHPolicyCreation.xaml" />
+    <None Remove="Pages\MergePolicies.xaml" />
     <None Remove="Pages\MicrosoftDocumentation.xaml" />
     <None Remove="Pages\Settings.xaml" />
     <None Remove="Pages\Simulation.xaml" />
@@ -307,6 +313,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\MergePolicies.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\CreateSupplementalPolicyFilesAndFoldersScanResults.xaml">

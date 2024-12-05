@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace AppControlManager
 {
-    public static class NewPFNLevelRules
+    internal static class NewPFNLevelRules
     {
         /// <summary>
         /// Creates PFN rules and adds them to an App Control policy XML file
@@ -13,7 +13,7 @@ namespace AppControlManager
         /// <param name="xmlFilePath"></param>
         /// <param name="packageFamilyNames"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Create(string xmlFilePath, List<string> packageFamilyNames)
+        internal static void Create(string xmlFilePath, List<string> packageFamilyNames)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
@@ -44,7 +44,7 @@ namespace AppControlManager
 
             foreach (string PFN in packageFamilyNames)
             {
-                string guid = Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase).ToUpperInvariant();
+                string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
 
                 string ID = $"ID_ALLOW_A_{guid}";
 

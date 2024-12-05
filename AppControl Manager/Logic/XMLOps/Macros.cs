@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using AppControlManager.Logging;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace AppControlManager
 {
-    public static class Macros
+    internal static class Macros
     {
         /// <summary>
         /// This method can backup the Macros node from an XML file by outputting them for storage in a variable.
         /// </summary>
         /// <param name="xmlFilePath"></param>
         /// <returns></returns>
-        public static XmlNode? Backup(string xmlFilePath)
+        internal static XmlNode? Backup(string xmlFilePath)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
@@ -31,7 +32,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="xmlFilePath"></param>
         /// <returns></returns>
-        public static List<XmlNode>? Backup(List<string> xmlFilePath)
+        internal static List<XmlNode>? Backup(List<string> xmlFilePath)
         {
             // A list to store <Macros> nodes
             List<XmlNode> macroNodes = [];
@@ -65,7 +66,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="xmlFilePath"></param>
         /// <param name="macroNode"></param>
-        public static void Restore(string xmlFilePath, XmlNode? macroNode)
+        internal static void Restore(string xmlFilePath, XmlNode? macroNode)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
@@ -117,7 +118,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="xmlFilePath"></param>
         /// <param name="macroNodes"></param>
-        public static void Restore(string xmlFilePath, List<XmlNode>? macroNodes)
+        internal static void Restore(string xmlFilePath, List<XmlNode>? macroNodes)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);

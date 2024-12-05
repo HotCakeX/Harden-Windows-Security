@@ -98,8 +98,8 @@ Style="{StaticResource BodyTextBlockStyle}">
 
 
                         <TeachingTip x:Name="CreateSupplementalPolicyTeachingTip"
- Target="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton}">
-                        </TeachingTip>
+ Target="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton}" />
+
 
                     </controls:WrapPanel>
 
@@ -267,8 +267,7 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                         <ToggleButton x:Name="CertificatesPolicyDeployToggleButton" Click="CertificatesPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
 
                         <TeachingTip x:Name="CreateCertificateBasedSupplementalPolicyTeachingTip"
-                Target="{x:Bind CreateCertificatesSupplementalPolicyButton}">
-                        </TeachingTip>
+                Target="{x:Bind CreateCertificatesSupplementalPolicyButton}" />
 
                     </controls:WrapPanel>
 

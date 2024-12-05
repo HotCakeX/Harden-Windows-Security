@@ -4,7 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager
 {
-    public static class GetCertificateDetails
+    internal static class GetCertificateDetails
     {
         /// <summary>
         /// A method to detect Root, Intermediate and Leaf certificates
@@ -17,7 +17,7 @@ namespace AppControlManager
         /// </summary>
         /// <param name="completeSignatureResult"></param>
         /// <returns></returns>
-        public static List<ChainPackage> Get(AllFileSigners[] completeSignatureResult)
+        internal static List<ChainPackage> Get(AllFileSigners[] completeSignatureResult)
         {
             // A list to hold the final result of the method
             List<ChainPackage> finalObject = [];

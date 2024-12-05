@@ -1,11 +1,13 @@
-﻿namespace AppControlManager
+﻿using AppControlManager.Logging;
+
+namespace AppControlManager
 {
-    public static class ConfigureISGServices
+    internal static class ConfigureISGServices
     {
         /// <summary>
         /// Starts the AppIdTel and sets the appidsvc service to auto start
         /// </summary>
-        public static void Configure()
+        internal static void Configure()
         {
             Logger.Write("Configuring and starting the required ISG related services");
 

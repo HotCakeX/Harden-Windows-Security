@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -36,7 +37,7 @@ namespace AppControlManager
 
 
             // Loop through each signer in the signer information array, these are the signers in the XML policy file
-            foreach (Signer signer in simulationInput.SignerInfo)
+            foreach (SignerX signer in simulationInput.SignerInfo)
             {
 
                 // Make sure it's an allowed signer and not a denier

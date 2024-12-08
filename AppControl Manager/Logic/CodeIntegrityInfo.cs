@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig.CodeIntegrity
+namespace AppControlManager.CodeIntegrity
 {
 
     internal sealed class CodeIntegrityOption
@@ -30,6 +30,7 @@ namespace WDACConfig.CodeIntegrity
 
         // https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_codeintegrity_information
         [LibraryImport("ntdll.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial int NtQuerySystemInformation(
         int SystemInformationClass,
         IntPtr SystemInformation,

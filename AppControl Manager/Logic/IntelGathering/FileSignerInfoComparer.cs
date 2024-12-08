@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     /// <summary>
     /// A custom equality comparer for the FileSignerInfo class.

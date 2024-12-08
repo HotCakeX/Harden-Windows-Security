@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // This class represents a single Code Integrity XML policy
     // It Makes sure PolicyType attribute, BasePolicyID node and PolicyID nodes exist and remove PolicyTypeID node if it exists
@@ -30,10 +30,10 @@ namespace WDACConfig
         internal XmlNode SignersNode { get; }
 
         internal XmlNode? UMCI_SigningScenarioNode { get; }
-        internal XmlNode KMCI_SigningScenarioNode { get; }
+        internal XmlNode? KMCI_SigningScenarioNode { get; }
 
         internal XmlNode? UMCI_ProductSignersNode { get; }
-        internal XmlNode KMCI_ProductSignersNode { get; }
+        internal XmlNode? KMCI_ProductSignersNode { get; }
 
         internal XmlNode CiSignersNode { get; }
 
@@ -72,15 +72,13 @@ namespace WDACConfig
             UMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']", NamespaceManager);
 
             // Find the SigningScenario Node for Kernel Mode
-            KMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']", NamespaceManager)
-                ?? throw new InvalidOperationException("KMCI Signing Scenario node not found");
+            KMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']", NamespaceManager);
 
             // Find the ProductSigners Node for User Mode - It is nullable because Kernel-Mode Strict policy won't have this section
             UMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']/ns:ProductSigners", NamespaceManager);
 
             // Find the ProductSigners Node for Kernel Mode
-            KMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']/ns:ProductSigners", NamespaceManager)
-                ?? throw new InvalidOperationException("KMCI Product Signers node not found");
+            KMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']/ns:ProductSigners", NamespaceManager);
 
 
             #region CiSigners Node
@@ -126,7 +124,7 @@ namespace WDACConfig
 
 
             // Generate a new GUID
-            Guid newRandomGUID = System.Guid.NewGuid();
+            Guid newRandomGUID = Guid.CreateVersion7();
 
             // Convert it to string
             string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     internal static class SupplementalForSelf
@@ -13,7 +14,7 @@ namespace WDACConfig
         /// Each Base policy should have this supplemental policy
         /// </summary>
         /// <param name="StagingArea"></param>
-        public static void Deploy(string StagingArea, string basePolicyID)
+        internal static void Deploy(string StagingArea, string basePolicyID)
         {
 
             string policyName = "AppControlManagerSupplementalPolicy";
@@ -29,7 +30,7 @@ namespace WDACConfig
             codeIntegrityPolicy.BasePolicyIDNode.InnerText = basePolicyID;
 
             // Generate a new GUID
-            Guid newRandomGUID = Guid.NewGuid();
+            Guid newRandomGUID = Guid.CreateVersion7();
 
             // Convert it to string
             string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";

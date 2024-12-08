@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class UpdateHvciOptions
+    internal static class UpdateHvciOptions
     {
         /// <summary>
         /// Sets the HVCI option to Strict or (2) in a policy XML file
@@ -12,7 +13,7 @@ namespace WDACConfig
         /// </summary>
         /// <param name="filePath"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Update(string filePath)
+        internal static void Update(string filePath)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(filePath, null);

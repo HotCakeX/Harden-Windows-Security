@@ -1,22 +1,22 @@
 using System.Linq;
 using System.Management;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
-    public sealed class DeviceGuardStatus
+    internal sealed class DeviceGuardStatus
     {
-        public uint? UsermodeCodeIntegrityPolicyEnforcementStatus { get; set; }
-        public uint? CodeIntegrityPolicyEnforcementStatus { get; set; }
+        internal uint? UsermodeCodeIntegrityPolicyEnforcementStatus { get; set; }
+        internal uint? CodeIntegrityPolicyEnforcementStatus { get; set; }
     }
 
-    public static class DeviceGuardInfo
+    internal static class DeviceGuardInfo
     {
         /// <summary>
         /// Get the Device Guard status information from the Win32_DeviceGuard WMI class
         /// </summary>
         /// <returns></returns>
-        public static DeviceGuardStatus? GetDeviceGuardStatus()
+        internal static DeviceGuardStatus? GetDeviceGuardStatus()
         {
             // Define the WMI query to get the Win32_DeviceGuard class information
             string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
@@ -44,7 +44,7 @@ namespace WDACConfig
                         CodeIntegrityPolicyEnforcementStatus = obj["CodeIntegrityPolicyEnforcementStatus"] as uint?
                     };
 
-                    return status;  // Return the first instance (assuming one instance)
+                    return status;  // Return the first instance
                 }
             }
 

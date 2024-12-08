@@ -1,5 +1,5 @@
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class CodeIntegrityHashes(string? sha1Page, string? sha256Page, string? sha1Authenticode, string? sha256Authenticode)
     {

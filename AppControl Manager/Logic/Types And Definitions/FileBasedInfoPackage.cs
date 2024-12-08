@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // Used by the BuildSignerAndHashObjects method to store and return the output
     public sealed class FileBasedInfoPackage(List<FilePublisherSignerCreator> filepublishersigners, List<PublisherSignerCreator> publishersigners, List<HashCreator> completehashes)

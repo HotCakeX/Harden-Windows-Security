@@ -1,7 +1,7 @@
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
      ChainElement[]? intermediatecertificates,

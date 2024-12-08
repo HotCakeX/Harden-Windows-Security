@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WDACConfig.Pages.Settings"
+    x:Class="AppControlManager.Pages.Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WDACConfig.Pages"
+    xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -249,8 +249,13 @@ Style="{StaticResource BodyTextBlockStyle}">
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
-                <HyperlinkButton Margin="0,8,0,0"
-                                 Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
+                    <HyperlinkButton Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+                    <HyperlinkButton Content="Icons8 website for all of the Icons used in this app" NavigateUri="https://icons8.com" />
+                    <HyperlinkButton Content="Source Code" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager" />
+                </controls:WrapPanel>
+
             </StackPanel>
 
         </Grid>

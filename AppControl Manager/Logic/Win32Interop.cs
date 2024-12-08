@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal sealed partial class Win32InteropInternal
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement
         [LibraryImport("user32.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 

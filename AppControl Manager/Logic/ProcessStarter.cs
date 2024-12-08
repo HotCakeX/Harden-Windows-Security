@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal static class ProcessStarter
     {

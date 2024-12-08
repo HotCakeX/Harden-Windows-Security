@@ -1,5 +1,5 @@
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class HashCreator(string authenticodeSHA256, string authenticodeSHA1, string fileName, int siSigningScenario)
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // This class contains all of the WinTrust related functions and codes
     internal static partial class WinTrust
@@ -14,6 +14,7 @@ namespace WDACConfig
 
         // a method to acquire a handle to a catalog administrator context using a native function from WinTrust.dll
         [LibraryImport("WinTrust.dll", StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool CryptCATAdminAcquireContext2(
             ref IntPtr hCatAdmin, // the first parameter: a reference to a pointer to store the handle
@@ -25,6 +26,7 @@ namespace WDACConfig
 
         // a method to release a handle to a catalog administrator context using a native function from WinTrust.dll
         [LibraryImport("WinTrust.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool CryptCATAdminReleaseContext(
             IntPtr hCatAdmin, // the first parameter: a pointer to the handle to release
@@ -33,6 +35,7 @@ namespace WDACConfig
 
         // a method to calculate the hash of a file using a native function from WinTrust.dll
         [LibraryImport("WinTrust.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool CryptCATAdminCalcHashFromFileHandle3(
             IntPtr hCatAdmin, // the first parameter: a pointer to the handle of the catalog administrator context
@@ -51,6 +54,7 @@ namespace WDACConfig
         // P/Invoke declaration to import the 'CryptCATOpen' function from WinTrust.dll
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatopen
         [LibraryImport("WinTrust.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial IntPtr CryptCATOpen(
             [MarshalAs(UnmanagedType.LPWStr)] string FileName, // The name of the catalog file.
             uint OpenFlags, // Flags to control the function behavior.
@@ -61,6 +65,7 @@ namespace WDACConfig
         // P/Invoke declaration to import the 'CryptCATEnumerateMember' function from WinTrust.dll
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatenumeratemember
         [LibraryImport("WinTrust.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial IntPtr CryptCATEnumerateMember(
             IntPtr MeowLogHandle, // Handle to the catalog context.
             IntPtr PrevCatalogMember); // Pointer to the previous catalog member.
@@ -68,6 +73,7 @@ namespace WDACConfig
         // P/Invoke declaration to import the 'CryptCATClose' function from WinTrust.dll
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatclose
         [LibraryImport("WinTrust.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial IntPtr CryptCATClose(IntPtr MainCryptProviderHandle); // Closes the catalog context.
 
         #endregion
@@ -78,6 +84,7 @@ namespace WDACConfig
 
         // a method to compute the hash of the first page of a file using a native function from Wintrust.dll
         [LibraryImport("Wintrust.dll", StringMarshalling = StringMarshalling.Utf16)] // an attribute to specify the DLL name and the character set
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial int ComputeFirstPageHash( // the method signature
             string pszAlgId, // the first parameter: the name of the hash algorithm to use
             string filename, // the second parameter: the name of the file to hash
@@ -116,6 +123,7 @@ namespace WDACConfig
 
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-winverifytrust
         [LibraryImport("wintrust.dll", EntryPoint = "WinVerifyTrust")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         // Set to return a WinVerifyTrustResult enum
         internal static partial WinVerifyTrustResult WinVerifyTrust(
             IntPtr hwnd,
@@ -124,6 +132,7 @@ namespace WDACConfig
 
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-wthelperprovdatafromstatedata
         [LibraryImport("wintrust.dll", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial IntPtr WTHelperProvDataFromStateData(IntPtr hStateData);
 
         #endregion

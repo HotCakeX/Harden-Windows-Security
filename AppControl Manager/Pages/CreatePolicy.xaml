@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WDACConfig.Pages.CreatePolicy"
+    x:Class="AppControlManager.Pages.CreatePolicy"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WDACConfig.Pages"
+    xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -99,7 +99,7 @@ Style="{StaticResource AccentButtonStyle}" Click="AllowMicrosoftCreateAndDeploy_
     Value="2"
     SpinButtonPlacementMode="Inline"
     SmallChange="1"
-    IsEnabled="False"                                      
+    IsEnabled="False"
     LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
 
 

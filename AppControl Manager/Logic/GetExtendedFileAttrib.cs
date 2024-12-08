@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed partial class ExFileInfo
     {
@@ -13,24 +13,27 @@ namespace WDACConfig
         public const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
 
         // Properties to hold file information
-        public string? OriginalFileName { get; private set; }
-        public string? InternalName { get; private set; }
-        public string? ProductName { get; private set; }
-        public Version? Version { get; private set; }
-        public string? FileDescription { get; private set; }
+        public string? OriginalFileName { get; set; }
+        public string? InternalName { get; set; }
+        public string? ProductName { get; set; }
+        public Version? Version { get; set; }
+        public string? FileDescription { get; set; }
 
         // Importing external functions from Version.dll to work with file version info
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
         [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoSizeExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-verqueryvaluea
         [LibraryImport("Version.dll", EntryPoint = "VerQueryValueW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfoexa
         [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, [Out] byte[] data);
 

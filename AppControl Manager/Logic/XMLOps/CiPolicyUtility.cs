@@ -2,16 +2,16 @@ using System;
 using System.IO;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class CiPolicyUtility
+    internal static class CiPolicyUtility
     {
         /// <summary>
         /// Copies the rules from one CI policy XML file to another.
         /// </summary>
         /// <param name="sourceFilePath">The source CI policy XML file path.</param>
         /// <param name="destinationFilePath">The destination CI policy XML file path.</param>
-        public static void CopyCiRules(string sourceFilePath, string destinationFilePath)
+        internal static void CopyCiRules(string sourceFilePath, string destinationFilePath)
         {
             // Validate file paths
             if (string.IsNullOrWhiteSpace(sourceFilePath))

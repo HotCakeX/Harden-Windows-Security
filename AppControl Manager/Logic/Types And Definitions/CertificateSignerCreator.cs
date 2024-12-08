@@ -1,5 +1,5 @@
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class CertificateSignerCreator(string tbs, string signerName, int siSigningScenario)
     {

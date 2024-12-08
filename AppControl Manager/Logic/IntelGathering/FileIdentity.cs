@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public sealed class FileIdentity
     {

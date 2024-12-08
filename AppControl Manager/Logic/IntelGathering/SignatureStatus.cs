@@ -1,9 +1,9 @@
 ﻿
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public enum SignatureStatus
     {
-        Signed,
-        Unsigned
+        IsSigned,
+        IsUnsigned
     }
 }

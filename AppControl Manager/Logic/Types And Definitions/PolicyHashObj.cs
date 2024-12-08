@@ -1,7 +1,7 @@
 using System;
 
 // Used by AppControl Simulations
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class PolicyHashObj(string hashvalue, string hashtype, string filepathforhash)
     {

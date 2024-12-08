@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Dispatching;
 using System.ComponentModel;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// ViewModel for the MainWindow, responsible for managing UI properties and
@@ -27,7 +27,7 @@ namespace WDACConfig
         /// Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
         /// When set to 0, the badge is hidden.
         /// </summary>
-        public double InfoBadgeOpacity
+        internal double InfoBadgeOpacity
         {
             get => _infoBadgeOpacity;
             set
@@ -48,7 +48,7 @@ namespace WDACConfig
         /// and subscribes to the update notification event.
         /// </summary>
         /// <param name="updateService">Instance of AppUpdate service used for update checks.</param>
-        public MainWindowViewModel(AppUpdate updateService)
+        internal MainWindowViewModel(AppUpdate updateService)
         {
             _updateService = updateService; // Store AppUpdate service instance
 
@@ -67,14 +67,15 @@ namespace WDACConfig
         /// </summary>
         /// <param name="sender">Sender of the event, in this case, AppUpdate instance.</param>
         /// <param name="isUpdateAvailable">Boolean indicating whether an update is available.</param>
-        private void OnUpdateAvailable(object sender, bool isUpdateAvailable)
+        private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
         {
             // Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
             _ = _dispatcher.TryEnqueue(() =>
-             {
-                 // Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
-                 InfoBadgeOpacity = isUpdateAvailable ? 1 : 0;
-             });
+            {
+                // Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
+                InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
+            });
         }
+
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Documents;
 using System;
 using System.Threading.Tasks;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class CreatePolicy : Page
     {
@@ -501,7 +501,7 @@ namespace WDACConfig.Pages
             TextBlock formattedTextBlock = new();
 
             // Gather driver block list info asynchronously
-            BasePolicyCreator.DriverBlockListInfo? driverBlockListInfo = await Task.Run(() => BasePolicyCreator.DriversBlockListInfoGathering());
+            BasePolicyCreator.DriverBlockListInfo? driverBlockListInfo = await Task.Run(BasePolicyCreator.DriversBlockListInfoGathering);
 
             // Prepare the text to display
             if (driverBlockListInfo is not null)

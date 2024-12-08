@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
 #pragma warning disable CS0649
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal static class KernelModeDrivers
     {
@@ -144,7 +145,7 @@ namespace WDACConfig.IntelGathering
                 }
 
                 // Generate a new GUID and convert it to a string to ensure a unique name for the file mapping
-                string localPointerName = Guid.NewGuid().ToString();
+                string localPointerName = Guid.CreateVersion7().ToString();
 
                 // Create a file mapping object, associating the file with a memory region.
                 // - fileHandle: File handle to map.

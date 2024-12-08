@@ -1,5 +1,5 @@
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public sealed class OpusSigner(string tbsHash, string subjectCN)
     {

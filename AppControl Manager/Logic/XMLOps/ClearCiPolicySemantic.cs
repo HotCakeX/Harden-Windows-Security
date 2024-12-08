@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class ClearCiPolicySemantic
+    internal static class ClearCiPolicySemantic
     {
         /// <summary>
         /// Clears the CI Policy XML file from all nodes except the base nodes
         /// According to the CI Schema
         /// </summary>
         /// <param name="xmlFilePath"></param>
-        public static void Clear(string xmlFilePath)
+        internal static void Clear(string xmlFilePath)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
@@ -27,7 +27,10 @@ namespace WDACConfig
                 baseNodes.Add(codeIntegrityPolicy.UMCI_ProductSignersNode);
             }
 
-            baseNodes.Add(codeIntegrityPolicy.KMCI_ProductSignersNode);
+            if (codeIntegrityPolicy.KMCI_ProductSignersNode is not null)
+            {
+                baseNodes.Add(codeIntegrityPolicy.KMCI_ProductSignersNode);
+            }
 
             XmlNode? fileRulesRefUMC = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
             if (fileRulesRefUMC is not null)
@@ -35,13 +38,14 @@ namespace WDACConfig
                 baseNodes.Add(fileRulesRefUMC);
             }
 
-            XmlNode? fileRulesRefKMCS = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? fileRulesRefKMCS = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
             if (fileRulesRefKMCS is not null)
             {
                 baseNodes.Add(fileRulesRefKMCS);
             }
 
             XmlNode? updatePolicySigners = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:UpdatePolicySigners", codeIntegrityPolicy.NamespaceManager);
+
             if (updatePolicySigners is not null)
             {
                 baseNodes.Add(updatePolicySigners);

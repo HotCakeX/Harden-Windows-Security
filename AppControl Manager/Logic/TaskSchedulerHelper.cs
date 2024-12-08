@@ -1,8 +1,9 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Linq;
 using System.Management;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal static class TaskSchedulerHelper
     {
@@ -12,7 +13,7 @@ namespace WDACConfig
         /// <param name="taskName">The task name to be deleted</param>
         /// <param name="taskPath">The path where the task is located</param>
         /// <returns></returns>
-        public static void Delete(string taskName, string taskPath)
+        internal static void Delete(string taskName, string taskPath)
         {
             try
             {

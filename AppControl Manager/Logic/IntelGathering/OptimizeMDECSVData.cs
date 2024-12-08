@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
 
     // Generates precomputed serialization metadata for Dictionary<string, string> at compile time,

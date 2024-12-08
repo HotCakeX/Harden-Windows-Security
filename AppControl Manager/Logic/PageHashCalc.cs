@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// necessary logics for Page hash calculation

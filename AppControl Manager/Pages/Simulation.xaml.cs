@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class Simulation : Page
     {
@@ -80,7 +80,7 @@ namespace WDACConfig.Pages
                 // Run the simulation
                 ConcurrentDictionary<string, SimulationOutput> result = await Task.Run(() =>
                 {
-                    return InvokeWDACSimulation.Invoke(
+                    return AppControlSimulation.Invoke(
                         filePaths,
                         folderPaths,
                         xmlFilePath,

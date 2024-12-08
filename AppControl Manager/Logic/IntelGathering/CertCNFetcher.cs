@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class CertCNFetcher
+    internal static class CertCNFetcher
     {
-        public static HashSet<string> GetCertCNs()
+        internal static HashSet<string> GetCertCNs()
         {
 
             HashSet<string> output = [];
@@ -19,7 +19,7 @@ namespace WDACConfig
                 // Loop through each certificate in the current user's personal store
                 foreach (X509Certificate2 cert in store.Certificates)
                 {
-                    // Make sure it uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies)
+                    // Make sure it uses RSA algorithm (Because ECDSA is not supported for signing App Control policies)
                     if (string.Equals(cert.PublicKey.Oid.FriendlyName, "RSA", StringComparison.OrdinalIgnoreCase))
                     {
                         // Get its Subject Common Name (CN) using the GetNameString method from CryptoAPI

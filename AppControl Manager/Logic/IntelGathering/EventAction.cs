@@ -1,5 +1,5 @@
 ﻿
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public enum EventAction
     {

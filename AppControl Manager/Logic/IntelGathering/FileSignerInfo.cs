@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public sealed class FileSignerInfo
     {

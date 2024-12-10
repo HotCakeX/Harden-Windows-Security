@@ -2,14 +2,14 @@
   # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
   RootModule           = 'Harden-Windows-Security-Module.psm1'
-  ModuleVersion        = '0.6.9'
+  ModuleVersion        = '0.7.0'
   CompatiblePSEditions = @('Core')
   GUID                 = 'afae7a0a-5eff-4a4d-9139-e1702b7ac426'
   Author               = 'Violet Hansen'
   CompanyName          = 'SpyNetGirl'
   Copyright            = '(c) Violet Hansen. All rights reserved.'
   HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module'
-  PowerShellVersion    = '7.4.4'
+  PowerShellVersion    = '7.5.0'
   RequiredAssemblies   = @()
   NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
   FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity', 'Update-HardenWindowsSecurity')

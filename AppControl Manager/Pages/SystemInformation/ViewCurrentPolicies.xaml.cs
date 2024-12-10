@@ -1,8 +1,7 @@
-using AppControlManager.Logging;
-using AppControlManager.SiPolicy;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,7 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace AppControlManager.Pages
 {
+
     public sealed partial class ViewCurrentPolicies : Page
     {
         // To store the policies displayed on the DataGrid
@@ -558,6 +558,23 @@ namespace AppControlManager.Pages
                 .ToString();
         }
 
+
+#pragma warning disable CA1822
+
+        /// <summary>
+        /// Event handler to prevent the MenuFlyout to automatically close immediately after selecting a checkbox or any button in it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+        {
+            if (sender is CustomUIElements.MenuFlyoutV2 { IsPointerOver: true })
+            {
+                args.Cancel = true;
+            }
+        }
+
+#pragma warning restore CA1822
 
     }
 }

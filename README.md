@@ -112,6 +112,8 @@ Unprotect-WindowsSecurity
 * [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
 * [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
+Use the following PowerShell command as Admin
+
 ```powershell
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
 ```

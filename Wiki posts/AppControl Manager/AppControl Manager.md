@@ -15,14 +15,13 @@ The short-term goal is for the AppControl manager to reach feature parity with t
 
 Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) as Admin, it will automatically download the latest MSIX file from this repository's release page and install it for you.
 
-> [!TIP]\
-> The app includes an update section that allows you to check for update and install the new version securely with just a press of a button. It is a very convenient and non-intrusive update experience because when the app is updated, it won't restart itself, instead it will wait for you to close it and the next time you open it you will be automatically using the new version.
-
-<br>
-
 ```powershell
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
 ```
+
+> [!TIP]\
+> [AppControl Manager supports auto-update and has built-in updater.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update)
+
 
 <br>
 

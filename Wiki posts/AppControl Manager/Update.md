@@ -4,4 +4,6 @@ In the [AppControl Manager's](https://github.com/HotCakeX/Harden-Windows-Securit
 
 Additionally, you can select an MSIX package to install as an update for AppControl Manager. This feature is particularly useful if you've already downloaded the MSIX file from GitHub or built the application from the source code yourself.
 
+The update experience is very convenient and non-intrusive because when the app is updated, it won't restart itself, instead it will wait for you to close it and the next time you open it you will be automatically using the new version.
+
 <br>

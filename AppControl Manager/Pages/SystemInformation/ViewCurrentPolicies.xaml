@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:AppControlManager="using:AppControlManager"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -44,7 +45,8 @@
                     </Button.Content>
 
                     <Button.Flyout>
-                        <MenuFlyout>
+
+                        <customUI:MenuFlyoutV2 Closing="MenuFlyout_Closing">
 
                             <ToggleMenuFlyoutItem Text="Base Policies" x:Name="IncludeBasePolicies" IsChecked="True">
                                 <ToggleMenuFlyoutItem.Icon>
@@ -70,7 +72,7 @@
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
 
-                        </MenuFlyout>
+                        </customUI:MenuFlyoutV2>
                     </Button.Flyout>
                 </Button>
 

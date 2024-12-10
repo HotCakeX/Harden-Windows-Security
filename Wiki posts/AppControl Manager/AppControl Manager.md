@@ -122,7 +122,7 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 ## About the Installation Process
 
-The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file]((https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1)) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
+The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
 
 * The latest version of the AppControl Manager MSIX package is securely downloaded from the GitHub release page, where it is built publicly with full artifact attestation and SBOMs.
 
@@ -130,7 +130,7 @@ The installation process for AppControl Manager is uniquely streamlined. When yo
 
 * A secure, on-device code-signing certificate is then generated. This certificate, managed by the Microsoft-signed `SignTool.exe`, is used to sign the MSIX package obtained from GitHub.
 
-* The private keys of the certificate are encrypted with a randomly generated, 100-character password during the signing process, which lasts only a few seconds. Once signing is complete, the private keys are securely discarded, leaving only the public keys on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
+* The private key of the certificate is non-exportable, never written on the disk and is securely discarded once signing is complete, leaving only the public key on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
 
 * The entire process is designed to leave no residual files. Each time the script runs, any certificates from previous executions are detected and removed, ensuring a clean system.
 

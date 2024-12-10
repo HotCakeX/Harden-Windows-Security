@@ -8,7 +8,7 @@ namespace AppControlManager.SiPolicy
 
     /// <summary>
     /// !!!! EXTRA information regarding the overall merge operation and what needs to happen !!!!
-    /// 
+    ///
     /// The FilePublisher and Publisher Signers in an XML file must be based on their TBS, Name, and/or CertPublisher values.
     /// For each FilePublisher signer, if two signers are found with the same TBS, Name, and CertPublisher, only one of them shall be kept, and their FileAttribRefs shall be merged.
     /// For each Publisher signer, if two signers are found with the same TBS, Name, and/or CertPublisher, only one of them shall be kept.
@@ -16,13 +16,13 @@ namespace AppControlManager.SiPolicy
     /// Distinction shall be made between FilePublisher and Publisher signers: If two signers have the same TBS, Name, and/or CertPublisher but only one of them has FileAttribRefs, then they are not the same.
     /// A signer can only be associated with a single SigningScenario at a time. So if a Signer needs to be allowed for both user and kernel mode, it should be mentioned twice, with different IDs.
     /// So there are 4 different Signer types to consider.
-    /// 
+    ///
     ///
     /// Each <Allow> node in <FileRules> nodes is associated only with one Signing scenario at a time. Same goes for <Deny> nodes.
     ///
     /// In the <EKUs> node there must be unique EKUs only based on their value. If 2 Signers need to reference the same EKU value, they must use same EKU's ID in their CertEKU section.
     ///
-    /// 
+    ///
     /// </summary>
     internal static partial class Merger
     {
@@ -38,9 +38,10 @@ namespace AppControlManager.SiPolicy
         /// <param name="subXmlFilePath"></param>
         internal static void Merge(string mainXmlFilePath, HashSet<string> otherXmlFilePaths)
         {
-
+            // Close the empty rules in the main policy
             CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);
 
+            // Create a list of all SiPolicy objects representing the instantiation of otherXmlFilePaths
             List<SiPolicy> allPolicies = [];
 
             foreach (string item in otherXmlFilePaths)
@@ -50,14 +51,16 @@ namespace AppControlManager.SiPolicy
                 allPolicies.Add(Management.Initialize(item));
             }
 
-            // Instantiate both policies
+            // Instantiate the main policy
             SiPolicy mainXML = Management.Initialize(mainXmlFilePath);
 
+            // Add the main policy to the mix
             allPolicies.Add(mainXML);
 
 
-            // Perform data aggregation
+            // Data aggregation
             // ID randomization
+            // De-duplication
             HashSet<AllowRule> allowRules = Factory.CollectAllowRules(allPolicies);
             HashSet<DenyRule> denyRules = Factory.CollectDenyRules(allPolicies);
             SignerCollection signerCollection = Factory.CollectSignerRules(allPolicies);
@@ -79,7 +82,6 @@ namespace AppControlManager.SiPolicy
             IEnumerable<FileRuleRef> kernelModeFileRulesRefs = allowRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement).
                 Concat(denyRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement));
 
-
             // Get all Signers
             IEnumerable<Signer> signers = signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
                 Concat(signerCollection.WHQLFilePublishers.Select(x => x.SignerElement)).
@@ -93,41 +95,41 @@ namespace AppControlManager.SiPolicy
                 Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!));
 
 
-
-
             // Get any possible SigningScenario from XML1 (main)
             // Will use some of its rare details when building the new policy
-            SigningScenario? userModeSigningScenario = mainXML.SigningScenarios
+            SigningScenario? mainXMLUserModeSigningScenario = mainXML.SigningScenarios
                .FirstOrDefault(s => s.Value == 12);
 
-            SigningScenario? kernelModeSigningScenario = mainXML.SigningScenarios
+            SigningScenario? mainXMLKernelModeSigningScenario = mainXML.SigningScenarios
                 .FirstOrDefault(s => s.Value == 131);
 
 
-
+            // Get all of the AllowedSigners - User Mode
             IEnumerable<AllowedSigner> userModeAllowedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement).
                 Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
                 Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
                 Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement))!;
 
+            // Get all of the DeniedSigners - User Mode
             IEnumerable<DeniedSigner> userModeDeniedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement).
                 Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
                 Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
                 Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement))!;
 
-
+            // Get all of the AllowedSigners - Kernel Mode
             IEnumerable<AllowedSigner> kernelModeAllowedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement).
               Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
               Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
               Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement))!;
 
+            // Get all of the DeniedSigners - Kernel Mode
             IEnumerable<DeniedSigner> kernelModeDeniedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement).
                 Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
                 Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
                 Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement))!;
 
 
-
+            // Construct the User Mode Signing Scenario
             SigningScenario UMCISigningScenario = new()
             {
                 Value = 12,
@@ -151,17 +153,18 @@ namespace AppControlManager.SiPolicy
                 }
             };
 
-
-            if (userModeSigningScenario is not null && userModeSigningScenario.MinimumHashAlgorithmSpecified)
+            // Add miscellaneous settings to the User Mode Signing Scenario from the Main XML
+            if (mainXMLUserModeSigningScenario is not null && mainXMLUserModeSigningScenario.MinimumHashAlgorithmSpecified)
             {
                 UMCISigningScenario.MinimumHashAlgorithmSpecified = true;
-                UMCISigningScenario.MinimumHashAlgorithm = userModeSigningScenario.MinimumHashAlgorithm;
+                UMCISigningScenario.MinimumHashAlgorithm = mainXMLUserModeSigningScenario.MinimumHashAlgorithm;
             }
 
-            UMCISigningScenario.InheritedScenarios = userModeSigningScenario?.InheritedScenarios;
-            UMCISigningScenario.AppIDTags = userModeSigningScenario?.AppIDTags;
+            UMCISigningScenario.InheritedScenarios = mainXMLUserModeSigningScenario?.InheritedScenarios;
+            UMCISigningScenario.AppIDTags = mainXMLUserModeSigningScenario?.AppIDTags;
 
 
+            // Construct the Kernel Mode Signing Scenario
             SigningScenario KMCISigningScenario = new()
             {
                 Value = 131,
@@ -186,20 +189,21 @@ namespace AppControlManager.SiPolicy
             };
 
 
-            if (kernelModeSigningScenario is not null && kernelModeSigningScenario.MinimumHashAlgorithmSpecified)
+            // Add miscellaneous settings to the Kernel Mode Signing Scenario from the Main XML
+            if (mainXMLKernelModeSigningScenario is not null && mainXMLKernelModeSigningScenario.MinimumHashAlgorithmSpecified)
             {
                 KMCISigningScenario.MinimumHashAlgorithmSpecified = true;
-                KMCISigningScenario.MinimumHashAlgorithm = kernelModeSigningScenario.MinimumHashAlgorithm;
+                KMCISigningScenario.MinimumHashAlgorithm = mainXMLKernelModeSigningScenario.MinimumHashAlgorithm;
             }
 
-            KMCISigningScenario.InheritedScenarios = kernelModeSigningScenario?.InheritedScenarios;
-            KMCISigningScenario.AppIDTags = kernelModeSigningScenario?.AppIDTags;
+            KMCISigningScenario.InheritedScenarios = mainXMLKernelModeSigningScenario?.InheritedScenarios;
+            KMCISigningScenario.AppIDTags = mainXMLKernelModeSigningScenario?.AppIDTags;
 
 
 
 
 
-            // Create the final policy data
+            // Create the final policy data, it will replace the content in the main XML file
             SiPolicy output = new()
             {
                 VersionEx = mainXML.VersionEx,  // Main policy takes priority
@@ -229,8 +233,8 @@ namespace AppControlManager.SiPolicy
             // Save the changes to the main XML File
             Management.SavePolicyToFile(output, mainXmlFilePath);
 
+            // Close any empty nodes
             CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);
-
 
 
             // The reason this method is being used to go over the XML one more time and its logic wasn't implemented during policy creation
@@ -253,8 +257,10 @@ namespace AppControlManager.SiPolicy
 
 
 
-
-
+        /// <summary>
+        /// Helper method to de-duplicate EKUs
+        /// </summary>
+        /// <param name="xmlFilePath"></param>
         private static void EnsureUniqueEKUs(string xmlFilePath)
         {
             // Load the XML document

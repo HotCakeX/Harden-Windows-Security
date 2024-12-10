@@ -72,7 +72,7 @@ namespace AppControlManager.SiPolicyIntel
                     IEnumerable<XElement> fileAttribRefs = xmlDoc.Descendants(ns + "FileAttribRef")
                         .Where(refElem => fileAttribIdsToReplace.Contains(refElem.Attribute("RuleID")?.Value));
 
-                    // Update each <FileAttribRef> to use the ID of the retained <FileAttrib> 
+                    // Update each <FileAttribRef> to use the ID of the retained <FileAttrib>
                     foreach (XElement refElem in fileAttribRefs)
                     {
                         refElem.SetAttributeValue("RuleID", idToKeep);

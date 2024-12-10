@@ -144,8 +144,8 @@ namespace AppControlManager
         ];
 
         private readonly static HashSet<int> SupplementalRules = [
-            (int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy,
-            (int)PolicyRuleOptions.DisabledRuntimeFilePathRuleProtection
+            (int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy
+          // (int)PolicyRuleOptions.DisabledRuntimeFilePathRuleProtection - Only add this if the Supplemental policy will have FilePath rules and user explicitly asks for allowing user-writable file paths
         ];
 
         private readonly static HashSet<int> RequireWHQLRules = [(int)PolicyRuleOptions.RequiredWHQL];

@@ -73,15 +73,21 @@ namespace AppControlManager.Pages
                 UpdateStatusInfoBar.IsClosable = false;
                 CheckForUpdateButton.IsEnabled = false;
                 UpdateStatusInfoBar.IsOpen = true;
-                UpdateStatusInfoBar.Message = "Checking for update";
                 UpdateStatusInfoBar.Severity = InfoBarSeverity.Informational;
 
+                // variable to store the update results
+                UpdateCheckResponse? updateCheckResult = null;
 
-                // Check for update asynchronously using the AppUpdate class's singleton instance
-                UpdateCheckResponse updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
+                // If user did not provide custom MSIX path, start checking for update
+                if (!useCustomMSIXPath)
+                {
+                    UpdateStatusInfoBar.Message = "Checking for update";
+                    // Check for update asynchronously using the AppUpdate class's singleton instance
+                    updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
+                }
 
                 // If a new version is available or user supplied a custom MSIX path to be installed
-                if (updateCheckResult.IsNewVersionAvailable || useCustomMSIXPath)
+                if ((updateCheckResult is not null && updateCheckResult.IsNewVersionAvailable) || useCustomMSIXPath)
                 {
                     string msg1;
 
@@ -91,7 +97,7 @@ namespace AppControlManager.Pages
                     }
                     else
                     {
-                        msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult.OnlineVersion}, updating the application...";
+                        msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult?.OnlineVersion}, updating the application...";
                     }
 
                     Logger.Write(msg1);

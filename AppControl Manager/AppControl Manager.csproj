@@ -132,7 +132,6 @@
   <!-- Nuget packages -->
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.1.240916" />
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.1.240916" />

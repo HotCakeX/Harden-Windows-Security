@@ -18,8 +18,9 @@ With AppControl Manager, you can easily create a supplemental policy by scanning
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
 
-* **Select Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
+* **Scalability**: Use this gauge to set the number of concurrent threads for the scan. By default, 2 threads are used. Increasing this number will speed up the scan but will also consume more system resources.
 
+* **Select Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
 
 > [!TIP]\
 > Use the ***View Detected File Details*** section to view highly detailed results of the files and folder scans.

@@ -229,7 +229,7 @@ namespace AppControlManager.SiPolicy
 
 
         /// <summary>
-        /// Helper method that categoriezes each signer
+        /// Helper method that categorizes each signer
         /// </summary>
         /// <param name="signer"></param>
         /// <param name="signingScenario"></param>

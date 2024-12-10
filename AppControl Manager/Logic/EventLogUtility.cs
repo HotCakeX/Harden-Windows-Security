@@ -8,9 +8,7 @@ namespace AppControlManager
     internal static class EventLogUtility
     {
 
-
         private const string logName = "Microsoft-Windows-CodeIntegrity/Operational";
-
 
         /// <summary>
         /// Increase Code Integrity Operational Event Logs size from the default 1MB to user-defined size.

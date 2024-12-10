@@ -34,9 +34,45 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
-                <CheckBox x:Name="IncludeSystemPolicies" Content="System Policies" />
-                <CheckBox x:Name="IncludeBasePolicies" Content="Base Policies" IsChecked="True" />
-                <CheckBox x:Name="IncludeSupplementalPolicies" Content="Supplemental Policies" IsChecked="True" />
+
+                <Button>
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE71C;" />
+                            <TextBlock Text="Filter" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+
+                    <Button.Flyout>
+                        <MenuFlyout>
+
+                            <ToggleMenuFlyoutItem Text="Base Policies" x:Name="IncludeBasePolicies" IsChecked="True">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xEB41;" />
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+
+                            <ToggleMenuFlyoutItem Text="Supplemental Policies" x:Name="IncludeSupplementalPolicies" IsChecked="True">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xECC4;" />
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+
+                            <ToggleMenuFlyoutItem Text="System Policies" x:Name="IncludeSystemPolicies" IsChecked="False">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE770;" />
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+
+                            <ToggleMenuFlyoutItem Text="Automatic Policies" x:Name="IncludeAppControlManagerSupplementalPolicy" IsChecked="False">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xEC12;" />
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
 
                 <Button Name="RetrievePoliciesButton" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Retrieve the latest deployed policies on the system">
                     <Button.Content>

@@ -65,7 +65,7 @@ namespace AppControlManager.SiPolicy
             {
                 DtdProcessing = DtdProcessing.Prohibit, // Disable DTD processing to avoid external entity attacks
                 XmlResolver = null,                     // Prevent external entity resolution
-                Async = true                            // Enable asynchronous reading 
+                Async = true                            // Enable asynchronous reading
             };
 
 

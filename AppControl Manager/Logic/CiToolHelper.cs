@@ -210,6 +210,59 @@ namespace AppControlManager
 
 
 
+
+        /// <summary>
+        /// Removes multiple deployed App Control policy from the system
+        /// </summary>
+        /// <param name="policyIds">The GUIDs which are the policy IDs of the policies to be removed.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void RemovePolicy(List<string> policyIds)
+        {
+
+            foreach (string policyId in policyIds)
+            {
+
+                if (string.IsNullOrWhiteSpace(policyId))
+                {
+                    continue;
+                }
+
+                // Remove any curly brackets or double quotes from the policy ID
+                // They will be added automatically later by the method
+                string ID = policyId.Trim('"', '"');
+                ID = ID.Trim('{', '}');
+
+                // Combine the path to CiTool.exe using the system's special folder path
+                string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+
+                // Set up the process start info to run CiTool.exe with necessary arguments
+                ProcessStartInfo processStartInfo = new()
+                {
+                    FileName = ciToolPath,
+                    Arguments = $"--remove-policy \"{{{ID}}}\" -json",   // Arguments to remove an App Control policy
+                    RedirectStandardOutput = true, // Capture the standard output
+                    UseShellExecute = false,   // Do not use the OS shell to start the process
+                    CreateNoWindow = true      // Run the process without creating a window
+                };
+
+                // Start the process and capture the output
+                using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
+
+                // Read all output as a string
+                string jsonOutput = process.StandardOutput.ReadToEnd();
+
+                // Wait for the process to complete
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// Deploys a Code Integrity policy on the system by accepting the .CIP file path
         /// </summary>

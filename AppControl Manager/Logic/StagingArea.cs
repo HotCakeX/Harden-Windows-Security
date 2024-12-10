@@ -8,18 +8,18 @@ namespace AppControlManager
         /// <summary>
         /// Creating a directory as a staging area for a job and returns the path to that directory
         /// </summary>
-        /// <param name="cmdletName"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        internal static DirectoryInfo NewStagingArea(string cmdletName)
+        internal static DirectoryInfo NewStagingArea(string name)
         {
-            if (string.IsNullOrWhiteSpace(cmdletName))
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("CmdletName cannot be null or whitespace", nameof(cmdletName));
+                throw new ArgumentException("CmdletName cannot be null or whitespace", nameof(name));
             }
 
             // Define a staging area for the cmdlet
-            string stagingArea = Path.Combine(GlobalVars.StagingArea, cmdletName);
+            string stagingArea = Path.Combine(GlobalVars.StagingArea, name);
 
             // Delete it if it already exists with possible content from previous runs
             if (Directory.Exists(stagingArea))

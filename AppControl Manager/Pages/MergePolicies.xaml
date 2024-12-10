@@ -45,7 +45,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 <Span>
     Merge <Italic>App Control for Business</Italic>
         <Run Foreground="{ThemeResource SystemAccentColor}">policies</Run>
-    and deduplicate them. You can select <Bold>the same policy twice</Bold> in order to deduplicate its rules.   
+    and deduplicate them. You can select <Bold>the same policy twice</Bold> in order to deduplicate its rules.
 </Span>
                 </TextBlock>
 
@@ -100,7 +100,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                         <controls:SettingsCard Description="Browse for the path to the main policy XML file." IsClickEnabled="True"
                                Header="Select Main Policy" x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click" IsActionIconVisible="False">
-                            
+
                             <Button Content="Browse" x:Name="MainPolicyBrowseButton" Click="MainPolicyBrowseButton_Click">
 
                                 <Button.Flyout>

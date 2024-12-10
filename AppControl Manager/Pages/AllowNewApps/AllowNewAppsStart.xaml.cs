@@ -27,7 +27,7 @@ namespace AppControlManager.Pages
         private static string? selectedSupplementalPolicyName;
 
         // The user selected directories to scan
-        private readonly static List<string> selectedDirectoriesToScan = [];
+        private readonly static HashSet<string> selectedDirectoriesToScan = [];
 
         // The user selected deploy button status
         private bool deployPolicy = true;
@@ -387,7 +387,13 @@ namespace AppControlManager.Pages
                         // Get all of the AppControl compatible files from user selected directories
                         List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
 
+                        _ = DispatcherQueue.TryEnqueue(() =>
+                        {
+                            Step2InfoBar.Message = $"Scanning {DetectedFilesInSelectedDirectories.Count} files found in the selected directories";
 
+                            // Set the progress ring to no longer be indeterminate since file scan will take control of its value
+                            Step2ProgressRing.IsIndeterminate = false;
+                        });
 
                         // Scan all of the detected files from the user selected directories
                         HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, null, Step2ProgressRing);
@@ -417,6 +423,9 @@ namespace AppControlManager.Pages
 
                 Step2InfoBar.Message = "Scanning the event logs";
 
+                // Log scanning doesn't produce determinate real time progress so setting it as indeterminate
+                Step2ProgressRing.IsIndeterminate = true;
+
                 // Check for available logs
 
                 // Grab the App Control Logs
@@ -429,6 +438,9 @@ namespace AppControlManager.Pages
                         .Where(fileIdentity => fileIdentity.TimeCreated >= LogsScanStartTime)
                         .ToHashSet();
                 });
+
+
+                Step2InfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
 
                 // If any logs were generated since audit mode policy was deployed
                 if (Output.Count > 0)
@@ -488,6 +500,8 @@ namespace AppControlManager.Pages
         {
             try
             {
+
+                ResetStepsButton.IsEnabled = false;
 
                 ResetProgressRing.IsActive = true;
 
@@ -554,6 +568,7 @@ namespace AppControlManager.Pages
                 // Enable the step1 for new operation
                 EnableStep1();
                 ResetProgressRing.IsActive = false;
+                ResetStepsButton.IsEnabled = true;
             }
         }
 
@@ -582,6 +597,7 @@ namespace AppControlManager.Pages
         }
 
 
+
         private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
@@ -595,17 +611,24 @@ namespace AppControlManager.Pages
             }
         }
 
+
         private void BrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFolder = FileDialogHelper.ShowDirectoryPickerDialog();
+            List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-            if (!string.IsNullOrEmpty(selectedFolder))
+            if (selectedFolders is not null && selectedFolders.Count > 0)
             {
-                selectedDirectoriesToScan.Add(selectedFolder);
-
-                // Update the text box on the UI
-                SelectedDirectoriesTextBox.Text = string.Join(Environment.NewLine, selectedDirectoriesToScan);
+                // Add each folder to the HashSet of the selected directories
+                foreach (string folder in selectedFolders)
+                {
+                    // If the add was successful then display it on the UI too
+                    if (selectedDirectoriesToScan.Add(folder))
+                    {
+                        // Append the new folder to the TextBox, followed by a newline
+                        SelectedDirectoriesTextBox.Text += folder + Environment.NewLine;
+                    }
+                }
             }
         }
 

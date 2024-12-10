@@ -1,3 +1,5 @@
+using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -10,10 +12,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using WDACConfig.IntelGathering;
 
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
 
     public sealed partial class AllowNewAppsStart : Page
@@ -26,7 +27,7 @@ namespace WDACConfig.Pages
         private static string? selectedSupplementalPolicyName;
 
         // The user selected directories to scan
-        private readonly static List<string> selectedDirectoriesToScan = [];
+        private readonly static HashSet<string> selectedDirectoriesToScan = [];
 
         // The user selected deploy button status
         private bool deployPolicy = true;
@@ -227,7 +228,7 @@ namespace WDACConfig.Pages
                 AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
 
                 // Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
-                EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.NewGuid().ToString().Replace("-", "")}.cip");
+                EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID()}.cip");
 
                 Step1InfoBar.IsOpen = true;
                 Step1InfoBar.Message = "Deploying the selected policy in Audit mode, please wait";
@@ -331,6 +332,9 @@ namespace WDACConfig.Pages
                 GoToStep3Button.IsEnabled = false;
                 ResetStepsButton.IsEnabled = false;
 
+                // While the base policy is being deployed is audit mode, set the progress ring as indeterminate
+                Step2ProgressRing.IsIndeterminate = true;
+
                 // Enable the DataGrid pages so user can select the logs
                 AllowNewApps.Instance.EnableAllowNewAppsNavigationItem("LocalFiles");
                 AllowNewApps.Instance.EnableAllowNewAppsNavigationItem("EventLogs");
@@ -369,6 +373,9 @@ namespace WDACConfig.Pages
                         _ = DispatcherQueue.TryEnqueue(() =>
                         {
                             Step2InfoBar.Message = "Scanning the selected directories";
+
+                            // Set the progress ring to no longer be indeterminate since file scan will take control of its value
+                            Step2ProgressRing.IsIndeterminate = false;
                         });
 
 
@@ -380,8 +387,16 @@ namespace WDACConfig.Pages
                         // Get all of the AppControl compatible files from user selected directories
                         List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
 
+                        _ = DispatcherQueue.TryEnqueue(() =>
+                        {
+                            Step2InfoBar.Message = $"Scanning {DetectedFilesInSelectedDirectories.Count} files found in the selected directories";
+
+                            // Set the progress ring to no longer be indeterminate since file scan will take control of its value
+                            Step2ProgressRing.IsIndeterminate = false;
+                        });
+
                         // Scan all of the detected files from the user selected directories
-                        HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories);
+                        HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, null, Step2ProgressRing);
 
                         // Add the results of the directories scans to the DataGrid
                         foreach (FileIdentity item in LocalFilesResults)
@@ -408,6 +423,9 @@ namespace WDACConfig.Pages
 
                 Step2InfoBar.Message = "Scanning the event logs";
 
+                // Log scanning doesn't produce determinate real time progress so setting it as indeterminate
+                Step2ProgressRing.IsIndeterminate = true;
+
                 // Check for available logs
 
                 // Grab the App Control Logs
@@ -420,6 +438,9 @@ namespace WDACConfig.Pages
                         .Where(fileIdentity => fileIdentity.TimeCreated >= LogsScanStartTime)
                         .ToHashSet();
                 });
+
+
+                Step2InfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
 
                 // If any logs were generated since audit mode policy was deployed
                 if (Output.Count > 0)
@@ -479,6 +500,8 @@ namespace WDACConfig.Pages
         {
             try
             {
+
+                ResetStepsButton.IsEnabled = false;
 
                 ResetProgressRing.IsActive = true;
 
@@ -545,6 +568,7 @@ namespace WDACConfig.Pages
                 // Enable the step1 for new operation
                 EnableStep1();
                 ResetProgressRing.IsActive = false;
+                ResetStepsButton.IsEnabled = true;
             }
         }
 
@@ -573,6 +597,7 @@ namespace WDACConfig.Pages
         }
 
 
+
         private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
@@ -586,17 +611,24 @@ namespace WDACConfig.Pages
             }
         }
 
+
         private void BrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
         {
 
-            string? selectedFolder = FileDialogHelper.ShowDirectoryPickerDialog();
+            List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-            if (!string.IsNullOrEmpty(selectedFolder))
+            if (selectedFolders is not null && selectedFolders.Count > 0)
             {
-                selectedDirectoriesToScan.Add(selectedFolder);
-
-                // Update the text box on the UI
-                SelectedDirectoriesTextBox.Text = string.Join(Environment.NewLine, selectedDirectoriesToScan);
+                // Add each folder to the HashSet of the selected directories
+                foreach (string folder in selectedFolders)
+                {
+                    // If the add was successful then display it on the UI too
+                    if (selectedDirectoriesToScan.Add(folder))
+                    {
+                        // Append the new folder to the TextBox, followed by a newline
+                        SelectedDirectoriesTextBox.Text += folder + Environment.NewLine;
+                    }
+                }
             }
         }
 
@@ -665,6 +697,7 @@ namespace WDACConfig.Pages
                 ResetStepsButton.IsEnabled = false;
 
                 Step3InfoBar.IsOpen = true;
+                Step3InfoBar.Severity = InfoBarSeverity.Informational;
                 Step3InfoBar.Message = "Creating the policy using any available event logs or file scan results in other tabs.";
 
 

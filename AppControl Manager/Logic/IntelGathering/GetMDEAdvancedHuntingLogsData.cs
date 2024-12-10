@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal static class GetMDEAdvancedHuntingLogsData
     {
@@ -155,7 +155,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -265,7 +265,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -372,7 +372,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -477,7 +477,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list

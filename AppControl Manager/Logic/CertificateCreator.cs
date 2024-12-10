@@ -1,12 +1,13 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class CertificateGenerator
+    internal static class CertificateGenerator
     {
 
         /// <summary>
@@ -15,7 +16,7 @@ namespace WDACConfig
         /// </summary>
         /// <param name="CommonName"></param>
         /// <param name="Password"></param>
-        public static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize)
+        internal static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize)
         {
             // Paths for .cer and .pfx files
             string cerFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.cer");
@@ -67,13 +68,13 @@ namespace WDACConfig
 
 
         // Enum representing the applicable certificate stores
-        public enum CertificateStoreLocation
+        internal enum CertificateStoreLocation
         {
             User,
             Machine
         }
 
-        public static X509Certificate2 GenerateSelfSignedCertificate(
+        internal static X509Certificate2 GenerateSelfSignedCertificate(
             string subjectName,
             int validityInYears,
             int keySize,
@@ -279,7 +280,7 @@ namespace WDACConfig
         }
 
 
-        public static List<X509Certificate2> GetCertificatesFromPersonalStore(string subjectName)
+        internal static List<X509Certificate2> GetCertificatesFromPersonalStore(string subjectName)
         {
             List<X509Certificate2> matchingCertificates = [];
 

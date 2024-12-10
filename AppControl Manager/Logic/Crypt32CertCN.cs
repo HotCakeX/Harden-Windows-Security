@@ -1,12 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static partial class CryptoAPI
+    internal static partial class CryptoAPI
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringw
         [LibraryImport("crypt32.dll", EntryPoint = "CertGetNameStringW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         private static partial int CertGetNameString(
             IntPtr pCertContext, // The handle property of the certificate object
             int dwType,
@@ -17,9 +18,9 @@ namespace WDACConfig
         );
 
         // Define constants for the name types
-        public const int CERT_NAME_SIMPLE_DISPLAY_TYPE = 4; // Display type for simple names
-        public const int CERT_NAME_ATTR_TYPE = 3; // Display type for attributes
-        public const int CERT_NAME_ISSUER_FLAG = 0x1; // Flag indicating that the issuer name should be retrieved
+        internal const int CERT_NAME_SIMPLE_DISPLAY_TYPE = 4; // Display type for simple names
+        internal const int CERT_NAME_ATTR_TYPE = 3; // Display type for attributes
+        internal const int CERT_NAME_ISSUER_FLAG = 0x1; // Flag indicating that the issuer name should be retrieved
 
         /// <summary>
         /// The main method of the class to get the name string
@@ -29,7 +30,7 @@ namespace WDACConfig
         /// <param name="pvTypePara"></param>
         /// <param name="isIssuer"></param>
         /// <returns></returns>
-        public static string GetNameString(IntPtr pCertContext, int dwType, string? pvTypePara, bool isIssuer)
+        internal static string GetNameString(IntPtr pCertContext, int dwType, string? pvTypePara, bool isIssuer)
         {
             // Allocate a buffer for the name string
             const int bufferSize = 1024;

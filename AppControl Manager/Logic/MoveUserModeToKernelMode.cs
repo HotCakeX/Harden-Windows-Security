@@ -1,7 +1,8 @@
+using AppControlManager.Logging;
 using System;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static class MoveUserModeToKernelMode
     {
@@ -51,7 +52,7 @@ namespace WDACConfig
                         _ = newAllowedSigner.Attributes!.Append(newSignerIdAttr);
 
                         // Find the AllowedSigners node in SigningScenario 131
-                        XmlNode? allowedSigners131 = codeIntegrityPolicy.KMCI_SigningScenarioNode.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+                        XmlNode? allowedSigners131 = codeIntegrityPolicy.KMCI_SigningScenarioNode?.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
 
                         // If the AllowedSigners node exists in SigningScenario 131
                         if (allowedSigners131 is not null)

@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // the enum for CertificateType
     public enum CertificateType

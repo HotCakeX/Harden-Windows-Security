@@ -1,9 +1,10 @@
+using AppControlManager.Logging;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // Declares a public static class that cannot be instantiated.
     public static partial class MeowParser
@@ -12,6 +13,7 @@ namespace WDACConfig
         // P/Invoke declaration to import the 'BCryptOpenAlgorithmProvider' function from 'bcrypt.dll'.
         // https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
         [LibraryImport("bcrypt.dll", EntryPoint = "BCryptOpenAlgorithmProvider", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial int BCryptOpenAlgorithmProvider(
         out IntPtr phAlgorithm, // Output parameter to receive the handle of the cryptographic algorithm.
         string pszAlgId, // The algorithm identifier (e.g., AES, SHA256, etc.).
@@ -22,6 +24,7 @@ namespace WDACConfig
         // Releases the algorithm handle acquired by 'BCryptOpenAlgorithmProvider'.
         // https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
         [LibraryImport("bcrypt.dll", EntryPoint = "BCryptCloseAlgorithmProvider", SetLastError = true)]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static partial int BCryptCloseAlgorithmProvider(IntPtr hAlgorithm, uint dwFlags);
 
         // Defines a structure with sequential layout to match the native structure.

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WDACConfig.Pages.CreateSupplementalPolicy"
+    x:Class="AppControlManager.Pages.CreateSupplementalPolicy"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WDACConfig.Pages"
+    xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -98,8 +98,8 @@ Style="{StaticResource BodyTextBlockStyle}">
 
 
                         <TeachingTip x:Name="CreateSupplementalPolicyTeachingTip"
- Target="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton}">
-                        </TeachingTip>
+ Target="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton}" />
+
 
                     </controls:WrapPanel>
 
@@ -188,6 +188,42 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
 
                         </controls:SettingsCard>
 
+                        <controls:SettingsCard Description="The higher this number, the faster the scan completes and the more system resources will be consumed."
+                        Header="Scalability" IsClickEnabled="False" IsActionIconVisible="False">
+
+                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15">
+
+                                <!-- Scalability Button with RadialGauge Flyout -->
+                                <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.">
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel>
+                                                <controls:RadialGauge x:Name="ScalabilityRadialGauge"
+                                                    StepSize="1"
+                                                    TickSpacing="2"
+                                                    ScaleWidth="12"
+                                                    NeedleWidth="5"
+                                                    NeedleLength="80"
+                                                    TickLength="8"
+                                                    TickWidth="0"
+                                                    ScalePadding="0"
+                                                    TickPadding="24"
+                                                    Width="200"
+                                                    Maximum="120"
+                                                    Minimum="2"
+                                                    ValueChanged="ScalabilityRadialGauge_ValueChanged"
+                                                    ValueStringFormat="N0"/>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                                <ProgressBar x:Name="FilesAndFoldersProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
+
+                            </controls:WrapPanel>
+
+                        </controls:SettingsCard>
+
                         <controls:SettingsCard Description="View the details of all of the files that were detected in the file and folder paths you selected."
                                            Header="View detected file details"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
@@ -231,8 +267,7 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                         <ToggleButton x:Name="CertificatesPolicyDeployToggleButton" Click="CertificatesPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
 
                         <TeachingTip x:Name="CreateCertificateBasedSupplementalPolicyTeachingTip"
-                Target="{x:Bind CreateCertificatesSupplementalPolicyButton}">
-                        </TeachingTip>
+                Target="{x:Bind CreateCertificatesSupplementalPolicyButton}" />
 
                     </controls:WrapPanel>
 

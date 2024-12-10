@@ -1,3 +1,4 @@
+using AppControlManager.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -17,7 +18,7 @@ using Windows.Management.Deployment;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
 
     public sealed partial class Update : Page
@@ -32,9 +33,15 @@ namespace WDACConfig.Pages
         // Track whether hardened update procedure must be used
         private bool useHardenedUpdateProcedure;
 
+        // To determine whether to use the user-supplied MSIX path or continue with downloading the MSIX from GitHub
+        // It's changed by the UI toggle
         internal bool useCustomMSIXPath;
 
+        // The custom MSIX path that the user supplied
         internal string? customMSIXPath;
+
+        // Could be a URL or file path, will be used by Regex to detect version and architecture
+        private string? sourceForRegex;
 
         // A static instance of the Update class which will hold the single, shared instance of it
         private static Update? _instance;
@@ -66,15 +73,21 @@ namespace WDACConfig.Pages
                 UpdateStatusInfoBar.IsClosable = false;
                 CheckForUpdateButton.IsEnabled = false;
                 UpdateStatusInfoBar.IsOpen = true;
-                UpdateStatusInfoBar.Message = "Checking for update";
                 UpdateStatusInfoBar.Severity = InfoBarSeverity.Informational;
 
+                // variable to store the update results
+                UpdateCheckResponse? updateCheckResult = null;
 
-                // Check for update asynchronously using the AppUpdate class's singleton instance
-                UpdateCheckResponse updateCheckResult = await Task.Run(() => AppUpdate.Instance.Check());
+                // If user did not provide custom MSIX path, start checking for update
+                if (!useCustomMSIXPath)
+                {
+                    UpdateStatusInfoBar.Message = "Checking for update";
+                    // Check for update asynchronously using the AppUpdate class's singleton instance
+                    updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
+                }
 
                 // If a new version is available or user supplied a custom MSIX path to be installed
-                if (updateCheckResult.IsNewVersionAvailable || useCustomMSIXPath)
+                if ((updateCheckResult is not null && updateCheckResult.IsNewVersionAvailable) || useCustomMSIXPath)
                 {
                     string msg1;
 
@@ -84,7 +97,7 @@ namespace WDACConfig.Pages
                     }
                     else
                     {
-                        msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult.OnlineVersion}, updating the application...";
+                        msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult?.OnlineVersion}, updating the application...";
                     }
 
                     Logger.Write(msg1);
@@ -94,24 +107,32 @@ namespace WDACConfig.Pages
 
                     string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
 
-                    string onlineDownloadURL;
+                    // To store the latest MSIX version download link after retrieving it from GitHub text file
+                    Uri onlineDownloadURL;
 
+                    // Location of the MSIX package where it will be saved after download it from GitHub
+                    // Or in case user supplied a custom path, it will be assigned to this
                     string AppControlManagerSavePath;
 
                     DownloadProgressRingForMSIXFile.Visibility = Visibility.Visible;
 
+                    // If user did not supply a custom MSIX file path
                     if (!useCustomMSIXPath)
                     {
 
                         using (HttpClient client = new())
                         {
                             // Store the download link to the latest available version
-                            onlineDownloadURL = await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL);
+                            onlineDownloadURL = new Uri(await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
                         }
+
+                        // The Uri will be used to detect the version and architecture of the MSIX package being installed
+                        sourceForRegex = onlineDownloadURL.ToString();
 
                         AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msix");
 
                         UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
+
 
                         using (HttpClient client = new())
                         {
@@ -181,7 +202,10 @@ namespace WDACConfig.Pages
 
                     else
                     {
-                        onlineDownloadURL = customMSIXPath ?? throw new InvalidOperationException("No MSIX path was selected");
+                        // Use the user-supplied MSIX file path to detect the version and architecture
+                        sourceForRegex = customMSIXPath ?? throw new InvalidOperationException("No MSIX path was selected");
+
+                        // Use the user-supplied MSIX file path for installation source
                         AppControlManagerSavePath = customMSIXPath;
                     }
 
@@ -198,7 +222,7 @@ namespace WDACConfig.Pages
                     await Task.Run(() =>
                     {
                         // Random password to temporarily encrypt the private key of the newly generated certificate
-                        string PassWord = Guid.NewGuid().ToString().Replace("-", "");
+                        string PassWord = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID();
 
                         // Common name of the certificate
                         string commonName = "SelfSignedCertForAppControlManager";
@@ -221,8 +245,8 @@ namespace WDACConfig.Pages
                         UserProtectedPrivateKey: useHardenedUpdateProcedure,
                         ExportablePrivateKey: false);
 
-                        // Get the version and architecture of the installing MSIX package app from the provided file path
-                        Match RegexMatch = regex.Match(onlineDownloadURL);
+                        // Get the version and architecture of the installing MSIX package app
+                        Match RegexMatch = regex.Match(sourceForRegex);
 
                         string InstallingAppVersion;
                         string InstallingAppArchitecture;

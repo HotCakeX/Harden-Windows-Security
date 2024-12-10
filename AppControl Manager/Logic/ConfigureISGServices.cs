@@ -1,13 +1,36 @@
-﻿namespace WDACConfig
+﻿using AppControlManager.Logging;
+
+namespace AppControlManager
 {
-    public static class ConfigureISGServices
+    internal static class ConfigureISGServices
     {
         /// <summary>
-        /// Starts the AppIdTel and sets the appidsvc service to auto start
+        /// Starts the AppIdTel and sets the AppIDSvc service to auto start
         /// </summary>
-        public static void Configure()
+        internal static void Configure()
         {
             Logger.Write("Configuring and starting the required ISG related services");
+
+
+            /*
+
+            // Start the AppID Service
+            using ServiceController AppIDService = new("AppIDSvc");
+
+            if (AppIDService.Status is not ServiceControllerStatus.Running)
+            {
+                Logger.Write("Starting the AppIDSvc service...");
+                AppIDService.Start();
+                AppIDService.WaitForStatus(ServiceControllerStatus.Running);
+                Logger.Write("Service started successfully.");
+            }
+            else
+            {
+                Logger.Write("AppIDSvc Service is already running.");
+            }
+
+            */
+
 
             ProcessStarter.RunCommand("appidtel.exe", "start");
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     internal static class GetEventLogsData
     {
@@ -281,7 +282,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -472,7 +473,7 @@ namespace WDACConfig.IntelGathering
                     }
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
                     // Add the populated EventData instance to the list
                     _ = fileIdentities.Add(eventData);
@@ -721,7 +722,7 @@ namespace WDACConfig.IntelGathering
 
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
                     // Add the entire event package to the output list
@@ -882,7 +883,7 @@ namespace WDACConfig.IntelGathering
                     }
 
                     // Set the SignatureStatus based on the number of signers
-                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.Signed : SignatureStatus.Unsigned;
+                    eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
                     // Add the populated EventData instance to the list
                     _ = fileIdentities.Add(eventData);

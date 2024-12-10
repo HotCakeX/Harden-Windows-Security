@@ -1,3 +1,4 @@
+using AppControlManager.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     // Class to represent a policy with various attributes
     public sealed class CiPolicyInfo
@@ -76,7 +77,7 @@ namespace WDACConfig
 
 
         /// <summary>
-        /// Gets a list of WDAC policies on the system with filtering
+        /// Gets a list of App Control policies on the system with filtering
         /// </summary>
         /// <param name="SystemPolicies">Will include System policies in the output</param>
         /// <param name="BasePolicies">Will include Base policies in the output</param>
@@ -163,7 +164,7 @@ namespace WDACConfig
 
 
         /// <summary>
-        /// Removes a deployed WDAC policy from the system
+        /// Removes a deployed App Control policy from the system
         /// </summary>
         /// <param name="policyId">The GUID which is the policy ID of the policy to be removed.</param>
         /// <exception cref="ArgumentException"></exception>
@@ -186,7 +187,7 @@ namespace WDACConfig
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a WDAC policy
+                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove an App Control policy
                 RedirectStandardOutput = true, // Capture the standard output
                 UseShellExecute = false,   // Do not use the OS shell to start the process
                 CreateNoWindow = true      // Run the process without creating a window
@@ -204,6 +205,59 @@ namespace WDACConfig
             if (process.ExitCode != 0)
             {
                 throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// Removes multiple deployed App Control policy from the system
+        /// </summary>
+        /// <param name="policyIds">The GUIDs which are the policy IDs of the policies to be removed.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void RemovePolicy(List<string> policyIds)
+        {
+
+            foreach (string policyId in policyIds)
+            {
+
+                if (string.IsNullOrWhiteSpace(policyId))
+                {
+                    continue;
+                }
+
+                // Remove any curly brackets or double quotes from the policy ID
+                // They will be added automatically later by the method
+                string ID = policyId.Trim('"', '"');
+                ID = ID.Trim('{', '}');
+
+                // Combine the path to CiTool.exe using the system's special folder path
+                string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+
+                // Set up the process start info to run CiTool.exe with necessary arguments
+                ProcessStartInfo processStartInfo = new()
+                {
+                    FileName = ciToolPath,
+                    Arguments = $"--remove-policy \"{{{ID}}}\" -json",   // Arguments to remove an App Control policy
+                    RedirectStandardOutput = true, // Capture the standard output
+                    UseShellExecute = false,   // Do not use the OS shell to start the process
+                    CreateNoWindow = true      // Run the process without creating a window
+                };
+
+                // Start the process and capture the output
+                using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
+
+                // Read all output as a string
+                string jsonOutput = process.StandardOutput.ReadToEnd();
+
+                // Wait for the process to complete
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+                }
             }
         }
 
@@ -237,7 +291,7 @@ namespace WDACConfig
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the WDAC policy
+                Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the App Control policy
                 RedirectStandardOutput = true, // Capture the standard output
                 UseShellExecute = false,   // Do not use the OS shell to start the process
                 CreateNoWindow = true      // Run the process without creating a window
@@ -272,7 +326,7 @@ namespace WDACConfig
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = "--refresh -json",  // Arguments to refresh WDAC policies
+                Arguments = "--refresh -json",  // Arguments to refresh App Control policies
                 RedirectStandardOutput = true,  // Capture the standard output
                 UseShellExecute = false,        // Do not use the OS shell to start the process
                 CreateNoWindow = true           // Run the process without creating a window

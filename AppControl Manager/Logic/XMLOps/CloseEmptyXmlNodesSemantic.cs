@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal static class CloseEmptyXmlNodesSemantic
     {
@@ -43,7 +43,7 @@ namespace WDACConfig
         {
             // Define the base node names that should not be removed even if empty
             string[] baseNodeNames = [ "SiPolicy", "Rules", "EKUs", "FileRules", "Signers", "SigningScenarios",
-                                   "UpdatePolicySigners", "CiSigners", "HvciOptions", "BasePolicyID", "PolicyID" ];
+                            "UpdatePolicySigners", "CiSigners", "HvciOptions", "BasePolicyID", "PolicyID" ];
 
             // Load the XML file
             XmlDocument xmlDoc = new();
@@ -59,25 +59,22 @@ namespace WDACConfig
         // Helper method to recursively close empty XML nodes
         private static void CloseEmptyNodesRecursively(XmlElement xmlNode, string[] baseNodeNames)
         {
-            // Iterate through child nodes
-            foreach (XmlNode childNode in xmlNode.ChildNodes)
+            // Iterate through child nodes in reverse to avoid modifying collection while iterating
+            for (int i = xmlNode.ChildNodes.Count - 1; i >= 0; i--)
             {
-                if (childNode is XmlElement childElement)
+                if (xmlNode.ChildNodes[i] is XmlElement childElement)
                 {
-                    // Recursively close empty child nodes
+                    // Recursively close empty child nodes first
                     CloseEmptyNodesRecursively(childElement, baseNodeNames);
 
-                    // Check if the node is empty
-                    if (!childElement.HasChildNodes && !childElement.HasAttributes)
+                    // Check if the node is empty (no children, no attributes, no inner text)
+                    bool isEmpty = !childElement.HasChildNodes && !childElement.HasAttributes && string.IsNullOrWhiteSpace(childElement.InnerText);
+
+                    if (isEmpty)
                     {
-                        // Check if it's a base node
-                        if (Array.Exists(baseNodeNames, baseNodeName => baseNodeName.Equals(childElement.LocalName, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            // Self-close it
-                            childElement.IsEmpty = true;
-                        }
-                        // Special case for ProductSigners because it's a required node inside each SigningScenario but can't be empty
-                        else if (childElement.LocalName.Equals("ProductSigners", StringComparison.OrdinalIgnoreCase))
+                        // Check if it's a base node or the special case "ProductSigners"
+                        if (Array.Exists(baseNodeNames, baseNodeName => baseNodeName.Equals(childElement.LocalName, StringComparison.OrdinalIgnoreCase)) ||
+                            childElement.LocalName.Equals("ProductSigners", StringComparison.OrdinalIgnoreCase))
                         {
                             // Self-close it
                             childElement.IsEmpty = true;

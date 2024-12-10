@@ -15,7 +15,7 @@ using Windows.ApplicationModel;
            }
 */
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public class PackageDetails
     {
@@ -79,7 +79,7 @@ namespace WDACConfig
                 Id_Publisher = SafeGet(() => package.Id.Publisher),
                 Id_PublisherId = SafeGet(() => package.Id.PublisherId),
                 Id_ResourceId = SafeGet(() => package.Id.ResourceId),
-                Id_Architecture = SafeGet(() => package.Id.Architecture.ToString()),
+                Id_Architecture = SafeGet(package.Id.Architecture.ToString),
                 Id_Version = SafeGet(() => $"{package.Id.Version.Major}.{package.Id.Version.Minor}.{package.Id.Version.Build}.{package.Id.Version.Revision}"),
 
                 // Storage and Installation Information
@@ -96,7 +96,7 @@ namespace WDACConfig
 
         private static IEnumerable<string> GetDependencyFullNames(IReadOnlyList<Package> dependencies)
         {
-            foreach (var dependency in dependencies)
+            foreach (Package dependency in dependencies)
             {
                 yield return dependency.Id.FullName;
             }

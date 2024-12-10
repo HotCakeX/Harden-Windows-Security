@@ -1,8 +1,9 @@
-﻿using System;
+﻿using AppControlManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     internal static class NewPublisherLevelRules
     {
@@ -40,7 +41,7 @@ namespace WDACConfig
 
             // Find AllowedSigners node in each ProductSigners node
             XmlNode? UMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
-            XmlNode? KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
 
             // Check if AllowedSigners node exists, if not, create it
             if (UMCI_ProductSigners_AllowedSigners_Node is null)
@@ -60,8 +61,8 @@ namespace WDACConfig
             if (KMCI_ProductSigners_AllowedSigners_Node is null)
             {
                 XmlElement KMCI_AllowedSignersNew = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigners", codeIntegrityPolicy.NameSpaceURI);
-                _ = codeIntegrityPolicy.KMCI_ProductSignersNode.AppendChild(KMCI_AllowedSignersNew);
-                KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+                _ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_AllowedSignersNew);
+                KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
             }
 
             if (KMCI_ProductSigners_AllowedSigners_Node is null)
@@ -81,7 +82,7 @@ namespace WDACConfig
                 foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
                 {
 
-                    string guid = Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase).ToUpperInvariant();
+                    string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
 
                     string SignerID = $"ID_SIGNER_B_{guid}";
 

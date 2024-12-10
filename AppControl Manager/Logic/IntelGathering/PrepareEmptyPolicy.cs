@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using AppControlManager.Logging;
+using System.IO;
 
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     public static class PrepareEmptyPolicy
     {

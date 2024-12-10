@@ -1,9 +1,10 @@
+using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using System.Collections.Generic;
-using WDACConfig.IntelGathering;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class SignerAndHashBuilder
+    internal static class SignerAndHashBuilder
     {
         /// <summary>
         /// Creates Signer and Hash objects from the input data
@@ -29,7 +30,7 @@ namespace WDACConfig
         /// If the file is missing the Issuer TBS hash, then the Publisher certificate will be used for both Publisher and Issuer details (TBS and Name)
         /// This will essentially create the Signers based on LeafCertificate Level.
         ///
-        /// The New-NewFilePublisherLevelRules class and NewPublisherLevelRules class both are able to create rules based on different signer WDAC levels.
+        /// The New-NewFilePublisherLevelRules class and NewPublisherLevelRules class both are able to create rules based on different signer App Control levels.
         ///
         /// The other way around, where Publisher TBS hash is missing but Issuer TBS is present, would create a PCACertificate level Signer, but that is not implemented yet.
         /// Its use case is not clear yet and there haven't been any files with that condition yet. <summary>
@@ -39,7 +40,7 @@ namespace WDACConfig
         /// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
         /// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
         /// <returns></returns>
-        public static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false)
+        internal static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false)
         {
             // To store the Signers created with FilePublisher Level
             List<FilePublisherSignerCreator> filePublisherSigners = [];
@@ -79,7 +80,7 @@ namespace WDACConfig
                     {
                         // If the current data is signed and publisherToHash is not used, which would indicate Hash level rules must be created for Publisher level data
                         // And make sure the file is not ECC Signed
-                        if (item.SignatureStatus is SignatureStatus.Signed && !publisherToHash && item.IsECCSigned != true)
+                        if (item.SignatureStatus is SignatureStatus.IsSigned && !publisherToHash && item.IsECCSigned != true)
                         {
                             signedPublisherData.Add(item);
                         }
@@ -102,7 +103,7 @@ namespace WDACConfig
                     {
                         // If the file's version is empty or it has no file attribute, then add it to the Publishers array
                         // because FilePublisher rule cannot be created for it
-                        if (item.SignatureStatus is SignatureStatus.Signed && item.IsECCSigned != true)
+                        if (item.SignatureStatus is SignatureStatus.IsSigned && item.IsECCSigned != true)
                         {
                             // Get values from the item and check for null, empty or whitespace
                             bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&

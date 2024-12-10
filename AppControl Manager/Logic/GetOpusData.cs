@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     public static partial class Opus
     {
@@ -13,11 +13,12 @@ namespace WDACConfig
 
             // More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
             [LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+            [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
             [return: MarshalAs(UnmanagedType.Bool)]
             internal static partial bool CryptDecodeObject(
                 uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
                 IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
-               [In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
+                [In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
                 uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
                 uint dwFlags,                   // Flags that modify the behavior of the function
                 IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure
@@ -56,7 +57,7 @@ namespace WDACConfig
                 foreach (CryptographicAttributeObject signedAttribute in signerInfo.SignedAttributes)
                 {
                     // Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
-                    if (string.Equals(signedAttribute.Oid.Value, Opus.SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(signedAttribute.Oid.Value, SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
                     {
                         // Initializing pcbStructInfo to 0
                         uint pcbStructInfo = 0;
@@ -68,7 +69,7 @@ namespace WDACConfig
                             AsnEncodedData asnEncodedData = signedAttribute.Values[0];  // Retrieving the first value from the signed attribute's Values collection
 
                             // Decoding ASN.1-encoded data using CryptDecodeObject
-                            if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)Opus.SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
+                            if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
                             {
                                 // If CryptDecodeObject fails, ignore
                             }
@@ -78,7 +79,7 @@ namespace WDACConfig
                                 decodedDataPtr = Marshal.AllocCoTaskMem((int)pcbStructInfo);
 
                                 // Decoding ASN.1-encoded data again into decodedDataPtr
-                                if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)Opus.SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
+                                if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
                                 {
                                     // If CryptDecodeObject fails, ignore
                                 }

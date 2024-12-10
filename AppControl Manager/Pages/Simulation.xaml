@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WDACConfig.Pages.Simulation"
+    x:Class="AppControlManager.Pages.Simulation"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WDACConfig.Pages"
-    xmlns:localbase="using:WDACConfig"
-    xmlns:wdac="using:WDACConfig"
+    xmlns:local="using:AppControlManager.Pages"
+    xmlns:localbase="using:AppControlManager"
+    xmlns:AppControlManager="using:AppControlManager"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -117,7 +117,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                             <MenuFlyoutSeparator/>
 
                             <!-- Toggle Button for CSV Output -->
-                            <ToggleMenuFlyoutItem x:Name="CSVOutputToggle" Text="Save output to CSV" IsChecked="False" ToolTipService.ToolTip="Exports the output to a CSV file in the WDACConfig directory in the Program Files directory at the end of the simulation job.">
+                            <ToggleMenuFlyoutItem x:Name="CSVOutputToggle" Text="Save output to CSV" IsChecked="False" ToolTipService.ToolTip="Exports the output to a CSV file in the AppControlManager directory in the Program Files directory at the end of the simulation job.">
                                 <ToggleMenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE9F9;" />
                                 </ToggleMenuFlyoutItem.Icon>

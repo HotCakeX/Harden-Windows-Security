@@ -1,5 +1,5 @@
 ﻿
-namespace WDACConfig.IntelGathering
+namespace AppControlManager.IntelGathering
 {
     // Define a public class to store the structure of the new CSV data
     public sealed class MDEAdvancedHuntingData

@@ -1,4 +1,5 @@
 using AnimatedVisuals;
+using AppControlManager.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
@@ -12,7 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Graphics;
 
-namespace WDACConfig
+namespace AppControlManager
 {
 
     public sealed partial class MainWindow : Window
@@ -46,7 +47,8 @@ namespace WDACConfig
             { typeof(Pages.BuildNewCertificate), "Build New Certificate" },
             { typeof(Pages.UpdatePageCustomMSIXPath), "Custom MSIX Path" }, // sub-page
             { typeof(Pages.CreateSupplementalPolicy), "Create Supplemental Policy" },
-            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" } // sub-page
+            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" }, // sub-page
+            { typeof(Pages.MergePolicies), "Merge App Control Policies" }
         };
 
 
@@ -138,16 +140,16 @@ namespace WDACConfig
 
 
             // Set the initial background setting based on the user's settings
-            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground));
+            OnNavigationBackgroundChanged(null, new(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground)));
 
             // Set the initial BackDrop setting based on the user's settings
-            OnBackgroundChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground));
+            OnBackgroundChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground)));
 
             // Set the initial App Theme based on the user's settings
-            OnAppThemeChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme));
+            OnAppThemeChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme)));
 
             // Set the initial Icons styles abased on the user's settings
-            OnIconsStylesChanged(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle));
+            OnIconsStylesChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle)));
 
             // Restore window size on startup
             RestoreWindowSize();
@@ -237,8 +239,9 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for the global Icons Style change event
         /// </summary>
-        /// <param name="newIconsStyle"></param>
-        private void OnIconsStylesChanged(string? newIconsStyle)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnIconsStylesChanged(object? sender, IconsStyleChangedEventArgs e)
         {
 
             // Get the current theme
@@ -246,7 +249,7 @@ namespace WDACConfig
 
 
             // Set the Icons Style
-            switch (newIconsStyle)
+            switch (e.NewIconsStyle)
             {
                 case "Animated":
                     {
@@ -385,6 +388,13 @@ namespace WDACConfig
                             Source = new SupplementalPolicy()
                         };
 
+                        // Merge App Control Policies
+                        MergePoliciesNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -9, -9, -9),
+                            Source = new Merge()
+                        };
+
                         break;
                     }
                 case "Windows Accent":
@@ -504,6 +514,13 @@ namespace WDACConfig
                             Foreground = accentBrush
                         };
 
+                        // Merge App Control Policies
+                        MergePoliciesNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEE49",
+                            Foreground = accentBrush
+                        };
+
                         break;
                     }
 
@@ -608,6 +625,12 @@ namespace WDACConfig
                             Glyph = "\uE8F9"
                         };
 
+                        // Merge App Control Policies
+                        MergePoliciesNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEE49"
+                        };
+
                         break;
                     }
             };
@@ -620,11 +643,12 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for the global NavigationView location change event
         /// </summary>
-        /// <param name="newLocation"></param>
-        private void OnNavigationViewLocationChanged(string newLocation)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnNavigationViewLocationChanged(object? sender, NavigationViewLocationChangedEventArgs e)
         {
             // Set the NavigationView's location based on the event
-            switch (newLocation)
+            switch (e.NewLocation)
             {
                 case "Left":
                     {
@@ -659,8 +683,9 @@ namespace WDACConfig
         /// Changing it during runtime is not possible without trigger a theme change: Light/Dark.
         /// Application.RequestedTheme is read-only, so we us RootGrid which is the origin of all other elements.
         /// </summary>
-        /// <param name="isBackgroundOn"></param>
-        private void OnNavigationBackgroundChanged(bool isBackgroundOn)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnNavigationBackgroundChanged(object? sender, NavigationBackgroundChangedEventArgs e)
         {
             // Get the current theme
             ElementTheme currentTheme = RootGrid.ActualTheme;
@@ -672,7 +697,7 @@ namespace WDACConfig
             RootGrid.RequestedTheme = oppositeTheme;
 
             // Perform NavigationView background changes based on the settings' page's button
-            if (isBackgroundOn)
+            if (e.IsBackgroundOn)
             {
                 MainNavigation.Resources["NavigationViewContentBackground"] = new SolidColorBrush(Colors.Transparent);
             }
@@ -692,12 +717,14 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for the global BackgroundChanged event. When user selects a different background for the app, this will be triggered.
         /// </summary>
-        /// <param name="selectedBackdrop"></param>
-        private void OnBackgroundChanged(string? selectedBackdrop)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnBackgroundChanged(object? sender, BackgroundChangedEventArgs e)
         {
+
             // Update the SystemBackdrop based on the selected background
             // The Default is set in the XAML
-            switch (selectedBackdrop)
+            switch (e.NewBackground)
             {
                 case "MicaAlt":
                     this.SystemBackdrop = new MicaBackdrop { Kind = MicaKind.BaseAlt };
@@ -719,9 +746,11 @@ namespace WDACConfig
         /// Event handler for the global AppThemeChanged event
         /// Also changes the AnimatedIcons based on the theme to maintain their accessibility
         /// </summary>
-        /// <param name="newTheme"></param>
-        private void OnAppThemeChanged(string? newTheme)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
         {
+
 
             // Get the current system color mode
             // UISettings uiSettings = new();
@@ -739,7 +768,7 @@ namespace WDACConfig
             // Set the requested theme based on the event
             // If "Use System Setting" is used, the current system color mode will be assigned which can be either light/dark
             // Also performs animated icon switch based on theme
-            switch (newTheme)
+            switch (e.NewTheme)
             {
                 case "Light":
                     {
@@ -747,7 +776,7 @@ namespace WDACConfig
                         RootGrid.RequestedTheme = ElementTheme.Light;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -772,7 +801,7 @@ namespace WDACConfig
                         RootGrid.RequestedTheme = ElementTheme.Dark;
 
                         // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                         {
 
                             AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -801,7 +830,7 @@ namespace WDACConfig
                         if (currentColorMode is ElementTheme.Dark)
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -822,7 +851,7 @@ namespace WDACConfig
                         else
                         {
                             // Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
                             {
 
                                 AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -1009,6 +1038,9 @@ namespace WDACConfig
                 case "CreateSupplementalPolicyFilesAndFoldersScanResults":
                     NavView_Navigate(typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), transitionInfo); // Sub-Page
                     break;
+                case "MergePolicies":
+                    NavView_Navigate(typeof(Pages.MergePolicies), transitionInfo);
+                    break;
                 default:
                     break;
             }
@@ -1038,7 +1070,7 @@ namespace WDACConfig
             Type preNavPageType = ContentFrame.CurrentSourcePageType;
 
             // Only navigate if the selected page isn't currently loaded.
-            if (navPageType is not null && !Type.Equals(preNavPageType, navPageType))
+            if (navPageType is not null && !Equals(preNavPageType, navPageType))
             {
 
                 // Play sound
@@ -1080,7 +1112,7 @@ namespace WDACConfig
                 Type preNavPageType = ContentFrame.CurrentSourcePageType;
 
                 // Extract the navigation item content from the dictionary
-                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out var item);
+                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out string? item);
 
                 // Set the correct header after back navigation has been completed
                 MainNavigation.Header = item;

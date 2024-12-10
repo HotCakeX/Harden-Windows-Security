@@ -1,17 +1,23 @@
 ﻿using System;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class ThemeManager
+    // Custom EventArgs class for the event
+    internal sealed class BackgroundChangedEventArgs(string? newBackground) : EventArgs
+    {
+        internal string? NewBackground { get; } = newBackground;
+    }
+
+    internal static class ThemeManager
     {
         // The static event for background changes
         // MainWindow listens to this to set the app theme
-        public static event Action<string>? BackDropChanged;
+        internal static event EventHandler<BackgroundChangedEventArgs>? BackDropChanged;
 
         // Method to raise the event when the background is changed
-        public static void OnBackgroundChanged(string newBackground)
+        internal static void OnBackgroundChanged(string newBackground)
         {
-            BackDropChanged?.Invoke(newBackground);
+            BackDropChanged?.Invoke(null, new BackgroundChangedEventArgs(newBackground));
         }
     }
 }

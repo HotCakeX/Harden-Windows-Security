@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class XmlFilePathExtractor
+    internal static class XmlFilePathExtractor
     {
-        public static HashSet<string> GetFilePaths(string xmlFilePath)
+        internal static HashSet<string> GetFilePaths(string xmlFilePath)
         {
             // Initialize HashSet with StringComparer.OrdinalIgnoreCase to ensure case-insensitive, ordinal comparison
             HashSet<string> filePaths = new(StringComparer.OrdinalIgnoreCase);

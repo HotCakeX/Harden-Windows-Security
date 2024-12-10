@@ -1,16 +1,26 @@
 ﻿using System;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class SoundManager
+    // Custom EventArgs class for sound setting changes
+    internal sealed class SoundSettingChangedEventArgs(bool isSoundOn) : EventArgs
+    {
+        internal bool IsSoundOn { get; } = isSoundOn;
+    }
+
+    internal static class SoundManager
     {
         // Event to notify when the sound setting is changed
-        public static event Action<bool>? SoundSettingChanged;
+        internal static event EventHandler<SoundSettingChangedEventArgs>? SoundSettingChanged;
 
         // Method to invoke the event
-        public static void OnSoundSettingChanged(bool isSoundOn)
+        internal static void OnSoundSettingChanged(bool isSoundOn)
         {
-            SoundSettingChanged?.Invoke(isSoundOn);
+            // Raise the SoundSettingChanged event with the new sound setting status
+            SoundSettingChanged?.Invoke(
+                null,
+                new SoundSettingChangedEventArgs(isSoundOn)
+            );
         }
     }
 }

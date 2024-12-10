@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace WDACConfig
+namespace AppControlManager
 {
-    public static class NewCertificateSignerRules
+    internal static class NewCertificateSignerRules
     {
         /// <summary>
         /// Creates new Signer rules for Certificates, in the XML file
@@ -13,7 +13,7 @@ namespace WDACConfig
         /// </summary>
         /// <param name="xmlFilePath"></param>
         /// <param name="signerData"></param>
-        public static void Create(string xmlFilePath, List<CertificateSignerCreator> signerData)
+        internal static void Create(string xmlFilePath, List<CertificateSignerCreator> signerData)
         {
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
@@ -28,7 +28,7 @@ namespace WDACConfig
 
             // Find AllowedSigners node in each ProductSigners node
             XmlNode? UMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
-            XmlNode? KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
 
             // Check if AllowedSigners node exists, if not, create it
             if (UMCI_ProductSigners_AllowedSigners_Node is null)
@@ -48,8 +48,8 @@ namespace WDACConfig
             if (KMCI_ProductSigners_AllowedSigners_Node is null)
             {
                 XmlElement KMCI_AllowedSignersNew = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigners", codeIntegrityPolicy.NameSpaceURI);
-                _ = codeIntegrityPolicy.KMCI_ProductSignersNode.AppendChild(KMCI_AllowedSignersNew);
-                KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+                _ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_AllowedSignersNew);
+                KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
             }
 
             if (KMCI_ProductSigners_AllowedSigners_Node is null)
@@ -62,7 +62,7 @@ namespace WDACConfig
             foreach (CertificateSignerCreator signer in signerData)
             {
                 // Create a unique ID for the Signer element
-                string guid = Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase).ToUpperInvariant();
+                string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
 
                 string SignerID = $"ID_SIGNER_R_{guid}";
 

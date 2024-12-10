@@ -1,3 +1,5 @@
+using AppControlManager.Logging;
+using AppControlManager.SiPolicy;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -10,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     public sealed partial class ViewCurrentPolicies : Page
     {
@@ -22,6 +24,9 @@ namespace WDACConfig.Pages
 
         // Keep track of the currently selected policy
         private CiPolicyInfo? selectedPolicy;
+
+        // Name of the special automatic supplemental policy
+        private const string AppControlPolicyName = "AppControlManagerSupplementalPolicy";
 
         public ViewCurrentPolicies()
         {
@@ -37,9 +42,24 @@ namespace WDACConfig.Pages
             AllPoliciesOutput = [];
         }
 
-        // Event handler for the RetrievePoliciesButton click
-        private async void RetrievePoliciesButton_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// Event handler for the RetrievePoliciesButton click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RetrievePoliciesButton_Click(object sender, RoutedEventArgs e)
         {
+            RetrievePolicies();
+        }
+
+
+        /// <summary>
+        /// Helper method to retrieve the policies from the system
+        /// </summary>
+        private async void RetrievePolicies()
+        {
+
             try
             {
 
@@ -47,42 +67,53 @@ namespace WDACConfig.Pages
                 RetrievePoliciesButton.IsEnabled = false;
 
                 // Clear the policies before getting and showing the new ones
+                // They also set the "SelectedItem" property of the DataGrid to null
                 AllPolicies.Clear();
                 AllPoliciesOutput.Clear();
 
                 // The checkboxes belong to the UI thread so can't use their bool value directly on the Task.Run's thread
-                bool ShouldIncludeSystem = IncludeSystemPolicies.IsChecked ?? false;
-                bool ShouldIncludeBase = IncludeBasePolicies.IsChecked ?? false;
-                bool ShouldIncludeSupplemental = IncludeSupplementalPolicies.IsChecked ?? false;
+                bool ShouldIncludeSystem = IncludeSystemPolicies.IsChecked;
+                bool ShouldIncludeBase = IncludeBasePolicies.IsChecked;
+                bool ShouldIncludeSupplemental = IncludeSupplementalPolicies.IsChecked;
+                bool ShouldIncludeAppControlManagerSupplementalPolicy = IncludeAppControlManagerSupplementalPolicy.IsChecked;
 
-                // Run the GetPolicies method asynchronously
-                List<CiPolicyInfo> policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental));
+                List<CiPolicyInfo> policies = [];
+
+                // Check if the AppControlManagerSupplementalPolicy checkbox is checked, if it is, show the automatic policy
+                if (ShouldIncludeAppControlManagerSupplementalPolicy)
+                {
+                    // Run the GetPolicies method asynchronously
+                    policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental));
+                }
+                // Filter out the AppControlManagerSupplementalPolicy automatic policies from the list
+                else
+                {
+                    // Run the GetPolicies method asynchronously
+                    policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
+                }
 
                 // Store all of the policies in the ObservableCollection
                 foreach (CiPolicyInfo policy in policies)
                 {
-                    CiPolicyInfo pol = new()
+                    CiPolicyInfo temp = new()
                     {
                         PolicyID = policy.PolicyID,
                         BasePolicyID = policy.BasePolicyID,
                         FriendlyName = policy.FriendlyName,
                         Version = policy.Version,
-                        IsAuthorized = policy.IsAuthorized,
-                        IsEnforced = policy.IsEnforced,
-                        IsOnDisk = policy.IsOnDisk,
-                        IsSignedPolicy = policy.IsSignedPolicy,
+                        VersionString = policy.VersionString,
                         IsSystemPolicy = policy.IsSystemPolicy,
+                        IsSignedPolicy = policy.IsSignedPolicy,
+                        IsOnDisk = policy.IsOnDisk,
+                        IsEnforced = policy.IsEnforced,
+                        IsAuthorized = policy.IsAuthorized,
                         PolicyOptions = policy.PolicyOptions
                     };
 
-                    // Add to the list
-                    AllPoliciesOutput.Add(pol);
+                    // Add the retrieved policies to the list in class instance
+                    AllPoliciesOutput.Add(temp);
 
-                    // Add to the ObservableCollection bound to the UI
-                    _ = DispatcherQueue.TryEnqueue(() =>
-                    {
-                        AllPolicies.Add(pol);
-                    });
+                    AllPolicies.Add(temp);
                 }
 
                 // Update the UI once the task completes
@@ -99,7 +130,12 @@ namespace WDACConfig.Pages
         }
 
 
-        // Event handler for the search box text change
+
+        /// <summary>
+        /// Event handler for the search box text change
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchTerm = SearchBox.Text.Trim().ToLowerInvariant();
@@ -118,6 +154,7 @@ namespace WDACConfig.Pages
 
             // Update the ObservableCollection on the UI thread with the filtered results
             AllPolicies.Clear();
+
             foreach (CiPolicyInfo result in filteredResults)
             {
                 AllPolicies.Add(result);
@@ -128,15 +165,34 @@ namespace WDACConfig.Pages
         }
 
 
-        // Event handler for when a policy is selected from the DataGrid
+        /// <summary>
+        /// Event handler for when a policy is selected from the DataGrid. It will contain the selected policy.
+        /// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, DataGrid's SelectedItem property will be null,
+        /// so we detect it here and return from the method without assigning null to the selectedPolicy class instance.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeployedPolicies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             // Get the selected policy from the DataGrid
-            selectedPolicy = (CiPolicyInfo)DeployedPolicies.SelectedItem;
+            CiPolicyInfo? temp = (CiPolicyInfo)DeployedPolicies.SelectedItem;
 
-            // Check if a non-system policy was actually selected and if it's unsigned or supplemental and if it exists on the disk
-            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
+            if (temp is null)
+            {
+                return;
+            }
+
+            selectedPolicy = temp;
+
+            // Check if:
+            if (
+                // It's non-system policy
+                !selectedPolicy.IsSystemPolicy &&
+                // It's available on disk
+                selectedPolicy.IsOnDisk &&
+                // It's an unsigned or supplemental policy
+                (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase))
+                )
             {
                 // Enable the RemoveUnsignedOrSupplementalPolicyButton for unsigned policies
                 RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = true;
@@ -158,62 +214,118 @@ namespace WDACConfig.Pages
         private async void RemoveUnsignedOrSupplementalPolicy_Click(object sender, RoutedEventArgs e)
         {
 
-            // Disable the remove button while the selected policy is being processed
-            // It will stay disabled until user selected another removable policy
-            RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
+            List<CiPolicyInfo> policiesToRemove = [];
 
-            string AppControlPolicyName = "AppControlManagerSupplementalPolicy";
-
-            // Make sure we have a valid selected non-system policy that is unsigned or supplemental and is on disk
-            if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
+            try
             {
+                // Disable the remove button while the selected policy is being processed
+                // It will stay disabled until user selected another removable policy
+                RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
 
-                // Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
-                if (string.Equals(selectedPolicy.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase))
+                // Disable interactions with the DataGrid while policies are being removed
+                DeployedPolicies.IsHitTestVisible = false;
+
+                // Disable the refresh policies button while policies are being removed
+                RetrievePoliciesButton.IsEnabled = false;
+
+                // Disable the search box while policies are being removed
+                SearchBox.IsEnabled = false;
+
+                // Make sure we have a valid selected non-system policy that is unsigned or supplemental and is on disk
+                if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
                 {
+                    // List of all the deployed non-system policies
+                    List<CiPolicyInfo> currentlyDeployedPolicies = [];
 
-                    // Get all the deployed base policies
-                    List<string?> CurrentlyDeployedPolicy = CiToolHelper.GetPolicies(false, true, false).Select(p => p.BasePolicyID).ToList();
+                    // List of all the deployed base policy IDs
+                    List<string?> currentlyDeployedBasePolicyIDs = [];
 
-                    // Check if the base policies of the AppControlManagerSupplementalPolicy Supplemental policy is currently deployed on the system
-                    // And only then show the prompt, otherwise allow for its removal just like any other policy since it's a stray Supplemental policy
-                    if (CurrentlyDeployedPolicy.Contains(selectedPolicy.BasePolicyID))
+                    // List of all the deployed AppControlManagerSupplementalPolicy
+                    List<CiPolicyInfo> currentlyDeployedAppControlManagerSupplementalPolicies = [];
+
+                    // Populate the lists defined above
+                    await Task.Run(() =>
+                    {
+                        currentlyDeployedPolicies = CiToolHelper.GetPolicies(false, true, true);
+
+                        currentlyDeployedBasePolicyIDs = currentlyDeployedPolicies.Where(x => string.Equals(x.PolicyID, x.BasePolicyID, StringComparison.OrdinalIgnoreCase)).Select(p => p.BasePolicyID).ToList();
+
+                        currentlyDeployedAppControlManagerSupplementalPolicies = currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase)).ToList();
+                    });
+
+
+                    // Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
+                    if (string.Equals(selectedPolicy.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase))
                     {
 
-                        // Create and display a ContentDialog with Yes and No options
-                        ContentDialog dialog = new()
+                        // Check if the base policy of the AppControlManagerSupplementalPolicy Supplemental policy is currently deployed on the system
+                        // And only then show the prompt, otherwise allow for its removal just like any other policy since it's a stray Supplemental policy
+                        if (currentlyDeployedBasePolicyIDs.Contains(selectedPolicy.BasePolicyID))
                         {
-                            Title = "Confirm Policy Removal",
-                            Content = $"The policy '{AppControlPolicyName}' must not be removed because you won't be able to relaunch the AppControl Manager again. Are you sure you still want to remove it?",
-                            PrimaryButtonText = "Yes",
-                            CloseButtonText = "No",
-                            XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
-                        };
+                            // Create and display a ContentDialog with Yes and No options
+                            ContentDialog dialog = new()
+                            {
+                                Title = "Confirm Policy Removal",
+                                Content = $"The policy '{AppControlPolicyName}' must not be removed because you won't be able to relaunch the AppControl Manager again. Are you sure you still want to remove it?",
+                                PrimaryButtonText = "Yes",
+                                CloseButtonText = "No",
+                                XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
+                            };
 
-                        // Show the dialog and wait for user response
-                        ContentDialogResult result = await dialog.ShowAsync();
+                            // Show the dialog and wait for user response
+                            ContentDialogResult result = await dialog.ShowAsync();
 
-                        // If the user did not select "Yes", return from the method
-                        if (result is not ContentDialogResult.Primary)
-                        {
-                            return;
+                            // If the user did not select "Yes", return from the method
+                            if (result is not ContentDialogResult.Primary)
+                            {
+                                return;
+                            }
+
                         }
+                    }
 
+                    // Add the policy to the removal list
+                    policiesToRemove.Add(selectedPolicy);
+
+                    #region
+
+                    // If the policy that's going to be removed is a base policy
+                    if (string.Equals(selectedPolicy.PolicyID, selectedPolicy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Find any automatic AppControlManagerSupplementalPolicy that is associated with it and still on the system
+                        List<CiPolicyInfo> extraPoliciesToRemove = [.. currentlyDeployedAppControlManagerSupplementalPolicies.Where(p => string.Equals(p.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && p.IsOnDisk)];
+
+                        if (extraPoliciesToRemove.Count > 0)
+                        {
+                            foreach (CiPolicyInfo item in extraPoliciesToRemove)
+                            {
+                                policiesToRemove.Add(item);
+                            }
+                        }
+                    }
+
+                    #endregion
+
+                    // If there are policies to be removed
+                    if (policiesToRemove.Count > 0)
+                    {
+                        // Remove all the policies from the system
+                        await Task.Run(() =>
+                        {
+                            CiToolHelper.RemovePolicy(policiesToRemove.Select(x => x.PolicyID!).ToList());
+                        });
+
+                        // Refresh the DataGrid's policies and their count
+                        RetrievePolicies();
                     }
                 }
+            }
 
-
-                // Remove the selected unsigned/supplemental policy using the CiToolHelper
-                await Task.Run(() => CiToolHelper.RemovePolicy(selectedPolicy.PolicyID!));
-
-                // Update the UI or log the action
-                Logger.Write($"Removed policy: {selectedPolicy.FriendlyName} with the PolicyID {selectedPolicy.PolicyID}");
-
-                // Remove the policy from the list and update the DataGrid
-                _ = AllPolicies.Remove(selectedPolicy);
-
-                // Update the policies count text
-                PoliciesCountTextBlock.Text = $"Number of Policies: {AllPolicies.Count}";
+            finally
+            {
+                DeployedPolicies.IsHitTestVisible = true;
+                RetrievePoliciesButton.IsEnabled = true;
+                SearchBox.IsEnabled = true;
             }
         }
 

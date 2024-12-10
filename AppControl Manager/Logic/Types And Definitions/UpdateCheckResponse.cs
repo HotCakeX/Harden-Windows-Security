@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WDACConfig
+namespace AppControlManager
 {
     /// <summary>
     /// Represents an object that is the response of an update check for the AppControl Manager app

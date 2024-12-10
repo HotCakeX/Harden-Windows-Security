@@ -1,3 +1,5 @@
+using AppControlManager.IntelGathering;
+using AppControlManager.Logging;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -9,11 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WDACConfig.IntelGathering;
 using Windows.ApplicationModel.DataTransfer;
 
 
-namespace WDACConfig.Pages
+namespace AppControlManager.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -110,7 +111,7 @@ namespace WDACConfig.Pages
 
             // Start with all items from the complete list, 'AllFileIdentities'
             // This list is used as the base set for filtering to preserve original data
-            var filteredResults = AllFileIdentities.AsEnumerable();
+            IEnumerable<FileIdentity> filteredResults = AllFileIdentities.AsEnumerable();
 
             // Apply the date filter if a date is selected in the CalendarDatePicker
             if (selectedDate.HasValue)
@@ -865,7 +866,7 @@ namespace WDACConfig.Pages
                         CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
 
                         // Merge the created policy with the user-selected policy which will result in adding the new rules to it
-                        PolicyMerger.Merge([PolicyToAddLogsTo, EmptyPolicyPath], PolicyToAddLogsTo);
+                        SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
                         UpdateHvciOptions.Update(PolicyToAddLogsTo);
 

@@ -64,10 +64,10 @@ jobs:
 
       - name: Building the AppControl Manager
       # https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
-        run: dotnet build "AppControl Manager/AppControl Manager.sln" --configuration Release --verbosity minimal --arch win-x64
+        run: dotnet build "AppControl Manager/AppControl Manager.sln" --configuration Release --verbosity minimal --arch x64
 
       - name: Generating the MSIX Package
-        run: dotnet msbuild "AppControl Manager/AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:arch=win-x64
+        run: dotnet msbuild "AppControl Manager/AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:arch=x64
 
       - name: Capturing the Generated MSIX file Path
         shell: pwsh

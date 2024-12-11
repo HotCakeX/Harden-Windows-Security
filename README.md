@@ -1837,6 +1837,43 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">
 
+<br>
+
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+
+<br>
+
+## Donations <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/DonateIcon.png" width="48" alt="DonateIcon">
+
+If you would like to support my work financially, your generosity is greatly appreciated. This section is specifically for those who want to make a monetary contribution. There are other ways to support such as sharing the repository on social media.
+
+You can donate using the following methods:
+
+* **Donate to a Charity That Matters:** Instead of donating directly to me, you could donate to a charity that is important to me, one that works to keep us safe and alive: [FIDF](https://www.fidf.org/)
+
+<details>
+<summary>
+
+* **Donate to me personally:** [My Public Address to Receive BNB (Smart Chain - Coin)](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D)
+
+</summary>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/BNB%20Donation.png" width="800" alt="Donation QR code for BNB">
+
+</div>
+
+</details>
+
+```
+0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D
+```
+
+<br>
+
+<p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">
 
 <br>

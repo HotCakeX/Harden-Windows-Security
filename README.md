@@ -1854,7 +1854,7 @@ You can donate using the following methods:
 <details>
 <summary>
 
-* **Donate to me personally:** [My Public Address to Receive BNB (Smart Chain - Coin)](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D)
+* **Donate to me personally:** [My Public Address to Receive BNB (Smart Chain - Coin)](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D) - Click/Tap here to view QR code
 
 </summary>
 

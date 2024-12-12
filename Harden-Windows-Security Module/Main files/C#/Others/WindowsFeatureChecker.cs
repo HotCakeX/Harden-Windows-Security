@@ -35,7 +35,7 @@ namespace HardenWindowsSecurity
                 PowerShellv2 = optionalFeatureStates.GetValueOrDefault("MicrosoftWindowsPowerShellV2", "Unknown"),
                 PowerShellv2Engine = optionalFeatureStates.GetValueOrDefault("MicrosoftWindowsPowerShellV2Root", "Unknown"),
                 WorkFoldersClient = optionalFeatureStates.GetValueOrDefault("WorkFolders-Client", "Unknown"),
-                InternetPrintingClient = optionalFeatureStates.GetValueOrDefault("Printing-Foundation-Features", "Unknown"),
+                InternetPrintingClient = optionalFeatureStates.GetValueOrDefault("Printing-Foundation-InternetPrinting-Client", "Unknown"),
                 WindowsMediaPlayer = GetCapabilityState("Media.WindowsMediaPlayer"),
                 MDAG = optionalFeatureStates.GetValueOrDefault("Windows-Defender-ApplicationGuard", "Unknown"),
                 WindowsSandbox = optionalFeatureStates.GetValueOrDefault("Containers-DisposableClientVM", "Unknown"),

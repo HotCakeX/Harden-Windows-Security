@@ -117,7 +117,7 @@ Remove-WindowsCapability -Online
             ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2", "PowerShell v2", "PowerShellv2");
             ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2Root", "PowerShell v2 root", "PowerShellv2Engine");
             ConfigureWindowsOptionalFeature(false, "WorkFolders-Client", "Work Folders", "WorkFoldersClient");
-            ConfigureWindowsOptionalFeature(false, "Printing-Foundation-Features", "Print Foundation Features", "InternetPrintingClient");
+            ConfigureWindowsOptionalFeature(false, "Printing-Foundation-InternetPrinting-Client", "Internet Printing Client", "InternetPrintingClient");
             ConfigureWindowsOptionalFeature(false, "Windows-Defender-ApplicationGuard", "Deprecated Microsoft Defender Application Guard (MDAG)", "MDAG");
             ConfigureWindowsOptionalFeature(true, "Containers-DisposableClientVM", "Windows Sandbox", "WindowsSandbox");
             ConfigureWindowsOptionalFeature(true, "Microsoft-Hyper-V", "Hyper-V", "HyperV");

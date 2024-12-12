@@ -287,10 +287,14 @@ ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" SelectedIndex="0">
                                 x:Name="RecoveryKeysDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
                                 <!-- DataGrid Columns Definitions -->
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Drive" Binding="{Binding DriveLetter}" IsReadOnly="True" Width="Auto" />
-                                    <DataGridTextColumn Header="Key ID" Binding="{Binding KeyID}" IsReadOnly="True" Width="Auto" />
-                                    <DataGridTextColumn Header="Recovery Key" Binding="{Binding RecoveryKey}" IsReadOnly="True" Width="Auto" />
-                                    <DataGridTextColumn Header="Size GB" Binding="{Binding SizeGB}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Drive " Binding="{Binding DriveLetter}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Key ID " Binding="{Binding KeyID}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Recovery Key " Binding="{Binding RecoveryKey}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Size GB " Binding="{Binding SizeGB}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Encryption % " Binding="{Binding EncryptionPercentage}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Protection Status " Binding="{Binding ProtectionStatus}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Key Protector " Binding="{Binding KeyProtector}" IsReadOnly="True" Width="Auto" />
+                                    <DataGridTextColumn Header=" Encryption Method " Binding="{Binding EncryptionMethod}" IsReadOnly="True" Width="Auto" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Border>

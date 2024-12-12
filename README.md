@@ -112,7 +112,7 @@ Unprotect-WindowsSecurity
 * [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
 * [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
-Use the following PowerShell command as Admin
+**Use the following PowerShell command as Admin**
 
 ```powershell
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
@@ -1845,7 +1845,7 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 ## Donations <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/DonateIcon.png" width="48" alt="DonateIcon">
 
-If you would like to support my work financially, your generosity is greatly appreciated. This section is specifically for those who want to make a monetary contribution. There are other ways to support such as sharing the repository on social media.
+If you would like to support my work financially, your generosity is greatly appreciated. This section is specifically for those who want to make a monetary contribution. There are other ways to support such as sharing the repository on social media, starring and so on.
 
 You can donate using the following methods:
 
@@ -1860,7 +1860,7 @@ You can donate using the following methods:
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/BNB%20Donation.png" width="800" alt="Donation QR code for BNB">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/BNB%20Donation.png" width="700" alt="Donation QR code for BNB">
 
 </div>
 

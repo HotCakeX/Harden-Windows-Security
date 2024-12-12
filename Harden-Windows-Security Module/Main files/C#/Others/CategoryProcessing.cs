@@ -6,10 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-#pragma warning disable IDE0038
-
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     // Registry keys are case-insensitive
@@ -20,7 +16,7 @@ namespace HardenWindowsSecurity
         private sealed class CsvRecord
         {
             public required string Origin { get; set; }
-            public required string Category { get; set; }
+            public required ComplianceCategories Category { get; set; }
             public required string Hive { get; set; }
             public required string Key { get; set; }
             public required string Name { get; set; }
@@ -70,13 +66,19 @@ namespace HardenWindowsSecurity
 
                         // Split the value field by commas only if ValueIsList is true
                         List<string> values = valueIsList
-                            ? fields[7].Trim('"').Split(',').Select(v => v.Trim()).ToList()
+                            ? [.. fields[7].Trim('"').Split(',').Select(v => v.Trim())]
                             : [fields[7].Trim('"')];
+
+
+                        if (!Enum.TryParse(fields[1], true, out ComplianceCategories categoryName))
+                        {
+                            throw new InvalidDataException($"Invalid category name in the 'Registry resources.csv' file: {categoryName}");
+                        }
 
                         records.Add(new CsvRecord
                         {
                             Origin = fields[0],
-                            Category = fields[1],
+                            Category = categoryName,
                             Hive = fields[2],
                             Key = fields[3],
                             Name = fields[4],
@@ -150,7 +152,7 @@ namespace HardenWindowsSecurity
 
         // method to process a category based on the CSV data
         // The method used to verify the hardening category, which can be 'Group Policy' or 'Registry Keys'
-        public static List<IndividualResult> ProcessCategory(string catName, string method)
+        public static List<IndividualResult> ProcessCategory(ComplianceCategories catName, string method)
         {
             // Create a list to store the results
             List<IndividualResult> output = [];
@@ -160,7 +162,7 @@ namespace HardenWindowsSecurity
 
             // Filter the items based on category and origin
             var filteredItems = csvData.Where(item =>
-                item.Category?.Equals(catName, StringComparison.OrdinalIgnoreCase) == true &&
+                item.Category == catName &&
                 item.Origin?.Equals(method, StringComparison.OrdinalIgnoreCase) == true
             );
 
@@ -186,22 +188,22 @@ namespace HardenWindowsSecurity
                             var regValue = key.GetValue(item.Name);
 
                             // Check if the registry value is an integer
-                            if (regValue is int)
+                            if (regValue is int v)
                             {
                                 // Handle the case where the DWORD value is returned as an int
                                 // because DWORD is an UInt32
                                 // Then convert it to a string
-                                regValueStr = unchecked((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
+                                regValueStr = unchecked((uint)v).ToString(CultureInfo.InvariantCulture);
                             }
                             else if (regValue is uint)
                             {
                                 // Handle the case where the DWORD value is returned as a uint
                                 regValueStr = regValue.ToString();
                             }
-                            else if (regValue is string[])
+                            else if (regValue is string[] v1)
                             {
                                 // Convert MULTI_STRING (string[]) to a comma-separated string for display
-                                regValueStr = string.Join(",", (string[])regValue);
+                                regValueStr = string.Join(",", v1);
                             }
                             else
                             {
@@ -257,20 +259,20 @@ namespace HardenWindowsSecurity
                             // Get the registry value
                             var regValue = key.GetValue(item.Name);
 
-                            if (regValue is int)
+                            if (regValue is int v1)
                             {
                                 // Handle the case where the DWORD value is returned as an int
-                                regValueStr = unchecked((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
+                                regValueStr = unchecked((uint)v1).ToString(CultureInfo.InvariantCulture);
                             }
                             else if (regValue is uint)
                             {
                                 // Handle the case where the DWORD value is returned as a uint
                                 regValueStr = regValue.ToString();
                             }
-                            else if (regValue is string[])
+                            else if (regValue is string[] v)
                             {
                                 // Convert MULTI_STRING (string[]) to a comma-separated string for display
-                                regValueStr = string.Join(",", (string[])regValue);
+                                regValueStr = string.Join(",", v);
                             }
                             else
                             {
@@ -313,6 +315,11 @@ namespace HardenWindowsSecurity
                     }
                 }
 
+                if (!Enum.TryParse(method, true, out ConfirmSystemComplianceMethods.Method methodEnum))
+                {
+                    throw new InvalidDataException($"Invalid method name in the 'Registry resources.csv' file: {method}");
+                }
+
                 // Add a new result to the output list
                 output.Add(new IndividualResult
                 {
@@ -320,8 +327,8 @@ namespace HardenWindowsSecurity
                     Compliant = valueMatches,
                     Value = regValueStr ?? string.Empty,
                     Name = item.Name ?? "Unknown", // Ensure Name is non-null
-                    Category = catName, // catName is non-null as it's a parameter
-                    Method = method // method is non-null as it's a parameter
+                    Category = catName,
+                    Method = methodEnum
                 });
             }
 
@@ -377,13 +384,13 @@ namespace HardenWindowsSecurity
                     case "DWORD":
                         {
                             // DWORD values are typically 32-bit unsigned integers
-                            if (regValue is int)
+                            if (regValue is int v)
                             {
-                                return (uint)(int)regValue == (uint)expectedValue;
+                                return (uint)v == (uint)expectedValue;
                             }
-                            else if (regValue is uint)
+                            else if (regValue is uint v1)
                             {
-                                return (uint)regValue == (uint)expectedValue;
+                                return v1 == (uint)expectedValue;
                             }
                             break;
                         }

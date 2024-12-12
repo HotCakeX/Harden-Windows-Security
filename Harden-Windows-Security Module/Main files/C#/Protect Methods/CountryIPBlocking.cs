@@ -1,4 +1,4 @@
-#nullable enable
+using System;
 
 namespace HardenWindowsSecurity
 {
@@ -16,7 +16,7 @@ namespace HardenWindowsSecurity
 
             FirewallHelper.BlockIPAddressListsInGroupPolicy(
                 "State Sponsors of Terrorism IP range blocking",
-                "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt",
+                new Uri("https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt"),
                 true
                 );
         }

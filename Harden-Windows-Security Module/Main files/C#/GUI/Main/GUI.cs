@@ -11,6 +11,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Diagnostics;
 
 #nullable disable
 
@@ -115,25 +116,6 @@ namespace HardenWindowsSecurity
         {
         }
 
-        public class UnprotectVM : ViewModelBase
-        {
-        }
-
-        public class ASRRulesVM : ViewModelBase
-        {
-        }
-
-        public class ExclusionsVM : ViewModelBase
-        {
-        }
-
-        public class BitLockerVM : ViewModelBase
-        {
-        }
-
-        public class LogsVM : ViewModelBase
-        {
-        }
 
         // NavigationVM class
         // ViewModel for handling navigation between different views, inheriting from ViewModelBase
@@ -201,24 +183,20 @@ namespace HardenWindowsSecurity
         public static void LoadMainXaml()
         {
 
-            // Defining the path to the XAML XML file
             if (GlobalVars.path is null)
             {
                 throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
-
-            // Create and initialize the application - the WPF GUI uses the App context
-            GUIMain.app = new Application();
 
             #region Load Resource Dictionaries (First)
             // Define the path to the ResourceDictionaries folder
             string resourceFolder = Path.Combine(GlobalVars.path, "Resources", "XAML", "ResourceDictionaries");
 
             // Get all of the XAML files in the folder
-            var resourceFiles = Directory.GetFiles(resourceFolder, "*.xaml");
+            string[] resourceFiles = Directory.GetFiles(resourceFolder, "*.xaml");
 
             // Load resource dictionaries from the ResourceDictionaries folder
-            foreach (var file in resourceFiles)
+            foreach (string file in resourceFiles)
             {
                 using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
 
@@ -226,24 +204,22 @@ namespace HardenWindowsSecurity
                 ResourceDictionary resourceDict = (ResourceDictionary)XamlReader.Load(fs);
 
                 // Add to application resources to ensure dictionaries are available to the whole application
-                GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);
+                app.Resources.MergedDictionaries.Add(resourceDict);
             }
             #endregion
 
             #region Load Main Window XAML (After Resource dictionaries have been loaded)
-            // Define the path to the main Window XAML file
-            GUIMain.xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Main.xaml");
 
             // Load the MainWindow.xaml
-            using (FileStream fs = new(GUIMain.xamlPath, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new(xamlPath, FileMode.Open, FileAccess.Read))
             {
                 // Load the main window from the XAML file
-                GUIMain.mainGUIWindow = (Window)XamlReader.Load(fs);
+                mainGUIWindow = (Window)XamlReader.Load(fs);
             }
             #endregion
 
             // Set the MainWindow for the application
-            GUIMain.app.MainWindow = GUIMain.mainGUIWindow;
+            app.MainWindow = mainGUIWindow;
 
             #region
             // Caching the icon in memory so that when the GUI is closed in PowerShell module, there wil be no files in the module directory preventing deletion of the module itself
@@ -258,16 +234,16 @@ namespace HardenWindowsSecurity
             IconBitmapImage.EndInit();
 
             // Assign the cached icon to the MainWindow
-            GUIMain.mainGUIWindow.Icon = IconBitmapImage;
+            mainGUIWindow.Icon = IconBitmapImage;
             #endregion
 
             // Set the DataContext for the main window
-            GUIMain.mainGUIWindow.DataContext = new NavigationVM();
+            mainGUIWindow.DataContext = new NavigationVM();
 
             #region Event handlers For The Main GUI
 
             // Defining what happens when the GUI window is closed
-            GUIMain.mainGUIWindow.Closed += (sender, e) =>
+            mainGUIWindow.Closed += (sender, e) =>
             {
                 // Create the footer to the log file
                 string endOfLogFile = $"""
@@ -281,7 +257,7 @@ End time: {DateTime.Now}
             };
 
             // Exit Event, will work for the GUI when using compiled version of the app or in Visual Studio
-            GUIMain.app!.Exit += (object s, ExitEventArgs e) =>
+            app.Exit += (object s, ExitEventArgs e) =>
             {
                 // Revert the changes to the PowerShell console Window Title
                 ChangePSConsoleTitle.Set("PowerShell");
@@ -294,7 +270,7 @@ End time: {DateTime.Now}
 
 
             // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
-            GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+            app.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
             {
                 // Create a custom error window
                 Window errorWindow = new()
@@ -342,7 +318,7 @@ End time: {DateTime.Now}
                 githubButton.Click += (sender, args) =>
                 {
                     // Open the GitHub issues page
-                    _ = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    _ = Process.Start(new ProcessStartInfo
                     {
                         FileName = "https://github.com/HotCakeX/Harden-Windows-Security/issues",
                         UseShellExecute = true // Ensure the link opens in the default browser
@@ -365,32 +341,11 @@ End time: {DateTime.Now}
             };
 
 
-
-            /*
-
-           // Startup Event
-           GUIMain.app!.Startup += (object s, StartupEventArgs e) =>
-           {
-               // Display a welcome message
-               System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-           };
-
-            GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(Button))
-            {
-                Setters =
-                {
-                    new Setter(Button.BackgroundProperty, Brushes.LightBlue),
-                    new Setter(Button.ForegroundProperty, Brushes.DarkBlue)
-                }
-            };
-
-            */
-
             #endregion
 
             #region parent border of the Main GUI
             // Find the Border control by name
-            Border border = (Border)GUIMain.mainGUIWindow.FindName("OuterMostBorder");
+            Border border = (Border)mainGUIWindow.FindName("OuterMostBorder");
 
             // Access the ImageBrush from the Border's Background property
             ImageBrush imageBrush = (ImageBrush)border.Background;
@@ -408,36 +363,36 @@ End time: {DateTime.Now}
             #endregion
 
             #region Inner border of the main GUI
-            Border InnerBorder = (Border)GUIMain.mainGUIWindow.FindName("InnerBorder");
+            Border InnerBorder = (Border)mainGUIWindow.FindName("InnerBorder");
 
             // Finding the gradient brush background of the inner border
-            GUIMain.InnerBorderBackground = (RadialGradientBrush)InnerBorder.Background;
+            InnerBorderBackground = (RadialGradientBrush)InnerBorder.Background;
 
             // Finding the bottom left slider
-            GUIMain.BackgroundSlider = (Slider)GUIMain.mainGUIWindow.FindName("BackgroundOpacitySlider");
+            BackgroundSlider = (Slider)mainGUIWindow.FindName("BackgroundOpacitySlider");
 
             // Creating event handler for the slider
-            GUIMain.BackgroundSlider.ValueChanged += (sender, e) =>
+            BackgroundSlider.ValueChanged += (sender, e) =>
             {
-                var slider = (Slider)sender;
+                Slider slider = (Slider)sender;
 
                 // Scale value from 0-100 to 0-1
                 double opacityValue = slider.Value / 100.0;
 
                 // Apply the scaled opacity value to the RadialGradientBrush background
-                GUIMain.InnerBorderBackground.Opacity = opacityValue;
+                InnerBorderBackground.Opacity = opacityValue;
             };
 
             #endregion
 
             // Finding the sidebar Grid
-            GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as Grid;
+            SidebarGrid = mainGUIWindow.FindName("SidebarGrid") as Grid;
 
             // Finding the progress bar
-            GUIMain.mainProgressBar = (ProgressBar)GUIMain.mainGUIWindow.FindName("MainProgressBar");
+            mainProgressBar = (ProgressBar)mainGUIWindow.FindName("MainProgressBar");
 
             // Finding the button responsible for changing the background image by browsing for image file
-            Button BackgroundChangeButton = (Button)GUIMain.mainGUIWindow.FindName("BackgroundChangeButton");
+            Button BackgroundChangeButton = (Button)mainGUIWindow.FindName("BackgroundChangeButton");
 
             // event handler for button to open file picker to browse for image files
             BackgroundChangeButton.Click += (sender, e) =>

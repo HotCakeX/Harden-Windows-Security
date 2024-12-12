@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class BitLocker
+    internal partial class BitLocker
     {
 
         /// <summary>

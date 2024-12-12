@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class BitLocker
+    internal partial class BitLocker
     {
         /// <summary>
         /// Enables the key protectors of an encrypted volume, doesn't decrypt or encrypt the drive.
@@ -18,7 +16,7 @@ namespace HardenWindowsSecurity
         /// https://learn.microsoft.com/en-us/windows/win32/secprov/enablekeyprotectors-win32-encryptablevolume
         /// </summary>
         /// <param name="DriveLetter"></param>
-        public static void EnableKeyProtectors(string DriveLetter)
+        internal static void EnableKeyProtectors(string DriveLetter)
         {
 
             // First get the volume info based on the drive letter

@@ -2,11 +2,9 @@ using System;
 using System.Linq;
 using System.Management.Automation;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class PowerShellExecutor
+    internal static class PowerShellExecutor
     {
         /// <summary>
         /// Runs a PowerShell script and displays verbose and normal output in real-time.
@@ -15,7 +13,7 @@ namespace HardenWindowsSecurity
         /// <param name="returnOutput">Indicates whether to return the output of the script</param>
         /// <returns>The output of the PowerShell script if returnOutput is true; otherwise, nothing is returned</returns>
         /// <exception cref="InvalidOperationException">Thrown when the PowerShell script execution results in errors.</exception>
-        public static string? ExecuteScript(string script, bool returnOutput = false, bool NonTerminatingErrors = false)
+        internal static string? ExecuteScript(string script, bool returnOutput = false, bool NonTerminatingErrors = false)
         {
             using PowerShell psInstance = PowerShell.Create();
 

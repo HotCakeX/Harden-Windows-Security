@@ -1,13 +1,11 @@
 using System.DirectoryServices.AccountManagement;
 using System.Security.Principal;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class LocalGroupMember
+    internal static class LocalGroupMember
     {
-        public static void Add(string userSid, string groupSid)
+        internal static void Add(string userSid, string groupSid)
         {
             // Convert the group SID to a SecurityIdentifier object
             SecurityIdentifier groupSecurityId = new(groupSid);
@@ -16,7 +14,7 @@ namespace HardenWindowsSecurity
             _ = new SecurityIdentifier(userSid);
 
             // Create a PrincipalContext for the local machine
-            using var ctx = new PrincipalContext(ContextType.Machine);
+            using PrincipalContext ctx = new(ContextType.Machine);
 
             // Find the group using its SID
             GroupPrincipal group = GroupPrincipal.FindByIdentity(ctx, IdentityType.Sid, groupSecurityId.Value);
@@ -26,9 +24,9 @@ namespace HardenWindowsSecurity
             {
                 // Check if the user is already a member of the group
                 bool isUserInGroup = false;
-                foreach (var member in group.GetMembers())
+                foreach (Principal member in group.GetMembers())
                 {
-                    if (member.Sid.Value == userSid)
+                    if (string.Equals(member.Sid.Value, userSid, System.StringComparison.OrdinalIgnoreCase))
                     {
                         isUserInGroup = true;
                         break;

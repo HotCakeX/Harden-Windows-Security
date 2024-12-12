@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class ConditionalResultAdd
+    internal static class ConditionalResultAdd
     {
         /// <summary>
         /// The method to add a result to the results list based on the Compliant status of the item.
@@ -14,7 +12,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="nestedObjectArray">A reference to the NestedObjectsArray List from the parent method so we can conditionally modify it</param>
         /// <param name="result">The current item that must be conditionally added to the List</param>
-        public static void Add(List<IndividualResult> nestedObjectArray, IndividualResult result)
+        internal static void Add(List<IndividualResult> nestedObjectArray, IndividualResult result)
         {
             // Check if there is already an instance with the FriendlyName
             IndividualResult? existingItem = nestedObjectArray.FirstOrDefault(item => string.Equals(item.FriendlyName, result.FriendlyName, StringComparison.OrdinalIgnoreCase));

@@ -1,7 +1,5 @@
 ﻿using System.Windows.Controls;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class GUIExclusions

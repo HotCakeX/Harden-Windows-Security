@@ -30,7 +30,6 @@ namespace HardenWindowsSecurity
                     return;
                 }
 
-                // Defining the path to the XAML XML file
                 if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
@@ -126,7 +125,7 @@ namespace HardenWindowsSecurity
                         {
                             case "preset: basic":
                                 {
-                                    GUIMain.app.Dispatcher.Invoke(() =>
+                                    app.Dispatcher.Invoke(() =>
                                      {
 
                                          string presetName = "preset: basic";
@@ -192,7 +191,7 @@ namespace HardenWindowsSecurity
                                 }
                             case "preset: recommended":
                                 {
-                                    GUIMain.app.Dispatcher.Invoke(() =>
+                                    app.Dispatcher.Invoke(() =>
                                     {
 
                                         string presetName = "preset: recommended";

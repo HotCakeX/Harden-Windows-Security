@@ -4,14 +4,11 @@ using System.Linq;
 using System.Management;
 using System.Security.Principal;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
 
-    public partial class BitLocker
+    internal static partial class BitLocker
     {
-
 
         /// <summary>
         /// Accepts a drive letter in the following format: "C:"
@@ -111,7 +108,7 @@ namespace HardenWindowsSecurity
         /// <param name="DriveLetter"></param>
         /// <param name="Password"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddRecoveryPassword(string DriveLetter, string? Password)
+        internal static void AddRecoveryPassword(string DriveLetter, string? Password)
         {
             // First get the volume info based on the drive letter
             ManagementObject VolumeInfo = GetVolumeFromLetter(DriveLetter);
@@ -162,7 +159,7 @@ namespace HardenWindowsSecurity
         /// <param name="DriveLetter">The drive letter</param>
         /// <param name="PassPhrase">The password to be used as a key protector, e.g: "1a2b3c4b" </param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddPasswordProtector(string DriveLetter, string? PassPhrase)
+        internal static void AddPasswordProtector(string DriveLetter, string? PassPhrase)
         {
             // First get the volume info based on the drive letter
             ManagementObject VolumeInfo = GetVolumeFromLetter(DriveLetter);
@@ -211,7 +208,7 @@ namespace HardenWindowsSecurity
         /// https://learn.microsoft.com/en-us/windows/win32/secprov/protectkeywithtpm-win32-encryptablevolume
         /// </summary>
         /// <param name="DriveLetter"></param>
-        public static void AddTpmProtector(string DriveLetter)
+        internal static void AddTpmProtector(string DriveLetter)
         {
             // First get the volume info based on the drive letter
             ManagementObject VolumeInfo = GetVolumeFromLetter(DriveLetter);
@@ -263,7 +260,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="DriveLetter"></param>
         /// <param name="PIN">Startup PIN to be used during system boot</param>
-        public static void AddTpmAndPinProtector(string DriveLetter, string PIN)
+        internal static void AddTpmAndPinProtector(string DriveLetter, string PIN)
         {
 
             if (string.IsNullOrWhiteSpace(PIN))
@@ -322,7 +319,7 @@ namespace HardenWindowsSecurity
         /// <param name="DriveLetter">The Drive letter in the format: "C:"</param>
         /// <param name="StartupKeyPath">Path to a Drive or Folder, such as: @"C:\". The folder/drive path must exist otherwise error is thrown.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddTpmAndStartupKeyProtector(string DriveLetter, string StartupKeyPath)
+        internal static void AddTpmAndStartupKeyProtector(string DriveLetter, string StartupKeyPath)
         {
 
             if (string.IsNullOrWhiteSpace(StartupKeyPath))
@@ -415,7 +412,7 @@ namespace HardenWindowsSecurity
         /// <param name="DriveLetter"></param>
         /// <param name="StartupKeyPath">Path to a Drive or Folder, such as: @"C:\". The folder/drive path must exist otherwise error is thrown.</param>
         /// <param name="PIN">A pin, its minimum length defined by policies</param>
-        public static void AddTpmAndPinAndStartupKeyProtector(string DriveLetter, string StartupKeyPath, string PIN)
+        internal static void AddTpmAndPinAndStartupKeyProtector(string DriveLetter, string StartupKeyPath, string PIN)
         {
 
             if (string.IsNullOrWhiteSpace(PIN) || string.IsNullOrWhiteSpace(StartupKeyPath))
@@ -509,7 +506,7 @@ namespace HardenWindowsSecurity
         /// <param name="DriveLetter"></param>
         /// <param name="StartupKeyPath">Path to a Drive or Folder, such as: @"C:\". The folder/drive path must exist otherwise error is thrown.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddStartupKeyProtector_OR_RecoveryKeyProtector(string DriveLetter, string StartupKeyPath)
+        internal static void AddStartupKeyProtector_OR_RecoveryKeyProtector(string DriveLetter, string StartupKeyPath)
         {
 
             if (string.IsNullOrWhiteSpace(StartupKeyPath))
@@ -601,7 +598,7 @@ namespace HardenWindowsSecurity
         /// <param name="SID"></param>
         /// <param name="ServiceAccount"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void AddSidProtector(string DriveLetter, string SID, bool ServiceAccount)
+        internal static void AddSidProtector(string DriveLetter, string SID, bool ServiceAccount)
         {
             if (string.IsNullOrWhiteSpace(SID))
             {

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class WindowsFeatureChecker
@@ -55,7 +53,7 @@ namespace HardenWindowsSecurity
         {
             // Initialize a dictionary to store the states of optional features
             // Ensure case-insensitive key comparison
-            var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, string> states = new(StringComparer.OrdinalIgnoreCase);
 
             // Create a ManagementObjectSearcher to query Win32_OptionalFeature
             using (ManagementObjectSearcher searcher = new("SELECT * FROM Win32_OptionalFeature"))

@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class MitigationPolicyProcessor
+    internal static class MitigationPolicyProcessor
     {
         // This method processes the exploit mitigation policies of the current system and returns a dictionary of the mitigations applied to each executable
-        public static Dictionary<string, HashSet<string>> ProcessMitigationPolicies(string xmlPath)
+        internal static Dictionary<string, HashSet<string>> ProcessMitigationPolicies(string xmlPath)
         {
             // Load the XML document
             XmlDocument xmlDoc = new();
@@ -104,7 +102,8 @@ namespace HardenWindowsSecurity
                 // Replace "StrictControlFlowGuard" with "StrictCFG" in the value set
                 // Replace "ControlFlowGuard" with "CFG" in the value set
                 HashSet<string> revisedValueSet = [];
-                foreach (var value in valueSet)
+
+                foreach (string value in valueSet)
                 {
                     // Check if the value is "StrictControlFlowGuard" and replace it with "StrictCFG"
                     if (value.Equals("StrictControlFlowGuard", StringComparison.OrdinalIgnoreCase))

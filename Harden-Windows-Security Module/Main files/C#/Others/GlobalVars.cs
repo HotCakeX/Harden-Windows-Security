@@ -3,18 +3,14 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Management.Automation.Host;
-using System.Security.Principal;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
     public static class GlobalVars
     {
         // Minimum required OS build number
-        internal const decimal Requiredbuild = 22621.4169M;
+        internal const decimal requiredBuild = 22621.4169M;
 
         // Current OS build version
         internal static readonly decimal OSBuildNumber = Environment.OSVersion.Version.Build;
@@ -71,14 +67,15 @@ namespace HardenWindowsSecurity
         // Such as PowerToys' CommandNotFound or WinGet's PowerShell module
         public static bool UseNewNotificationsExp = true;
 
-        // To store the registry data CSV parse output - Registry.csv
-        internal static List<HardeningRegistryKeys.CsvRecord>? RegistryCSVItems;
+        // Initialize the RegistryCSVItems list so that the HardeningRegistryKeys.ReadCsv() method can write to it
+        internal static readonly List<HardeningRegistryKeys.CsvRecord> RegistryCSVItems = [];
 
         // To store the Process mitigations CSV parse output used by all cmdlets - ProcessMitigations.csv
-        internal static List<ProcessMitigationsParser.ProcessMitigationsRecords>? ProcessMitigations;
+        // Initialize the ProcessMitigations list so that the ProcessMitigationsParser.ReadCsv() method can write to it
+        internal static readonly List<ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations = [];
 
         // a global variable to save the output of the [HardenWindowsSecurity.ProtectionCategoriex]::New().GetValidValues() in
-        public static string[]? HardeningCategorieX;
+        public static string[] HardeningCategorieX = ProtectionCategoriex.GetValidValues();
 
         // the explicit path to save the security_policy.inf file
         internal static string securityPolicyInfPath = Path.Combine(WorkingDir, "security_policy.inf");
@@ -95,11 +92,11 @@ namespace HardenWindowsSecurity
         // stored at the beginning of each cmdlet in the begin block through the Initialize() method
         public static string? VerbosePreference;
 
-        // An object to store the final results of Confirm-SystemCompliance cmdlet
-        public static ConcurrentDictionary<String, List<IndividualResult>>? FinalMegaObject;
+        // Create an empty ConcurrentDictionary to store the final results of the cmdlets
+        public readonly static ConcurrentDictionary<ComplianceCategories, List<IndividualResult>> FinalMegaObject = [];
 
-        // Storing the output of the ini file parsing function
-        internal static Dictionary<string, Dictionary<string, string>>? SystemSecurityPoliciesIniObject;
+        // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
+        internal static Dictionary<string, Dictionary<string, string>> SystemSecurityPoliciesIniObject = [];
 
         // a variable to store the security policies CSV file parse output
         internal static List<SecurityPolicyRecord>? SecurityPolicyRecords;
@@ -125,50 +122,13 @@ namespace HardenWindowsSecurity
         // To store the System MDM parsed JSON output
         internal static Hashtable? MDM_Policy_Result01_System02;
 
+        // Call GetCurrentIdentity() once and store the result in a private static variable
+        private static readonly CurrentUserIdentityResult _identity = WinIdentityUser.GetCurrentIdentity();
 
-        internal readonly static string userName;
-        internal readonly static string userSID;
-        internal readonly static string? userFullName;
-
-        static GlobalVars()
-        {
-            // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
-            HardeningCategorieX = ProtectionCategoriex.GetValidValues();
-
-            // Save the username in the class variable
-            WindowsIdentity CurrentUserResult = WindowsIdentity.GetCurrent();
-            userSID = CurrentUserResult.User!.Value.ToString();
-
-            // The LocalUserRetriever.Get() method doesn't return SYSTEM so we have to handle it separately
-            // In case the Harden Windows Security is running as SYSTEM
-            if (CurrentUserResult.IsSystem)
-            {
-                userName = "SYSTEM";
-                userFullName = "SYSTEM";
-            }
-
-            else
-            {
-
-                try
-                {
-
-                    LocalUser CurrentLocalUser = LocalUserRetriever.Get()
-        .First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
-
-                    userName = CurrentLocalUser.Name!;
-                    userFullName = CurrentLocalUser.FullName;
-
-                }
-                // We don't fail it if username or full name can't be detected
-                // Any parts of the Harden Windows Security relying on their values must gracefully handle empty or inaccurate values.
-                catch
-                {
-                    userName = string.Empty;
-                    Logger.LogMessage($"Could not find UserName or FullName of the current user with the SID {userSID}", LogTypeIntel.Warning);
-                }
-            }
-        }
+        // Initialize the properties using the properties of the single _identity instance
+        internal readonly static string userName = _identity.userName;
+        internal readonly static string userSID = _identity.userSID;
+        internal readonly static string? userFullName = _identity.userFullName;
 
     }
 }

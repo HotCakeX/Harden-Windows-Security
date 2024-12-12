@@ -1,32 +1,30 @@
 using System;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class MDMClassProcessor
+    internal partial class MDMClassProcessor
     {
         /// <summary>
         /// It gets the results of all of the MDM related CimInstances and processes them into a list of MDMClassProcessor objects
         /// </summary>
         /// <returns></returns>
-        public static List<MDMClassProcessor> Process()
+        internal static List<MDMClassProcessor> Process()
         {
             // Get the results of all of the Intune policies from the system
-            var output = MDM.Get();
+            Dictionary<string, List<Dictionary<string, object>>> output = MDM.Get();
 
             // Create a list to store the processed results and return at the end
             List<MDMClassProcessor> resultsList = [];
 
             // Loop over each data
-            foreach (var cimInstanceResult in output)
+            foreach (KeyValuePair<string, List<Dictionary<string, object>>> cimInstanceResult in output)
             {
                 try
                 {
-                    foreach (var dictionary in cimInstanceResult.Value)
+                    foreach (Dictionary<string, object> dictionary in cimInstanceResult.Value)
                     {
-                        foreach (var keyValuePair in dictionary)
+                        foreach (KeyValuePair<string, object> keyValuePair in dictionary)
                         {
                             // Filter out the items we don't need using ordinal, case-insensitive comparison
                             if (String.Equals(keyValuePair.Key, "Class", StringComparison.OrdinalIgnoreCase) ||

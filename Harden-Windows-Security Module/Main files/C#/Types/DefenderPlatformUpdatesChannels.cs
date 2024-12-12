@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>
     /// Microsoft Defender Update channel names for Platform and Engine
     /// </summary>
-    public static class DefenderPlatformUpdatesChannels
+    internal static class DefenderPlatformUpdatesChannels
     {
-        public static readonly Dictionary<ushort, string> Channels = new()
+        internal static readonly Dictionary<ushort, string> Channels = new()
     {
             { 0, "NotConfigured" },
             { 2, "Beta" },

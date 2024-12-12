@@ -36,6 +36,8 @@ Microsoft.Win32.Primitives
 System.Diagnostics.EventLog
 System.Management.Automation
 System.IO.Compression.zipfile
+System.Security.AccessControl
+System.Collections.NonGeneric
 System.Collections.Concurrent
 System.Runtime.InteropServices
 System.Windows.Controls.Ribbon

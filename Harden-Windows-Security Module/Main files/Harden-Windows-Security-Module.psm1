@@ -43,7 +43,7 @@ function Update-HardenWindowsSecurity {
         Remove-Module -Name 'Harden-Windows-Security-Module' -Force -WarningAction SilentlyContinue
 
         try {
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start($true, $false)
 
             try {
                 # Suppressing errors and warnings on this one because it can't uninstall the module currently in use even after Remove attempt earlier so it removes any leftover versions except for the one currently in use.
@@ -93,7 +93,8 @@ $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toa
 
 # Load all of the C# codes
 # for some reason it tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
-Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/nowarn:1701'
+# https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked' , '/optimize+'
 
 try {
     # when we use the -ReferencedAssemblies parameter of Add-Type, The DLLs are only added and made available to the C# compilation, not the PowerShell host itself

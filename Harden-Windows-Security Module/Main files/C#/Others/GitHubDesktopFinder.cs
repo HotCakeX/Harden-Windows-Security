@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class GitHubDesktopFinder
+    internal static class GitHubDesktopFinder
     {
         // This method searches for .exe files in the specified path and returns a list of FileInfo objects
-        public static List<FileInfo>? Find()
+        internal static List<FileInfo>? Find()
         {
             // Get the current user's name
             string userName = Environment.UserName;

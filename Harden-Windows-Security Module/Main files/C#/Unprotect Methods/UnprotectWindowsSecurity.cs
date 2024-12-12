@@ -5,8 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class UnprotectWindowsSecurity
@@ -32,7 +30,7 @@ namespace HardenWindowsSecurity
             #region registry keys
             Logger.LogMessage("Deleting all the registry keys created during protection.", LogTypeIntel.Information);
 
-            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems)
             {
                 RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, "Delete");
             }
@@ -72,7 +70,7 @@ namespace HardenWindowsSecurity
             // No ActivityTracker is implemented in here because this file download only happens
             // When this method is run from PowerShell
             // When this method is run from the GUI, check for existence of LGPO and downloading it will happen in that code
-            if (!System.IO.Path.Exists(GlobalVars.LGPOExe))
+            if (!Path.Exists(GlobalVars.LGPOExe))
             {
                 Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
                 AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
@@ -102,9 +100,8 @@ namespace HardenWindowsSecurity
 
             if (XblGameSaveTaskResult)
             {
-
                 Logger.LogMessage("Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
-                _ = PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
+                ProcessStarter.RunCommand("schtasks.exe", @"/Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
             }
             else
             {
@@ -160,7 +157,7 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 
 
             Logger.LogMessage("""Disabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category""", LogTypeIntel.Information);
-            RunCommandLineCommands.Run("auditpol", "/set /subcategory:\"{0CCE921C-69AE-11D9-BED3-505054503030}\" /success:disable /failure:disable");
+            ProcessStarter.RunCommand("auditpol", "/set /subcategory:\"{0CCE921C-69AE-11D9-BED3-505054503030}\" /success:disable /failure:disable");
 
         }
 
@@ -179,9 +176,8 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
             FirewallHelper.BlockIPAddressListsInGroupPolicy("State Sponsors of Terrorism IP range blocking", null, false);
 
             // Refresh the group policies to apply the changes instantly
-            _ = PowerShellExecutor.ExecuteScript("""
-Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
-""");
+            ProcessStarter.RunCommand("GPUpdate.exe", "/force");
+
         }
 
 
@@ -199,23 +195,14 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             _ = PowerShellExecutor.ExecuteScript(command);
 
 
-            if (GlobalVars.ProcessMitigations is null)
-            {
-                throw new InvalidOperationException("GlobalVars.ProcessMitigations is null.");
-            }
-
             // Only remove the mitigations that are allowed to be removed
             // It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have the RemovalAllowed property of ALL OF ITS MITIGATIONS defined in the Process Mitigations CSV file set to False
             // So regardless of whether mitigations were added by the module, only remove mitigations for processes whose names do not exist in that registry location by default, this will prevent from removing any possible built-in default mitigations
             // The following removals only affect the registry keys, they do not alter the mitigations defined in Microsoft Defender GUI
-            List<ProcessMitigationsParser.ProcessMitigationsRecords> processMitigations = GlobalVars.ProcessMitigations
-                .Where(mitigation => mitigation.RemovalAllowed)
-                .ToList();
+            List<ProcessMitigationsParser.ProcessMitigationsRecords> processMitigations = [.. GlobalVars.ProcessMitigations.Where(mitigation => mitigation.RemovalAllowed)];
 
             // Group the filtered mitigations by ProgramName
-            List<IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords>>? groupedMitigations = processMitigations
-                .GroupBy(mitigation => mitigation.ProgramName)
-                .ToList();
+            List<IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords>> groupedMitigations = [.. processMitigations.GroupBy(mitigation => mitigation.ProgramName)];
 
             // Get all of the currently available mitigations from the registry which are executable names
             List<string>? allAvailableMitigations = Registry.LocalMachine
@@ -246,7 +233,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
         public static void RemoveAppControlPolicies(bool DownloadsDefenseMeasures, bool DangerousScriptHostsBlocking)
         {
             // Run the CiTool and retrieve a list of base policies
-            List<CiPolicyInfo> policies = CiToolRunner.RunCiTool(CiToolRunner.GetOptions(), SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
+            List<CiPolicyInfo> policies = CiToolRunner.RunCiTool(CiToolRunner.Options, SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
 
             if (DownloadsDefenseMeasures)
             {

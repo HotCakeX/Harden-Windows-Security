@@ -4,15 +4,13 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class TaskSchedulerHelper
     {
 
         // Enums for ScheduledTask
-        public enum StateEnum
+        public enum State
         {
             Unknown = 0,
             Disabled = 1,
@@ -21,7 +19,7 @@ namespace HardenWindowsSecurity
             Running = 4
         }
 
-        public enum CompatibilityEnum
+        public enum Compatibility
         {
             At = 0,
             V1 = 1,
@@ -30,20 +28,20 @@ namespace HardenWindowsSecurity
             Win8 = 4
         }
 
-        public enum RunLevelEnum
+        public enum RunLevel
         {
             Limited = 0,
             Highest = 1
         }
 
-        public enum ProcessTokenSidTypeEnum
+        public enum ProcessTokenSidType
         {
             None = 0,
             Unrestricted = 1,
             Default = 2
         }
 
-        public enum LogonTypeEnum
+        public enum LogonType
         {
             None = 0,
             Password = 1,
@@ -54,15 +52,16 @@ namespace HardenWindowsSecurity
             InteractiveOrPassword = 6
         }
 
-        public enum MultipleInstancesEnum
+        public enum MultipleInstances
         {
             Parallel = 0,
             Queue = 1,
             IgnoreNew = 2
         }
 
-        public enum ClusterTaskTypeEnum
+        public enum ClusterTaskType
         {
+            None = 0,
             ResourceSpecific = 1,
             AnyNode = 2,
             ClusterWide = 3

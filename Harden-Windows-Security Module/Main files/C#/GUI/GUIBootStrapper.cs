@@ -1,8 +1,6 @@
 using System;
 using System.Threading;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class GUIHandOff
@@ -21,7 +19,7 @@ namespace HardenWindowsSecurity
                 {
                     // Initialize and run the WPF GUI
                     GUIMain.LoadMainXaml();
-                    _ = GUIMain.app!.Run(GUIMain.mainGUIWindow);
+                    _ = GUIMain.app.Run(GUIMain.mainGUIWindow);
                 }
                 catch (Exception ex)
                 {

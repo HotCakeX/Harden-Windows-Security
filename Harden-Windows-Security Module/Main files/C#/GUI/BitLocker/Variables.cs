@@ -2,9 +2,6 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -15,8 +12,6 @@ namespace HardenWindowsSecurity
         internal static Grid? ParentGrid;
 
         internal static TabControl? TabControl;
-
-        internal static ToggleButton? ExecuteButton;
 
         internal static PasswordBox? PIN1;
 
@@ -105,12 +100,12 @@ namespace HardenWindowsSecurity
 
 
             // Using the Application dispatcher to update UI elements
-            GUIMain.app!.Dispatcher.Invoke(() =>
+            GUIMain.app.Dispatcher.Invoke(() =>
             {
                 if (viewModelList.Count > 0)
                 {
                     // Place them in the DataGrid
-                    GUIBitLocker.RecoveryKeysDataGrid!.ItemsSource = viewModelList;
+                    RecoveryKeysDataGrid!.ItemsSource = viewModelList;
                 }
             });
 

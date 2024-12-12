@@ -1,8 +1,6 @@
 using System;
 using System.Reflection;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class OptionalWindowsFeatures

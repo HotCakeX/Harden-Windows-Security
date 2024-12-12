@@ -2,11 +2,9 @@
 using System.Globalization;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class BitLocker
+    internal partial class BitLocker
     {
         /// <summary>
         /// Enables Auto unlock | Suitable for Non-OS Drives
@@ -14,7 +12,7 @@ namespace HardenWindowsSecurity
         /// https://learn.microsoft.com/en-us/windows/win32/secprov/enableautounlock-win32-encryptablevolume
         /// </summary>
         /// <param name="DriveLetter">Drive letter in the following format: "C:"</param>
-        public static void EnableBitLockerAutoUnlock(string DriveLetter)
+        internal static void EnableBitLockerAutoUnlock(string DriveLetter)
         {
 
             // First get the volume info based on the drive letter

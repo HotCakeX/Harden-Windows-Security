@@ -7,8 +7,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public partial class GUIMain
@@ -29,7 +27,6 @@ namespace HardenWindowsSecurity
                     return;
                 }
 
-                // Defining the path to the XAML XML file
                 if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
@@ -43,9 +40,6 @@ namespace HardenWindowsSecurity
 
                 // Parse the XAML content to create a UserControl
                 GUILogs.View = (UserControl)XamlReader.Parse(xamlContent);
-
-                // Set the DataContext for Logs view
-                GUILogs.View.DataContext = new LogsVM();
 
                 // Find the Parent Grid
                 GUILogs.ParentGrid = (Grid)GUILogs.View.FindName("ParentGrid");

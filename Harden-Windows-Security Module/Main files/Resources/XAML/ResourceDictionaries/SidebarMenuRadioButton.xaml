@@ -15,7 +15,7 @@
                             Height="50"
                             Width="228"
                             BorderThickness="0">
-                       <!--// background of each sidebar button //-->
+                       <!-- background of each sidebar button -->
                        <Border.Background>
                            <LinearGradientBrush x:Name="BorderBackground" StartPoint="0,0" EndPoint="1,0">
                                <GradientStop Color="#272B2F" Offset="0.0" />
@@ -45,7 +45,7 @@
                                       SourceName="border">
                            <BeginStoryboard>
                                <Storyboard>
-                                   <!--// gradient color of the sidebar button when mouse/touch hovers over //-->
+                                   <!-- gradient color of the sidebar button when mouse/touch hovers over -->
                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
                                                     Storyboard.TargetProperty="GradientStops[0].Color"
                                                     From="#272B2F"
@@ -63,7 +63,7 @@
                                       SourceName="border">
                            <BeginStoryboard>
                                <Storyboard>
-                                   <!--// revert gradient color of the sidebar button when mouse/touch leaves it //-->
+                                   <!-- revert gradient color of the sidebar button when mouse/touch leaves it -->
                                    <ColorAnimation Storyboard.TargetName="BorderBackground"
                                                     Storyboard.TargetProperty="GradientStops[0].Color"
                                                     From="#3E434A"
@@ -79,7 +79,7 @@
                        </EventTrigger>
                        <Trigger Property="IsChecked"
                                  Value="True">
-                           <!--// gradient color of the currently selected/active sidebar button //-->
+                           <!-- gradient color of the currently selected/active sidebar button -->
                            <Setter Property="Background"
                                     TargetName="border">
                                <Setter.Value>

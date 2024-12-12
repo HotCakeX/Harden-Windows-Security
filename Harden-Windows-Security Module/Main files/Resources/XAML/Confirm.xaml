@@ -352,8 +352,9 @@ ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" ></ComboBox>
                 <TextBlock x:Name="TotalCurrentlyDisplayedSecOps" FontSize="15" FontWeight="SemiBold" Foreground="#121518"
 HorizontalAlignment="Right" VerticalAlignment="Center"/>
             </StackPanel>
+
             <!--SecOps Data Grid-->
-            <DataGrid Grid.Row="3" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="SecOpsDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
+            <DataGrid Grid.Row="3" AutoGenerateColumns="False" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="SecOpsDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
                 <!-- DataGrid Columns Definitions -->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" IsReadOnly="True" Width="3*" />

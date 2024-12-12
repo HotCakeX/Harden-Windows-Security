@@ -1,7 +1,5 @@
 using System;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class NonAdminCommands
@@ -22,7 +20,7 @@ namespace HardenWindowsSecurity
             Logger.LogMessage("Running the Non-Admin category", LogTypeIntel.Information);
             Logger.LogMessage("Applying the Non-Admin registry settings", LogTypeIntel.Information);
 
-            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems)
             {
                 if (string.Equals(Item.Category, "NonAdmin", StringComparison.OrdinalIgnoreCase))
                 {

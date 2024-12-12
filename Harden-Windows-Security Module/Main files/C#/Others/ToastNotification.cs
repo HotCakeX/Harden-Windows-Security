@@ -2,8 +2,6 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class ToastNotification

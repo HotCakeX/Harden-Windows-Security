@@ -2,8 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     internal static class DialogMsgHelper
@@ -14,7 +12,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="Message"></param>
         /// <param name="Title"></param>
-        public static void Show(string Message, string? Title = "An Error Occurred")
+        internal static void Show(string Message, string? Title = "An Error Occurred")
         {
             Thread thread = new(() =>
             {

@@ -4,8 +4,6 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace HardenWindowsSecurity
         public string? ErrorMessage { get; set; }
     }
 
-    public partial class TpmStatus
+    public static partial class TpmStatus
     {
         // Method to use the Windows APIs to check if the TPM is enabled and activated
         public static TpmResult Get()
@@ -58,9 +56,11 @@ namespace HardenWindowsSecurity
         private static class TpmCoreProvisioningFunctions
         {
             [DllImport("TpmCoreProvisioning", CharSet = CharSet.Unicode)]
+            [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
             internal static extern uint TpmIsEnabled(out byte pfIsEnabled);
 
             [DllImport("TpmCoreProvisioning", CharSet = CharSet.Unicode)]
+            [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
             internal static extern uint TpmIsActivated(out byte pfIsActivated);
         }
 

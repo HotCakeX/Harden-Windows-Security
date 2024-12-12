@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class LockScreen

@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class WindowsFirewall
@@ -31,9 +29,7 @@ namespace HardenWindowsSecurity
             List<ManagementObject> AllCurrentNetworkAdapters = NetConnectionProfiles.Get();
 
             // Extract InterfaceIndex from each ManagementObject and convert to int array
-            int[] InterfaceIndexes = AllCurrentNetworkAdapters
-                .Select(n => Convert.ToInt32(n["InterfaceIndex"], CultureInfo.InvariantCulture))
-                .ToArray();
+            int[] InterfaceIndexes = [.. AllCurrentNetworkAdapters.Select(n => Convert.ToInt32(n["InterfaceIndex"], CultureInfo.InvariantCulture))];
 
             // Use the extracted InterfaceIndexes in the method to set all of the network locations to public
             bool ReturnResult = NetConnectionProfiles.Set(NetConnectionProfiles.NetworkCategory.Public, InterfaceIndexes, null);

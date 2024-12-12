@@ -1,4 +1,4 @@
-#nullable enable
+using System;
 
 namespace HardenWindowsSecurity
 {
@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
 
             FirewallHelper.BlockIPAddressListsInGroupPolicy(
               "OFAC Sanctioned Countries IP range blocking",
-              "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt",
+             new Uri("https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt"),
               true
               );
         }

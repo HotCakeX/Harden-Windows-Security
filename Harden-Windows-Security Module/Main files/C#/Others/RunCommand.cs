@@ -1,33 +1,60 @@
 using System;
 using System.Diagnostics;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class RunCommandLineCommands
+    internal static class ProcessStarter
     {
-        public static void Run(string command, string arguments)
+        /// <summary>
+        /// Executes an executable with arguments
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="arguments"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        internal static void RunCommand(string command, string? arguments = null, bool suppressError = false)
         {
-            ProcessStartInfo processStartInfo = new()
-            {
-                FileName = command,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
 
-            using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Failed to start the process.");
+            ProcessStartInfo processInfo;
+
+            if (arguments is not null)
+            {
+                processInfo = new()
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+            }
+            else
+            {
+                processInfo = new()
+                {
+                    FileName = command,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+            }
+
+            using Process process = new();
+            process.StartInfo = processInfo;
+            _ = process.Start();
+
+            // Capture output and errors
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
 
             process.WaitForExit();
 
-            if (process.ExitCode != 0)
+            if (process.ExitCode != 0 && !suppressError)
             {
-                string error = process.StandardError.ReadToEnd();
-                throw new InvalidOperationException(error);
+                throw new InvalidOperationException($"Command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
             }
+
         }
     }
 }

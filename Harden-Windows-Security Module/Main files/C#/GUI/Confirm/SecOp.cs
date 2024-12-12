@@ -4,8 +4,6 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
 
@@ -56,7 +54,7 @@ namespace HardenWindowsSecurity
         public string? FriendlyName { get; set; }
         public string? Value { get; set; }
         public string? Name { get; set; }
-        public string? Category { get; set; }
+        public required ComplianceCategories Category { get; set; }
         public string? Method { get; set; }
 
         // Public property to get or set whether the security option is compliant

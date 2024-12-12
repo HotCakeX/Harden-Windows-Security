@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class GUIProtectWinSecurity

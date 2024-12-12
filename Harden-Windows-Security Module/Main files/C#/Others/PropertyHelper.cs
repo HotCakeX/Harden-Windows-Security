@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class PropertyHelper
+    internal static class PropertyHelper
     {
         /// <summary>
         /// Get the value of a property from a dynamic object
@@ -17,7 +15,7 @@ namespace HardenWindowsSecurity
         /// <param name="obj"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        public static object? GetPropertyValue(dynamic obj, string propertyName)
+        internal static object? GetPropertyValue(dynamic obj, string propertyName)
         {
             // Convert dynamic object to IDictionary<string, object> to access properties and check for nulls
             if (obj is IDictionary<string, object> dictionary)

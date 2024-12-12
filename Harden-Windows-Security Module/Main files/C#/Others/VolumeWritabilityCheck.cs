@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     internal static partial class VolumeWritabilityCheck
@@ -35,7 +33,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Create a random file name using GUID
-                string GUID = System.Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase);
+                string GUID = Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase);
 
                 try
                 {

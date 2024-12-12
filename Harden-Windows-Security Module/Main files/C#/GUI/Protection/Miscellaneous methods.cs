@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Controls;
 
-#nullable enable
+#nullable disable
 
 namespace HardenWindowsSecurity
 {
@@ -15,13 +15,13 @@ namespace HardenWindowsSecurity
         public static void UpdateSubCategories()
         {
             // Disable all sub-category items first
-            foreach (var item in GUIProtectWinSecurity.subCategories!.Items)
+            foreach (var item in subCategories!.Items)
             {
                 ((ListViewItem)item).IsEnabled = false;
             }
 
             // Get all checked categories
-            var checkedCategories = GUIProtectWinSecurity.categories!.Items
+            var checkedCategories = categories!.Items
                 .Cast<ListViewItem>()
                 .Where(item => ((CheckBox)item.Content).IsChecked == true)
                 .ToList();
@@ -30,13 +30,13 @@ namespace HardenWindowsSecurity
             foreach (var categoryItem in checkedCategories)
             {
                 string categoryContent = ((CheckBox)categoryItem.Content).Name;
-                if (GUIProtectWinSecurity.correlation.Contains(categoryContent))
+                if (correlation.Contains(categoryContent))
                 {
-                    if (GUIProtectWinSecurity.correlation[categoryContent] is string[] subCategoryNames)
+                    if (correlation[categoryContent] is string[] subCategoryNames)
                     {
                         foreach (string subCategoryName in subCategoryNames)
                         {
-                            foreach (var item in GUIProtectWinSecurity.subCategories.Items)
+                            foreach (var item in subCategories.Items)
                             {
                                 ListViewItem subCategoryItem = (ListViewItem)item;
                                 if (((CheckBox)subCategoryItem.Content).Name == subCategoryName)
@@ -50,7 +50,7 @@ namespace HardenWindowsSecurity
             }
 
             // Uncheck sub-category items whose category is not selected
-            foreach (var item in GUIProtectWinSecurity.subCategories.Items)
+            foreach (var item in subCategories.Items)
             {
                 ListViewItem subCategoryItem = (ListViewItem)item;
                 if (!subCategoryItem.IsEnabled)
@@ -65,7 +65,7 @@ namespace HardenWindowsSecurity
             }
 
             // Disable categories that are not valid for the current session
-            foreach (var item in GUIProtectWinSecurity.categories.Items)
+            foreach (var item in categories.Items)
             {
                 ListViewItem categoryItem = (ListViewItem)item;
                 if (!GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
@@ -79,12 +79,12 @@ namespace HardenWindowsSecurity
         // Method to disable the Offline Mode configuration inputs
         public static void DisableOfflineModeConfigInputs()
         {
-            GUIProtectWinSecurity.microsoftSecurityBaselineZipButton!.IsEnabled = false;
-            GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox!.IsEnabled = false;
-            GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton!.IsEnabled = false;
-            GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox!.IsEnabled = false;
-            GUIProtectWinSecurity.lgpoZipButton!.IsEnabled = false;
-            GUIProtectWinSecurity.lgpoZipTextBox!.IsEnabled = false;
+            microsoftSecurityBaselineZipButton!.IsEnabled = false;
+            microsoftSecurityBaselineZipTextBox!.IsEnabled = false;
+            microsoft365AppsSecurityBaselineZipButton!.IsEnabled = false;
+            microsoft365AppsSecurityBaselineZipTextBox!.IsEnabled = false;
+            lgpoZipButton!.IsEnabled = false;
+            lgpoZipTextBox!.IsEnabled = false;
         }
 
         /// <summary>
@@ -93,15 +93,13 @@ namespace HardenWindowsSecurity
         public static void ExecuteButtonPress()
         {
 
-#nullable disable
-
             // Clear the categories and sub-categories lists from the saved variables
-            GUIProtectWinSecurity.SelectedCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
-            GUIProtectWinSecurity.SelectedSubCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
+            SelectedCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
+            SelectedSubCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
 
-            // Gather the selected categories and sub-categories and store them in the GlobalVars hashtable
-            System.Collections.IEnumerable categoriesItems = GUIProtectWinSecurity.categories!.Items;
-            System.Collections.IEnumerable subCategoriesItems = GUIProtectWinSecurity.subCategories!.Items;
+            // Gather the selected categories and sub-categories and store them in the GlobalVars HashTable
+            System.Collections.IEnumerable categoriesItems = categories!.Items;
+            System.Collections.IEnumerable subCategoriesItems = subCategories!.Items;
 
             // Get the Categories status and add them to the variables
             foreach (ListBoxItem categoryItem in categoriesItems)
@@ -109,7 +107,7 @@ namespace HardenWindowsSecurity
                 if ((bool)((CheckBox)categoryItem.Content).IsChecked)
                 {
                     string categoryName = ((CheckBox)categoryItem.Content).Name;
-                    GUIProtectWinSecurity.SelectedCategories.Enqueue(categoryName);
+                    SelectedCategories.Enqueue(categoryName);
                 }
             }
 
@@ -119,11 +117,10 @@ namespace HardenWindowsSecurity
                 if ((bool)((CheckBox)subCategoryItem.Content).IsChecked)
                 {
                     string subCategoryName = ((CheckBox)subCategoryItem.Content).Name;
-                    GUIProtectWinSecurity.SelectedSubCategories.Enqueue(subCategoryName);
+                    SelectedSubCategories.Enqueue(subCategoryName);
                 }
             }
 
-#nullable enable
         }
     }
 }

@@ -34,7 +34,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Version>$(FileVersion)</Version>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 
@@ -47,6 +47,7 @@
     <IncludeSymbols>False</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <DebugType>full</DebugType>
+    <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>

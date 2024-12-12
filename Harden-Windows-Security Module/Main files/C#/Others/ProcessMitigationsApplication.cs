@@ -4,24 +4,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class ProcessMitigationsApplication
+    internal static class ProcessMitigationsApplication
     {
-        public static void Apply()
+        internal static void Apply()
         {
 
-            if (GlobalVars.ProcessMitigations is null)
-            {
-                throw new InvalidOperationException("No process mitigations found in the global variable.");
-            }
-
             // Group the data by ProgramName
-            IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords>[] groupedMitigations = GlobalVars.ProcessMitigations
-                .GroupBy(pm => pm.ProgramName)
-                .ToArray();
+            IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords>[] groupedMitigations = [.. GlobalVars.ProcessMitigations.GroupBy(pm => pm.ProgramName)];
 
             // Get the current process mitigations from the registry
             string[] allAvailableMitigations = (Registry.LocalMachine
@@ -62,13 +53,9 @@ namespace HardenWindowsSecurity
                 string? programName = group.Key;
                 Logger.LogMessage($"Adding process mitigations for {programName}", LogTypeIntel.Information);
 
-                string?[] enableMitigations = group.Where(g => string.Equals(g.Action, "Enable", StringComparison.OrdinalIgnoreCase))
-                                             .Select(g => g.Mitigation)
-                                             .ToArray();
+                string?[] enableMitigations = [.. group.Where(g => string.Equals(g.Action, "Enable", StringComparison.OrdinalIgnoreCase)).Select(g => g.Mitigation)];
 
-                string?[] disableMitigations = group.Where(g => string.Equals(g.Action, "Disable", StringComparison.OrdinalIgnoreCase))
-                                              .Select(g => g.Mitigation)
-                                              .ToArray();
+                string?[] disableMitigations = [.. group.Where(g => string.Equals(g.Action, "Disable", StringComparison.OrdinalIgnoreCase)).Select(g => g.Mitigation)];
 
                 // Create the command and add parameters
                 PSCommand command = new();

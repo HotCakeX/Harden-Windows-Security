@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -28,7 +28,6 @@ namespace HardenWindowsSecurity
                     return;
                 }
 
-                // Defining the path to the XAML XML file
                 if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
@@ -51,40 +50,8 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl
                 GUIExclusions.View = (UserControl)XamlReader.Parse(xamlContent);
 
-                // Set the DataContext for the Exclusions view
-                GUIExclusions.View.DataContext = new ExclusionsVM();
-
                 // Find the Parent Grid
                 GUIExclusions.ParentGrid = (Grid)GUIExclusions.View.FindName("ParentGrid");
-
-                #region finding Execute button related elements
-
-                // Finding the Execute Button Grid
-                Grid? ExecuteButtonGrid = GUIExclusions.ParentGrid.FindName("ExecuteButtonGrid") as Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the Exclusions View");
-
-                // Finding the Execute Button
-                ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as ToggleButton ?? throw new InvalidOperationException("Couldn't find the ExecuteButton in Exclusions view");
-
-                // Apply the template to make sure it's available
-                _ = ExecuteButton.ApplyTemplate();
-
-                // Access the image within the Execute Button's template
-                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not Image RefreshIconImage)
-                {
-                    throw new InvalidOperationException("RefreshIconImage could not be found in the Exclusions view");
-                }
-
-                // Update the image source for the Refresh button
-                // Load the Refresh icon image into memory and set it as the source
-                BitmapImage RefreshIconBitmapImage = new();
-                RefreshIconBitmapImage.BeginInit();
-                RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-                RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-                RefreshIconBitmapImage.EndInit();
-
-                RefreshIconImage.Source = RefreshIconBitmapImage;
-
-                #endregion
 
 
                 #region Finding other elements
@@ -96,6 +63,8 @@ namespace HardenWindowsSecurity
                 TextBox? SelectedFilePaths = GUIExclusions.ParentGrid.FindName("SelectedFilePaths") as TextBox ?? throw new InvalidOperationException("Couldn't find SelectedFilePaths in the Exclusions view.");
 
                 Button? BrowseForFilesButton = GUIExclusions.ParentGrid.FindName("BrowseForFilesButton") as Button ?? throw new InvalidOperationException("Couldn't find BrowseForFilesButton in the Exclusions view.");
+
+                Button ApplyExclusionsButton = GUIExclusions.ParentGrid.FindName("ApplyExclusionsButton") as Button ?? throw new InvalidOperationException("ApplyExclusionsButton could not be found in the Exclusions view.");
 
                 // Finding the button's image to assign an icon to it
                 Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as Image ?? throw new InvalidOperationException("Couldn't find BrowseButtonIcon in the Exclusions view.");
@@ -151,11 +120,8 @@ namespace HardenWindowsSecurity
                 };
 
 
-                // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                ActivityTracker.RegisterUIElement(ExecuteButton);
-                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                // Register the elements that will be enabled/disabled based on current activity
+                ActivityTracker.RegisterUIElement(ApplyExclusionsButton);
                 ActivityTracker.RegisterUIElement(BrowseForFilesButton);
 
                 // Add the path to the Controlled folder access backup list of the Harden Windows Security
@@ -167,7 +133,7 @@ namespace HardenWindowsSecurity
                     GlobalVars.CFABackup ??= [];
 
                     // Convert GlobalVars.CFABackup to a List for easier manipulation
-                    List<string> CFABackupLocal = new(GlobalVars.CFABackup!);
+                    List<string> CFABackupLocal = [.. GlobalVars.CFABackup!];
 
                     // Check if the item is not already in the list
                     if (!CFABackupLocal.Contains(itemToAdd))
@@ -181,152 +147,147 @@ namespace HardenWindowsSecurity
 
 
 
-                // Set up the Click event handler for the ExecuteButton button
-                ExecuteButton.Click += async (sender, e) =>
+                // Set up the Click event handler for the main button
+                ApplyExclusionsButton.Click += async (sender, e) =>
                     {
                         // Only continue if there is no activity other places
-                        if (!ActivityTracker.IsActive)
+                        if (ActivityTracker.IsActive)
                         {
-                            // mark as activity started
-                            ActivityTracker.IsActive = true;
+                            return;
+                        }
 
-                            // Get the status of the toggle buttons using dispatcher and update the bool variables accordingly
-                            // This way, we won't need to run the actual job in the dispatcher thread
-                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        // mark as activity started
+                        ActivityTracker.IsActive = true;
+
+                        // Get the status of the toggle buttons using dispatcher and update the bool variables accordingly
+                        // This way, we won't need to run the actual job in the dispatcher thread
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            GUIExclusions.MicrosoftDefenderToggleButtonStatus = MicrosoftDefenderToggleButton?.IsChecked ?? false;
+                            GUIExclusions.ControlledFolderAccessToggleButtonStatus = ControlledFolderAccessToggleButton?.IsChecked ?? false;
+                            GUIExclusions.AttackSurfaceReductionRulesToggleButtonStatus = AttackSurfaceReductionRulesToggleButton?.IsChecked ?? false;
+
+                        });
+
+                        // Run the exclusion addition job asynchronously in a different thread
+                        await Task.Run(() =>
+                        {
+
+                            // If user selected file paths
+                            if (GUIExclusions.selectedFiles is not null)
                             {
-                                GUIExclusions.MicrosoftDefenderToggleButtonStatus = MicrosoftDefenderToggleButton?.IsChecked ?? false;
-                                GUIExclusions.ControlledFolderAccessToggleButtonStatus = ControlledFolderAccessToggleButton?.IsChecked ?? false;
-                                GUIExclusions.AttackSurfaceReductionRulesToggleButtonStatus = AttackSurfaceReductionRulesToggleButton?.IsChecked ?? false;
 
-                            });
+                                #region Getting the current exclusion lists
 
-                            // Run the exclusion addition job asynchronously in a different thread
-                            await System.Threading.Tasks.Task.Run(() =>
-                            {
+                                // These already run in the Initialize() method but we need them up to date after user adds files to the exclusions and then presses the execute button again
 
-                                // If user selected file paths
-                                if (GUIExclusions.selectedFiles is not null)
+                                // Get the MSFT_MpPreference WMI results and save them to the global variable GlobalVars.MDAVPreferencesCurrent
+                                GlobalVars.MDAVPreferencesCurrent = MpPreferenceHelper.GetMpPreference();
+
+
+                                // Attempt to retrieve the property value as string[]
+                                string[] ExclusionPathArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "ExclusionPath");
+
+                                // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
+                                List<string> ExclusionPathList = ExclusionPathArray is not null
+                                    ? [.. ExclusionPathArray]
+                                    : [];
+
+
+                                // Attempt to retrieve the property value as string[]
+                                string[] ControlledFolderAccessAllowedApplicationsArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications");
+
+                                // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
+                                List<string> ControlledFolderAccessAllowedApplicationsList = ControlledFolderAccessAllowedApplicationsArray is not null
+                                    ? [.. ControlledFolderAccessAllowedApplicationsArray]
+                                    : [];
+
+
+                                // Attempt to retrieve the property value as string[]
+                                string[] attackSurfaceReductionOnlyExclusionsArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "AttackSurfaceReductionOnlyExclusions");
+
+                                // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
+                                // Makes it easier to check items in it later
+                                List<string> attackSurfaceReductionOnlyExclusionsList = attackSurfaceReductionOnlyExclusionsArray is not null
+                                    ? [.. attackSurfaceReductionOnlyExclusionsArray]
+                                    : [];
+                                #endregion
+
+
+                                // Loop over each user selected file path
+                                foreach (string path in GUIExclusions.selectedFiles)
                                 {
 
-                                    #region Getting the current exclusion lists
-
-                                    // These already run in the Initialize() method but we need them up to date after user adds files to the exclusions and then presses the execute button again
-
-                                    // Get the MSFT_MpPreference WMI results and save them to the global variable GlobalVars.MDAVPreferencesCurrent
-                                    GlobalVars.MDAVPreferencesCurrent = MpPreferenceHelper.GetMpPreference();
-
-
-                                    // Attempt to retrieve the property value as string[]
-                                    string[] ExclusionPathArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "ExclusionPath");
-
-                                    // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
-                                    List<string> ExclusionPathList = ExclusionPathArray is not null
-                                        ? new List<string>(ExclusionPathArray)
-                                        : [];
-
-
-                                    // Attempt to retrieve the property value as string[]
-                                    string[] ControlledFolderAccessAllowedApplicationsArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications");
-
-                                    // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
-                                    List<string> ControlledFolderAccessAllowedApplicationsList = ControlledFolderAccessAllowedApplicationsArray is not null
-                                        ? new List<string>(ControlledFolderAccessAllowedApplicationsArray)
-                                        : [];
-
-
-                                    // Attempt to retrieve the property value as string[]
-                                    string[] attackSurfaceReductionOnlyExclusionsArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "AttackSurfaceReductionOnlyExclusions");
-
-                                    // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
-                                    // Makes it easier to check items in it later
-                                    List<string> attackSurfaceReductionOnlyExclusionsList = attackSurfaceReductionOnlyExclusionsArray is not null
-                                        ? new List<string>(attackSurfaceReductionOnlyExclusionsArray)
-                                        : [];
-                                    #endregion
-
-
-                                    // Loop over each user selected file path
-                                    foreach (string path in GUIExclusions.selectedFiles)
+                                    // check for toggle button status
+                                    if (GUIExclusions.MicrosoftDefenderToggleButtonStatus)
                                     {
 
-                                        // check for toggle button status
-                                        if (GUIExclusions.MicrosoftDefenderToggleButtonStatus)
+                                        if (!ExclusionPathList.Contains(path))
                                         {
+                                            Logger.LogMessage($"Adding {path} to the Microsoft Defender exclusions list", LogTypeIntel.Information);
 
-                                            if (!ExclusionPathList.Contains(path))
-                                            {
-                                                Logger.LogMessage($"Adding {path} to the Microsoft Defender exclusions list", LogTypeIntel.Information);
-
-                                                // ADD the program path to the Microsoft Defender's main Exclusions
-                                                ConfigDefenderHelper.ManageMpPreference<string[]>("ExclusionPath", [path], false);
-                                            }
-                                            else
-                                            {
-                                                Logger.LogMessage($"{path} already exists in the Microsoft Defender exclusions list, skipping.", LogTypeIntel.Information);
-                                            }
-
+                                            // ADD the program path to the Microsoft Defender's main Exclusions
+                                            ConfigDefenderHelper.ManageMpPreference<string[]>("ExclusionPath", [path], false);
                                         }
-
-                                        // check for toggle button status
-                                        if (GUIExclusions.ControlledFolderAccessToggleButtonStatus)
+                                        else
                                         {
-                                            if (!ControlledFolderAccessAllowedApplicationsList.Contains(path))
-                                            {
-
-                                                Logger.LogMessage($"Adding {path} to the Controlled Folder Access Allowed Applications", LogTypeIntel.Information);
-
-                                                // ADD the program path to the Controlled Folder Access Exclusions
-                                                ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessAllowedApplications", [path], false);
-
-                                                // ADD the same path for CFA to the CFA backup that the program uses by default so that during the restore, the user change will be included and not left out
-                                                AddItemToBackup(path);
-                                            }
-                                            else
-                                            {
-                                                Logger.LogMessage($"{path} already exists in the Controlled Folder Access Allowed Applications, skipping.", LogTypeIntel.Information);
-                                            }
-                                        }
-
-                                        // check for toggle button status
-                                        if (GUIExclusions.AttackSurfaceReductionRulesToggleButtonStatus)
-                                        {
-                                            if (!attackSurfaceReductionOnlyExclusionsList.Contains(path))
-                                            {
-
-                                                Logger.LogMessage($"Adding {path} to the Attack Surface Reduction Rules exclusions list", LogTypeIntel.Information);
-
-                                                // ADD the program path to the Attack Surface Exclusions
-                                                ConfigDefenderHelper.ManageMpPreference<string[]>("AttackSurfaceReductionOnlyExclusions", [path], false);
-                                            }
-                                            else
-                                            {
-                                                Logger.LogMessage($"{path} already exists in the Attack Surface Reduction Rules exclusions list, skipping.", LogTypeIntel.Information);
-                                            }
+                                            Logger.LogMessage($"{path} already exists in the Microsoft Defender exclusions list, skipping.", LogTypeIntel.Information);
                                         }
 
                                     }
 
-                                    // Display notification at the end if files were selected
-                                    ToastNotification.Show(ToastNotification.Type.EndOfExclusions, null, null, null, null);
+                                    // check for toggle button status
+                                    if (GUIExclusions.ControlledFolderAccessToggleButtonStatus)
+                                    {
+                                        if (!ControlledFolderAccessAllowedApplicationsList.Contains(path))
+                                        {
+
+                                            Logger.LogMessage($"Adding {path} to the Controlled Folder Access Allowed Applications", LogTypeIntel.Information);
+
+                                            // ADD the program path to the Controlled Folder Access Exclusions
+                                            ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessAllowedApplications", [path], false);
+
+                                            // ADD the same path for CFA to the CFA backup that the program uses by default so that during the restore, the user change will be included and not left out
+                                            AddItemToBackup(path);
+                                        }
+                                        else
+                                        {
+                                            Logger.LogMessage($"{path} already exists in the Controlled Folder Access Allowed Applications, skipping.", LogTypeIntel.Information);
+                                        }
+                                    }
+
+                                    // check for toggle button status
+                                    if (GUIExclusions.AttackSurfaceReductionRulesToggleButtonStatus)
+                                    {
+                                        if (!attackSurfaceReductionOnlyExclusionsList.Contains(path))
+                                        {
+
+                                            Logger.LogMessage($"Adding {path} to the Attack Surface Reduction Rules exclusions list", LogTypeIntel.Information);
+
+                                            // ADD the program path to the Attack Surface Exclusions
+                                            ConfigDefenderHelper.ManageMpPreference<string[]>("AttackSurfaceReductionOnlyExclusions", [path], false);
+                                        }
+                                        else
+                                        {
+                                            Logger.LogMessage($"{path} already exists in the Attack Surface Reduction Rules exclusions list, skipping.", LogTypeIntel.Information);
+                                        }
+                                    }
 
                                 }
-                                else
-                                {
-                                    Logger.LogMessage("No file paths selected for exclusion addition, nothing to process.", LogTypeIntel.Information);
-                                }
 
-                            });
+                                // Display notification at the end if files were selected
+                                ToastNotification.Show(ToastNotification.Type.EndOfExclusions, null, null, null, null);
 
-                            // Update the UI Elements at the end of the run
-                            await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                            }
+                            else
                             {
-                                ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
+                                Logger.LogMessage("No file paths selected for exclusion addition, nothing to process.", LogTypeIntel.Information);
+                            }
 
-                            });
+                        });
 
-                            // mark as activity completed
-                            ActivityTracker.IsActive = false;
-                        }
+                        // mark as activity completed
+                        ActivityTracker.IsActive = false;
                     };
 
                 // Cache the view before setting it as the CurrentView

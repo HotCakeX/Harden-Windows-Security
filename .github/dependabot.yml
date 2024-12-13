@@ -5,6 +5,11 @@
 
 version: 2
 updates:
+  - package-ecosystem: "dotnet-sdk"
+    directory: "/AppControl Manager"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager"

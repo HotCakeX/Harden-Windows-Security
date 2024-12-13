@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
 using static HardenWindowsSecurity.BitLocker;
 
 namespace HardenWindowsSecurity
@@ -105,11 +105,8 @@ namespace HardenWindowsSecurity
             // Using the Application dispatcher to update UI elements
             GUIMain.app.Dispatcher.Invoke(() =>
             {
-                if (viewModelList.Count > 0)
-                {
-                    // Place them in the DataGrid
-                    RecoveryKeysDataGrid!.ItemsSource = viewModelList;
-                }
+                // Place them in the DataGrid
+                RecoveryKeysDataGrid!.ItemsSource = viewModelList;
             });
 
 

@@ -8,23 +8,40 @@ namespace HardenWindowsSecurity
     {
         // Using HashTable since they don't throw error for non-existing keys
         // This method acts like ConvertFrom-Json -AsHashTable in PowerShell
-        internal static Hashtable ProcessJsonFile(string filePath)
+        internal static Hashtable? ProcessJsonFile(string filePath)
         {
-            // Check if the file exists at the specified path
-            if (!File.Exists(filePath))
+
+            try
             {
-                // Throw an exception if the file does not exist
-                throw new FileNotFoundException($"The specified file at '{filePath}' does not exist.");
+
+                // Check if the file exists at the specified path
+                if (!File.Exists(filePath))
+                {
+                    // Throw an exception if the file does not exist
+                    throw new FileNotFoundException($"The specified file at '{filePath}' does not exist.");
+                }
+
+                // Read the JSON file content as a string
+                string jsonContent = File.ReadAllText(filePath);
+
+                if (string.IsNullOrWhiteSpace(jsonContent))
+                {
+                    Logger.LogMessage($"The contents of '{filePath}' is empty.", LogTypeIntel.Error);
+                }
+
+                // Parse the JSON content into a JsonDocument
+                JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
+
+                // Convert the root element of the JsonDocument to a HashTable and return it
+                return ConvertJsonElementToHashTable(jsonDocument.RootElement);
+
             }
 
-            // Read the JSON file content as a string
-            string jsonContent = File.ReadAllText(filePath);
-
-            // Parse the JSON content into a JsonDocument
-            JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
-
-            // Convert the root element of the JsonDocument to a HashTable and return it
-            return ConvertJsonElementToHashTable(jsonDocument.RootElement);
+            catch
+            {
+                Logger.LogMessage($"Could not process the JSON file '{filePath}'. Compliance checks that rely on it will not show correct values.", LogTypeIntel.Error);
+                return null;
+            }
         }
 
         // Private method to convert a JsonElement representing a JSON object into a HashTable

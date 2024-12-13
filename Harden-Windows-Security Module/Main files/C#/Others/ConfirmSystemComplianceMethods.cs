@@ -217,11 +217,7 @@ namespace HardenWindowsSecurity
                 ComplianceCategories CatName = ComplianceCategories.WindowsUpdateConfigurations;
 
                 // Get the control from MDM CIM
-                Hashtable mdmPolicy = GlobalVars.MDM_Policy_Result01_Update02
-                ?? throw new InvalidOperationException("MDM_Policy_Result01_Update02 is null");
-
-                HashTableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork =
-                    HashTableChecker.CheckValue(mdmPolicy, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
+                HashTableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -543,9 +539,6 @@ namespace HardenWindowsSecurity
                     IEnumerable<BitLocker.KeyProtectorType?> KeyProtectors = volumeInfo.KeyProtector!
                     .Select(kp => kp.KeyProtectorType);
 
-                    // Display the key protectors
-                    // Logger.LogMessage(string.Join(", ", KeyProtectors));
-
                     // Check if TPM+PIN and recovery password are being used - Normal Security level
                     if (KeyProtectors.Contains(BitLocker.KeyProtectorType.TpmPin) && KeyProtectors.Contains(BitLocker.KeyProtectorType.RecoveryPassword))
                     {
@@ -737,11 +730,6 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Policy_Result01_System02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
-                }
                 HashTableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1170,11 +1158,6 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Firewall_PublicProfile02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Firewall_PublicProfile02 is null.");
-                }
                 HashTableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1245,11 +1228,6 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Firewall_PrivateProfile02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Firewall_PrivateProfile02 is null.");
-                }
                 HashTableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1320,11 +1298,6 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Firewall_DomainProfile02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Firewall_DomainProfile02 is null.");
-                }
                 HashTableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
@@ -2351,11 +2324,6 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Policy_Result01_System02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
-                }
                 HashTableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
 
                 nestedObjectArray.Add(new IndividualResult

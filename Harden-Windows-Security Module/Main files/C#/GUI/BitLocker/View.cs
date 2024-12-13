@@ -418,7 +418,7 @@ namespace HardenWindowsSecurity
                                 ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Operation System Drive");
                             }
 
-                        }); // End of Async Thread 
+                        }); // End of Async Thread
 
                     }
                     finally

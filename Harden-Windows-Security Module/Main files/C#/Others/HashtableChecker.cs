@@ -22,13 +22,13 @@ namespace HardenWindowsSecurity
         /// <param name="key">The key to be used against the HashTable in order to get the value</param>
         /// <param name="compareValue">Our desired value which will be compared against the value found in the HashTable after finding it based on the key we supply</param>
         /// <returns></returns>
-        internal static HashTableCheckerResult CheckValue<T>(Hashtable hashTable, string key, T compareValue)
+        internal static HashTableCheckerResult CheckValue<T>(Hashtable? hashTable, string key, T compareValue)
         {
             // Initialize the result object
             HashTableCheckerResult result = new();
 
             // Check if the HashTable contains the specified key
-            if (hashTable.ContainsKey(key))
+            if (hashTable is not null && hashTable.ContainsKey(key))
             {
                 // Retrieve the value associated with the key
                 var value = hashTable[key];

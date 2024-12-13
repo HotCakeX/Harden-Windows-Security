@@ -37,12 +37,11 @@ Function AppControl {
     <#
     .DESCRIPTION
         Please refer to the provided link for all of the information about this function and detailed overview of the entire process.
+        https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
     .PARAMETER MSIXPath
         The path to the AppControlManager MSIX file. If not provided, the latest MSIX file will be downloaded from the GitHub. It must have the version number and architecture in its file name as provided on GitHub or produced by Visual Studio.
     .PARAMETER SignTool
        The path to the Microsoft's Signtool.exe If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft website in Nuget and will use it for the signing operations.
-    .LINK
-        https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
     #>
     [CmdletBinding()]
     param (
@@ -58,7 +57,6 @@ Function AppControl {
         'ARM64' { [string]$CPUArch = 'arm64'; break }
         default { Throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
     }
-
     [string]$CommonName = 'SelfSignedCertForAppControlManager'
     [string]$WorkingDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $CommonName)
     [string]$CertificateOutputPath = [System.IO.Path]::Combine($WorkingDir, "$CommonName.cer")
@@ -163,17 +161,9 @@ Function AppControl {
         Write-Verbose -Message "Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else."
         $null = Import-Certificate -FilePath $CertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root'
 
-        Write-Verbose -Message 'Checking for existence of the application in unpacked format'
+        Write-Verbose -Message 'Checking for the existence of the application'
         $PossibleExistingApp = Get-AppxPackage -Name 'AppControlManager'
         if ($null -ne $PossibleExistingApp) {
-            if ($PossibleExistingApp.IsDevelopmentMode -eq $true) {
-                if ($PossibleExistingApp.SignatureKind -eq 'None') {
-                    # Without this step, the installing would fail
-                    Write-Verbose -Message 'The MSIX package is already installed in an unpacked format. Removing it and installing it again from the MSIX file.'
-                    $PossibleExistingApp | Remove-AppxPackage -AllUsers
-                }
-            }
-            # Get the details of the currently installed app before attempting to install the new one
             [string]$InstalledAppVersionBefore = $PossibleExistingApp.Version
             [string]$InstalledAppArchitectureBefore = $PossibleExistingApp.Architecture
             Write-Verbose -Message "The AppControl Manager app is already installed with version '$InstalledAppVersionBefore' and architecture '$InstalledAppArchitectureBefore'"
@@ -182,34 +172,33 @@ Function AppControl {
         Write-Verbose -Message "Installing AppControl Manager MSIX Package version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
         Add-AppPackage -Path $MSIXPath -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse
 
-        [string]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
-        Write-Verbose -Message "Adding the new app install's files To the ASR Rules exclusions."
-        # The cmdlet won't add duplicates
-        Add-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstallingAppLocationToAdd + 'AppControlManager.exe'), ($InstallingAppLocationToAdd + 'AppControlManager.dll'))
-
-        # If the app version being installed is not the same as the app version currently installed
-        if ($InstallingAppVersion -ne $InstalledAppVersionBefore) {
-            if (![string]::IsNullOrWhiteSpace($InstalledAppVersionBefore) -and ![string]::IsNullOrWhiteSpace($InstalledAppArchitectureBefore)) {
-                Write-Verbose -Message 'Removing ASR Rules exclusions that belong to the previous app version.'
-                # No check is needed since the Remove-MpPreference accepts any string and only removes them if they exist
-                [string]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02\'
-                Remove-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstalledAppLocationToRemove + 'AppControlManager.exe'), ($InstalledAppLocationToRemove + 'AppControlManager.dll'))
-            }
-        }
-        else {
-            Write-Verbose -Message 'Current and new AppControl Manager versions are the same, skipping removing previous ASR rules exclusions.'
-        }
-
         try {
-            $ValidateAdminCodeSignaturesRegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+            [string]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
+            Write-Verbose -Message "Adding the new app install's files To the ASR Rules exclusions."
+            # The cmdlet won't add duplicates
+            Add-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstallingAppLocationToAdd + 'AppControlManager.exe'), ($InstallingAppLocationToAdd + 'AppControlManager.dll')) -ErrorAction Stop
+
+            # If the app version being installed is not the same as the app version currently installed
+            if ($InstallingAppVersion -ne $InstalledAppVersionBefore) {
+                if (![string]::IsNullOrWhiteSpace($InstalledAppVersionBefore) -and ![string]::IsNullOrWhiteSpace($InstalledAppArchitectureBefore)) {
+                    Write-Verbose -Message 'Removing ASR Rules exclusions that belong to the previous app version.'
+                    # No check is needed since the Remove-MpPreference accepts any string and only removes them if they exist
+                    [string]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02\'
+                    Remove-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstalledAppLocationToRemove + 'AppControlManager.exe'), ($InstalledAppLocationToRemove + 'AppControlManager.dll')) -ErrorAction Stop
+                }
+            }
+            else {
+                Write-Verbose -Message 'Current and new AppControl Manager versions are the same, skipping removing previous ASR rules exclusions.'
+            }
+
             $ValidateAdminCodeSignaturesRegName = 'ValidateAdminCodeSignatures'
-            $ValidateAdminCodeSignaturesRegValue = Get-ItemProperty -Path $ValidateAdminCodeSignaturesRegPath -Name $ValidateAdminCodeSignaturesRegName -ErrorAction SilentlyContinue
+            $ValidateAdminCodeSignaturesRegValue = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name $ValidateAdminCodeSignaturesRegName -ErrorAction SilentlyContinue
             # This will cause the "A referral was returned from the server." error to show up when AppControl Manager tries to start.
             if ($ValidateAdminCodeSignaturesRegValue.$ValidateAdminCodeSignaturesRegName -eq 1) {
                 Write-Warning -Message "A policy named 'Only elevate executables that are signed and validated' is conflicting with the AppControl Manager app and won't let it start because it's self-signed with your on-device keys. Please disable the policy. It can be found in Group Policy Editor -> Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> 'User Account Control: Only elevate executable files that are signed and validated'"
             }
         }
-        catch {}
+        catch { Write-Verbose -Message "You can safely ignore this error: $_" } # If this section fails for some reason such as running the script in Windows Sandbox, no error should be thrown
     }
     finally { [System.IO.Directory]::Delete($WorkingDir, $true) } # Cleaning up the working directory in the TEMP directory
 }

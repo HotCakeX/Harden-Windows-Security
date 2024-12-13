@@ -296,64 +296,73 @@ namespace AppControlManager.Pages
                         // Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else
                         CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
 
-
-                        // Connect to the WMI namespace
-                        ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
-                        scope.Connect();
-
-                        // Create an instance of the MSFT_MpPreference class for Add method
-                        using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
-
-
-                        StringBuilder InstallingAppLocationToAdd = new();
-                        _ = InstallingAppLocationToAdd.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
-                        _ = InstallingAppLocationToAdd.Append(InstallingAppVersion);
-                        _ = InstallingAppLocationToAdd.Append('_');
-                        _ = InstallingAppLocationToAdd.Append(InstallingAppArchitecture);
-                        _ = InstallingAppLocationToAdd.Append("__sadt7br7jpt02\\");
-
-                        string path1 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.exe");
-                        string path2 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.dll");
-
-
-                        // Get the available methods for the class
-                        ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
-
-                        methodParams["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
-
-                        // Invoke the method to apply the settings
-                        _ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
-
-
-                        // Remove ASR rule exclusions that belong to the previous app version if it existed
-                        if (!string.IsNullOrWhiteSpace(InstalledAppVersionBefore) && !string.IsNullOrWhiteSpace(InstalledAppArchitectureBefore))
+                        try
                         {
 
-                            // Removing ASR Rules exclusions that belong to the previous app version.
+                            // Connect to the WMI namespace
+                            ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
+                            scope.Connect();
 
-                            StringBuilder InstalledAppLocationToRemove = new();
-                            _ = InstalledAppLocationToRemove.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
-                            _ = InstalledAppLocationToRemove.Append(InstalledAppVersionBefore);
-                            _ = InstalledAppLocationToRemove.Append('_');
-                            _ = InstalledAppLocationToRemove.Append(InstalledAppArchitectureBefore);
-                            _ = InstalledAppLocationToRemove.Append("__sadt7br7jpt02\\");
-
-                            // Create an instance of the MSFT_MpPreference class for Remove Method
-                            using ManagementClass mpPreferenceClass2 = new(scope, new ManagementPath("MSFT_MpPreference"), null);
+                            // Create an instance of the MSFT_MpPreference class for Add method
+                            using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
 
 
-                            path1 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.exe");
-                            path2 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.dll");
+                            StringBuilder InstallingAppLocationToAdd = new();
+                            _ = InstallingAppLocationToAdd.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
+                            _ = InstallingAppLocationToAdd.Append(InstallingAppVersion);
+                            _ = InstallingAppLocationToAdd.Append('_');
+                            _ = InstallingAppLocationToAdd.Append(InstallingAppArchitecture);
+                            _ = InstallingAppLocationToAdd.Append("__sadt7br7jpt02\\");
+
+                            string path1 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.exe");
+                            string path2 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.dll");
 
 
                             // Get the available methods for the class
-                            ManagementBaseObject methodParams2 = mpPreferenceClass2.GetMethodParameters("Remove");
+                            ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
 
-                            methodParams2["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
+                            methodParams["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
 
                             // Invoke the method to apply the settings
-                            _ = mpPreferenceClass2.InvokeMethod("Remove", methodParams2, null);
+                            _ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
 
+
+                            // Remove ASR rule exclusions that belong to the previous app version if it existed
+                            if (!string.IsNullOrWhiteSpace(InstalledAppVersionBefore) && !string.IsNullOrWhiteSpace(InstalledAppArchitectureBefore))
+                            {
+
+                                // Removing ASR Rules exclusions that belong to the previous app version.
+
+                                StringBuilder InstalledAppLocationToRemove = new();
+                                _ = InstalledAppLocationToRemove.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
+                                _ = InstalledAppLocationToRemove.Append(InstalledAppVersionBefore);
+                                _ = InstalledAppLocationToRemove.Append('_');
+                                _ = InstalledAppLocationToRemove.Append(InstalledAppArchitectureBefore);
+                                _ = InstalledAppLocationToRemove.Append("__sadt7br7jpt02\\");
+
+                                // Create an instance of the MSFT_MpPreference class for Remove Method
+                                using ManagementClass mpPreferenceClass2 = new(scope, new ManagementPath("MSFT_MpPreference"), null);
+
+
+                                path1 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.exe");
+                                path2 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.dll");
+
+
+                                // Get the available methods for the class
+                                ManagementBaseObject methodParams2 = mpPreferenceClass2.GetMethodParameters("Remove");
+
+                                methodParams2["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
+
+                                // Invoke the method to apply the settings
+                                _ = mpPreferenceClass2.InvokeMethod("Remove", methodParams2, null);
+
+                            }
+
+                        }
+
+                        catch (Exception ex)
+                        {
+                            Logger.Write($"An error occurred while trying to add the ASR rule exclusions which you can ignore: {ex.Message}");
                         }
 
                     });

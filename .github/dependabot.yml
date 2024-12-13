@@ -2,6 +2,8 @@
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# https://devblogs.microsoft.com/dotnet/using-dependabot-to-manage-dotnet-sdk-updates/
+# https://learn.microsoft.com/en-us/dotnet/core/tools/global-json
 
 version: 2
 updates:
@@ -10,6 +12,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "thursday"
+    reviewers:
+      - "HotCakeX"
+    labels:
+      - ".NET SDK"
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager"

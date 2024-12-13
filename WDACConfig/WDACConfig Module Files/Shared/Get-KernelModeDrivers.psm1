@@ -29,34 +29,6 @@ Function Get-KernelModeDrivers {
         [Parameter(Mandatory = $False)][System.IO.FileInfo[]]$File
     )
     Begin {
-        # Import the ConfigCI assembly resources if they are not already imported
-        if (-NOT ('Microsoft.SecureBoot.UserConfig.ImportParser' -as [System.Type]) ) {
-            [WDACConfig.Logger]::Write('Importing the ConfigCI assembly resources')
-            Add-Type -Path ([System.String](PowerShell.exe -NoProfile -Command { (Get-Command -Name Merge-CIPolicy).DLL }))
-        }
-
-        Function Test-UserPE {
-            <#
-             .SYNOPSIS
-                This function tests if a DLL is a user-mode PE by inspecting its imports
-             #>
-            Param (
-                [AllowNull()]
-                [System.String[]]$Imports
-            )
-
-            if ($null -eq $Imports) {
-                return $False
-            }
-            # If any of these DLLs are found in the imports list, the method return true, indicating that the file is likely a user-mode PE
-            elseif (($Imports -icontains 'kernel32.dll') -or ($Imports -icontains 'kernelbase.dll') -or ($Imports -icontains 'mscoree.dll') -or ($Imports -icontains 'ntdll.dll') -or ($Imports -icontains 'user32.dll')) {
-                return $true
-            }
-            else {
-                return $False
-            }
-        }
-
         function Get-FolderDllKernelDrivers {
             <#
              .SYNOPSIS

@@ -5,12 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -31,7 +28,6 @@ namespace HardenWindowsSecurity
                     return;
                 }
 
-                // Defining the path to the XAML XML file
                 if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
@@ -54,31 +50,10 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl
                 GUIBitLocker.View = (UserControl)XamlReader.Parse(xamlContent);
 
-                // Set the DataContext for the BitLocker view
-                GUIBitLocker.View.DataContext = new BitLockerVM();
-
                 // Find the Parent Grid
                 GUIBitLocker.ParentGrid = (Grid)GUIBitLocker.View.FindName("ParentGrid");
 
                 GUIBitLocker.TabControl = GUIBitLocker.ParentGrid.FindName("TabControl") as TabControl ?? throw new InvalidOperationException("TabControl could not be found");
-
-                #region Execute Button
-                // Find the Execute button Grid, button and its image
-                Grid ExecuteButtonGrid = GUIBitLocker.ParentGrid.FindName("ExecuteButtonGrid") as Grid ?? throw new InvalidOperationException("ExecuteButtonGrid could not be found");
-                GUIBitLocker.ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as ToggleButton ?? throw new InvalidOperationException("ExecuteButton could not be found");
-                // Apply the template to make sure it's available
-                _ = GUIBitLocker.ExecuteButton.ApplyTemplate();
-                Image ExecuteIconImage = GUIBitLocker.ExecuteButton.Template.FindName("ExecuteIconImage", GUIBitLocker.ExecuteButton) as Image ?? throw new InvalidOperationException("ExecuteIconImage could not be found");
-
-                // Update the image source for the Execute button
-                // Load the Execute icon image into memory and set it as the source
-                BitmapImage ExecuteIconBitmapImage = new();
-                ExecuteIconBitmapImage.BeginInit();
-                ExecuteIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-                ExecuteIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-                ExecuteIconBitmapImage.EndInit();
-                ExecuteIconImage.Source = ExecuteIconBitmapImage;
-                #endregion
 
                 if (GUIBitLocker.TabControl.FindName("OSDriveGrid") is not Grid OSDriveGrid ||
                     GUIBitLocker.TabControl.FindName("NonOSDrivesGrid") is not Grid NonOSDrivesGrid ||
@@ -98,7 +73,7 @@ namespace HardenWindowsSecurity
                 GUIBitLocker.RefreshRemovableDrivesInOSDriveSection = OSDriveGrid.FindName("RefreshRemovableDrivesInOSDriveSection") as Button ?? throw new InvalidOperationException("RefreshRemovableDrivesInOSDriveSection button could not be found");
                 Image? RefreshButtonIcon1 = OSDriveGrid.FindName("RefreshButtonIcon1") as Image ?? throw new InvalidOperationException("RefreshButtonIcon1 could not be found");
                 GUIBitLocker.RemovableDrivesComboBox = OSDriveGrid.FindName("RemovableDrivesComboBox") as ComboBox ?? throw new InvalidOperationException("RemovableDrivesComboBox could not be found");
-
+                Button OSDriveEncryptButton = OSDriveGrid.FindName("OSDriveEncryptButton") as Button ?? throw new InvalidOperationException("OSDriveEncryptButton could not be found.");
 
                 // Event handler for when the refresh button is pressed
                 GUIBitLocker.RefreshRemovableDrivesInOSDriveSection.Click += async (sender, e) =>
@@ -112,7 +87,7 @@ namespace HardenWindowsSecurity
                         GUIBitLocker.RemovableDrivesList = VolumeWritabilityCheck.GetWritableVolumes(UndeterminedRemovableDrivesList);
 
                         // Update the ComboBox with the removable drives using Application's Dispatcher
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        app.Dispatcher.Invoke(() =>
                         {
                             GUIBitLocker.RemovableDrivesComboBox.ItemsSource = GUIBitLocker.RemovableDrivesList?.Select(D => D.MountPoint);
                         });
@@ -123,7 +98,7 @@ namespace HardenWindowsSecurity
                 static void UpdateEnhancedLevelElements()
                 {
                     // Using the Application dispatcher
-                    GUIMain.app!.Dispatcher.Invoke(() =>
+                    app.Dispatcher.Invoke(() =>
                     {
                         // Retrieve the ComboBoxItem
                         var selectedItem = GUIBitLocker.BitLockerSecurityLevelComboBox!.SelectedItem;
@@ -170,6 +145,7 @@ namespace HardenWindowsSecurity
                 GUIBitLocker.RefreshNonOSDrives = NonOSDrivesGrid.FindName("RefreshNonOSDrives") as Button ?? throw new InvalidOperationException("RefreshNonOSDrives button could not be found");
                 Image? RefreshButtonIcon2 = NonOSDrivesGrid.FindName("RefreshButtonIcon2") as Image ?? throw new InvalidOperationException("RefreshButtonIcon2 could not be found");
                 GUIBitLocker.NonOSDrivesComboBox = NonOSDrivesGrid.FindName("NonOSDrivesComboBox") as ComboBox ?? throw new InvalidOperationException("NonOSDrivesComboBox button could not be found");
+                Button NonOSDriveEncryptButton = NonOSDrivesGrid.FindName("NonOSDriveEncryptButton") as Button ?? throw new InvalidOperationException("NonOSDriveEncryptButton button could not be found");
 
                 // Event handler for when the refresh button is pressed
                 GUIBitLocker.RefreshNonOSDrives.Click += async (sender, e) =>
@@ -180,7 +156,7 @@ namespace HardenWindowsSecurity
                         GUIBitLocker.NonOSDrivesList = BitLocker.GetAllEncryptedVolumeInfo(true, false);
 
                         // Update the ComboBox with the Non-OS drives using Application's Dispatcher
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        app.Dispatcher.Invoke(() =>
                         {
                             GUIBitLocker.NonOSDrivesComboBox.ItemsSource = GUIBitLocker.NonOSDrivesList.Select(D => $"{D.MountPoint}");
                         });
@@ -197,6 +173,8 @@ namespace HardenWindowsSecurity
                 GUIBitLocker.RemovableDrivesInRemovableDrivesGridComboBox = RemovableDrivesGrid.FindName("RemovableDrivesInRemovableDrivesGridComboBox") as ComboBox ?? throw new InvalidOperationException("RemovableDrivesInRemovableDrivesGridComboBox button could not be found");
                 GUIBitLocker.Password1 = RemovableDrivesGrid.FindName("Password1") as PasswordBox ?? throw new InvalidOperationException("Password1 password box could not be found");
                 GUIBitLocker.Password2 = RemovableDrivesGrid.FindName("Password2") as PasswordBox ?? throw new InvalidOperationException("Password2 password box could not be found");
+                Button RemovableDriveEncryptButton = NonOSDrivesGrid.FindName("RemovableDriveEncryptButton") as Button ?? throw new InvalidOperationException("RemovableDriveEncryptButton button could not be found");
+
 
                 // Event handler for when the refresh button is pressed
                 GUIBitLocker.RefreshRemovableDrivesForRemovableDrivesSection.Click += async (sender, e) =>
@@ -209,7 +187,7 @@ namespace HardenWindowsSecurity
                         GUIBitLocker.RemovableDrivesList = VolumeWritabilityCheck.GetWritableVolumes(UndeterminedRemovableDrivesList);
 
                         // Update the ComboBox with the Removable drives using Application's Dispatcher
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        app.Dispatcher.Invoke(() =>
                         {
                             GUIBitLocker.RemovableDrivesInRemovableDrivesGridComboBox.ItemsSource = GUIBitLocker.RemovableDrivesList?.Select(D => D.MountPoint);
                         });
@@ -295,53 +273,78 @@ namespace HardenWindowsSecurity
                 RefreshButtonIcon3.Source = RefreshButtonIcon1BitmapImage;
                 RefreshButtonForBackupIcon.Source = RefreshButtonIcon1BitmapImage;
 
-                // Register the ExecuteButton and TabControl that will be enabled/disabled based on current activity
-                ActivityTracker.RegisterUIElement(GUIBitLocker.ExecuteButton);
+                // Register the buttons and TabControl that will be enabled/disabled based on current activity
+                ActivityTracker.RegisterUIElement(OSDriveEncryptButton);
+                ActivityTracker.RegisterUIElement(NonOSDriveEncryptButton);
+                ActivityTracker.RegisterUIElement(RemovableDriveEncryptButton);
                 ActivityTracker.RegisterUIElement(GUIBitLocker.TabControl);
 
-                // Event handler for the Execute Button
-                GUIBitLocker.ExecuteButton.Click += async (sender, e) =>
+
+
+                // To ensure BitLocker settings have been applied prior to using BitLocker encryption
+                static void applyGroupPolicies()
+                {
+
+                    if (!BitLocker.PoliciesApplied)
+                    {
+
+                        // if LGPO doesn't already exist in the working directory, then download it
+                        if (!Path.Exists(GlobalVars.LGPOExe))
+                        {
+                            Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
+                            AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
+                        }
+                        else
+                        {
+                            Logger.LogMessage("LGPO.exe already exists, skipping downloading it.", LogTypeIntel.Information);
+                        }
+
+                        // Apply the BitLocker group policies
+                        BitLockerSettings.Invoke();
+
+                        // Refresh the group policies to apply the changes instantly
+                        ProcessStarter.RunCommand("GPUpdate.exe", "/force");
+
+                        // Set the flag to true so this section won't happen again
+                        BitLocker.PoliciesApplied = true;
+                    }
+                    else
+                    {
+                        Logger.LogMessage("BitLocker group policies already applied.", LogTypeIntel.Information);
+                    }
+
+                }
+
+
+                // OS Drive tab's Encrypt button event handler
+                OSDriveEncryptButton.Click += async (sender, e) =>
                 {
 
                     // Only continue if there is no activity other places
-                    if (!ActivityTracker.IsActive)
+                    if (ActivityTracker.IsActive)
                     {
+                        return;
+                    }
+
+                    try
+                    {
+
                         // mark as activity started
                         ActivityTracker.IsActive = true;
 
                         // Reset this flag to false indicating no errors Occurred so far
                         BitLocker.HasErrorsOccurred = false;
 
-                        #region Local variables initialization to store the currently active UI element values
-
-                        // Tab control index
-                        int? CurrentTabControlIndex = null;
-
-                        // OS Drive | Security Level ComboBox
                         string? SecurityLevel = null;
-                        // OS Drive | PINs
+                        // OS Drive - PINs
                         string? PIN1 = null;
                         string? PIN2 = null;
-                        // OS Drive | Removable Drive ComboBox
+                        // OS Drive - Removable Drive ComboBox
                         string? RemovableDriveLetter = null;
 
-                        // Non-OS Drives | Drives ComboBox
-                        string? NonOSDrivesLetter = null;
-
-                        // Removable Drives | Removable Drive ComboBox
-                        string? RemovableDrivesTabDriveSelection = null;
-                        // Removable Drives | Passwords
-                        string? Password1 = null;
-                        string? Password2 = null;
-
-                        #endregion
-
-
                         // Using the Application dispatcher to query UI elements' values only
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        app.Dispatcher.Invoke(() =>
                         {
-
-                            CurrentTabControlIndex = GUIBitLocker.TabControl!.SelectedIndex;
 
                             // Retrieve the ComboBoxItem of the Security Level in OS Drive tab
                             // Because we are using the index to access it
@@ -358,190 +361,224 @@ namespace HardenWindowsSecurity
 
                             // Retrieve the ComboBoxItem of the Removable drive in the OS Drive tab
                             RemovableDriveLetter = GUIBitLocker.RemovableDrivesComboBox!.SelectedItem?.ToString();
+                        });
 
+
+                        await Task.Run(() =>
+                        {
+
+                            applyGroupPolicies();
+
+                            Logger.LogMessage($"Executing BitLocker Ops for the OS Drive with {SecurityLevel} security level.", LogTypeIntel.Information);
+
+                            if (string.IsNullOrWhiteSpace(PIN1) || string.IsNullOrWhiteSpace(PIN2))
+                            {
+                                Logger.LogMessage("Both PIN boxes must be entered.", LogTypeIntel.ErrorInteractionRequired);
+                                return;
+                            }
+
+                            // Make sure the PINs match
+                            if (!string.Equals(PIN1, PIN2, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Logger.LogMessage("PINs don't match.", LogTypeIntel.ErrorInteractionRequired);
+                                return;
+                            }
+                            {
+                                Logger.LogMessage($"PINs matched.", LogTypeIntel.Information);
+                            }
+
+                            // Get the system directory path
+                            string systemDirectory = Environment.SystemDirectory;
+
+                            // Extract the drive letter
+                            string systemDrive = Path.GetPathRoot(systemDirectory) ?? throw new InvalidOperationException("System/OS drive letter could not be found");
+
+                            string TrimmedSystemDrive = systemDrive.TrimEnd('\\');
+
+                            // Determine the security level of the OS encryption
+                            if (string.Equals(SecurityLevel, "Normal", StringComparison.OrdinalIgnoreCase))
+                            {
+                                BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Normal, PIN1, null, true);
+                            }
+                            else
+                            {
+                                if (string.IsNullOrWhiteSpace(RemovableDriveLetter))
+                                {
+                                    Logger.LogMessage("No Removable Drive selected for the Enhanced security level.", LogTypeIntel.ErrorInteractionRequired);
+                                    return;
+                                }
+
+                                BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter, true);
+                            }
+
+
+                            if (!BitLocker.HasErrorsOccurred)
+                            {
+                                // Display notification at the end if no errors occurred
+                                ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Operation System Drive");
+                            }
+
+                        }); // End of Async Thread
+
+                    }
+                    finally
+                    {
+                        // mark as activity completed
+                        ActivityTracker.IsActive = false;
+                    }
+                };
+
+
+                // Non-OS Drive tab's Encrypt button event handler
+                NonOSDriveEncryptButton.Click += async (sender, e) =>
+                {
+
+                    // Only continue if there is no activity other places
+                    if (ActivityTracker.IsActive)
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+                        // mark as activity started
+                        ActivityTracker.IsActive = true;
+
+                        // Reset this flag to false indicating no errors Occurred so far
+                        BitLocker.HasErrorsOccurred = false;
+
+                        // Drives ComboBox
+                        string? NonOSDrivesLetter = null;
+
+                        // Using the Application dispatcher to query UI elements' values only
+                        app.Dispatcher.Invoke(() =>
+                        {
                             // Retrieve the ComboBoxItem in the Non-OS Drives tab
                             NonOSDrivesLetter = GUIBitLocker.NonOSDrivesComboBox!.SelectedItem?.ToString();
 
+                        });
+
+                        await Task.Run(() =>
+                        {
+
+                            applyGroupPolicies();
+
+                            if (NonOSDrivesLetter is null)
+                            {
+                                Logger.LogMessage("No Non-OS Drive selected", LogTypeIntel.ErrorInteractionRequired);
+                                return;
+                            }
+
+                            Logger.LogMessage($"Executing BitLocker Ops for the Non-OS Drives on drive {NonOSDrivesLetter} .", LogTypeIntel.Information);
+
+                            BitLocker.Enable(NonOSDrivesLetter, true);
+
+
+                            if (!BitLocker.HasErrorsOccurred)
+                            {
+                                // Display notification at the end if no errors occurred
+                                ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Non-OS Drive");
+                            }
+
+                            return;
+
+                        }); // End of Async Thread
+
+                    }
+
+                    finally
+                    {
+                        // mark as activity completed
+                        ActivityTracker.IsActive = false;
+                    }
+                };
+
+
+
+                // Removable Drive tab's Encrypt button event handler
+                RemovableDriveEncryptButton.Click += async (sender, e) =>
+                {
+
+                    // Only continue if there is no activity other places
+                    if (ActivityTracker.IsActive)
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+
+                        // mark as activity started
+                        ActivityTracker.IsActive = true;
+
+                        // Reset this flag to false indicating no errors Occurred so far
+                        BitLocker.HasErrorsOccurred = false;
+
+                        // Removable Drive ComboBox
+                        string? RemovableDrivesTabDriveSelection = null;
+                        // Passwords
+                        string? Password1 = null;
+                        string? Password2 = null;
+
+                        // Using the Application dispatcher to query UI elements' values only
+                        app.Dispatcher.Invoke(() =>
+                        {
                             // Retrieve the ComboBoxItem in the Removable Drives tab
                             RemovableDrivesTabDriveSelection = GUIBitLocker.RemovableDrivesInRemovableDrivesGridComboBox!.SelectedItem?.ToString();
 
                             // Get the Password values as plain texts since CIM needs them way that
                             Password1 = GUIBitLocker.Password1.Password;
                             Password2 = GUIBitLocker.Password2.Password;
-
                         });
 
-
-                        // Perform the main tasks on another thread to avoid freezing the GUI
                         await Task.Run(() =>
                         {
+                            applyGroupPolicies();
 
-                            #region Group Policy handling
-                            if (!BitLocker.PoliciesApplied)
+                            Logger.LogMessage($"Executing BitLocker Ops for the Removable Drives on drive {RemovableDrivesTabDriveSelection} .", LogTypeIntel.Information);
+
+                            if (string.IsNullOrWhiteSpace(Password1) || string.IsNullOrWhiteSpace(Password2))
                             {
-
-                                // if LGPO doesn't already exist in the working directory, then download it
-                                if (!Path.Exists(GlobalVars.LGPOExe))
-                                {
-                                    Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
-                                    AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
-                                }
-                                else
-                                {
-                                    Logger.LogMessage("LGPO.exe already exists, skipping downloading it.", LogTypeIntel.Information);
-                                }
-
-                                // Apply the BitLocker group policies
-                                BitLockerSettings.Invoke();
-
-                                // Refresh the group policies to apply the changes instantly
-                                _ = PowerShellExecutor.ExecuteScript("""
-Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
-""");
-                                // Set the flag to true so this section won't happen again
-                                BitLocker.PoliciesApplied = true;
+                                Logger.LogMessage("Both Password boxes must be entered.", LogTypeIntel.ErrorInteractionRequired);
+                                return;
                             }
-                            else
+
+                            // Make sure the Passwords match
+                            if (!string.Equals(Password1, Password2, StringComparison.OrdinalIgnoreCase))
                             {
-                                Logger.LogMessage("BitLocker group policies already applied.", LogTypeIntel.Information);
+                                Logger.LogMessage("Passwords don't match.", LogTypeIntel.ErrorInteractionRequired);
+                                return;
                             }
-                            #endregion
-
-
-                            switch (CurrentTabControlIndex)
                             {
-                                // OS Drive tab
-                                case 0:
-                                    {
-                                        Logger.LogMessage($"Executing BitLocker Ops for the OS Drive with {SecurityLevel} security level.", LogTypeIntel.Information);
+                                Logger.LogMessage($"Passwords matched.", LogTypeIntel.Information);
+                            }
 
-                                        if (string.IsNullOrWhiteSpace(PIN1) || string.IsNullOrWhiteSpace(PIN2))
-                                        {
-                                            Logger.LogMessage("Both PIN boxes must be entered.", LogTypeIntel.ErrorInteractionRequired);
-                                            break;
-                                        }
+                            if (RemovableDrivesTabDriveSelection is null)
+                            {
+                                Logger.LogMessage("No Removable Drive selected", LogTypeIntel.ErrorInteractionRequired);
+                                return;
+                            }
 
-                                        // Make sure the PINs match
-                                        if (!string.Equals(PIN1, PIN2, StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            Logger.LogMessage("PINs don't match.", LogTypeIntel.ErrorInteractionRequired);
-                                            break;
-                                        }
-                                        {
-                                            Logger.LogMessage($"PINs matched.", LogTypeIntel.Information);
-                                        }
-
-                                        // Get the system directory path
-                                        string systemDirectory = Environment.SystemDirectory;
-                                        // Extract the drive letter
-                                        string systemDrive = Path.GetPathRoot(systemDirectory) ?? throw new InvalidOperationException("System/OS drive letter could not be found");
-
-                                        string TrimmedSystemDrive = systemDrive.TrimEnd('\\');
-
-                                        // Determine the security level of the OS encryption
-                                        if (string.Equals(SecurityLevel, "Normal", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Normal, PIN1, null, true);
-                                        }
-                                        else
-                                        {
-                                            if (string.IsNullOrWhiteSpace(RemovableDriveLetter))
-                                            {
-                                                Logger.LogMessage("No Removable Drive selected for the Enhanced security level.", LogTypeIntel.ErrorInteractionRequired);
-                                                break;
-                                            }
-
-                                            BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter, true);
-                                        }
+                            BitLocker.Enable(RemovableDrivesTabDriveSelection, Password1, true);
 
 
-                                        if (!BitLocker.HasErrorsOccurred)
-                                        {
-                                            // Display notification at the end if no errors occurred
-                                            ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Operation System Drive");
-                                        }
-
-                                        break;
-                                    }
-                                // Non-OS Drives tab
-                                case 1:
-                                    {
-                                        if (NonOSDrivesLetter is null)
-                                        {
-                                            Logger.LogMessage("No Non-OS Drive selected", LogTypeIntel.ErrorInteractionRequired);
-                                            break;
-                                        }
-
-                                        Logger.LogMessage($"Executing BitLocker Ops for the Non-OS Drives on drive {NonOSDrivesLetter} .", LogTypeIntel.Information);
-
-                                        BitLocker.Enable(NonOSDrivesLetter, true);
-
-
-                                        if (!BitLocker.HasErrorsOccurred)
-                                        {
-                                            // Display notification at the end if no errors occurred
-                                            ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Non-OS Drive");
-                                        }
-
-                                        break;
-                                    }
-                                // Removable Drives tab
-                                case 2:
-                                    {
-                                        Logger.LogMessage($"Executing BitLocker Ops for the Removable Drives on drive {RemovableDrivesTabDriveSelection} .", LogTypeIntel.Information);
-
-                                        if (string.IsNullOrWhiteSpace(Password1) || string.IsNullOrWhiteSpace(Password2))
-                                        {
-                                            Logger.LogMessage("Both Password boxes must be entered.", LogTypeIntel.ErrorInteractionRequired);
-                                            break;
-                                        }
-
-                                        // Make sure the Passwords match
-                                        if (!string.Equals(Password1, Password2, StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            Logger.LogMessage("Passwords don't match.", LogTypeIntel.ErrorInteractionRequired);
-                                            break;
-                                        }
-                                        {
-                                            Logger.LogMessage($"Passwords matched.", LogTypeIntel.Information);
-                                        }
-
-
-                                        if (RemovableDrivesTabDriveSelection is null)
-                                        {
-                                            Logger.LogMessage("No Removable Drive selected", LogTypeIntel.ErrorInteractionRequired);
-                                            break;
-                                        }
-
-                                        BitLocker.Enable(RemovableDrivesTabDriveSelection, Password1, true);
-
-
-                                        if (!BitLocker.HasErrorsOccurred)
-                                        {
-                                            // Display notification at the end if no errors occurred
-                                            ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Removable Drive");
-                                        }
-
-                                        break;
-                                    }
-
-                                default:
-                                    break;
+                            if (!BitLocker.HasErrorsOccurred)
+                            {
+                                // Display notification at the end if no errors occurred
+                                ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Removable Drive");
                             }
 
                         }); // End of Async Thread
 
-                        // Update the UI Elements at the end of the run
-                        await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
-                        {
-                            GUIBitLocker.ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
-                        });
+                    }
 
+                    finally
+                    {
                         // mark as activity completed
                         ActivityTracker.IsActive = false;
                     }
-
                 };
+
 
                 // Cache the view before setting it as the CurrentView
                 _viewCache["BitLockerView"] = GUIBitLocker.View;

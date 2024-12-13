@@ -1,21 +1,24 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
+    /// <summary>
+    /// The following are XAML GUI Elements
+    /// </summary>
     public partial class GUIMain
     {
-        // The following are XAML GUI Elements
-        public static string? xamlPath;
+        // Define the path to the main Window XAML file
+        public static readonly string xamlPath = Path.Combine(GlobalVars.path!, "Resources", "XAML", "Main.xaml");
 
         // Main window instance
         public static Window? mainGUIWindow;
 
         // Application instance
-        public static Application? app;
+        // Create and initialize the application - the WPF GUI uses the App context
+        public readonly static Application app = new();
 
         // Sidebar menu Grid in the main Window
         public static Grid? SidebarGrid;

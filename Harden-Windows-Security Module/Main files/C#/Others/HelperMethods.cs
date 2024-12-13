@@ -1,8 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     internal static class HelperMethods
@@ -16,7 +14,7 @@ namespace HardenWindowsSecurity
             }
             if (input is byte[] byteArray)
             {
-                return byteArray.Select(b => b.ToString(CultureInfo.InvariantCulture)).ToArray();
+                return [.. byteArray.Select(b => b.ToString(CultureInfo.InvariantCulture))];
             }
             return null;
         }

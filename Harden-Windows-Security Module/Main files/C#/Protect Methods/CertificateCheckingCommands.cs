@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class CertificateCheckingCommands
@@ -25,7 +23,7 @@ namespace HardenWindowsSecurity
             Logger.LogMessage("Running the Certificate Checking category", LogTypeIntel.Information);
 
             string sigcheck64Path = Path.Combine(GlobalVars.WorkingDir, "sigcheck64.exe");
-            string fileUrl = "https://live.sysinternals.com/sigcheck64.exe";
+            Uri fileUrl = new("https://live.sysinternals.com/sigcheck64.exe");
 
             try
             {

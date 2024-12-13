@@ -1,8 +1,6 @@
 using System;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class MicrosoftDefender

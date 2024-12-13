@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-
-#nullable enable
+using static HardenWindowsSecurity.BitLocker;
 
 namespace HardenWindowsSecurity
 {
@@ -15,8 +14,6 @@ namespace HardenWindowsSecurity
         internal static Grid? ParentGrid;
 
         internal static TabControl? TabControl;
-
-        internal static ToggleButton? ExecuteButton;
 
         internal static PasswordBox? PIN1;
 
@@ -30,9 +27,9 @@ namespace HardenWindowsSecurity
 
         internal static Button? RefreshRemovableDrivesForRemovableDrivesSection;
 
-        internal static List<BitLocker.BitLockerVolume>? NonOSDrivesList;
+        internal static List<BitLockerVolume>? NonOSDrivesList;
 
-        internal static List<BitLocker.BitLockerVolume>? RemovableDrivesList;
+        internal static List<BitLockerVolume>? RemovableDrivesList;
 
         internal static ComboBox? BitLockerSecurityLevelComboBox;
 
@@ -55,10 +52,14 @@ namespace HardenWindowsSecurity
 
         public sealed class BitLockerVolumeViewModel
         {
-            public string? DriveLetter { get; set; }  // MountPoint in BitLockerVolume type
-            public string? KeyID { get; set; }        // KeyProtectorID in KeyProtector type
-            public string? RecoveryKey { get; set; }  // RecoveryPassword in KeyProtector type
-            public string? SizeGB { get; set; }    // CapacityGB in BitLockerVolume type
+            public string? DriveLetter { get; set; }
+            public string? KeyID { get; set; }
+            public string? RecoveryKey { get; set; }
+            public string? SizeGB { get; set; }
+            public string? EncryptionPercentage { get; set; }
+            public string? ProtectionStatus { get; set; }
+            public string? KeyProtector { get; set; }
+            public string? EncryptionMethod { get; set; }
         }
 
 
@@ -71,47 +72,41 @@ namespace HardenWindowsSecurity
         {
 
             // Get all of the BitLocker volumes
-            List<BitLocker.BitLockerVolume> AllBitLockerVolumes = BitLocker.GetAllEncryptedVolumeInfo(false, false);
+            List<BitLockerVolume> AllBitLockerVolumes = GetAllEncryptedVolumeInfo(false, false);
 
             // List of BitLockerVolumeViewModel objects
             List<BitLockerVolumeViewModel> viewModelList = [];
 
 
-            if (AllBitLockerVolumes is not null)
+            foreach (BitLockerVolume Volume in AllBitLockerVolumes)
             {
-                foreach (BitLocker.BitLockerVolume Volume in AllBitLockerVolumes)
+                if (Volume.KeyProtector is not null)
                 {
-                    if (Volume.KeyProtector is not null)
+                    foreach (KeyProtector KeyProtector in Volume.KeyProtector)
                     {
-                        foreach (BitLocker.KeyProtector KeyProtector in Volume.KeyProtector)
+                        if (KeyProtector.KeyProtectorType is KeyProtectorType.RecoveryPassword)
                         {
-                            if (KeyProtector.KeyProtectorType is not null)
+                            viewModelList.Add(new BitLockerVolumeViewModel
                             {
-                                if (KeyProtector.KeyProtectorType is BitLocker.KeyProtectorType.RecoveryPassword)
-                                {
-                                    viewModelList.Add(new BitLockerVolumeViewModel
-                                    {
-                                        DriveLetter = Volume.MountPoint,
-                                        KeyID = KeyProtector.KeyProtectorID,
-                                        RecoveryKey = KeyProtector.RecoveryPassword,
-                                        SizeGB = Volume.CapacityGB
-                                    });
-                                }
-                            }
+                                DriveLetter = Volume.MountPoint,
+                                KeyID = KeyProtector.KeyProtectorID,
+                                RecoveryKey = KeyProtector.RecoveryPassword,
+                                SizeGB = Volume.CapacityGB,
+                                EncryptionPercentage = Volume.EncryptionPercentage,
+                                ProtectionStatus = Volume.ProtectionStatus.ToString(),
+                                KeyProtector = string.Join(", ", Volume.KeyProtector.Where(kp => kp is not null).Select(p => p.KeyProtectorType.ToString())),
+                                EncryptionMethod = Volume.EncryptionMethod.ToString()
+                            });
                         }
                     }
                 }
             }
 
-
             // Using the Application dispatcher to update UI elements
-            GUIMain.app!.Dispatcher.Invoke(() =>
+            GUIMain.app.Dispatcher.Invoke(() =>
             {
-                if (viewModelList.Count > 0)
-                {
-                    // Place them in the DataGrid
-                    GUIBitLocker.RecoveryKeysDataGrid!.ItemsSource = viewModelList;
-                }
+                // Place them in the DataGrid
+                RecoveryKeysDataGrid!.ItemsSource = viewModelList;
             });
 
 
@@ -138,12 +133,12 @@ namespace HardenWindowsSecurity
                     using (StreamWriter writer = new(filePath))
                     {
                         // Write headers
-                        writer.WriteLine("DriveLetter | KeyID | RecoveryKey | Size (GB)");
+                        writer.WriteLine("DriveLetter | KeyID | RecoveryKey | Size (GB) | EncryptionPercentage | ProtectionStatus | KeyProtector | EncryptionMethod");
 
                         // Write each BitLockerVolumeViewModel's data into the file
                         foreach (BitLockerVolumeViewModel volume in viewModelList!)
                         {
-                            writer.WriteLine($"{volume.DriveLetter} | {volume.KeyID} | {volume.RecoveryKey} | {volume.SizeGB} GB");
+                            writer.WriteLine($"{volume.DriveLetter} | {volume.KeyID} | {volume.RecoveryKey} | {volume.SizeGB} GB | {volume.EncryptionPercentage} | {volume.ProtectionStatus} | {volume.KeyProtector} | {volume.EncryptionMethod}");
                         }
 
                         writer.WriteLine("""

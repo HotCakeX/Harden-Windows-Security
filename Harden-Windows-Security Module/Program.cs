@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class Program
@@ -29,7 +27,7 @@ namespace HardenWindowsSecurity
 
             if (UserPrivCheck.IsAdmin())
             {
-                ControlledFolderAccessHandler.Start();
+                ControlledFolderAccessHandler.Start(true, false);
                 Miscellaneous.RequirementsCheck();
             }
             #endregion

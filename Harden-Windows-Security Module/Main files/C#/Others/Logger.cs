@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Threading;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     // Log type used when calling the LogMessage method
@@ -96,7 +94,7 @@ namespace HardenWindowsSecurity
                         if (!GlobalVars.LogHeaderHasBeenWritten)
                         {
 
-                            Logger.LogToFile($"""
+                            LogToFile($"""
 **********************
 Harden Windows Security operation log start
 Start time: {DateTime.Now}

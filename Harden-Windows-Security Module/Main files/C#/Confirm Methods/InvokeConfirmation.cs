@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class InvokeConfirmation
@@ -15,15 +13,8 @@ namespace HardenWindowsSecurity
         /// <param name="Categories"></param>
         public static void Invoke(string[] Categories)
         {
-            Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
+            ControlledFolderAccessHandler.Start(true, false);
 
-            Logger.LogMessage("Controlled Folder Access Handling", LogTypeIntel.Information);
-            ControlledFolderAccessHandler.Start();
-
-            // Give the Defender internals time to process the updated exclusions list
-            Thread.Sleep(5000);
-
-            Logger.LogMessage("Collecting any possible Intune/MDM policies", LogTypeIntel.Information);
             SYSTEMScheduledTasks.Invoke();
 
             // Collect the JSON File Paths
@@ -69,11 +60,11 @@ namespace HardenWindowsSecurity
             }
 
             // Parse the JSON Files and store the results in global variables
-            GlobalVars.MDM_Firewall_DomainProfile02 = JsonToHashtable.ProcessJsonFile(MDM_Firewall_DomainProfile02_Path);
-            GlobalVars.MDM_Firewall_PrivateProfile02 = JsonToHashtable.ProcessJsonFile(MDM_Firewall_PrivateProfile02_Path);
-            GlobalVars.MDM_Firewall_PublicProfile02 = JsonToHashtable.ProcessJsonFile(MDM_Firewall_PublicProfile02_Path);
-            GlobalVars.MDM_Policy_Result01_Update02 = JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_Update02_Path);
-            GlobalVars.MDM_Policy_Result01_System02 = JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_System02_Path);
+            GlobalVars.MDM_Firewall_DomainProfile02 = JsonToHashTable.ProcessJsonFile(MDM_Firewall_DomainProfile02_Path);
+            GlobalVars.MDM_Firewall_PrivateProfile02 = JsonToHashTable.ProcessJsonFile(MDM_Firewall_PrivateProfile02_Path);
+            GlobalVars.MDM_Firewall_PublicProfile02 = JsonToHashTable.ProcessJsonFile(MDM_Firewall_PublicProfile02_Path);
+            GlobalVars.MDM_Policy_Result01_Update02 = JsonToHashTable.ProcessJsonFile(MDM_Policy_Result01_Update02_Path);
+            GlobalVars.MDM_Policy_Result01_System02 = JsonToHashTable.ProcessJsonFile(MDM_Policy_Result01_System02_Path);
 
             Logger.LogMessage("Verifying the security settings", LogTypeIntel.Information);
             ConfirmSystemComplianceMethods.OrchestrateComplianceChecks(Categories);

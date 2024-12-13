@@ -1,8 +1,7 @@
 using Microsoft.Win32;
 using System;
 using System.IO;
-
-#nullable enable
+using System.Threading;
 
 namespace HardenWindowsSecurity
 {
@@ -65,10 +64,13 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
+                    ControlledFolderAccessHandler.Start(false, true);
+
+                    // Give the Defender internals time to process the updated exclusions list
+                    Thread.Sleep(4000);
+
                     Logger.LogMessage("OS Drive is BitLocker encrypted. Setting the Hibernate file size to full.", LogTypeIntel.Information);
-                    _ = PowerShellExecutor.ExecuteScript("""
-$null = &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full
-""");
+                    ProcessStarter.RunCommand("powercfg.exe", "/h /type full");
                 }
             }
             else

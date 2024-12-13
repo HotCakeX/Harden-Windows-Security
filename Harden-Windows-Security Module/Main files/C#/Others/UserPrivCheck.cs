@@ -1,7 +1,5 @@
 using System.Security.Principal;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class UserPrivCheck

@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class WindowsNetworking
@@ -30,7 +28,7 @@ namespace HardenWindowsSecurity
 
             Logger.LogMessage("Applying the Windows Networking registry settings", LogTypeIntel.Information);
 
-            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems)
             {
                 if (string.Equals(Item.Category, "WindowsNetworking", StringComparison.OrdinalIgnoreCase))
                 {

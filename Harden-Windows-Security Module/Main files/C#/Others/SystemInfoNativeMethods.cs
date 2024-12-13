@@ -1,8 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>
@@ -10,7 +8,7 @@ namespace HardenWindowsSecurity
     /// can be used to find out if the DMA Protection is ON \ OFF.
     /// will show this by emitting 1 for True (Kernel DMA Protection Available) and 0 for False (Kernel DMA Protection Not Available)
     /// </summary>
-    public static class SystemInformationClass
+    internal static class SystemInformationClass
     {
         internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
         {
@@ -18,21 +16,22 @@ namespace HardenWindowsSecurity
         }
 
         [DllImport("ntdll.dll")]
+        [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
         internal static extern Int32 NtQuerySystemInformation(
             SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
             IntPtr SystemInformation,
             Int32 SystemInformationLength,
             out Int32 ReturnLength);
 
-        public static byte BootDmaCheck()
+        internal static byte BootDmaCheck()
         {
             Int32 result;
             Int32 SystemInformationLength = 1;
             IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
 
             // https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
-            result = SystemInformationClass.NtQuerySystemInformation(
-                SystemInformationClass.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
+            result = NtQuerySystemInformation(
+                SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
                 SystemInformation,
                 SystemInformationLength,
                 out _);

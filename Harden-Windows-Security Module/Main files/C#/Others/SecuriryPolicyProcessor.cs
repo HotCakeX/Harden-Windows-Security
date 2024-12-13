@@ -2,25 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class SecurityPolicyChecker
+    internal static class SecurityPolicyChecker
     {
         /// <summary>
         /// The method is used to verify the compliance of security group policies on the system against the predefined values in the SecurityPoliciesVerification.csv
         /// </summary>
         /// <param name="category">The category to filter the CSV file content by</param>
         /// <returns></returns>
-        public static List<IndividualResult> CheckPolicyCompliance(string category)
+        internal static List<IndividualResult> CheckPolicyCompliance(ComplianceCategories category)
         {
             // Create a list of IndividualResult objects
             List<IndividualResult> nestedObjectArray = [];
 
             // Filter the CSV data to only get the records that match the input category
             List<SecurityPolicyRecord>? csvRecords = GlobalVars.SecurityPolicyRecords?
-                .Where(record => record.Category is not null && record.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                .Where(record => record.Category == category)
                 .ToList();
 
             // Ensure csvRecords is not null before iterating
@@ -39,8 +37,7 @@ namespace HardenWindowsSecurity
                     string? actualValue = null;
 
                     // Ensure SystemSecurityPoliciesIniObject is not null and check for section
-                    if (GlobalVars.SystemSecurityPoliciesIniObject is not null &&
-                        section is not null && // Check if section is not null
+                    if (section is not null && // Check if section is not null
                         GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
                         sectionDict is not null &&
                         path is not null && // Check if path is not null
@@ -52,12 +49,12 @@ namespace HardenWindowsSecurity
 
                     nestedObjectArray.Add(new IndividualResult
                     {
-                        FriendlyName = name,
+                        FriendlyName = name ?? string.Empty,
                         Compliant = complianceResult,
                         Value = actualValue,
-                        Name = name,
+                        Name = name ?? string.Empty,
                         Category = category,
-                        Method = "Security Group Policy"
+                        Method = ConfirmSystemComplianceMethods.Method.SecurityGroupPolicy
                     });
                 }
             }

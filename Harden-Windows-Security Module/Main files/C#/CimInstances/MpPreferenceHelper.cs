@@ -5,14 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class MpPreferenceHelper
+    internal static class MpPreferenceHelper
     {
         // Get the MpPreference from the MSFT_MpPreference WMI class and returns it as a dynamic object
-        public static dynamic GetMpPreference()
+        internal static dynamic GetMpPreference()
         {
             try
             {

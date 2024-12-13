@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>
@@ -7,11 +5,11 @@ namespace HardenWindowsSecurity
     /// </summary>
     public sealed class IndividualResult
     {
-        public string? FriendlyName { get; set; }
-        public bool Compliant { get; set; }
+        public required string FriendlyName { get; set; }
+        public required bool Compliant { get; set; }
         public string? Value { get; set; }
-        public string? Name { get; set; }
-        public string? Category { get; set; }
-        public string? Method { get; set; }
+        public required string Name { get; set; }
+        public required ComplianceCategories Category { get; set; }
+        public required ConfirmSystemComplianceMethods.Method Method { get; set; }
     }
 }

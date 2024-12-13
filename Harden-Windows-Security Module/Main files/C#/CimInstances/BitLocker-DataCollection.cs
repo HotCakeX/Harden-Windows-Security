@@ -4,8 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 
-#nullable enable
-
 /// Sources for the code:
 /// https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume
 /// https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume
@@ -17,51 +15,51 @@ using System.Management;
 namespace HardenWindowsSecurity
 {
 
-    public partial class BitLocker
+    internal partial class BitLocker
     {
 
         // Class that stores the information about each key protector
-        public sealed class KeyProtector
+        internal sealed class KeyProtector
         {
-            public KeyProtectorType? KeyProtectorType { get; set; }
-            public string? KeyProtectorID { get; set; }
-            public bool AutoUnlockProtector { get; set; }
-            public string? KeyFileName { get; set; }
-            public string? RecoveryPassword { get; set; }
-            public string? KeyCertificateType { get; set; }
-            public string? Thumbprint { get; set; }
+            internal KeyProtectorType? KeyProtectorType { get; set; }
+            internal string? KeyProtectorID { get; set; }
+            internal bool AutoUnlockProtector { get; set; }
+            internal string? KeyFileName { get; set; }
+            internal string? RecoveryPassword { get; set; }
+            internal string? KeyCertificateType { get; set; }
+            internal string? Thumbprint { get; set; }
         }
 
         // class that stores the information about BitLocker protected volumes
-        public sealed class BitLockerVolume
+        internal sealed class BitLockerVolume
         {
-            public string? MountPoint { get; set; }
-            public EncryptionMethod? EncryptionMethod { get; set; }
-            public string? EncryptionMethodFlags { get; set; }
-            public bool AutoUnlockEnabled { get; set; }
-            public bool AutoUnlockKeyStored { get; set; }
+            internal string? MountPoint { get; set; }
+            internal EncryptionMethod? EncryptionMethod { get; set; }
+            internal string? EncryptionMethodFlags { get; set; }
+            internal bool AutoUnlockEnabled { get; set; }
+            internal bool AutoUnlockKeyStored { get; set; }
 
             // https://learn.microsoft.com/en-us/windows/win32/secprov/getversion-win32-encryptablevolume#parameters
-            public uint MetadataVersion { get; set; }
+            internal uint MetadataVersion { get; set; }
 
-            public ConversionStatus? ConversionStatus { get; set; }
-            public ProtectionStatus? ProtectionStatus { get; set; }
-            public LockStatus? LockStatus { get; set; }
-            public string? EncryptionPercentage { get; set; }
-            public string? WipePercentage { get; set; }
-            public WipingStatus? WipingStatus { get; set; }
-            public VolumeType? VolumeType { get; set; }
-            public string? CapacityGB { get; set; }
-            public FileSystemType? FileSystemType { get; set; }
-            public string? FriendlyName { get; set; }
-            public string? AllocationUnitSize { get; set; }
-            public ReFSDedupMode? ReFSDedupMode { get; set; }
-            public List<KeyProtector>? KeyProtector { get; set; }
+            internal ConversionStatus? ConversionStatus { get; set; }
+            internal ProtectionStatus? ProtectionStatus { get; set; }
+            internal LockStatus? LockStatus { get; set; }
+            internal string? EncryptionPercentage { get; set; }
+            internal string? WipePercentage { get; set; }
+            internal WipingStatus? WipingStatus { get; set; }
+            internal VolumeType? VolumeType { get; set; }
+            internal string? CapacityGB { get; set; }
+            internal FileSystemType? FileSystemType { get; set; }
+            internal string? FriendlyName { get; set; }
+            internal string? AllocationUnitSize { get; set; }
+            internal ReFSDedupMode? ReFSDedupMode { get; set; }
+            internal List<KeyProtector>? KeyProtector { get; set; }
         }
 
         // Different types of the key protectors
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getkeyprotectortype-win32-encryptablevolume
-        public enum KeyProtectorType : uint
+        internal enum KeyProtectorType : uint
         {
             Unknown = 0,
             Tpm = 1,
@@ -77,7 +75,7 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getencryptionmethod-win32-encryptablevolume
-        public enum EncryptionMethod : uint
+        internal enum EncryptionMethod : uint
         {
             None = 0,
             AES_128_WITH_DIFFUSER = 1,
@@ -90,7 +88,7 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getprotectionstatus-win32-encryptablevolume
-        public enum ProtectionStatus : uint
+        internal enum ProtectionStatus : uint
         {
             Unprotected = 0,
             Protected = 1,
@@ -98,14 +96,14 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getlockstatus-win32-encryptablevolume
-        public enum LockStatus
+        internal enum LockStatus
         {
             Unlocked = 0,
             Locked = 1
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume#properties
-        public enum VolumeType
+        internal enum VolumeType
         {
             OperationSystem = 0,
             FixedDisk = 1,
@@ -113,7 +111,7 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        public enum ConversionStatus : uint
+        internal enum ConversionStatus : uint
         {
             FullyDecrypted = 0,
             FullyEncrypted = 1,
@@ -124,7 +122,7 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        public enum WipingStatus : uint
+        internal enum WipingStatus : uint
         {
             FreeSpaceNotWiped = 0,
             FreeSpaceWiped = 1,
@@ -133,7 +131,7 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        public enum FileSystemType : ushort
+        internal enum FileSystemType : ushort
         {
             Unknown = 0,
             UFS = 2,
@@ -153,7 +151,7 @@ namespace HardenWindowsSecurity
         }
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        public enum ReFSDedupMode : uint
+        internal enum ReFSDedupMode : uint
         {
             Disabled = 0,
             GeneralPurpose = 1,
@@ -164,7 +162,7 @@ namespace HardenWindowsSecurity
 
 
         // The main method that will generate as much useful info as possible about every BitLocker volume
-        public static BitLockerVolume GetEncryptedVolumeInfo(string targetVolume)
+        internal static BitLockerVolume GetEncryptedVolumeInfo(string targetVolume)
         {
             // The MSFT_Volume class requires the volume name without the colon
             string targetVolumeVer2 = targetVolume.Replace(":", "", StringComparison.OrdinalIgnoreCase);
@@ -408,7 +406,7 @@ namespace HardenWindowsSecurity
         }
 
         // Method to get the drive letters of all volumes on the system, encrypted or not
-        public static string[] GetAllDriveLetters()
+        internal static string[] GetAllDriveLetters()
         {
             List<string> driveLetters = [];
 
@@ -455,7 +453,7 @@ namespace HardenWindowsSecurity
         /// <param name="OnlyRemovableDrives">Will only return Removable Drives</param>
         /// <param name="OnlyNonOSDrives">Will only return Non-OSDrives, excluding Removable Drives</param>
         /// <returns></returns>
-        public static List<BitLockerVolume> GetAllEncryptedVolumeInfo(bool OnlyNonOSDrives, bool OnlyRemovableDrives)
+        internal static List<BitLockerVolume> GetAllEncryptedVolumeInfo(bool OnlyNonOSDrives, bool OnlyRemovableDrives)
         {
             // Create a new list of BitLockerVolume objects
             List<BitLockerVolume> volumes = [];

@@ -1,11 +1,7 @@
 using Microsoft.Win32;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -64,14 +60,14 @@ namespace HardenWindowsSecurity
                 // Create the working directory
                 _ = Directory.CreateDirectory(GlobalVars.WorkingDir);
 
-                // Initialize the RegistryCSVItems list so that the HardeningRegistryKeys.ReadCsv() method can write to it
-                GlobalVars.RegistryCSVItems = [];
+                // Clear the collection
+                GlobalVars.RegistryCSVItems.Clear();
 
                 // Parse the Registry.csv and save it to the global GlobalVars.RegistryCSVItems list
                 HardeningRegistryKeys.ReadCsv();
 
-                // Initialize the ProcessMitigations list so that the ProcessMitigationsParser.ReadCsv() method can write to it
-                GlobalVars.ProcessMitigations = [];
+                // Clear the collection
+                GlobalVars.ProcessMitigations.Clear();
 
                 // Parse the ProcessMitigations.csv and save it to the global GlobalVars.ProcessMitigations list
                 ProcessMitigationsParser.ReadCsv();
@@ -83,9 +79,9 @@ namespace HardenWindowsSecurity
                 }
 
                 // Make sure the current OS build is equal or greater than the required build number
-                if (!(fullOSBuild >= GlobalVars.Requiredbuild))
+                if (!(fullOSBuild >= GlobalVars.requiredBuild))
                 {
-                    throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
+                    throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {GlobalVars.requiredBuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
                 }
 
             }
@@ -102,11 +98,11 @@ namespace HardenWindowsSecurity
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             GlobalVars.VerbosePreference = VerbosePreference;
 
-            // Create an empty ConcurrentDictionary to store the final results of the cmdlets
-            GlobalVars.FinalMegaObject = new ConcurrentDictionary<String, List<IndividualResult>>();
+            // Clear the collection
+            GlobalVars.FinalMegaObject.Clear();
 
-            // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
-            GlobalVars.SystemSecurityPoliciesIniObject = [];
+            // Clear the collection
+            GlobalVars.SystemSecurityPoliciesIniObject.Clear();
 
             // Make sure Admin privileges exist before running this method
             if (UserPrivCheck.IsAdmin())

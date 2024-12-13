@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     internal static class HResultHelper
@@ -12,7 +10,7 @@ namespace HardenWindowsSecurity
         /// If the provided HRESULT is null, it will default to 0 and gracefully handle the case by writing that no specific exception was found.
         /// </summary>
         /// <param name="hresult">An unsigned 32-bit integer representing the HRESULT. If null, it defaults to 0.</param>
-        public static void HandleHresultAndLog(uint? hresult)
+        internal static void HandleHresultAndLog(uint? hresult)
         {
             // If the nullable HRESULT is null, assign it a default value of 0
             // If null is passed, it is treated as HRESULT 0, which corresponds to success (S_OK)

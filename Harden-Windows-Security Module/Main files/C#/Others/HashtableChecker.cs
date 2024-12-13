@@ -2,38 +2,36 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     // Class to hold the result of the HashTable check
-    public sealed class HashtableCheckerResult
+    internal sealed class HashTableCheckerResult
     {
-        public bool IsMatch { get; set; } // Indicates if the value matches
-        public string? Value { get; set; } // The value from the HashTable if found
+        internal bool IsMatch { get; set; } // Indicates if the value matches
+        internal string? Value { get; set; } // The value from the HashTable if found
     }
 
     // Static class containing the method to check values in a HashTable
-    public static class HashtableChecker
+    internal static class HashTableChecker
     {
         /// <summary>
         /// Method to check if a value in the HashTable matches the supplied value
         /// </summary>
         /// <typeparam name="T">We supply the type to be used during comparison</typeparam>
-        /// <param name="hashtable">The HashTable containing the MDM parsed result that we're gonna use to query</param>
+        /// <param name="hashTable">The HashTable containing the MDM parsed result that we're gonna use to query</param>
         /// <param name="key">The key to be used against the HashTable in order to get the value</param>
-        /// <param name="compareValue">Our desired value which will be compared against the value found in the Hashtable after finding it based on the key we supply</param>
+        /// <param name="compareValue">Our desired value which will be compared against the value found in the HashTable after finding it based on the key we supply</param>
         /// <returns></returns>
-        public static HashtableCheckerResult CheckValue<T>(Hashtable hashtable, string key, T compareValue)
+        internal static HashTableCheckerResult CheckValue<T>(Hashtable? hashTable, string key, T compareValue)
         {
             // Initialize the result object
-            var result = new HashtableCheckerResult();
+            HashTableCheckerResult result = new();
 
-            // Check if the hashtable contains the specified key
-            if (hashtable.ContainsKey(key))
+            // Check if the HashTable contains the specified key
+            if (hashTable is not null && hashTable.ContainsKey(key))
             {
                 // Retrieve the value associated with the key
-                var value = hashtable[key];
+                var value = hashTable[key];
 
                 // If the value is not null and is of the expected type
                 if (value is not null && value is T t)

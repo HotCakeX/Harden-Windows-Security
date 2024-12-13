@@ -1,7 +1,5 @@
 using System;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class EdgeBrowserConfigurations
@@ -15,10 +13,6 @@ namespace HardenWindowsSecurity
             if (GlobalVars.path is null)
             {
                 throw new ArgumentNullException("GlobalVars.path cannot be null.");
-            }
-            if (GlobalVars.RegistryCSVItems is null)
-            {
-                throw new ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }
 
             ChangePSConsoleTitle.Set("🦔 Edge");

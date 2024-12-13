@@ -5,8 +5,6 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 
-#nullable enable
-
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
 namespace HardenWindowsSecurity
@@ -14,16 +12,16 @@ namespace HardenWindowsSecurity
     /// <summary>
     /// Class that deals with MDM/CSPs/Intune
     /// </summary>
-    public static class MDM
+    internal static class MDM
     {
         /// <summary>
         /// Gets the results of all of the Intune policies from the system
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<string, List<Dictionary<string, object>>> Get()
+        internal static Dictionary<string, List<Dictionary<string, object>>> Get()
         {
             // Running the asynchronous method synchronously and returning the result
-            return Task.Run(() => GetAsync()).GetAwaiter().GetResult();
+            return Task.Run(GetAsync).GetAwaiter().GetResult();
         }
 
         // Asynchronous method to get the results
@@ -177,9 +175,9 @@ namespace HardenWindowsSecurity
         // Class to represent a record in the CSV file
         private sealed class MdmRecord
         {
-            public string? Namespace { get; set; }
-            public string? Class { get; set; }
-            public string? Authorized { get; set; }
+            internal string? Namespace { get; set; }
+            internal string? Class { get; set; }
+            internal string? Authorized { get; set; }
         }
     }
 }

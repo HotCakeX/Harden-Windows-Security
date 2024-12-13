@@ -1,7 +1,5 @@
 ﻿using System;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public partial class DeviceGuard
@@ -23,7 +21,7 @@ namespace HardenWindowsSecurity
 
             Logger.LogMessage("Setting VBS and Memory Integrity in Mandatory Mode", LogTypeIntel.Information);
 
-            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems)
             {
                 if (string.Equals(Item.Category, "DeviceGuard_MandatoryVBS", StringComparison.OrdinalIgnoreCase))
                 {

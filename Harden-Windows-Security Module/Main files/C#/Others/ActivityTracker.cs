@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>
@@ -10,7 +8,7 @@ namespace HardenWindowsSecurity
     /// enabled/disabled state of registered UI elements based on this status. It is thread-safe to ensure
     /// that concurrent access to the activity state and UI elements list is handled properly.
     /// </summary>
-    public static class ActivityTracker
+    internal static class ActivityTracker
     {
         // A volatile boolean to indicate whether the application is currently active or not.
         // The 'volatile' keyword ensures that the value is always read directly from memory,
@@ -28,7 +26,7 @@ namespace HardenWindowsSecurity
         /// Gets or sets the current activity status of the application.
         /// When setting the status, it also updates the state of all registered UI elements.
         /// </summary>
-        public static bool IsActive
+        internal static bool IsActive
         {
             get
             {
@@ -60,7 +58,7 @@ namespace HardenWindowsSecurity
         /// If the application is currently active, the element will be immediately disabled.
         /// </summary>
         /// <param name="element">The UI element to register.</param>
-        public static void RegisterUIElement(UIElement element)
+        internal static void RegisterUIElement(UIElement element)
         {
             // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)
@@ -74,7 +72,7 @@ namespace HardenWindowsSecurity
                     if (_isActive)
                     {
                         // Ensure that the update to the UI element happens on the UI thread.
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        GUIMain.app.Dispatcher.Invoke(() =>
                         {
                             element.IsEnabled = false; // Disable the element if the application is active.
                         });
@@ -88,7 +86,7 @@ namespace HardenWindowsSecurity
         /// The element's enabled/disabled state will no longer be controlled by the application's activity status.
         /// </summary>
         /// <param name="element">The UI element to unregister.</param>
-        public static void UnregisterUIElement(UIElement element)
+        internal static void UnregisterUIElement(UIElement element)
         {
             // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)
@@ -105,10 +103,10 @@ namespace HardenWindowsSecurity
         private static void UpdateUIElements()
         {
             // Iterate through each registered UI element.
-            foreach (var element in _uiElements)
+            foreach (UIElement element in _uiElements)
             {
                 // Ensure that the update to each UI element happens on the UI thread.
-                GUIMain.app!.Dispatcher.Invoke(() =>
+                GUIMain.app.Dispatcher.Invoke(() =>
                 {
                     // Set the IsEnabled property of the element based on the current activity status.
                     // If the application is active (_isActive is true), disable the element (IsEnabled = false).
@@ -125,7 +123,7 @@ namespace HardenWindowsSecurity
         private static void UpdateMainProgressBarVisibility()
         {
             // Ensure that the update to the progress bar's visibility happens on the UI thread.
-            GUIMain.app!.Dispatcher.Invoke(() =>
+            GUIMain.app.Dispatcher.Invoke(() =>
             {
                 // Set the Visibility property of the main progress bar based on the current activity status.
                 // If the application is active (_isActive is true), set Visibility to Visible.

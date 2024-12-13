@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class MiscellaneousConfigurations
@@ -17,10 +15,6 @@ namespace HardenWindowsSecurity
             if (GlobalVars.path is null)
             {
                 throw new ArgumentNullException("GlobalVars.path cannot be null.");
-            }
-            if (GlobalVars.RegistryCSVItems is null)
-            {
-                throw new ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }
 
             ChangePSConsoleTitle.Set("🥌 Miscellaneous");
@@ -59,7 +53,7 @@ namespace HardenWindowsSecurity
 
             Logger.LogMessage("""Enabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category""", LogTypeIntel.Information);
 
-            RunCommandLineCommands.Run("auditpol", "/set /subcategory:\"{0CCE921C-69AE-11D9-BED3-505054503030}\" /success:enable /failure:enable");
+            ProcessStarter.RunCommand("auditpol", "/set /subcategory:\"{0CCE921C-69AE-11D9-BED3-505054503030}\" /success:enable /failure:enable");
 
             // Query all Audits status
             // auditpol /get /category:*

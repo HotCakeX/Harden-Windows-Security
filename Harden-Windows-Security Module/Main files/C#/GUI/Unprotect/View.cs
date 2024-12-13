@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -28,7 +27,6 @@ namespace HardenWindowsSecurity
                     return;
                 }
 
-                // Defining the path to the XAML XML file
                 if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
@@ -51,8 +49,6 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl
                 GUIUnprotect.View = (UserControl)XamlReader.Parse(xamlContent);
 
-                // Set the DataContext for the Unprotect view
-                GUIUnprotect.View.DataContext = new UnprotectVM();
 
                 #region Finding The Elements
 
@@ -126,7 +122,7 @@ namespace HardenWindowsSecurity
                         List<BitLocker.BitLockerVolume> allDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, false);
 
                         // Update the ComboBox with the drives using Application's Dispatcher
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        app.Dispatcher.Invoke(() =>
                         {
                             ListOfDrivesComboBox.ItemsSource = allDrivesList.Select(D => $"{D.MountPoint}");
                         });
@@ -151,7 +147,7 @@ namespace HardenWindowsSecurity
                         string? SelectedDriveFromComboBox = null;
 
                         // Using the Application dispatcher to query UI elements' values only
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        app.Dispatcher.Invoke(() =>
                         {
                             SelectedDriveFromComboBox = ListOfDrivesComboBox.SelectedItem?.ToString();
                         });
@@ -212,7 +208,7 @@ namespace HardenWindowsSecurity
                         ActivityTracker.IsActive = true;
 
                         // Disable the ExecuteButton button while processing
-                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
                             // Store the values of the combo boxes in View variables since they need to be acquired through the Application dispatcher since they belong to the UI thread
                             GUIUnprotect.UnprotectCategoriesComboBoxSelection = (byte)UnprotectCategoriesComboBox.SelectedIndex;
@@ -299,7 +295,7 @@ namespace HardenWindowsSecurity
                         });
 
                         // Update the UI Elements at the end of the run
-                        await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                        await Application.Current.Dispatcher.InvokeAsync(() =>
                         {
                             ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
                         });

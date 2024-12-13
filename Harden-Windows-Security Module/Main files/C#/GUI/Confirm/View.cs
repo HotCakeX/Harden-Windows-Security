@@ -108,7 +108,7 @@ namespace HardenWindowsSecurity
                                        (member.FriendlyName?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
                                        (member.Value?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
                                        (member.Name?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                                       (member.Category?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                       (member.Category.ToString()?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
                                        (member.Method?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false);
 
                                 // Check if the item passes the compliant toggle buttons filters
@@ -187,14 +187,9 @@ namespace HardenWindowsSecurity
                 // Finding the ComplianceCategoriesSelectionComboBox ComboBox
                 ComboBox ComplianceCategoriesSelectionComboBox = GUIConfirmSystemCompliance.View.FindName("ComplianceCategoriesSelectionComboBox") as ComboBox;
 
-                // Create an instance of the class
-                ComplianceCategoriex cats = new();
 
-                // Get the valid compliance checking categories
-                string[] catsStrings = cats.GetValidValues();
-
-                // Convert the array to a list to easily add items
-                List<string> catsList = new(catsStrings);
+                // Get the valid compliance category names
+                List<string> catsList = [.. Enum.GetNames<ComplianceCategories>()];
 
                 // Add an empty item to the list at the beginning
                 // Add an empty string as the first item
@@ -257,7 +252,7 @@ namespace HardenWindowsSecurity
                                 string SelectedCategory = string.Empty;
 
                                 // Use the App dispatcher since this is being done in a different thread
-                                GUIMain.app.Dispatcher.Invoke(() =>
+                                app.Dispatcher.Invoke(() =>
                                 {
 
                                     if (ComplianceCategoriesSelectionComboBox.SelectedItem is not null)
@@ -351,7 +346,7 @@ namespace HardenWindowsSecurity
             {
 
                 // calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
-                int totalCount = GlobalVars.FinalMegaObject?.Values.Sum(list => list.Count) ?? 0;
+                int totalCount = GlobalVars.FinalMegaObject.Values.Sum(list => list.Count);
 
                 // Find the TextBlock used to display the total count
                 TextBlock TotalCountTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
@@ -404,25 +399,22 @@ namespace HardenWindowsSecurity
                 __SecOpses.Clear();
 
                 // Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
-                if (GlobalVars.FinalMegaObject is not null)
+                foreach (KeyValuePair<ComplianceCategories, List<IndividualResult>> kvp in GlobalVars.FinalMegaObject)
                 {
-                    foreach (KeyValuePair<string, List<IndividualResult>> kvp in GlobalVars.FinalMegaObject)
+                    // Loop over the results for the category
+                    foreach (IndividualResult result in kvp.Value)
                     {
-                        // Loop over the results for the category
-                        foreach (IndividualResult result in kvp.Value)
+                        // Add each result as a new SecOp object to the collection
+                        __SecOpses.Add(new SecOp
                         {
-                            // Add each result as a new SecOp object to the collection
-                            __SecOpses.Add(new SecOp
-                            {
-                                FriendlyName = result.FriendlyName,
-                                Value = result.Value,
-                                Name = result.Name,
-                                Category = result.Category,
-                                Method = result.Method,
-                                Compliant = result.Compliant,
-                                BgColor = GetCategoryColor(result.Category) // Set the background color based on the category
-                            });
-                        }
+                            FriendlyName = result.FriendlyName,
+                            Value = result.Value,
+                            Name = result.Name,
+                            Category = result.Category,
+                            Method = result.Method.ToString(),
+                            Compliant = result.Compliant,
+                            BgColor = GetCategoryColor(result.Category.ToString()) // Set the background color based on the category
+                        });
                     }
                 }
 

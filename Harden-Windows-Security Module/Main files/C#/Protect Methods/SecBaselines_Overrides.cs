@@ -4,8 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class MicrosoftSecurityBaselines

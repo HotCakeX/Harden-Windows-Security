@@ -18,7 +18,7 @@
                 </RadialGradientBrush>
             </Border.Background>
             <Grid x:Name="MainGridInWindow">
-                <!--// Base Grid //-->
+                <!-- Base Grid -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width='228' />
                     <ColumnDefinition Width='*' />
@@ -36,61 +36,62 @@
     Margin="0,0,0,5"
     Grid.ColumnSpan="2"
     BorderThickness="0" />
-                <!--// Navigation Panel //-->
+                <!-- Navigation Panel -->
                 <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
-                    <!--// background of the tabs sidebar can be set using border background //-->
+                    <!-- background of the tabs sidebar can be set using border background -->
                     <Border>
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Width='228'>
-                                <!--// Protect //-->
+                                <!-- Protect -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ProtectCommand}' IsChecked='True'>
                                     <Grid Name="ProtectButtonGrid">
                                         <Image x:Name="ProtectButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='Protect' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-                                <!--// Confirm //-->
+                                <!-- Confirm -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ConfirmCommand}'>
                                     <Grid x:Name="ConfirmButtonGrid">
                                         <Image x:Name="ConfirmButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='Confirm &amp; Verify' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-                                <!--// ASRRules //-->
+                                <!-- ASRRules -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ASRRulesCommand}'>
                                     <Grid x:Name="ASRRulesButtonGrid">
                                         <Image x:Name="ASRRulesButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='ASR Rules' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-                                <!--// Unprotect //-->
+                                <!-- Unprotect -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding UnprotectCommand}'>
                                     <Grid x:Name="UnprotectButtonGrid">
                                         <Image x:Name="UnprotectButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-                                <!--// Exclusions //-->
+                                <!-- Exclusions -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ExclusionsCommand}'>
                                     <Grid x:Name="ExclusionsButtonGrid">
                                         <Image x:Name="ExclusionsButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='Exclusions' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-                                <!--// BitLocker //-->
+                                <!-- BitLocker -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding BitLockerCommand}'>
                                     <Grid x:Name="BitLockerButtonGrid">
                                         <Image x:Name="BitLockerButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='BitLocker' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-                                <!--// Logs //-->
+                                <!-- Logs -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">
                                         <Image x:Name="LogsButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='Logs' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+
                             </StackPanel>
                         </ScrollViewer>
                     </Border>

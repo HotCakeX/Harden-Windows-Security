@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static partial class MicrosoftDefender
@@ -59,7 +57,7 @@ namespace HardenWindowsSecurity
             if (gitHubDesktopFiles is not null)
             {
                 IEnumerable<string> gitHubDesktopExes = gitHubDesktopFiles.Select(x => x.Name);
-                ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitHubDesktopExes.ToArray());
+                ForceRelocateImagesForFiles.SetProcessMitigationForFiles([.. gitHubDesktopExes]);
             }
 
 
@@ -70,7 +68,7 @@ namespace HardenWindowsSecurity
             if (gitExesFiles is not null)
             {
                 IEnumerable<string> gitExes = gitExesFiles.Select(x => x.Name);
-                ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitExes.ToArray());
+                ForceRelocateImagesForFiles.SetProcessMitigationForFiles([.. gitExes]);
             }
 
             // Skip applying process mitigations when ARM hardware detected

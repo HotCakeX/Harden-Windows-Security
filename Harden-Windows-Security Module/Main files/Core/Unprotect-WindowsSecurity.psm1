@@ -43,7 +43,7 @@ Function Unprotect-WindowsSecurity {
             try {
                 Write-Progress -Activity 'Removing protections from Windows' -Status 'Unprotecting' -PercentComplete 50
 
-                [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
+                [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start($true, $false)
                 Start-Sleep -Seconds 3
 
                 Switch ($True) {

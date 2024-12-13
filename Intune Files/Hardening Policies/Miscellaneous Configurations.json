@@ -1,18 +1,18 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-25T15:40:42.1396463Z",
+    "createdDateTime": "2024-12-13T09:50:21.3160332Z",
     "creationSource": null,
     "description": "Miscellaneous Configurations Category",
-    "lastModifiedDateTime": "2024-07-28T04:13:44.8554192Z",
+    "lastModifiedDateTime": "2024-12-13T09:55:33.2010251Z",
     "name": "Miscellaneous Configurations",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 15,
+    "settingCount": 16,
     "technologies": "mdm",
-    "id": "b6114261-e199-4121-a333-c91a95cd67e8",
+    "id": "e685a3fc-6823-4409-9d71-8406e4e1905d",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -74,6 +74,19 @@
             "id": "3",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_admx_filesys_longpathsenabled",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_admx_filesys_longpathsenabled_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "4",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_kerberos_kerberosclientsupportsclaimscompoundarmor",
                 "settingInstanceTemplateReference": null,
                 "choiceSettingValue": {
@@ -84,7 +97,7 @@
             }
         },
         {
-            "id": "4",
+            "id": "5",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_remoteprocedurecall_rpcendpointmapperclientauthentication",
@@ -97,7 +110,7 @@
             }
         },
         {
-            "id": "5",
+            "id": "6",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_servicecontrolmanager_svchostprocessmitigation",
@@ -110,7 +123,7 @@
             }
         },
         {
-            "id": "6",
+            "id": "7",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "user_vendor_msft_policy_config_admx_sensors_disablelocation_1",
@@ -123,7 +136,7 @@
             }
         },
         {
-            "id": "7",
+            "id": "8",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_sensors_disablelocationscripting_2",
@@ -136,7 +149,7 @@
             }
         },
         {
-            "id": "8",
+            "id": "9",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "user_vendor_msft_policy_config_admx_sensors_disablelocationscripting_1",
@@ -149,7 +162,7 @@
             }
         },
         {
-            "id": "9",
+            "id": "10",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_locationprovideradm_disablewindowslocationprovider_1",
@@ -162,7 +175,7 @@
             }
         },
         {
-            "id": "10",
+            "id": "11",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_audit_accountlogonlogoff_auditaccountlockout",
@@ -175,7 +188,7 @@
             }
         },
         {
-            "id": "11",
+            "id": "12",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_microsoftnetworkclient_digitallysigncommunicationsalways",
@@ -188,7 +201,7 @@
             }
         },
         {
-            "id": "12",
+            "id": "13",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_microsoftnetworkserver_digitallysigncommunicationsalways",
@@ -201,7 +214,7 @@
             }
         },
         {
-            "id": "13",
+            "id": "14",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_privacy_letappsaccesslocation",
@@ -214,7 +227,7 @@
             }
         },
         {
-            "id": "14",
+            "id": "15",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_system_allowlocation",

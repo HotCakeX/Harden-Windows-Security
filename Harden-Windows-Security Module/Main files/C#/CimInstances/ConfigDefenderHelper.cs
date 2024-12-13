@@ -4,14 +4,12 @@ using System.Dynamic;
 using System.Linq;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class ConfigDefenderHelper
+    internal static class ConfigDefenderHelper
     {
         // Get the MpComputerStatus from the MSFT_MpComputerStatus WMI class and returns it as a dynamic object
-        public static dynamic GetMpComputerStatus()
+        internal static dynamic GetMpComputerStatus()
         {
             try
             {
@@ -94,7 +92,7 @@ namespace HardenWindowsSecurity
         /// <param name="preferenceName">The name of the Microsoft Defender feature to configure</param>
         /// <param name="preferenceValue">The value to set the Microsoft Defender feature to</param>
         /// <param name="Set">Bool. If true, Set will be used, if false, Add will be used.</param>
-        public static void ManageMpPreference<T>(string preferenceName, T preferenceValue, bool Set)
+        internal static void ManageMpPreference<T>(string preferenceName, T preferenceValue, bool Set)
         {
 
             // The name of the method

@@ -1,6 +1,5 @@
 function Confirm-SystemCompliance {
     [CmdletBinding()]
-    [OutputType([System.String], [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardenWindowsSecurity.IndividualResult[]]])]
     param (
         [ArgumentCompleter({
                 # Get the current command and the already bound parameters
@@ -16,7 +15,7 @@ function Confirm-SystemCompliance {
                     $false
                 ).Value
 
-                foreach ($Item in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
+                foreach ($Item in [Enum]::GetNames([HardenWindowsSecurity.ComplianceCategories])) {
                     if ($Item -notin $Existing) {
                         $Item
                     }
@@ -24,7 +23,7 @@ function Confirm-SystemCompliance {
 
             })]
         [ValidateScript({
-                if ($_ -notin [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                if ($_ -notin [Enum]::GetNames([HardenWindowsSecurity.ComplianceCategories])) { throw "Invalid Category Name: $_" }
                 $true # Return true if everything is okay
             })]
         [System.String[]]$Categories,
@@ -152,7 +151,7 @@ function Confirm-SystemCompliance {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
                 $AllOrderedResults = [System.Collections.Generic.List[HardenWindowsSecurity.IndividualResult]]::new()
 
-                $AllOrderedResults = foreach ($Key in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
+                $AllOrderedResults = foreach ($Key in [Enum]::GetNames([HardenWindowsSecurity.ComplianceCategories])) {
                     if (([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).ContainsKey($Key)) {
                         foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject)[$Key].GetEnumerator()) {
                             $Item
@@ -188,7 +187,7 @@ function Confirm-SystemCompliance {
                     'List' {
                         # Setting the List Format Accent the same color as the category's title
                         $PSStyle.Formatting.FormatAccent = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2]))
-                        ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).$CategoryName | Format-List -Property FriendlyName, @{
+                        ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).([Enum]::Parse([HardenWindowsSecurity.ComplianceCategories], $CategoryName, $true)) | Format-List -Property FriendlyName, @{
                             Label      = 'Compliant'
                             Expression =
                             { switch ($_.Compliant) {
@@ -202,7 +201,7 @@ function Confirm-SystemCompliance {
                     'Table' {
                         # Setting the Table header the same color as the category's title
                         $PSStyle.Formatting.TableHeader = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2]))
-                        ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).$CategoryName | Format-Table -Property FriendlyName,
+                        ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).([Enum]::Parse([HardenWindowsSecurity.ComplianceCategories], $CategoryName, $true)) | Format-Table -Property FriendlyName,
                         @{
                             Label      = 'Compliant'
                             Expression =
@@ -239,8 +238,8 @@ function Confirm-SystemCompliance {
 
                 # Counting the number of $True Compliant values in the Final Output Object
                 [System.UInt32]$TotalTrueCompliantValuesInOutPut = 0
-                foreach ($Category in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
-                    $TotalTrueCompliantValuesInOutPut += (([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).$Category).Where({ $_.Compliant -eq $True }).Count
+                foreach ($Category in [Enum]::GetNames([HardenWindowsSecurity.ComplianceCategories])) {
+                    $TotalTrueCompliantValuesInOutPut += (([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).([Enum]::Parse([HardenWindowsSecurity.ComplianceCategories], $Category, $true))).Where({ $_.Compliant -eq $True }).Count
                 }
 
                 # Only display the overall score if the user has not specified any categories

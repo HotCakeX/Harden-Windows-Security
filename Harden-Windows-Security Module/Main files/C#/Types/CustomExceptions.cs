@@ -1,7 +1,5 @@
 using System;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     // Custom exception class for PowerShell execution errors
@@ -12,6 +10,10 @@ namespace HardenWindowsSecurity
         }
 
         public PowerShellExecutionException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        public PowerShellExecutionException()
         {
         }
     }

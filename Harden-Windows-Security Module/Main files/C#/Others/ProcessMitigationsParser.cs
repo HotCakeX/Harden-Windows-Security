@@ -2,24 +2,22 @@ using System;
 using System.Globalization;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class ProcessMitigationsParser
+    internal static class ProcessMitigationsParser
     {
-        // Define a public class to store the structure of the new CSV data
-        public sealed class ProcessMitigationsRecords
+        // a class to store the structure of the new CSV data
+        internal sealed class ProcessMitigationsRecords
         {
-            public string? ProgramName { get; set; }    // Column for program name
-            public string? Mitigation { get; set; }     // Column for mitigation
-            public string? Action { get; set; }         // Column for action
-            public bool RemovalAllowed { get; set; } // Column for removal allowed
-            public string? Comment { get; set; }        // Column for comments
+            internal string? ProgramName { get; set; }    // Column for program name
+            internal string? Mitigation { get; set; }     // Column for mitigation
+            internal string? Action { get; set; }         // Column for action
+            internal bool RemovalAllowed { get; set; } // Column for removal allowed
+            internal string? Comment { get; set; }        // Column for comments
         }
 
-        // Define a public method to parse the CSV file and save the records to RegistryCSVItems
-        public static void ReadCsv()
+        // a method to parse the CSV file and save the records to RegistryCSVItems
+        internal static void ReadCsv()
         {
 
             // Initializing the path variable for the CSV file
@@ -59,7 +57,7 @@ namespace HardenWindowsSecurity
                 if (values.Length == 5)
                 {
                     // Add a new ProcessMitigationsRecords to the list
-                    GlobalVars.ProcessMitigations!.Add(new ProcessMitigationsRecords
+                    GlobalVars.ProcessMitigations.Add(new ProcessMitigationsRecords
                     {
                         ProgramName = values[0],
                         Mitigation = values[1],

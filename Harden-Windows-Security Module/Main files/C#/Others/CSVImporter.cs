@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class HardeningRegistryKeys
@@ -27,7 +25,7 @@ namespace HardenWindowsSecurity
             string basePath = GlobalVars.path ?? throw new ArgumentNullException(nameof(GlobalVars.path), "GlobalVars.path cannot be null.");
 
             // Ensure RegistryCSVItems is initialized
-            List<CsvRecord> registryCSVItems = GlobalVars.RegistryCSVItems ?? throw new InvalidOperationException("RegistryCSVItems is not initialized.");
+            List<CsvRecord> registryCSVItems = GlobalVars.RegistryCSVItems;
 
             // Define the path to the CSV file
             string path = Path.Combine(basePath, "Resources", "Registry.csv");

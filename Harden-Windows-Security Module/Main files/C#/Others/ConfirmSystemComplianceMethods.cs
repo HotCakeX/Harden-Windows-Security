@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,12 +10,23 @@ using System.Management;
 using System.Management.Automation;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class ConfirmSystemComplianceMethods
+    public static partial class ConfirmSystemComplianceMethods
     {
+
+        public enum Method
+        {
+            CIM,
+            MDM,
+            DISM,
+            WindowsAPI,
+            RegistryKeys,
+            Cmdlet,
+            SecurityGroupPolicy,
+            GroupPolicy
+        }
+
 
         /// <summary>
         /// The main Orchestrator of the Confirm-SystemCompliance cmdlet
@@ -26,18 +36,12 @@ namespace HardenWindowsSecurity
         /// <exception cref="Exception"></exception>
         internal static void OrchestrateComplianceChecks(params string[] methodNames)
         {
-
-            string scriptToStartLanmanWorkstationService = """
-sc.exe config LanmanWorkstation start=auto
-sc.exe start LanmanWorkstation
-""";
-
             // The "LanmanWorkstation" with the display name of "Workstation" is necessary to be running for at least one category to perform successfully, which is the Miscellaneous Category
-            _ = PowerShellExecutor.ExecuteScript(scriptToStartLanmanWorkstationService);
-
+            ProcessStarter.RunCommand("sc.exe", "config LanmanWorkstation start=auto", true);
+            ProcessStarter.RunCommand("sc.exe", "start LanmanWorkstation", true);
 
             // Call the method to get the security group policies to be exported to a file
-            ConfirmSystemComplianceMethods.ExportSecurityPolicy();
+            ExportSecurityPolicy();
 
             // Storing the output of the ini file parsing function
             GlobalVars.SystemSecurityPoliciesIniObject = IniFileConverter.ConvertFromIniFile(GlobalVars.securityPolicyInfPath);
@@ -45,49 +49,31 @@ sc.exe start LanmanWorkstation
             // Process the SecurityPoliciesVerification.csv and save the output to the global variable GlobalVars.SecurityPolicyRecords
             string basePath = GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path cannot be null.");
             string fullPath = Path.Combine(basePath, "Resources", "SecurityPoliciesVerification.csv");
+
             GlobalVars.SecurityPolicyRecords = SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(fullPath);
 
-            // Call the method and supply the category names if any
-            // Will run them async
-            Task MethodsTaskOutput = RunComplianceMethodsInParallelAsync(methodNames);
-
-            // Since this parent method is not async and we did not use await when calling RunComplianceMethodsInParallelAsync method
-            // We need to implement our own manual await process
-            while (!MethodsTaskOutput.IsCompleted)
-            {
-                // Wait for 500 milliseconds before checking again
-                System.Threading.Thread.Sleep(50);
-            }
-
-            // Check if the task failed
-            if (MethodsTaskOutput.IsFaulted)
-            {
-                // throw the exceptions
-                throw MethodsTaskOutput.Exception;
-
-                // this should automatically throw ?
-                // MethodsTaskOutput.GetAwaiter().GetResult()
-            }
+            // Call the async method and supply the category names if any
+            RunComplianceMethodsInParallelAsync(methodNames).GetAwaiter().GetResult();
         }
 
         // Defining delegates for the methods
         private static readonly Dictionary<string, Func<Task>> methodDictionary = new(StringComparer.OrdinalIgnoreCase)
-    {
-        { "AttackSurfaceReductionRules", VerifyAttackSurfaceReductionRules },
-        { "WindowsUpdateConfigurations", VerifyWindowsUpdateConfigurations },
-        { "NonAdminCommands", VerifyNonAdminCommands },
-        { "EdgeBrowserConfigurations", VerifyEdgeBrowserConfigurations },
-        { "DeviceGuard", VerifyDeviceGuard },
-        { "BitLockerSettings", VerifyBitLockerSettings },
-        { "MiscellaneousConfigurations", VerifyMiscellaneousConfigurations },
-        { "WindowsNetworking", VerifyWindowsNetworking },
-        { "LockScreen", VerifyLockScreen },
-        { "UserAccountControl", VerifyUserAccountControl },
-        { "OptionalWindowsFeatures", VerifyOptionalWindowsFeatures },
-        { "TLSSecurity", VerifyTLSSecurity },
-        { "WindowsFirewall", VerifyWindowsFirewall },
-        { "MicrosoftDefender", VerifyMicrosoftDefender }
-    };
+        {
+            { "AttackSurfaceReductionRules", VerifyAttackSurfaceReductionRules },
+            { "WindowsUpdateConfigurations", VerifyWindowsUpdateConfigurations },
+            { "NonAdminCommands", VerifyNonAdminCommands },
+            { "EdgeBrowserConfigurations", VerifyEdgeBrowserConfigurations },
+            { "DeviceGuard", VerifyDeviceGuard },
+            { "BitLockerSettings", VerifyBitLockerSettings },
+            { "MiscellaneousConfigurations", VerifyMiscellaneousConfigurations },
+            { "WindowsNetworking", VerifyWindowsNetworking },
+            { "LockScreen", VerifyLockScreen },
+            { "UserAccountControl", VerifyUserAccountControl },
+            { "OptionalWindowsFeatures", VerifyOptionalWindowsFeatures },
+            { "TLSSecurity", VerifyTLSSecurity },
+            { "WindowsFirewall", VerifyWindowsFirewall },
+            { "MicrosoftDefender", VerifyMicrosoftDefender }
+        };
 
 
         // Task status codes: https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus
@@ -111,10 +97,9 @@ sc.exe start LanmanWorkstation
             else
             {
                 // Only run the specified methods
-                methodsToRun = methodNames
-                    .Where(methodName => methodDictionary.ContainsKey(methodName))
-                    .Select(methodName => methodDictionary[methodName])
-                    .ToList();
+                methodsToRun = [.. methodNames
+                    .Where(methodDictionary.ContainsKey)
+                    .Select(methodName => methodDictionary[methodName])];
             }
 
             // Run all selected methods in parallel
@@ -140,7 +125,7 @@ sc.exe start LanmanWorkstation
                 // Create a new list to store the results
                 List<IndividualResult> nestedObjectArray = [];
 
-                string CatName = "AttackSurfaceReductionRules";
+                ComplianceCategories CatName = ComplianceCategories.AttackSurfaceReductionRules;
 
                 // Warn + Block array - meaning either states are acceptable
                 string[] MultipleAcceptableStates = ["6", "1"];
@@ -166,7 +151,7 @@ sc.exe start LanmanWorkstation
                 // If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
                 if (ids is not null)
                 {
-                    ids = ids.Select(id => id.ToLowerInvariant()).ToArray();
+                    ids = [.. ids.Select(id => id.ToLowerInvariant())];
                 }
 
                 // Loop over each item in the HashTable
@@ -208,18 +193,12 @@ sc.exe start LanmanWorkstation
                         Value = action,
                         Name = name,
                         Category = CatName,
-                        Method = "CIM"
+                        Method = Method.CIM
                     });
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+
             });
         }
 
@@ -235,14 +214,10 @@ sc.exe start LanmanWorkstation
                 // Create a new list to store the results
                 List<IndividualResult> nestedObjectArray = [];
 
-                string CatName = "WindowsUpdateConfigurations";
+                ComplianceCategories CatName = ComplianceCategories.WindowsUpdateConfigurations;
 
                 // Get the control from MDM CIM
-                Hashtable mdmPolicy = GlobalVars.MDM_Policy_Result01_Update02
-                ?? throw new InvalidOperationException("MDM_Policy_Result01_Update02 is null");
-
-                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork =
-                    HashtableChecker.CheckValue(mdmPolicy, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
+                HashTableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -251,12 +226,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.Value,
                     Name = "Allow updates to be downloaded automatically over metered connections",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
+                HashTableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -265,12 +240,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Policy_Result01_Update02_AllowAutoUpdate.Value,
                     Name = "Automatically download updates and install them on maintenance day",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
+                HashTableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -279,30 +254,23 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Policy_Result01_Update02_AllowMUUpdateService.Value,
                     Name = "Install updates for other Microsoft products",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -318,22 +286,15 @@ sc.exe start LanmanWorkstation
                 // Create a new list to store the results
                 List<IndividualResult> nestedObjectArray = [];
 
-                string CatName = "NonAdminCommands";
+                ComplianceCategories CatName = ComplianceCategories.NonAdminCommands;
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -348,22 +309,15 @@ sc.exe start LanmanWorkstation
                 // Create a new list to store the results
                 List<IndividualResult> nestedObjectArray = [];
 
-                string CatName = "EdgeBrowserConfigurations";
+                ComplianceCategories CatName = ComplianceCategories.EdgeBrowserConfigurations;
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -379,7 +333,7 @@ sc.exe start LanmanWorkstation
                 // Create a new list to store the results
                 List<IndividualResult> nestedObjectArray = [];
 
-                string CatName = "DeviceGuard";
+                ComplianceCategories CatName = ComplianceCategories.DeviceGuard;
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#enablevirtualizationbasedsecurity
                 bool EnableVirtualizationBasedSecurity = GetMDMResultValue.Get("EnableVirtualizationBasedSecurity", "1");
@@ -391,7 +345,7 @@ sc.exe start LanmanWorkstation
                     Value = EnableVirtualizationBasedSecurity ? "True" : "False",
                     Name = "EnableVirtualizationBasedSecurity",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
 
@@ -414,7 +368,7 @@ sc.exe start LanmanWorkstation
                             "False",
                     Name = "RequirePlatformSecurityFeatures",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
 
@@ -429,7 +383,7 @@ sc.exe start LanmanWorkstation
                     Value = HypervisorEnforcedCodeIntegrity ? "True" : "False",
                     Name = "HypervisorEnforcedCodeIntegrity",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
 
@@ -443,7 +397,7 @@ sc.exe start LanmanWorkstation
                     Value = RequireUEFIMemoryAttributesTable ? "True" : "False",
                     Name = "HVCIMATRequired",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
 
@@ -457,7 +411,7 @@ sc.exe start LanmanWorkstation
                     Value = LsaCfgFlags ? "True" : "False",
                     Name = "LsaCfgFlags",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
 
@@ -471,29 +425,22 @@ sc.exe start LanmanWorkstation
                     Value = ConfigureSystemGuardLaunch ? "True" : "False",
                     Name = "ConfigureSystemGuardLaunch",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -509,7 +456,7 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "BitLockerSettings";
+                ComplianceCategories CatName = ComplianceCategories.BitLockerSettings;
 
                 // Returns true or false depending on whether Kernel DMA Protection is on or off
                 bool BootDMAProtection = SystemInformationClass.BootDmaCheck() != 0;
@@ -547,7 +494,7 @@ sc.exe start LanmanWorkstation
                     Value = ItemState ? "True" : "False",
                     Name = "DMA protection",
                     Category = CatName,
-                    Method = "Windows API"
+                    Method = Method.WindowsAPI
                 });
 
 
@@ -572,7 +519,7 @@ sc.exe start LanmanWorkstation
                         Value = IndividualItemResult ? "True" : "False",
                         Name = "Hibernate is set to full",
                         Category = CatName,
-                        Method = "Registry Keys"
+                        Method = Method.RegistryKeys
                     });
                 }
                 else
@@ -592,9 +539,6 @@ sc.exe start LanmanWorkstation
                     IEnumerable<BitLocker.KeyProtectorType?> KeyProtectors = volumeInfo.KeyProtector!
                     .Select(kp => kp.KeyProtectorType);
 
-                    // Display the key protectors
-                    // Logger.LogMessage(string.Join(", ", KeyProtectors));
-
                     // Check if TPM+PIN and recovery password are being used - Normal Security level
                     if (KeyProtectors.Contains(BitLocker.KeyProtectorType.TpmPin) && KeyProtectors.Contains(BitLocker.KeyProtectorType.RecoveryPassword))
                     {
@@ -605,7 +549,7 @@ sc.exe start LanmanWorkstation
                             Value = "Normal Security Level",
                             Name = "Secure OS Drive encryption",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                     // Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
@@ -618,7 +562,7 @@ sc.exe start LanmanWorkstation
                             Value = "Enhanced Security Level",
                             Name = "Secure OS Drive encryption",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                     else
@@ -632,7 +576,7 @@ sc.exe start LanmanWorkstation
                             Value = "False",
                             Name = "Secure OS Drive encryption",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                 }
@@ -647,7 +591,7 @@ sc.exe start LanmanWorkstation
                         Value = "False",
                         Name = "Secure OS Drive encryption",
                         Category = CatName,
-                        Method = "CIM"
+                        Method = Method.CIM
                     });
                 }
 
@@ -686,7 +630,7 @@ sc.exe start LanmanWorkstation
                                     Value = "Encrypted",
                                     Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                     Category = CatName,
-                                    Method = "CIM"
+                                    Method = Method.CIM
                                 });
                             }
                             else
@@ -698,7 +642,7 @@ sc.exe start LanmanWorkstation
                                     Value = "Not properly encrypted",
                                     Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                     Category = CatName,
-                                    Method = "CIM"
+                                    Method = Method.CIM
                                 });
                             }
                         }
@@ -711,27 +655,19 @@ sc.exe start LanmanWorkstation
                                 Value = "Not encrypted",
                                 Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                 Category = CatName,
-                                Method = "CIM"
+                                Method = Method.CIM
                             });
                         }
                     }
                 }
 
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
-
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -748,7 +684,7 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "MiscellaneousConfigurations";
+                ComplianceCategories CatName = ComplianceCategories.MiscellaneousConfigurations;
 
                 // Checking if all user accounts are part of the Hyper-V security Group
                 // Get all the enabled user accounts that are not part of the Hyper-V Security group based on SID
@@ -772,101 +708,29 @@ sc.exe start LanmanWorkstation
                     Value = compliant ? "True" : "False",
                     Name = "All users are part of the Hyper-V Administrators group",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
-                /// PS Equivalent: (auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting'
-                // Verify an Audit policy is enabled - only supports systems with English-US language
-                CultureInfoProperties cultureInfoHelper = CultureInfoHelper.Get();
-                string currentCulture = cultureInfoHelper.Name;
 
-                if (string.Equals(currentCulture, "en-US", StringComparison.OrdinalIgnoreCase))
+                // Verify an Audit policy is enabled
+                AuditPolicyHelper.AuditPolicies auditPoliciesResult = AuditPolicyHelper.GetAuditPolicies();
+
+                // Add the result to the nested object array
+                nestedObjectArray.Add(new IndividualResult
                 {
-                    // Start a new process to run the auditpol command
-                    using Process process = new()
-                    {
-                        StartInfo = new ProcessStartInfo
-                        {
-                            FileName = "auditpol",
-                            Arguments = "/get /subcategory:\"Other Logon/Logoff Events\" /r",
-                            RedirectStandardOutput = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true
-                        }
-                    };
+                    FriendlyName = "Audit policy for Other Logon/Logoff Events",
+                    Compliant = auditPoliciesResult.LogonLogoff.OtherLogonLogoffEvents is AuditPolicyHelper.Status.SuccessAndFailure,
+                    Value = auditPoliciesResult.LogonLogoff.OtherLogonLogoffEvents.ToString(),
+                    Name = "Audit policy for Other Logon/Logoff Events",
+                    Category = CatName,
+                    Method = Method.Cmdlet
+                });
 
-                    _ = process.Start();
-
-                    // Read the output from the process
-                    string output = process.StandardOutput.ReadToEnd();
-                    process.WaitForExit();
-
-                    // Check if the output is empty
-                    if (string.IsNullOrWhiteSpace(output))
-                    {
-                        Logger.LogMessage("No output from the auditpol command.", LogTypeIntel.Information);
-                        return;
-                    }
-
-                    // Convert the CSV output to a dictionary
-                    using StringReader reader = new(output);
-
-                    // Initialize the inclusion setting
-                    string? inclusionSetting = null;
-
-                    // Read the first line to get the headers
-                    string? headers = reader.ReadLine();
-
-                    // Check if the headers are not null
-                    if (headers is not null)
-                    {
-                        // Get the index of the "Inclusion Setting" column
-                        string[] headerColumns = headers.Split(',');
-
-                        int inclusionSettingIndex = Array.IndexOf(headerColumns, "Inclusion Setting");
-
-                        // Read subsequent lines to get the values
-                        string? values;
-                        while ((values = reader.ReadLine()) is not null)
-                        {
-                            string[] valueColumns = values.Split(',');
-                            if (inclusionSettingIndex != -1 && inclusionSettingIndex < valueColumns.Length)
-                            {
-                                inclusionSetting = valueColumns[inclusionSettingIndex].Trim();
-                                break; // break because we are only interested in the first line of values
-                            }
-                        }
-                    }
-
-                    // Verify the inclusion setting
-                    bool individualItemResult = string.Equals(inclusionSetting, "Success and Failure", StringComparison.OrdinalIgnoreCase);
-
-                    // Add the result to the nested object array
-                    nestedObjectArray.Add(new IndividualResult
-                    {
-                        FriendlyName = "Audit policy for Other Logon/Logoff Events",
-                        Compliant = individualItemResult,
-                        Value = individualItemResult ? "Success and Failure" : inclusionSetting ?? string.Empty, // just to suppress the warning
-                        Name = "Audit policy for Other Logon/Logoff Events",
-                        Category = CatName,
-                        Method = "Cmdlet"
-                    });
-                }
-                else
-                {
-                    // Decrement the total number of true compliant values
-                    GlobalVars.TotalNumberOfTrueCompliantValues--;
-                }
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Policy_Result01_System02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
-                }
-                HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
+                HashTableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -875,18 +739,18 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Policy_Result01_System02_AllowLocation.Value,
                     Name = "Disable Location",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -897,19 +761,7 @@ sc.exe start LanmanWorkstation
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else if (CatName is null)
-                {
-                    throw new ArgumentNullException(nameof(CatName), "CatName cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                }
-
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
 
                 bool testSecureMacsResult = SSHConfigurations.TestSecureMACs();
 
@@ -920,7 +772,7 @@ sc.exe start LanmanWorkstation
                     Value = testSecureMacsResult ? "True" : "False",
                     Name = "SSH Secure MACs",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
             });
@@ -940,16 +792,16 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "WindowsNetworking";
+                ComplianceCategories CatName = ComplianceCategories.WindowsNetworking;
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -960,14 +812,7 @@ sc.exe start LanmanWorkstation
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -984,10 +829,10 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "LockScreen";
+                ComplianceCategories CatName = ComplianceCategories.LockScreen;
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -997,15 +842,7 @@ sc.exe start LanmanWorkstation
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
-
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1022,10 +859,10 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "UserAccountControl";
+                ComplianceCategories CatName = ComplianceCategories.UserAccountControl;
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -1036,14 +873,7 @@ sc.exe start LanmanWorkstation
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1060,7 +890,7 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "OptionalWindowsFeatures";
+                ComplianceCategories CatName = ComplianceCategories.OptionalWindowsFeatures;
 
                 // Get the results of all optional features
                 WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = WindowsFeatureChecker.CheckWindowsFeatures();
@@ -1072,7 +902,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.PowerShellv2,
                     Name = "PowerShell v2 is disabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1082,7 +912,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.PowerShellv2Engine,
                     Name = "PowerShell v2 Engine is disabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1092,7 +922,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.WorkFoldersClient,
                     Name = "Work Folders client is disabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1102,7 +932,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.InternetPrintingClient,
                     Name = "Internet Printing Client is disabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1112,7 +942,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.WindowsMediaPlayer,
                     Name = "Windows Media Player (legacy) is disabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1122,7 +952,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.MDAG,
                     Name = "Microsoft Defender Application Guard is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1132,7 +962,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.WindowsSandbox,
                     Name = "Windows Sandbox is enabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1142,7 +972,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.HyperV,
                     Name = "Hyper-V is enabled",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1152,7 +982,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.WMIC,
                     Name = "WMIC is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1162,7 +992,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.IEMode,
                     Name = "Internet Explorer mode functionality for Edge is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1172,7 +1002,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.LegacyNotepad,
                     Name = "Legacy Notepad is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1182,7 +1012,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.LegacyWordPad,
                     Name = "WordPad is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1192,7 +1022,7 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.PowerShellISE,
                     Name = "PowerShell ISE is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
                 nestedObjectArray.Add(new IndividualResult
@@ -1202,17 +1032,10 @@ sc.exe start LanmanWorkstation
                     Value = FeaturesCheckResults.StepsRecorder,
                     Name = "Steps Recorder is not present",
                     Category = CatName,
-                    Method = "DISM"
+                    Method = Method.DISM
                 });
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1229,7 +1052,7 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "TLSSecurity";
+                ComplianceCategories CatName = ComplianceCategories.TLSSecurity;
 
                 EccCurveComparisonResult ECCCurvesComparisonResults = EccCurveComparer.GetEccCurveComparison();
 
@@ -1240,7 +1063,7 @@ sc.exe start LanmanWorkstation
                     Value = string.Join(", ", ECCCurvesComparisonResults.CurrentEccCurves ?? Enumerable.Empty<string>()),
                     Name = "ECC Curves and their positions",
                     Category = CatName,
-                    Method = "Cmdlet"
+                    Method = Method.Cmdlet
                 });
 
 
@@ -1254,29 +1077,22 @@ sc.exe start LanmanWorkstation
                     Value = TLSCipherSuites ? "True" : "False",
                     Name = "Configure the correct TLS Cipher Suites",
                     Category = CatName,
-                    Method = "MDM"
+                    Method = Method.MDM
                 });
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                // Process items in Registry resources.csv file with "RegistryKeys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "RegistryKeys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1293,7 +1109,7 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "WindowsFirewall";
+                ComplianceCategories CatName = ComplianceCategories.WindowsFirewall;
 
 
                 // Check network location of all connections to see if they are public
@@ -1309,7 +1125,7 @@ sc.exe start LanmanWorkstation
                     Value = individualItemResult ? "True" : "False",
                     Name = "Network Location of all connections set to Public",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -1337,17 +1153,12 @@ sc.exe start LanmanWorkstation
                     Value = firewallRuleGroupResultEnabledStatus ? "True" : "False",
                     Name = "mDNS UDP-In Firewall Rules are disabled",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Firewall_PublicProfile02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Firewall_PublicProfile02 is null.");
-                }
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
+                HashTableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1356,12 +1167,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PublicProfile02_EnableFirewall.Value,
                     Name = "Enable Windows Firewall for Public profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
+                HashTableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1370,12 +1181,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PublicProfile02_DisableInboundNotifications.Value,
                     Name = "Display notifications for Public profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
+                HashTableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1384,12 +1195,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PublicProfile02_LogMaxFileSize.Value,
                     Name = "Configure Log file size for Public profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
+                HashTableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1398,12 +1209,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.Value,
                     Name = "Log blocked connections for Public profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
+                HashTableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1412,17 +1223,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PublicProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for Public profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Firewall_PrivateProfile02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Firewall_PrivateProfile02 is null.");
-                }
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
+                HashTableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1431,12 +1237,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PrivateProfile02_EnableFirewall.Value,
                     Name = "Enable Windows Firewall for Private profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
+                HashTableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1445,12 +1251,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.Value,
                     Name = "Display notifications for Private profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
+                HashTableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1459,12 +1265,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PrivateProfile02_LogMaxFileSize.Value,
                     Name = "Configure Log file size for Private profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
+                HashTableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1473,12 +1279,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.Value,
                     Name = "Log blocked connections for Private profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
+                HashTableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1487,17 +1293,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_PrivateProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for Private profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Firewall_DomainProfile02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Firewall_DomainProfile02 is null.");
-                }
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1506,12 +1307,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_EnableFirewall.Value,
                     Name = "Enable Windows Firewall for Domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1520,12 +1321,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_DefaultOutboundAction.Value,
                     Name = "Set Default Outbound Action for Domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1534,12 +1335,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_DefaultInboundAction.Value,
                     Name = "Set Default Inbound Action for Domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1548,12 +1349,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_Shielded.Value,
                     Name = "Shielded",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1562,12 +1363,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1576,12 +1377,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_LogMaxFileSize.Value,
                     Name = "Configure Log file size for domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1590,12 +1391,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.Value,
                     Name = "Log blocked connections for domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
+                HashTableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HashTableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1604,24 +1405,18 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.Value,
                     Name = "Log successful connections for domain profile",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+
             });
         }
 
@@ -1639,7 +1434,7 @@ sc.exe start LanmanWorkstation
                 List<IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
-                string CatName = "MicrosoftDefender";
+                ComplianceCategories CatName = ComplianceCategories.MicrosoftDefender;
 
                 #region NX Bit Verification
 
@@ -1681,7 +1476,7 @@ sc.exe start LanmanWorkstation
                                 Value = nxValue ?? string.Empty,
                                 Name = "Boot Configuration Data (BCD) No-eXecute (NX) Value",
                                 Category = CatName,
-                                Method = "Cmdlet"
+                                Method = Method.Cmdlet
                             });
                         }
                         else
@@ -1748,7 +1543,7 @@ sc.exe start LanmanWorkstation
                                     Value = ForceRelocateImages,
                                     Name = "Mandatory ASLR",
                                     Category = CatName,
-                                    Method = "Cmdlet"
+                                    Method = Method.Cmdlet
                                 });
 
                             }
@@ -1761,7 +1556,7 @@ sc.exe start LanmanWorkstation
                                     Value = "False",
                                     Name = "Mandatory ASLR",
                                     Category = CatName,
-                                    Method = "Cmdlet"
+                                    Method = Method.Cmdlet
                                 });
                             }
                         }
@@ -1774,7 +1569,7 @@ sc.exe start LanmanWorkstation
                                 Value = "False",
                                 Name = "Mandatory ASLR",
                                 Category = CatName,
-                                Method = "Cmdlet"
+                                Method = Method.Cmdlet
                             });
                         }
                     }
@@ -1821,9 +1616,7 @@ sc.exe start LanmanWorkstation
                     );
 
                 // Import the CSV file as an object
-                List<ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations =
-                GlobalVars.ProcessMitigations
-                ?? throw new ArgumentNullException(nameof(GlobalVars.ProcessMitigations), "ProcessMitigations cannot be null.");
+                List<ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations = GlobalVars.ProcessMitigations;
 
 
                 // Only keep the enabled mitigations in the CSV, then group the data by ProgramName
@@ -1889,7 +1682,7 @@ sc.exe start LanmanWorkstation
                                     Value = string.Join(",", ProcessMitigations_Target), // Join the array elements into a string to display them properly in the output CSV file
                                     Name = $"Process Mitigations for: {ProcessName_Target}",
                                     Category = CatName,
-                                    Method = "Cmdlet"
+                                    Method = Method.Cmdlet
                                 });
 
                             }
@@ -1907,7 +1700,7 @@ sc.exe start LanmanWorkstation
                                     Value = string.Join(",", ProcessMitigations_Applied),
                                     Name = $"Process Mitigations for: {ProcessName_Target}",
                                     Category = CatName,
-                                    Method = "Cmdlet"
+                                    Method = Method.Cmdlet
                                 });
 
                             }
@@ -1925,7 +1718,7 @@ sc.exe start LanmanWorkstation
                                 Value = string.Join(",", ProcessMitigations_Target), // Join the array elements into a string to display them properly in the output CSV file
                                 Name = $"Process Mitigations for: {ProcessName_Target}",
                                 Category = CatName,
-                                Method = "Cmdlet"
+                                Method = Method.Cmdlet
                             });
                         }
                     }
@@ -1941,7 +1734,7 @@ sc.exe start LanmanWorkstation
                             Value = "N/A",
                             Name = $"Process Mitigations for: {ProcessName_Target}",
                             Category = CatName,
-                            Method = "Cmdlet"
+                            Method = Method.Cmdlet
                         });
                     }
                 }
@@ -1968,7 +1761,7 @@ sc.exe start LanmanWorkstation
                     Value = DriverBlockListScheduledTaskResult ? "True" : "False",
                     Name = "Fast weekly Microsoft recommended driver block list update",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
                 #endregion
@@ -1992,7 +1785,7 @@ sc.exe start LanmanWorkstation
                     Value = PlatformUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Platform Updates Channel",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2009,7 +1802,7 @@ sc.exe start LanmanWorkstation
                     Value = EngineUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Engine Updates Channel",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2022,7 +1815,7 @@ sc.exe start LanmanWorkstation
                     Value = AllowSwitchToAsyncInspectionResult ? "True" : "False",
                     Name = "Allow Switch To Async Inspection",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2035,7 +1828,7 @@ sc.exe start LanmanWorkstation
                     Value = OOBEEnableRtpAndSigUpdateResult ? "True" : "False",
                     Name = "OOBE Enable Rtp And Sig Update",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2048,7 +1841,7 @@ sc.exe start LanmanWorkstation
                     Value = IntelTDTEnabledResult ? "True" : "False",
                     Name = "Intel TDT Enabled",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2061,7 +1854,7 @@ sc.exe start LanmanWorkstation
                     Value = SmartAppControlStateResult,
                     Name = "Smart App Control State",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2074,7 +1867,7 @@ sc.exe start LanmanWorkstation
                     Value = EnableControlledFolderAccessResult,
                     Name = "Controlled Folder Access",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2087,7 +1880,7 @@ sc.exe start LanmanWorkstation
                     Value = DisableRestorePointResult ? "False" : "True",
                     Name = "Enable Restore Point scanning",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2102,7 +1895,7 @@ sc.exe start LanmanWorkstation
                     Value = PerformanceModeStatusResult,
                     Name = "Performance Mode Status",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2115,7 +1908,7 @@ sc.exe start LanmanWorkstation
                     Value = EnableConvertWarnToBlockResult ? "True" : "False",
                     Name = "Enable Convert Warn To Block",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2138,7 +1931,7 @@ sc.exe start LanmanWorkstation
                             Value = BruteForceProtectionAggressivenessResult,
                             Name = "BruteForce Protection Aggressiveness",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                     else
@@ -2150,7 +1943,7 @@ sc.exe start LanmanWorkstation
                             Value = "N/A",
                             Name = "BruteForce Protection Aggressiveness",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                 }
@@ -2163,7 +1956,7 @@ sc.exe start LanmanWorkstation
                         Value = "N/A",
                         Name = "BruteForce Protection Aggressiveness",
                         Category = CatName,
-                        Method = "CIM"
+                        Method = Method.CIM
                     });
                 }
 
@@ -2187,7 +1980,7 @@ sc.exe start LanmanWorkstation
                             Value = BruteForceProtectionMaxBlockTimeResult,
                             Name = "BruteForce Protection Max Block Time",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                     else
@@ -2199,7 +1992,7 @@ sc.exe start LanmanWorkstation
                             Value = "N/A",
                             Name = "BruteForce Protection Max Block Time",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                 }
@@ -2212,7 +2005,7 @@ sc.exe start LanmanWorkstation
                         Value = "N/A",
                         Name = "BruteForce Protection Max Block Time",
                         Category = CatName,
-                        Method = "CIM"
+                        Method = Method.CIM
                     });
                 }
 
@@ -2226,7 +2019,7 @@ sc.exe start LanmanWorkstation
                     Value = BruteForceProtectionConfiguredStateResult,
                     Name = "BruteForce Protection Configured State",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2249,7 +2042,7 @@ sc.exe start LanmanWorkstation
                             Value = RemoteEncryptionProtectionMaxBlockTimeResult,
                             Name = "Remote Encryption Protection Max Block Time",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                     else
@@ -2261,7 +2054,7 @@ sc.exe start LanmanWorkstation
                             Value = "N/A",
                             Name = "Remote Encryption Protection Max Block Time",
                             Category = CatName,
-                            Method = "CIM"
+                            Method = Method.CIM
                         });
                     }
                 }
@@ -2274,7 +2067,7 @@ sc.exe start LanmanWorkstation
                         Value = "N/A",
                         Name = "Remote Encryption Protection Max Block Time",
                         Category = CatName,
-                        Method = "CIM"
+                        Method = Method.CIM
                     });
                 }
 
@@ -2289,7 +2082,7 @@ sc.exe start LanmanWorkstation
                     Value = RemoteEncryptionProtectionAggressivenessResult,
                     Name = "Remote Encryption Protection Aggressiveness",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2302,7 +2095,7 @@ sc.exe start LanmanWorkstation
                     Value = RemoteEncryptionProtectionConfiguredStateResult,
                     Name = "Remote Encryption Protection Configured State",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2316,7 +2109,7 @@ sc.exe start LanmanWorkstation
                     Value = CloudBlockLevelResult,
                     Name = "Cloud Block Level",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2330,7 +2123,7 @@ sc.exe start LanmanWorkstation
                     Value = DisableEmailScanningResult ? "False" : "True",
                     Name = "Email Scanning",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2344,7 +2137,7 @@ sc.exe start LanmanWorkstation
                     Value = SubmitSamplesConsentResult,
                     Name = "Send file samples when further analysis is required",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2358,7 +2151,7 @@ sc.exe start LanmanWorkstation
                     Value = MAPSReportingResult,
                     Name = "Join Microsoft MAPS (aka SpyNet)",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2372,7 +2165,7 @@ sc.exe start LanmanWorkstation
                     Value = EnableFileHashComputationResult ? "True" : "False",
                     Name = "File Hash Computation",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2386,7 +2179,7 @@ sc.exe start LanmanWorkstation
                     Value = CloudExtendedTimeoutResult,
                     Name = "Extended cloud check (Seconds)",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2400,7 +2193,7 @@ sc.exe start LanmanWorkstation
                     Value = PUAProtectionResult,
                     Name = "Detection for potentially unwanted applications",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2414,7 +2207,7 @@ sc.exe start LanmanWorkstation
                     Value = DisableCatchupQuickScanResult ? "False" : "True",
                     Name = "Catchup Quick Scan",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2428,7 +2221,7 @@ sc.exe start LanmanWorkstation
                     Value = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
                     Name = "Check For Signatures Before Running Scan",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2442,7 +2235,7 @@ sc.exe start LanmanWorkstation
                     Value = EnableNetworkProtectionResult,
                     Name = "Enable Network Protection",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2456,7 +2249,7 @@ sc.exe start LanmanWorkstation
                     Value = SignatureUpdateIntervalResult,
                     Name = "Interval to check for security intelligence updates",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2470,7 +2263,7 @@ sc.exe start LanmanWorkstation
                     Value = MeteredConnectionUpdatesResult ? "True" : "False",
                     Name = "Allows Microsoft Defender Antivirus to update over a metered connection",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2484,7 +2277,7 @@ sc.exe start LanmanWorkstation
                     Value = SevereThreatDefaultActionResult,
                     Name = "Severe Threat level default action = Remove",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2498,7 +2291,7 @@ sc.exe start LanmanWorkstation
                     Value = HighThreatDefaultActionResult,
                     Name = "High Threat level default action = Remove",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2512,7 +2305,7 @@ sc.exe start LanmanWorkstation
                     Value = ModerateThreatDefaultActionResult,
                     Name = "Moderate Threat level default action = Quarantine",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
@@ -2526,17 +2319,12 @@ sc.exe start LanmanWorkstation
                     Value = LowThreatDefaultActionResult,
                     Name = "Low Threat level default action = Quarantine",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                if (GlobalVars.MDM_Policy_Result01_System02 is null)
-                {
-                    // Handle the case where the global variable is null
-                    throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
-                }
-                HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
+                HashTableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -2545,12 +2333,12 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Policy_Result01_System02_AllowTelemetry.Value,
                     Name = "Optional Diagnostic Data Required for Smart App Control etc.",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
+                HashTableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HashTableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -2559,24 +2347,17 @@ sc.exe start LanmanWorkstation
                     Value = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.Value,
                     Name = "Configure diagnostic data opt-in settings user interface",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
 
-                // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                // Process items in Registry resources.csv file with "GroupPolicy" origin and add them to the $NestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "GroupPolicy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (GlobalVars.FinalMegaObject is null)
-                {
-                    throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
-                }
-                else
-                {
-                    _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-                };
+                _ = GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
 
                 // Get the value and convert it to bool
                 bool BruteForceProtectionLocalNetworkBlockingResult = Convert.ToBoolean(PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionLocalNetworkBlocking") ?? false);
@@ -2587,7 +2368,7 @@ sc.exe start LanmanWorkstation
                     Value = BruteForceProtectionLocalNetworkBlockingResult ? "True" : "False",
                     Name = "Brute Force Protection Local Network Blocking State",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
                 // Get the value and convert it to bool
@@ -2599,7 +2380,7 @@ sc.exe start LanmanWorkstation
                     Value = EnableEcsConfigurationResult ? "True" : "False",
                     Name = "ECS is enabled in Microsoft Defender",
                     Category = CatName,
-                    Method = "CIM"
+                    Method = Method.CIM
                 });
 
             });

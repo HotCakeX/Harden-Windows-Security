@@ -8,11 +8,9 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class GUIMain
+    public static partial class GUIMain
     {
 
         // Partial class definition for handling navigation and view models
@@ -29,7 +27,6 @@ namespace HardenWindowsSecurity
                     return;
                 }
 
-                // Defining the path to the XAML XML file
                 if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
@@ -51,9 +48,6 @@ namespace HardenWindowsSecurity
 
                 // Parse the XAML content to create a UserControl
                 GUIASRRules.View = (UserControl)XamlReader.Parse(xamlContent);
-
-                // Set the DataContext for the ASRRules view
-                GUIASRRules.View.DataContext = new ASRRulesVM();
 
                 // Find the Parent Grid
                 GUIASRRules.ParentGrid = (Grid)GUIASRRules.View.FindName("ParentGrid");
@@ -345,7 +339,7 @@ namespace HardenWindowsSecurity
                             // If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
                             if (ids is not null)
                             {
-                                ids = ids.Select(id => id.ToLowerInvariant()).ToArray();
+                                ids = [.. ids.Select(id => id.ToLowerInvariant())];
                             }
 
                             // Loop over each item in the HashTable

@@ -2,8 +2,6 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class TLSSecurity
@@ -47,7 +45,7 @@ namespace HardenWindowsSecurity
 
             Logger.LogMessage("Applying the TLS Security registry settings", LogTypeIntel.Information);
 
-            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems)
             {
                 if (string.Equals(Item.Category, "TLS", StringComparison.OrdinalIgnoreCase))
                 {

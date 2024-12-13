@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class WindowsFeatureChecker
@@ -37,7 +35,7 @@ namespace HardenWindowsSecurity
                 PowerShellv2 = optionalFeatureStates.GetValueOrDefault("MicrosoftWindowsPowerShellV2", "Unknown"),
                 PowerShellv2Engine = optionalFeatureStates.GetValueOrDefault("MicrosoftWindowsPowerShellV2Root", "Unknown"),
                 WorkFoldersClient = optionalFeatureStates.GetValueOrDefault("WorkFolders-Client", "Unknown"),
-                InternetPrintingClient = optionalFeatureStates.GetValueOrDefault("Printing-Foundation-Features", "Unknown"),
+                InternetPrintingClient = optionalFeatureStates.GetValueOrDefault("Printing-Foundation-InternetPrinting-Client", "Unknown"),
                 WindowsMediaPlayer = GetCapabilityState("Media.WindowsMediaPlayer"),
                 MDAG = optionalFeatureStates.GetValueOrDefault("Windows-Defender-ApplicationGuard", "Unknown"),
                 WindowsSandbox = optionalFeatureStates.GetValueOrDefault("Containers-DisposableClientVM", "Unknown"),
@@ -55,7 +53,7 @@ namespace HardenWindowsSecurity
         {
             // Initialize a dictionary to store the states of optional features
             // Ensure case-insensitive key comparison
-            var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, string> states = new(StringComparer.OrdinalIgnoreCase);
 
             // Create a ManagementObjectSearcher to query Win32_OptionalFeature
             using (ManagementObjectSearcher searcher = new("SELECT * FROM Win32_OptionalFeature"))

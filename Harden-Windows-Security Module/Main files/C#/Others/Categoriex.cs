@@ -2,37 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
-using System.Management.Automation;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public sealed class ComplianceCategoriex : IValidateSetValuesGenerator
+
+    public enum ComplianceCategories
     {
-        // Categories for Confirmation / Compliance Checks
-        public string[] GetValidValues()
-        {
-            string[] categoriex =
-            [
-            "MicrosoftDefender", // 55 + Number of Process Mitigations which are dynamically increased
-            "AttackSurfaceReductionRules", // 19 rules
-            "BitLockerSettings", // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
-            "TLSSecurity", // 21
-            "LockScreen", // 14
-            "UserAccountControl", // 6
-            "DeviceGuard", // 10
-            "WindowsFirewall", // 20
-            "OptionalWindowsFeatures", // 14
-            "WindowsNetworking", // 17
-            "MiscellaneousConfigurations", // 20
-            "WindowsUpdateConfigurations", // 15
-            "EdgeBrowserConfigurations", // 14
-            "NonAdminCommands" // 9
-            ];
-            return categoriex;
-        }
+        MicrosoftDefender, // 55 + Number of Process Mitigations which are dynamically increased
+        AttackSurfaceReductionRules, // 19 rules
+        BitLockerSettings, // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
+        TLSSecurity, // 21
+        LockScreen, // 14
+        UserAccountControl, // 6
+        DeviceGuard, // 10
+        WindowsFirewall, // 20
+        OptionalWindowsFeatures, // 14
+        WindowsNetworking, // 17
+        MiscellaneousConfigurations, // 20
+        WindowsUpdateConfigurations, // 15
+        EdgeBrowserConfigurations, // 14
+        NonAdminCommands // 9
     }
+
 
     // # This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
     public static class ProtectionCategoriex
@@ -149,7 +140,7 @@ namespace HardenWindowsSecurity
                 _ = categoriex.Remove("BitLockerSettings");
             }
 
-            return new List<string>(categoriex).ToArray();
+            return [.. categoriex];
         }
     }
 }

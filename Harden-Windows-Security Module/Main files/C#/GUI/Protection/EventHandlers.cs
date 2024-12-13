@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>
@@ -23,72 +21,72 @@ namespace HardenWindowsSecurity
             // null checks to make sure the elements are available to the AddEventHandlers method
             // LoadXaml method doesn't need the checks because these values are initialized in that method
 
-            if (GUIProtectWinSecurity.View is null)
+            if (View is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: Window object is empty!");
             }
 
-            if (GUIProtectWinSecurity.categories is null)
+            if (categories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: categories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.selectAllCategories is null)
+            if (selectAllCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: selectAllCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.subCategories is null)
+            if (subCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: subCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.selectAllSubCategories is null)
+            if (selectAllSubCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: selectAllSubCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox is null)
+            if (microsoft365AppsSecurityBaselineZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.lgpoZipButton is null)
+            if (lgpoZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: lgpoZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.lgpoZipTextBox is null)
+            if (lgpoZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: lgpoZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.txtFilePath is null)
+            if (txtFilePath is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: txtFilePath object is empty!");
             }
 
-            if (GUIProtectWinSecurity.enableOfflineMode is null)
+            if (enableOfflineMode is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: enableOfflineMode object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipButton is null)
+            if (microsoftSecurityBaselineZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox is null)
+            if (microsoftSecurityBaselineZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton is null)
+            if (microsoft365AppsSecurityBaselineZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.ExecuteButton is null)
+            if (ExecuteButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: ExecuteButton object is empty!");
             }
@@ -97,7 +95,7 @@ namespace HardenWindowsSecurity
 
 
             // Add Checked and Unchecked event handlers to category checkboxes
-            foreach (var item in GUIProtectWinSecurity.categories.Items)
+            foreach (var item in categories.Items)
             {
                 ListViewItem categoryItem = (ListViewItem)item;
                 CheckBox checkBox = (CheckBox)categoryItem.Content;
@@ -107,14 +105,14 @@ namespace HardenWindowsSecurity
             }
 
             // Add click event for 'Check All' button
-            GUIProtectWinSecurity.selectAllCategories.Checked += (sender, e) =>
+            selectAllCategories.Checked += (sender, e) =>
             {
 
                 if (GlobalVars.HardeningCategorieX is null)
                 {
                     throw new ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
                 }
-                foreach (var item in GUIProtectWinSecurity.categories.Items)
+                foreach (var item in categories.Items)
                 {
                     ListViewItem categoryItem = (ListViewItem)item;
                     if (GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
@@ -125,19 +123,19 @@ namespace HardenWindowsSecurity
             };
 
             // Add click event for 'Uncheck All' button
-            GUIProtectWinSecurity.selectAllCategories.Unchecked += (sender, e) =>
+            selectAllCategories.Unchecked += (sender, e) =>
             {
-                foreach (var item in GUIProtectWinSecurity.categories.Items)
+                foreach (var item in categories.Items)
                 {
                     ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                 }
             };
 
             // Add click event for 'Check All' button for enabled sub-categories
-            GUIProtectWinSecurity.selectAllSubCategories.Checked += (sender, e) =>
+            selectAllSubCategories.Checked += (sender, e) =>
             {
 
-                foreach (var item in GUIProtectWinSecurity.subCategories.Items)
+                foreach (var item in subCategories.Items)
                 {
                     ListViewItem subCategoryItem = (ListViewItem)item;
                     if (subCategoryItem.IsEnabled)
@@ -148,10 +146,10 @@ namespace HardenWindowsSecurity
             };
 
             // Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
-            GUIProtectWinSecurity.selectAllSubCategories.Unchecked += (sender, e) =>
+            selectAllSubCategories.Unchecked += (sender, e) =>
             {
 
-                foreach (var item in GUIProtectWinSecurity.subCategories.Items)
+                foreach (var item in subCategories.Items)
                 {
                     ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                 }
@@ -160,25 +158,25 @@ namespace HardenWindowsSecurity
 
             // Add Checked event handler to enable offline mode controls/buttons
             // When the Offline Mode button it toggled
-            GUIProtectWinSecurity.enableOfflineMode.Checked += (sender, e) =>
+            enableOfflineMode.Checked += (sender, e) =>
             {
-                GUIProtectWinSecurity.microsoftSecurityBaselineZipButton.IsEnabled = true;
-                GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox.IsEnabled = true;
-                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton.IsEnabled = true;
-                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = true;
-                GUIProtectWinSecurity.lgpoZipButton.IsEnabled = true;
-                GUIProtectWinSecurity.lgpoZipTextBox.IsEnabled = true;
+                microsoftSecurityBaselineZipButton.IsEnabled = true;
+                microsoftSecurityBaselineZipTextBox.IsEnabled = true;
+                microsoft365AppsSecurityBaselineZipButton.IsEnabled = true;
+                microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = true;
+                lgpoZipButton.IsEnabled = true;
+                lgpoZipTextBox.IsEnabled = true;
             };
 
             // Add Unchecked event handler to disable offline mode controls/buttons
-            GUIProtectWinSecurity.enableOfflineMode.Unchecked += (sender, e) =>
+            enableOfflineMode.Unchecked += (sender, e) =>
             {
                 DisableOfflineModeConfigInputs();
             };
 
 
             // Define the click event for the Microsoft Security Baseline Zip button
-            GUIProtectWinSecurity.microsoftSecurityBaselineZipButton.Click += (sender, e) =>
+            microsoftSecurityBaselineZipButton.Click += (sender, e) =>
             {
                 OpenFileDialog dialog = new()
                 {
@@ -200,9 +198,9 @@ namespace HardenWindowsSecurity
                         else
                         {
                             // For displaying the text on the GUI's text box
-                            GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox.Text = dialog.FileName;
+                            microsoftSecurityBaselineZipTextBox.Text = dialog.FileName;
                             // The actual value that will be used
-                            GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath = dialog.FileName;
+                            MicrosoftSecurityBaselineZipPath = dialog.FileName;
                         }
                     }
                     catch (Exception ex)
@@ -214,7 +212,7 @@ namespace HardenWindowsSecurity
             };
 
             // Define the click event for the Microsoft 365 Apps Security Baseline Zip button
-            GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton.Click += (sender, e) =>
+            microsoft365AppsSecurityBaselineZipButton.Click += (sender, e) =>
             {
                 OpenFileDialog dialog = new()
                 {
@@ -236,9 +234,9 @@ namespace HardenWindowsSecurity
                         else
                         {
                             // For displaying the text on the GUI's text box
-                            GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox.Text = dialog.FileName;
+                            microsoft365AppsSecurityBaselineZipTextBox.Text = dialog.FileName;
                             // The actual value that will be used
-                            GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath = dialog.FileName;
+                            Microsoft365AppsSecurityBaselineZipPath = dialog.FileName;
                         }
                     }
                     catch (Exception ex)
@@ -250,7 +248,7 @@ namespace HardenWindowsSecurity
             };
 
             // Define the click event for the LGPO Zip button
-            GUIProtectWinSecurity.lgpoZipButton.Click += (sender, e) =>
+            lgpoZipButton.Click += (sender, e) =>
             {
                 OpenFileDialog dialog = new()
                 {
@@ -272,9 +270,9 @@ namespace HardenWindowsSecurity
                         else
                         {
                             // For displaying the text on the GUI's text box
-                            GUIProtectWinSecurity.lgpoZipTextBox.Text = dialog.FileName;
+                            lgpoZipTextBox.Text = dialog.FileName;
                             // The actual value that will be used
-                            GUIProtectWinSecurity.LGPOZipPath = dialog.FileName;
+                            LGPOZipPath = dialog.FileName;
                         }
                     }
                     catch (Exception ex)
@@ -288,7 +286,7 @@ namespace HardenWindowsSecurity
 
 
             // Defining a set of commands to run when the GUI window is loaded, async
-            GUIProtectWinSecurity.View.Loaded += async (sender, e) =>
+            View.Loaded += async (sender, e) =>
             {
 
                 // Only continue if there is no activity in other places
@@ -298,23 +296,23 @@ namespace HardenWindowsSecurity
                     ActivityTracker.IsActive = true;
 
                     // Only proceed if this event hasn't already been triggered
-                    if (!GUIProtectWinSecurity.LoadEventHasBeenTriggered)
+                    if (!LoadEventHasBeenTriggered)
                     {
 
                         // Set the flag to true indicating the view loaded event has been triggered
-                        GUIProtectWinSecurity.LoadEventHasBeenTriggered = true;
+                        LoadEventHasBeenTriggered = true;
 
                         // Run this entire section, including the downloading part, asynchronously
 
                         #region Initial Preset Configuration
                         // Configure the categories and sub-categories for the Recommended preset when the Protect view page is first loaded
-                        GUIMain.app!.Dispatcher.Invoke(() =>
+                        GUIMain.app.Dispatcher.Invoke(() =>
                         {
 
                             string presetName = "preset: recommended";
 
                             // Check if the preset exists in the dictionary
-                            if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+                            if (PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
                             {
                                 // Access the categories and subcategories
                                 List<string> categories = categoriesAndSubcategories["Categories"];
@@ -350,7 +348,7 @@ namespace HardenWindowsSecurity
                                 {
 
                                     // Loop over each sub-category in the GUI
-                                    foreach (var item in GUIProtectWinSecurity.subCategories.Items)
+                                    foreach (var item in subCategories.Items)
                                     {
                                         // Get the sub-category item list view item
                                         ListViewItem SubCategoryItem = (ListViewItem)item;
@@ -386,13 +384,13 @@ namespace HardenWindowsSecurity
                             #endregion
 
                             // Use Dispatcher.Invoke to update the UI thread
-                            GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                            View.Dispatcher.Invoke(() =>
                             {
                                 // Set the execute button to disabled until all the prerequisites are met
-                                GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
+                                ExecuteButton.IsEnabled = false;
 
                                 // Start the execute button's operation to show the files are being downloaded
-                                GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
+                                ExecuteButton.IsChecked = true;
                             });
 
                             // Only download and process the files when the GUI is loaded and if Offline mode is not used
@@ -405,9 +403,9 @@ namespace HardenWindowsSecurity
                                 await Task.Run(() =>
                                 {
                                     AsyncDownloader.PrepDownloadedFiles(
-                                        LGPOPath: GUIProtectWinSecurity.LGPOZipPath,
-                                        MSFTSecurityBaselinesPath: GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath,
-                                        MSFT365AppsSecurityBaselinesPath: GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath,
+                                        LGPOPath: LGPOZipPath,
+                                        MSFTSecurityBaselinesPath: MicrosoftSecurityBaselineZipPath,
+                                        MSFT365AppsSecurityBaselinesPath: Microsoft365AppsSecurityBaselineZipPath,
                                         false
                                     );
                                 });
@@ -417,10 +415,10 @@ namespace HardenWindowsSecurity
 
                             // Using Dispatcher since the execute button is owned by the GUI thread, and we're in another thread
                             // Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
-                            GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                            View.Dispatcher.Invoke(() =>
                             {
-                                GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
-                                GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
+                                ExecuteButton.IsEnabled = true;
+                                ExecuteButton.IsChecked = false;
                             });
                         }
                         catch (Exception ex)
@@ -440,7 +438,7 @@ namespace HardenWindowsSecurity
 
 
             // When Execute button is pressed
-            GUIProtectWinSecurity.ExecuteButton.Click += async (sender, e) =>
+            ExecuteButton.Click += async (sender, e) =>
            {
                // Only continue if there is no activity in other places
                if (!ActivityTracker.IsActive)
@@ -456,36 +454,36 @@ namespace HardenWindowsSecurity
                        bool OfflineModeToggleStatus = false;
 
                        // Dispatcher to interact with the GUI elements
-                       GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                       View.Dispatcher.Invoke(() =>
                        {
                            // Call the method to get the selected categories and sub-categories
-                           GUIProtectWinSecurity.ExecuteButtonPress();
+                           ExecuteButtonPress();
                            // Disable the TextFilePath for the log file path
-                           GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
+                           txtFilePath!.IsEnabled = false;
                        });
 
                        // If Offline mode is used
                        if (GlobalVars.Offline)
                        {
 
-                           GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                           View.Dispatcher.Invoke(() =>
                            {
 
                                // Handle the nullable boolean
-                               if (GUIProtectWinSecurity.enableOfflineMode.IsChecked.HasValue)
+                               if (enableOfflineMode.IsChecked.HasValue)
                                {
-                                   OfflineModeToggleStatus = GUIProtectWinSecurity.enableOfflineMode.IsChecked.Value;
+                                   OfflineModeToggleStatus = enableOfflineMode.IsChecked.Value;
                                }
 
                                OfflineGreenLightStatus =
-                                   !string.IsNullOrWhiteSpace(GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox.Text) &&
-                                   !string.IsNullOrWhiteSpace(GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox.Text) &&
-                                   !string.IsNullOrWhiteSpace(GUIProtectWinSecurity.lgpoZipTextBox.Text);
+                                   !string.IsNullOrWhiteSpace(microsoftSecurityBaselineZipTextBox.Text) &&
+                                   !string.IsNullOrWhiteSpace(microsoft365AppsSecurityBaselineZipTextBox.Text) &&
+                                   !string.IsNullOrWhiteSpace(lgpoZipTextBox.Text);
                            });
 
 
                            // If the required files have not been processed for offline mode already
-                           if (!GUIProtectWinSecurity.StartFileDownloadHasRun)
+                           if (!StartFileDownloadHasRun)
                            {
                                // If the checkbox on the GUI for Offline mode is checked
                                if (OfflineModeToggleStatus)
@@ -496,16 +494,16 @@ namespace HardenWindowsSecurity
 
                                        // Process the offline mode files selected by the user
                                        AsyncDownloader.PrepDownloadedFiles(
-                                      LGPOPath: GUIProtectWinSecurity.LGPOZipPath,
-                                      MSFTSecurityBaselinesPath: GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath,
-                                      MSFT365AppsSecurityBaselinesPath: GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath,
+                                      LGPOPath: LGPOZipPath,
+                                      MSFTSecurityBaselinesPath: MicrosoftSecurityBaselineZipPath,
+                                      MSFT365AppsSecurityBaselinesPath: Microsoft365AppsSecurityBaselineZipPath,
                                       false
                                        );
 
                                        Logger.LogMessage("Finished processing the required files", LogTypeIntel.Information);
 
                                        // Set a flag indicating this code block should not run again when the execute button is pressed
-                                       GUIProtectWinSecurity.StartFileDownloadHasRun = true;
+                                       StartFileDownloadHasRun = true;
 
                                    }
                                    else
@@ -520,14 +518,14 @@ namespace HardenWindowsSecurity
                            }
                        }
 
-                       if (!GlobalVars.Offline || (GlobalVars.Offline && GUIProtectWinSecurity.StartFileDownloadHasRun))
+                       if (!GlobalVars.Offline || (GlobalVars.Offline && StartFileDownloadHasRun))
                        {
 
-                           if (!GUIProtectWinSecurity.SelectedCategories.IsEmpty)
+                           if (!SelectedCategories.IsEmpty)
                            {
 
                                // Loop over the ConcurrentQueue that contains the Categories
-                               foreach (string Category in GUIProtectWinSecurity.SelectedCategories)
+                               foreach (string Category in SelectedCategories)
                                {
 
                                    // A switch for the Categories
@@ -536,7 +534,7 @@ namespace HardenWindowsSecurity
 
                                        case "MicrosoftSecurityBaselines":
                                            {
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("SecBaselines_NoOverrides"))
+                                               if (SelectedSubCategories.Contains("SecBaselines_NoOverrides"))
                                                {
                                                    MicrosoftSecurityBaselines.Invoke();
                                                }
@@ -556,7 +554,7 @@ namespace HardenWindowsSecurity
                                            {
                                                MicrosoftDefender.Invoke();
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MSFTDefender_SAC"))
+                                               if (SelectedSubCategories.Contains("MSFTDefender_SAC"))
                                                {
                                                    MicrosoftDefender.MSFTDefender_SAC();
                                                }
@@ -569,18 +567,18 @@ namespace HardenWindowsSecurity
 
                                                if (!string.Equals(PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "SmartAppControlState") ?? string.Empty, "off", StringComparison.OrdinalIgnoreCase))
                                                {
-                                                   if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MSFTDefender_NoDiagData"))
+                                                   if (SelectedSubCategories.Contains("MSFTDefender_NoDiagData"))
                                                    {
                                                        // do nothing
                                                    }
                                                }
 
-                                               if (!GUIProtectWinSecurity.SelectedSubCategories.Contains("MSFTDefender_NoScheduledTask"))
+                                               if (!SelectedSubCategories.Contains("MSFTDefender_NoScheduledTask"))
                                                {
                                                    MicrosoftDefender.MSFTDefender_ScheduledTask();
                                                }
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MSFTDefender_BetaChannels"))
+                                               if (SelectedSubCategories.Contains("MSFTDefender_BetaChannels"))
                                                {
                                                    MicrosoftDefender.MSFTDefender_BetaChannels();
                                                }
@@ -599,7 +597,7 @@ namespace HardenWindowsSecurity
                                        case "DeviceGuard":
                                            {
                                                DeviceGuard.Invoke();
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("DeviceGuard_MandatoryVBS"))
+                                               if (SelectedSubCategories.Contains("DeviceGuard_MandatoryVBS"))
                                                {
                                                    DeviceGuard.DeviceGuard_MandatoryVBS();
                                                }
@@ -614,11 +612,11 @@ namespace HardenWindowsSecurity
                                            {
                                                LockScreen.Invoke();
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("LockScreen_CtrlAltDel"))
+                                               if (SelectedSubCategories.Contains("LockScreen_CtrlAltDel"))
                                                {
                                                    LockScreen.LockScreen_CtrlAltDel();
                                                }
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("LockScreen_NoLastSignedIn"))
+                                               if (SelectedSubCategories.Contains("LockScreen_NoLastSignedIn"))
                                                {
                                                    LockScreen.LockScreen_LastSignedIn();
                                                }
@@ -628,11 +626,11 @@ namespace HardenWindowsSecurity
                                            {
                                                UserAccountControl.Invoke();
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("UAC_NoFastSwitching"))
+                                               if (SelectedSubCategories.Contains("UAC_NoFastSwitching"))
                                                {
                                                    UserAccountControl.UAC_NoFastSwitching();
                                                }
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("UAC_OnlyElevateSigned"))
+                                               if (SelectedSubCategories.Contains("UAC_OnlyElevateSigned"))
                                                {
                                                    UserAccountControl.UAC_OnlyElevateSigned();
                                                }
@@ -653,7 +651,7 @@ namespace HardenWindowsSecurity
                                            {
                                                WindowsNetworking.Invoke();
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("WindowsNetworking_BlockNTLM"))
+                                               if (SelectedSubCategories.Contains("WindowsNetworking_BlockNTLM"))
                                                {
                                                    WindowsNetworking.WindowsNetworking_BlockNTLM();
                                                }
@@ -664,17 +662,17 @@ namespace HardenWindowsSecurity
                                            {
                                                MiscellaneousConfigurations.Invoke();
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("Miscellaneous_WindowsProtectedPrint"))
+                                               if (SelectedSubCategories.Contains("Miscellaneous_WindowsProtectedPrint"))
                                                {
                                                    MiscellaneousConfigurations.MiscellaneousConfigurations_WindowsProtectedPrint();
                                                }
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MiscellaneousConfigurations_LongPathSupport"))
+                                               if (SelectedSubCategories.Contains("MiscellaneousConfigurations_LongPathSupport"))
                                                {
                                                    MiscellaneousConfigurations.MiscellaneousConfigurations_LongPathSupport();
                                                }
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MiscellaneousConfigurations_StrongKeyProtection"))
+                                               if (SelectedSubCategories.Contains("MiscellaneousConfigurations_StrongKeyProtection"))
                                                {
                                                    MiscellaneousConfigurations.MiscellaneousConfigurations_StrongKeyProtection();
                                                }
@@ -700,7 +698,7 @@ namespace HardenWindowsSecurity
                                            {
                                                CountryIPBlocking.Invoke();
 
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("CountryIPBlocking_OFAC"))
+                                               if (SelectedSubCategories.Contains("CountryIPBlocking_OFAC"))
                                                {
                                                    CountryIPBlocking.CountryIPBlocking_OFAC();
                                                }
@@ -709,7 +707,7 @@ namespace HardenWindowsSecurity
                                        case "DownloadsDefenseMeasures":
                                            {
                                                DownloadsDefenseMeasures.Invoke();
-                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("DangerousScriptHostsBlocking"))
+                                               if (SelectedSubCategories.Contains("DangerousScriptHostsBlocking"))
                                                {
                                                    DownloadsDefenseMeasures.DangerousScriptHostsBlocking();
                                                }
@@ -737,15 +735,15 @@ namespace HardenWindowsSecurity
                            }
                        }
 
-                       GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                       View.Dispatcher.Invoke(() =>
                        {
                            // Manually trigger the ToggleButton to be unchecked to trigger the ending animation
-                           GUIProtectWinSecurity.ExecuteButton!.IsChecked = false;
+                           ExecuteButton!.IsChecked = false;
 
                            // Only enable the log file path TextBox if the log toggle button is toggled
-                           if (GUIProtectWinSecurity.log!.IsChecked == true)
+                           if (log!.IsChecked == true)
                            {
-                               GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
+                               txtFilePath!.IsEnabled = true;
                            }
                        });
 

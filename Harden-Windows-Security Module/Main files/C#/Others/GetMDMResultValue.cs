@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     public static class GetMDMResultValue

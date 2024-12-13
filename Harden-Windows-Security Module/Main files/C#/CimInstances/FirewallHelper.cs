@@ -6,8 +6,6 @@ using System.Linq;
 using System.Management;
 using System.Net.Http;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     internal static class FirewallHelper
@@ -193,7 +191,7 @@ namespace HardenWindowsSecurity
         /// <param name="DisplayName">The DisplayName of the Firewall rule</param>
         /// <param name="ListDownloadURL">Link to the GitHub file that contains the IP Addresses</param>
         /// <param name="ToAdd">If true, the firewall rules will be added. If false, the firewall rules will only be deleted.</param>
-        public static void BlockIPAddressListsInGroupPolicy(string DisplayName, string? ListDownloadURL, bool ToAdd)
+        public static void BlockIPAddressListsInGroupPolicy(string DisplayName, Uri? ListDownloadURL, bool ToAdd)
         {
             // An array to hold the IP Address ranges
             string[] ipList = [];
@@ -234,7 +232,7 @@ namespace HardenWindowsSecurity
             #region Helper Methods
 
             // Downloads the IP Address list from the GitHub URLs and converts them into string arrays
-            string[] DownloadIPList(string URL)
+            string[] DownloadIPList(Uri URL)
             {
                 // Download the fresh list of IPs
                 using HttpClient client = new();

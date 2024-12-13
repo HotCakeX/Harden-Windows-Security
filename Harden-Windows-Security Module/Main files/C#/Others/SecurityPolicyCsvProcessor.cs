@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     // Represents a record in the security policy
     public sealed class SecurityPolicyRecord
     {
-        public string? Category { get; set; }
+        public required ComplianceCategories Category { get; set; }
         public string? Section { get; set; }
         public string? Path { get; set; }
         public string? Value { get; set; }
@@ -48,10 +46,16 @@ namespace HardenWindowsSecurity
                 // Ensure the line has exactly 5 fields
                 if (fields.Length == 5)
                 {
+
+                    if (!Enum.TryParse(fields[0].Trim(), true, out ComplianceCategories categoryName))
+                    {
+                        throw new InvalidDataException($"Invalid category name in the 'SecurityPoliciesVerification.csv' file: {categoryName}");
+                    }
+
                     // Add a new SecurityPolicyRecord to the output list
                     securityPolicyRecordsOutput.Add(new SecurityPolicyRecord
                     {
-                        Category = fields[0].Trim(),
+                        Category = categoryName,
                         Section = fields[1].Trim(),
                         Path = fields[2].Trim(),
                         Value = fields[3].Trim(),

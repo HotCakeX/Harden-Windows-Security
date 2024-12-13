@@ -3,11 +3,9 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public partial class BitLocker
+    internal partial class BitLocker
     {
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/deletekeyprotector-win32-encryptablevolume#return-value
@@ -25,7 +23,7 @@ namespace HardenWindowsSecurity
         /// If the key protector being deleted is bound to the volume and used to keep the drive unlocked then do not throw errors.
         /// This usually happens when trying to remove all ExternalKey key protectors of a Non-OS Drive when it is detected to have more than 1.
         /// </param>
-        public static void RemoveKeyProtector(string DriveLetter, string KeyProtectorID, bool NoErrorIfBound)
+        internal static void RemoveKeyProtector(string DriveLetter, string KeyProtectorID, bool NoErrorIfBound)
         {
 
             // First get the volume info based on the drive letter

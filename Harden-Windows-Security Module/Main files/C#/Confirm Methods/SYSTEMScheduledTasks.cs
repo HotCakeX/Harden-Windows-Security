@@ -1,13 +1,11 @@
 using System;
 using System.IO;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
-    public static class SYSTEMScheduledTasks
+    internal static class SYSTEMScheduledTasks
     {
-        public static void Invoke()
+        internal static void Invoke()
         {
             Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
 

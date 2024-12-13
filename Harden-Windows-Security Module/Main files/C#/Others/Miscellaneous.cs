@@ -1,10 +1,9 @@
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Management;
 using System.Management.Automation;
-
-#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -34,9 +33,9 @@ namespace HardenWindowsSecurity
             {
 
                 // Check if the system is running UEFI firmware
-                var firmwareType = FirmwareChecker.CheckFirmwareType();
+                FirmwareChecker.FirmwareType firmwareType = FirmwareChecker.CheckFirmwareType();
 
-                if (firmwareType != FirmwareChecker.FirmwareType.FirmwareTypeUefi)
+                if (firmwareType is not FirmwareChecker.FirmwareType.FirmwareTypeUefi)
                 {
                     throw new InvalidOperationException("Non-UEFI systems are not supported.");
                 }
@@ -46,7 +45,7 @@ namespace HardenWindowsSecurity
                 {
                     _ = powerShell.AddScript("Confirm-SecureBootUEFI");
 
-                    var results = powerShell.Invoke();
+                    Collection<PSObject> results = powerShell.Invoke();
 
                     // Ensure there is at least one result.
                     // Check if the result is null before trying to access it.
@@ -81,7 +80,7 @@ namespace HardenWindowsSecurity
 
                 Logger.LogMessage("Checking if TPM is available and enabled...", LogTypeIntel.Information);
 
-                var tpmStatus = TpmStatus.Get();
+                TpmResult tpmStatus = TpmStatus.Get();
 
                 if (!tpmStatus.IsActivated || !tpmStatus.IsEnabled)
                 {

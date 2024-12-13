@@ -213,7 +213,7 @@ namespace AppControlManager.Pages
         /// <param name="e"></param>
         private void FilesAndFoldersViewFileDetailsSettingsCard_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.Navigate_ToPage(null, "CreateSupplementalPolicyFilesAndFoldersScanResults", null, "Create Supplemental Policy - Details");
+            MainWindow.Instance.NavView_Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
         }
 
 

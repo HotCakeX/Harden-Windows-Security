@@ -477,7 +477,7 @@ namespace AppControlManager.Pages
         /// <param name="e"></param>
         private void CheckForUpdate_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.Navigate_ToPage(null, "UpdatePageCustomMSIXPath", null, "Update - Custom MSIX Path");
+            MainWindow.Instance.NavView_Navigate(typeof(UpdatePageCustomMSIXPath), null);
         }
 
     }

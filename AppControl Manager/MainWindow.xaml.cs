@@ -2,6 +2,7 @@ using AnimatedVisuals;
 using AppControlManager.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -9,47 +10,197 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Graphics;
+using Rect = Windows.Foundation.Rect;
 
 namespace AppControlManager
 {
+    // https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
+    // Represents an item in the BreadCrumBar's ItemsSource collection
+    public readonly struct Crumb(String label, Type page)
+    {
+        public string Label { get; } = label;
+        public Type Page { get; } = page;
+        public override string ToString() => Label;
+    }
+
+
 
     public sealed partial class MainWindow : Window
     {
 
         public MainWindowViewModel ViewModel { get; }
 
-        // Dictionary to store the display names and associated NavigationViewItems
-        private readonly Dictionary<string, NavigationViewItem> menuItems = [];
+        private readonly AppWindow m_AppWindow;
 
-
-        // Static pre-made dictionary for navigation page-to-item content mapping
-        // Used for the back button in order to set the correct header
-        private static readonly Dictionary<Type, string> NavigationPageToItemContentMap = new()
+        // Used for the BreadCrumBar's data to define valid navigational paths in the app
+        internal sealed class PageTitleMap
         {
-            { typeof(Pages.CreatePolicy), "Create Policy" },
-            { typeof(Pages.GetCIHashes), "Get Code Integrity Hashes" },
-            { typeof(Pages.GitHubDocumentation), "GitHub Documentation" },
-            { typeof(Pages.MicrosoftDocumentation), "Microsoft Documentation" },
-            { typeof(Pages.GetSecurePolicySettings), "Get Secure Policy Settings" },
-            { typeof(Pages.Settings), "Settings" },
-            { typeof(Pages.SystemInformation), "System Information" },
-            { typeof(Pages.ConfigurePolicyRuleOptions), "Configure Policy Rule Options" },
-            { typeof(Pages.Logs), "Logs" },
-            { typeof(Pages.Simulation), "Simulation" },
-            { typeof(Pages.Update), "Update" },
-            { typeof(Pages.Deployment), "Deploy App Control Policy" },
-            { typeof(Pages.EventLogsPolicyCreation), "Create policy from Event Logs" },
-            { typeof(Pages.MDEAHPolicyCreation), "MDE Advanced Hunting" },
-            { typeof(Pages.AllowNewApps), "Allow New Apps" },
-            { typeof(Pages.BuildNewCertificate), "Build New Certificate" },
-            { typeof(Pages.UpdatePageCustomMSIXPath), "Custom MSIX Path" }, // sub-page
-            { typeof(Pages.CreateSupplementalPolicy), "Create Supplemental Policy" },
-            { typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), "Scan Results" }, // sub-page
-            { typeof(Pages.MergePolicies), "Merge App Control Policies" }
+            internal required List<string> Titles { get; set; }
+            internal required List<Type> Pages { get; set; }
+        }
+
+        // a list of all the NavigationViewItem in the Main NavigationViewItem
+        // It is populated in the class initializer
+        // Since the app uses it multiple times, we only populate this list once to reuse it in subsequent calls
+        private readonly IEnumerable<NavigationViewItem> allNavigationItems = [];
+
+        /// <summary>
+        /// Every page in the application must be defined in this dictionary.
+        /// It is used by the BreadCrumbBar.
+        /// Sub-pages must use the same value as their main page in the dictionary.
+        /// </summary>
+        private static readonly Dictionary<Type, PageTitleMap> breadCrumbMappingsV2 = new()
+        {
+            [typeof(Pages.CreatePolicy)] = new PageTitleMap
+            {
+                Titles = ["Create Policy"],
+                Pages = [typeof(Pages.CreatePolicy)]
+            },
+            [typeof(Pages.GetCIHashes)] = new PageTitleMap
+            {
+                Titles = ["Get Code Integrity Hashes"],
+                Pages = [typeof(Pages.GetCIHashes)]
+            },
+            [typeof(Pages.GitHubDocumentation)] = new PageTitleMap
+            {
+                Titles = ["GitHub Documentation"],
+                Pages = [typeof(Pages.GitHubDocumentation)]
+            },
+            [typeof(Pages.MicrosoftDocumentation)] = new PageTitleMap
+            {
+                Titles = ["Microsoft Documentation"],
+                Pages = [typeof(Pages.MicrosoftDocumentation)]
+            },
+            [typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
+            {
+                Titles = ["Get Secure Policy Settings"],
+                Pages = [typeof(Pages.GetSecurePolicySettings)]
+            },
+            [typeof(Pages.Settings)] = new PageTitleMap
+            {
+                Titles = ["Settings"],
+                Pages = [typeof(Pages.Settings)]
+            },
+            [typeof(Pages.SystemInformation)] = new PageTitleMap
+            {
+                Titles = ["System Information"],
+                Pages = [typeof(Pages.SystemInformation)]
+            },
+            [typeof(Pages.ConfigurePolicyRuleOptions)] = new PageTitleMap
+            {
+                Titles = ["Configure Policy Rule Options"],
+                Pages = [typeof(Pages.ConfigurePolicyRuleOptions)]
+            },
+            [typeof(Pages.Logs)] = new PageTitleMap
+            {
+                Titles = ["Logs"],
+                Pages = [typeof(Pages.Logs)]
+            },
+            [typeof(Pages.Simulation)] = new PageTitleMap
+            {
+                Titles = ["Simulation"],
+                Pages = [typeof(Pages.Simulation)]
+            },
+            [typeof(Pages.Update)] = new PageTitleMap
+            {
+                Titles = ["Update", "Custom MSIX Path"],
+                Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
+            },
+            [typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
+            {
+                Titles = ["Update", "Custom MSIX Path"],
+                Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
+            },
+            [typeof(Pages.Deployment)] = new PageTitleMap
+            {
+                Titles = ["Deploy App Control Policy"],
+                Pages = [typeof(Pages.Deployment)]
+            },
+            [typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
+            {
+                Titles = ["Create policy from Event Logs"],
+                Pages = [typeof(Pages.EventLogsPolicyCreation)]
+            },
+            [typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
+            {
+                Titles = ["MDE Advanced Hunting"],
+                Pages = [typeof(Pages.MDEAHPolicyCreation)]
+            },
+            [typeof(Pages.AllowNewApps)] = new PageTitleMap
+            {
+                Titles = ["Allow New Apps"],
+                Pages = [typeof(Pages.AllowNewApps)]
+            },
+            [typeof(Pages.BuildNewCertificate)] = new PageTitleMap
+            {
+                Titles = ["Build New Certificate"],
+                Pages = [typeof(Pages.BuildNewCertificate)]
+            },
+            [typeof(Pages.MergePolicies)] = new PageTitleMap
+            {
+                Titles = ["Merge App Control Policies"],
+                Pages = [typeof(Pages.MergePolicies)]
+            },
+            [typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
+            {
+                Titles = ["Create Supplemental Policy", "Scan Results"],
+                Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
+            },
+            [typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)] = new PageTitleMap // sub-page
+            {
+                Titles = ["Create Supplemental Policy", "Scan Results"],
+                Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
+            }
         };
+
+
+        // This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
+        // initially adding the default page that loads when the app is loaded to the collection
+        private readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb("Create Policy", typeof(Pages.CreatePolicy))];
+
+        /// <summary>
+        /// Event handler for the BreadCrumbBar's ItemClicked event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void BreadcrumbBar_ItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+        {
+            Crumb crumb = (Crumb)args.Item;
+
+            NavView_Navigate(crumb.Page, null);
+        }
+
+
+
+        // Dictionary of all the main pages in the app, used by the search bar
+        // Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized
+        private static readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
+        {
+            { "Create Policy", typeof(Pages.CreatePolicy) },
+            { "Get Code Integrity Hashes", typeof(Pages.GetCIHashes) },
+            { "GitHub Documentation", typeof(Pages.GitHubDocumentation) },
+            { "Microsoft Documentation", typeof(Pages.MicrosoftDocumentation) },
+            { "Get Secure Policy Settings", typeof(Pages.GetSecurePolicySettings) },
+            { "Settings", typeof(Pages.Settings) },
+            { "System Information", typeof(Pages.SystemInformation) },
+            { "Configure Policy Rule Options", typeof(Pages.ConfigurePolicyRuleOptions) },
+            { "Logs", typeof(Pages.Logs) },
+            { "Simulation", typeof(Pages.Simulation) },
+            { "Update", typeof(Pages.Update) },
+            { "Deploy App Control Policy", typeof(Pages.Deployment) },
+            { "Create policy from Event Logs", typeof(Pages.EventLogsPolicyCreation) },
+            { "MDE Advanced Hunting", typeof(Pages.MDEAHPolicyCreation) },
+            { "Allow New Apps", typeof(Pages.AllowNewApps) },
+            { "Build New Certificate", typeof(Pages.BuildNewCertificate) },
+            { "Create Supplemental Policy", typeof(Pages.CreateSupplementalPolicy) },
+            { "Merge App Control Policies", typeof(Pages.MergePolicies) }
+        };
+
 
 
         // A static instance of the MainWindow class which will hold the single, shared instance of it
@@ -70,8 +221,38 @@ namespace AppControlManager
             // Make title bar Mica
             ExtendsContentIntoTitleBar = true;
 
+            // Get the app window and set it to a class variable
+            m_AppWindow = this.AppWindow;
+
+            // Some event handlers
+            Activated += MainWindow_Activated;
+            AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+            AppTitleBar.Loaded += AppTitleBar_Loaded;
+
+            // Set the title bar's height style to tall
+            m_AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
+
+            this.SizeChanged += MainWindow_SizeChanged;
+
+            // Set the TitleBar title text to the app's display name
+            TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
+
             // Subscribe to the global BackDrop change event
             ThemeManager.BackDropChanged += OnBackgroundChanged;
+
+
+            // Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems
+            allNavigationItems =
+            [                 .. MainNavigation.MenuItems
+                                 .OfType<NavigationViewItem>()
+                                 .SelectMany(GetAllChildren)
+,
+                 .. MainNavigation.FooterMenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren),
+             ];
+
+            static IEnumerable<NavigationViewItem> GetAllChildren(NavigationViewItem parent) =>
+                new[] { parent }.Concat(parent.MenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren));
+
 
             // Subscribe to the NavigationView Content background change event
             NavigationBackgroundManager.NavViewBackgroundChange += OnNavigationBackgroundChanged;
@@ -129,14 +310,9 @@ namespace AppControlManager
             // Navigate to the CreatePolicy page when the window is loaded
             _ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
 
-            // Set the "CreatePolicy" item as selected in the NavigationView
-            MainNavigation.SelectedItem = MainNavigation.MenuItems.OfType<NavigationViewItem>()
-                .First(item => item.Tag.ToString() == "CreatePolicy");
-
-            // Set the initial NavigationView header
-            MainNavigation.Header = "Create Policy";
-
-            PopulateMenuItems();
+            // Set the "Create Policy" item as selected in the NavigationView
+            MainNavigation.SelectedItem = allNavigationItems
+                .First(item => string.Equals(item.Content.ToString(), "Create Policy", StringComparison.OrdinalIgnoreCase));
 
 
             // Set the initial background setting based on the user's settings
@@ -160,6 +336,112 @@ namespace AppControlManager
 
         // Public property to access the singleton instance from other classes
         public static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
+
+
+        /// <summary>
+        /// Event handler for when the AppTitleBar Grid is loaded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Set the initial interactive regions.
+            SetRegionsForCustomTitleBar();
+        }
+
+
+        /// <summary>
+        /// Event handler for when the AppTitleBar Grid's size changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // Update interactive regions if the size of the window changes.
+            SetRegionsForCustomTitleBar();
+        }
+
+
+        /// <summary>
+        /// Specifies the interactive regions of the title bar in the AppTitleBar Grid
+        /// </summary>
+        private void SetRegionsForCustomTitleBar()
+        {
+            double scaleAdjustment = AppTitleBar.XamlRoot.RasterizationScale;
+
+            RightPaddingColumn.Width = new GridLength(m_AppWindow.TitleBar.RightInset / scaleAdjustment);
+            LeftPaddingColumn.Width = new GridLength(m_AppWindow.TitleBar.LeftInset / scaleAdjustment);
+
+
+            // For the main back button
+            GeneralTransform transform = BackButtonTitleBar.TransformToVisual(null);
+            Rect bounds = transform.TransformBounds(new Rect(0, 0,
+                                                        BackButtonTitleBar.ActualWidth,
+                                                        BackButtonTitleBar.ActualHeight));
+            RectInt32 backButtonRect = GetRect(bounds, scaleAdjustment);
+
+
+            // For the hamburger main menu button
+            transform = HamburgerMenuButton.TransformToVisual(null);
+            bounds = transform.TransformBounds(new Rect(0, 0,
+                                                       HamburgerMenuButton.ActualWidth,
+                                                       HamburgerMenuButton.ActualHeight));
+            RectInt32 hamburgerMenuButtonRect = GetRect(bounds, scaleAdjustment);
+
+
+            // Get the rectangle around the AutoSuggestBox control.
+            transform = TitleBarSearchBox.TransformToVisual(null);
+            bounds = transform.TransformBounds(new Rect(0, 0,
+                                                            TitleBarSearchBox.ActualWidth,
+                                                            TitleBarSearchBox.ActualHeight));
+            RectInt32 SearchBoxRect = GetRect(bounds, scaleAdjustment);
+
+
+            // Get the rectangle around the Sidebar button.
+            transform = SidebarButton.TransformToVisual(null);
+            bounds = transform.TransformBounds(new Rect(0, 0,
+                                                        SidebarButton.ActualWidth,
+                                                        SidebarButton.ActualHeight));
+            RectInt32 PersonPicRect = GetRect(bounds, scaleAdjustment);
+
+            // Put all items in an array
+            RectInt32[] rectArray = [backButtonRect, hamburgerMenuButtonRect, SearchBoxRect, PersonPicRect];
+
+            InputNonClientPointerSource nonClientInputSrc =
+                InputNonClientPointerSource.GetForWindowId(this.AppWindow.Id);
+            nonClientInputSrc.SetRegionRects(NonClientRegionKind.Passthrough, rectArray);
+        }
+
+
+        private static RectInt32 GetRect(Rect bounds, double scale)
+        {
+            return new RectInt32(
+                _X: (int)Math.Round(bounds.X * scale),
+                _Y: (int)Math.Round(bounds.Y * scale),
+                _Width: (int)Math.Round(bounds.Width * scale),
+                _Height: (int)Math.Round(bounds.Height * scale)
+            );
+        }
+
+
+        /// <summary>
+        /// Ensures the TitleBar follows the app's appearance when the window is in and out of focus
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            if (args.WindowActivationState == WindowActivationState.Deactivated)
+            {
+                TitleBarTextBlock.Foreground =
+                    (SolidColorBrush)Application.Current.Resources["WindowCaptionForegroundDisabled"];
+            }
+            else
+            {
+                TitleBarTextBlock.Foreground =
+                    (SolidColorBrush)Application.Current.Resources["WindowCaptionForeground"];
+            }
+        }
 
 
         /// <summary>
@@ -655,21 +937,34 @@ namespace AppControlManager
                         // MainNavigation has no margins by default when it's on the left side
                         MainNavigation.Margin = new Thickness(0);
 
+                        // Set it to left once, regardless of whether it's already left or coming from top position
                         MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Left;
+
+                        // Set it to auto after setting it to left because we need the XAML-defined triggers for the pane to take control
+                        MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Auto;
+
+                        // Set the main menu's button on the TitleBar visible since we'll need it for left navigation
+                        HamburgerMenuButton.Visibility = Visibility.Visible;
+
                         break;
                     }
                 case "Top":
                     {
-                        // Needs some top margin when it's set to top
-                        MainNavigation.Margin = new Thickness(0, 40, 0, 0);
+                        MainNavigation.Margin = new Thickness(0);
 
                         MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Top;
+
+                        // Hide the main menu's button on the TitleBar since we don't need it in Top mode
+                        HamburgerMenuButton.Visibility = Visibility.Collapsed;
+
                         break;
                     }
                 default:
                     {
                         // MainNavigation has no margins by default
                         MainNavigation.Margin = new Thickness(0);
+                        HamburgerMenuButton.Visibility = Visibility.Visible;
+                        MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Auto;
                         break;
                     }
             };
@@ -878,25 +1173,7 @@ namespace AppControlManager
         }
 
 
-        /// <summary>
-        /// Populate the dictionary with menu items for search purposes
-        /// </summary>
-        private void PopulateMenuItems()
-        {
-            foreach (NavigationViewItem item in MainNavigation.MenuItems.OfType<NavigationViewItem>())
-            {
-                menuItems[item.Content.ToString()!] = item;
-
-                // If there are sub-items, add those as well
-                if (item.MenuItems is not null && item.MenuItems.Count > 0)
-                {
-                    foreach (NavigationViewItem subItem in item.MenuItems.OfType<NavigationViewItem>())
-                    {
-                        menuItems[subItem.Content.ToString()!] = subItem;
-                    }
-                }
-            }
-        }
+#pragma warning disable CA1822
 
         /// <summary>
         /// Event handler for the AutoSuggestBox text change event
@@ -907,16 +1184,19 @@ namespace AppControlManager
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                string query = sender.Text.ToLowerInvariant();
+                // Get the text user entered in the search box
+                string query = sender.Text.ToLowerInvariant().Trim();
 
                 // Filter menu items based on the search query
-                List<string> suggestions = [.. menuItems.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
-
+                List<string> suggestions = [.. NavigationPageToItemContentMap.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
 
                 // Set the filtered items as suggestions in the AutoSuggestBox
                 sender.ItemsSource = suggestions;
             }
         }
+
+#pragma warning restore CA1822
+
 
         /// <summary>
         /// Event handler for when a suggestion is chosen in the AutoSuggestBox
@@ -927,21 +1207,10 @@ namespace AppControlManager
         {
             // Get the selected item's name and find the corresponding NavigationViewItem
             string? chosenItemName = args.SelectedItem?.ToString();
-            if (chosenItemName is not null && menuItems.TryGetValue(chosenItemName, out NavigationViewItem? selectedItem))
+
+            if (chosenItemName is not null && NavigationPageToItemContentMap.TryGetValue(chosenItemName, out Type? selectedItem))
             {
-                // Select the item in the NavigationView
-                MainNavigation.SelectedItem = selectedItem;
-
-                if (selectedItem is not null)
-                {
-                    // Directly call NavigateToMenuItem with the selected item's tag
-                    string? selectedTag = selectedItem.Tag?.ToString();
-
-                    if (selectedTag is not null)
-                    {
-                        Navigate_ToPage(MainNavigation, selectedTag, null);
-                    }
-                }
+                NavView_Navigate(selectedItem, null);
             }
         }
 
@@ -960,133 +1229,162 @@ namespace AppControlManager
             // If any other page was invoked
             if (args?.InvokedItemContainer is not null)
             {
-                Navigate_ToPage(sender, args.InvokedItemContainer.Tag.ToString()!, args?.RecommendedNavigationTransitionInfo);
+                // The "Content" property of the Settings page is null when NavigationView is in "Top" mode since it has no label/content on the UI
+                // That is why we use the "IsSettingsInvoked" property to check for the Settings page click/tap.
+                // Settings' content is also auto translated on different system localizations so this is also useful for those situations.
+                // https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
+                if (args.IsSettingsInvoked)
+                {
+                    NavView_Navigate(typeof(Pages.Settings), args?.RecommendedNavigationTransitionInfo, null);
+                }
+                else
+                {
+                    NavView_Navigate(null, args?.RecommendedNavigationTransitionInfo, args?.InvokedItemContainer.Content.ToString());
+                }
             }
         }
 
 
         /// <summary>
-        /// Used by the main navigation's event, AutoSuggestBox and through the current class's singleton instance by other pages
-        /// to navigate to sub-pages that aren't included in the main navigation menu
+        /// Main navigation method that is used by the search bar, direct clicks on the main navigation items
+        /// And by other methods throughout the app in order to navigate to sub-pages
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="tag"></param>
+        /// <param name="navPageType"></param>
         /// <param name="transitionInfo"></param>
-        internal void Navigate_ToPage(NavigationView? sender, string tag, NavigationTransitionInfo? transitionInfo, string? Header = null)
+        /// <param name="navItemName"></param>
+        internal void NavView_Navigate(Type? navPageType, NavigationTransitionInfo? transitionInfo = null, string? navItemName = null)
         {
-
-            // Find the page type based on the tag and send it to another method for final navigation action
-            switch (tag)
-            {
-                case "CreatePolicy":
-                    NavView_Navigate(typeof(Pages.CreatePolicy), transitionInfo);
-                    break;
-                case "GetCIHashes":
-                    NavView_Navigate(typeof(Pages.GetCIHashes), transitionInfo);
-                    break;
-                case "GitHubDocumentation":
-                    NavView_Navigate(typeof(Pages.GitHubDocumentation), transitionInfo);
-                    break;
-                case "MicrosoftDocumentation":
-                    NavView_Navigate(typeof(Pages.MicrosoftDocumentation), transitionInfo);
-                    break;
-                case "GetSecurePolicySettings":
-                    NavView_Navigate(typeof(Pages.GetSecurePolicySettings), transitionInfo);
-                    break;
-                // Doesn't need XAML nav item because it's included by default in the navigation view
-                case "Settings":
-                    NavView_Navigate(typeof(Pages.Settings), transitionInfo);
-                    break;
-                case "SystemInformation":
-                    NavView_Navigate(typeof(Pages.SystemInformation), transitionInfo);
-                    break;
-                case "ConfigurePolicyRuleOptions":
-                    NavView_Navigate(typeof(Pages.ConfigurePolicyRuleOptions), transitionInfo);
-                    break;
-                case "Logs":
-                    NavView_Navigate(typeof(Pages.Logs), transitionInfo);
-                    break;
-                case "Simulation":
-                    NavView_Navigate(typeof(Pages.Simulation), transitionInfo);
-                    break;
-                case "Update":
-                    NavView_Navigate(typeof(Pages.Update), transitionInfo);
-                    break;
-                case "Deployment":
-                    NavView_Navigate(typeof(Pages.Deployment), transitionInfo);
-                    break;
-                case "EventLogsPolicyCreation":
-                    NavView_Navigate(typeof(Pages.EventLogsPolicyCreation), transitionInfo);
-                    break;
-                case "MDEAHPolicyCreation":
-                    NavView_Navigate(typeof(Pages.MDEAHPolicyCreation), transitionInfo);
-                    break;
-                case "AllowNewApps":
-                    NavView_Navigate(typeof(Pages.AllowNewApps), transitionInfo);
-                    break;
-                case "BuildNewCertificate":
-                    NavView_Navigate(typeof(Pages.BuildNewCertificate), transitionInfo);
-                    break;
-                case "UpdatePageCustomMSIXPath":
-                    NavView_Navigate(typeof(Pages.UpdatePageCustomMSIXPath), transitionInfo); // Sub-Page
-                    break;
-                case "CreateSupplementalPolicy":
-                    NavView_Navigate(typeof(Pages.CreateSupplementalPolicy), transitionInfo);
-                    break;
-                case "CreateSupplementalPolicyFilesAndFoldersScanResults":
-                    NavView_Navigate(typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults), transitionInfo); // Sub-Page
-                    break;
-                case "MergePolicies":
-                    NavView_Navigate(typeof(Pages.MergePolicies), transitionInfo);
-                    break;
-                default:
-                    break;
-            }
-
-            // Set the NavigationView's header to the Navigation view item's content
-            if (MainNavigation.SelectedItem is NavigationViewItem item)
-            {
-                if (sender is not null)
-                {
-                    // Must be nullable because when NavigationViewPaneDisplayMode is top, this is null.
-                    sender.Header = item.Content?.ToString();
-                }
-                else if (Header is not null)
-                {
-                    MainNavigation.Header = Header;
-                }
-            }
-        }
-
-
-
-        private void NavView_Navigate(Type navPageType, NavigationTransitionInfo? transitionInfo)
-        {
-            // Get the page's type before navigation so we can prevent duplicate
-            // entries in the BackStack
+            // Get the page's type before navigation so we can prevent duplicate entries in the BackStack
             // This will prevent reloading the same page if we're already on it and works with sub-pages to navigate back to the main page
             Type preNavPageType = ContentFrame.CurrentSourcePageType;
 
-            // Only navigate if the selected page isn't currently loaded.
+            // The next page that will be navigated to
+            Type? nextNavPageType;
+
+            // Check if the method was called by supplying page type and it's not the same page as the current page
             if (navPageType is not null && !Equals(preNavPageType, navPageType))
             {
-
-                // Play sound
-                ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
-
-                _ = ContentFrame.Navigate(navPageType, null, transitionInfo);
+                nextNavPageType = navPageType;
             }
+            // Check if the method was called by a page's NavigationViewItem's content and it's not the same page as the current page - Used by the search bar
+            // Others calls this method by supplying page's type instead
+            // The dictionary used to find the page's type doesn't contain sub-pages for the reasons explained on dictionary definition.
+            else if (navItemName is not null && NavigationPageToItemContentMap.TryGetValue(navItemName, out Type? page) && !Equals(page, preNavPageType))
+            {
+                nextNavPageType = page;
+            }
+            else
+            {
+                return;
+            }
+
+            if (nextNavPageType is null)
+            {
+                return;
+            }
+
+
+            // Play a sound
+            ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
+
+            // Navigate to the new page
+            _ = ContentFrame.Navigate(nextNavPageType, null, transitionInfo);
+
+            // Get the item from BreadCrumb dictionary that belongs to the next page we navigated to
+            _ = breadCrumbMappingsV2.TryGetValue(nextNavPageType, out PageTitleMap? info);
+
+            if (info is not null)
+            {
+                // Get the index location of the page we navigated to in the list of pages
+                int currentPageLocation = info.Pages.IndexOf(nextNavPageType);
+
+                // Clear the breadcrumb bar's collection
+                Breadcrumbs.Clear();
+
+                // Add the breadcrumbs to the bar one by one, starting from the first item
+                // Which is the main item in the main NavigationMenu all the way to the item that was selected
+                // E.g, if there are 5 pages in one of the valid app navigation paths and the page user wants to navigate to is the 3rd one
+                // Then the name of all the pages starting from index 0 to index 2 will be added to the breadcrumb bar (total of 3)
+                for (int i = 0; i <= currentPageLocation; i++)
+                {
+                    Breadcrumbs.Add(new Crumb(info.Titles[i], info.Pages[i]));
+                }
+
+                // Since settings page doesn't have content the way we define them in XAML, adding an explicit check for it here
+                if (Equals(nextNavPageType, typeof(Pages.Settings)))
+                {
+                    // Set the selected item in the MainNavigation to the Settings page
+                    MainNavigation.SelectedItem = MainNavigation.SettingsItem;
+                }
+                else
+                {
+                    // Set the selected item in the MainNavigation to the next page by first detecting it via its NavigationViewItem's context set in XAML
+                    // info.Titles[0] ensures the selected item in the NavigationView will correctly be set to the main item in the menu even when the page being navigated to is a sub-page in that valid navigational path
+                    MainNavigation.SelectedItem = allNavigationItems.First(x => string.Equals(x.Content.ToString(), info.Titles[0], StringComparison.OrdinalIgnoreCase));
+                }
+            }
+
         }
 
 
 
+        /// <summary>
+        /// Event handler for the main Sidebar button click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SidebarButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get the current state of the sidebar closed/open
+            bool sidePaneStat = MainSidebar.IsPaneOpen;
+
+            // Set the sidebar button's text and icon based on the current state
+            SidebarButtonTextContent.Text = sidePaneStat ? "Open Sidebar" : "Close Sidebar";
+            SidebarButtonIcon.Glyph = sidePaneStat ? "\xE8A0" : "\xE89F";
+
+            // Set the close/open state of the sidebar to the opposite state
+            MainSidebar.IsPaneOpen = !sidePaneStat;
+
+            // If the sidebar is open, set its style to Windows accent color
+            SidebarButton.Style = sidePaneStat ? null : (Style)Application.Current.Resources["AccentButtonStyle"];
+        }
+
 
         /// <summary>
-        /// Event handlers for the back button in the NavigationView
+        /// Event handler for when the sidebar pane is closing
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        private void MainSidebar_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
+        {
+            SidebarButtonTextContent.Text = "Open Sidebar";
+            SidebarButtonIcon.Glyph = "\xE8A0";
+
+            SidebarButton.Style = null;
+        }
+
+
+        /// <summary>
+        /// Event handler for when the sidebar pane is opening
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MainSidebar_PaneOpening(SplitView sender, object args)
+        {
+            SidebarButtonTextContent.Text = "Close Sidebar";
+            SidebarButtonIcon.Glyph = "\xE89F";
+
+            SidebarButton.Style = (Style)Application.Current.Resources["AccentButtonStyle"];
+        }
+
+
+
+        /// <summary>
+        /// Event handler for when the back button is pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackButtonTitleBar_Click(object sender, RoutedEventArgs e)
         {
             if (ContentFrame.CanGoBack)
             {
@@ -1101,20 +1399,69 @@ namespace AppControlManager
                 // Play sound for back navigation
                 ElementSoundPlayer.Play(ElementSoundKind.GoBack);
 
-
-
                 // Go back to the previous page
                 ContentFrame.GoBack();
 
                 // Get the current page after navigating back
-                Type preNavPageType = ContentFrame.CurrentSourcePageType;
+                Type currentPage = ContentFrame.CurrentSourcePageType;
 
-                // Extract the navigation item content from the dictionary
-                _ = NavigationPageToItemContentMap.TryGetValue(preNavPageType, out string? item);
+                _ = breadCrumbMappingsV2.TryGetValue(currentPage, out PageTitleMap? info);
 
-                // Set the correct header after back navigation has been completed
-                MainNavigation.Header = item;
+                if (info is not null)
+                {
+                    int currentPageLocation = info.Pages.IndexOf(currentPage);
 
+                    Breadcrumbs.Clear();
+
+                    for (int i = 0; i <= currentPageLocation; i++)
+                    {
+                        Breadcrumbs.Add(new Crumb(info.Titles[i], info.Pages[i]));
+                    }
+
+
+                    // Since settings page doesn't have content when it is in Top mode (it only has Tag property)
+                    // And also content for the auto-created Settings page varies based on localization, adding an explicit check for it here
+                    if (Equals(currentPage, typeof(Pages.Settings)))
+                    {
+                        MainNavigation.SelectedItem = MainNavigation.SettingsItem;
+                    }
+                    else
+                    {
+                        // info.Titles[0] ensures the selected item in the NavigationView will correctly be set to the main item in the menu even when the page being navigated to is a sub-page in that valid navigational path
+                        MainNavigation.SelectedItem = allNavigationItems.First(x => string.Equals(x.Content.ToString(), info.Titles[0], StringComparison.OrdinalIgnoreCase));
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Event handler for the hamburger/main menu button click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HamburgerMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainNavigation.IsPaneOpen = !MainNavigation.IsPaneOpen;
+        }
+
+
+        /// <summary>
+        /// Event handler for when the main app window's size changes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            double mainWindowWidth = args.Size.Width; // Width of the main window
+
+            if (mainWindowWidth < 750)
+            {
+                TitleColumn.Width = new GridLength(0); // Hide TitleColumn if width is less than 200
+            }
+            else
+            {
+                TitleColumn.Width = GridLength.Auto; // Restore the TitleColumn if width is 200 or more
             }
         }
 

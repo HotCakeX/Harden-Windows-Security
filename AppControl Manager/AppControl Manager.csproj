@@ -88,7 +88,7 @@
     <AssemblyName>AppControlManager</AssemblyName>
     <PublishAot>False</PublishAot>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.6.0.0</FileVersion>
+    <FileVersion>1.7.0.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -101,7 +101,7 @@
 
 
     <Version>$(FileVersion)</Version>
-    <Copyright>© 2024–Present</Copyright>
+    <Copyright>© 2024-Present</Copyright>
     <Title>AppControl Manager</Title>
 
 

@@ -83,13 +83,12 @@ namespace AppControlManager
                             // At this point the file is definitely WHQL-Signed
 
                             // Get the WHQL chain packages by checking for any chain whose leaf certificate contains the WHQL EKU OID
-                            List<ChainPackage> WHQLChainPackagesCandidates = simulationInput.AllFileSigners
+                            List<ChainPackage> WHQLChainPackagesCandidates = [.. simulationInput.AllFileSigners
                                   .Where(sig => sig.LeafCertificate is not null &&
                                   sig.LeafCertificate.Certificate.Extensions
                                   .OfType<X509EnhancedKeyUsageExtension>()
                                   .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
-                                  .Any(oid => oid.Value is not null && oid.Value.Contains("1.3.6.1.4.1.311.10.3.5", StringComparison.OrdinalIgnoreCase))))
-                                  .ToList();
+                                  .Any(oid => oid.Value is not null && oid.Value.Contains("1.3.6.1.4.1.311.10.3.5", StringComparison.OrdinalIgnoreCase))))];
 
 
                             // HashSet to store all of the Opus data from the WHQL chain packages candidates
@@ -106,7 +105,7 @@ namespace AppControlManager
                                 try
                                 {
                                     // Try to get the Opus data of the current chain (essentially the current chain's leaf certificate)
-                                    CurrentOpusData = Opus.GetOpusData(chainPackage.SignedCms).Select(p => p.CertOemID).ToList();
+                                    CurrentOpusData = [.. Opus.GetOpusData(chainPackage.SignedCms).Select(p => p.CertOemID)];
                                 }
                                 catch
                                 {

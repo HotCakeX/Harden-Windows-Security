@@ -268,19 +268,18 @@ namespace AppControlManager.SiPolicy
             XNamespace ns = "urn:schemas-microsoft-com:sipolicy";
 
             // Get all EKU elements
-            List<XElement> ekuElements = doc.Descendants(ns + "EKU").ToList();
+            List<XElement> ekuElements = [.. doc.Descendants(ns + "EKU")];
 
             // Group EKUs by their Value attribute to identify duplicates
-            List<IGrouping<string, XElement>> duplicateGroups = ekuElements
+            List<IGrouping<string, XElement>> duplicateGroups = [.. ekuElements
                 .GroupBy(e => (string)e.Attribute("Value")!)
-                .Where(g => g.Count() > 1) // Only consider duplicates
-                .ToList();
+                .Where(g => g.Count() > 1)];
 
             foreach (IGrouping<string, XElement> group in duplicateGroups)
             {
                 // Keep the first EKU as the "master" and remove the others
                 XElement ekuToKeep = group.First();
-                List<XElement> ekusToRemove = group.Skip(1).ToList();
+                List<XElement> ekusToRemove = [.. group.Skip(1)];
 
                 // Update Signer CertEKU references to point to the retained EKU
                 foreach (XElement ekuToRemove in ekusToRemove)

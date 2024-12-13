@@ -141,7 +141,7 @@ namespace AppControlManager.Pages
             string searchTerm = SearchBox.Text.Trim().ToLowerInvariant();
 
             // Perform a case-insensitive search in all relevant fields
-            List<CiPolicyInfo> filteredResults = AllPoliciesOutput.Where(p =>
+            List<CiPolicyInfo> filteredResults = [.. AllPoliciesOutput.Where(p =>
                 (p.PolicyID?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
                 (p.FriendlyName?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
                 (p.VersionString?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -150,7 +150,7 @@ namespace AppControlManager.Pages
                 (p.IsOnDisk.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
                 (p.IsEnforced.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
                 (p.PolicyOptionsDisplay?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-            ).ToList();
+            )];
 
             // Update the ObservableCollection on the UI thread with the filtered results
             AllPolicies.Clear();
@@ -248,9 +248,9 @@ namespace AppControlManager.Pages
                     {
                         currentlyDeployedPolicies = CiToolHelper.GetPolicies(false, true, true);
 
-                        currentlyDeployedBasePolicyIDs = currentlyDeployedPolicies.Where(x => string.Equals(x.PolicyID, x.BasePolicyID, StringComparison.OrdinalIgnoreCase)).Select(p => p.BasePolicyID).ToList();
+                        currentlyDeployedBasePolicyIDs = [.. currentlyDeployedPolicies.Where(x => string.Equals(x.PolicyID, x.BasePolicyID, StringComparison.OrdinalIgnoreCase)).Select(p => p.BasePolicyID)];
 
-                        currentlyDeployedAppControlManagerSupplementalPolicies = currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase)).ToList();
+                        currentlyDeployedAppControlManagerSupplementalPolicies = [.. currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase))];
                     });
 
 
@@ -312,7 +312,7 @@ namespace AppControlManager.Pages
                         // Remove all the policies from the system
                         await Task.Run(() =>
                         {
-                            CiToolHelper.RemovePolicy(policiesToRemove.Select(x => x.PolicyID!).ToList());
+                            CiToolHelper.RemovePolicy([.. policiesToRemove.Select(x => x.PolicyID!)]);
                         });
 
                         // Refresh the DataGrid's policies and their count

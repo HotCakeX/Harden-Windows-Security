@@ -231,7 +231,7 @@ namespace AppControlManager
 
                 if (catRootPath is not null && catRootPath.Count > 0)
                 {
-                    catRootDirectories = catRootPath.Select(dir => new DirectoryInfo(dir)).ToArray();
+                    catRootDirectories = [.. catRootPath.Select(dir => new DirectoryInfo(dir))];
                 }
                 else
                 {
@@ -266,7 +266,7 @@ namespace AppControlManager
             // Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
             Logger.Write("Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file");
 
-            HashSet<string> SHA256HashesFromXML = GetFileRuleOutput.Get(XMLData).Select(i => i.HashValue).ToHashSet();
+            HashSet<string> SHA256HashesFromXML = [.. GetFileRuleOutput.Get(XMLData).Select(i => i.HashValue)];
 
             Logger.Write("Getting all of the file paths of the files that App Control supports, from the user provided directory");
 

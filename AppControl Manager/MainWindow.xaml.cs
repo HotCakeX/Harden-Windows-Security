@@ -910,9 +910,7 @@ namespace AppControlManager
                 string query = sender.Text.ToLowerInvariant();
 
                 // Filter menu items based on the search query
-                List<string> suggestions = menuItems.Keys
-                    .Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                List<string> suggestions = [.. menuItems.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
 
 
                 // Set the filtered items as suggestions in the AutoSuggestBox

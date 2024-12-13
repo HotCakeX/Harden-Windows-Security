@@ -1,18 +1,18 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-25T15:40:18.7798321Z",
+    "createdDateTime": "2024-12-13T09:59:31.4614085Z",
     "creationSource": null,
     "description": "UAC Category",
-    "lastModifiedDateTime": "2024-07-29T16:22:08.364299Z",
+    "lastModifiedDateTime": "2024-12-13T10:04:53.9686462Z",
     "name": "User Account Control",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 5,
+    "settingCount": 8,
     "technologies": "mdm",
-    "id": "71861648-10fa-499b-a13e-b901526e6ad5",
+    "id": "5974bac9-35e5-455e-a206-d656ae3da9a9",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -22,6 +22,19 @@
     "settings": [
         {
             "id": "0",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_behavioroftheelevationpromptforadministratorprotection",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_behavioroftheelevationpromptforadministratorprotection_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "1",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_behavioroftheelevationpromptforadministrators",
@@ -34,20 +47,20 @@
             }
         },
         {
-            "id": "1",
+            "id": "2",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_behavioroftheelevationpromptforstandardusers",
                 "settingInstanceTemplateReference": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
-                    "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_behavioroftheelevationpromptforstandardusers_0",
+                    "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_behavioroftheelevationpromptforstandardusers_1",
                     "children": []
                 }
             }
         },
         {
-            "id": "2",
+            "id": "3",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_onlyelevateexecutablefilesthataresignedandvalidated",
@@ -60,7 +73,7 @@
             }
         },
         {
-            "id": "3",
+            "id": "4",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_switchtothesecuredesktopwhenpromptingforelevation",
@@ -73,7 +86,33 @@
             }
         },
         {
-            "id": "4",
+            "id": "5",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_typeofadminapprovalmode",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_typeofadminapprovalmode_2",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "6",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_useadminapprovalmode",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_useadminapprovalmode_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "7",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_windowslogon_hidefastuserswitching",

@@ -40,7 +40,7 @@ namespace AppControlManager
             }
 
             // Make sure the PackageFamilyNames are unique and have no duplicates
-            packageFamilyNames = packageFamilyNames.Distinct().ToList();
+            packageFamilyNames = [.. packageFamilyNames.Distinct()];
 
             foreach (string PFN in packageFamilyNames)
             {

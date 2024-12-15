@@ -54,9 +54,9 @@ namespace AppControlManager
 
             List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicyNoFilter = CiToolHelper.GetPolicies(false, false, true);
 
-            List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase)).ToList();
+            List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = [.. CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase))];
 
-            List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy = CurrentlyDeployedSupplementalPolicy1stFilter.Where(policy => string.Equals(policy.BasePolicyID, trimmedBasePolicyID, StringComparison.OrdinalIgnoreCase)).ToList();
+            List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy = [.. CurrentlyDeployedSupplementalPolicy1stFilter.Where(policy => string.Equals(policy.BasePolicyID, trimmedBasePolicyID, StringComparison.OrdinalIgnoreCase))];
 
             if (CurrentlyDeployedSupplementalPolicy.Count > 0)
             {

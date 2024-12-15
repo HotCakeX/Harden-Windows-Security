@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 
 
@@ -244,7 +243,7 @@ namespace AppControlManager.Pages
                     List<CiPolicyInfo> allDeployedBasePolicies = CiToolHelper.GetPolicies(false, true, false);
 
                     // Get all the deployed base policyIDs
-                    List<string?> CurrentlyDeployedBasePolicyIDs = allDeployedBasePolicies.Select(p => p.BasePolicyID).ToList();
+                    List<string?> CurrentlyDeployedBasePolicyIDs = [.. allDeployedBasePolicies.Select(p => p.BasePolicyID)];
 
                     // Trim the curly braces from the policyID
                     string trimmedPolicyID = codeIntegrityPolicy.PolicyID.TrimStart('{').TrimEnd('}');
@@ -382,7 +381,7 @@ namespace AppControlManager.Pages
                         DirectoryInfo[] selectedDirectories = [];
 
                         // Convert user selected folder paths that are strings to DirectoryInfo objects
-                        selectedDirectories = selectedDirectoriesToScan.Select(dir => new DirectoryInfo(dir)).ToArray();
+                        selectedDirectories = [.. selectedDirectoriesToScan.Select(dir => new DirectoryInfo(dir))];
 
                         // Get all of the AppControl compatible files from user selected directories
                         List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
@@ -434,9 +433,7 @@ namespace AppControlManager.Pages
                 // Filter the logs and keep only ones generated after audit mode policy was deployed
                 await Task.Run(() =>
                 {
-                    Output = Output
-                        .Where(fileIdentity => fileIdentity.TimeCreated >= LogsScanStartTime)
-                        .ToHashSet();
+                    Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= LogsScanStartTime)];
                 });
 
 

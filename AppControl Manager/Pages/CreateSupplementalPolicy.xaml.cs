@@ -213,7 +213,7 @@ namespace AppControlManager.Pages
         /// <param name="e"></param>
         private void FilesAndFoldersViewFileDetailsSettingsCard_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.Navigate_ToPage(null, "CreateSupplementalPolicyFilesAndFoldersScanResults", null, "Create Supplemental Policy - Details");
+            MainWindow.Instance.NavView_Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
         }
 
 
@@ -372,12 +372,12 @@ namespace AppControlManager.Pages
                     DirectoryInfo[] selectedDirectories = [];
 
                     // Convert user selected folder paths that are strings to DirectoryInfo objects
-                    selectedDirectories = filesAndFoldersFolderPaths.Select(dir => new DirectoryInfo(dir)).ToArray();
+                    selectedDirectories = [.. filesAndFoldersFolderPaths.Select(dir => new DirectoryInfo(dir))];
 
                     FileInfo[] selectedFiles = [];
 
                     // Convert user selected file paths that are strings to FileInfo objects
-                    selectedFiles = filesAndFoldersFilePaths.Select(file => new FileInfo(file)).ToArray();
+                    selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
 
                     // Collect all of the AppControl compatible files from user selected directories and files
                     List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);

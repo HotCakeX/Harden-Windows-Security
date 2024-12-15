@@ -52,7 +52,7 @@ namespace AppControlManager.IntelGathering
                 MDEAdvancedHuntingData? possibleAppLockerBlockEvent = group.FirstOrDefault(g => string.Equals(g.ActionType, "AppControlCIScriptBlocked", StringComparison.OrdinalIgnoreCase));
 
                 // Get the possible correlated data
-                List<MDEAdvancedHuntingData> correlatedEvents = group.Where(g => string.Equals(g.ActionType, "AppControlCodeIntegritySigningInformation", StringComparison.OrdinalIgnoreCase)).ToList();
+                List<MDEAdvancedHuntingData> correlatedEvents = [.. group.Where(g => string.Equals(g.ActionType, "AppControlCodeIntegritySigningInformation", StringComparison.OrdinalIgnoreCase))];
 
 
                 // The SHA256 must be available in Audit/Block type of events for either Code Integrity or AppLocker

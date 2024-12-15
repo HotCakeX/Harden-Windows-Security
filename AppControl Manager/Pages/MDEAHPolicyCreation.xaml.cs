@@ -457,7 +457,7 @@ namespace AppControlManager.Pages
         private void DataGridFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
         {
             // Collect the selected items to delete
-            List<FileIdentity> itemsToDelete = FileIdentitiesDataGrid.SelectedItems.Cast<FileIdentity>().ToList();
+            List<FileIdentity> itemsToDelete = [.. FileIdentitiesDataGrid.SelectedItems.Cast<FileIdentity>()];
 
             // Remove each selected item from the FileIdentities ObservableCollection, they won't be included in the policy
             foreach (FileIdentity item in itemsToDelete)

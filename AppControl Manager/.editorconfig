@@ -6,6 +6,8 @@ spelling_exclusion_path = .\exclusion.dic
 # Miscellaneous settings
 trim_trailing_whitespace = true
 
+end_of_line = crlf
+
 # CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = error
 
@@ -1065,3 +1067,9 @@ dotnet_diagnostic.IDE0079.severity = error
 
 # CA1505: Avoid unmaintainable code
 dotnet_diagnostic.CA1505.severity = error
+
+# CA1047: Do not declare protected members in sealed types
+dotnet_diagnostic.CA1047.severity = error
+
+# IDE0054: Use compound assignment
+dotnet_diagnostic.IDE0054.severity = error

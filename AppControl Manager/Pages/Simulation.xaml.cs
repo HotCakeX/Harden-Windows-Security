@@ -225,7 +225,7 @@ namespace AppControlManager.Pages
             string searchTerm = SearchBox.Text.Trim().ToLowerInvariant();
 
             // Perform a case-insensitive search in all relevant fields
-            List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
+            List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
                 (output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 (output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 (output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -233,7 +233,7 @@ namespace AppControlManager.Pages
                 (output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 (output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
                 (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
+            )];
 
 
             // Update the ObservableCollection on the UI thread with the filtered results

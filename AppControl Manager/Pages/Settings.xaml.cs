@@ -475,9 +475,7 @@ namespace AppControlManager.Pages
                 string query = sender.Text.ToLowerInvariant();
 
                 // Filter menu items based on the search query
-                List<string> suggestions = CertCommonNames
-                    .Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                List<string> suggestions = [.. CertCommonNames.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
 
                 // Set the filtered items as suggestions in the AutoSuggestBox
                 sender.ItemsSource = suggestions;

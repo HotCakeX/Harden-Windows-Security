@@ -4,9 +4,21 @@
 spelling_exclusion_path = .\exclusion.dic
 
 # Miscellaneous settings
+# https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
 trim_trailing_whitespace = true
-
 end_of_line = crlf
+indent_style = tab
+insert_final_newline = true
+
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/dotnet-formatting-options
+dotnet_sort_system_directives_first = true
+
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options
+csharp_using_directive_placement = outside_namespace:error
+csharp_prefer_simple_using_statement = true:error
+csharp_new_line_before_members_in_object_initializers = true:error
+csharp_space_after_dot = false:error
+csharp_space_before_comma = false:error
 
 # CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = error
@@ -1073,3 +1085,11 @@ dotnet_diagnostic.CA1047.severity = error
 
 # IDE0054: Use compound assignment
 dotnet_diagnostic.IDE0054.severity = error
+
+# IDE0161: Use file-scoped namespace - enforces file-scoped namespace style with error severity
+# https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-10.0/file-scoped-namespaces
+dotnet_diagnostic.IDE0161.severity = error
+csharp_style_namespace_declarations = file_scoped:error
+
+# CA1002: Do not expose generic lists
+dotnet_diagnostic.CA1002.severity = error

@@ -10,11 +10,12 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
 
     <ScrollView>
 
-        <Grid>
+        <Grid x:Name="RootGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -31,6 +32,8 @@
                         <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
                     </Style.Setters>
                 </Style>
+
+                <ThemeShadow x:Name="SharedShadow" />
 
             </Grid.Resources>
 
@@ -50,9 +53,9 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                 <StackPanel Orientation="Horizontal" Spacing="15">
 
-                <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
+                    <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
 
-                <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
+                    <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
 
                 </StackPanel>
 
@@ -80,8 +83,41 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="15" HorizontalSpacing="15">
 
                         <TextBox x:Name="SupplementalPolicyNameTextBox" Header="Supplemental Policy Name" PlaceholderText="Enter a name for the Supplemental Policy" />
-                        <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0" Content="Browse for a policy XML file" ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device." />
-                        <TextBox x:Name="SelectedXMLFilePathTextBox" Header="Selected XML file path" />
+                        <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0" ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device.">
+
+                            <Button.Flyout>
+                                <Flyout x:Name="BrowseForXMLPolicyButton_FlyOut">
+
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                        <Button Content="Clear" Click="BrowseForXMLPolicyButton_Flyout_Clear_Click" />
+
+                                        <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+
+                                        <TextBox x:Name="BrowseForXMLPolicyButton_SelectedBasePolicyTextBox"
+                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                  SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
+                                    </controls:WrapPanel>
+
+                                </Flyout>
+                            </Button.Flyout>
+
+                            <Button.Content>
+                                <controls:WrapPanel Orientation="Horizontal">
+
+                                    <AnimatedIcon x:Name="BrowseForXMLPolicyButtonLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20" Visibility="Collapsed">
+                                        <AnimatedIcon.Source>
+                                            <animatedvisuals:Light/>
+                                        </AnimatedIcon.Source>
+                                    </AnimatedIcon>
+
+                                    <TextBlock Text="Browse for a policy XML file" />
+
+                                </controls:WrapPanel>
+                            </Button.Content>
+
+                        </Button>
 
 
                         <NumberBox x:Name="LogSizeNumberBox"

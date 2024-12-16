@@ -1,9 +1,8 @@
 ﻿
-namespace AppControlManager.IntelGathering
+namespace AppControlManager.IntelGathering;
+
+public enum EventAction
 {
-    public enum EventAction
-    {
-        Audit,
-        Block
-    }
+	Audit,
+	Block
 }

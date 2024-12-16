@@ -25,6 +25,9 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
 
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+
     <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
@@ -189,6 +192,8 @@
     <None Remove="Pages\AllowNewAppsStart.xaml" />
     <None Remove="Pages\BuildNewCertificate.xaml" />
     <None Remove="Pages\ConfigurePolicyRuleOptions.xaml" />
+    <None Remove="Pages\CreateDenyPolicy.xaml" />
+    <None Remove="Pages\CreateDenyPolicyFilesAndFoldersScanResults.xaml" />
     <None Remove="Pages\CreateSupplementalPolicy.xaml" />
     <None Remove="Pages\CreateSupplementalPolicyFilesAndFoldersScanResults.xaml" />
     <None Remove="Pages\Deployment.xaml" />
@@ -313,6 +318,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\CreateDenyPolicyFilesAndFoldersScanResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\CreateDenyPolicy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\MergePolicies.xaml">

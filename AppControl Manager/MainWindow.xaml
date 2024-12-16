@@ -10,8 +10,9 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"    
     mc:Ignorable="d"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     Title="AppControl Manager">
 
     <!-- For the MicaAlt BackDrop which is the default BackDrop -->
@@ -19,7 +20,7 @@
         <MicaBackdrop Kind="BaseAlt"/>
     </Window.SystemBackdrop>
 
-    <Grid x:Name="RootGrid">
+    <Grid x:Name="RootGrid" Loaded="RootGrid_Loaded">
 
         <Grid.RowDefinitions>
             <!-- Titlebar Row -->
@@ -32,6 +33,11 @@
         <Grid.Resources>
             <!-- For the BreadCrumbBar's size -->
             <x:Double x:Key="BreadcrumbBarChevronFontSize">30</x:Double>
+
+            <!-- Theme Shadow effect used on certain elements inside of the grid -->
+            <!-- https://learn.microsoft.com/en-us/windows/apps/design/layout/depth-shadow -->
+            <ThemeShadow x:Name="SharedShadow" />
+
         </Grid.Resources>
 
         <!-- When using this, we shouldn't set PaneDisplayMode="" property on the navigation element itself or set that property to anything other than Auto, otherwise these dynamic triggers won't work on it. -->
@@ -121,13 +127,21 @@
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8" 
                     Height="32" Margin="5,0,30,0">
+
                 <Button.Content>
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <FontIcon x:Name="SidebarButtonIcon" FontFamily="Segoe Fluent Icons" Glyph="&#xE8A0;" />
-                        <TextBlock x:Name="SidebarButtonTextContent" Text="Open Sidebar" FontWeight="SemiBold" />
-                    </StackPanel>
+                    <controls:WrapPanel Orientation="Horizontal">
+
+                        <AnimatedIcon Height="35" Width="35" Margin="-9,-9,-9,-9">
+                            <AnimatedIcon.Source>
+                                <animatedvisuals:Sidebar/>
+                            </AnimatedIcon.Source>
+                        </AnimatedIcon>
+
+                    </controls:WrapPanel>
                 </Button.Content>
+
             </Button>
+
         </Grid>
 
 
@@ -189,9 +203,11 @@
                     </NavigationViewItem.MenuItems>
                 </NavigationViewItem>
 
-                <NavigationViewItemSeparator/>
+                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" Content="Create Deny Policy" ToolTipService.ToolTip="Create Deny App Control Policies"/>
 
-                <NavigationViewItemHeader Content="Miscellaneous"/>
+                <!-- <NavigationViewItemSeparator/> -->
+
+                <!--  <NavigationViewItemHeader Content="Miscellaneous"/> -->
 
                 <NavigationViewItem x:Name="MergePoliciesNavItem" Content="Merge App Control Policies" ToolTipService.ToolTip="Merge 2 App Control policeis together or deduplicate a single policy"/>
                 <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system"/>
@@ -224,19 +240,97 @@
             <!-- Split view to create the sidebar -->
             <SplitView x:Name="MainSidebar" PaneBackground="Transparent" 
                  IsPaneOpen="False" OpenPaneLength="256"
-                 CompactPaneLength="48" PaneClosing="MainSidebar_PaneClosing"
-                 PaneOpening="MainSidebar_PaneOpening" DisplayMode="Inline" PanePlacement="Right">
+                 CompactPaneLength="48" DisplayMode="Inline" PanePlacement="Right">
                 <SplitView.Pane>
                     <Border BorderThickness="1"
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             CornerRadius="5">
-                        <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="20" Orientation="Vertical" HorizontalAlignment="Center">
 
-                            <TextBlock Text="Sidebar" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center" Style="{StaticResource BaseTextBlockStyle}"/>
+                        <ScrollViewer>
+
+                            <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
+
+                                <TextBlock Text="Sidebar" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
+
+                                <TextBlock Text="Use the sidebar to select XML file paths and reuse them in different parts of the AppControl Manager." Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
+
+                                <Border x:Name="Border1" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
+
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="HotPink" Offset="0" />
+                                            <GradientStop Color="Wheat" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+
+                                    <Grid Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
 
-                        </controls:WrapPanel>
+                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+
+
+                                        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"                                                
+                                        x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"                                                 
+                                        Width="150" />
+
+                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyBrowseButton" Click="SidebarBasePolicyBrowseButton_Click" Content="Browse" Style="{ThemeResource AccentButtonStyle}" />
+
+                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyClearButton" Click="SidebarBasePolicyClearButton_Click" Content="Clear" Style="{ThemeResource AccentButtonStyle}" />
+
+                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" x:Name="SidebarBasePolicySelectButton" HorizontalAlignment="Center">
+
+
+                                            <Button.Content>
+                                                <controls:WrapPanel Orientation="Horizontal">
+
+                                                    <AnimatedIcon x:Name="SidebarBasePolicySelectButtonLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20" Visibility="Collapsed">
+                                                        <AnimatedIcon.Source>
+                                                            <animatedvisuals:Light/>
+                                                        </AnimatedIcon.Source>
+                                                    </AnimatedIcon>
+
+                                                    <TextBlock Text="Select" />
+
+                                                </controls:WrapPanel>
+                                            </Button.Content>
+
+                                            <Button.Flyout>
+                                                <Flyout Placement="Bottom">
+                                                    <StackPanel Orientation="Vertical" Spacing="10">
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect1" Content="Select 1" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect2" Content="Select 2" Visibility="Collapsed" />
+                                                    </StackPanel>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+
+                                    </Grid>
+
+                                </Border>
+
+                                <controls:SettingsCard HorizontalContentAlignment="Center" x:Name="AutomaticAssignmentSidebarSettingsCard"
+                               Description="Automatically save the path to the base policies you create in the Sidebar." Click="AutomaticAssignmentSidebarSettingsCard_Click"
+                               Header="Automatic Assignment" HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
+                                    <ToggleSwitch Toggled="AutomaticAssignmentSidebarToggleSwitch_Toggled" x:Name="AutomaticAssignmentSidebarToggleSwitch"/>
+                                </controls:SettingsCard>
+
+                                <HyperlinkButton HorizontalAlignment="Center" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
+
+                            </controls:WrapPanel>
+
+                        </ScrollViewer>
+
                     </Border>
                 </SplitView.Pane>
 
@@ -266,7 +360,7 @@
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <controls:PropertySizer HorizontalAlignment="Left" Grid.Row="1"
                  Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
-                 Maximum="440"
+                 Maximum="640"
                  Minimum="60"
                  Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
 

@@ -1,11 +1,10 @@
 
-namespace AppControlManager
+namespace AppControlManager;
+
+public sealed class CertificateDetailsCreator(string intermediateCertTBS, string intermediateCertName, string leafCertTBS, string leafCertName)
 {
-    public sealed class CertificateDetailsCreator(string intermediateCertTBS, string intermediateCertName, string leafCertTBS, string leafCertName)
-    {
-        public string IntermediateCertTBS { get; set; } = intermediateCertTBS;
-        public string IntermediateCertName { get; set; } = intermediateCertName;
-        public string LeafCertTBS { get; set; } = leafCertTBS;
-        public string LeafCertName { get; set; } = leafCertName;
-    }
+	public string IntermediateCertTBS { get; set; } = intermediateCertTBS;
+	public string IntermediateCertName { get; set; } = intermediateCertName;
+	public string LeafCertTBS { get; set; } = leafCertTBS;
+	public string LeafCertName { get; set; } = leafCertName;
 }

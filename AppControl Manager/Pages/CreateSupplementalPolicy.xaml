@@ -10,6 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -172,7 +173,42 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                         Header="Base Policy File" IsClickEnabled="True" Click="FilesAndFoldersBrowseForBasePolicySettingsCard_Click"
                         x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Content="Browse" Click="FilesAndFoldersBrowseForBasePolicyButton_Click"/>
+                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button Content="Clear" Click="FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click" />
+
+                                            <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+
+                                            <TextBox x:Name="FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </Button.Flyout>
+
+                                <Button.Content>
+                                    <controls:WrapPanel Orientation="Horizontal">
+
+                                        <AnimatedIcon x:Name="FilesAndFoldersBasePolicyLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+
+                                        <TextBlock Text="Browse" />
+
+                                    </controls:WrapPanel>
+                                </Button.Content>
+
+
+                            </Button>
 
                         </controls:SettingsCard>
 
@@ -293,7 +329,42 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                         <controls:SettingsCard x:Name="CertificatesBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
 Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="CertificatesBrowseForBasePolicySettingsCard_Click">
 
-                            <Button x:Name="CertificatesBrowseForBasePolicyButton" Content="Browse" Click="CertificatesBrowseForBasePolicyButton_Click" />
+                            <Button x:Name="CertificatesBrowseForBasePolicyButton" Click="CertificatesBrowseForBasePolicyButton_Click">
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button Content="Clear" Click="CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click" />
+
+                                            <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+
+                                            <TextBox x:Name="CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                 SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </Button.Flyout>
+
+                                <Button.Content>
+                                    <controls:WrapPanel Orientation="Horizontal">
+
+                                        <AnimatedIcon x:Name="CertificatesBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+
+                                        <TextBlock Text="Browse" />
+
+                                    </controls:WrapPanel>
+                                </Button.Content>
+
+
+                            </Button>
 
                         </controls:SettingsCard>
 

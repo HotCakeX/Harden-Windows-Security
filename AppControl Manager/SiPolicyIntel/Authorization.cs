@@ -1,8 +1,7 @@
-﻿namespace AppControlManager.SiPolicyIntel
+﻿namespace AppControlManager.SiPolicyIntel;
+
+internal enum Authorization
 {
-    internal enum Authorization
-    {
-        Allow,
-        Deny
-    }
+	Allow,
+	Deny
 }

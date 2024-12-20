@@ -1,18 +1,18 @@
 ﻿using AppControlManager.Logging;
 
-namespace AppControlManager
+namespace AppControlManager;
+
+internal static class ConfigureISGServices
 {
-    internal static class ConfigureISGServices
-    {
-        /// <summary>
-        /// Starts the AppIdTel and sets the AppIDSvc service to auto start
-        /// </summary>
-        internal static void Configure()
-        {
-            Logger.Write("Configuring and starting the required ISG related services");
+	/// <summary>
+	/// Starts the AppIdTel and sets the AppIDSvc service to auto start
+	/// </summary>
+	internal static void Configure()
+	{
+		Logger.Write("Configuring and starting the required ISG related services");
 
 
-            /*
+		/*
 
             // Start the AppID Service
             using ServiceController AppIDService = new("AppIDSvc");
@@ -32,10 +32,9 @@ namespace AppControlManager
             */
 
 
-            ProcessStarter.RunCommand("appidtel.exe", "start");
+		ProcessStarter.RunCommand("appidtel.exe", "start");
 
-            ProcessStarter.RunCommand("sc.exe", "config appidsvc start=auto");
+		ProcessStarter.RunCommand("sc.exe", "config appidsvc start=auto");
 
-        }
-    }
+	}
 }

@@ -6,20 +6,44 @@
     xmlns:local="using:AppControlManager"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"    
     mc:Ignorable="d"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     Title="AppControl Manager">
 
-    <!-- For the Mica background -->
+    <!-- For the MicaAlt BackDrop which is the default BackDrop -->
     <Window.SystemBackdrop>
         <MicaBackdrop Kind="BaseAlt"/>
     </Window.SystemBackdrop>
 
-    <Grid x:Name="RootGrid">
+    <Grid x:Name="RootGrid" Loaded="RootGrid_Loaded">
 
-        <!-- When using this, we shouldn't set PaneDisplayMode="" property on the navigation element itself, otherwise these dynamic triggers won't work on it -->
+        <Grid.RowDefinitions>
+            <!-- Titlebar Row -->
+            <RowDefinition Height="Auto"/>
+            <!-- NavigationView Row -->
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <Grid.Resources>
+            <!-- For the BreadCrumbBar's size -->
+            <x:Double x:Key="BreadcrumbBarChevronFontSize">30</x:Double>
+
+            <!-- Theme Shadow effect used on certain elements inside of the grid -->
+            <!-- https://learn.microsoft.com/en-us/windows/apps/design/layout/depth-shadow -->
+            <ThemeShadow x:Name="SharedShadow" />
+
+        </Grid.Resources>
+
+        <!-- When using this, we shouldn't set PaneDisplayMode="" property on the navigation element itself or set that property to anything other than Auto, otherwise these dynamic triggers won't work on it. -->
         <!-- Also apparently there are hardcoded minimum width that do not allow for smaller MinWindowWidth to be set for the triggers below and they are overriden when it happens -->
 
-        <!-- VisualStateManager for responsive layout -->
+        <!-- VisualStateManager for responsive layout of the NavigationView -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <!-- Very narrow window state -->
@@ -54,15 +78,84 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
+
+        <!-- Titlebar -->
+        <!-- https://learn.microsoft.com/en-us/windows/apps/develop/title-bar#full-customization-example -->
+        <Grid x:Name="AppTitleBar" Height="48" Grid.Row="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                <ColumnDefinition x:Name="BackButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="HamburgerMenuButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="TitleColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="SearchColumn" Width="3*"/>
+                <ColumnDefinition x:Name="RightDragColumn" Width="*" />
+                <ColumnDefinition x:Name="AccountColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Back button style, mimics the same NavigationView back button's style. If the style isn't set here, we can use the built-in animated icon for the back button -->
+            <Button x:Name="BackButtonTitleBar" Style="{StaticResource NavigationBackButtonNormalStyle}" Grid.Column="1" Click="BackButtonTitleBar_Click" />
+
+            <!-- Menu button style, mimics the same NavigationView menu (hamburger) button's style. If the style isn't set here, we can use the built-in animated icon for the menu (hamburger) button -->
+            <Button VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="HamburgerMenuButton" Grid.Column="2" Style="{StaticResource PaneToggleButtonStyle}" Margin="10,0,0,0" Click="HamburgerMenuButton_Click" />
+
+            <!-- App icon -->
+            <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
+           Width="16" Height="16"
+           Margin="8,0,4,0"/>
+
+            <!-- App title bar   -->
+            <TextBlock x:Name="TitleBarTextBlock"
+                       Text="App title" 
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Grid.Column="4"
+                       VerticalAlignment="Center" />
+
+            <!-- Main search area at the top -->
+            <AutoSuggestBox x:Name="TitleBarSearchBox" 
+                            Grid.Column="6" 
+                            QueryIcon="Find"                        
+                            VerticalAlignment="Center"
+                            MaxWidth="600"  TextChanged="SearchBox_TextChanged"
+                            SuggestionChosen="SearchBox_SuggestionChosen"
+                            PlaceholderText="Search menu items..." Margin="0"/>
+
+
+            <!-- Sidebar access point -->
+            <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8" 
+                    Height="32" Margin="5,0,30,0">
+
+                <Button.Content>
+                    <controls:WrapPanel Orientation="Horizontal">
+
+                        <AnimatedIcon Height="35" Width="35" Margin="-9,-9,-9,-9">
+                            <AnimatedIcon.Source>
+                                <animatedvisuals:Sidebar/>
+                            </AnimatedIcon.Source>
+                        </AnimatedIcon>
+
+                    </controls:WrapPanel>
+                </Button.Content>
+
+            </Button>
+
+        </Grid>
+
+
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
                     ItemInvoked="MainNavigation_ItemInvoked"
-                    PaneTitle="Menu"
-                    IsBackButtonVisible="Auto"
-                    IsBackEnabled="True"
-                    BackRequested="NavView_BackRequested"
-                    AlwaysShowHeader="True">
+                    IsBackButtonVisible="Collapsed"
+                    IsBackEnabled="False"                    
+                    AlwaysShowHeader="False"
+                    Grid.Row="1"
+                    IsTitleBarAutoPaddingEnabled="False"
+                    IsPaneToggleButtonVisible="False">
+
 
             <!--
              Being controlled from MainWindow.xaml.cs
@@ -73,6 +166,10 @@
 
             -->
 
+
+            <!--
+            Used in the Titlebar
+
             <NavigationView.AutoSuggestBox>
                 <AutoSuggestBox x:Name="SearchBox"
                         QueryIcon="Find"
@@ -80,6 +177,9 @@
                         SuggestionChosen="SearchBox_SuggestionChosen"
                         PlaceholderText="Search menu items..."/>
             </NavigationView.AutoSuggestBox>
+            
+           -->
+
 
             <!--
             <NavigationView.PaneCustomContent>
@@ -88,51 +188,42 @@
             -->
 
             <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="CreatePolicyNavItem" Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics" Tag="CreatePolicy"/>
-                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" Content="Create Supplemental Policy" ToolTipService.ToolTip="Create Supplemental AppControl Policies" Tag="CreateSupplementalPolicy"/>
-                <NavigationViewItem x:Name="SystemInformationNavItem" Content="System Information" ToolTipService.ToolTip="View information about the system" Tag="SystemInformation"/>
-                <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options" Tag="ConfigurePolicyRuleOptions"/>
-                <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies" Tag="Simulation"/>
-                <NavigationViewItem x:Name="AllowNewAppsNavItem" Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running." Tag="AllowNewApps"/>
-                <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies" Tag="BuildNewCertificate"/>
+                <NavigationViewItem x:Name="CreatePolicyNavItem" Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics"/>
+                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" Content="Create Supplemental Policy" ToolTipService.ToolTip="Create Supplemental AppControl Policies"/>
+                <NavigationViewItem x:Name="SystemInformationNavItem" Content="System Information" ToolTipService.ToolTip="View information about the system"/>
+                <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options"/>
+                <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies"/>
+                <NavigationViewItem x:Name="AllowNewAppsNavItem" Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running."/>
+                <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies"/>
 
                 <!-- Make it expanded by default to show the import feature to the user at first sight -->
-                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create App Control policy either from the local event logs or EVTX files" Tag="EventLogsPolicyCreation">
-
+                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create App Control policy either from the local event logs or EVTX files">
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="MDE Advanced Hunting" ToolTipService.ToolTip="Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs" Tag="MDEAHPolicyCreation" />
+                        <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="MDE Advanced Hunting" ToolTipService.ToolTip="Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs"/>
                     </NavigationViewItem.MenuItems>
-
                 </NavigationViewItem>
 
-                <NavigationViewItemSeparator/>
-                
-                <NavigationViewItemHeader Content="Miscellaneous"/>
+                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" Content="Create Deny Policy" ToolTipService.ToolTip="Create Deny App Control Policies"/>
 
-                <NavigationViewItem x:Name="MergePoliciesNavItem" Content="Merge App Control Policies" ToolTipService.ToolTip="Merge 2 App Control policeis together or deduplicate a single policy" Tag="MergePolicies"/>
+                <!-- <NavigationViewItemSeparator/> -->
 
-                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system" Tag="Deployment"/>
+                <!--  <NavigationViewItemHeader Content="Miscellaneous"/> -->
 
-                <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes"/>
-
-                <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies" Tag="GetSecurePolicySettings"/>
+                <NavigationViewItem x:Name="MergePoliciesNavItem" Content="Merge App Control Policies" ToolTipService.ToolTip="Merge 2 App Control policeis together or deduplicate a single policy"/>
+                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system"/>
+                <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files"/>
+                <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies"/>
 
                 <!-- These are still considered footer so important menu items must be placed above them -->
-
-                <NavigationViewItem x:Name="LogsNavItem" Content="Logs" ToolTipService.ToolTip="View the application logs in real time" Tag="Logs" />
-
+                <NavigationViewItem x:Name="LogsNavItem" Content="Logs" ToolTipService.ToolTip="View the application logs in real time"/>
                 <NavigationViewItemHeader Content="Documentation"/>
-
-                <NavigationViewItem x:Name="GitHubDocsNavItem" Content="GitHub Documentation" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation"/>
-
-                <NavigationViewItem x:Name="MSFTDocsNavItem" Content="Microsoft Documentation" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation"/>
-
+                <NavigationViewItem x:Name="GitHubDocsNavItem" Content="GitHub Documentation" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application"/>
+                <NavigationViewItem x:Name="MSFTDocsNavItem" Content="Microsoft Documentation" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies"/>
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
 
-                <NavigationViewItem x:Name="UpdateNavItem" Content="Update" ToolTipService.ToolTip="Check for updates" Tag="Update">
-
+                <NavigationViewItem x:Name="UpdateNavItem" Content="Update" ToolTipService.ToolTip="Check for updates">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge x:Name="AvailableUpdateInfoBadge"
                                    Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
@@ -142,13 +233,144 @@
                             </InfoBadge.IconSource>
                         </InfoBadge>
                     </NavigationViewItem.InfoBadge>
-
                 </NavigationViewItem>
 
             </NavigationView.FooterMenuItems>
 
-            <!-- Global margin settings for every page -->
-            <Frame x:Name="ContentFrame" Margin="15,15,15,10" />
+            <!-- Split view to create the sidebar -->
+            <SplitView x:Name="MainSidebar" PaneBackground="Transparent" 
+                 IsPaneOpen="False" OpenPaneLength="256"
+                 CompactPaneLength="48" DisplayMode="Inline" PanePlacement="Right">
+                <SplitView.Pane>
+                    <Border BorderThickness="1"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            CornerRadius="5">
+
+                        <ScrollViewer>
+
+                            <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
+
+                                <TextBlock Text="Sidebar" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
+
+                                <TextBlock Text="Use the sidebar to select XML file paths and reuse them in different parts of the AppControl Manager." Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
+
+                                <Border x:Name="Border1" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
+
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="HotPink" Offset="0" />
+                                            <GradientStop Color="Wheat" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+
+                                    <Grid Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+
+                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+
+
+                                        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"                                                
+                                        x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"                                                 
+                                        Width="150" />
+
+                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyBrowseButton" Click="SidebarBasePolicyBrowseButton_Click" Content="Browse" Style="{ThemeResource AccentButtonStyle}" />
+
+                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyClearButton" Click="SidebarBasePolicyClearButton_Click" Content="Clear" Style="{ThemeResource AccentButtonStyle}" />
+
+                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" x:Name="SidebarBasePolicySelectButton" HorizontalAlignment="Center">
+
+
+                                            <Button.Content>
+                                                <controls:WrapPanel Orientation="Horizontal">
+
+                                                    <AnimatedIcon x:Name="SidebarBasePolicySelectButtonLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20" Visibility="Collapsed">
+                                                        <AnimatedIcon.Source>
+                                                            <animatedvisuals:Light/>
+                                                        </AnimatedIcon.Source>
+                                                    </AnimatedIcon>
+
+                                                    <TextBlock Text="Select" />
+
+                                                </controls:WrapPanel>
+                                            </Button.Content>
+
+                                            <Button.Flyout>
+                                                <Flyout Placement="Bottom">
+                                                    <StackPanel Orientation="Vertical" Spacing="10">
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect1" Content="Select 1" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect2" Content="Select 2" Visibility="Collapsed" />
+                                                    </StackPanel>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+
+                                    </Grid>
+
+                                </Border>
+
+                                <controls:SettingsCard HorizontalContentAlignment="Center" x:Name="AutomaticAssignmentSidebarSettingsCard"
+                               Description="Automatically save the path to the base policies you create in the Sidebar." Click="AutomaticAssignmentSidebarSettingsCard_Click"
+                               Header="Automatic Assignment" HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
+                                    <ToggleSwitch Toggled="AutomaticAssignmentSidebarToggleSwitch_Toggled" x:Name="AutomaticAssignmentSidebarToggleSwitch"/>
+                                </controls:SettingsCard>
+
+                                <HyperlinkButton HorizontalAlignment="Center" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
+
+                            </controls:WrapPanel>
+
+                        </ScrollViewer>
+
+                    </Border>
+                </SplitView.Pane>
+
+                <!-- The area where the main window content are displayed -->
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!-- BreadCrumBar that that also acts as a sticky header -->
+                    <BreadcrumbBar x:Name="BreadcrumbBar" VerticalAlignment="Top"
+                        Grid.Row="0" 
+                        Padding="10" 
+                        Margin="20,10,0,10"
+                        ItemsSource="{x:Bind Breadcrumbs}" 
+                        ItemClicked="BreadcrumbBar_ItemClicked">
+
+                        <BreadcrumbBar.ItemTemplate>
+                            <DataTemplate x:DataType="local:Crumb">
+                                <TextBlock Text="{x:Bind Label}" TextWrapping="Wrap" Style="{StaticResource TitleTextBlockStyle}" />
+                            </DataTemplate>
+                        </BreadcrumbBar.ItemTemplate>
+                    </BreadcrumbBar>
+
+                    <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
+                    <controls:PropertySizer HorizontalAlignment="Left" Grid.Row="1"
+                 Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
+                 Maximum="640"
+                 Minimum="60"
+                 Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
+
+                    <!-- Global margin settings for every page's content -->
+                    <Frame x:Name="ContentFrame" Margin="15,15,15,10" Grid.Row="1" />
+
+                </Grid>
+            </SplitView>
+
         </NavigationView>
+
     </Grid>
 </Window>

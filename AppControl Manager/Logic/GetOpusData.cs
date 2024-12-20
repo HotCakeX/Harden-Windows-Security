@@ -4,105 +4,104 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 
-namespace AppControlManager
+namespace AppControlManager;
+
+public static partial class Opus
 {
-    public static partial class Opus
-    {
-        internal static partial class Crypt32
-        {
+	internal static partial class Crypt32
+	{
 
-            // More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
-            [LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
-            [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static partial bool CryptDecodeObject(
-                uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
-                IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
-                [In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
-                uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
-                uint dwFlags,                   // Flags that modify the behavior of the function
-                IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure
-                ref uint pcbStructInfo          // Pointer to a variable that specifies the size, in bytes, of the pvStructInfo buffer
-            );
-        }
+		// More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
+		[LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		internal static partial bool CryptDecodeObject(
+			uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
+			IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
+			[In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
+			uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
+			uint dwFlags,                   // Flags that modify the behavior of the function
+			IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure
+			ref uint pcbStructInfo          // Pointer to a variable that specifies the size, in bytes, of the pvStructInfo buffer
+		);
+	}
 
-        // More info about this at the end of the code
-        public const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
-        // for the SpcSpOpusInfo structure
-        public const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
+	// More info about this at the end of the code
+	public const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
+	// for the SpcSpOpusInfo structure
+	public const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
 
-        // https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
-        // Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
-        public struct OpusInfoObj
-        {
-            // Declaring a public field CertOemID of type string with LPWStr marshaling
-            [MarshalAs(UnmanagedType.LPWStr)]
-            public string CertOemID;
-            public IntPtr PublisherInfo;
-            public IntPtr MoreInfo; // not always present
-        }
+	// https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
+	// Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
+	public struct OpusInfoObj
+	{
+		// Declaring a public field CertOemID of type string with LPWStr marshaling
+		[MarshalAs(UnmanagedType.LPWStr)]
+		public string CertOemID;
+		public IntPtr PublisherInfo;
+		public IntPtr MoreInfo; // not always present
+	}
 
-        // Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
-        // https://learn.microsoft.com/en-us/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
-        // https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
-        public static List<OpusInfoObj> GetOpusData(SignedCms signature)
-        {
-            // Initializing a new List of OpusInfoObj to store the output data to return
-            List<OpusInfoObj> OEMOpusData = [];
+	// Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
+	// https://learn.microsoft.com/en-us/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
+	// https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
+	internal static List<OpusInfoObj> GetOpusData(SignedCms signature)
+	{
+		// Initializing a new List of OpusInfoObj to store the output data to return
+		List<OpusInfoObj> OEMOpusData = [];
 
-            // Iterating through each SignerInfo in the SignerInfos collection of the signature
-            foreach (SignerInfo signerInfo in signature.SignerInfos)
-            {
-                // Iterating through each CryptographicAttributeObject in the SignedAttributes collection of the signerInfo
-                foreach (CryptographicAttributeObject signedAttribute in signerInfo.SignedAttributes)
-                {
-                    // Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
-                    if (string.Equals(signedAttribute.Oid.Value, SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Initializing pcbStructInfo to 0
-                        uint pcbStructInfo = 0;
-                        // Initializing decodedDataPtr to IntPtr.Zero
-                        IntPtr decodedDataPtr = IntPtr.Zero;
+		// Iterating through each SignerInfo in the SignerInfos collection of the signature
+		foreach (SignerInfo signerInfo in signature.SignerInfos)
+		{
+			// Iterating through each CryptographicAttributeObject in the SignedAttributes collection of the signerInfo
+			foreach (CryptographicAttributeObject signedAttribute in signerInfo.SignedAttributes)
+			{
+				// Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
+				if (string.Equals(signedAttribute.Oid.Value, SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
+				{
+					// Initializing pcbStructInfo to 0
+					uint pcbStructInfo = 0;
+					// Initializing decodedDataPtr to IntPtr.Zero
+					IntPtr decodedDataPtr = IntPtr.Zero;
 
-                        try
-                        {
-                            AsnEncodedData asnEncodedData = signedAttribute.Values[0];  // Retrieving the first value from the signed attribute's Values collection
+					try
+					{
+						AsnEncodedData asnEncodedData = signedAttribute.Values[0];  // Retrieving the first value from the signed attribute's Values collection
 
-                            // Decoding ASN.1-encoded data using CryptDecodeObject
-                            if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
-                            {
-                                // If CryptDecodeObject fails, ignore
-                            }
-                            else
-                            {
-                                // Allocating unmanaged memory to decodedDataPtr based on pcbStructInfo size
-                                decodedDataPtr = Marshal.AllocCoTaskMem((int)pcbStructInfo);
+						// Decoding ASN.1-encoded data using CryptDecodeObject
+						if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
+						{
+							// If CryptDecodeObject fails, ignore
+						}
+						else
+						{
+							// Allocating unmanaged memory to decodedDataPtr based on pcbStructInfo size
+							decodedDataPtr = Marshal.AllocCoTaskMem((int)pcbStructInfo);
 
-                                // Decoding ASN.1-encoded data again into decodedDataPtr
-                                if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
-                                {
-                                    // If CryptDecodeObject fails, ignore
-                                }
-                                else
-                                {
-                                    // Converting the unmanaged memory block to OpusInfoObj structure
-                                    OpusInfoObj structure = Marshal.PtrToStructure<OpusInfoObj>(decodedDataPtr)!;
-                                    // Adding the structure to OEMOpusData list
-                                    OEMOpusData.Add(structure);
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            // Freeing the allocated unmanaged memory (decodedDataPtr)
-                            Marshal.FreeCoTaskMem(decodedDataPtr);
-                        }
-                    }
-                }
-            }
-            return OEMOpusData;
-        }
-    }
+							// Decoding ASN.1-encoded data again into decodedDataPtr
+							if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
+							{
+								// If CryptDecodeObject fails, ignore
+							}
+							else
+							{
+								// Converting the unmanaged memory block to OpusInfoObj structure
+								OpusInfoObj structure = Marshal.PtrToStructure<OpusInfoObj>(decodedDataPtr)!;
+								// Adding the structure to OEMOpusData list
+								OEMOpusData.Add(structure);
+							}
+						}
+					}
+					finally
+					{
+						// Freeing the allocated unmanaged memory (decodedDataPtr)
+						Marshal.FreeCoTaskMem(decodedDataPtr);
+					}
+				}
+			}
+		}
+		return OEMOpusData;
+	}
 }
 
 // Constants

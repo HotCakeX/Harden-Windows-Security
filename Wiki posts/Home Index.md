@@ -17,11 +17,13 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Build%20new%20certificate.gif" alt="AppControl Manager Menu Item" width="30"> [Build New Certificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20policy%20from%20Event%20Logs.gif" alt="AppControl Manager Menu Item" width="30"> [Create Policy From Event Logs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20policy%20from%20MDE%20Advanced%20Hunting.gif" alt="AppControl Manager Menu Item" width="30"> [Create Policy From MDE Advanced Hunting](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Deny%20Policy.gif" alt="AppControl Manager Menu Item" width="30"> [Create Deny Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Merge%20App%20Control%20Policies.gif" width="30" alt="AppControl Manager Menu Item"> [Merge App Control Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Deployment.gif" alt="AppControl Manager Menu Item" width="30"> [Deploy App Control Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Get%20CI%20Hahses.gif" alt="AppControl Manager Menu Item" width="30"> [Get Code Integrity Hashes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Get%20Secure%20policy%20settings.gif" alt="AppControl Manager Menu Item" width="30"> [Get Secure Policy Settings](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Secure-Policy-Settings)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Update.gif" alt="AppControl Manager Menu Item" width="30"> [Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Sidebar.gif" alt="AppControl Manager Menu Item" width="30"> [Sidebar](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar)
 
 <br>
 
@@ -46,27 +48,6 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [Script Enforcement and PowerShell Constrained Language Mode in App Control Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Script-Enforcement-and-PowerShell-Constrained-Language-Mode-in-WDAC-App-Control-Policies)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [How to Use Microsoft Defender for Endpoint Advanced Hunting With App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [App Control Frequently Asked Questions (FAQs)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Application-Control-(WDAC)-Frequently-Asked-Questions-(FAQs))
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="50"> [WDACConfig Module Main](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
-
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [New-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [New-SupplementalWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Remove-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Edit-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Edit-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Confirm-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [New-DenyWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Set-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [New-KernelModeWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Remove-CommonWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Assert-WDACConfigIntegrity](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CiFileHashes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes)
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CIPolicySetting](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting)
 
 <br>
 

@@ -213,7 +213,7 @@ internal partial class BitLocker
 				PrepareVolumeResultCode = Convert.ToUInt32(PrepareVolumeMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (PrepareVolumeResultCode is not null && PrepareVolumeResultCode == 0)
+			if (PrepareVolumeResultCode is 0)
 			{
 				Logger.LogMessage($"Successfully prepared the drive {DriveLetter} for encryption.", LogTypeIntel.Information);
 			}
@@ -296,7 +296,7 @@ internal partial class BitLocker
 				EncryptResultCode = Convert.ToUInt32(EncryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (EncryptResultCode is not null && EncryptResultCode == 0)
+			if (EncryptResultCode is 0)
 			{
 				Logger.LogMessage($"Successfully Encrypted the drive {DriveLetter}.", LogTypeIntel.Information);
 			}
@@ -490,7 +490,7 @@ internal partial class BitLocker
 				PrepareVolumeResultCode = Convert.ToUInt32(PrepareVolumeMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (PrepareVolumeResultCode is not null && PrepareVolumeResultCode == 0)
+			if (PrepareVolumeResultCode is 0)
 			{
 				Logger.LogMessage($"Successfully prepared the drive {DriveLetter} for encryption.", LogTypeIntel.Information);
 			}
@@ -548,7 +548,7 @@ internal partial class BitLocker
 				EncryptResultCode = Convert.ToUInt32(EncryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (EncryptResultCode is not null && EncryptResultCode == 0)
+			if (EncryptResultCode is 0)
 			{
 				Logger.LogMessage($"Successfully Encrypted the drive {DriveLetter}.", LogTypeIntel.Information);
 			}
@@ -624,7 +624,7 @@ internal partial class BitLocker
 			PrepareVolumeResultCode = Convert.ToUInt32(PrepareVolumeMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 		}
 
-		if (PrepareVolumeResultCode is not null && PrepareVolumeResultCode == 0)
+		if (PrepareVolumeResultCode is 0)
 		{
 			Logger.LogMessage($"Successfully prepared the drive {DriveLetter} for encryption.", LogTypeIntel.Information);
 		}
@@ -686,7 +686,7 @@ internal partial class BitLocker
 			EncryptResultCode = Convert.ToUInt32(EncryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 		}
 
-		if (EncryptResultCode is not null && EncryptResultCode == 0)
+		if (EncryptResultCode is 0)
 		{
 			Logger.LogMessage($"Successfully Encrypted the drive {DriveLetter}.", LogTypeIntel.Information);
 		}

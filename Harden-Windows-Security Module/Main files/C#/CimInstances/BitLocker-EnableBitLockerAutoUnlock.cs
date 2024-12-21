@@ -33,7 +33,7 @@ internal partial class BitLocker
 			IsAutoUnlockEnabledResultCode = Convert.ToUInt32(IsAutoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture);
 		}
 
-		if (IsAutoUnlockEnabledResultCode is not null && IsAutoUnlockEnabledResultCode == 0)
+		if (IsAutoUnlockEnabledResultCode is 0)
 		{
 			Logger.LogMessage($"Successfully queried the Auto-unlock status of the drive {DriveLetter}.", LogTypeIntel.Information);
 		}
@@ -67,7 +67,7 @@ internal partial class BitLocker
 				MethodInvocationResultCode = Convert.ToUInt32(ProtectKeyWithExternalKeyMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
+			if (MethodInvocationResultCode is 0)
 			{
 				Logger.LogMessage("The ExternalKey key protector was successfully added.", LogTypeIntel.Information);
 				// Will move forward to the next step
@@ -97,7 +97,7 @@ internal partial class BitLocker
 				EnableAutoUnlockMethodInvocationResultCode = Convert.ToUInt32(EnableAutoUnlockMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (EnableAutoUnlockMethodInvocationResultCode is not null && EnableAutoUnlockMethodInvocationResultCode == 0)
+			if (EnableAutoUnlockMethodInvocationResultCode is 0)
 			{
 				Logger.LogMessage($"Auto-Unlock has been successfully enabled for the drive: {DriveLetter}", LogTypeIntel.Information);
 			}

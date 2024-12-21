@@ -267,7 +267,7 @@ public partial class GUIMain
 							});
 
 							// if user selected a category for compliance checking
-							if (SelectedCategory is not null && !string.IsNullOrEmpty(SelectedCategory))
+							if (!string.IsNullOrEmpty(SelectedCategory))
 							{
 								// Perform the compliance check using the selected compliance category
 								InvokeConfirmation.Invoke([SelectedCategory]);

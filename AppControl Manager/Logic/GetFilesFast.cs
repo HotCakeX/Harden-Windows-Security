@@ -118,6 +118,8 @@ internal static class FileUtility
 							try
 							{
 								// Move to the next file
+								// The reason we use MoveNext() instead of foreach loop is that protected/inaccessible files
+								// Would throw errors and this way we can catch them and move to the next file without terminating the entire loop
 								if (!enumerator.MoveNext())
 								{
 									// If we reach the end of the enumeration, we break out of the loop

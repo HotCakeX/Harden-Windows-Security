@@ -100,7 +100,7 @@ jobs:
           artifact-name: HardenWindowsSecurityRepoSBOM.spdx
 
       - name: Generating SBOM attestation
-        uses: actions/attest-sbom@v1
+        uses: actions/attest-sbom@v2
         with:
           subject-path: ${{ env.MSIX_PATH }}
           sbom-path: ./HardenWindowsSecurityRepoSBOM.spdx

@@ -35,3 +35,5 @@ updates:
       interval: "weekly"
     reviewers:
       - "HotCakeX"
+    labels:
+      - "github_actions"

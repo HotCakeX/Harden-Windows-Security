@@ -86,7 +86,7 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "MSIX_VERSION=$MSIXVersion"
 
       - name: Generating Artifact Attestation
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v2
         with:
           subject-path: ${{ env.MSIX_PATH }}
 

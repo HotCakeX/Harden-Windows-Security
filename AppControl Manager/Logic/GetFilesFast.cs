@@ -62,11 +62,8 @@ internal static class FileUtility
 		FileInfo[]? files,
 		string[]? extensionsToFilterBy)
 	{
-		// Create a Stopwatch instance
-		Stopwatch stopwatch = new();
-
-		// Start measuring time
-		stopwatch.Start();
+		// Create a Stopwatch instance and start measuring time
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		// Use the Default App Control supported extensions and make them case-insensitive
 		HashSet<string> extensions = new(StringComparer.OrdinalIgnoreCase)

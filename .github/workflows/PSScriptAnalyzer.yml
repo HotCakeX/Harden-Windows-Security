@@ -11,18 +11,9 @@ name: PSScriptAnalyzer
 
 on:
   push:
-    branches: ["main"]
-    paths:
-      - "**.ps1"
-      - "**.psm1"
-      - "**.psd1"
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
-    paths:
-      - "**.ps1"
-      - "**.psm1"
-      - "**.psd1"
-  workflow_dispatch:
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -51,6 +42,6 @@ jobs:
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif

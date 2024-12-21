@@ -63,7 +63,7 @@ internal partial class BitLocker
 				MethodInvocationResultCode = Convert.ToUInt32(IsAutoUnlockKeyStoredMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 			}
 
-			if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
+			if (MethodInvocationResultCode is 0)
 			{
 				Logger.LogMessage("Successfully checked the OS Drive for any stored auto-unlock keys.", LogTypeIntel.Information);
 				// Will move forward to the next step
@@ -108,7 +108,7 @@ internal partial class BitLocker
 			DecryptMethodInvocationResultCode = Convert.ToUInt32(DecryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
 		}
 
-		if (DecryptMethodInvocationResultCode is not null && DecryptMethodInvocationResultCode == 0)
+		if (DecryptMethodInvocationResultCode is 0)
 		{
 			Logger.LogMessage($"Successfully Decrypted the drive {DriveLetter}", LogTypeIntel.InformationInteractionRequired);
 		}

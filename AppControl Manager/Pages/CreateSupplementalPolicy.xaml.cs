@@ -139,7 +139,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -167,7 +167,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -191,7 +191,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories is not null && selectedDirectories.Count > 0)
+		if (selectedDirectories is { Count: > 0 })
 		{
 			foreach (string dir in selectedDirectories)
 			{
@@ -217,7 +217,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories is not null && selectedDirectories.Count > 0)
+		if (selectedDirectories is { Count: > 0 })
 		{
 			foreach (string dir in selectedDirectories)
 			{
@@ -667,7 +667,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -682,7 +682,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{

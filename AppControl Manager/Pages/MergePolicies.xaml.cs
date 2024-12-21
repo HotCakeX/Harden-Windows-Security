@@ -163,7 +163,7 @@ public sealed partial class MergePolicies : Page
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -183,7 +183,7 @@ public sealed partial class MergePolicies : Page
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{

@@ -193,7 +193,7 @@ internal static class AppControlSimulation
 			// Loop through each .cat security catalog on the system - If user selected custom CatRoot folders then use them instead
 			DirectoryInfo[] catRootDirectories = [];
 
-			if (catRootPath is not null && catRootPath.Count > 0)
+			if (catRootPath is { Count: > 0 })
 			{
 				catRootDirectories = [.. catRootPath.Select(dir => new DirectoryInfo(dir))];
 			}

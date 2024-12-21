@@ -108,7 +108,7 @@ public static partial class GUIMain
 						ComboBox? comboBox = stackPanel.Children.OfType<ComboBox>().FirstOrDefault();
 
 						// To make sure the ComboBox's selected index is not -1 indicating it's empty
-						if (comboBox is not null && comboBox.SelectedIndex is not -1)
+						if (comboBox is { SelectedIndex: not -1 })
 						{
 							// Add the ComboBox Name as string key and ComboBox SelectedIndex as byte value
 							comboBoxDictionary[comboBox.Name.ToString()] = (byte)comboBox.SelectedIndex;

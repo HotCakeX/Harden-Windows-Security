@@ -36,7 +36,7 @@ internal partial class BitLocker
 			KeyProtectorEnablementResultCode = Convert.ToUInt32(KeyProtectorEnablementResult["ReturnValue"], CultureInfo.InvariantCulture);
 		}
 
-		if (KeyProtectorEnablementResultCode is not null && KeyProtectorEnablementResultCode == 0)
+		if (KeyProtectorEnablementResultCode is 0)
 		{
 			Logger.LogMessage($"Successfully enabled the key protectors of the drive {DriveLetter}.", LogTypeIntel.Information);
 		}

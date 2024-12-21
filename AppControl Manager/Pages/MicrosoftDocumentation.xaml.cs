@@ -57,7 +57,7 @@ public sealed partial class MicrosoftDocumentation : Page
 		try
 		{
 			// Check if the WebView2 control or its CoreWebView2 instance is disposed
-			if (MicrosoftDocumentationWebView2 is not null && MicrosoftDocumentationWebView2.CoreWebView2 is not null)
+			if (MicrosoftDocumentationWebView2 is { CoreWebView2: not null })
 			{
 				BackButton.IsEnabled = MicrosoftDocumentationWebView2.CanGoBack;
 				ForwardButton.IsEnabled = MicrosoftDocumentationWebView2.CanGoForward;

@@ -32,7 +32,7 @@ internal static class Factory
 				// Get all possible FileRuleRef items from the current signing scenario
 				FileRuleRef[]? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
 
-				if (possibleFileRuleRef is not null && possibleFileRuleRef.Length > 0)
+				if (possibleFileRuleRef is { Length: > 0 })
 				{
 					foreach (FileRuleRef fileRuleRef in possibleFileRuleRef)
 					{
@@ -88,7 +88,7 @@ internal static class Factory
 				// Get all possible FileRuleRef items from the current signing scenario
 				FileRuleRef[]? possibleFileRuleRef = signingScenario.ProductSigners?.FileRulesRef?.FileRuleRef;
 
-				if (possibleFileRuleRef is not null && possibleFileRuleRef.Length > 0)
+				if (possibleFileRuleRef is { Length: > 0 })
 				{
 					foreach (FileRuleRef fileRuleRef in possibleFileRuleRef)
 					{
@@ -164,7 +164,7 @@ internal static class Factory
 					AllowedSigner[]? allowedSigners = possibleProdSigners.AllowedSigners?.AllowedSigner;
 					DeniedSigner[]? deniedSigners = possibleProdSigners.DeniedSigners?.DeniedSigner;
 
-					if (allowedSigners is not null && allowedSigners.Length > 0)
+					if (allowedSigners is { Length: > 0 })
 					{
 						// Process Allowed Signers
 						foreach (AllowedSigner item in allowedSigners)
@@ -189,7 +189,7 @@ internal static class Factory
 						}
 					}
 
-					if (deniedSigners is not null && deniedSigners.Length > 0)
+					if (deniedSigners is { Length: > 0 })
 					{
 						// Process Denied Signers
 						foreach (DeniedSigner item in deniedSigners)

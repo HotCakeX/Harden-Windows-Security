@@ -2,8 +2,8 @@ using Microsoft.Win32;
 using System;
 using System.Globalization;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class RegistryEditor
     {
         private static readonly string[] separator = [";"];
@@ -121,4 +121,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

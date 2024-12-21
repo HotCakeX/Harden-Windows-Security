@@ -4,8 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MicrosoftSecurityBaselines
     {
         /// <summary>
@@ -87,4 +87,3 @@ namespace HardenWindowsSecurity
             #endregion
         }
     }
-}

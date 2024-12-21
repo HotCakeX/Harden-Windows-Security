@@ -5,8 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class CiToolRunner
     {
         /// <summary>
@@ -281,4 +281,3 @@ namespace HardenWindowsSecurity
             return [];
         }
     }
-}

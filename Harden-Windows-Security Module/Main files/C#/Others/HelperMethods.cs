@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class HelperMethods
     {
         // Helper method to convert object to string array
@@ -19,4 +19,3 @@ namespace HardenWindowsSecurity
             return null;
         }
     }
-}

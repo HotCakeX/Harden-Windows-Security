@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // Class to hold the result of the HashTable check
     internal sealed class HashTableCheckerResult
     {
@@ -85,4 +85,3 @@ namespace HardenWindowsSecurity
             return result;
         }
     }
-}

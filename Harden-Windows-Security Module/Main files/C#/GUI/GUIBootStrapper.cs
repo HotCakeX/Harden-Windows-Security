@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GUIHandOff
     {
         /// <summary>
@@ -42,4 +42,3 @@ namespace HardenWindowsSecurity
             thread.Join();
         }
     }
-}

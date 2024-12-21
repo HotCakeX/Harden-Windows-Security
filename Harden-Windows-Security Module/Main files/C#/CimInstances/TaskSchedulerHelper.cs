@@ -4,8 +4,8 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class TaskSchedulerHelper
     {
 
@@ -298,4 +298,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

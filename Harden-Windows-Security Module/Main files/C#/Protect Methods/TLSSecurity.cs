@@ -2,8 +2,8 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class TLSSecurity
     {
         public static void Invoke()
@@ -68,4 +68,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

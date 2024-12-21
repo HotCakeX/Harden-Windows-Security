@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class NetConnectionProfiles
     {
         /// <summary>
@@ -147,4 +147,3 @@ namespace HardenWindowsSecurity
             Internet = 4
         }
     }
-}

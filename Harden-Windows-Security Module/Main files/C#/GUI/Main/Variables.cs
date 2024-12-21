@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// The following are XAML GUI Elements
     /// </summary>
@@ -32,4 +32,3 @@ namespace HardenWindowsSecurity
         // The slider at the bottom left that controls the background image opacity
         public static Slider? BackgroundSlider;
     }
-}

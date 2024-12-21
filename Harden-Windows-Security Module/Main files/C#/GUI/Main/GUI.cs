@@ -15,8 +15,8 @@ using System.Windows.Threading;
 
 #nullable disable
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public partial class GUIMain
     {
         // ViewModelBase class
@@ -505,4 +505,3 @@ End time: {DateTime.Now}
 
         }
     }
-}

@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class FirmwareChecker
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype
@@ -29,4 +29,3 @@ namespace HardenWindowsSecurity
             return FirmwareType.FirmwareTypeUnknown;
         }
     }
-}

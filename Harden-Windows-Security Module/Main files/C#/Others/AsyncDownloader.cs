@@ -4,8 +4,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class AsyncDownloader
     {
         // HttpClient instance to be used and re-used for downloading files
@@ -277,4 +277,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

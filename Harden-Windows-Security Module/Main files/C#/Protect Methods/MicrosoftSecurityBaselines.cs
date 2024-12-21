@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MicrosoftSecurityBaselines
     {
         /// <summary>
@@ -44,4 +44,3 @@ Set-Location -Path "{scriptDirectory}"; .\Baseline-LocalInstall.ps1 -Win11NonDom
             _ = PowerShellExecutor.ExecuteScript(Command, false, true);
         }
     }
-}

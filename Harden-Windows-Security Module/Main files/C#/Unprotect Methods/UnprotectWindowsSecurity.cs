@@ -5,8 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class UnprotectWindowsSecurity
     {
         /// <summary>
@@ -269,4 +269,3 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
             }
         }
     }
-}

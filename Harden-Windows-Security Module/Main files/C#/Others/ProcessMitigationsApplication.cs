@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class ProcessMitigationsApplication
     {
         internal static void Apply()
@@ -88,4 +88,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
 
     public enum ComplianceCategories
     {
@@ -143,4 +143,3 @@ namespace HardenWindowsSecurity
             return [.. categoriex];
         }
     }
-}

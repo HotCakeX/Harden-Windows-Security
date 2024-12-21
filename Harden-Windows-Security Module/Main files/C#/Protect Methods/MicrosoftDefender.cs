@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MicrosoftDefender
     {
         /// <summary>
@@ -88,4 +88,3 @@ namespace HardenWindowsSecurity
             _ = PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3'");
         }
     }
-}

@@ -1,5 +1,5 @@
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class DownloadsDefenseMeasures
     {
         /// <summary>
@@ -95,4 +95,3 @@ else {{
             _ = PowerShellExecutor.ExecuteScript(script);
         }
     }
-}

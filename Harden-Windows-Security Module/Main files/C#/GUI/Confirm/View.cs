@@ -10,8 +10,8 @@ using System.Windows.Media.Imaging;
 
 #nullable disable
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public partial class GUIMain
     {
 
@@ -426,4 +426,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

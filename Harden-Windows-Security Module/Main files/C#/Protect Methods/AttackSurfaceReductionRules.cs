@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class AttackSurfaceReductionRules
     {
         /// <summary>
@@ -23,4 +23,3 @@ namespace HardenWindowsSecurity
             LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Attack Surface Reduction Rules Policies", "registry.pol"), LGPORunner.FileType.POL);
         }
     }
-}

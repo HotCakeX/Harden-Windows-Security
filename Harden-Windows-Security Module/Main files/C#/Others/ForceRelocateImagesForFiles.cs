@@ -1,8 +1,8 @@
 using System;
 using System.Management.Automation;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class ForceRelocateImagesForFiles
     {
 
@@ -48,4 +48,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

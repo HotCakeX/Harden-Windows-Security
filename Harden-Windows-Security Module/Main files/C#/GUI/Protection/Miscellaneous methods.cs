@@ -4,8 +4,8 @@ using System.Windows.Controls;
 
 #nullable disable
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class GUIProtectWinSecurity
     {
 
@@ -123,4 +123,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

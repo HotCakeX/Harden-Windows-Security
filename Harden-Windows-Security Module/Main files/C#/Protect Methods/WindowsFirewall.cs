@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class WindowsFirewall
     {
         /// <summary>
@@ -50,4 +50,3 @@ ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
 
         }
     }
-}

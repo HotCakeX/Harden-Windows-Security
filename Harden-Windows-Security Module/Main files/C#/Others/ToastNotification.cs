@@ -2,8 +2,8 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class ToastNotification
     {
 
@@ -249,4 +249,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

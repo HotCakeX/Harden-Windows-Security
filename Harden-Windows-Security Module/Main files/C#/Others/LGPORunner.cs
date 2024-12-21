@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class LGPORunner
     {
         // Enum to specify the file type
@@ -31,4 +31,3 @@ namespace HardenWindowsSecurity
             ProcessStarter.RunCommand(LGPOExePath ?? GlobalVars.LGPOExe!, commandArgs);
         }
     }
-}

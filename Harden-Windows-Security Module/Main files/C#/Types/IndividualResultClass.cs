@@ -1,5 +1,5 @@
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// A class that defines a single compliance check result
     /// </summary>
@@ -12,4 +12,3 @@ namespace HardenWindowsSecurity
         public required ComplianceCategories Category { get; set; }
         public required ConfirmSystemComplianceMethods.Method Method { get; set; }
     }
-}

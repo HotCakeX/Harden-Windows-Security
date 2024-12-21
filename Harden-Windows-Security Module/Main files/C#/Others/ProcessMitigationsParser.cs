@@ -2,8 +2,8 @@ using System;
 using System.Globalization;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class ProcessMitigationsParser
     {
         // a class to store the structure of the new CSV data
@@ -69,4 +69,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

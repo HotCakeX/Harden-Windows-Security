@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// Class that deals with MDM/CSPs/Intune
     /// </summary>
@@ -180,4 +180,3 @@ namespace HardenWindowsSecurity
             internal string? Authorized { get; set; }
         }
     }
-}

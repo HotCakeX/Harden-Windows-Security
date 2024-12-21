@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class Program
     {
         /// <summary>
@@ -37,4 +37,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

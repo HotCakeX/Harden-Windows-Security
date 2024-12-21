@@ -6,8 +6,8 @@ using System.Linq;
 using System.Management;
 using System.Net.Http;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class FirewallHelper
     {
         // Method to get firewall rules based on RuleGroup and Direction
@@ -299,4 +299,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

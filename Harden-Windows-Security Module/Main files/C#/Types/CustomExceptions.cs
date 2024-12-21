@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // Custom exception class for PowerShell execution errors
     public sealed class PowerShellExecutionException : Exception
     {
@@ -17,4 +17,3 @@ namespace HardenWindowsSecurity
         {
         }
     }
-}

@@ -1,7 +1,7 @@
 using System.Security.Principal;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class UserPrivCheck
     {
         // Method to check if the user has Administrator privileges
@@ -12,4 +12,3 @@ namespace HardenWindowsSecurity
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
-}

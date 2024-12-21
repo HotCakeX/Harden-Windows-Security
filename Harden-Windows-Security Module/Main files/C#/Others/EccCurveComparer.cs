@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class EccCurveComparer
     {
         /// <summary>
@@ -67,4 +67,3 @@ namespace HardenWindowsSecurity
             return currentEccCurvesToOutput;
         }
     }
-}

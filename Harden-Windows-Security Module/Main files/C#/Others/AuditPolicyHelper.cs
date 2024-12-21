@@ -3,8 +3,8 @@ using System;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// This class is responsible for querying effective Audit policy information on the system.
     /// It uses registry instead of using cmdlets such as: (auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting'
@@ -398,4 +398,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

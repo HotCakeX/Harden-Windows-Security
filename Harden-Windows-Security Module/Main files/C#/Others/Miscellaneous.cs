@@ -5,8 +5,8 @@ using System.Linq;
 using System.Management;
 using System.Management.Automation;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class Miscellaneous
     {
         // Clean up the working directory at the end of each cmdlet
@@ -122,4 +122,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

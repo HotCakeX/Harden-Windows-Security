@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class EdgeBrowserConfigurations
     {
         /// <summary>
@@ -31,4 +31,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

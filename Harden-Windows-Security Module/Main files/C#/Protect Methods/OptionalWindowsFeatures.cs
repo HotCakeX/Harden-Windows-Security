@@ -1,8 +1,8 @@
 using System;
 using System.Reflection;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class OptionalWindowsFeatures
     {
         // Declare the _FeaturesCheckResults as a private static field
@@ -132,4 +132,3 @@ Remove-WindowsCapability -Online
             RemoveCapability("Browser.InternetExplorer", "Internet Explorer Mode for Edge");
         }
     }
-}

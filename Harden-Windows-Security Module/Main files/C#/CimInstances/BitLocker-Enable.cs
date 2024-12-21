@@ -5,8 +5,8 @@ using System.Linq;
 using System.Management;
 using System.Windows;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal partial class BitLocker
     {
 
@@ -699,5 +699,3 @@ namespace HardenWindowsSecurity
         }
 
     }
-
-}

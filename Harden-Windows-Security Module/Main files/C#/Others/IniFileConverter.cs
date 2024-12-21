@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class IniFileConverter
     {
         /// <summary>
@@ -53,4 +53,3 @@ namespace HardenWindowsSecurity
             return iniObject;
         }
     }
-}

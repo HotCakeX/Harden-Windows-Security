@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GUILogs
     {
         internal static UserControl? View;
@@ -17,4 +17,3 @@ namespace HardenWindowsSecurity
         // without this initial assignment, switching to Logs page wouldn't have auto-scrolling capability until the toggle button is set to off and on again.
         internal static bool AutoScroll = true;
     }
-}

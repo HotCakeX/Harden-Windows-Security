@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class HResultHelper
     {
         /// <summary>
@@ -37,4 +37,3 @@ namespace HardenWindowsSecurity
             BitLocker.HasErrorsOccurred = true;
         }
     }
-}

@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Threading;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // Log type used when calling the LogMessage method
     public enum LogTypeIntel
     {
@@ -257,4 +257,3 @@ Machine: {Environment.MachineName}
 
         }
     }
-}

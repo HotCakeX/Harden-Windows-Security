@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal partial class BitLocker
     {
         /// <summary>
@@ -121,4 +121,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

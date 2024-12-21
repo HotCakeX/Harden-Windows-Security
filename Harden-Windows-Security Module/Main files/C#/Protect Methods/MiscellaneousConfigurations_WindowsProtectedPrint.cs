@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MiscellaneousConfigurations
     {
         /// <summary>
@@ -22,4 +22,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

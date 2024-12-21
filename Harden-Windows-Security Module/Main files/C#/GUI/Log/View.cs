@@ -7,8 +7,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public partial class GUIMain
     {
 
@@ -129,4 +129,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

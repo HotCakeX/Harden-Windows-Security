@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // Registry keys are case-insensitive
     // https://learn.microsoft.com/en-us/windows/win32/sysinfo/structure-of-the-registry
     public static class CategoryProcessing
@@ -434,4 +434,3 @@ namespace HardenWindowsSecurity
         }
 
     }
-}

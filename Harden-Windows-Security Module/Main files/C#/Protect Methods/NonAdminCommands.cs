@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class NonAdminCommands
     {
         /// <summary>
@@ -30,4 +30,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

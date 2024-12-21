@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public partial class ConfirmSystemComplianceMethods
     {
         /// <summary>
@@ -40,4 +40,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

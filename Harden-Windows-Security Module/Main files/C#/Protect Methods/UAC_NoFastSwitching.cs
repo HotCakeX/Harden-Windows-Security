@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class UserAccountControl
     {
         /// <summary>
@@ -19,4 +19,3 @@ namespace HardenWindowsSecurity
             LGPORunner.RunLGPOCommand(System.IO.Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "User Account Control UAC Policies", "Hides the entry points for Fast User Switching", "registry.pol"), LGPORunner.FileType.POL);
         }
     }
-}

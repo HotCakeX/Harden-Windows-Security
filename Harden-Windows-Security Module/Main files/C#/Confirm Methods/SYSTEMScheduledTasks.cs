@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class SYSTEMScheduledTasks
     {
         internal static void Invoke()
@@ -22,4 +22,3 @@ namespace HardenWindowsSecurity
             _ = PowerShellExecutor.ExecuteScript(script);
         }
     }
-}

@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MicrosoftDefender
     {
         /// <summary>
@@ -23,4 +23,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

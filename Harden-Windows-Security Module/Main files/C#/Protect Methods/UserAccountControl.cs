@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class UserAccountControl
     {
         /// <summary>
@@ -22,4 +22,3 @@ namespace HardenWindowsSecurity
             LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "User Account Control UAC Policies", "GptTmpl.inf"), LGPORunner.FileType.INF);
         }
     }
-}

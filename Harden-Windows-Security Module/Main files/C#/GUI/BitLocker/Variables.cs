@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using static HardenWindowsSecurity.BitLocker;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GUIBitLocker
     {
         internal static UserControl? View;
@@ -160,4 +160,3 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
 
         }
     }
-}

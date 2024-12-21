@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// This class is responsible for tracking the activity status of the application and managing the
     /// enabled/disabled state of registered UI elements based on this status. It is thread-safe to ensure
@@ -132,4 +132,3 @@ namespace HardenWindowsSecurity
             });
         }
     }
-}

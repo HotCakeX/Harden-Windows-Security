@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class ProcessStarter
     {
         /// <summary>
@@ -57,4 +57,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

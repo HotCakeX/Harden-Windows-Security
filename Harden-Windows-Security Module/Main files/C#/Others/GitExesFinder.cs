@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class GitExesFinder
     {
         // This method searches for .exe files in the specified path for Standalone Git program and returns a list of FileInfo objects
@@ -43,4 +43,3 @@ namespace HardenWindowsSecurity
             return fileList;
         }
     }
-}

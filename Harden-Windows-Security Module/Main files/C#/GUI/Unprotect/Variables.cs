@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GUIUnprotect
     {
         internal static UserControl? View;
@@ -12,4 +12,3 @@ namespace HardenWindowsSecurity
 
         internal static byte AppControlPoliciesComboBoxSelection;
     }
-}

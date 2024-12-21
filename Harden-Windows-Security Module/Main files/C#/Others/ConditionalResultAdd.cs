@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class ConditionalResultAdd
     {
         /// <summary>
@@ -49,4 +49,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

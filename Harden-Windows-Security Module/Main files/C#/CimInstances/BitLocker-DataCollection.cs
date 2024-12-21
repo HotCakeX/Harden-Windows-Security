@@ -12,8 +12,8 @@ using System.Management;
 /// $output
 /// $output.KeyProtector
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
 
     internal partial class BitLocker
     {
@@ -485,4 +485,3 @@ namespace HardenWindowsSecurity
             return volumes;
         }
     }
-}

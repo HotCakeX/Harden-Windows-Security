@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // Represents a record in the security policy
     public sealed class SecurityPolicyRecord
     {
@@ -105,4 +105,3 @@ namespace HardenWindowsSecurity
             return [.. fields];
         }
     }
-}

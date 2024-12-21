@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class HardeningRegistryKeys
     {
         // Define a public class to store the structure of the new CSV data
@@ -74,4 +74,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

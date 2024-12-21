@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GUIExclusions
     {
         internal static UserControl? View;
@@ -16,4 +16,3 @@ namespace HardenWindowsSecurity
         internal static bool ControlledFolderAccessToggleButtonStatus;
         internal static bool AttackSurfaceReductionRulesToggleButtonStatus;
     }
-}

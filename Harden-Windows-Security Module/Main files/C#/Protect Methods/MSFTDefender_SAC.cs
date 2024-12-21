@@ -1,5 +1,5 @@
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MicrosoftDefender
     {
         /// <summary>
@@ -15,4 +15,3 @@ namespace HardenWindowsSecurity
             GlobalVars.ShouldEnableOptionalDiagnosticData = true;
         }
     }
-}

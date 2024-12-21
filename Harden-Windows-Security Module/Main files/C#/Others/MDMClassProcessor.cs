@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal partial class MDMClassProcessor
     {
         /// <summary>
@@ -52,4 +52,3 @@ namespace HardenWindowsSecurity
             return resultsList;
         }
     }
-}

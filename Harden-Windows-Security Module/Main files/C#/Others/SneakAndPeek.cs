@@ -3,8 +3,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class SneakAndPeek
     {
         /// <summary>
@@ -29,4 +29,3 @@ namespace HardenWindowsSecurity
             return content.Count > 0;
         }
     }
-}

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class MitigationPolicyProcessor
     {
         // This method processes the exploit mitigation policies of the current system and returns a dictionary of the mitigations applied to each executable
@@ -131,4 +131,3 @@ namespace HardenWindowsSecurity
             return revisedProcessMitigations;
         }
     }
-}

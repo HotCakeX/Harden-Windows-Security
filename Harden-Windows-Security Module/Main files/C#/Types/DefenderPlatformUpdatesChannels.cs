@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// Microsoft Defender Update channel names for Platform and Engine
     /// </summary>
@@ -17,4 +17,3 @@ namespace HardenWindowsSecurity
             { 6, "Delayed" }
     };
     }
-}

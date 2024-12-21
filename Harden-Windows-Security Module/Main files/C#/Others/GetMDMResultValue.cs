@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GetMDMResultValue
     {
         /// <summary>
@@ -41,4 +41,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

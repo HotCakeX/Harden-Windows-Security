@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Security.Principal;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
 
     internal sealed class CurrentUserIdentityResult
     {
@@ -63,4 +63,3 @@ namespace HardenWindowsSecurity
             };
         }
     }
-}

@@ -1,5 +1,5 @@
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class ChangePSConsoleTitle
     {
         /// <summary>
@@ -19,4 +19,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

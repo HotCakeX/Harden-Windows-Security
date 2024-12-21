@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class WindowsNetworking
     {
         /// <summary>
@@ -38,4 +38,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class GUIProtectWinSecurity
     {
         // During offline mode, this is the path that the button for MicrosoftSecurityBaselineZipPath assigns
@@ -110,5 +110,4 @@ namespace HardenWindowsSecurity
         };
 
     }
-}
 

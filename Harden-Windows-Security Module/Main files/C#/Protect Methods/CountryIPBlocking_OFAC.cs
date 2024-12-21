@@ -1,7 +1,7 @@
 using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class CountryIPBlocking
     {
         /// <summary>
@@ -18,4 +18,3 @@ namespace HardenWindowsSecurity
               );
         }
     }
-}

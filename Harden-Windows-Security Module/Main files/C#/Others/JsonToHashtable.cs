@@ -2,8 +2,8 @@ using System.Collections;
 using System.IO;
 using System.Text.Json;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class JsonToHashTable
     {
         // Using HashTable since they don't throw error for non-existing keys
@@ -106,4 +106,3 @@ namespace HardenWindowsSecurity
             return arrayList;
         }
     }
-}

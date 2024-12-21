@@ -4,8 +4,8 @@ using System.Dynamic;
 using System.Linq;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class ConfigDefenderHelper
     {
         // Get the MpComputerStatus from the MSFT_MpComputerStatus WMI class and returns it as a dynamic object
@@ -164,4 +164,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

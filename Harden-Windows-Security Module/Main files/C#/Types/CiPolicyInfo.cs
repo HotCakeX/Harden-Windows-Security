@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// Class to represent a policy with various attributes
     /// </summary>
@@ -20,4 +20,3 @@ namespace HardenWindowsSecurity
         public bool IsAuthorized { get; set; }          // Indicates if the policy is authorized
         public List<string>? PolicyOptions { get; set; }// List of options or settings related to the policy
     }
-}

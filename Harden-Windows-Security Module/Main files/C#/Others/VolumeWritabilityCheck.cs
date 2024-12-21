@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static partial class VolumeWritabilityCheck
     {
         /// <summary>
@@ -67,4 +67,3 @@ namespace HardenWindowsSecurity
             return availableWritableVolumes;
         }
     }
-}

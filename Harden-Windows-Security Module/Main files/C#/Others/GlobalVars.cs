@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management.Automation.Host;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class GlobalVars
     {
         // Minimum required OS build number
@@ -131,4 +131,3 @@ namespace HardenWindowsSecurity
         internal readonly static string? userFullName = _identity.userFullName;
 
     }
-}

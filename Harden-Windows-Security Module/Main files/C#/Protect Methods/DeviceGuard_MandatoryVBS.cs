@@ -1,7 +1,7 @@
 ﻿using System;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public partial class DeviceGuard
     {
 
@@ -31,4 +31,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

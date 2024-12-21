@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Management.Automation;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class PowerShellExecutor
     {
         /// <summary>
@@ -124,4 +124,3 @@ namespace HardenWindowsSecurity
             return null;
         }
     }
-}

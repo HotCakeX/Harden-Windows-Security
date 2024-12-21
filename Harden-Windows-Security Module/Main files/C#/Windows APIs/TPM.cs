@@ -4,8 +4,8 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// Class that contains the results of TPM status checks
     /// </summary>
@@ -151,4 +151,3 @@ namespace HardenWindowsSecurity
             return result;
         }
     }
-}

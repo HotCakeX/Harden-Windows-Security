@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class GitHubDesktopFinder
     {
         // This method searches for .exe files in the specified path and returns a list of FileInfo objects
@@ -47,4 +47,3 @@ namespace HardenWindowsSecurity
             return fileList;
         }
     }
-}

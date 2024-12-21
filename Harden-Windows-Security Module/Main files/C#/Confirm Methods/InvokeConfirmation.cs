@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class InvokeConfirmation
     {
         /// <summary>
@@ -71,4 +71,3 @@ namespace HardenWindowsSecurity
 
         }
     }
-}

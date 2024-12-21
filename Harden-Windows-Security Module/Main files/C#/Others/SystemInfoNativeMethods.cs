@@ -1,8 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
     /// can be used to find out if the DMA Protection is ON \ OFF.
@@ -47,4 +47,3 @@ namespace HardenWindowsSecurity
             return 0;
         }
     }
-}

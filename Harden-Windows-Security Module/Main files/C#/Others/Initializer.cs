@@ -3,8 +3,8 @@ using System;
 using System.Globalization;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
     public static class Initializer
     {
@@ -124,4 +124,3 @@ namespace HardenWindowsSecurity
         }
 
     }
-}

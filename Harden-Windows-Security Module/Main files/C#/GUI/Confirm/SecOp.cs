@@ -4,8 +4,8 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
 
     // Define the SecOp class, representing an individual security option in the data grid
     public class SecOp : INotifyPropertyChanged
@@ -88,4 +88,3 @@ namespace HardenWindowsSecurity
             return new BitmapImage(new Uri(imagePath, UriKind.Absolute));
         }
     }
-}

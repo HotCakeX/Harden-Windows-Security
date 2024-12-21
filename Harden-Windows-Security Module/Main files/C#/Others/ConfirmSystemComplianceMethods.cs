@@ -10,8 +10,8 @@ using System.Management;
 using System.Management.Automation;
 using System.Threading.Tasks;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class ConfirmSystemComplianceMethods
     {
 
@@ -2386,4 +2386,3 @@ namespace HardenWindowsSecurity
             });
         }
     }
-}

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class AttackSurfaceReductionIntel
     {
         // A dictionary to store the ASR rule IDs and their descriptions
@@ -83,4 +83,3 @@ namespace HardenWindowsSecurity
         };
 
     }
-}

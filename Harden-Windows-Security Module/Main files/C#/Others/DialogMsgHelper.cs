@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class DialogMsgHelper
     {
 
@@ -71,4 +71,3 @@ namespace HardenWindowsSecurity
             thread.Start();
         }
     }
-}

@@ -1,8 +1,8 @@
 using System.DirectoryServices.AccountManagement;
 using System.Security.Principal;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class LocalGroupMember
     {
         internal static void Add(string userSid, string groupSid)
@@ -55,4 +55,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     /// <summary>
     /// Class to handle Controlled Folder Access allowed applications
     /// Mostly for adding some system executables or Pwh.exe to the list during the module's operation
@@ -176,4 +176,3 @@ namespace HardenWindowsSecurity
             GlobalVars.CFABackup = null;
         }
     }
-}

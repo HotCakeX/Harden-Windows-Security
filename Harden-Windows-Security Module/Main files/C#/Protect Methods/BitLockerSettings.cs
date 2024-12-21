@@ -3,8 +3,8 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class BitLockerSettings
     {
         /// <summary>
@@ -79,4 +79,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

@@ -1,8 +1,8 @@
 using System;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static partial class MicrosoftDefender
     {
         /// <summary>
@@ -248,4 +248,3 @@ else {
 
         }
     }
-}

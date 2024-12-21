@@ -4,8 +4,8 @@ using System.DirectoryServices.AccountManagement;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     // Class to represent a local user account
     internal sealed class LocalUser
     {
@@ -123,4 +123,3 @@ namespace HardenWindowsSecurity
             return groupSIDs;
         }
     }
-}

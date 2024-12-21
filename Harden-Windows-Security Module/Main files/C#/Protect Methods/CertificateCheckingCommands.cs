@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class CertificateCheckingCommands
     {
         /// <summary>
@@ -97,4 +97,3 @@ namespace HardenWindowsSecurity
             }
         }
     }
-}

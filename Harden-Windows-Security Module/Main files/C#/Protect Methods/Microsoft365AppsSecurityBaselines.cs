@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class Microsoft365AppsSecurityBaselines
     {
         /// <summary>
@@ -39,4 +39,3 @@ Set-Location -Path "{scriptDirectory}"; .\Baseline-LocalInstall.ps1 4>&1
 
         }
     }
-}

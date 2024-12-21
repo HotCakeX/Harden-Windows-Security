@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     internal static class PropertyHelper
     {
         /// <summary>
@@ -38,4 +38,3 @@ namespace HardenWindowsSecurity
             return null;
         }
     }
-}

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
 
-namespace HardenWindowsSecurity
-{
+namespace HardenWindowsSecurity;
+
     public static class WindowsFeatureChecker
     {
         public sealed class FeatureStatus
@@ -206,4 +206,3 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
             _ = RunDismCommand(arguments);
         }
     }
-}

@@ -29,12 +29,6 @@ Function New-SupplementalWDACConfig {
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
-
-        if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
-            Invoke-MockConfigCIBootstrap
-            [WDACConfig.GlobalVars]::ConfigCIBootstrap = $true
-        }
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-SupplementalWDACConfig')
 

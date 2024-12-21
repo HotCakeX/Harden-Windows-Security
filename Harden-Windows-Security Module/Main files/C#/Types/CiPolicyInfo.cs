@@ -18,5 +18,5 @@ public sealed class CiPolicyInfo
 	public bool IsOnDisk { get; set; }              // Indicates if the policy is present on disk
 	public bool IsEnforced { get; set; }            // Indicates if the policy is enforced
 	public bool IsAuthorized { get; set; }          // Indicates if the policy is authorized
-	public List<string>? PolicyOptions { get; set; }// List of options or settings related to the policy
+	internal List<string>? PolicyOptions { get; set; }// List of options or settings related to the policy
 }

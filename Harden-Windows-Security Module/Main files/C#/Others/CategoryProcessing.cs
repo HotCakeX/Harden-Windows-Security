@@ -152,7 +152,7 @@ public static class CategoryProcessing
 
 	// method to process a category based on the CSV data
 	// The method used to verify the hardening category, which can be 'Group Policy' or 'Registry Keys'
-	public static List<IndividualResult> ProcessCategory(ComplianceCategories catName, string method)
+	internal static List<IndividualResult> ProcessCategory(ComplianceCategories catName, string method)
 	{
 		// Create a list to store the results
 		List<IndividualResult> output = [];

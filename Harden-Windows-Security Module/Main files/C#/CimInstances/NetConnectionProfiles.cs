@@ -5,14 +5,14 @@ using System.Management;
 
 namespace HardenWindowsSecurity;
 
-public static class NetConnectionProfiles
+internal static class NetConnectionProfiles
 {
 	/// <summary>
 	/// This method outputs a list of all network connection profiles.
 	/// The output is precisely the same as the output of the Get-NetConnectionProfile cmdlet in PowerShell.
 	/// </summary>
 	/// <returns></returns>
-	public static List<ManagementObject> Get()
+	internal static List<ManagementObject> Get()
 	{
 		// Create a list to store the profiles
 		List<ManagementObject> profiles = [];
@@ -60,7 +60,7 @@ public static class NetConnectionProfiles
 	/// PS Example: [HardenWindowsSecurity.NetConnectionProfiles]::Set((3, 22), $null, [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::public)
 	/// PS Example: [HardenWindowsSecurity.NetConnectionProfiles]::Set($null, ('Ethernet', 'Wi-Fi'), [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::private)
 	/// <returns>True if successful, otherwise false.</returns>
-	public static bool Set(NetworkCategory networkCategory, int[]? interfaceIndices = null, string[]? interfaceAliases = null)
+	internal static bool Set(NetworkCategory networkCategory, int[]? interfaceIndices = null, string[]? interfaceAliases = null)
 	{
 		try
 		{
@@ -115,21 +115,21 @@ public static class NetConnectionProfiles
 	}
 
 	// The following enums are used to represent the properties of the MSFT_NetConnectionProfile class
-	public enum NetworkCategory : uint
+	internal enum NetworkCategory : uint
 	{
 		Public = 0,
 		Private = 1,
 		DomainAuthenticated = 2
 	}
 
-	public enum DomainAuthenticationKind : uint
+	internal enum DomainAuthenticationKind : uint
 	{
 		None = 0,
 		Ldap = 1,
 		Tls = 2
 	}
 
-	public enum IPv4Connectivity : uint
+	internal enum IPv4Connectivity : uint
 	{
 		Disconnected = 0,
 		NoTraffic = 1,
@@ -138,7 +138,7 @@ public static class NetConnectionProfiles
 		Internet = 4
 	}
 
-	public enum IPv6Connectivity : uint
+	internal enum IPv6Connectivity : uint
 	{
 		Disconnected = 0,
 		NoTraffic = 1,

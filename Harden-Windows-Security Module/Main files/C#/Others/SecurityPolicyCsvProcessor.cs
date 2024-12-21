@@ -6,20 +6,20 @@ using System.Text;
 namespace HardenWindowsSecurity;
 
 // Represents a record in the security policy
-public sealed class SecurityPolicyRecord
+internal sealed class SecurityPolicyRecord
 {
-	public required ComplianceCategories Category { get; set; }
-	public string? Section { get; set; }
-	public string? Path { get; set; }
-	public string? Value { get; set; }
-	public string? Name { get; set; }
+	internal required ComplianceCategories Category { get; set; }
+	internal string? Section { get; set; }
+	internal string? Path { get; set; }
+	internal string? Value { get; set; }
+	internal string? Name { get; set; }
 }
 
 // Processes the CSV file "SecurityPoliciesVerification.csv" containing security policy records
-public static class SecurityPolicyCsvProcessor
+internal static class SecurityPolicyCsvProcessor
 {
 	// Reads and processes the CSV file, returning a list of SecurityPolicyRecord objects
-	public static List<SecurityPolicyRecord> ProcessSecurityPolicyCsvFile(string csvFilePath)
+	internal static List<SecurityPolicyRecord> ProcessSecurityPolicyCsvFile(string csvFilePath)
 	{
 		List<SecurityPolicyRecord> securityPolicyRecordsOutput = [];
 

@@ -14,9 +14,13 @@ name: "CodeQL Advanced - Security"
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+    paths:
+      - "**.cs"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+    paths:
+      - "**.cs"
 
 jobs:
   analyze:

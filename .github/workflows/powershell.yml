@@ -11,9 +11,18 @@ name: PSScriptAnalyzer
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+    paths:
+      - "**.ps1"
+      - "**.psm1"
+      - "**.psd1"
+    
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+    paths:
+      - "**.ps1"
+      - "**.psm1"
+      - "**.psd1"
 
 permissions:
   contents: read

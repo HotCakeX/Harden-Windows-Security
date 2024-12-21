@@ -27,6 +27,14 @@ internal static class FileUtility
 	};
 
 
+	// The Default App Control supported extensions, case-insensitive
+	private static readonly HashSet<string> appControlExtensions = new(StringComparer.OrdinalIgnoreCase)
+		{
+			".sys", ".exe", ".com", ".dll", ".rll", ".ocx", ".msp", ".mst", ".msi",
+			".js", ".vbs", ".ps1", ".appx", ".bin", ".bat", ".hxs", ".mui", ".lex", ".mof"
+		};
+
+
 	/// <summary>
 	/// Custom HashSet comparer to compare two FileInfo objects based on their FullName (full path of file)
 	/// </summary>
@@ -62,23 +70,20 @@ internal static class FileUtility
 		FileInfo[]? files,
 		string[]? extensionsToFilterBy)
 	{
-		// Create a Stopwatch instance
-		Stopwatch stopwatch = new();
+		// Create a Stopwatch instance and start measuring time
+		Stopwatch stopwatch = Stopwatch.StartNew();
 
-		// Start measuring time
-		stopwatch.Start();
-
-		// Use the Default App Control supported extensions and make them case-insensitive
-		HashSet<string> extensions = new(StringComparer.OrdinalIgnoreCase)
-		{
-			".sys", ".exe", ".com", ".dll", ".rll", ".ocx", ".msp", ".mst", ".msi",
-			".js", ".vbs", ".ps1", ".appx", ".bin", ".bat", ".hxs", ".mui", ".lex", ".mof"
-		};
+		// A HashSet used to store extensions to filter files
+		HashSet<string> extensions = new(StringComparer.OrdinalIgnoreCase);
 
 		// If custom extensions are provided, use them and make them case-insensitive
 		if (extensionsToFilterBy is { Length: > 0 })
 		{
 			extensions = new HashSet<string>(extensionsToFilterBy, StringComparer.OrdinalIgnoreCase);
+		}
+		else
+		{
+			extensions = appControlExtensions;
 		}
 
 		// Define a HashSet to store the final output
@@ -92,6 +97,9 @@ internal static class FileUtility
 		// To store all of the tasks
 		List<Task> tasks = [];
 
+
+		#region Directories
+
 		// Process directories if provided
 		if (directories is { Length: > 0 })
 		{
@@ -101,28 +109,51 @@ internal static class FileUtility
 				tasks.Add(Task.Run(() =>
 				{
 					IEnumerator<FileInfo> enumerator = directory.EnumerateFiles("*", options2).GetEnumerator();
-					while (true)
-					{
-						try
-						{
-							// Move to the next file
-							if (!enumerator.MoveNext())
-							{
-								// If we reach the end of the enumeration, we break out of the loop
-								break;
-							}
 
-							// Check if the file extension is in the Extensions HashSet or Wildcard was used
-							if (extensions.Contains(enumerator.Current.Extension) || extensions.Contains("*"))
+					// If there is wildcard in extensions to filter by, then add all files without performing extension check
+					if (extensions.Contains("*"))
+					{
+						while (true)
+						{
+							try
 							{
+								// Move to the next file
+								// The reason we use MoveNext() instead of foreach loop is that protected/inaccessible files
+								// Would throw errors and this way we can catch them and move to the next file without terminating the entire loop
+								if (!enumerator.MoveNext())
+								{
+									// If we reach the end of the enumeration, we break out of the loop
+									break;
+								}
 								bc.Add(enumerator.Current);
 							}
+							catch { }
 						}
-						catch { }
 					}
+					// Filter files by extensions if there is no wildcard character for filtering
+					else
+					{
+						while (true)
+						{
+							try
+							{
+								// Move to the next file
+								if (!enumerator.MoveNext())
+								{
+									// If we reach the end of the enumeration, we break out of the loop
+									break;
+								}
 
+								// Check if the file extension is in the Extensions HashSet or Wildcard was used
+								if (extensions.Contains(enumerator.Current.Extension))
+								{
+									bc.Add(enumerator.Current);
+								}
+							}
+							catch { }
+						}
+					}
 				}));
-
 
 
 				// Check for immediate sub-directories and process them if present
@@ -136,24 +167,45 @@ internal static class FileUtility
 						tasks.Add(Task.Run(() =>
 						{
 							IEnumerator<FileInfo> subEnumerator = subDirectory.EnumerateFiles("*", options).GetEnumerator();
-							while (true)
-							{
-								try
-								{
-									// Move to the next file
-									if (!subEnumerator.MoveNext())
-									{
-										// If we reach the end of the enumeration, we break out of the loop
-										break;
-									}
 
-									// Check if the file extension is in the Extensions HashSet or Wildcard was used
-									if (extensions.Contains(subEnumerator.Current.Extension) || extensions.Contains("*"))
+							if (extensions.Contains("*"))
+							{
+								while (true)
+								{
+									try
 									{
+										// Move to the next file
+										if (!subEnumerator.MoveNext())
+										{
+											// If we reach the end of the enumeration, we break out of the loop
+											break;
+										}
 										bc.Add(subEnumerator.Current);
 									}
+									catch { }
 								}
-								catch { }
+							}
+							else
+							{
+								while (true)
+								{
+									try
+									{
+										// Move to the next file
+										if (!subEnumerator.MoveNext())
+										{
+											// If we reach the end of the enumeration, we break out of the loop
+											break;
+										}
+
+										// Check if the file extension is in the Extensions HashSet or Wildcard was used
+										if (extensions.Contains(subEnumerator.Current.Extension))
+										{
+											bc.Add(subEnumerator.Current);
+										}
+									}
+									catch { }
+								}
 							}
 						}));
 					}
@@ -162,17 +214,37 @@ internal static class FileUtility
 			}
 		}
 
+		#endregion
+
+
+		#region Files
+
 		// If files are provided, process them
 		if (files is { Length: > 0 })
 		{
-			foreach (FileInfo file in files)
+			// If user provided wildcard then add all files without checking their extensions
+			if (extensions.Contains("*"))
 			{
-				if (extensions.Contains(file.Extension))
+				foreach (FileInfo file in files)
 				{
 					bc.Add(file);
 				}
 			}
+			// If user provided no extensions to filter by or provided extensions that are not wildcard
+			else
+			{
+				foreach (FileInfo file in files)
+				{
+					if (extensions.Contains(file.Extension))
+					{
+						bc.Add(file);
+					}
+				}
+			}
 		}
+
+		#endregion
+
 
 		// Wait for all tasks to be completed
 		Task.WaitAll(tasks);

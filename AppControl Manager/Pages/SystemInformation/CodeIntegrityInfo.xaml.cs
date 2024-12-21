@@ -21,8 +21,8 @@ public sealed partial class CodeIntegrityInfo : Page
 	/// <returns></returns>
 	private static string? GetPolicyStatus(uint? status) => status switch
 	{
+		0 => "Disabled/Not Running",
 		1 => "Audit Mode",
-		1 => "Audit mode",
 		2 => "Enforced Mode",
 		_ => null
 	};

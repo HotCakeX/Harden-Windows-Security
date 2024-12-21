@@ -28,3 +28,10 @@ updates:
       - "HotCakeX"
     labels:
       - "Nuget Dependencies"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # Check for updates to GitHub Actions every week: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
+      interval: "weekly"
+    reviewers:
+      - "HotCakeX"

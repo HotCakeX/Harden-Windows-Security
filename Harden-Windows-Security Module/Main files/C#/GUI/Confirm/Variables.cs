@@ -1,11 +1,10 @@
 ﻿using System.Windows.Controls;
 
-namespace HardenWindowsSecurity
-{
-    public static class GUIConfirmSystemCompliance
-    {
-        internal static DataGrid? SecOpsDataGrid;
+namespace HardenWindowsSecurity;
 
-        internal static UserControl? View;
-    }
+public static class GUIConfirmSystemCompliance
+{
+	internal static DataGrid? SecOpsDataGrid;
+
+	internal static UserControl? View;
 }

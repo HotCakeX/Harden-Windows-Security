@@ -1,20 +1,19 @@
 using System;
 
-namespace HardenWindowsSecurity
+namespace HardenWindowsSecurity;
+
+// Custom exception class for PowerShell execution errors
+public sealed class PowerShellExecutionException : Exception
 {
-    // Custom exception class for PowerShell execution errors
-    public sealed class PowerShellExecutionException : Exception
-    {
-        public PowerShellExecutionException(string message) : base(message)
-        {
-        }
+	public PowerShellExecutionException(string message) : base(message)
+	{
+	}
 
-        public PowerShellExecutionException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+	public PowerShellExecutionException(string message, Exception innerException) : base(message, innerException)
+	{
+	}
 
-        public PowerShellExecutionException()
-        {
-        }
-    }
+	public PowerShellExecutionException()
+	{
+	}
 }

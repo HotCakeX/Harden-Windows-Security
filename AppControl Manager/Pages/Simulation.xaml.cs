@@ -169,7 +169,7 @@ public sealed partial class Simulation : Page
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is not null && selectedFiles.Count != 0)
+		if (selectedFiles is { Count: > 0 })
 		{
 			filePaths = [.. selectedFiles];
 		}
@@ -193,7 +193,7 @@ public sealed partial class Simulation : Page
 	{
 		List<string>? selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedCatRoots is not null && selectedCatRoots.Count > 0)
+		if (selectedCatRoots is { Count: > 0 })
 		{
 			catRootPaths = selectedCatRoots;
 		}

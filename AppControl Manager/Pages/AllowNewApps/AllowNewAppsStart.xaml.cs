@@ -672,7 +672,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders is not null && selectedFolders.Count > 0)
+		if (selectedFolders is { Count: > 0 })
 		{
 			// Add each folder to the HashSet of the selected directories
 			foreach (string folder in selectedFolders)

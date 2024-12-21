@@ -36,7 +36,7 @@ internal static class CiPolicyHandler
 		// Check if SupplementalPolicySigners exists and has child nodes
 		XmlNodeList? supplementalPolicySignersNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:SupplementalPolicySigners", codeIntegrityPolicy.NamespaceManager);
 
-		if (supplementalPolicySignersNodes is not null && supplementalPolicySignersNodes.Count > 0)
+		if (supplementalPolicySignersNodes is { Count: > 0 })
 		{
 			Logger.Write("Removing the SupplementalPolicySigners blocks and corresponding Signers");
 

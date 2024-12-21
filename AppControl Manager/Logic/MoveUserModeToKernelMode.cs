@@ -24,7 +24,7 @@ public static class MoveUserModeToKernelMode
 		XmlNode? allowedSigners12 = codeIntegrityPolicy.UMCI_SigningScenarioNode?.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
 
 		// If AllowedSigners node exists in SigningScenario 12 and has child nodes
-		if (allowedSigners12 is not null && allowedSigners12.HasChildNodes)
+		if (allowedSigners12 is { HasChildNodes: true })
 		{
 			// Loop through each child node of AllowedSigners in SigningScenario 12
 			foreach (XmlNode allowedSignerNode in allowedSigners12.ChildNodes)

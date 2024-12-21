@@ -155,7 +155,7 @@ internal static partial class Merger
 		};
 
 		// Add miscellaneous settings to the User Mode Signing Scenario from the Main XML
-		if (mainXMLUserModeSigningScenario is not null && mainXMLUserModeSigningScenario.MinimumHashAlgorithmSpecified)
+		if (mainXMLUserModeSigningScenario is { MinimumHashAlgorithmSpecified: true })
 		{
 			UMCISigningScenario.MinimumHashAlgorithmSpecified = true;
 			UMCISigningScenario.MinimumHashAlgorithm = mainXMLUserModeSigningScenario.MinimumHashAlgorithm;
@@ -191,7 +191,7 @@ internal static partial class Merger
 
 
 		// Add miscellaneous settings to the Kernel Mode Signing Scenario from the Main XML
-		if (mainXMLKernelModeSigningScenario is not null && mainXMLKernelModeSigningScenario.MinimumHashAlgorithmSpecified)
+		if (mainXMLKernelModeSigningScenario is { MinimumHashAlgorithmSpecified: true })
 		{
 			KMCISigningScenario.MinimumHashAlgorithmSpecified = true;
 			KMCISigningScenario.MinimumHashAlgorithm = mainXMLKernelModeSigningScenario.MinimumHashAlgorithm;

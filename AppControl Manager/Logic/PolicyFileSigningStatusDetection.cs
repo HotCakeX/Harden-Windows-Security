@@ -28,7 +28,7 @@ internal static class PolicyFileSigningStatusDetection
 		// Check if SupplementalPolicySigners exists and has child nodes
 		XmlNodeList? supplementalPolicySignersNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:SupplementalPolicySigners/ns:SupplementalPolicySigner", codeIntegrityPolicy.NamespaceManager);
 
-		if (supplementalPolicySignersNodes is not null && supplementalPolicySignersNodes.Count > 0)
+		if (supplementalPolicySignersNodes is { Count: > 0 })
 		{
 			// Get unique SignerIds from SupplementalPolicySigners
 			foreach (XmlElement node in supplementalPolicySignersNodes)
@@ -40,7 +40,7 @@ internal static class PolicyFileSigningStatusDetection
 		// Check if UpdatePolicySigners exists and has child nodes
 		XmlNodeList? updatePolicySignersNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:UpdatePolicySigners/ns:UpdatePolicySigner", codeIntegrityPolicy.NamespaceManager);
 
-		if (updatePolicySignersNodes is not null && updatePolicySignersNodes.Count > 0)
+		if (updatePolicySignersNodes is { Count: > 0 })
 		{
 			// Get unique SignerIds from UpdatePolicySigners
 			foreach (XmlElement node in updatePolicySignersNodes)

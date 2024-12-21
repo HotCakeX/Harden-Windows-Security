@@ -61,7 +61,7 @@ public sealed partial class GitHubDocumentation : Page
 		{
 
 			// Check if the WebView2 control or its CoreWebView2 instance is disposed
-			if (GitHubDocumentationWebView2 is not null && GitHubDocumentationWebView2.CoreWebView2 is not null)
+			if (GitHubDocumentationWebView2 is { CoreWebView2: not null })
 			{
 				BackButton.IsEnabled = GitHubDocumentationWebView2.CanGoBack;
 				ForwardButton.IsEnabled = GitHubDocumentationWebView2.CanGoForward;

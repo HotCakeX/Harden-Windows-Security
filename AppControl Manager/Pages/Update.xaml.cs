@@ -87,7 +87,7 @@ public sealed partial class Update : Page
 			}
 
 			// If a new version is available or user supplied a custom MSIX path to be installed
-			if ((updateCheckResult is not null && updateCheckResult.IsNewVersionAvailable) || useCustomMSIXPath)
+			if ((updateCheckResult is { IsNewVersionAvailable: true }) || useCustomMSIXPath)
 			{
 				string msg1;
 

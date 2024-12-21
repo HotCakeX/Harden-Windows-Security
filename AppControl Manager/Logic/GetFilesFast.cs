@@ -76,7 +76,7 @@ internal static class FileUtility
 		};
 
 		// If custom extensions are provided, use them and make them case-insensitive
-		if (extensionsToFilterBy is not null && extensionsToFilterBy.Length > 0)
+		if (extensionsToFilterBy is { Length: > 0 })
 		{
 			extensions = new HashSet<string>(extensionsToFilterBy, StringComparer.OrdinalIgnoreCase);
 		}
@@ -93,7 +93,7 @@ internal static class FileUtility
 		List<Task> tasks = [];
 
 		// Process directories if provided
-		if (directories is not null && directories.Length > 0)
+		if (directories is { Length: > 0 })
 		{
 			foreach (DirectoryInfo directory in directories)
 			{
@@ -163,7 +163,7 @@ internal static class FileUtility
 		}
 
 		// If files are provided, process them
-		if (files is not null && files.Length > 0)
+		if (files is { Length: > 0 })
 		{
 			foreach (FileInfo file in files)
 			{

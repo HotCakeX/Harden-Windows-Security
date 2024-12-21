@@ -2,9 +2,9 @@
 
 namespace HardenWindowsSecurity;
 
-    public static class GUIConfirmSystemCompliance
-    {
-        internal static DataGrid? SecOpsDataGrid;
+public static class GUIConfirmSystemCompliance
+{
+	internal static DataGrid? SecOpsDataGrid;
 
-        internal static UserControl? View;
-    }
+	internal static UserControl? View;
+}

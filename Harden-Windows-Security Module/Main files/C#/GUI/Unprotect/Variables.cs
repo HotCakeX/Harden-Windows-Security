@@ -2,13 +2,13 @@
 
 namespace HardenWindowsSecurity;
 
-    public static class GUIUnprotect
-    {
-        internal static UserControl? View;
+public static class GUIUnprotect
+{
+	internal static UserControl? View;
 
-        internal static Grid? ParentGrid;
+	internal static Grid? ParentGrid;
 
-        internal static byte UnprotectCategoriesComboBoxSelection;
+	internal static byte UnprotectCategoriesComboBoxSelection;
 
-        internal static byte AppControlPoliciesComboBoxSelection;
-    }
+	internal static byte AppControlPoliciesComboBoxSelection;
+}

@@ -1,251 +1,251 @@
-using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.IO;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace HardenWindowsSecurity;
 
-    public static class ToastNotification
-    {
+public static class ToastNotification
+{
 
-        // These are the different type of notification types/presets that can be displayed
-        public enum Type
-        {
-            EndOfProtection,
-            EndOfConfirmation,
-            EndOfASRRules,
-            EndOfUnprotection,
-            EndOfExclusions,
-            EndOfBitLocker
-        }
+	// These are the different type of notification types/presets that can be displayed
+	public enum Type
+	{
+		EndOfProtection,
+		EndOfConfirmation,
+		EndOfASRRules,
+		EndOfUnprotection,
+		EndOfExclusions,
+		EndOfBitLocker
+	}
 
-        /// <summary>
-        /// Displays modern toast notification on Windows
-        /// The caller must check for GlobalVars.UseNewNotificationsExp and if it's true then use this method
-        /// So that it will only display the notifications if the required DLLs have been loaded in the PowerShell session via Add-Type
-        /// That is different than the DLLs being made available to the Add-Type during C# code compilation
-        /// </summary>
-        /// <param name="Type">The type of the toast notification to use</param>
-        public static void Show(Type Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
-        {
+	/// <summary>
+	/// Displays modern toast notification on Windows
+	/// The caller must check for GlobalVars.UseNewNotificationsExp and if it's true then use this method
+	/// So that it will only display the notifications if the required DLLs have been loaded in the PowerShell session via Add-Type
+	/// That is different than the DLLs being made available to the Add-Type during C# code compilation
+	/// </summary>
+	/// <param name="Type">The type of the toast notification to use</param>
+	public static void Show(Type Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
+	{
 
-            try
-            {
+		try
+		{
 
-                // Notifications Icon Override for all of the toast notification styles
-                string LogoOverride = Path.Combine(GlobalVars.path!, "Resources", "Media", "NotificationIconOverride.png");
+			// Notifications Icon Override for all of the toast notification styles
+			string LogoOverride = Path.Combine(GlobalVars.path!, "Resources", "Media", "NotificationIconOverride.png");
 
-                // Detect the notification type so we can create the proper notification to be displayed
-                switch (Type)
-                {
+			// Detect the notification type so we can create the proper notification to be displayed
+			switch (Type)
+			{
 
-                    // Notification to show at the end of applying the hardening measures
-                    case Type.EndOfProtection:
-                        {
-                            // Combine paths
-                            // string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Microsoft Defender.png");
-                            // string DismissButtonImage = Path.Combine(GlobalVars.path!, "Resources", "Media", "notification (1).png");
-                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ProtectToastNotificationImage.png");
+				// Notification to show at the end of applying the hardening measures
+				case Type.EndOfProtection:
+					{
+						// Combine paths
+						// string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Microsoft Defender.png");
+						// string DismissButtonImage = Path.Combine(GlobalVars.path!, "Resources", "Media", "notification (1).png");
+						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ProtectToastNotificationImage.png");
 
-                            new ToastContentBuilder()
+						new ToastContentBuilder()
 
-                            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+						.AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                            .AddText("Protection Completed.")
+						.AddText("Protection Completed.")
 
-                            .AddText($"Successfully applied {GUIProtectWinSecurity.SelectedCategories.Count} categories")
+						.AddText($"Successfully applied {GUIProtectWinSecurity.SelectedCategories.Count} categories")
 
-                            .AddText("Your computer is now more secure 👏")
+						.AddText("Your computer is now more secure 👏")
 
-                            // .AddHeroImage(new Uri($"file:///{Hero}"))
+						// .AddHeroImage(new Uri($"file:///{Hero}"))
 
-                            .AddInlineImage(new Uri($"file:///{Inline}"))
+						.AddInlineImage(new Uri($"file:///{Inline}"))
 
 
-                            /*
+						/*
 
-                             .AddButton(new ToastButton()
-                                            .SetContent("Dismiss")
-                                            .AddArgument("action", "dismiss")
-                                            .SetImageUri(new Uri($"file:///{DismissButtonImage}")))
+						 .AddButton(new ToastButton()
+										.SetContent("Dismiss")
+										.AddArgument("action", "dismiss")
+										.SetImageUri(new Uri($"file:///{DismissButtonImage}")))
 
-                                        .AddButton(new ToastButton()
-                                            .SetContent("View Details")
-                                            .AddArgument("action", "viewDetails")
-                                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+									.AddButton(new ToastButton()
+										.SetContent("View Details")
+										.AddArgument("action", "viewDetails")
+										.SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
 
-                                        .AddButton(new ToastButton()
-                                            .SetContent("Open App")
-                                            .AddArgument("action", "openApp")
-                                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+									.AddButton(new ToastButton()
+										.SetContent("Open App")
+										.AddArgument("action", "openApp")
+										.SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
 
-                                        .AddButton(new ToastButton()
-                                            .SetContent("Open App")
-                                            .AddArgument("action", "openApp")
-                                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+									.AddButton(new ToastButton()
+										.SetContent("Open App")
+										.AddArgument("action", "openApp")
+										.SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
 
-                                        .AddButton(new ToastButton()
-                                            .SetContent("Open App")
-                                            .AddArgument("action", "openApp")
-                                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
-                            */
+									.AddButton(new ToastButton()
+										.SetContent("Open App")
+										.AddArgument("action", "openApp")
+										.SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+						*/
 
-                            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+						.AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
 
-                            .AddAttributionText("Brought to you by Harden Windows Security")
+						.AddAttributionText("Brought to you by Harden Windows Security")
 
-                            .AddHeader("00001", "End of Protection", "Action")
+						.AddHeader("00001", "End of Protection", "Action")
 
-                            .Show();
+						.Show();
 
-                            break;
-                        }
+						break;
+					}
 
-                    // Notification to show for End of compliance checking/Confirmation
-                    case Type.EndOfConfirmation:
-                        {
+				// Notification to show for End of compliance checking/Confirmation
+				case Type.EndOfConfirmation:
+					{
 
-                            // Combine paths
-                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
+						// Combine paths
+						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
 
-                            new ToastContentBuilder()
+						new ToastContentBuilder()
 
-                            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+						.AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                            .AddText("Compliance checking completed.")
+						.AddText("Compliance checking completed.")
 
-                            .AddText($"Successfully verified the hardening measures on the current system.")
+						.AddText($"Successfully verified the hardening measures on the current system.")
 
-                            .AddText($"{TotalCompliantValues} Compliant and {TotalNonCompliantValues} Non-Compliant items have been detected.")
+						.AddText($"{TotalCompliantValues} Compliant and {TotalNonCompliantValues} Non-Compliant items have been detected.")
 
-                            // .AddHeroImage(new Uri($"file:///{Hero}"))
+						// .AddHeroImage(new Uri($"file:///{Hero}"))
 
-                            .AddInlineImage(new Uri($"file:///{Inline}"))
+						.AddInlineImage(new Uri($"file:///{Inline}"))
 
-                            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+						.AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
 
-                            .AddAttributionText("Brought to you by Harden Windows Security")
+						.AddAttributionText("Brought to you by Harden Windows Security")
 
-                            .AddHeader("00002", "End of Confirmation", "Action")
+						.AddHeader("00002", "End of Confirmation", "Action")
 
-                            .Show();
+						.Show();
 
-                            break;
-                        }
-                    case Type.EndOfASRRules:
-                        {
+						break;
+					}
+				case Type.EndOfASRRules:
+					{
 
-                            // Combine paths
-                            string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
-                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ASRRulesToastNotificationImage.png");
+						// Combine paths
+						string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
+						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ASRRulesToastNotificationImage.png");
 
-                            new ToastContentBuilder()
+						new ToastContentBuilder()
 
-                            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+						.AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                            .AddText("ASR Rules Applied.")
+						.AddText("ASR Rules Applied.")
 
-                            .AddText($"Successfully applied the Attack Surface Reduction configurations on the system.")
+						.AddText($"Successfully applied the Attack Surface Reduction configurations on the system.")
 
-                            .AddText($"They were applied using Group Policy..")
+						.AddText($"They were applied using Group Policy..")
 
-                            .AddHeroImage(new Uri($"file:///{Hero}"))
+						.AddHeroImage(new Uri($"file:///{Hero}"))
 
-                            .AddInlineImage(new Uri($"file:///{Inline}"))
+						.AddInlineImage(new Uri($"file:///{Inline}"))
 
-                            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+						.AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
 
-                            .AddAttributionText("Brought to you by Harden Windows Security")
+						.AddAttributionText("Brought to you by Harden Windows Security")
 
-                            .AddHeader("00003", "End of ASR Rules application", "Action")
+						.AddHeader("00003", "End of ASR Rules application", "Action")
 
-                            .Show();
+						.Show();
 
-                            break;
-                        }
-                    case Type.EndOfUnprotection:
-                        {
-                            // Combine paths
-                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+						break;
+					}
+				case Type.EndOfUnprotection:
+					{
+						// Combine paths
+						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
-                            new ToastContentBuilder()
+						new ToastContentBuilder()
 
-                            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+						.AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                            .AddText("Protections have been removed.")
+						.AddText("Protections have been removed.")
 
-                            .AddText($"Successfully removed the {UnprotectCategory} from the system.")
+						.AddText($"Successfully removed the {UnprotectCategory} from the system.")
 
-                            .AddInlineImage(new Uri($"file:///{Inline}"))
+						.AddInlineImage(new Uri($"file:///{Inline}"))
 
-                            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+						.AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
 
-                            .AddAttributionText("Brought to you by Harden Windows Security")
+						.AddAttributionText("Brought to you by Harden Windows Security")
 
-                            .AddHeader("00004", "End of Unprotection", "Action")
+						.AddHeader("00004", "End of Unprotection", "Action")
 
-                            .Show();
+						.Show();
 
-                            break;
-                        }
-                    case Type.EndOfExclusions:
-                        {
-                            // Combine paths
-                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+						break;
+					}
+				case Type.EndOfExclusions:
+					{
+						// Combine paths
+						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
-                            new ToastContentBuilder()
+						new ToastContentBuilder()
 
-                            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+						.AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                            .AddText("Exclusions Processed.")
+						.AddText("Exclusions Processed.")
 
-                            .AddText($"Successfully Processed {(GUIExclusions.selectedFiles!.Length)} file path(s) for exclusions.")
+						.AddText($"Successfully Processed {(GUIExclusions.selectedFiles!.Length)} file path(s) for exclusions.")
 
-                            .AddInlineImage(new Uri($"file:///{Inline}"))
+						.AddInlineImage(new Uri($"file:///{Inline}"))
 
-                            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+						.AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
 
-                            .AddAttributionText("Brought to you by Harden Windows Security")
+						.AddAttributionText("Brought to you by Harden Windows Security")
 
-                            .AddHeader("00004", "End of Exclusions", "Action")
+						.AddHeader("00004", "End of Exclusions", "Action")
 
-                            .Show();
+						.Show();
 
-                            break;
-                        }
-                    case Type.EndOfBitLocker:
-                        {
-                            // Combine paths
-                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
+						break;
+					}
+				case Type.EndOfBitLocker:
+					{
+						// Combine paths
+						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
 
-                            new ToastContentBuilder()
+						new ToastContentBuilder()
 
-                            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+						.AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                            .AddText("BitLocker section Completed.")
+						.AddText("BitLocker section Completed.")
 
-                            .AddText($"{BitLockerEncryptionTab} encryption section completed.")
+						.AddText($"{BitLockerEncryptionTab} encryption section completed.")
 
-                            .AddInlineImage(new Uri($"file:///{Inline}"))
+						.AddInlineImage(new Uri($"file:///{Inline}"))
 
-                            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+						.AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
 
-                            .AddAttributionText("Brought to you by Harden Windows Security")
+						.AddAttributionText("Brought to you by Harden Windows Security")
 
-                            .AddHeader("00004", "End of BitLocker Encryption", "Action")
+						.AddHeader("00004", "End of BitLocker Encryption", "Action")
 
-                            .Show();
+						.Show();
 
-                            break;
-                        }
+						break;
+					}
 
-                    default:
-                        break;
-                }
-            }
-            catch
-            {
-                // Suppress the errors as they are unimportant and there is no need to pollute the logs if user has certain configurations that doesn't allow toast notifications from PowerShell to be generated
-            }
+				default:
+					break;
+			}
+		}
+		catch
+		{
+			// Suppress the errors as they are unimportant and there is no need to pollute the logs if user has certain configurations that doesn't allow toast notifications from PowerShell to be generated
+		}
 
-        }
-    }
+	}
+}

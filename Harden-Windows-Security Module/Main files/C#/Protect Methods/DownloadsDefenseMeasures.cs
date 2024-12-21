@@ -1,19 +1,19 @@
 namespace HardenWindowsSecurity;
 
-    public static partial class DownloadsDefenseMeasures
-    {
-        /// <summary>
-        /// Prevents executables originating from the Downloads folder from running, using AppControl policy
-        /// </summary>
-        public static void Invoke()
-        {
+public static partial class DownloadsDefenseMeasures
+{
+	/// <summary>
+	/// Prevents executables originating from the Downloads folder from running, using AppControl policy
+	/// </summary>
+	public static void Invoke()
+	{
 
-            ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
+		ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
 
-            Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
+		Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
-            // PowerShell script with embedded {UserValue} directly in the string using @""
-            string script = $@"
+		// PowerShell script with embedded {UserValue} directly in the string using @""
+		string script = $@"
 $VerbosePreference = 'Continue'
 $script:ErrorActionPreference = 'Stop'
 
@@ -92,6 +92,6 @@ else {{
 }}
 ";
 
-            _ = PowerShellExecutor.ExecuteScript(script);
-        }
-    }
+		_ = PowerShellExecutor.ExecuteScript(script);
+	}
+}

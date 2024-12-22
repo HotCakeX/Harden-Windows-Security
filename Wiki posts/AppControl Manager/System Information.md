@@ -23,7 +23,9 @@ Use the System Information page in [AppControl Manager](https://github.com/HotCa
 
 This page also allows you to **remove** the deployed App Control policies from the system with a single click/tap.
 
-In the ***Code Integrity Information*** section you can view advanced details about the current status of Code Integrity on the system.
+In the ***Code Integrity Information*** section you can view advanced details about the current status of Code Integrity on the system. 
+
+You can also check the status of Application Control for Business, including whether User-Mode or Kernel-Mode policies are deployed and whether they are set to Enforced mode or Audit mode.
 
 > [!NOTE]\
 > **About the Automatic Policies filter option**

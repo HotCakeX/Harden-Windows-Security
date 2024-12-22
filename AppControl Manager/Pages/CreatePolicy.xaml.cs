@@ -1,9 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.UI;
 using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -23,7 +27,7 @@ public sealed partial class CreatePolicy : Page
 		SignedAndReputableLogSizeInput.IsEnabled = false;
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
 	}
 
@@ -52,7 +56,7 @@ public sealed partial class CreatePolicy : Page
 	#region For Allow Microsoft Policy
 
 	// Event handler for creating AllowMicrosoft policy
-	private async void AllowMicrosoftCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void AllowMicrosoftCreate_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -113,7 +117,7 @@ public sealed partial class CreatePolicy : Page
 
 
 	// Event handler for creating & deploying AllowMicrosoft policy
-	private async void AllowMicrosoftCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void AllowMicrosoftCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -174,7 +178,7 @@ public sealed partial class CreatePolicy : Page
 	}
 
 	// Event handler for the ToggleSwitch to enable/disable the log size input
-	private void AllowMicrosoftLogSizeInputEnabled_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void AllowMicrosoftLogSizeInputEnabled_Toggled(object sender, RoutedEventArgs e)
 	{
 		if (AllowMicrosoftLogSizeInputEnabled.IsOn)
 		{
@@ -188,7 +192,7 @@ public sealed partial class CreatePolicy : Page
 
 
 
-	private void AllowMicrosoftAudit_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void AllowMicrosoftAudit_Toggled(object sender, RoutedEventArgs e)
 	{
 		AllowMicrosoftLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
 		AllowMicrosoftLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
@@ -201,7 +205,7 @@ public sealed partial class CreatePolicy : Page
 	#region For Default Windows Policy
 
 	// Event handler for creating DefaultWindows policy
-	private async void DefaultWindowsCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void DefaultWindowsCreate_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -262,7 +266,7 @@ public sealed partial class CreatePolicy : Page
 
 
 	// Event handler for creating & deploying DefaultWindows policy
-	private async void DefaultWindowsCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void DefaultWindowsCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -323,7 +327,7 @@ public sealed partial class CreatePolicy : Page
 	}
 
 	// Event handler for the ToggleSwitch to enable/disable the log size input
-	private void DefaultWindowsLogSizeInputEnabled_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void DefaultWindowsLogSizeInputEnabled_Toggled(object sender, RoutedEventArgs e)
 	{
 		if (DefaultWindowsLogSizeInputEnabled.IsOn)
 		{
@@ -336,7 +340,7 @@ public sealed partial class CreatePolicy : Page
 	}
 
 
-	private void DefaultWindowsAudit_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void DefaultWindowsAudit_Toggled(object sender, RoutedEventArgs e)
 	{
 		DefaultWindowsLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
 		DefaultWindowsLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
@@ -349,7 +353,7 @@ public sealed partial class CreatePolicy : Page
 	#region For Signed and Reputable Policy
 
 	// Event handler for creating SignedAndReputable policy
-	private async void SignedAndReputableCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void SignedAndReputableCreate_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
@@ -409,7 +413,7 @@ public sealed partial class CreatePolicy : Page
 
 
 	// Event handler for creating & deploying SignedAndReputable policy
-	private async void SignedAndReputableCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void SignedAndReputableCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -465,7 +469,7 @@ public sealed partial class CreatePolicy : Page
 	}
 
 	// Event handler for the ToggleSwitch to enable/disable the log size input
-	private void SignedAndReputableLogSizeInputEnabled_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void SignedAndReputableLogSizeInputEnabled_Toggled(object sender, RoutedEventArgs e)
 	{
 		if (SignedAndReputableLogSizeInputEnabled.IsOn)
 		{
@@ -478,7 +482,7 @@ public sealed partial class CreatePolicy : Page
 	}
 
 
-	private void SignedAndReputableAudit_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private void SignedAndReputableAudit_Toggled(object sender, RoutedEventArgs e)
 	{
 		SignedAndReputableLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
 		SignedAndReputableLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
@@ -488,7 +492,7 @@ public sealed partial class CreatePolicy : Page
 
 
 
-	#region For Microsoft Recommended Driver Block Rules
+	#region For Microsoft Recommended Drivers Block Rules
 
 
 	/// <summary>
@@ -511,8 +515,8 @@ public sealed partial class CreatePolicy : Page
 			{
 				Inlines =
 		{
-			new Run { Text = "Version: ", FontWeight = FontWeights.Bold, Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Violet) },
-			new Run { Text = $"{driverBlockListInfo.Version}\n", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Violet) }
+			new Run { Text = "Version: ", FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.Violet) },
+			new Run { Text = $"{driverBlockListInfo.Version}\n", Foreground = new SolidColorBrush(Colors.Violet) }
 		}
 			};
 
@@ -520,8 +524,8 @@ public sealed partial class CreatePolicy : Page
 			{
 				Inlines =
 		{
-			new Run { Text = "Last Updated: ", FontWeight = FontWeights.Bold, Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.HotPink) },
-			new Run { Text = $"{driverBlockListInfo.LastUpdated:MMMM dd, yyyy}\n", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.HotPink) }
+			new Run { Text = "Last Updated: ", FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.HotPink) },
+			new Run { Text = $"{driverBlockListInfo.LastUpdated:MMMM dd, yyyy}\n", Foreground = new SolidColorBrush(Colors.HotPink) }
 		}
 			};
 
@@ -536,7 +540,7 @@ public sealed partial class CreatePolicy : Page
 			Run errorRun = new()
 			{
 				Text = "Error retrieving driver block list information.",
-				Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Yellow)
+				Foreground = new SolidColorBrush(Colors.Yellow)
 			};
 			formattedTextBlock.Inlines.Add(errorRun);
 		}
@@ -556,7 +560,7 @@ public sealed partial class CreatePolicy : Page
 
 
 	// Event handler for creating SignedAndReputable policy
-	private async void RecommendedDriverBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void RecommendedDriverBlockRulesCreate_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
@@ -590,7 +594,7 @@ public sealed partial class CreatePolicy : Page
 
 
 	// Event handler for creating SignedAndReputable policy
-	private async void RecommendedDriverBlockRulesCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void RecommendedDriverBlockRulesCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
@@ -621,13 +625,60 @@ public sealed partial class CreatePolicy : Page
 		}
 	}
 
+
+
+	/// <summary>
+	/// Event handler for Auto Update button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void RecommendedDriverBlockRulesScheduledAutoUpdate_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool errorsOccurred = false;
+
+		try
+		{
+			RecommendedDriverBlockRulesInfoBar.IsClosable = false;
+			RecommendedDriverBlockRulesInfoBar.IsOpen = true;
+			RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Informational;
+			RecommendedDriverBlockRulesInfoBar.Message = "Configuring Scheduled task for auto update";
+
+			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
+		}
+		catch
+		{
+			errorsOccurred = true;
+			throw;
+		}
+		finally
+		{
+
+			RecommendedDriverBlockRulesInfoBar.IsClosable = true;
+
+			if (errorsOccurred)
+			{
+				RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Error;
+				RecommendedDriverBlockRulesInfoBar.Message = $"An error occurred.";
+			}
+			else
+			{
+				RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Success;
+				RecommendedDriverBlockRulesInfoBar.Message = "Successfully configured scheduled task to keep the Microsoft Drivers Block Rules up to date";
+			}
+
+		}
+
+	}
+
+
 	#endregion
 
 
 	#region For Microsoft Recommended User Mode Block Rules
 
 	// Event handler for creating SignedAndReputable policy
-	private async void RecommendedUserModeBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void RecommendedUserModeBlockRulesCreate_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
@@ -657,7 +708,7 @@ public sealed partial class CreatePolicy : Page
 
 
 	// Event handler for creating SignedAndReputable policy
-	private async void RecommendedUserModeBlockRulesCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async void RecommendedUserModeBlockRulesCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
@@ -685,6 +736,7 @@ public sealed partial class CreatePolicy : Page
 			EnableDeployButtons();
 		}
 	}
+
 
 
 

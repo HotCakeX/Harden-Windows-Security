@@ -137,7 +137,8 @@ internal static partial class BasePolicyCreator
 
 
 		#region Register Task
-		// Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
+		// Register the scheduled task.
+		// If the task's state is disabled or its configuration is invalid, it will be replaced with a new correct task as this step is overwriting.
 		using ManagementClass registerClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
 		// Prepare method parameters to register the task
@@ -162,10 +163,6 @@ internal static partial class BasePolicyCreator
 		#endregion
 
 		Logger.Write("Successfully created the Microsoft Recommended Driver Block Rules auto updater scheduled task.");
-
-
-		Logger.Write("Displaying extra info about the Microsoft recommended Drivers block list");
-		_ = DriversBlockListInfoGathering();
 
 	}
 
@@ -312,9 +309,6 @@ internal static partial class BasePolicyCreator
 		CiToolHelper.RefreshPolicy();
 
 		Logger.Write("SiPolicy.p7b has been deployed and policies refreshed.");
-
-		Logger.Write("Displaying extra info about the Microsoft recommended Drivers block list");
-		_ = DriversBlockListInfoGathering();
 	}
 
 
@@ -367,9 +361,6 @@ internal static partial class BasePolicyCreator
 		codeIntegrityPolicy.XmlDocument.Save(xmlPath);
 
 		CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
-
-		Logger.Write($"Displaying extra info about the {name}");
-		_ = DriversBlockListInfoGathering();
 
 		// The final path where the XML policy file will be located
 		string savePathLocation = Path.Combine(GlobalVars.UserConfigDir, $"{name}.xml");

@@ -107,9 +107,8 @@
            Width="16" Height="16"
            Margin="8,0,4,0"/>
 
-            <!-- App title bar   -->
-            <TextBlock x:Name="TitleBarTextBlock"
-                       Text="App title" 
+            <!-- App title bar -->
+            <TextBlock x:Name="TitleBarTextBlock"                       
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Grid.Column="4"
                        VerticalAlignment="Center" />

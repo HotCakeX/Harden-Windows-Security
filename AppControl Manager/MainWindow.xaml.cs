@@ -237,7 +237,6 @@ public sealed partial class MainWindow : Window
 		m_AppWindow = this.AppWindow;
 
 		// Some event handlers
-		Activated += MainWindow_Activated;
 		AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
 		AppTitleBar.Loaded += AppTitleBar_Loaded;
 
@@ -440,13 +439,20 @@ public sealed partial class MainWindow : Window
 	}
 
 
+
+	/*
+	 
+	 This will make keep the title bar text white even on light theme, making it unreadable
+	 It's not even necessary to change the text based on Window being in focus or not
+
 	/// <summary>
-	/// Ensures the TitleBar follows the app's appearance when the window is in and out of focus
+	/// Ensures the TitleBar's text follows the app's appearance when the window is in and out of focus
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
 	private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
 	{
+
 		if (args.WindowActivationState == WindowActivationState.Deactivated)
 		{
 			TitleBarTextBlock.Foreground =
@@ -457,7 +463,10 @@ public sealed partial class MainWindow : Window
 			TitleBarTextBlock.Foreground =
 				(SolidColorBrush)Application.Current.Resources["WindowCaptionForeground"];
 		}
+
 	}
+
+	*/
 
 
 	/// <summary>

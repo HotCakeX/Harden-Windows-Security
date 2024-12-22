@@ -656,6 +656,9 @@ public sealed partial class CreatePolicy : Page
 
 			RecommendedDriverBlockRulesInfoBar.IsClosable = true;
 
+			// Expand the settings card to make the InfoBar visible
+			RecommendedDriverBlockRulesSettings.IsExpanded = true;
+
 			if (errorsOccurred)
 			{
 				RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Error;

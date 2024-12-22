@@ -288,13 +288,27 @@ Style="{StaticResource AccentButtonStyle}" Click="SignedAndReputableCreateAndDep
                            Header="Create Microsoft Recommended Driver Block Rules"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="RecommendedDriverBlockRulesInfoBar"
+            BorderThickness="0"
+            CornerRadius="0"
+            IsIconVisible="True"
+            IsOpen="False"
+            IsClosable="False"
+            Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="RecommendedDriverBlockRulesCreate" Content="Create"
+                        <Button x:Name="RecommendedDriverBlockRulesCreate" Content="Create" ToolTipService.ToolTip="Creates the Microsoft Recommended Drivers Block List XML file"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedDriverBlockRulesCreate_Click" />
 
-                        <Button x:Name="RecommendedDriverBlockRulesCreateAndDeploy" Content="Create And Deploy"
+                        <Button x:Name="RecommendedDriverBlockRulesCreateAndDeploy" Content="Create And Deploy" ToolTipService.ToolTip="Creates and Deploys the Microsoft Recommended Drivers Block List XML file"
 Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesCreateAndDeploy_Click" Margin="0,0,15,0" />
+
+                        <Button x:Name="RecommendedDriverBlockRulesScheduledAutoUpdate" Content="Auto Update" ToolTipService.ToolTip="Configures the Microsoft Recommended Drivers Block List to be automatically updated using a scheduled task"
+Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesScheduledAutoUpdate_Click" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
@@ -303,7 +317,6 @@ Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesCre
 
                         <controls:SettingsCard Description="Information about the latest Microsoft Recommended Drivers Block Rules"
                                Header="Info">
-
                         </controls:SettingsCard>
 
 

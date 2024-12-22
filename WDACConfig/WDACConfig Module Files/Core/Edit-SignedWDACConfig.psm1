@@ -113,13 +113,6 @@ Function Edit-SignedWDACConfig {
         $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps", $null, '.psm1')).FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
 
-        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
-
-        if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
-            Invoke-MockConfigCIBootstrap
-            [WDACConfig.GlobalVars]::ConfigCIBootstrap = $true
-        }
-
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Edit-SignedWDACConfig')
 
         #Region User-Configurations-Processing-Validation
@@ -684,13 +677,6 @@ Function Edit-SignedWDACConfig {
                 # The total number of the main steps for the progress bar to render
                 [System.UInt16]$TotalSteps = 5
                 [System.UInt16]$CurrentStep = 0
-
-                $CurrentStep++
-                Write-Progress -Id 17 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Getting the Use-Mode Block Rules')
-                # This shouldn't deploy the policy unsigned if it is already signed - requires build 24H2 features
-                New-WDACConfig -GetUserModeBlockRules -Deploy
 
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

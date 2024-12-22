@@ -24,8 +24,6 @@ Please see the GitHub page for Full details and everything about the module: htt
 
 🛡️ Here is the list of module's cmdlets
 
-✔️ New-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
-
 ✔️ New-SupplementalWDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig
 
 ✔️ Remove-WDACConfig: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
@@ -44,8 +42,7 @@ Please see the GitHub page for Full details and everything about the module: htt
 
 '@
 
-    NestedModules        = @('Core\New-WDACConfig.psm1',
-        'Core\Remove-WDACConfig.psm1',
+    NestedModules        = @('Core\Remove-WDACConfig.psm1',
         'Core\Deploy-SignedWDACConfig.psm1',
         'Core\Edit-SignedWDACConfig.psm1',
         'Core\New-SupplementalWDACConfig.psm1',
@@ -54,16 +51,13 @@ Please see the GitHub page for Full details and everything about the module: htt
         'Core\Assert-WDACConfigIntegrity.psm1',
         'Core\Test-CiPolicy.psm1')
 
-    FunctionsToExport    = @('New-WDACConfig',
-        'Remove-WDACConfig',
+    FunctionsToExport    = @('Remove-WDACConfig',
         'Deploy-SignedWDACConfig',
         'Edit-SignedWDACConfig',
         'New-SupplementalWDACConfig',
         'New-DenyWDACConfig',
         'New-KernelModeWDACConfig',
-        'Assert-WDACConfigIntegrity',
-        'Test-CiPolicy',
-        'Update-WDACConfigPSModule')
+        'Test-CiPolicy')
 
     PrivateData          = @{
         PSData = @{

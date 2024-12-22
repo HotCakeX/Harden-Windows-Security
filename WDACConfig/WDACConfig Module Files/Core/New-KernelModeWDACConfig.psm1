@@ -20,8 +20,6 @@ Function New-KernelModeWDACConfig {
         [WDACConfig.Logger]::Write('Importing the required sub-modules')
         Import-Module -Force -FullyQualifiedName @("$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-KernelModeDriversAudit.psm1")
 
-        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
-
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-KernelModeWDACConfig')
 
         # Create a directory to store the kernel mode drivers symbolic links for both modes

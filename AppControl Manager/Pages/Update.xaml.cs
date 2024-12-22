@@ -407,10 +407,14 @@ public sealed partial class Update : Page
 	}
 
 
-	// Event handler for the Auto Update Check Toggle Button to modify the User Configurations file
+	/// <summary>
+	/// Event handler for the Auto Update Check Toggle Button to modify the app settings
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private void AutoUpdateCheckToggle_Toggled(object sender, RoutedEventArgs e)
 	{
-		_ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
+		AppSettings.SaveSetting(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
 	}
 
 
@@ -425,8 +429,8 @@ public sealed partial class Update : Page
 		// Call the base class implementation first
 		base.OnNavigatedTo(e);
 
-		// Set the toggle for Auto Update Check based on the User Configurations
-		AutoUpdateCheckToggle.IsOn = (UserConfiguration.Get().AutoUpdateCheck == true);
+		// Set the toggle for Auto Update Check based on app settings
+		AutoUpdateCheckToggle.IsOn = AppSettings.TryGetSetting<bool?>(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup) ?? true;
 
 		// Grab the latest text for the CheckForUpdateButton button
 		CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
@@ -451,9 +455,9 @@ public sealed partial class Update : Page
 	/// <param name="e"></param>
 	private void AutoUpdateCheckToggleSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		_ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
-
 		AutoUpdateCheckToggle.IsOn = !AutoUpdateCheckToggle.IsOn;
+
+		AppSettings.SaveSetting(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
 	}
 
 

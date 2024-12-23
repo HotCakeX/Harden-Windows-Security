@@ -40,7 +40,7 @@ internal static class AppSettings
 
 
 	/// <summary>
-	/// Retrieve setting from local storage with a specific key and returns null of the value doesn't exist.
+	/// Retrieve setting from local storage with a specific key and returns null if the value doesn't exist.
 	/// Used by settings that need to set a default app configuration to true/on unless there is a user-defined configuration.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>

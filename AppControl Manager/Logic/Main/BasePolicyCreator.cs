@@ -331,11 +331,8 @@ internal static partial class BasePolicyCreator
 		// Extracted the XML content from the markdown string will saved in this variable
 		string xmlContent;
 
-		// Regex pattern to capture XML content between ```xml and ```
-		string pattern = @"```xml\s*(.*?)\s*```";
-
 		// Extract the XML content with Regex
-		Match match = Regex.Match(msftDriverBlockRulesAsString, pattern, RegexOptions.Singleline);
+		Match match = MyRegex1().Match(msftDriverBlockRulesAsString);
 
 		if (match.Success)
 		{
@@ -556,11 +553,8 @@ internal static partial class BasePolicyCreator
 		// Extracted the XML content from the markdown string will saved in this variable
 		string xmlContent;
 
-		// Regex pattern to capture XML content between ```xml and ```
-		string pattern = @"```xml\s*(.*?)\s*```";
-
 		// Extract the XML content with Regex
-		Match match = Regex.Match(msftUserModeBlockRulesAsString, pattern, RegexOptions.Singleline);
+		Match match = MyRegex1().Match(msftUserModeBlockRulesAsString);
 
 		if (match.Success)
 		{
@@ -718,4 +712,9 @@ internal static partial class BasePolicyCreator
 
 	[GeneratedRegex(@"<VersionEx>(.*?)<\/VersionEx>", RegexOptions.Compiled)]
 	private static partial Regex MyRegex();
+
+	// Regex pattern to capture XML content between ```xml and ```
+	[GeneratedRegex(@"```xml\s*(.*?)\s*```", RegexOptions.Compiled | RegexOptions.Singleline)]
+	private static partial Regex MyRegex1();
+
 }

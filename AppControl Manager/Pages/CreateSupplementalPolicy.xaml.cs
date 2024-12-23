@@ -238,9 +238,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -263,9 +262,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -699,9 +697,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -716,9 +713,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{

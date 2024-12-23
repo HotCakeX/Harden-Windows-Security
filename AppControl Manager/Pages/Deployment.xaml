@@ -83,9 +83,9 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsCard
-                Description="Browse for unsigned XML policy file(s) to deploy on the system"
+                Description="Browse for XML policy file(s) to deploy unsigned on the system"
                 Header="Select unsigned XML policy file(s)"
-                HeaderIcon="{ui:FontIcon Glyph=&#xE8E5;}" IsClickEnabled="False" IsActionIconVisible="False">
+                HeaderIcon="{ui:FontIcon Glyph=&#xE82D;}" IsClickEnabled="False" IsActionIconVisible="False">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -147,10 +147,80 @@
 
                 </controls:SettingsCard>
 
+
+
+                <controls:SettingsCard
+            Description="Browse for XML policy file(s) to Sign and deploy on the system"
+            Header="Select signed XML policy file(s)"
+            HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                    <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
+
+                        <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="BrowseForSignedXMLPolicyFilesButton_Click">
+                            <Button.Content>
+                                <controls:WrapPanel Orientation="Horizontal">
+
+                                    <AnimatedIcon x:Name="SignedXMLFilesLightAnimatedIcon" Visibility="Collapsed" Height="20" Margin="0,0,5,0" Width="20">
+                                        <AnimatedIcon.Source>
+                                            <animatedvisuals:Light/>
+                                        </AnimatedIcon.Source>
+                                    </AnimatedIcon>
+
+                                    <TextBlock Text="Browse" />
+
+                                </controls:WrapPanel>
+                            </Button.Content>
+
+                            <Button.Flyout>
+                                <Flyout x:Name="BrowseForSignedXMLPolicyFilesButton_Flyout">
+
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                        <Button Content="Clear" Click="BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click" />
+
+                                        <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
+
+                                        <TextBox x:Name="BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox"
+                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                    SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
+                                    </controls:WrapPanel>
+
+                                </Flyout>
+                            </Button.Flyout>
+
+                        </Button>
+
+                        <Button HorizontalAlignment="Center" x:Name="DeploySignedXMLButton"
+                                HorizontalContentAlignment="Center" Click="DeploySignedXMLButton_Click">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
+                                        <TextBlock x:Name="DeploySignedXMLButtonContentTextBlock" Text="Deploy"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Button.Content>
+
+                        </Button>
+
+                        <TeachingTip x:Name="DeploySignedXMLButtonTeachingTip"
+    Target="{x:Bind DeploySignedXMLButton}"
+    Title="No File was selected"
+    Subtitle="You need to select Signed XML files to deploy first.">
+                        </TeachingTip>
+
+                    </controls:WrapPanel>
+
+                </controls:SettingsCard>
+
+
+
+
                 <controls:SettingsCard 
                     Description="Browse for CIP Binary file(s) to deploy on the system"
                     Header="Select CIP Binary file(s)"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8E5;}" IsClickEnabled="False" IsActionIconVisible="False" >
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}" IsClickEnabled="False" IsActionIconVisible="False" >
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 

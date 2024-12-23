@@ -7,11 +7,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using AppControlManager.Logging;
+using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager;
@@ -133,12 +133,7 @@ internal static class AppControlSimulation
 
 		#region Region Making Sure No AllowAll Rule Exists
 
-		// Define the regex pattern to match the desired XML element
-		string pattern = @"<Allow ID=""ID_ALLOW_.*"" FriendlyName="".*"" FileName=""\*"".*/>";
-		Regex allowAllRegex = new(pattern, RegexOptions.Compiled);
-
-		// Check if the pattern matches the XML content
-		if (allowAllRegex.IsMatch(xmlContent))
+		if (CheckForAllowAll.Check(xmlFilePath))
 		{
 			Logger.Write($"The supplied XML file '{xmlFilePath}' contains a rule that allows all files.");
 

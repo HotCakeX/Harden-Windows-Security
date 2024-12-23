@@ -679,9 +679,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 	private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
 	{
 
-		string filter = "XML file|*.xml";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -704,9 +702,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 	private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
 	{
 
-		string filter = "XML file|*.xml";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{

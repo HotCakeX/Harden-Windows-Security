@@ -22,13 +22,10 @@ internal static class SignToolHelper
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void Sign(FileInfo ciPath, FileInfo signToolPathFinal, string certCN)
 	{
-		// Validate inputs
-		ArgumentNullException.ThrowIfNull(ciPath);
-		ArgumentNullException.ThrowIfNull(signToolPathFinal);
-		if (string.IsNullOrEmpty(certCN)) throw new ArgumentException("Certificate Common Name cannot be null or empty.", nameof(certCN));
-
 		// Build the arguments for the process
 		string arguments = $"sign /v /n \"{certCN}\" /p7 . /p7co 1.3.6.1.4.1.311.79.1 /fd certHash \"{ciPath.Name}\"";
+
+		Logger.Write($"Signing {ciPath.FullName}");
 
 		// Set up the process start info
 		ProcessStartInfo startInfo = new()

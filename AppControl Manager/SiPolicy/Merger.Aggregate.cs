@@ -23,8 +23,14 @@ internal static class Factory
 
 			// Index FileRules by their ID for quick lookup
 			// ID will be key and AllowRule itself will be the value
-			Dictionary<string, Allow> fileRuleDictionary = siPolicy.FileRules.OfType<Allow>()
+			Dictionary<string, Allow>? fileRuleDictionary = siPolicy.FileRules?.OfType<Allow>()
 				.ToDictionary(fileRule => fileRule.ID, fileRule => fileRule);
+
+			// Skip if the policy doesn't have <FileRules> node
+			if (fileRuleDictionary is null)
+			{
+				continue;
+			}
 
 			// Find all FileRuleRefs in SigningScenarios and map them to AllowRules
 			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
@@ -79,8 +85,14 @@ internal static class Factory
 		{
 			// Index FileRules by their ID for quick lookup
 			// ID will be key and DenyRule itself will be the value
-			Dictionary<string, Deny> fileRuleDictionary = siPolicy.FileRules.OfType<Deny>()
+			Dictionary<string, Deny>? fileRuleDictionary = siPolicy.FileRules?.OfType<Deny>()
 				.ToDictionary(fileRule => fileRule.ID, fileRule => fileRule);
+
+			// Skip if the policy doesn't have <FileRules> node
+			if (fileRuleDictionary is null)
+			{
+				continue;
+			}
 
 			// Find all FileRuleRefs in SigningScenarios and map them to DenyRules
 			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
@@ -140,7 +152,7 @@ internal static class Factory
 		{
 
 			// Index elements for efficient lookup
-			Dictionary<string, FileAttrib> fileAttribDictionary = siPolicy.FileRules.OfType<FileAttrib>()
+			Dictionary<string, FileAttrib>? fileAttribDictionary = siPolicy.FileRules?.OfType<FileAttrib>()
 				.ToDictionary(fileAttrib => fileAttrib.ID, fileAttrib => fileAttrib);
 
 			// Get all of the <Signer> elements from the policy
@@ -249,7 +261,7 @@ internal static class Factory
 	AllowedSigner? allowedSigner,
 	DeniedSigner? deniedSigner,
 	HashSet<string> ciSignerSet,
-	Dictionary<string, FileAttrib> fileAttribDictionary,
+	Dictionary<string, FileAttrib>? fileAttribDictionary,
 	HashSet<FilePublisherSignerRule> filePublisherSigners,
 	HashSet<SignerRule> signerRules,
 	HashSet<WHQLPublisher> WHQLPublishers,
@@ -264,7 +276,7 @@ internal static class Factory
 
 		// Gather all associated FileAttribs
 		List<FileAttrib> associatedFileAttribs = signer.FileAttribRef?
-			.Select(fileAttribRef => fileAttribDictionary.GetValueOrDefault(fileAttribRef.RuleID))
+			.Select(fileAttribRef => fileAttribDictionary?.GetValueOrDefault(fileAttribRef.RuleID))
 			.Where(fileAttrib => fileAttrib is not null) // Ensure no nulls
 			.Cast<FileAttrib>()                         // Safe cast to non-nullable type
 			.ToList() ?? [];

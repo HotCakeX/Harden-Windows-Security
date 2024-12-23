@@ -147,9 +147,7 @@ public sealed partial class Simulation : Page
 	private void SelectXmlFileButton_Click(object sender, RoutedEventArgs e)
 	{
 
-		string filter = "XML file|*.xml";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{

@@ -186,7 +186,7 @@ public partial class App : Application
 					ContentDialog errorDialog = new()
 					{
 						Title = "An error occurred",
-						BorderBrush = Current.Resources["AccentFillColorDefaultBrush"] as Brush,
+						BorderBrush = Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 						BorderThickness = new Thickness(1),
 						Content = $"An unexpected error has occurred:\n{ex.Message}",
 						CloseButtonText = "OK",

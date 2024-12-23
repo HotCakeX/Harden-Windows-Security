@@ -6,6 +6,7 @@ using AppControlManager.Logging;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
@@ -41,6 +42,11 @@ public partial class App : Application
 	public App()
 	{
 		this.InitializeComponent();
+
+#if DEBUG
+
+		Logger.Write("App Startup");
+#endif
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
@@ -176,9 +182,12 @@ public partial class App : Application
 				// Ensure we're on the UI thread before showing the dialog
 				await m_window.DispatcherQueue.EnqueueAsync(async () =>
 				{
+
 					ContentDialog errorDialog = new()
 					{
 						Title = "An error occurred",
+						BorderBrush = Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
+						BorderThickness = new Thickness(1),
 						Content = $"An unexpected error has occurred:\n{ex.Message}",
 						CloseButtonText = "OK",
 						XamlRoot = m_window.Content.XamlRoot // Ensure dialog is attached to the main window

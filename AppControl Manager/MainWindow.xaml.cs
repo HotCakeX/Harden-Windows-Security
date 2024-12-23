@@ -291,12 +291,13 @@ public sealed partial class MainWindow : Window
 		_ = Task.Run(() =>
 		   {
 
-			   // If AutoUpdateCheck is enabled in the user configurations, checks for updates on startup and displays a dot on the Update page in the navigation
+			   // If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
 			   // If a new version is available.
-			   if (UserConfiguration.Get().AutoUpdateCheck == true)
+			   // Will also check for update if it's null meaning user hasn't configured the auto update check yet
+			   if (AppSettings.TryGetSetting<bool?>(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
 			   {
 
-				   Logger.Write("Checking for update on startup because AutoUpdateCheck is enabled");
+				   Logger.Write("Checking for update on startup");
 
 				   // Start the update check
 				   UpdateCheckResponse updateCheckResponse = updateService.Check();
@@ -1610,7 +1611,7 @@ public sealed partial class MainWindow : Window
 		SidebarBasePolicyPathTextBox.Text = UserConfiguration.Get().UnsignedPolicyPath;
 
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
-		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettings.GetSetting<bool>(AppSettings.SettingKeys.AutomaticAssignmentSidebar);
+		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettings.TryGetSetting<bool?>(AppSettings.SettingKeys.AutomaticAssignmentSidebar) ?? true;
 	}
 
 

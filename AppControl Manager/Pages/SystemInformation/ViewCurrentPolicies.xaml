@@ -31,7 +31,7 @@
             </Style>
         </Grid.Resources>
 
-        <Border Grid.Row="0" Margin="0,0,0,15" Style="{StaticResource GridCardStyle}" Padding="10">
+        <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
@@ -91,11 +91,11 @@
 
                 <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="The count of all of the displayed policies"/>
 
-                <Button x:Name="RemoveUnsignedOrSupplementalPolicyButton" Click="RemoveUnsignedOrSupplementalPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Unsigned Base policies as well as any Supplemental policy can be removed with this button">
+                <Button x:Name="RemovePolicyButton" Click="RemovePolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Remove any non-system policy from the system">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE74D;" />
-                            <TextBlock Text="Remove Unsigned/Supplemental Policy" Margin="5,0,0,0" />
+                            <TextBlock Text="Remove Policy" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>

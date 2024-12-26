@@ -444,10 +444,10 @@ public sealed partial class Settings : Page
 		switch (fieldName)
 		{
 			case "SignedPolicyPath":
-				SignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("XML file|*.xml");
+				SignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 				break;
 			case "UnsignedPolicyPath":
-				UnsignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("XML file|*.xml");
+				UnsignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 				break;
 			case "SignToolCustomPath":
 				SignToolCustomPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("EXE file|*.exe");

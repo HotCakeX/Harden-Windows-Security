@@ -123,9 +123,8 @@ public sealed partial class MergePolicies : Page
 
 	private void MainPolicyBrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -139,9 +138,8 @@ public sealed partial class MergePolicies : Page
 
 	private void MainPolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -159,9 +157,8 @@ public sealed partial class MergePolicies : Page
 
 	private void OtherPoliciesBrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{
@@ -179,9 +176,8 @@ public sealed partial class MergePolicies : Page
 
 	private void OtherPoliciesSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{

@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
+using AppControlManager.SiPolicyIntel;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -25,9 +30,6 @@ public sealed partial class ViewCurrentPolicies : Page
 	// Keep track of the currently selected policy
 	private CiPolicyInfo? selectedPolicy;
 
-	// Name of the special automatic supplemental policy
-	private const string AppControlPolicyName = "AppControlManagerSupplementalPolicy";
-
 	public ViewCurrentPolicies()
 	{
 		this.InitializeComponent();
@@ -35,8 +37,8 @@ public sealed partial class ViewCurrentPolicies : Page
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
-		// Initially disable the RemoveUnsignedOrSupplementalPolicyButton
-		RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
+		// Initially disable the RemovePolicyButton
+		RemovePolicyButton.IsEnabled = false;
 
 		AllPolicies = [];
 		AllPoliciesOutput = [];
@@ -89,7 +91,7 @@ public sealed partial class ViewCurrentPolicies : Page
 			else
 			{
 				// Run the GetPolicies method asynchronously
-				policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
+				policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
 			}
 
 			// Store all of the policies in the ObservableCollection
@@ -146,10 +148,10 @@ public sealed partial class ViewCurrentPolicies : Page
 			(p.FriendlyName?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.VersionString?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.IsSystemPolicy.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
-                (p.IsSignedPolicy.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
-                (p.IsOnDisk.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
-                (p.IsEnforced.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
-                (p.PolicyOptionsDisplay?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+            (p.IsSignedPolicy.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
+            (p.IsOnDisk.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
+            (p.IsEnforced.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) || // Convert bool to string for comparison
+            (p.PolicyOptionsDisplay?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 		)];
 
 		// Update the ObservableCollection on the UI thread with the filtered results
@@ -186,32 +188,29 @@ public sealed partial class ViewCurrentPolicies : Page
 
 		// Check if:
 		if (
-			// It's non-system policy
+			// It's a non-system policy
 			!selectedPolicy.IsSystemPolicy &&
 			// It's available on disk
-			selectedPolicy.IsOnDisk &&
-			// It's an unsigned or supplemental policy
-			(!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase))
-			)
+			selectedPolicy.IsOnDisk)
 		{
-			// Enable the RemoveUnsignedOrSupplementalPolicyButton for unsigned policies
-			RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = true;
+			// Enable the RemovePolicyButton
+			RemovePolicyButton.IsEnabled = true;
 		}
 		else
 		{
-			// Disable the button if no unsigned policy is selected
-			RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
+			// Disable the button if no proper policy is selected
+			RemovePolicyButton.IsEnabled = false;
 		}
 	}
 
 
 
 	/// <summary>
-	/// Event handler for the RemoveUnsignedOrSupplementalPolicyButton click
+	/// Event handler for the RemovePolicyButton click
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private async void RemoveUnsignedOrSupplementalPolicy_Click(object sender, RoutedEventArgs e)
+	private async void RemovePolicy_Click(object sender, RoutedEventArgs e)
 	{
 
 		List<CiPolicyInfo> policiesToRemove = [];
@@ -219,8 +218,8 @@ public sealed partial class ViewCurrentPolicies : Page
 		try
 		{
 			// Disable the remove button while the selected policy is being processed
-			// It will stay disabled until user selected another removable policy
-			RemoveUnsignedOrSupplementalPolicyButton.IsEnabled = false;
+			// It will stay disabled until user selects another removable policy
+			RemovePolicyButton.IsEnabled = false;
 
 			// Disable interactions with the DataGrid while policies are being removed
 			DeployedPolicies.IsHitTestVisible = false;
@@ -231,8 +230,8 @@ public sealed partial class ViewCurrentPolicies : Page
 			// Disable the search box while policies are being removed
 			SearchBox.IsEnabled = false;
 
-			// Make sure we have a valid selected non-system policy that is unsigned or supplemental and is on disk
-			if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk && (!selectedPolicy.IsSignedPolicy || !string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase)))
+			// Make sure we have a valid selected non-system policy that is on disk
+			if (selectedPolicy is not null && !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk)
 			{
 				// List of all the deployed non-system policies
 				List<CiPolicyInfo> currentlyDeployedPolicies = [];
@@ -250,12 +249,12 @@ public sealed partial class ViewCurrentPolicies : Page
 
 					currentlyDeployedBasePolicyIDs = [.. currentlyDeployedPolicies.Where(x => string.Equals(x.PolicyID, x.BasePolicyID, StringComparison.OrdinalIgnoreCase)).Select(p => p.BasePolicyID)];
 
-					currentlyDeployedAppControlManagerSupplementalPolicies = [.. currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase))];
+					currentlyDeployedAppControlManagerSupplementalPolicies = [.. currentlyDeployedPolicies.Where(p => string.Equals(p.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))];
 				});
 
 
 				// Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
-				if (string.Equals(selectedPolicy.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(selectedPolicy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))
 				{
 
 					// Check if the base policy of the AppControlManagerSupplementalPolicy Supplemental policy is currently deployed on the system
@@ -265,9 +264,11 @@ public sealed partial class ViewCurrentPolicies : Page
 						// Create and display a ContentDialog with Yes and No options
 						ContentDialog dialog = new()
 						{
-							Title = "Confirm Policy Removal",
-							Content = $"The policy '{AppControlPolicyName}' must not be removed because you won't be able to relaunch the AppControl Manager again. Are you sure you still want to remove it?",
+							Title = "WARNING",
+							Content = $"The policy '{GlobalVars.AppControlManagerSpecialPolicyName}' must not be manually removed because you WILL NOT BE ABLE TO USE APPCONTROL MANAGER AGAIN. It is automatically removed when its corresponding base policy is removed from the system. Are you sure you still want to remove it manually?",
 							PrimaryButtonText = "Yes",
+							BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
+							BorderThickness = new Thickness(1),
 							CloseButtonText = "No",
 							XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
 						};
@@ -289,17 +290,23 @@ public sealed partial class ViewCurrentPolicies : Page
 
 				#region
 
+
 				// If the policy that's going to be removed is a base policy
 				if (string.Equals(selectedPolicy.PolicyID, selectedPolicy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 				{
-					// Find any automatic AppControlManagerSupplementalPolicy that is associated with it and still on the system
-					List<CiPolicyInfo> extraPoliciesToRemove = [.. currentlyDeployedAppControlManagerSupplementalPolicies.Where(p => string.Equals(p.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && p.IsOnDisk)];
-
-					if (extraPoliciesToRemove.Count > 0)
+					// Check if it's unsigned, Or it is signed but doesn't have the "Enabled:Unsigned System Integrity Policy" rule option
+					// Meaning it was re-signed in unsigned mode and can be now safely removed
+					if (!selectedPolicy.IsSignedPolicy || (selectedPolicy.IsSignedPolicy && selectedPolicy.PolicyOptions is not null && selectedPolicy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase)))
 					{
-						foreach (CiPolicyInfo item in extraPoliciesToRemove)
+						// Find any automatic AppControlManagerSupplementalPolicy that is associated with it and still on the system
+						List<CiPolicyInfo> extraPoliciesToRemove = [.. currentlyDeployedAppControlManagerSupplementalPolicies.Where(p => string.Equals(p.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && p.IsOnDisk)];
+
+						if (extraPoliciesToRemove.Count > 0)
 						{
-							policiesToRemove.Add(item);
+							foreach (CiPolicyInfo item in extraPoliciesToRemove)
+							{
+								policiesToRemove.Add(item);
+							}
 						}
 					}
 				}
@@ -309,11 +316,90 @@ public sealed partial class ViewCurrentPolicies : Page
 				// If there are policies to be removed
 				if (policiesToRemove.Count > 0)
 				{
-					// Remove all the policies from the system
-					await Task.Run(() =>
+
+					DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyRemoval");
+
+
+					foreach (CiPolicyInfo policy in policiesToRemove)
 					{
-						CiToolHelper.RemovePolicy([.. policiesToRemove.Select(x => x.PolicyID!)]);
-					});
+						// Remove the policy directly from the system if it's unsigned						
+						if (!policy.IsSignedPolicy ||
+							// or supplemental
+							!string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase) ||
+							// or signed base policy with the EnabledUnsignedSystemIntegrityPolicy policy rule option
+							(policy.IsSignedPolicy && string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase) &&
+							 policy.PolicyOptions is not null && policy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase)
+							))
+						{
+							await Task.Run(() =>
+							{
+								CiToolHelper.RemovePolicy(policy.PolicyID!);
+							});
+						}
+
+						// If the policy is base and signed
+						else
+						{
+							#region Signing Details acquisition
+
+							string CertCN;
+							string CertPath;
+							string SignToolPath;
+							string XMLPolicyPath;
+
+							// Instantiate the Content Dialog
+							SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
+
+							// Show the dialog and await its result
+							ContentDialogResult result = await customDialog.ShowAsync();
+
+							// Ensure primary button was selected
+							if (result is ContentDialogResult.Primary)
+							{
+								SignToolPath = customDialog.SignToolPath!;
+								CertPath = customDialog.CertificatePath!;
+								CertCN = customDialog.CertificateCommonName!;
+								XMLPolicyPath = customDialog.XMLPolicyPath!;
+
+								// Sometimes the content dialog lingers on or re-appears so making sure it hides
+								customDialog.Hide();
+
+							}
+							else
+							{
+								return;
+							}
+
+							#endregion
+
+							// Add the unsigned policy rule option to the policy
+							CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+
+							// Making sure SupplementalPolicySigners do not exist in the XML policy
+							CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
+
+							// Define the path for the CIP file
+							string randomString = GUIDGenerator.GenerateUniqueGUID();
+							string xmlFileName = Path.GetFileName(XMLPolicyPath);
+							string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
+
+							string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
+
+							// Convert the XML file to CIP, overwriting the unsigned one
+							PolicyToCIPConverter.Convert(XMLPolicyPath, CIPFilePath);
+
+							// Sign the CIP
+							SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
+
+							// Rename the .p7 signed file to .cip 
+							File.Move(CIPp7SignedFilePath, CIPFilePath, true);
+
+							// Deploy the signed CIP file
+							CiToolHelper.UpdatePolicy(CIPFilePath);
+
+						}
+					}
+
 
 					// Refresh the DataGrid's policies and their count
 					RetrievePolicies();
@@ -565,7 +651,7 @@ public sealed partial class ViewCurrentPolicies : Page
 	/// <param name="args"></param>
 	private void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
 	{
-		if (sender is CustomUIElements.MenuFlyoutV2 { IsPointerOver: true })
+		if (sender is MenuFlyoutV2 { IsPointerOver: true })
 		{
 			args.Cancel = true;
 		}

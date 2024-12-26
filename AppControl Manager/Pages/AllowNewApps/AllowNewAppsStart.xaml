@@ -37,7 +37,7 @@
 
             </Grid.Resources>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Vertical" Margin="6,10,6,10">
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,5,6,5">
 
                 <TextBlock
 TextWrapping="WrapWholeWords"
@@ -49,9 +49,9 @@ Style="{StaticResource BodyTextBlockStyle}">
 </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
+                <HyperlinkButton Margin="0,-8,0,8" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 
-                <StackPanel Orientation="Horizontal" Spacing="15">
+                <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
 
                     <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
 

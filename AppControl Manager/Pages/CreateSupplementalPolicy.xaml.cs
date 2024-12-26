@@ -238,9 +238,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -263,9 +262,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -699,9 +697,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -716,9 +713,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "XML file|*.xml";
 
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -811,7 +807,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				foreach (string certificate in CertificatesBasedCertFilePaths)
 				{
-					//  Create a certificate object from the .cer file
+					// Create a certificate object from the .cer file
 					X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificate);
 
 					// Create rule for the certificate based on the first element in its chain

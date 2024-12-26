@@ -40,6 +40,20 @@ internal static class GlobalVars
 	// Handle of the main Window - acquired in the MainWindow.xaml.cs
 	internal static nint hWnd;
 
+	// The filter for the file picker dialog to select XML files
+	internal const string XMLFilePickerFilter = "XML file|*.xml";
+
+	// Name of the special automatic supplemental policy
+	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
+
+	// Get the base directory where the app is running
+	internal static readonly string AppControlManagerSpecialPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", $"{AppControlManagerSpecialPolicyName}.xml");
+
+	// Get the current OS version
+	internal static readonly Version CurrentOSVersion = Environment.OSVersion.Version;
+
+	internal static readonly Version VersionFor24H2 = new(10, 0, 26100, 0);
+
 	static GlobalVars()
 	{
 		// Ensure the directory exists

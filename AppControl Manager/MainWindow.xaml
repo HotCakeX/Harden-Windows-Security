@@ -194,14 +194,8 @@
                 <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies"/>
                 <NavigationViewItem x:Name="AllowNewAppsNavItem" Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running."/>
                 <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies"/>
-
-                <!-- Make it expanded by default to show the import feature to the user at first sight -->
-                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create App Control policy either from the local event logs or EVTX files">
-                    <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="MDE Advanced Hunting" ToolTipService.ToolTip="Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs"/>
-                    </NavigationViewItem.MenuItems>
-                </NavigationViewItem>
-
+                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create App Control policy either from the local event logs or EVTX files"/>
+                <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="MDE Advanced Hunting" ToolTipService.ToolTip="Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs"/>
                 <NavigationViewItem x:Name="CreateDenyPolicyNavItem" Content="Create Deny Policy" ToolTipService.ToolTip="Create Deny App Control Policies"/>
 
                 <!-- <NavigationViewItemSeparator/> -->

@@ -382,6 +382,9 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 
 			// Set the SignTool.exe path that was verified to be valid to the user configurations
 			_ = UserConfiguration.Set(SignToolCustomPath: SignToolPath);
+
+			// Set certificate details that were verified to the user configurations
+			_ = UserConfiguration.Set(CertificateCommonName: CertificateCommonNameAutoSuggestBox.Text, CertificatePath: CertFilePathTextBox.Text);
 		}
 		finally
 		{

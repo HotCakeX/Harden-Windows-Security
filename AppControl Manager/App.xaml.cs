@@ -44,10 +44,7 @@ public partial class App : Application
 	{
 		this.InitializeComponent();
 
-#if DEBUG
-
 		Logger.Write("App Startup");
-#endif
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus

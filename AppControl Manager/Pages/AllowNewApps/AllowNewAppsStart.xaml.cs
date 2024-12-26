@@ -5,8 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.IntelGathering;
 using AppControlManager.Logging;
+using AppControlManager.SiPolicy;
+using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -14,9 +17,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
-
 namespace AppControlManager.Pages;
-
 
 public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
 {
@@ -81,6 +82,18 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	// The ThemeShadow defined in Grid XAML
 	private readonly ThemeShadow sharedShadow;
+
+	// Will determine whether the user selected XML policy file is signed or unsigned
+	private bool _IsSignedPolicy;
+
+	// The base policy XML objectified
+	private SiPolicy.SiPolicy? _BasePolicyObject;
+
+	// To hold the necessary details for policy signing if the selected base policy is signed
+	// They will be retrieved from the content dialog
+	private string? _CertCN;
+	private string? _CertPath;
+	private string? _SignToolPath;
 
 	public AllowNewAppsStart()
 	{
@@ -276,24 +289,21 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				throw new InvalidOperationException("You need to select a XML policy file path");
 			}
 
+			// Ensure the selected XML file path exists on the disk
+			if (!File.Exists(selectedXMLFilePath))
+			{
+				throw new InvalidOperationException($"The selected XML file path doesn't exist {selectedXMLFilePath}");
+			}
 
-			// Create the required directory and file paths in step 1
-			stagingArea = StagingArea.NewStagingArea("AllowNewApps");
-			tempBasePolicyPath = Path.Combine(stagingArea.FullName, "BasePolicy.XML");
-			AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
-
-			// Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
-			EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID()}.cip");
-
-			Step1InfoBar.IsOpen = true;
-			Step1InfoBar.Message = "Deploying the selected policy in Audit mode, please wait";
-
-			// Execute the main tasks of step 1
 			await Task.Run(() =>
 			{
+				// Instantiate the selected policy file
+				_BasePolicyObject = Management.Initialize(selectedXMLFilePath);
 
-				// Instantiate the policy
-				CodeIntegrityPolicy codeIntegrityPolicy = new(selectedXMLFilePath, null);
+				if (_BasePolicyObject.PolicyType is not PolicyType.BasePolicy)
+				{
+					throw new InvalidOperationException($"The selected XML policy file must be Base policy type, but its type is '{_BasePolicyObject.PolicyType}'");
+				}
 
 				// Get all deployed base policies
 				List<CiPolicyInfo> allDeployedBasePolicies = CiToolHelper.GetPolicies(false, true, false);
@@ -302,32 +312,122 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				List<string?> CurrentlyDeployedBasePolicyIDs = [.. allDeployedBasePolicies.Select(p => p.BasePolicyID)];
 
 				// Trim the curly braces from the policyID
-				string trimmedPolicyID = codeIntegrityPolicy.PolicyID.TrimStart('{').TrimEnd('}');
+				string trimmedPolicyID = _BasePolicyObject.PolicyID.TrimStart('{').TrimEnd('}');
 
-				// Make sure the selected policy is a base and that it is deployed on the system
+				// Make sure the selected policy is deployed on the system
 				if (!CurrentlyDeployedBasePolicyIDs.Any(id => string.Equals(id, trimmedPolicyID, StringComparison.OrdinalIgnoreCase)))
 				{
-					throw new InvalidOperationException($"The selected policy file {selectedXMLFilePath} is not deployed on the system or it's not a base policy");
+					throw new InvalidOperationException($"The selected policy file {selectedXMLFilePath} is not deployed on the system.");
 				}
 
-				// Make sure the policy is not signed
-				CiPolicyInfo detectedBasePolicy = allDeployedBasePolicies.First(p => string.Equals(p.PolicyID, trimmedPolicyID, StringComparison.OrdinalIgnoreCase));
 
-				if (detectedBasePolicy.IsSignedPolicy)
+				// If the policy doesn't have any rule options or it doesn't have the EnabledUnsignedSystemIntegrityPolicy rule option then it is signed
+				_IsSignedPolicy = (_BasePolicyObject.Rules is null || !_BasePolicyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy));
+			});
+
+
+			if (_IsSignedPolicy)
+			{
+
+				Logger.Write("Signed policy detected");
+
+				#region Signing Details acquisition
+
+				// Instantiate the Content Dialog
+				SigningDetailsDialog customDialog = new();
+
+				// Show the dialog and await its result
+				ContentDialogResult result = await customDialog.ShowAsync();
+
+				// Ensure primary button was selected
+				if (result is ContentDialogResult.Primary)
 				{
-					throw new InvalidOperationException("The selected policy is signed. Signed policies are not supported yet.");
+					_SignToolPath = customDialog.SignToolPath!;
+					_CertPath = customDialog.CertificatePath!;
+					_CertCN = customDialog.CertificateCommonName!;
 				}
+				else
+				{
+					GoToStep2Button.IsEnabled = true;
+
+					return;
+				}
+
+				#endregion
+			}
+
+
+			// Execute the main tasks of step 1
+			await Task.Run(() =>
+			{
+
+				// Create the required directory and file paths in step 1
+				stagingArea = StagingArea.NewStagingArea("AllowNewApps");
+				tempBasePolicyPath = Path.Combine(stagingArea.FullName, "BasePolicy.XML");
+				AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
+
+				// Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
+				EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{GUIDGenerator.GenerateUniqueGUID()}.cip");
+
+				_ = DispatcherQueue.TryEnqueue(() =>
+				{
+					Step1InfoBar.IsOpen = true;
+					Step1InfoBar.Message = "Deploying the selected policy in Audit mode, please wait";
+				});
 
 				// Creating a copy of the original policy in the Staging Area so that the original one will be unaffected
 				File.Copy(selectedXMLFilePath, tempBasePolicyPath, true);
 
-				// Create audit mode CIP
-				CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
-				PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
+				// If the policy is Unsigned
+				if (!_IsSignedPolicy)
+				{
+					// Create audit mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
 
-				// Create Enforced mode CIP
-				CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
-				PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
+					// Create Enforced mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
+				}
+
+				// If the policy is Signed
+				else
+				{
+
+					// Create audit mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+
+					string CIPp7SignedFilePathAudit = Path.Combine(stagingArea.FullName, "BaseAudit.cip.p7");
+
+					// Convert the XML file to CIP
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
+
+					// Sign the CIP
+					SignToolHelper.Sign(new FileInfo(AuditModeCIP), new FileInfo(_SignToolPath!), _CertCN!);
+
+					// Rename the .p7 signed file to .cip 
+					File.Move(CIPp7SignedFilePathAudit, AuditModeCIP, true);
+
+
+
+					// Create Enforced mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode, CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+
+					string CIPp7SignedFilePathEnforced = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip.p7");
+
+					string tempEnforcedModeCIPPath = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip");
+
+					// Convert the XML file to CIP
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, tempEnforcedModeCIPPath);
+
+					// Sign the CIP
+					SignToolHelper.Sign(new FileInfo(tempEnforcedModeCIPPath), new FileInfo(_SignToolPath!), _CertCN!);
+
+					// Rename the .p7 signed file to .cip 
+					File.Move(CIPp7SignedFilePathEnforced, EnforcedModeCIP, true);
+
+				}
+
 
 				Logger.Write("Creating Enforced Mode SnapBack guarantee");
 				SnapBackGuarantee.Create(EnforcedModeCIP);
@@ -579,6 +679,12 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			selectedSupplementalPolicyName = null;
 			selectedXMLFilePath = null;
 			LogsScanStartTime = null;
+			tempBasePolicyPath = null;
+			_BasePolicyObject = null;
+			_CertCN = null;
+			_CertPath = null;
+			_SignToolPath = null;
+			_IsSignedPolicy = false;
 
 			LogSizeNumberBox.Value = EventLogUtility.GetCurrentLogSize();
 
@@ -830,32 +936,58 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: scanLevel);
 
 				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+				Master.Initiate(DataPackage, EmptyPolicyPath, Authorization.Allow);
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{selectedSupplementalPolicyName}.xml");
 
-				// Instantiate the user selected Base policy - To get its BasePolicyID
-				CodeIntegrityPolicy codeIntegrityPolicy = new(selectedXMLFilePath, null);
-
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, codeIntegrityPolicy.BasePolicyID, null);
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, _BasePolicyObject!.BasePolicyID, null);
 
 				// Configure policy rule options
-				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				if (!_IsSignedPolicy)
+				{
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				}
+				else
+				{
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+				}
 
 				// Set policy version
 				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
 
+				if (_IsSignedPolicy)
+				{
+					// Add certificate's details to the supplemental policy
+					_ = AddSigningDetails.Add(EmptyPolicyPath, _CertPath!);
+				}
+
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
-
 
 				// If user selected to deploy the policy
 				if (deployPolicy)
 				{
 					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+					if (_IsSignedPolicy)
+					{
+						string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip.p7");
+
+						// Convert the XML file to CIP
+						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+						// Sign the CIP
+						SignToolHelper.Sign(new FileInfo(CIPPath), new FileInfo(_SignToolPath!), _CertCN!);
+
+						// Rename the .p7 signed file to .cip 
+						File.Move(CIPp7SignedFilePath, CIPPath, true);
+					}
+
+					else
+					{
+						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+					}
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
@@ -912,5 +1044,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	{
 		BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = null;
 		selectedXMLFilePath = null;
+		tempBasePolicyPath = null;
 	}
 }

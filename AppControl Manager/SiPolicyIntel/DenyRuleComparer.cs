@@ -13,6 +13,12 @@ internal sealed class DenyRuleComparer : IEqualityComparer<DenyRule>
 			return false;
 		}
 
+		// Check SSType
+		if (x.SigningScenario != y.SigningScenario)
+		{
+			return false;
+		}
+
 		Deny denyX = x.DenyElement;
 		Deny denyY = y.DenyElement;
 
@@ -34,6 +40,12 @@ internal sealed class DenyRuleComparer : IEqualityComparer<DenyRule>
 		if (!string.IsNullOrWhiteSpace(denyX.FilePath) &&
 			!string.IsNullOrWhiteSpace(denyY.FilePath) &&
 			string.Equals(denyX.FilePath, denyY.FilePath, StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		// Rule special case: Check if FileName is "*" in both and are equal
+		if (string.Equals(denyX.FileName, "*", StringComparison.OrdinalIgnoreCase) && string.Equals(denyX.FileName, "*", StringComparison.OrdinalIgnoreCase))
 		{
 			return true;
 		}

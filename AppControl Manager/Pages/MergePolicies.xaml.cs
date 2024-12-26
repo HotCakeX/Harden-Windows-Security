@@ -24,6 +24,12 @@ public sealed partial class MergePolicies : Page
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
+
+	/// <summary>
+	/// Event handler for the main Merge button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private async void MergeButton_Click(object sender, RoutedEventArgs e)
 	{
 
@@ -52,6 +58,8 @@ public sealed partial class MergePolicies : Page
 
 		try
 		{
+
+			MergeButton.IsEnabled = false;
 
 			PolicyMergerInfoBar.IsOpen = true;
 
@@ -113,6 +121,9 @@ public sealed partial class MergePolicies : Page
 			PolicyMergerInfoBar.IsClosable = true;
 
 			MergeProgressRing.Visibility = Visibility.Collapsed;
+
+
+			MergeButton.IsEnabled = true;
 		}
 	}
 
@@ -132,7 +143,7 @@ public sealed partial class MergePolicies : Page
 			mainPolicy = selectedFile;
 
 			// Add the selected main XML policy file path to the flyout's TextBox
-			MainPolicy_Flyout_TextBox.Text += selectedFile;
+			MainPolicy_Flyout_TextBox.Text = selectedFile;
 		}
 	}
 
@@ -147,7 +158,7 @@ public sealed partial class MergePolicies : Page
 			mainPolicy = selectedFile;
 
 			// Add the selected main XML policy file path to the flyout's TextBox
-			MainPolicy_Flyout_TextBox.Text += selectedFile;
+			MainPolicy_Flyout_TextBox.Text = selectedFile;
 		}
 
 		// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself

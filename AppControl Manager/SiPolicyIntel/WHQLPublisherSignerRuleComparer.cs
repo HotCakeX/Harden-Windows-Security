@@ -31,7 +31,7 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
 		// And CertEKUs match
 		// For intermediate certificate type that uses full proper chain in signer
-		if (IsSignerRule1Match(signerX, signerY) && DoCertEKUsMatch(signerX, signerY))
+		if (IsSignerRule1Match(signerX, signerY) && DoEKUsMatch(x.Ekus, y.Ekus))
 		{
 			return true;
 		}
@@ -39,7 +39,7 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 		// Rule 2: Check if Name and CertRoot.Value are equal
 		// And CertEKUs match
 		// For WHQL but PCA/Root/Leaf certificate signer types
-		if (IsSignerRule2Match(signerX, signerY) && DoCertEKUsMatch(signerX, signerY))
+		if (IsSignerRule2Match(signerX, signerY) && DoEKUsMatch(x.Ekus, y.Ekus))
 		{
 			return true;
 		}
@@ -49,6 +49,9 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 		return false;
 	}
 
+	/// <summary>
+	/// Generates a hash code for a WHQLPublisher object.
+	/// </summary>
 	public int GetHashCode(WHQLPublisher obj)
 	{
 		ArgumentNullException.ThrowIfNull(obj);
@@ -89,25 +92,23 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % modulus;
 		}
 
-		// Rule 3: Include CertEKU IDs in the hash
-		foreach (CertEKU certEKU in signer.CertEKU ?? [])
+
+		// Rule 3: Include EKU Values
+		foreach (EKU eku in obj.Ekus)
 		{
-			if (!string.IsNullOrWhiteSpace(certEKU.ID))
+			if (eku.Value != null)
 			{
-				hash = (hash * 31 + certEKU.ID.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+				hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(eku.Value)) % modulus;
 			}
 		}
 
-		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value
+		// Ensure non-negative hash value
+		return (int)(hash & 0x7FFFFFFF);
 	}
-
 
 	/// <summary>
 	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
 	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
 	private static bool IsSignerRule1Match(Signer signerX, Signer signerY)
 	{
 		return !string.IsNullOrWhiteSpace(signerX.Name) &&
@@ -121,9 +122,6 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 	/// <summary>
 	/// Rule 2: Name and CertRoot.Value must match
 	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
 	private static bool IsSignerRule2Match(Signer signerX, Signer signerY)
 	{
 		return !string.IsNullOrWhiteSpace(signerX.Name) &&
@@ -134,20 +132,21 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 
 
 	/// <summary>
-	/// Rule 3: CertEKU IDs must match
+	/// Rule 3: Compare EKU lists based on Value only (ignore IDs)
 	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
-	private static bool DoCertEKUsMatch(Signer signerX, Signer signerY)
+	/// <param name="ekusX">EKU list for first signer</param>
+	/// <param name="ekusY">EKU list for second signer</param>
+	/// <returns>True if EKU values match</returns>
+	private static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
 	{
-		HashSet<string> ekuIdsX = signerX.CertEKU?.Select(e => e.ID).Where(id => !string.IsNullOrWhiteSpace(id)).ToHashSet(StringComparer.OrdinalIgnoreCase)
-					  ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-		HashSet<string> ekuIdsY = signerY.CertEKU?.Select(e => e.ID).Where(id => !string.IsNullOrWhiteSpace(id)).ToHashSet(StringComparer.OrdinalIgnoreCase)
-					  ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+		// Extract EKU values and ignore IDs
+		HashSet<int> ekuValuesX = [.. ekusX.Where(e => e.Value != null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
 
-		return ekuIdsX.SetEquals(ekuIdsY);
+		HashSet<int> ekuValuesY = [.. ekusY.Where(e => e.Value != null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
+
+		// Compare sets of EKU values
+		return ekuValuesX.SetEquals(ekuValuesY);
 	}
 
 

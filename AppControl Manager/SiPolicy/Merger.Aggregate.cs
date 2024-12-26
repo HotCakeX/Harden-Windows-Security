@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AppControlManager.Logging;
 using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.SiPolicy;
@@ -146,6 +147,8 @@ internal static class Factory
 		HashSet<SignerRule> signerRules = new(new PublisherSignerRuleComparer());
 		HashSet<WHQLFilePublisher> whqlFilePublishers = new(new WHQLFilePublisherSignerRuleComparer());
 		HashSet<WHQLPublisher> wHQLPublishers = new(new WHQLPublisherSignerRuleComparer());
+		HashSet<UpdatePolicySignerRule> updatePolicySignerRules = new(new UpdatePolicySignerRuleComparer());
+		HashSet<SupplementalPolicySignerRule> supplementalPolicySignerRules = new(new SupplementalPolicySignerRuleComparer());
 
 		// Loop over each policy input data
 		foreach (SiPolicy siPolicy in siPolicies)
@@ -156,14 +159,36 @@ internal static class Factory
 				.ToDictionary(fileAttrib => fileAttrib.ID, fileAttrib => fileAttrib);
 
 			// Get all of the <Signer> elements from the policy
-			Dictionary<string, Signer> signerDictionary = siPolicy.Signers
-				.ToDictionary(signer => signer.ID, signer => signer);
+			Dictionary<string, Signer> signerDictionary = [];
+
+			foreach (Signer signer in siPolicy.Signers)
+			{
+				if (!signerDictionary.TryAdd(signer.ID, signer))
+				{
+					Logger.Write($"One of the XML files has more than 1 Signer with the same ID `{signer.ID}`");
+				}
+			}
+
 
 			// ID of all of the CiSigners if they exist
 			HashSet<string> ciSignerSet = [.. siPolicy.CiSigners?.Select(ciSigner => ciSigner.SignerId) ?? []];
 
 			// Dictionary to store all of the EKUs
 			Dictionary<string, EKU> ekuDictionary = siPolicy.EKUs?.ToDictionary(eku => eku.ID, eku => eku) ?? [];
+
+			// ID of all of the SupplementalPolicySigners if they exist
+			HashSet<string> supplementalPolicySignersSet = [.. siPolicy.SupplementalPolicySigners?.Select(supplementalPolicySigner => supplementalPolicySigner.SignerId) ?? []];
+
+			// ID of all of the UpdatePolicySigners if they exist
+			HashSet<string> updatePolicySignersSet = [.. siPolicy.UpdatePolicySigners?.Select(updatePolicySigner => updatePolicySigner.SignerId) ?? []];
+
+
+			// Collecting UpdatePolicySigners and SupplementalPolicySigners separately
+			// Because they are not part of any SigningScenario and don't have Allowed/Denied signers
+			ProcessSupplementalPolicySigners(supplementalPolicySignersSet, signerDictionary, supplementalPolicySignerRules);
+
+			ProcessUpdatePolicySigners(updatePolicySignersSet, signerDictionary, updatePolicySignerRules);
+
 
 			// Step 2: Process SigningScenarios
 			foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
@@ -234,7 +259,9 @@ internal static class Factory
 			FilePublisherSigners = filePublisherSigners,
 			SignerRules = signerRules,
 			WHQLPublishers = wHQLPublishers,
-			WHQLFilePublishers = whqlFilePublishers
+			WHQLFilePublishers = whqlFilePublishers,
+			UpdatePolicySigners = updatePolicySignerRules,
+			SupplementalPolicySigners = supplementalPolicySignerRules
 		};
 	}
 
@@ -558,6 +585,93 @@ internal static class Factory
 				Auth = auth
 			});
 		}
+	}
+
+
+
+	/// <summary>
+	/// Processes SupplementalPolicySigners
+	/// </summary>
+	/// <param name="supplementalPolicySignerIDs"></param>
+	/// <param name="Signers"></param>
+	/// <param name="supplementalPolicySignersSet"></param>
+	private static void ProcessSupplementalPolicySigners(
+		HashSet<string> supplementalPolicySignerIDs,
+		Dictionary<string, Signer> Signers,
+		HashSet<SupplementalPolicySignerRule> supplementalPolicySignersSet)
+	{
+
+		foreach (string ID in supplementalPolicySignerIDs)
+		{
+			if (Signers.TryGetValue(ID, out Signer? possibleSupplementalPolicySigner))
+			{
+
+				// Create random ID for the signer and its corresponding SupplementalPolicySigner element
+				string guid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string rand = $"ID_SIGNER_A_{guid}";
+
+				// Replace the Signer's ID
+				possibleSupplementalPolicySigner.ID = rand;
+
+
+				// Create a new SupplementalPolicySigner element with the new ID
+				SupplementalPolicySigner suppRule = new()
+				{
+					SignerId = rand
+				};
+
+
+				_ = supplementalPolicySignersSet.Add(new SupplementalPolicySignerRule
+				{
+					SignerElement = possibleSupplementalPolicySigner,
+					SupplementalPolicySigner = suppRule
+				});
+			}
+		}
+	}
+
+
+
+
+	/// <summary>
+	/// Processes UpdatePolicySigners
+	/// </summary>
+	/// <param name="updatePolicySignerIDs"></param>
+	/// <param name="Signers"></param>
+	/// <param name="updatePolicySignersSet"></param>
+	private static void ProcessUpdatePolicySigners(
+		HashSet<string> updatePolicySignerIDs,
+		Dictionary<string, Signer> Signers,
+		HashSet<UpdatePolicySignerRule> updatePolicySignersSet)
+	{
+
+		foreach (string ID in updatePolicySignerIDs)
+		{
+			if (Signers.TryGetValue(ID, out Signer? possibleUpdatePolicySigner))
+			{
+
+				// Create random ID for the signer and its corresponding UpdatePolicySigner element
+				string guid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string rand = $"ID_SIGNER_A_{guid}";
+
+				// Replace the Signer's ID
+				possibleUpdatePolicySigner.ID = rand;
+
+				// Create a new UpdatePolicySigner element with the new ID
+				UpdatePolicySigner uppRule = new()
+				{
+					SignerId = rand
+				};
+
+				_ = updatePolicySignersSet.Add(new UpdatePolicySignerRule
+				{
+					SignerElement = possibleUpdatePolicySigner,
+					UpdatePolicySigner = uppRule
+				});
+			}
+		}
+
+
 	}
 
 }

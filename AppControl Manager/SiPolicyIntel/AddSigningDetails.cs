@@ -87,8 +87,7 @@ internal static class AddSigningDetails
 		}
 		else
 		{
-			IEnumerable<Signer> signersList = policyObject.PolicyType is not PolicyType.SupplementalPolicy ?
-				[updatePolicySigner, supplementalPolicySigner] : [updatePolicySigner];
+			IEnumerable<Signer> signersList = policyObject.PolicyType is not PolicyType.SupplementalPolicy ? [updatePolicySigner, supplementalPolicySigner] : [updatePolicySigner];
 
 			policyObject.Signers = [.. signersList];
 		}

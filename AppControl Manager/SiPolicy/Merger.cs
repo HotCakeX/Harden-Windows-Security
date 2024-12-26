@@ -87,7 +87,9 @@ internal static partial class Merger
 		IEnumerable<Signer> signers = signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
 			Concat(signerCollection.WHQLFilePublishers.Select(x => x.SignerElement)).
 			Concat(signerCollection.WHQLPublishers.Select(x => x.SignerElement)).
-			Concat(signerCollection.SignerRules.Select(x => x.SignerElement));
+			Concat(signerCollection.SignerRules.Select(x => x.SignerElement)).
+			Concat(signerCollection.SupplementalPolicySigners.Select(x => x.SignerElement)).
+			Concat(signerCollection.UpdatePolicySigners.Select(x => x.SignerElement));
 
 		// Get all CiSigners
 		IEnumerable<CiSigner> ciSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
@@ -128,6 +130,11 @@ internal static partial class Merger
 			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
 			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
 			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement))!;
+
+
+		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol = signerCollection.SupplementalPolicySigners.Where(x => x is not null).Select(x => x.SupplementalPolicySigner);
+
+		IEnumerable<UpdatePolicySigner> updatePolicySignersCol = signerCollection.UpdatePolicySigners.Where(x => x is not null).Select(x => x.UpdatePolicySigner);
 
 
 		// Construct the User Mode Signing Scenario
@@ -207,27 +214,27 @@ internal static partial class Merger
 		// Create the final policy data, it will replace the content in the main XML file
 		SiPolicy output = new()
 		{
-			VersionEx = mainXML.VersionEx,  // Main policy takes priority
-			PolicyTypeID = mainXML.PolicyTypeID,  // Main policy takes priority
-			PlatformID = mainXML.PlatformID,  // Main policy takes priority
-			PolicyID = mainXML.PolicyID,  // Main policy takes priority
-			BasePolicyID = mainXML.BasePolicyID,  // Main policy takes priority
-			Rules = mainXML.Rules,  // Main policy takes priority
+			VersionEx = mainXML.VersionEx, // Main policy takes priority
+			PolicyTypeID = mainXML.PolicyTypeID, // Main policy takes priority
+			PlatformID = mainXML.PlatformID, // Main policy takes priority
+			PolicyID = mainXML.PolicyID, // Main policy takes priority
+			BasePolicyID = mainXML.BasePolicyID, // Main policy takes priority
+			Rules = mainXML.Rules, // Main policy takes priority
 			EKUs = [.. ekusToUse], // Aggregated data
 			FileRules = [.. fileRules], // Aggregated data
-			Signers = [.. signers],  // Aggregated data
+			Signers = [.. signers], // Aggregated data
 			SigningScenarios = [UMCISigningScenario, KMCISigningScenario], // Aggregated data
-			UpdatePolicySigners = mainXML.UpdatePolicySigners,  // Main policy takes priority
+			UpdatePolicySigners = [.. updatePolicySignersCol], // Aggregated data
 			CiSigners = [.. ciSigners], // Aggregated data
 			HvciOptions = 2, // Set to the secure state
 			HvciOptionsSpecified = true, // Set to the secure state
-			Settings = mainXML.Settings,  // Main policy takes priority
-			Macros = mainXML.Macros,  // Main policy takes priority
-			SupplementalPolicySigners = mainXML.SupplementalPolicySigners,  // Main policy takes priority
-			AppSettings = mainXML.AppSettings,  // Main policy takes priority
-			FriendlyName = mainXML.FriendlyName,  // Main policy takes priority
-			PolicyType = mainXML.PolicyType,  // Main policy takes priority
-			PolicyTypeSpecified = mainXML.PolicyTypeSpecified  // Main policy takes priority
+			Settings = mainXML.Settings, // Main policy takes priority
+			Macros = mainXML.Macros, // Main policy takes priority
+			SupplementalPolicySigners = [.. supplementalPolicySignersCol], // Aggregated data
+			AppSettings = mainXML.AppSettings, // Main policy takes priority
+			FriendlyName = mainXML.FriendlyName, // Main policy takes priority
+			PolicyType = mainXML.PolicyType, // Main policy takes priority
+			PolicyTypeSpecified = mainXML.PolicyTypeSpecified // Main policy takes priority
 		};
 
 

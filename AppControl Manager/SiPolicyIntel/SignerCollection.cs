@@ -11,4 +11,6 @@ internal sealed class SignerCollection
 	internal required HashSet<SignerRule> SignerRules { get; set; }
 	internal required HashSet<WHQLPublisher> WHQLPublishers { get; set; }
 	internal required HashSet<WHQLFilePublisher> WHQLFilePublishers { get; set; }
+	internal required HashSet<UpdatePolicySignerRule> UpdatePolicySigners { get; set; }
+	internal required HashSet<SupplementalPolicySignerRule> SupplementalPolicySigners { get; set; }
 }

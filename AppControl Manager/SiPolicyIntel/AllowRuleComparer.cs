@@ -13,6 +13,12 @@ internal sealed class AllowRuleComparer : IEqualityComparer<AllowRule>
 			return false;
 		}
 
+		// Check SSType
+		if (x.SigningScenario != y.SigningScenario)
+		{
+			return false;
+		}
+
 		Allow allowX = x.AllowElement;
 		Allow allowY = y.AllowElement;
 
@@ -34,6 +40,12 @@ internal sealed class AllowRuleComparer : IEqualityComparer<AllowRule>
 		if (!string.IsNullOrWhiteSpace(allowX.FilePath) &&
 			!string.IsNullOrWhiteSpace(allowY.FilePath) &&
 			string.Equals(allowX.FilePath, allowY.FilePath, StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		// Rule special case: Check if FileName is "*" in both and are equal
+		if (string.Equals(allowX.FileName, "*", StringComparison.OrdinalIgnoreCase) && string.Equals(allowY.FileName, "*", StringComparison.OrdinalIgnoreCase))
 		{
 			return true;
 		}

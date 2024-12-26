@@ -17,3 +17,7 @@ When submitting a Pull Request (PR), please enable the "Allow edits by maintaine
 ## Code Style
 
 If your PR includes C# code, make sure it adheres to the coding styles enforced by the .editorconfig files located in the respective project directories. This helps maintain consistency across the codebase.
+
+## Type of Code
+
+Contributions should be written in C# or lower-level languages if necessary. Higher-level scripting languages are not suitable for this project.

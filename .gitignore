@@ -1,13 +1,10 @@
 Harden-Windows-Security Module/obj/
 Harden-Windows-Security Module/.vs/
 Harden-Windows-Security Module/bin/
-WDACConfig/obj/
-WDACConfig/.vs/
-WDACConfig/bin/
+Harden-Windows-Security Module/Harden Windows Security.csproj.user
 AppControl Manager/.vs/
 AppControl Manager/bin/
 AppControl Manager/obj/
 AppControl Manager/MSIXOutput
 AppControl Manager/Generated Files/
 AppControl Manager/AppControl Manager.csproj.user
-Harden-Windows-Security Module/Harden Windows Security.csproj.user

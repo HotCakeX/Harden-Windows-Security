@@ -65,17 +65,19 @@ jobs:
       - name: Building the AppControl Manager
         shell: pwsh
         working-directory: './AppControl Manager'
+        # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
+
       # https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
       # https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference
       # https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
         run: |
           dotnet --info
           dotnet --list-sdks
-          dotnet build "AppControl Manager.sln" --configuration Release --verbosity minimal /p:Platform=x64
+          dotnet build "AppControl Manager.sln" --configuration Release --verbosity diagnostic /p:Platform=x64
        
       - name: Generating the MSIX Package
         working-directory: './AppControl Manager'
-        run: dotnet msbuild "AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64
+        run: dotnet msbuild "AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:diagnostic
 
       - name: Capturing the Generated MSIX file Path
         shell: pwsh

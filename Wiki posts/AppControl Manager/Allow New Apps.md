@@ -27,6 +27,9 @@ If something like a power outage occurs during the audit mode phase, on the next
 > [!NOTE]\
 > This feature can also detect and create supplemental policy for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode so that it can capture those executables.
 
+> [!TIP]\
+> You can use both Signed and Unsigned App Control policies. The app will automatically detect the signing status of the XML policy file that you select and prompt for any additional information required.
+
 <br>
 
 ## Configuration Details

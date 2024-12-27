@@ -2,12 +2,12 @@
 
 AppControl Manager is a modern secure app that provides easy to use graphical user interface to manage App Control and Code Integrity on your device.
 
-The short-term goal is for the AppControl manager to reach feature parity with the [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) Powershell module, as fast as possible, and then to surpass it with new unique features and improvements.
+**⚡What is App Control? [Check Out This Article ⚡](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)**
+
+<br>
 
 > [!IMPORTANT]\
 > The AppControl Manager application is built publicly using a [GitHub action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with [SLSA](https://slsa.dev/spec/v1.0/levels) level 2 and [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds). The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
->
-> **What is App Control for business? [check out this article](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)**
 
 <br>
 
@@ -121,6 +121,18 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 <br>
 
+### Where Are The Temporary Files Saved To?
+
+The Temporary Files Are Stored in the Following Directory
+
+```
+C:\Program Files\WDACConfig\StagingArea
+```
+
+Each applicable feature of the AppControl Manager that you start using will generate a uniquely named subdirectory within the StagingArea to store its temporary files (if needed). Upon closing the application, the entire StagingArea directory, along with its contents, will be automatically deleted. These files are utilized by the application for tasks such as creating policies, storing temporary scan results, and other related functions.
+
+<br>
+
 ## About the Installation Process
 
 The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
@@ -194,11 +206,11 @@ AppControl -MSIXPath "Path To the MSIX" -SignTool "Path to signtool.exe" -Verbos
 # FAQs
 
 * Q: Why isn't AppControl Manager on Microsoft Store?
-* A: Because Microsoft Store currently does not accept apps that require Administrator privileges to run (i.e., MediumIL).
+* A: Because Microsoft Store currently does not accept apps that require Administrator privileges to run [(i.e., MediumIL)](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control).
 
 <br>
 
 * Q: Why isn't the MSIX package pre-signed?
-* A: Because I haven't started paying for a code-signing certificate yet.
+* A: Because I haven't started paying for a code-signing certificate yet. [Read more about signing](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Rethinking-Trust:-Advanced-Security-Measures-for-High%E2%80%90Stakes-Systems)
 
 <br>

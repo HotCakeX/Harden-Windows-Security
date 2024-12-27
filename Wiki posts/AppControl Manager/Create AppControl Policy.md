@@ -22,7 +22,7 @@ Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 * **Microsoft Recommended Driver Block Rules**: It will download the latest Microsoft Recommended (Kernel-Mode) block rules from [the official source](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules) and create an App Control policy.
 
-   * **Auto update**: It will create a scheduled task on the system that will check every week for the latest Microsoft Recommended block rules and update the policy automatically.
+   * **Auto update**: It will create a scheduled task on the system that will check every week for the latest Microsoft Recommended block rules and update the policy automatically. [Please refer to this page for more info.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
 
 <br>
 

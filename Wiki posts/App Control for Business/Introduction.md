@@ -23,6 +23,22 @@ App Control puts the power of security directly in your hands, giving you comple
 
 <br>
 
+## But What Is App Control in Simpler Terms?
+
+By default, you can install any program and run any file on your system. These files can either be signed or unsigned. Signed files come with a certificate that verifies their authenticity, and Windows maintains [a list of trusted certificates](https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certificate-trust).
+
+Application Control is a security feature designed to regulate and restrict which programs and files are allowed to run on your system. It eliminates the default open-ended approach where any file can be executed freely. Instead, you define a policy—formatted as an XML file—that specifies which certificates or files are trusted. The system then enforces this policy, permitting only the approved files and programs to run while blocking everything else.
+
+This fundamentally changes the security landscape. Instead of allowing everything by default, the system now demands that programs and files prove their trustworthiness to the policy you created, before execution.
+
+Windows also includes a feature called [Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003). It acts as a fully automated Application Control system for your device. Being fully automated means it cannot be manually configured or overridden. Smart App Control leverages [the Microsoft Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph#how-does-wdac-work-with-the-isg), which utilizes AI and advanced technologies to assess whether a file or program is safe to execute.
+
+For those seeking more granular control, [**the AppControl Manager app**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) offers a highly intuitive graphical interface. It allows you to create detailed policies, specifying which files or programs are permitted to run. Policies can be defined using various criteria within the XML format. For example, you can create rules to block all files from running in a particular folder or allow only files signed with a specific certificate, effectively blocking unsigned or differently signed files. AppControl Manager provides a comprehensive suite of tools to manage and configure App Control on your system. With all functionalities built directly into the app, it eliminates the need to switch between different tools or interfaces, making the process seamless and efficient.
+
+App Control is deeply integrated into Windows core and a component known as Code Integrity is mainly responsible for enforcing App Control policies that we create. It runs very early during the system boot, ensuring tight policy enforcement from the very beginning.
+
+<br>
+
 ## Application Control Usage Levels
 
 There are many ways you can utilize Application Control features and here they are sorted by the level of restriction and protection they provide; From top (having the least restriction and protection) to bottom (having the most restriction and protection).
@@ -70,8 +86,6 @@ Microsoft provides the [following official document](https://learn.microsoft.com
 * [Merge App Control for Business policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/merge-appcontrol-policies)
 * [Understand App Control for Business policy rules and file rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#app-control-for-business-policy-rules)
 * [Testing and Debugging AppId Tagging Policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/AppIdTagging/debugging-operational-guide-appid-tagging-policies)
-* [Editing existing base and supplemental WDAC policies with the Wizard](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-wizard-editing-policy)
-* [Creating a new Supplemental Policy with the Wizard](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-wizard-create-supplemental-policy)
 * [App Control for Business example base policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/example-appcontrol-base-policies)
 * [Configure the Application Identity service](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/applocker/configure-the-application-identity-service)
 * [Microsoft recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules)

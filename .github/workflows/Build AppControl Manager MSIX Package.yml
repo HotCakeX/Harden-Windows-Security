@@ -63,13 +63,19 @@ jobs:
           winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
       - name: Building the AppControl Manager
+        shell: pwsh
+        working-directory: './AppControl Manager'
       # https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
       # https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference
       # https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
-        run: dotnet build "AppControl Manager/AppControl Manager.sln" --configuration Release --verbosity minimal /p:Platform=x64
-
+        run: |
+          dotnet --info
+          dotnet --list-sdks
+          dotnet build "AppControl Manager.sln" --configuration Release --verbosity minimal /p:Platform=x64
+       
       - name: Generating the MSIX Package
-        run: dotnet msbuild "AppControl Manager/AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64
+        working-directory: './AppControl Manager'
+        run: dotnet msbuild "AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64
 
       - name: Capturing the Generated MSIX file Path
         shell: pwsh

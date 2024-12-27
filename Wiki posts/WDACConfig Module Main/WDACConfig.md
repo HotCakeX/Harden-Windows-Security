@@ -3,7 +3,7 @@
 > [!IMPORTANT]\
 > This module is being deprecated. Use the new AppControl Manager application -> https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
 >
-> YouTube demo: 
+> YouTube demo:
 > https://www.youtube.com/watch?v=SzMs13n7elE
 
 <br>

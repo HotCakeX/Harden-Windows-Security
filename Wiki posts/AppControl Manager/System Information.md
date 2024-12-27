@@ -10,7 +10,7 @@
 
 <br>
 
-Use the System Information page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to view details about the deployed App Control policies on the system. 
+Use the System Information page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to view details about the deployed App Control policies on the system.
 
 * Search through the list of policies
 
@@ -33,7 +33,7 @@ Use the System Information page in [AppControl Manager](https://github.com/HotCa
 
 ## View Code Integrity Information
 
-In the ***Code Integrity Information*** section you can view advanced details about the current status of Code Integrity on the system. 
+In the ***Code Integrity Information*** section you can view advanced details about the current status of Code Integrity on the system.
 
 You can also check the status of Application Control for Business, including whether User-Mode or Kernel-Mode policies are deployed and whether they are set to Enforced mode or Audit mode.
 
@@ -83,7 +83,7 @@ Once all four fields are populated, press the **Verify** button. This action val
 Following this step, the policy will be re-signed and redeployed on the system with a new [rule option](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options) labeled **Enabled: Unsigned System Integrity Policy**.
 
 > [!IMPORTANT]\
-> After completing this process, restart your system. Since signed policies are tamper-resistant, they leverage Secure Boot and reside in the EFI partition. Upon reboot, select the same signed policy and press the Remove **button**. The AppControl Manager will detect the policy as safe for removal and delete it from the system without requiring further input. (**If you do not reboot your system and attempt to remove the signed policy that was just re-signed and re-deployed, it will lead to boot failure.**) 
+> After completing this process, restart your system. Since signed policies are tamper-resistant, they leverage Secure Boot and reside in the EFI partition. Upon reboot, select the same signed policy and press the Remove **button**. The AppControl Manager will detect the policy as safe for removal and delete it from the system without requiring further input. (**If you do not reboot your system and attempt to remove the signed policy that was just re-signed and re-deployed, it will lead to boot failure.**)
 
 <br>
 
@@ -92,7 +92,7 @@ Following this step, the policy will be re-signed and redeployed on the system w
 >
 > Enabling this checkbox includes supplemental policies named `AppControlManagerSupplementalPolicy` in the displayed results. Each base policy created and deployed via the AppControl Manager automatically deploys a corresponding supplemental policy with this name. This supplemental policy is essential for the operation of the AppControl Manager application itself.
 > In addition, it contains a FilePublisher rule for `SignTool.exe`, allowing signing operations to be performed. If you intentionally remove this policy, you will no longer be able to launch the AppControl Manager or use `SignTool.exe` when certain base policies are active.
-> 
+>
 > **Note that these supplemental policies are automatically removed when their associated base policy is removed from the system, so no additional action is required on your part.**
 >
 > You can view the XML source of the `AppControlManagerSupplementalPolicy` supplemental policy [here](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/AppControl%20Manager/Resources/AppControlManagerSupplementalPolicy.xml).

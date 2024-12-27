@@ -53,6 +53,6 @@ Set-CIPolicySetting -FilePath 'Policy.xml' -Provider 'Provider2' -ValueType 'DWo
 * `DWord` value is the same as integer or `WldpInteger`.
 
 * In order to set a Boolean value using the `Set-CIPolicySetting` cmdlet, you need to use 1 for True or 0 for False, that will create a valid policy XML file that is compliant with the CI Policy Schema.
-  
+
 
 <br>

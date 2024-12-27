@@ -14,4 +14,7 @@ Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Securit
 
 Use the browser button to select a file and the hashes will be immediately calculated and displayed on the page.
 
+> [!NOTE]\
+> If the selected file is non-conformant, the app will calculate the flat hashes of the file and present them as Authenticode hashes. When that happens, the page hashes will be displayed as `N/A`. This is compliant with how the App Control engine in Windows works.
+
 <br>

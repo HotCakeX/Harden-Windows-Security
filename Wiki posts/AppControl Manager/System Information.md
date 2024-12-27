@@ -1,5 +1,15 @@
 # System Information
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/System%20Information.png" alt="AppControl Manager Application's System Information Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use the System Information page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to view details about the deployed App Control policies on the system. 
 
 * Search through the list of policies

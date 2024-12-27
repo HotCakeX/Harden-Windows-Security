@@ -1,5 +1,15 @@
 # Build New Certificate
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Build%20New%20Certificate.png" alt="AppControl Manager Application's Build New Certificate Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use this page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to build a new Code Signing certificate that is suitable for signing App Control policies according to the [Microsoft's requirements](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering). This page offers multiple options to configure the generated certificate according to your needs and requirements. The keys use `SHA2-512` hashing algorithm.
 
 You will see a prompt asking for password during certificate building process. This is the password that will be used to protect the certificate's private key on your system. You can uncheck the box for passwords and only use confirmation prompts. The password or confirmation prompt will be displayed to you every time the private key of the certificate is going to be used to sign a file.

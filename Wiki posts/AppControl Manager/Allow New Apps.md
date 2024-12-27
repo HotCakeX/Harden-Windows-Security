@@ -1,5 +1,15 @@
 # Allow New Apps
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Allow%20New%20Apps.png" alt="AppControl Manager Application's Allow New Apps Page">
+
+</div>
+
+<br>
+
+<br>
+
 This page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) is designed as a practical hub for managing App Control on your system. Consider it your centralized solution for effortlessly overseeing your app-related policies and allowing new apps.
 
 When you need to install a new application, this page provides an intuitive way to temporarily enable Audit mode in your existing base policy. This allows the installation of the app while ensuring the base policy automatically reverts to Enforced mode immediately afterward.

@@ -1,5 +1,15 @@
 # Create App Control Policy
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Create%20Policy.png" alt="AppControl Manager Application's Create App Control Policy Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create new App Control policies based on the [default templates](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/example-appcontrol-base-policies).
 
 * **Allow Microsoft**: Only allows files signed by Microsoft certificates to run on the system.

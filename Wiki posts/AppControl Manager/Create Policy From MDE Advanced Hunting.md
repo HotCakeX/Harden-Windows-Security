@@ -1,5 +1,15 @@
 # Create Policy From MDE Advanced Hunting
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Create%20policy%20from%20MDE%20Advanced%20Hunting.png" alt="AppControl Manager Application's Create Policy From MDE Advanced Hunting Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) page to create App Control policies based on Microsoft Defender for Endpoint (MDE) Advanced Hunting exported CSV logs. [**Refer to this page for more information**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control).
 
 This page offers a data grid that has search functionality, sorting, removal of individual logs and copying entire rows or each cell to the clipboard.

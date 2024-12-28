@@ -2,7 +2,6 @@
 
 ## New-SupplementalWDACConfig -PathWildCards
 
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-PathWildCards.apng)
 
 ## Syntax
 
@@ -109,8 +108,6 @@ Indicates that the module will automatically deploy the Supplemental policy afte
 <br>
 
 ## New-SupplementalWDACConfig -InstalledAppXPackages
-
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-InstalledAppXPackages.apng)
 
 ## Syntax
 
@@ -236,8 +233,6 @@ Indicates that the cmdlet won't ask for confirmation and will proceed with creat
 <br>
 
 ## New-SupplementalWDACConfig -Certificates
-
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Certificates.gif)
 
 ## Syntax
 

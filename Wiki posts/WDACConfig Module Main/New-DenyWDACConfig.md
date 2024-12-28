@@ -2,8 +2,6 @@
 
 ## New-DenyWDACConfig -Drivers
 
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-Drivers.apng)
-
 ## Syntax
 
 ```powershell
@@ -84,8 +82,6 @@ Indicates that the module will automatically deploy the Deny base policy after c
 <br>
 
 ## New-DenyWDACConfig -InstalledAppXPackages
-
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-DenyWDACConfig/New-DenyWDACConfig%20-InstalledAppXPackages.apng)
 
 ## Syntax
 

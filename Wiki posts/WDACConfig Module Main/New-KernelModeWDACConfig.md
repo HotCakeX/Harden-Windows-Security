@@ -1,5 +1,4 @@
 # New-KernelModeWDACConfig available parameters
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-KernelModeWDACConfig/New-KernelModeWDACConfig%20-Default.apng)
 
 ## Syntax
 

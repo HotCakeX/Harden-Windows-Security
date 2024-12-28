@@ -1,7 +1,7 @@
 # Create and Deploy Signed Application Control (WDAC) Policies
 
 > [!IMPORTANT]\
-> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) can easily and quickly generate a Code Signing certificate to be used for signing App Control policies.
+> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) can [easily and quickly generate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate) a Code Signing certificate to be used for signing App Control policies.
 >
 > This guide is only for those who want to learn how to setup a Windows Server with Active Directory and Certification Authority roles and create their own CA.
 
@@ -13,20 +13,10 @@
 
 * [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about App Control itself and how to create a customized App Control policy for your own environment.
 
-* Always test and deploy your App Control policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
-    - The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) has a ***Test Mode*** feature that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
+* Always test and deploy your App Control policy in Audit mode or Unsigned mode first to make sure it works correctly, before deploying the Signed version of it.
+    - The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) has a ***Test Mode*** option when creating policies that will create/deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options. [You can also add those options to other policies that have already been created.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options).
 
-* Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed if you decide to disable or modify the signed deployed App Control policy later on.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Video Guide
-
-<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png" alt="Create and Deploy Signed WDAC Windows Defender Policy YouTube Guide"></a>
+* Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed, along with the certificate that signed them, if you decide to disable or modify the signed deployed App Control policy later on.
 
 <br>
 
@@ -42,7 +32,7 @@
 
 That's essentially everything we have to do. So, if you are already familiar with the concepts, you can go straight to the bottom of this page and use the resources section to refer to Microsoft guides to create and deploy the Signed App Control policy.
 
-But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the App Control policy. It takes about 20 minutes for me (as you can see in the video) and depending on the hardware, it can even take less time.
+But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the App Control policy. It takes about 20 minutes for me and depending on the hardware, it can even take less time.
 
 <br>
 
@@ -52,20 +42,16 @@ But if you aren't familiar, keep reading as I've thoroughly explained every step
 
 ## Prerequisites
 
-Latest Windows Server, it's free for 180 days for evaluation and comes in ISO and VHDX formats. Preferably use Windows Server insider vNext because it has the newest features and visual upgrades.
+Latest Windows Server, it's free for 180 days for evaluation and comes in ISO and VHDX formats.
 
-* [Download Windows Server 2022](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022) from [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter)
-* [Download Windows Server insider vNext](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewserver)
-    - [Insider activation keys](https://techcommunity.microsoft.com/t5/windows-server-insiders/bd-p/WindowsServerInsiders)
-
-<br>
+* [Download Windows Server 2025](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2025) from [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter).
 
 Once we have our Windows installation media (ISO or VHDX), we need to set up a Hyper-V VM on our host. For this guide, our host is a Windows 11 pro for workstations machine.
 
 Create a Hyper-V VM with these specifications:
 
 * Secure Boot
-* Trusted Platform Module (TPM)
+* Trusted Platform Module (vTPM)
 * At least 4 virtual processors
 * At least 4 GB RAM
 * At least ~20 GB storage
@@ -290,13 +276,8 @@ The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/win
 
 ## Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to sign and deploy App Control policies
 
-It supports creating certificates and signing, deploying and removing signed policies.
-
-You don't need to manually download SignTool.exe but here are some of the sources that it can be retrieved from:
-
-* [Windows stable SDK **installer**](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
-* [Windows Insider SDK **ISO**](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewSDK)
-* *SignTool is also included in the [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install) but the one in SDK is the newest and recommended place to get it.*
+> [!TIP]\
+> AppControl Manager has everything built-in for you. You can [**Deploy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy), [**Modify**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps) and [**Remove**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information#policy-removal) Signed policies.
 
 <br>
 
@@ -411,12 +392,11 @@ then FQDN is: `CAServer.CAServer.com`
 * [Use signed policies to protect App Control for Business against tampering](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering)
 * [Create a code signing cert for App Control for Business](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol)
 * [Deploying signed policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-with-script#deploying-signed-policies)
-* [WDAC Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
-* [WDAC policy creation - Australian Government](https://desktop.gov.au/blueprint/abac/wdac-policy-creation.html)
+* [App Control Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
+* [Application Control - Australian Government](https://blueprint.asd.gov.au/security-and-governance/essential-eight/application-control/)
 * [Understand App Control for Business policy rules and file rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create)
 * [Install Active Directory Domain Services](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-)
 * [Install-AdcsCertificationAuthority](https://learn.microsoft.com/en-us/powershell/module/adcsdeployment/install-adcscertificationauthority)
 * [Install the Certification Authority](https://learn.microsoft.com/en-us/windows-server/networking/core-network-guide/cncg/server-certs/install-the-certification-authority)
-* [Comparison of Standard, Datacenter, and Datacenter: Azure Edition editions of Windows Server 2022](https://learn.microsoft.com/en-us/windows-server/get-started/editions-comparison-windows-server-2022?tabs=full-comparison)
+* [Comparison of Windows Server editions](https://learn.microsoft.com/en-us/windows-server/get-started/editions-comparison)
 * [Remove App Control for Business policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies)
-* [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule)

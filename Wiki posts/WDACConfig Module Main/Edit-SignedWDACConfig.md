@@ -2,8 +2,6 @@
 
 ## Edit-SignedWDACConfig -AllowNewApps
 
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-AllowNewApps.apng)
-
 ## Syntax
 
 ```powershell
@@ -281,8 +279,6 @@ By default, the module includes user PEs in the scan. When you use this switch p
 
 ## Edit-SignedWDACConfig -MergeSupplementalPolicies
 
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-MergeSupplementalPolicies.apng)
-
 ## Syntax
 
 ```powershell
@@ -441,8 +437,6 @@ Indicates that the module will not remove the old Supplemental policy xml files 
 <br>
 
 ## Edit-SignedWDACConfig -UpdateBasePolicy
-
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-SignedWDACConfig/Edit-SignedWDACConfig%20-UpdateBasePolicy.apng)
 
 ## Syntax
 

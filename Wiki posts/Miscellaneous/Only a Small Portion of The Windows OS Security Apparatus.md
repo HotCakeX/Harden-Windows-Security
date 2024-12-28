@@ -138,6 +138,8 @@ Application control is a crucial line of defense for protecting computer systems
 
 * [Read More](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
 
+* [**AppControl Manager**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+
 <br>
 
 ### Complete BYOVD Protection
@@ -151,8 +153,6 @@ This scenario involves removing the trust to any Kernel mode driver, whether the
 ### Application Cross-Dependency Usage Control
 
 Implements Sandboxing-like restrictions around the program's dependencies so that only the main executable(s) of the program can use its dependencies and any other executable will be blocked from using them.
-
-* [Read More](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#-boostedsecurity)
 
 * [Watch](https://youtu.be/cp7TaTNPZE0?si=2rhBTGdO76A5vQS6)
 

@@ -121,11 +121,13 @@ If a policy is not deployed in audit mode, it is considered to be in enforced mo
 
 * [How To Create an App Control Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Create-an-App-Control-Supplemental-Policy)
 
+* [The Strength of Signed App Control Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies)
+
 * [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
 
 * [App Control Notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes)
 
-* [How to Create and Deploy a Signed App Control Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
+* [How to use Windows Server to Create App Control Code Signing Certificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
 
 * [App Control policy for BYOVD Kernel mode only protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 

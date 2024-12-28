@@ -1,5 +1,15 @@
 # Create App Control Policy
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Create%20Policy.png" alt="AppControl Manager Application's Create App Control Policy Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create new App Control policies based on the [default templates](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/example-appcontrol-base-policies).
 
 * **Allow Microsoft**: Only allows files signed by Microsoft certificates to run on the system.
@@ -12,7 +22,7 @@ Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 * **Microsoft Recommended Driver Block Rules**: It will download the latest Microsoft Recommended (Kernel-Mode) block rules from [the official source](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules) and create an App Control policy.
 
-   * **Auto update**: It will create a scheduled task on the system that will check every week for the latest Microsoft Recommended block rules and update the policy automatically.
+   * **Auto update**: It will create a scheduled task on the system that will check every week for the latest Microsoft Recommended block rules and update the policy automatically. [Please refer to this page for more info.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
 
 <br>
 

@@ -1,5 +1,15 @@
 # Create Deny Policy
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Create%20Deny%20policy.png" alt="AppControl Manager Application's Create Deny Policy Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create Deny App Control policies. Keep in mind that App Control is inherently a whitelisting feature so anything that is not allowed by a policy is already automatically blocked.
 
 All Deny policies have *Base* policy types as other types such as Supplemental cannot have Deny rules in them.

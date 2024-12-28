@@ -1,7 +1,7 @@
-# Create and Deploy Signed Application Control (WDAC) Policies
+# How to use Windows Server to Create App Control Code Signing Certificate
 
 > [!IMPORTANT]\
-> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) can easily and quickly generate a Code Signing certificate to be used for signing App Control policies.
+> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) can [easily and quickly generate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate) a Code Signing certificate to be used for signing App Control policies.
 >
 > This guide is only for those who want to learn how to setup a Windows Server with Active Directory and Certification Authority roles and create their own CA.
 
@@ -13,20 +13,10 @@
 
 * [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about App Control itself and how to create a customized App Control policy for your own environment.
 
-* Always test and deploy your App Control policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
-    - The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) has a ***Test Mode*** feature that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
+* Always test and deploy your App Control policy in Audit mode or Unsigned mode first to make sure it works correctly, before deploying the Signed version of it.
+    - The [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) has a ***Test Mode*** option when creating policies that will create/deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options. [You can also add those options to other policies that have already been created.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options).
 
-* Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed if you decide to disable or modify the signed deployed App Control policy later on.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Video Guide
-
-<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png" alt="Create and Deploy Signed WDAC Windows Defender Policy YouTube Guide"></a>
+* Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed, along with the certificate that signed them, if you decide to disable or modify the signed deployed App Control policy later on.
 
 <br>
 
@@ -42,7 +32,7 @@
 
 That's essentially everything we have to do. So, if you are already familiar with the concepts, you can go straight to the bottom of this page and use the resources section to refer to Microsoft guides to create and deploy the Signed App Control policy.
 
-But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the App Control policy. It takes about 20 minutes for me (as you can see in the video) and depending on the hardware, it can even take less time.
+But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the App Control policy. It takes about 20 minutes for me and depending on the hardware, it can even take less time.
 
 <br>
 
@@ -52,20 +42,16 @@ But if you aren't familiar, keep reading as I've thoroughly explained every step
 
 ## Prerequisites
 
-Latest Windows Server, it's free for 180 days for evaluation and comes in ISO and VHDX formats. Preferably use Windows Server insider vNext because it has the newest features and visual upgrades.
+Latest Windows Server, it's free for 180 days for evaluation and comes in ISO and VHDX formats.
 
-* [Download Windows Server 2022](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2022) from [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter)
-* [Download Windows Server insider vNext](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewserver)
-    - [Insider activation keys](https://techcommunity.microsoft.com/t5/windows-server-insiders/bd-p/WindowsServerInsiders)
-
-<br>
+* [Download Windows Server 2025](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2025) from [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter).
 
 Once we have our Windows installation media (ISO or VHDX), we need to set up a Hyper-V VM on our host. For this guide, our host is a Windows 11 pro for workstations machine.
 
 Create a Hyper-V VM with these specifications:
 
 * Secure Boot
-* Trusted Platform Module (TPM)
+* Trusted Platform Module (vTPM)
 * At least 4 virtual processors
 * At least 4 GB RAM
 * At least ~20 GB storage
@@ -290,61 +276,8 @@ The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/win
 
 ## Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to sign and deploy App Control policies
 
-It supports creating certificates and signing, deploying and removing signed policies.
-
-You don't need to manually download SignTool.exe but here are some of the sources that it can be retrieved from:
-
-* [Windows stable SDK **installer**](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/)
-* [Windows Insider SDK **ISO**](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewSDK)
-* *SignTool is also included in the [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install) but the one in SDK is the newest and recommended place to get it.*
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## System Behavior After Deploying a Signed Application Control Policy
-
-### Activation Process
-
-After the signed App Control policy binary `.cip` is copied to the `EFI` partition as part of the deployment process, and system is restarted once, we can see in System Information that Application Control User-Mode is being enforced and when you try to install an application not permitted by the deployed policy, it will be successfully blocked.
-
-At this point, since we are using UEFI Secure Boot, the **Anti Tampering** protection of the **Signed policy** kicks in and starts protecting App Control policy against any tampering. We need to reboot the system one more time, [to verify everything](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering#verify-and-deploy-the-signed-policy) and make sure there is no boot failure.
-
-Deploying a Signed App Control policy **without restarting** is the same as deploying Unsigned policies, because the Signed policy can be easily removed just like an Unsigned policy. So always make sure you restart at least once after deploying a Signed App Control policy.
-
-<br>
-
-### If Someone forcefully deletes the deployed App Control policy file
-
-* Deleting the `.cip` policy file from `C:\Windows\System32\CodeIntegrity\CiPolicies\Active` and then restarting the system multiple times won't have any effect at all on the status of App Control. It will continue to work, and enforcement status will be shown in System Information. **This is how it protects itself against rogue administrators.**
-
-* Deleting the `.cip` policy file from the `EFI` partition located at `\EFI\Microsoft\Boot\CIPolicies\Active` and restarting the device will result in a boot failure. Before system restart, nothing happens and it will remain active. This is another self-protection method of a Signed App Control policy. To recover from this state, the person will need to disable Secure Boot in the UEFI firmware settings. There are only 3 scenarios at this point:
-
-    1. If, as suggested in the [Security Recommendations](https://github.com/HotCakeX/Harden-Windows-Security#security-recommendations), you set a strong password for the UEFI firmware of your hardware, they can't access the firmware. This security measure [alongside the rest of the Windows built-in security features](https://github.com/HotCakeX/Harden-Windows-Security) such as BitLocker device encryption will provide the **Ultimate protection for a Windows device against any threats and any person, no matter physical, real-life or Internet threats.**
-
-    2. If UEFI firmware is not password protected, the person can disable Secure Boot and/or TPM in UEFI firmware settings, they can even flash the entire UEFI firmware memory by physically abusing the device to get past the UEFI password, but since the device is BitLocker protected, **a total Lock Down will be triggered** and the person will need to provide the 48-digit recovery key of the OS drive in order to even complete the boot process into Windows lock screen. Assuming the person also has access to the Windows PIN, they will additionally need to provide 48-digit recovery password of any subsequent BitLocker protected drive(s) in order to access them (if the drive(s) aren't set to be auto-unlocked with OS drive). **This is more than Security-In-Depth.** If UEFI firmware has any unpatched vulnerability, Device Guard features will take care of it.
-
-    3. Since steps 1 and 2 are impossible to bypass for a rouge person, there will be only one option left. To completely recycle the physical device, get rid of the inaccessible hardware such as SSD and then sell the remaining hardware parts. Either way, **your data remains secure and inaccessible to any unauthorized person(s) at all times.**
-
-<details><summary>Screenshot of a message after forcefully deleting a Signed App Control policy from the EFI partition</summary>
-
-<img src="https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png" alt="Screenshot of a message after forcefully deleting a Signed App Control policy from the EFI partition">
-
-</details>
-
-<br>
-
-### What Happens When We Turn On Smart App Control
-
-Smart App Control works side-by-side any signed or unsigned App Control policy because it is itself a special type of App Control policy. It will be in enforced mode and continue to do its job.
-
-<br>
-
-### Dual boot OS configurations
-
-When you deploy a **Signed** App Control policy on a system that uses Secure Boot, it will be enforced on all of the OSes that boot on the physical machine, because the policy resides on the EFI partition and is not tied to any specific OS. That means if you perform a clean install of a second Windows OS or natively boot a VHDX (Hyper-V VM), the policy will apply to them as well.
+> [!TIP]\
+> AppControl Manager has everything built-in for you. You can [**Deploy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy), [**Modify**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps) and [**Remove**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information#policy-removal) Signed policies.
 
 <br>
 
@@ -411,12 +344,11 @@ then FQDN is: `CAServer.CAServer.com`
 * [Use signed policies to protect App Control for Business against tampering](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering)
 * [Create a code signing cert for App Control for Business](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol)
 * [Deploying signed policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-with-script#deploying-signed-policies)
-* [WDAC Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
-* [WDAC policy creation - Australian Government](https://desktop.gov.au/blueprint/abac/wdac-policy-creation.html)
+* [App Control Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
+* [Application Control - Australian Government](https://blueprint.asd.gov.au/security-and-governance/essential-eight/application-control/)
 * [Understand App Control for Business policy rules and file rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create)
 * [Install Active Directory Domain Services](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-)
 * [Install-AdcsCertificationAuthority](https://learn.microsoft.com/en-us/powershell/module/adcsdeployment/install-adcscertificationauthority)
 * [Install the Certification Authority](https://learn.microsoft.com/en-us/windows-server/networking/core-network-guide/cncg/server-certs/install-the-certification-authority)
-* [Comparison of Standard, Datacenter, and Datacenter: Azure Edition editions of Windows Server 2022](https://learn.microsoft.com/en-us/windows-server/get-started/editions-comparison-windows-server-2022?tabs=full-comparison)
+* [Comparison of Windows Server editions](https://learn.microsoft.com/en-us/windows-server/get-started/editions-comparison)
 * [Remove App Control for Business policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies)
-* [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule)

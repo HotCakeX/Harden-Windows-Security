@@ -1,5 +1,15 @@
 # Simulation
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Simulation.png" alt="AppControl Manager Application's Simulation Page">
+
+</div>
+
+<br>
+
+<br>
+
 The Simulation page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) allows you to simulate an App Control for Business policy deployment. Simply select folders or files and a policy XML file, it will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were running.
 
 There will be very detailed results of each file that participates in the Simulation process. You can use sorting and search features to categories and find the files quickly.

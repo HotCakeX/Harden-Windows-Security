@@ -1,5 +1,15 @@
 # Create Supplemental App Control Policy
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Create%20Supplemental%20Policy.png" alt="AppControl Manager Application's Create Supplemental App Control Policy Page">
+
+</div>
+
+<br>
+
+<br>
+
 Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create Supplemental App Control policies for your base policies. Use Supplemental policies to expand the scope of your base policies by allowing more files or applications.
 
 <br>

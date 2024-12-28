@@ -1,5 +1,15 @@
 # Create Policy From Event Logs
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/AppControl%20Manager%20page%20screenshots/Create%20policy%20from%20event%20logs.png" alt="AppControl Manager Application's Create Policy From Event Logs Page">
+
+</div>
+
+<br>
+
+<br>
+
 This page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) allows you to create Application Control policies directly from local event logs or EVTX files. It focuses on processing Code Integrity and AppLocker event logs to help build tailored policies.
 
 This page offers a data grid that has search functionality, sorting, removal of individual logs and copying entire rows or each cell to the clipboard.

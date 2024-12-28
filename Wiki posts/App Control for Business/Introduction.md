@@ -119,6 +119,8 @@ If a policy is not deployed in audit mode, it is considered to be in enforced mo
 
 * [How To Generate Audit Logs via App Control Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Generate-Audit-Logs-via-App-Control-Policies)
 
+* [How To Create an App Control Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Create-an-App-Control-Supplemental-Policy)
+
 * [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
 
 * [App Control Notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes)

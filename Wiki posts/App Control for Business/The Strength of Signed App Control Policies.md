@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![image](https://github.com/user-attachments/assets/37b36dfe-ce2c-494b-bdc6-e4a71f0ed9ff)
+<img src="https://github.com/user-attachments/assets/37b36dfe-ce2c-494b-bdc6-e4a71f0ed9ff" alt="mad cats" />
 
 </div>
 
@@ -113,6 +113,11 @@ In the rare case that an attacker bypasses the TCG OPAL protection, BitLocker's 
 3. The TPM: The SSD must be connected to the same machine due to the tight coupling with the Trusted Platform Module (TPM).
 
 If any one of these factors is not satisfied, the attacker would be forced to provide a 48-character recovery password to unlock the boot process, further complicating their efforts.
+
+<br>
+
+> [!NOTE]\
+> BitLocker employs software-based encryption using the `XTS-AES-256` algorithm. This approach is distinct from the hardware encryption provided by TCG OPAL. Alternatively, BitLocker can leverage TCG OPAL's hardware encryption directly. However, we intentionally maintain these as separate layers to enhance security.
 
 <br>
 

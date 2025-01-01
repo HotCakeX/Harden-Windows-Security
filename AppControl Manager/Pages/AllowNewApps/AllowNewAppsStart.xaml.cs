@@ -674,10 +674,10 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			EventLogsAllFileIdentities.Clear();
 
 			// reset the class variables back to their default states
+			fileIdentities.FileIdentitiesInternal.Clear();
 			selectedDirectoriesToScan.Clear();
 			deployPolicy = true;
 			selectedSupplementalPolicyName = null;
-			selectedXMLFilePath = null;
 			LogsScanStartTime = null;
 			tempBasePolicyPath = null;
 			_BasePolicyObject = null;
@@ -700,7 +700,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			// Reset the UI inputs back to their default states
 			DeployToggleButton.IsChecked = true;
 			SelectedDirectoriesTextBox.Text = null;
-			BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = null;
 			SupplementalPolicyNameTextBox.Text = null;
 			ScanLevelComboBox.SelectedIndex = 0;
 
@@ -913,7 +912,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 			// If there are no logs to create a Supplemental policy with
-			if (fileIdentities.Count == 0)
+			if (fileIdentities.Count is 0)
 			{
 				Step3InfoBar.Severity = InfoBarSeverity.Warning;
 				Step3InfoBar.Message = "There are no logs or files in any data grids to create a Supplemental policy for.";
@@ -1004,6 +1003,9 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		{
 			CreatePolicyButton.IsEnabled = true;
 			ResetStepsButton.IsEnabled = true;
+
+			// Clear the private variable after the policy is created. This allows the user to remove some items from the logs and recreate the policy with less data if needed.
+			fileIdentities.FileIdentitiesInternal.Clear();
 		}
 	}
 

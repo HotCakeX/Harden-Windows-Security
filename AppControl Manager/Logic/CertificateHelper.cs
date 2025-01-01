@@ -5,9 +5,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager;
 
-public static class CertificateHelper
+internal static class CertificateHelper
 {
-	public static string GetTBSCertificate(X509Certificate2 cert)
+	internal static string GetTBSCertificate(X509Certificate2 cert)
 	// Calculates the TBS value of a certificate
 	{
 		// Get the raw data of the certificate
@@ -59,7 +59,7 @@ public static class CertificateHelper
 		}
 	}
 
-	public static string ConvertHexToOID(string hex)
+	internal static string ConvertHexToOID(string hex)
 	// Converts a hexadecimal string to an OID
 	// Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
 	{

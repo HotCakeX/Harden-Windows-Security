@@ -4,7 +4,7 @@ using AppControlManager.Logging;
 
 namespace AppControlManager;
 
-public static class MoveUserModeToKernelMode
+internal static class MoveUserModeToKernelMode
 {
 	/// <summary>
 	/// Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
@@ -14,7 +14,7 @@ public static class MoveUserModeToKernelMode
 	/// </summary>
 	/// <param name="filePath">The path to the XML file</param>
 	/// <exception cref="Exception"></exception>
-	public static void Move(string filePath)
+	internal static void Move(string filePath)
 	{
 
 		// Instantiate the policy

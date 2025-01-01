@@ -72,6 +72,7 @@ public sealed partial class Update : Page
 
 			UpdateStatusInfoBar.IsClosable = false;
 			CheckForUpdateButton.IsEnabled = false;
+			CheckForUpdate.IsClickEnabled = false;
 			UpdateStatusInfoBar.IsOpen = true;
 			UpdateStatusInfoBar.Severity = InfoBarSeverity.Informational;
 
@@ -403,6 +404,8 @@ public sealed partial class Update : Page
 			UpdateStatusInfoBar.IsClosable = true;
 
 			DownloadProgressRingForMSIXFile.Visibility = Visibility.Collapsed;
+
+			CheckForUpdate.IsClickEnabled = true;
 		}
 	}
 

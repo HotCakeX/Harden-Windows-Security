@@ -320,6 +320,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 		foreach (FileIdentity item in itemsToDelete)
 		{
 			_ = AllowNewAppsStart.Instance.LocalFilesFileIdentities.Remove(item);
+			_ = AllowNewAppsStart.Instance.LocalFilesAllFileIdentities?.Remove(item);
 		}
 
 		UpdateTotalLogs();

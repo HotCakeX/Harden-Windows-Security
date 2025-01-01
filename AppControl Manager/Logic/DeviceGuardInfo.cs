@@ -11,18 +11,20 @@ internal sealed class DeviceGuardStatus
 
 internal static class DeviceGuardInfo
 {
+
+	// Define the WMI query to get the Win32_DeviceGuard class information
+	private const string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
+
+	// Define the scope (namespace) for the query
+	private const string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
+
+
 	/// <summary>
 	/// Get the Device Guard status information from the Win32_DeviceGuard WMI class
 	/// </summary>
 	/// <returns></returns>
 	internal static DeviceGuardStatus? GetDeviceGuardStatus()
 	{
-		// Define the WMI query to get the Win32_DeviceGuard class information
-		string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
-
-		// Define the scope (namespace) for the query
-		string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
-
 		// Create a ManagementScope object for the WMI namespace
 		ManagementScope managementScope = new(scope);
 

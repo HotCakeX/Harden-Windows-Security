@@ -6,8 +6,7 @@ using AppControlManager.Logging;
 
 namespace AppControlManager;
 
-// Declares a public static class that cannot be instantiated.
-public static partial class MeowParser
+internal static partial class MeowParser
 {
 
 	// P/Invoke declaration to import the 'BCryptOpenAlgorithmProvider' function from 'bcrypt.dll'.
@@ -45,8 +44,14 @@ public static partial class MeowParser
 		private readonly IntPtr Reserved2; // Reserved for future use.
 	}
 
-	// A public static method that returns a HashSet of strings.
-	public static HashSet<string> GetHashes(string SecurityCatalogFilePath)
+
+	/// <summary>
+	/// A public static method that returns a HashSet of strings.
+	/// </summary>
+	/// <param name="SecurityCatalogFilePath"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static HashSet<string> GetHashes(string SecurityCatalogFilePath)
 	{
 		// Initializes a new HashSet to store the hashes.
 		HashSet<string> OutputHashSet = [];

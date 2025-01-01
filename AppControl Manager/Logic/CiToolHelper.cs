@@ -32,14 +32,14 @@ public sealed class CiPolicyInfo
 
 // This class contains all the necessary logics to interact with CiTool.exe
 // Any code that wants to use CiTool.exe must go through this class rather than contacting it directly
-public static class CiToolHelper
+internal static class CiToolHelper
 {
 	/// <summary>
 	/// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
 	/// </summary>
 	/// <param name="number">The 64-bit unsigned integer as a string.</param>
 	/// <returns>The parsed version</returns>
-	public static Version Measure(string number)
+	internal static Version Measure(string number)
 	{
 		try
 		{
@@ -168,7 +168,7 @@ public static class CiToolHelper
 	/// </summary>
 	/// <param name="policyId">The GUID which is the policy ID of the policy to be removed.</param>
 	/// <exception cref="ArgumentException"></exception>
-	public static void RemovePolicy(string policyId)
+	internal static void RemovePolicy(string policyId)
 	{
 		if (string.IsNullOrWhiteSpace(policyId))
 		{
@@ -270,7 +270,7 @@ public static class CiToolHelper
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	public static void UpdatePolicy(string CipPath)
+	internal static void UpdatePolicy(string CipPath)
 	{
 		if (string.IsNullOrWhiteSpace(CipPath))
 		{
@@ -317,7 +317,7 @@ public static class CiToolHelper
 	/// Refreshes the currently deployed policies on the system
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
-	public static void RefreshPolicy()
+	internal static void RefreshPolicy()
 	{
 		// Combine the path to CiTool.exe using the system's special folder path
 		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
@@ -353,7 +353,7 @@ public static class CiToolHelper
 
 
 // Extension methods for JsonElement to simplify retrieving properties with default values
-public static class JsonElementExtensions
+internal static class JsonElementExtensions
 {
 
 	/// <summary>
@@ -364,7 +364,7 @@ public static class JsonElementExtensions
 	/// <param name="propertyName">The name of the property to retrieve.</param>
 	/// <param name="defaultValue">The default value to return if the property does not exist or is not a string.</param>
 	/// <returns>The value of the property as a string if it exists and is of type string; otherwise, returns the default value.</returns>
-	public static string? GetPropertyOrDefault(this JsonElement element, string propertyName, string defaultValue)
+	internal static string? GetPropertyOrDefault(this JsonElement element, string propertyName, string defaultValue)
 	{
 		// Attempt to retrieve the property with the specified name from the JSON element.
 		// Check if the property exists and if its value is of type string.
@@ -383,7 +383,7 @@ public static class JsonElementExtensions
 	/// <param name="propertyName">The name of the property to retrieve.</param>
 	/// <param name="defaultValue">The default value to return if the property does not exist or is not a boolean.</param>
 	/// <returns>The value of the property as a boolean if it exists and is of type boolean; otherwise, returns the default value.</returns>
-	public static bool GetPropertyOrDefault(this JsonElement element, string propertyName, bool defaultValue)
+	internal static bool GetPropertyOrDefault(this JsonElement element, string propertyName, bool defaultValue)
 	{
 		// Attempt to retrieve the property with the specified name from the JSON element.
 		// Check if the property exists and if its value is of type boolean.

@@ -321,6 +321,7 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page
 		foreach (FileIdentity item in itemsToDelete)
 		{
 			_ = AllowNewAppsStart.Instance.EventLogsFileIdentities.Remove(item);
+			_ = AllowNewAppsStart.Instance.EventLogsAllFileIdentities?.Remove(item);
 		}
 
 		UpdateTotalLogs();

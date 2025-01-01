@@ -30,7 +30,7 @@ internal static class TaskSchedulerHelper
 			using ManagementObjectCollection results = searcher.Get();
 
 			// If no tasks were found, return false
-			if (results.Count == 0)
+			if (results.Count is 0)
 			{
 				Logger.Write("No tasks found in Task Scheduler.");
 				return;

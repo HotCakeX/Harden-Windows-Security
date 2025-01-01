@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.Logic.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -24,12 +26,16 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	// To store the selectable Certificate common names
 	private HashSet<string> CertCommonNames = [];
 
+	// When this argument is provided, the verify button will check the input fields with the policy's details
+	private readonly SiPolicy.SiPolicy? policyObjectToVerify;
 
-	internal SigningDetailsDialog()
+	internal SigningDetailsDialog(SiPolicy.SiPolicy? policyObject = null)
 	{
 		this.InitializeComponent();
 
 		XamlRoot = App.MainWindow?.Content.XamlRoot;
+
+		policyObjectToVerify = policyObject;
 
 		// Populate the AutoSuggestBox with possible certificate common names available on the system
 		FetchLatestCertificateCNs();
@@ -46,6 +52,15 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 		CertificatePath = currentUserConfigs.CertificatePath;
 		CertificateCommonName = currentUserConfigs.CertificateCommonName;
 		SignToolPath = currentUserConfigs.SignToolCustomPath;
+
+
+		// Set the focus on the Verify button when the Content Dialog opens
+		// And highlight it
+		VerifyButton.Loaded += async (sender, e) =>
+		{
+			_ = await FocusManager.TryFocusAsync(VerifyButton, FocusState.Keyboard);
+		};
+
 	}
 
 
@@ -244,6 +259,42 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 				ShowTeachingTip("No certificate was found in the Current User personal store with the selected Common Name.");
 				return;
 			}
+
+
+			#region Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
+
+			string certCN = CertificateCommonNameAutoSuggestBox.Text;
+			string certPath = CertFilePathTextBox.Text;
+
+			if (policyObjectToVerify is not null)
+			{
+				bool isValid = false;
+
+				await Task.Run(() =>
+				{
+					isValid = CertificatePresence.InferCertificatePresence(policyObjectToVerify, certPath, certCN);
+				});
+
+
+				if (!isValid)
+				{
+					ShowTeachingTip("The selected certificate is not present in the XML policy file as an UpdatePolicySigner or the selected common name does not match the selected certificate's common name, thus it cannot be used to re-sign the policy. Please select the correct certificate.");
+					return;
+				};
+
+			}
+
+			// If cert object is not passed, only ensure cert CN and cert file match
+			else
+			{
+				if (!CertificatePresence.VerifyCertAndCNMatch(certPath, certCN))
+				{
+					ShowTeachingTip("The selected certificate file and common name don't match.");
+					return;
+				}
+			}
+
+			#endregion
 
 
 			// Verify the SignTool

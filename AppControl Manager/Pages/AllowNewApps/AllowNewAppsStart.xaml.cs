@@ -334,7 +334,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				#region Signing Details acquisition
 
 				// Instantiate the Content Dialog
-				SigningDetailsDialog customDialog = new();
+				SigningDetailsDialog customDialog = new(_BasePolicyObject);
 
 				// Show the dialog and await its result
 				ContentDialogResult result = await customDialog.ShowAsync();
@@ -466,6 +466,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				GoToStep2Button.IsEnabled = true;
 				Step1InfoBar.Message = null;
 				Step1InfoBar.IsOpen = false;
+
+				// Clear the variables if errors occurred in step 1
+				_BasePolicyObject = null;
+				_CertCN = null;
+				_CertPath = null;
 			}
 		}
 	}
@@ -796,9 +801,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	private void BrowseForXMLPolicyButton_Click(object sender, RoutedEventArgs e)
 	{
 
-		string filter = "XML Document|*.xml";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFile))
 		{

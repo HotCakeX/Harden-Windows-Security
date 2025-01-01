@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.Logic.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -55,6 +57,14 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 		CertificatePath = currentUserConfigs.CertificatePath;
 		CertificateCommonName = currentUserConfigs.CertificateCommonName;
 		SignToolPath = currentUserConfigs.SignToolCustomPath;
+
+
+		// Set the focus on the Verify button when the Content Dialog opens
+		// And highlight it
+		VerifyButton.Loaded += async (sender, e) =>
+		{
+			_ = await FocusManager.TryFocusAsync(VerifyButton, FocusState.Keyboard);
+		};
 	}
 
 
@@ -323,6 +333,27 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 			#endregion
 
 
+			#region Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
+
+			string certFilePath = CertFilePathTextBox.Text;
+			string certCN = CertificateCommonNameAutoSuggestBox.Text;
+
+			bool certIsUpdatePolicySigner = false;
+
+			await Task.Run(() =>
+			{
+				certIsUpdatePolicySigner = CertificatePresence.InferCertificatePresence(policyObject, certFilePath, certCN);
+			});
+
+			if (!certIsUpdatePolicySigner)
+			{
+				ShowTeachingTip("The selected certificate is not present in the XML policy file as an UpdatePolicySigner or the selected common name does not match the selected certificate's common name, thus it cannot be used to re-sign the policy for the removal process. Please select the correct certificate.");
+				return;
+			}
+
+			#endregion
+
+
 			#region Verify the SignTool
 
 
@@ -385,6 +416,16 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 
 			// Set certificate details that were verified to the user configurations
 			_ = UserConfiguration.Set(CertificateCommonName: CertificateCommonNameAutoSuggestBox.Text, CertificatePath: CertFilePathTextBox.Text);
+
+
+			// Set the focus on the Primary button after verification has been successful
+			Button? primaryButton = this.GetTemplateChild("PrimaryButton") as Button;
+			if (primaryButton is not null)
+			{
+				// Set focus on the primary button
+				_ = await FocusManager.TryFocusAsync(primaryButton, FocusState.Keyboard);
+			}
+
 		}
 		finally
 		{

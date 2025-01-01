@@ -118,7 +118,7 @@
                             Grid.Column="6" 
                             QueryIcon="Find"                        
                             VerticalAlignment="Center"
-                            MaxWidth="600"  TextChanged="SearchBox_TextChanged"
+                            MaxWidth="600" TextChanged="SearchBox_TextChanged"
                             SuggestionChosen="SearchBox_SuggestionChosen"
                             PlaceholderText="Search menu items..." Margin="0"/>
 

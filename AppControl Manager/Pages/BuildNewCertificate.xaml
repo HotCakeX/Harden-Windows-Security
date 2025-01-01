@@ -115,7 +115,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                 Header="Common Name"
                 HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
 
-                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name" TextChanged="CommonNameTextBox_TextChanged" MinWidth="200"/>
+                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name"  TextChanged="CommonNameTextBox_TextChanged" MinWidth="200"/>
 
                 </controls:SettingsCard>
 

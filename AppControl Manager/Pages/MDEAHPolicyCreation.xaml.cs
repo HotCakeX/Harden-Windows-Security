@@ -460,6 +460,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 		foreach (FileIdentity item in itemsToDelete)
 		{
 			_ = FileIdentities.Remove(item);
+			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
 
 		UpdateTotalLogs();
@@ -775,7 +776,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 			if (FileIdentities.Count == 0)
 			{
-				throw new InvalidOperationException("There are no logs. Use the scan button first.");
+				throw new InvalidOperationException("There are no logs. Use the scan button first or adjust the filters.");
 			}
 
 

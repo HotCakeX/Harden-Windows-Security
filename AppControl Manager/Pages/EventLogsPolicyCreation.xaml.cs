@@ -467,6 +467,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 		foreach (FileIdentity item in itemsToDelete)
 		{
 			_ = FileIdentities.Remove(item);
+			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
 
 		UpdateTotalLogs();

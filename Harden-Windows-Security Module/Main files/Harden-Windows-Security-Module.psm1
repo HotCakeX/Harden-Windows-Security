@@ -94,7 +94,7 @@ $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toa
 # Load all of the C# codes
 # for some reason it tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
 # https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
-Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked' , '/optimize+'
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked'
 
 try {
     # when we use the -ReferencedAssemblies parameter of Add-Type, The DLLs are only added and made available to the C# compilation, not the PowerShell host itself

@@ -43,6 +43,7 @@ public static partial class GUIProtectWinSecurity
 				{ "LockScreen", new string[] { "LockScreen_CtrlAltDel", "LockScreen_NoLastSignedIn" } },
 				{ "UserAccountControl", new string[] { "UAC_NoFastSwitching", "UAC_OnlyElevateSigned" } },
 				{ "WindowsNetworking", new string[] { "WindowsNetworking_BlockNTLM" } },
+				{ "TLSSecurity", new string[] { "TLSSecurity_BattleNetClient" } },
 				{ "MiscellaneousConfigurations", new string[] { "Miscellaneous_WindowsProtectedPrint", "MiscellaneousConfigurations_LongPathSupport", "MiscellaneousConfigurations_StrongKeyProtection" } },
 				{ "DeviceGuard", new string[] { "DeviceGuard_MandatoryVBS" } },
 				{ "CountryIPBlocking", new string[] { "CountryIPBlocking_OFAC" } },

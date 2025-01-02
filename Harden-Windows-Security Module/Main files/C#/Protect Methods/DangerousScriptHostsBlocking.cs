@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace HardenWindowsSecurity;
@@ -6,7 +7,7 @@ namespace HardenWindowsSecurity;
 public static partial class DownloadsDefenseMeasures
 {
 	/// <summary>
-	/// Blocks certain dangerous script hosts using AppControl policy
+	/// Blocks certain dangerous script hosts using App Control policy
 	/// </summary>
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void DangerousScriptHostsBlocking()
@@ -21,22 +22,31 @@ public static partial class DownloadsDefenseMeasures
 		string CIPPath = Path.Combine(GlobalVars.WorkingDir, "Dangerous-Script-Hosts-Blocking.cip");
 		string XMLPath = Path.Combine(GlobalVars.path, "Resources", "Dangerous-Script-Hosts-Blocking.xml");
 
-		// Use string interpolation without the @ symbol for multiline
-		string script = $@"
-                $CurrentBasePolicyNames = [System.Collections.Generic.HashSet[System.String]]@(
-                    ((&""$env:SystemDrive\Windows\System32\CiTool.exe"" -lp -json | ConvertFrom-Json).Policies |
-                    Where-Object -FilterScript {{ ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }}).FriendlyName
-                )
+		// Run the CiTool and retrieve a list of base policies
+		List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
 
-                if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Contains('Dangerous-Script-Hosts-Blocking')))) {{
-                    $null = ConvertFrom-CIPolicy -XmlFilePath '{XMLPath}' -BinaryFilePath '{CIPPath}'
-                    $null = CiTool.exe --update-policy '{CIPPath}' -json
-                }}
-                else {{
-                    Write-Verbose -Message 'The Dangerous-Script-Hosts-Blocking policy is already deployed' -Verbose
-                }}
-            ";
+		bool isFound = false;
 
-		_ = PowerShellExecutor.ExecuteScript(script);
+		// loop over all policies
+		foreach (CiPolicyInfo item in policies)
+		{
+			// find the policy with the right name
+			if (string.Equals(item.FriendlyName, "Dangerous-Script-Hosts-Blocking", StringComparison.OrdinalIgnoreCase))
+			{
+				isFound = true;
+				break;
+			}
+		}
+
+		// If the Dangerous-Script-Hosts-Blocking is not deployed
+		if (!isFound)
+		{
+			PolicyToCIPConverter.Convert(XMLPath, CIPPath);
+			CiToolHelper.UpdatePolicy(CIPPath);
+		}
+		else
+		{
+			Logger.LogMessage("The Dangerous-Script-Hosts-Blocking policy is already deployed", LogTypeIntel.Information);
+		}
 	}
 }

@@ -33,51 +33,37 @@
   </Rules>
   <EKUs />
   <FileRules>
-    <FileAttrib ID="ID_FILEATTRIB_F_2F" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_32" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_34" FriendlyName="wscript.exe FileAttribute" FileName="wscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <Allow ID="ID_ALLOW_A_1_1" FriendlyName="" FileName="*" />
-    <Allow ID="ID_ALLOW_A_2_1" FriendlyName="" FileName="*" />
+    <Allow ID="ID_ALLOW_A_1_0" FriendlyName="" FileName="*" />
+    <Allow ID="ID_ALLOW_A_2_0" FriendlyName="" FileName="*" />
+    <Deny ID="ID_DENY_D_1_1" FriendlyName="System Downloads Folder" FilePath="To-Be-Detected" />
   </FileRules>
-  <Signers>
-    <Signer ID="ID_SIGNER_F_7" Name="Microsoft Windows Production PCA 2011">
-      <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
-      <CertPublisher Value="Microsoft Windows" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_2F" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_32" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_34" />
-    </Signer>
-  </Signers>
+  <Signers />
   <SigningScenarios>
     <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel-Mode Signing Scenario">
       <ProductSigners>
         <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_1_1" />
+          <FileRuleRef RuleID="ID_ALLOW_A_1_0" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
     <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User-Mode Signing Scenario">
       <ProductSigners>
-        <DeniedSigners>
-          <DeniedSigner SignerId="ID_SIGNER_F_7" />
-        </DeniedSigners>
         <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_2_1" />
+          <FileRuleRef RuleID="ID_ALLOW_A_2_0" />
+          <FileRuleRef RuleID="ID_DENY_D_1_1" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
   <UpdatePolicySigners />
-  <CiSigners>
-    <CiSigner SignerId="ID_SIGNER_F_7" />
-  </CiSigners>
+  <CiSigners />
   <HvciOptions>2</HvciOptions>
-  <BasePolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</BasePolicyID>
-  <PolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</PolicyID>
+  <BasePolicyID>{98FC8E9B-A6B1-431C-B2BE-EB23A86B5DE5}</BasePolicyID>
+  <PolicyID>{98FC8E9B-A6B1-431C-B2BE-EB23A86B5DE5}</PolicyID>
   <Settings>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>
-        <String>Dangerous-Script-Hosts-Blocking</String>
+        <String>Downloads-Defense-Measures</String>
       </Value>
     </Setting>
   </Settings>

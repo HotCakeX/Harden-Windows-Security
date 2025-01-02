@@ -1,97 +1,128 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Xml;
+
 namespace HardenWindowsSecurity;
 
 public static partial class DownloadsDefenseMeasures
 {
+
+	// GUID for the Downloads folder
+	private static Guid FolderDownloads = new("374DE290-123F-4565-9164-39C4925E467B");
+
+	[DllImport("shell32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	private static extern int SHGetKnownFolderPath(
+		ref Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr ppszPath);
+
+
 	/// <summary>
 	/// Prevents executables originating from the Downloads folder from running, using AppControl policy
 	/// </summary>
 	public static void Invoke()
 	{
+		if (GlobalVars.path is null)
+		{
+			throw new ArgumentNullException("GlobalVars.path cannot be null.");
+		}
 
 		ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
 
 		Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
-		// PowerShell script with embedded {UserValue} directly in the string using @""
-		string script = $@"
-$VerbosePreference = 'Continue'
-$script:ErrorActionPreference = 'Stop'
+		string CIPPath = Path.Combine(GlobalVars.WorkingDir, "Downloads-Defense-Measures.cip");
+		string XMLPath = Path.Combine(GlobalVars.path, "Resources", "Downloads-Defense-Measures.xml");
 
-#region Installation And Update
+		// The path to use to save the modified XML policy file and deploy it
+		string XMLPathToDeploy = Path.Combine(GlobalVars.WorkingDir, "Downloads-Defense-Measures.xml");
 
-# a flag indicating the WDACConfig module must be downloaded and installed on the system
-[System.Boolean]$ShouldInstallWDACConfigModule = $true
+		// Run the CiTool and retrieve a list of base policies
+		List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
 
-Write-Verbose -Message 'Getting the latest available version number of the WDACConfig module'
-[System.Version]$WDACConfigLatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
+		bool isFound = false;
 
-Write-Verbose -Message 'Getting the latest available version of the WDACConfig module from the local system, if it exists'
-[System.Management.Automation.PSModuleInfo]$WDACConfigModuleLocalStatus = Get-Module -ListAvailable -Name 'WDACConfig' -Verbose:$false | Sort-Object -Property Version -Descending | Select-Object -First 1
+		// loop over all policies
+		foreach (CiPolicyInfo item in policies)
+		{
+			// find the policy with the right name
+			if (string.Equals(item.FriendlyName, "Downloads-Defense-Measures", StringComparison.OrdinalIgnoreCase))
+			{
+				isFound = true;
+				break;
+			}
+		}
 
-# If the WDACConfig module is already installed on the system and its version is greater than or equal to the latest version available on GitHub repo then don't install it again
-if (($null -ne $WDACConfigModuleLocalStatus) -and ($WDACConfigModuleLocalStatus.count -gt 0)) {{
-    if ($WDACConfigModuleLocalStatus.Version -ge $WDACConfigLatestVersion) {{
-        $ShouldInstallWDACConfigModule = $false
-        Write-Verbose -Message 'Skipping WDACConfig module installation, it is already installed.'
-    }}
-    else {{
-        [System.String]$ReasonToInstallWDACConfigModule = ""the installed WDACConfig module version $($WDACConfigModuleLocalStatus.Version) is less than the latest available version $($WDACConfigLatestVersion)""
-        Write-Verbose -Message 'Removing the WDACConfig module'
-        try {{
-            $null = Uninstall-Module -Name 'WDACConfig' -Force -Verbose:$false -AllVersions
-        }}
-        catch {{}}
-    }}
-}}
-else {{
-    [System.String]$ReasonToInstallWDACConfigModule = 'it is not installed on the system'
-}}
+		// If the Downloads-Defense-Measures is not deployed
+		if (!isFound)
+		{
 
-if ($ShouldInstallWDACConfigModule) {{
-    Write-Verbose -Message ""Installing the WDACConfig module because $ReasonToInstallWDACConfigModule""
-    Install-Module -Name 'WDACConfig' -Force -Verbose:$false -Scope 'AllUsers' -RequiredVersion $WDACConfigLatestVersion
-}}
+			IntPtr pathPtr = IntPtr.Zero;
 
-#endregion Installation And Update
+			string? downloadsPath = null;
 
-Write-Verbose -Message 'Getting the currently deployed base policy names'
-$CurrentBasePolicyNames = [System.Collections.Generic.HashSet[System.String]](((&""$env:SystemDrive\Windows\System32\CiTool.exe"" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript {{ ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }}).FriendlyName)
+			try
+			{
+				// Get the System Downloads folder path
+				int result = SHGetKnownFolderPath(ref FolderDownloads, 0, IntPtr.Zero, out pathPtr);
 
-# Only deploy the Downloads-Defense-Measures policy if it is not already deployed
-if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Contains('Downloads-Defense-Measures')))) {{
+				if (result is 0) // S_OK
+				{
+					downloadsPath = Marshal.PtrToStringUni(pathPtr);
 
-    Write-Verbose -Message 'Detecting the Downloads folder path on system'
-    [System.IO.FileInfo]$DownloadsPathSystem = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.path
-    Write-Verbose -Message ""The Downloads folder path on system is $DownloadsPathSystem""
+					if (string.IsNullOrWhiteSpace(downloadsPath))
+					{
+						Logger.LogMessage("The downloads folder path was empty, exiting.", LogTypeIntel.Error);
+						return;
+					}
 
-    # Checking if the Edge preferences file exists
-    if ([System.IO.File]::Exists(""$env:SystemDrive\Users\{GlobalVars.userName}\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"")) {{
+					Logger.LogMessage($"Downloads folder path: {downloadsPath}", LogTypeIntel.Information);
+				}
+				else
+				{
+					Logger.LogMessage("Failed to retrieve Downloads folder path.", LogTypeIntel.Error);
+					return;
+				}
+			}
+			finally
+			{
+				if (pathPtr != IntPtr.Zero)
+				{
+					Marshal.FreeCoTaskMem(pathPtr); // Free memory allocated by SHGetKnownFolderPath
+				}
+			}
 
-        Write-Verbose -Message 'Detecting the Downloads path in Edge'
-        [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path ""$env:SystemDrive\Users\{GlobalVars.userName}\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"")
-        [System.IO.FileInfo]$DownloadsPathEdge = $CurrentUserEdgePreference.savefile.default_directory
+			string pathToUse = downloadsPath + @"\" + '*';
 
-        # Ensure there is an Edge browser profile and it was initialized
-        if ((-NOT [System.String]::IsNullOrWhitespace($DownloadsPathEdge.FullName))) {{
+			XmlDocument doc = new();
+			doc.Load(XMLPath);
 
-            Write-Verbose -Message ""The Downloads path in Edge is $DownloadsPathEdge""
+			XmlNamespaceManager nsmgr = new(doc.NameTable);
+			nsmgr.AddNamespace("sip", "urn:schemas-microsoft-com:sipolicy");
 
-            # Display a warning for now
-            if ($DownloadsPathEdge.FullName -ne $DownloadsPathSystem.FullName) {{
-                Write-Warning -Message ""The Downloads path in Edge ($($DownloadsPathEdge.FullName)) is different than the system's Downloads path ($($DownloadsPathSystem.FullName))""
-            }}
-        }}
-    }}
+			// Find all 'FileRules/Allow' or 'FileRules/Deny' elements
+			XmlNodeList fileRules = doc.SelectNodes("//sip:FileRules/*[@FilePath]", nsmgr)!;
 
-    Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
-    New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath ""$DownloadsPathSystem\*"" -Deploy -Verbose:$Verbose -EmbeddedVerboseOutput
+			foreach (XmlNode node in fileRules)
+			{
+				XmlAttribute filePathAttr = node.Attributes!["FilePath"]!;
+				if (string.Equals(filePathAttr.Value, "To-Be-Detected", StringComparison.OrdinalIgnoreCase))
+				{
+					filePathAttr.Value = pathToUse;
+				}
+			}
 
-}}
-else {{
-    Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'
-}}
-";
+			// Save the modified XML to the working directory so we don't modify the module's files
+			doc.Save(XMLPathToDeploy);
 
-		_ = PowerShellExecutor.ExecuteScript(script);
+			PolicyToCIPConverter.Convert(XMLPathToDeploy, CIPPath);
+			CiToolHelper.UpdatePolicy(CIPPath);
+		}
+		else
+		{
+			Logger.LogMessage("The Downloads-Defense-Measures policy is already deployed", LogTypeIntel.Information);
+		}
+
 	}
 }

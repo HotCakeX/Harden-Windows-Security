@@ -233,7 +233,7 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 	public static void RemoveAppControlPolicies(bool DownloadsDefenseMeasures, bool DangerousScriptHostsBlocking)
 	{
 		// Run the CiTool and retrieve a list of base policies
-		List<CiPolicyInfo> policies = CiToolRunner.RunCiTool(CiToolRunner.Options, SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
+		List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
 
 		if (DownloadsDefenseMeasures)
 		{
@@ -247,7 +247,7 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 					Logger.LogMessage("Removing the Downloads-Defense-Measures AppControl policy", LogTypeIntel.Information);
 
 					// remove the policy
-					CiToolRunner.RemovePolicy(item.PolicyID!);
+					CiToolHelper.RemovePolicy(item.PolicyID!);
 				}
 			}
 		}
@@ -263,7 +263,7 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 					Logger.LogMessage("Removing the Dangerous-Script-Hosts-Blocking AppControl policy", LogTypeIntel.Information);
 
 					// remove the policy
-					CiToolRunner.RemovePolicy(item.PolicyID!);
+					CiToolHelper.RemovePolicy(item.PolicyID!);
 				}
 			}
 		}

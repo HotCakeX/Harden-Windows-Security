@@ -3,18 +3,43 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 
+// The following code is exact mirror of the same code in AppControl Manager's codebase
 namespace HardenWindowsSecurity;
 
-internal static class CiToolRunner
+// Class to represent a policy with various attributes
+public sealed class CiPolicyInfo
+{
+	public string? PolicyID { get; set; }           // Unique identifier for the policy
+	public string? BasePolicyID { get; set; }       // Identifier for the base policy
+	public string? FriendlyName { get; set; }       // Human-readable name of the policy
+	public Version? Version { get; set; }            // Version object representing the policy version
+	public string? VersionString { get; set; }       // Original version string from the policy data
+	public bool IsSystemPolicy { get; set; }         // Indicates if it's a system policy
+	public bool IsSignedPolicy { get; set; }         // Indicates if the policy is signed
+	public bool IsOnDisk { get; set; }               // Indicates if the policy is present on disk
+	public bool IsEnforced { get; set; }             // Indicates if the policy is enforced
+	public bool IsAuthorized { get; set; }           // Indicates if the policy is authorized
+	internal List<string>? PolicyOptions { get; set; } // List of options or settings related to the policy
+
+
+	// A property to format PolicyOptions as a comma-separated string
+	public string PolicyOptionsDisplay => PolicyOptions is not null ? string.Join(", ", PolicyOptions) : string.Empty;
+}
+
+
+// This class contains all the necessary logics to interact with CiTool.exe
+// Any code that wants to use CiTool.exe must go through this class rather than contacting it directly
+internal static class CiToolHelper
 {
 	/// <summary>
 	/// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
 	/// </summary>
 	/// <param name="number">The 64-bit unsigned integer as a string.</param>
 	/// <returns>The parsed version</returns>
-	private static Version Measure(string number)
+	internal static Version Measure(string number)
 	{
 		try
 		{
@@ -45,27 +70,21 @@ internal static class CiToolRunner
 		catch (Exception ex)
 		{
 			// Handle errors by printing an error message and returning a default version of 0.0.0.0
-			Logger.LogMessage($"Error converting number to version: {ex.Message}", LogTypeIntel.Error);
+			Logger.LogMessage($"Error converting number to version: {ex.Message}", LogTypeIntel.Information);
 			return new Version(0, 0, 0, 0);
 		}
 	}
 
-	internal static JsonSerializerOptions Options => new()
-	{
-		// Ignore case when matching JSON property names
-		PropertyNameCaseInsensitive = true,
-	};
-
 
 	/// <summary>
-	/// Gets a list of AppControl policies on the system with filtering
+	/// Gets a list of App Control policies on the system with filtering
 	/// </summary>
 	/// <param name="SystemPolicies">Will include System policies in the output</param>
 	/// <param name="BasePolicies">Will include Base policies in the output</param>
 	/// <param name="SupplementalPolicies">Will include Supplemental policies in the output</param>
 	/// <returns></returns>
 	/// <exception cref="Exception"></exception>
-	internal static List<CiPolicyInfo> RunCiTool(JsonSerializerOptions options, bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
+	internal static List<CiPolicyInfo> GetPolicies(bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
 	{
 		// Create an empty list of Policy objects to return at the end
 		List<CiPolicyInfo> policies = [];
@@ -83,9 +102,8 @@ internal static class CiToolRunner
 			CreateNoWindow = true      // Run the process without creating a window
 		};
 
-
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RunCiTool method.");
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -95,12 +113,13 @@ internal static class CiToolRunner
 
 		if (process.ExitCode != 0)
 		{
-			// Throw an exception with the error message
 			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
 		}
 
-		// Deserialize the JSON into a JsonElement for easy traversal
-		var rootElement = JsonSerializer.Deserialize<JsonElement>(jsonOutput, options);
+		// Parse the JSON into a JsonElement for easy traversal
+		using JsonDocument document = JsonDocument.Parse(Encoding.UTF8.GetBytes(jsonOutput));
+
+		JsonElement rootElement = document.RootElement;
 
 		// If "Policies" property exists and is an array, start processing each policy
 		if (rootElement.TryGetProperty("Policies", out JsonElement policiesElement) && policiesElement.ValueKind == JsonValueKind.Array)
@@ -145,9 +164,9 @@ internal static class CiToolRunner
 
 
 	/// <summary>
-	/// Removes a deployed AppControl policy from the system
+	/// Removes a deployed App Control policy from the system
 	/// </summary>
-	/// <param name="policyId">the GUID which is the policy ID of the policy to be removed, with the curly brackets {} wrapped with double quotes "" </param>
+	/// <param name="policyId">The GUID which is the policy ID of the policy to be removed.</param>
 	/// <exception cref="ArgumentException"></exception>
 	internal static void RemovePolicy(string policyId)
 	{
@@ -156,6 +175,11 @@ internal static class CiToolRunner
 			throw new ArgumentException("Policy ID cannot be null or empty.", nameof(policyId));
 		}
 
+		// Remove any curly brackets or double quotes from the policy ID
+		// They will be added automatically later by the method
+		policyId = policyId.Trim('"', '"');
+		policyId = policyId.Trim('{', '}');
+
 		// Combine the path to CiTool.exe using the system's special folder path
 		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
 
@@ -163,28 +187,170 @@ internal static class CiToolRunner
 		ProcessStartInfo processStartInfo = new()
 		{
 			FileName = ciToolPath,
-			Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a AppControl policy
+			Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove an App Control policy
 			RedirectStandardOutput = true, // Capture the standard output
 			UseShellExecute = false,   // Do not use the OS shell to start the process
 			CreateNoWindow = true      // Run the process without creating a window
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RunCiTool method.");
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
 
-		// Don't need the output if successful
-		_ = process.StandardOutput.ReadToEnd();
+		// Read all output as a string
+		string jsonOutput = process.StandardOutput.ReadToEnd();
 
 		// Wait for the process to complete
 		process.WaitForExit();
 
 		if (process.ExitCode != 0)
 		{
-			// Throw an exception with the error message
-			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
 		}
 	}
+
+
+
+
+	/// <summary>
+	/// Removes multiple deployed App Control policy from the system
+	/// </summary>
+	/// <param name="policyIds">The GUIDs which are the policy IDs of the policies to be removed.</param>
+	/// <exception cref="ArgumentException"></exception>
+	internal static void RemovePolicy(List<string> policyIds)
+	{
+
+		foreach (string policyId in policyIds)
+		{
+
+			if (string.IsNullOrWhiteSpace(policyId))
+			{
+				continue;
+			}
+
+			// Remove any curly brackets or double quotes from the policy ID
+			// They will be added automatically later by the method
+			string ID = policyId.Trim('"', '"');
+			ID = ID.Trim('{', '}');
+
+			// Combine the path to CiTool.exe using the system's special folder path
+			string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+
+			// Set up the process start info to run CiTool.exe with necessary arguments
+			ProcessStartInfo processStartInfo = new()
+			{
+				FileName = ciToolPath,
+				Arguments = $"--remove-policy \"{{{ID}}}\" -json",   // Arguments to remove an App Control policy
+				RedirectStandardOutput = true, // Capture the standard output
+				UseShellExecute = false,   // Do not use the OS shell to start the process
+				CreateNoWindow = true      // Run the process without creating a window
+			};
+
+			// Start the process and capture the output
+			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
+
+			// Read all output as a string
+			string jsonOutput = process.StandardOutput.ReadToEnd();
+
+			// Wait for the process to complete
+			process.WaitForExit();
+
+			if (process.ExitCode != 0)
+			{
+				throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+			}
+		}
+	}
+
+
+
+	/// <summary>
+	/// Deploys a Code Integrity policy on the system by accepting the .CIP file path
+	/// </summary>
+	/// <param name="CipPath"></param>
+	/// <exception cref="ArgumentException"></exception>
+	/// <exception cref="FileNotFoundException"></exception>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static void UpdatePolicy(string CipPath)
+	{
+		if (string.IsNullOrWhiteSpace(CipPath))
+		{
+			throw new ArgumentException("CipPath cannot be null or empty.", nameof(CipPath));
+		}
+
+		if (!File.Exists(CipPath))
+		{
+			throw new FileNotFoundException($"The file '{CipPath}' does not exist.", CipPath);
+		}
+
+		// Combine the path to CiTool.exe using the system's special folder path
+		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+
+		Logger.LogMessage($"Deploying the following CIP file: {CipPath}", LogTypeIntel.Information);
+
+		// Set up the process start info to run CiTool.exe with necessary arguments
+		ProcessStartInfo processStartInfo = new()
+		{
+			FileName = ciToolPath,
+			Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the App Control policy
+			RedirectStandardOutput = true, // Capture the standard output
+			UseShellExecute = false,   // Do not use the OS shell to start the process
+			CreateNoWindow = true      // Run the process without creating a window
+		};
+
+		// Start the process and capture the output
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the UpdatePolicy method.");
+
+		// Read all output as a string
+		string jsonOutput = process.StandardOutput.ReadToEnd();
+
+		// Wait for the process to complete
+		process.WaitForExit();
+
+		if (process.ExitCode != 0)
+		{
+			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+		}
+	}
+
+
+	/// <summary>
+	/// Refreshes the currently deployed policies on the system
+	/// </summary>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static void RefreshPolicy()
+	{
+		// Combine the path to CiTool.exe using the system's special folder path
+		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+
+		// Set up the process start info to run CiTool.exe with the refresh argument
+		ProcessStartInfo processStartInfo = new()
+		{
+			FileName = ciToolPath,
+			Arguments = "--refresh -json",  // Arguments to refresh App Control policies
+			RedirectStandardOutput = true,  // Capture the standard output
+			UseShellExecute = false,        // Do not use the OS shell to start the process
+			CreateNoWindow = true           // Run the process without creating a window
+		};
+
+		// Start the process and capture the output
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RefreshPolicy method.");
+
+		// Read all output as a string
+		string jsonOutput = process.StandardOutput.ReadToEnd();
+
+		// Wait for the process to complete
+		process.WaitForExit();
+
+		if (process.ExitCode != 0)
+		{
+			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+		}
+	}
+
 }
+
+
+
 
 // Extension methods for JsonElement to simplify retrieving properties with default values
 internal static class JsonElementExtensions

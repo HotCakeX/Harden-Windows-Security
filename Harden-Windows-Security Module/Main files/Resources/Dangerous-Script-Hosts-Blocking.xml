@@ -74,7 +74,7 @@
   <HvciOptions>2</HvciOptions>
   <BasePolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</BasePolicyID>
   <PolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</PolicyID>
-  <Settings>    
+  <Settings>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>
         <String>Dangerous-Script-Hosts-Blocking</String>

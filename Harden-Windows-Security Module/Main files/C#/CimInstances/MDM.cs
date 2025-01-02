@@ -46,11 +46,8 @@ internal static class MDM
 			foreach (MdmRecord record in records)
 			{
 				// Process only authorized records
-				if (record.Authorized?.Equals("TRUE", StringComparison.OrdinalIgnoreCase) == true)
+				if (record.Authorized.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
 				{
-
-					// Debugging output
-					// Logger.LogMessage($"Namespace: {record.Namespace}, Class: {record.Class}");
 
 					// Add a new task for each class query
 					tasks.Add(Task.Run(() =>
@@ -72,7 +69,7 @@ internal static class MDM
 						}
 
 						// Create object query for the current class
-						string classQuery = record.Class?.Trim() ?? throw new InvalidOperationException("Record.Class is null");
+						string classQuery = record.Class.Trim();
 						ObjectQuery query = new("SELECT * FROM " + classQuery);
 
 						// Create management object searcher for the query
@@ -125,14 +122,24 @@ internal static class MDM
 		return results;
 	}
 
-	// Helper method to get property value as original type
+
+	/// <summary>
+	/// Helper method to get property value as original type
+	/// </summary>
+	/// <param name="prop"></param>
+	/// <returns></returns>
 	private static object GetPropertyOriginalValue(PropertyData prop)
 	{
 		// Return the value of the property
 		return prop.Value;
 	}
 
-	// Helper method to read CSV file asynchronously
+
+	/// <summary>
+	/// Helper method to read CSV file asynchronously
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
 	private static async Task<List<MdmRecord>> ReadCsvFileAsync(string filePath)
 	{
 		List<MdmRecord> records = [];
@@ -149,9 +156,10 @@ internal static class MDM
 					continue; // Skip the header line
 				}
 
-				// This check is redundant but shows explicit handling
 				if (line is null)
+				{
 					continue;
+				}
 
 				string[] values = line.Split(',');
 
@@ -175,8 +183,8 @@ internal static class MDM
 	// Class to represent a record in the CSV file
 	private sealed class MdmRecord
 	{
-		internal string? Namespace { get; set; }
-		internal string? Class { get; set; }
-		internal string? Authorized { get; set; }
+		internal required string Namespace { get; set; }
+		internal required string Class { get; set; }
+		internal required string Authorized { get; set; }
 	}
 }

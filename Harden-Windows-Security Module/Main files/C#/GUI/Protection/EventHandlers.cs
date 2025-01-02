@@ -606,6 +606,10 @@ public static partial class GUIProtectWinSecurity
 								   case "TLSSecurity":
 									   {
 										   TLSSecurity.Invoke();
+										   if (SelectedSubCategories.Contains("TLSSecurity_BattleNetClient"))
+										   {
+											   TLSSecurity.TLSSecurity_BattleNetClient();
+										   }
 										   break;
 									   }
 								   case "LockScreen":

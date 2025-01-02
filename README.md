@@ -333,6 +333,8 @@ From Top to bottom in order:
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Clears Quarantined items after 1 day instead of the default behavior of keeping them indefinitely. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#quarantine_purgeitemsafterdelay)
 
+   * Quarantine involves isolating potentially harmful files in a non-executable area of your system to prevent any risk of execution. To further minimize potential threats, quarantined files are automatically removed after 1 day, rather than being retained indefinitely. This precaution helps mitigate the possibility of these files exploiting unforeseen vulnerabilities in the future, ensuring a proactive approach to system security.
+
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Allows Microsoft Defender to download security updates even on a metered connection. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationmeteredconnectionupdates)
@@ -814,9 +816,6 @@ Changes made by this category only affect things that use [Schannel SSP](https:/
 
 If you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
 
-> [!NOTE]\
-> This category checks whether Battle.net client is installed on the system and if it is then includes  `TLS_RSA_WITH_AES_256_CBC_SHA` as an additional cipher suite in the policy due to [a known issue](https://github.com/HotCakeX/Harden-Windows-Security/issues/38). The way Battle.net client is detected is by checking the presence of `Battle.net.exe` or `Battle.net Launcher.exe` in `C:\Program Files (x86)\Battle.net\` folder.
-
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables TLS 1 and TLS 1.1 security protocols that only **exist for backward compatibility**. All modern software should and do use `TLS 1.2` and `TLS 1.3`. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#overrideminimumenabledtlsversionclient) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#overrideminimumenabledtlsversionserver)
@@ -844,6 +843,10 @@ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
 ```
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Use the ***TLS for BattleNet*** sub-category if you have the BattleNet game client installed on your system. This client utilizes the `TLS_RSA_WITH_AES_256_CBC_SHA` cipher suite to establish connections with its servers. Since this cipher suite is less secure, it is excluded from the secure cipher-suites list by default. However, enabling this sub-category will include the required cipher suite, allowing you to use BattleNet without interruptions.
 
 <br>
 

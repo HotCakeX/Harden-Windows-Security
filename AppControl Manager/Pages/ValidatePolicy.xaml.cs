@@ -53,6 +53,11 @@ public sealed partial class ValidatePolicy : Page
 					isValid = (bool)CiPolicyTest.TestCiPolicy(selectedFile, null)!;
 				});
 			}
+			else
+			{
+				MainInfoBar.IsOpen = false;
+				return;
+			}
 
 
 			if (isValid)

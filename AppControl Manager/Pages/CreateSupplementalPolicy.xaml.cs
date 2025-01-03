@@ -135,9 +135,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForFilesSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Any file (*.*)|*.*";
-
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{
@@ -163,9 +161,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForFilesButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Any file (*.*)|*.*";
-
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{

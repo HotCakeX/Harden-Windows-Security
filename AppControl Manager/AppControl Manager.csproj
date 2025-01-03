@@ -212,6 +212,7 @@
     <None Remove="Pages\Update.xaml" />
     <None Remove="Pages\ValidatePolicy.xaml" />
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
+    <None Remove="Pages\ViewFileCertificates.xaml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +320,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\ViewFileCertificates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\ValidatePolicy.xaml">

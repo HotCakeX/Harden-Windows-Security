@@ -18,9 +18,7 @@ public sealed partial class GetCIHashes : Page
 
 	private void PickFile_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Any file (*.*)|*.*";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{

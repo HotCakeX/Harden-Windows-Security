@@ -43,6 +43,9 @@ internal static class GlobalVars
 	// The filter for the file picker dialog to select XML files
 	internal const string XMLFilePickerFilter = "XML file|*.xml";
 
+	// The filter for the file picker dialog to select Any files
+	internal const string AnyFilePickerFilter = "Any file (*.*)|*.*";
+
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
 

@@ -163,9 +163,7 @@ public sealed partial class Simulation : Page
 	private void SelectFilesButton_Click(object sender, RoutedEventArgs e)
 	{
 
-		string filter = "Any file (*.*)|*.*";
-
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{

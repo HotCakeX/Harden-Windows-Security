@@ -206,6 +206,8 @@
                 <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system"/>
                 <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files"/>
                 <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies"/>
+                <NavigationViewItem x:Name="ValidatePoliciesNavItem" Content="Validate Policies" ToolTipService.ToolTip="Validate App Control Policies"/>
+                
 
                 <!-- These are still considered footer so important menu items must be placed above them -->
                 <NavigationViewItem x:Name="LogsNavItem" Content="Logs" ToolTipService.ToolTip="View the application logs in real time"/>

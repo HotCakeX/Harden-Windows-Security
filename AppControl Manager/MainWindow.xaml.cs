@@ -166,6 +166,11 @@ public sealed partial class MainWindow : Window
 		{
 			Titles = ["Create Deny Policy", "Scan Results"],
 			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
+		},
+		[typeof(Pages.ValidatePolicy)] = new PageTitleMap
+		{
+			Titles = ["Validate Policies"],
+			Pages = [typeof(Pages.ValidatePolicy)]
 		}
 	};
 
@@ -210,7 +215,8 @@ public sealed partial class MainWindow : Window
 		{ "Build New Certificate", typeof(Pages.BuildNewCertificate) },
 		{ "Create Supplemental Policy", typeof(Pages.CreateSupplementalPolicy) },
 		{ "Merge App Control Policies", typeof(Pages.MergePolicies) },
-		{ "Create Deny Policy", typeof(Pages.CreateDenyPolicy) }
+		{ "Create Deny Policy", typeof(Pages.CreateDenyPolicy) },
+		{ "Validate Policies", typeof(Pages.ValidatePolicy) }
 	};
 
 
@@ -710,6 +716,13 @@ public sealed partial class MainWindow : Window
 						Source = new Deny()
 					};
 
+					// Validate Policies
+					ValidatePoliciesNavItem.Icon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -9, -9, -9),
+						Source = new Validate()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -843,6 +856,13 @@ public sealed partial class MainWindow : Window
 						Foreground = accentBrush
 					};
 
+					// Validate Policies
+					ValidatePoliciesNavItem.Icon = new FontIcon
+					{
+						Glyph = "\uED5E",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 
@@ -957,6 +977,12 @@ public sealed partial class MainWindow : Window
 					CreateDenyPolicyNavItem.Icon = new FontIcon
 					{
 						Glyph = "\uE8D0"
+					};
+
+					// Validate Policies
+					ValidatePoliciesNavItem.Icon = new FontIcon
+					{
+						Glyph = "\uED5E"
 					};
 
 					break;

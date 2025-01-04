@@ -35,7 +35,7 @@ Style="{StaticResource BodyTextBlockStyle}">
             </controls:WrapPanel>
 
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Margin="15,0,15,0" Grid.Row="1">
+            <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="1">
 
                 <!-- Button to trigger file picker -->
                 <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
@@ -50,7 +50,12 @@ Style="{StaticResource BodyTextBlockStyle}">
                 <TextBox Header="SHA1 Authenticode" x:Name="Sha1AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
 
                 <TextBox Header="SHA256 Authenticode" x:Name="Sha256AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
-            </StackPanel>
+
+                <TextBox Header="SHA3 384 Flat" x:Name="SHA3384FlatHash" IsReadOnly="True" MinWidth="300"/>
+                
+                <TextBox Header="SHA3 512 Flat" x:Name="SHA3512FlatHash" IsReadOnly="True" MinWidth="300"/>                
+            
+            </controls:WrapPanel>
 
         </Grid>
 

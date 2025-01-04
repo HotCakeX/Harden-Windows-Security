@@ -171,6 +171,11 @@ public sealed partial class MainWindow : Window
 		{
 			Titles = ["Validate Policies"],
 			Pages = [typeof(Pages.ValidatePolicy)]
+		},
+		[typeof(Pages.ViewFileCertificates)] = new PageTitleMap
+		{
+			Titles = ["View File Certificates"],
+			Pages = [typeof(Pages.ViewFileCertificates)]
 		}
 	};
 
@@ -216,7 +221,8 @@ public sealed partial class MainWindow : Window
 		{ "Create Supplemental Policy", typeof(Pages.CreateSupplementalPolicy) },
 		{ "Merge App Control Policies", typeof(Pages.MergePolicies) },
 		{ "Create Deny Policy", typeof(Pages.CreateDenyPolicy) },
-		{ "Validate Policies", typeof(Pages.ValidatePolicy) }
+		{ "Validate Policies", typeof(Pages.ValidatePolicy) },
+		{ "View File Certificates", typeof(Pages.ViewFileCertificates) }
 	};
 
 
@@ -723,6 +729,13 @@ public sealed partial class MainWindow : Window
 						Source = new Validate()
 					};
 
+					// View File Certificates
+					ViewFileCertificatesNavItem.Icon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -9, -9, -9),
+						Source = new ViewAllCertificates()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -863,6 +876,13 @@ public sealed partial class MainWindow : Window
 						Foreground = accentBrush
 					};
 
+					// View File Certificates
+					ViewFileCertificatesNavItem.Icon = new FontIcon
+					{
+						Glyph = "\uEBD2",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 
@@ -983,6 +1003,12 @@ public sealed partial class MainWindow : Window
 					ValidatePoliciesNavItem.Icon = new FontIcon
 					{
 						Glyph = "\uED5E"
+					};
+
+					// View File Certificates
+					ViewFileCertificatesNavItem.Icon = new FontIcon
+					{
+						Glyph = "\uEBD2"
 					};
 
 					break;

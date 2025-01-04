@@ -480,7 +480,7 @@ internal static class CiRuleOptions
 		UpdateHvciOptions.Update(filePath);
 
 		// Validate the XML file at the end
-		if (!(bool)CiPolicyTest.TestCiPolicy(filePath, null)!)
+		if (!CiPolicyTest.TestCiPolicy(filePath))
 		{
 			throw new InvalidOperationException("The XML file created at the end is not compliant with the CI policy schema");
 		}

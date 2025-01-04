@@ -46,7 +46,7 @@
                     </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-App-Control-Policy" />
+                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-Policies" />
 
             </controls:WrapPanel>
 

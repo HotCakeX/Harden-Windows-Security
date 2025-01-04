@@ -19,7 +19,7 @@ internal static class Management
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy Initialize(string xmlFilePath)
 	{
-		if (!(bool)CiPolicyTest.TestCiPolicy(xmlFilePath, null)!)
+		if (!CiPolicyTest.TestCiPolicy(xmlFilePath))
 		{
 			throw new InvalidOperationException($"The XML file '{xmlFilePath}' is not compliant with the CI policy schema");
 		}

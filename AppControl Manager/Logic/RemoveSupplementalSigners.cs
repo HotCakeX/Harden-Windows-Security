@@ -25,7 +25,7 @@ internal static class CiPolicyHandler
 	{
 
 		// Validate input XML file compliance with CI policy schema
-		if (CiPolicyTest.TestCiPolicy(path, "") is not true)
+		if (!CiPolicyTest.TestCiPolicy(path))
 		{
 			throw new InvalidOperationException("The input XML file is not compliant with the CI policy schema");
 		}

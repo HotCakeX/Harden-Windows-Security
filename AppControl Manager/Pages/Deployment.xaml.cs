@@ -27,7 +27,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
-		if (GlobalVars.CurrentOSVersion < GlobalVars.VersionFor24H2)
+		if (GlobalVars.IsOlderThan24H2)
 		{
 			DeploySignedXMLButton.IsEnabled = false;
 			DeploySignedXMLButtonContentTextBlock.Text = "Requires Windows 11 24H2 or later";

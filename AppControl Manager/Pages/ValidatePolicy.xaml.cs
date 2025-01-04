@@ -50,8 +50,13 @@ public sealed partial class ValidatePolicy : Page
 			{
 				await Task.Run(() =>
 				{
-					isValid = (bool)CiPolicyTest.TestCiPolicy(selectedFile, null)!;
+					isValid = CiPolicyTest.TestCiPolicy(selectedFile);
 				});
+			}
+			else
+			{
+				MainInfoBar.IsOpen = false;
+				return;
 			}
 
 

@@ -43,6 +43,9 @@ internal static class GlobalVars
 	// The filter for the file picker dialog to select XML files
 	internal const string XMLFilePickerFilter = "XML file|*.xml";
 
+	// The filter for the file picker dialog to select Any files
+	internal const string AnyFilePickerFilter = "Any file (*.*)|*.*";
+
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
 
@@ -50,9 +53,13 @@ internal static class GlobalVars
 	internal static readonly string AppControlManagerSpecialPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", $"{AppControlManagerSpecialPolicyName}.xml");
 
 	// Get the current OS version
-	internal static readonly Version CurrentOSVersion = Environment.OSVersion.Version;
+	private static readonly Version CurrentOSVersion = Environment.OSVersion.Version;
 
-	internal static readonly Version VersionFor24H2 = new(10, 0, 26100, 0);
+	// Version for the build 24H2
+	private static readonly Version VersionFor24H2 = new(10, 0, 26100, 0);
+
+	// Determine whether the current OS is older than 24H2
+	internal static bool IsOlderThan24H2 => CurrentOSVersion < VersionFor24H2;
 
 	static GlobalVars()
 	{

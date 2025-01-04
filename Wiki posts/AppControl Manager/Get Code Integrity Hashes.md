@@ -18,3 +18,8 @@ Use the browser button to select a file and the hashes will be immediately calcu
 > If the selected file is non-conformant, the app will calculate the flat hashes of the file and present them as Authenticode hashes. When that happens, the page hashes will be displayed as `N/A`. This is compliant with how the App Control engine in Windows works.
 
 <br>
+
+This page also calculates the new [secure](https://csrc.nist.gov/pubs/fips/202/final) SHA3-384 and SHA3-512 flat file hashes.
+
+<br>
+

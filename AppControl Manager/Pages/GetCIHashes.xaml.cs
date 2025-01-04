@@ -67,9 +67,6 @@ public sealed partial class GetCIHashes : Page
 			string? SHA3_512Hash = null;
 			string? SHA3_384Hash = null;
 
-			SHA3384FlatHashProgressRing.Visibility = Visibility.Visible;
-			SHA3512FlatHashProgressRing.Visibility = Visibility.Visible;
-
 			if (GlobalVars.IsOlderThan24H2)
 			{
 				SHA3_512Hash = "Requires Windows 11 24H2 or later";
@@ -77,6 +74,9 @@ public sealed partial class GetCIHashes : Page
 			}
 			else
 			{
+
+				SHA3384FlatHashProgressRing.Visibility = Visibility.Visible;
+				SHA3512FlatHashProgressRing.Visibility = Visibility.Visible;
 
 				await Task.Run(() =>
 				{
@@ -123,14 +123,15 @@ public sealed partial class GetCIHashes : Page
 					}
 
 				});
+
+				SHA3384FlatHashProgressRing.Visibility = Visibility.Collapsed;
+				SHA3512FlatHashProgressRing.Visibility = Visibility.Collapsed;
 			}
 
 			// Display the rest of the hashes in the UI
 			SHA3384FlatHash.Text = SHA3_384Hash ?? "N/A";
 			SHA3512FlatHash.Text = SHA3_512Hash ?? "N/A";
 
-			SHA3384FlatHashProgressRing.Visibility = Visibility.Collapsed;
-			SHA3512FlatHashProgressRing.Visibility = Visibility.Collapsed;
 		}
 		finally
 		{

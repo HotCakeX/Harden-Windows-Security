@@ -14,6 +14,11 @@ Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Securit
 
 <br>
 
+> [!TIP]\
+> This feature allows you to verify the signing certificates in the `.CIP` files of signed App Control policies as well.
+
+<br>
+
 The following data is displayed for each member of the certificate chain:
 
 | Name                | Description                                                                                         |

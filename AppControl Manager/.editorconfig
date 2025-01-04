@@ -1093,3 +1093,6 @@ csharp_style_namespace_declarations = file_scoped:error
 
 # CA1002: Do not expose generic lists
 dotnet_diagnostic.CA1002.severity = error
+
+# CA1034: Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = error

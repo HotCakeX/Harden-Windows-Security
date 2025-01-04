@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using AppControlManager.Logging;
+using AppControlManager.Logic;
 
 namespace AppControlManager;
 
@@ -76,7 +77,7 @@ internal static class SignToolHelper
 	{
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("GetSignTool");
 
-		using HttpClient client = new();
+		using HttpClient client = new SecHttpClient();
 
 		string packageName = "microsoft.windows.sdk.buildtools"; // Important that this stays all lower case
 

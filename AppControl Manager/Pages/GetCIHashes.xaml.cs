@@ -38,7 +38,31 @@ public sealed partial class GetCIHashes : Page
 				return;
 			}
 
+			// Clear the UI text boxes
+			Sha1PageTextBox.Text = null;
+			Sha256PageTextBox.Text = null;
+			Sha1AuthenticodeTextBox.Text = null;
+			Sha256AuthenticodeTextBox.Text = null;
+			SHA3384FlatHash.Text = null;
+			SHA3512FlatHash.Text = null;
+
+			Sha1PageProgressRing.Visibility = Visibility.Visible;
+			Sha256PageProgressRing.Visibility = Visibility.Visible;
+			Sha1AuthenticodeProgressRing.Visibility = Visibility.Visible;
+			Sha256AuthenticodeProgressRing.Visibility = Visibility.Visible;
+
 			CodeIntegrityHashes hashes = await Task.Run(() => CiFileHash.GetCiFileHashes(selectedFile));
+
+			// Display the hashes in the UI
+			Sha1PageTextBox.Text = hashes.SHA1Page ?? "N/A";
+			Sha256PageTextBox.Text = hashes.SHA256Page ?? "N/A";
+			Sha1AuthenticodeTextBox.Text = hashes.SHa1Authenticode ?? "N/A";
+			Sha256AuthenticodeTextBox.Text = hashes.SHA256Authenticode ?? "N/A";
+
+			Sha1PageProgressRing.Visibility = Visibility.Collapsed;
+			Sha256PageProgressRing.Visibility = Visibility.Collapsed;
+			Sha1AuthenticodeProgressRing.Visibility = Visibility.Collapsed;
+			Sha256AuthenticodeProgressRing.Visibility = Visibility.Collapsed;
 
 			string? SHA3_512Hash = null;
 			string? SHA3_384Hash = null;
@@ -51,36 +75,63 @@ public sealed partial class GetCIHashes : Page
 			else
 			{
 
+				SHA3384FlatHashProgressRing.Visibility = Visibility.Visible;
+				SHA3512FlatHashProgressRing.Visibility = Visibility.Visible;
+
 				await Task.Run(() =>
 				{
 
-					// Read the file as a byte array - This way we can get hashes of a file in use by another process
-					byte[] Bytes = File.ReadAllBytes(selectedFile);
+					// Initializing the hash algorithms for SHA3-512 and SHA3-384
+					using SHA3_512 sha3_512 = SHA3_512.Create();
+					using SHA3_384 sha3_384 = SHA3_384.Create();
 
-					// Compute the hash of the byte array
-					Byte[] SHA3_512HashBytes = SHA3_512.HashData(Bytes);
+					// Opening the file as a stream to read it in chunks, this way we can handle large files
+					using (FileStream fs = new(selectedFile, FileMode.Open, FileAccess.Read))
+					{
+						// Defining a buffer size of 4MB to read the file in manageable chunks
+						byte[] buffer = new byte[4 * 1024 * 1024];
 
-					// Convert the hash bytes to a hexadecimal string to make it look like the output of the Get-FileHash which produces hexadecimals (0-9 and A-F)
-					// If System.Convert.ToBase64String was used, it'd return the hash in base64 format, which uses 64 symbols (A-Z, a-z, 0-9, + and /) to represent each byte
-					String HashString_SHA3_512 = BitConverter.ToString(SHA3_512HashBytes);
+						int bytesRead;
 
-					// Remove the dashes from the hexadecimal string
-					SHA3_512Hash = HashString_SHA3_512.Replace("-", "", StringComparison.OrdinalIgnoreCase);
+						// Read the file in chunks and update the hash algorithms with the chunk data
+						while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
+						{
+							// Update SHA3-512 hash with the current chunk
+							_ = sha3_512.TransformBlock(buffer, 0, bytesRead, null, 0);
 
+							// Update SHA3-384 hash with the current chunk
+							_ = sha3_384.TransformBlock(buffer, 0, bytesRead, null, 0);
+						}
 
-					Byte[] SHA3_384HashBytes = SHA3_384.HashData(Bytes);
-					String HashString_SHA3_384 = BitConverter.ToString(SHA3_384HashBytes);
-					SHA3_384Hash = HashString_SHA3_384.Replace("-", "", StringComparison.OrdinalIgnoreCase);
+						// Finalize the SHA3-512 hash computation
+						_ = sha3_512.TransformFinalBlock([], 0, 0);
+
+						// Finalize the SHA3-384 hash computation
+						_ = sha3_384.TransformFinalBlock([], 0, 0);
+					}
+
+					if (sha3_512.Hash is not null)
+
+					{   // Convert the SHA3-512 hash bytes to a hexadecimal string
+						SHA3_512Hash = Convert.ToHexString(sha3_512.Hash);
+					}
+
+					if (sha3_384.Hash is not null)
+					{
+						// Convert the SHA3-384 hash bytes to a hexadecimal string
+						SHA3_384Hash = Convert.ToHexString(sha3_384.Hash);
+					}
+
 				});
+
+				SHA3384FlatHashProgressRing.Visibility = Visibility.Collapsed;
+				SHA3512FlatHashProgressRing.Visibility = Visibility.Collapsed;
 			}
 
-			// Display the hashes in the UI
-			Sha1PageTextBox.Text = hashes.SHA1Page ?? "N/A";
-			Sha256PageTextBox.Text = hashes.SHA256Page ?? "N/A";
-			Sha1AuthenticodeTextBox.Text = hashes.SHa1Authenticode ?? "N/A";
-			Sha256AuthenticodeTextBox.Text = hashes.SHA256Authenticode ?? "N/A";
+			// Display the rest of the hashes in the UI
 			SHA3384FlatHash.Text = SHA3_384Hash ?? "N/A";
 			SHA3512FlatHash.Text = SHA3_512Hash ?? "N/A";
+
 		}
 		finally
 		{

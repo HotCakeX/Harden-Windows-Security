@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AppControlManager.Logging;
+using AppControlManager.Logic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -54,7 +55,7 @@ public sealed partial class Update : Page
 		_instance = this;
 
 		// Cache the page in the memory so that when the user navigates back to this page, it does not go through the entire initialization process again, which improves performance.
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 
@@ -121,7 +122,7 @@ public sealed partial class Update : Page
 				if (!useCustomMSIXPath)
 				{
 
-					using (HttpClient client = new())
+					using (HttpClient client = new SecHttpClient())
 					{
 						// Store the download link to the latest available version
 						onlineDownloadURL = new Uri(await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
@@ -135,7 +136,7 @@ public sealed partial class Update : Page
 					UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
 
 
-					using (HttpClient client = new())
+					using (HttpClient client = new SecHttpClient())
 					{
 						// Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
 						using (HttpResponseMessage response = await client.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))

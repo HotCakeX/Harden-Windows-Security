@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using AppControlManager.Logic;
 
 namespace AppControlManager;
 
@@ -33,7 +34,7 @@ internal sealed class AppUpdate
 	/// </summary>
 	internal UpdateCheckResponse Check()
 	{
-		using HttpClient client = new();
+		using HttpClient client = new SecHttpClient();
 
 		string versionsResponse = client.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult();
 

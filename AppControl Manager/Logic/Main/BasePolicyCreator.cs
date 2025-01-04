@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
 using AppControlManager.Logging;
+using AppControlManager.Logic;
 using AppControlManager.XMLOps;
 
 namespace AppControlManager;
@@ -190,7 +191,7 @@ internal static partial class BasePolicyCreator
 
 			Uri apiUrl = new($"https://api.github.com/repos/{owner}/{repo}/commits?path={path}");
 
-			using HttpClient httpClient = new();
+			using HttpClient httpClient = new SecHttpClient();
 			httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
 
 			// Call GitHub API to get commit details
@@ -280,7 +281,7 @@ internal static partial class BasePolicyCreator
 		}
 
 		// Download the zip file
-		using (HttpClient client = new())
+		using (HttpClient client = new SecHttpClient())
 		{
 			// Download the file synchronously
 			byte[] fileBytes = client.GetByteArrayAsync(DriversBlockListZipDownloadLink).GetAwaiter().GetResult();
@@ -323,7 +324,7 @@ internal static partial class BasePolicyCreator
 
 		// Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
 		string msftDriverBlockRulesAsString;
-		using (HttpClient client = new())
+		using (HttpClient client = new SecHttpClient())
 		{
 			msftDriverBlockRulesAsString = client.GetStringAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
 		}
@@ -545,7 +546,7 @@ internal static partial class BasePolicyCreator
 
 		// Download the markdown page from GitHub containing the latest Microsoft recommended block rules (User Mode)
 		string msftUserModeBlockRulesAsString;
-		using (HttpClient client = new())
+		using (HttpClient client = new SecHttpClient())
 		{
 			msftUserModeBlockRulesAsString = client.GetStringAsync(GlobalVars.MSFTRecommendedBlockRulesURL).GetAwaiter().GetResult();
 		}

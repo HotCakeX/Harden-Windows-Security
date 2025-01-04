@@ -24,22 +24,6 @@ public sealed partial class ViewFileCertificates : Page
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
-	// a class that represents each certificate in a chain
-	public sealed class FileCertificateInfoCol
-	{
-		public int SignerNumber { get; set; }
-		public CertificateType Type { get; set; }
-		public string? SubjectCN { get; set; }
-		public string? IssuerCN { get; set; }
-		public DateTime NotBefore { get; set; }
-		public DateTime NotAfter { get; set; }
-		public string? HashingAlgorithm { get; set; }
-		public string? SerialNumber { get; set; }
-		public string? Thumbprint { get; set; }
-		public string? TBSHash { get; set; }
-		public string? OIDs { get; set; }
-	}
-
 	// Main collection assigned to the DataGrid
 	private readonly ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
 

@@ -6,6 +6,17 @@ using System.Security.Cryptography.Pkcs;
 
 namespace AppControlManager;
 
+// https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
+// Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
+public struct OpusInfoObj
+{
+	// Declaring a public field CertOemID of type string with LPWStr marshaling
+	[MarshalAs(UnmanagedType.LPWStr)]
+	public string CertOemID;
+	public IntPtr PublisherInfo;
+	public IntPtr MoreInfo; // not always present
+}
+
 public static partial class Opus
 {
 	internal static partial class Crypt32
@@ -30,17 +41,6 @@ public static partial class Opus
 	public const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
 	// for the SpcSpOpusInfo structure
 	public const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
-
-	// https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
-	// Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
-	public struct OpusInfoObj
-	{
-		// Declaring a public field CertOemID of type string with LPWStr marshaling
-		[MarshalAs(UnmanagedType.LPWStr)]
-		public string CertOemID;
-		public IntPtr PublisherInfo;
-		public IntPtr MoreInfo; // not always present
-	}
 
 	// Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
 	// https://learn.microsoft.com/en-us/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file

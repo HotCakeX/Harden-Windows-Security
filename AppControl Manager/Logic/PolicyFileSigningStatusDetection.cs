@@ -17,7 +17,7 @@ internal static class PolicyFileSigningStatusDetection
 	{
 
 		// Make sure the policy file is valid first
-		_ = CiPolicyTest.TestCiPolicy(policyXMLPath, "");
+		_ = CiPolicyTest.TestCiPolicy(policyXMLPath);
 
 		HashSet<string> supplementalSignerIDs = [];
 		HashSet<string> updatePolicySignerIDs = [];

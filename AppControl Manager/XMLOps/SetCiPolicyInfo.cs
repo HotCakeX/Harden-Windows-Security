@@ -229,7 +229,7 @@ internal static class SetCiPolicyInfo
 		codeIntegrityPolicy.XmlDocument.Save(filePath);
 
 		// Validate the XML file at the end
-		if (!(bool)CiPolicyTest.TestCiPolicy(filePath, null)!)
+		if (!CiPolicyTest.TestCiPolicy(filePath))
 		{
 			throw new InvalidOperationException("SetCiPolicyInfo.Set: The XML file created at the end is not compliant with the CI policy schema");
 		}
@@ -262,7 +262,7 @@ internal static class SetCiPolicyInfo
 		codeIntegrityPolicy.XmlDocument.Save(filePath);
 
 		// Validate the XML file at the end
-		if (!(bool)CiPolicyTest.TestCiPolicy(filePath, null)!)
+		if (!CiPolicyTest.TestCiPolicy(filePath))
 		{
 			throw new InvalidOperationException("SetCiPolicyInfo.Set: The XML file created at the end is not compliant with the CI policy schema");
 		}

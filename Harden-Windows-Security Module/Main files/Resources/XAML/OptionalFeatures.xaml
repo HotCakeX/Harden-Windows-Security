@@ -1,0 +1,141 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" FontFamily="Trebuchet MS" FontSize="16" Style="{StaticResource Page_Style}">
+    <Grid x:Name="ParentGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Margin="10" Grid.Column="0" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Select All" VerticalContentAlignment="Center" Margin="7,0,0,2" Padding="10,10,40,10" x:Name="SelectAllOptionalFeatures" Template="{StaticResource CustomCheckBoxTemplate}"/>
+            <!-- ListViews for Optional Features -->
+            <ListView x:Name="OptionalFeatures" BorderThickness="0" ToolTip="Select the optional features to add and remove" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.PanningMode="Both">
+                <!-- Background color for the ListView -->
+                <ListView.Background>
+                    <SolidColorBrush Color="transparent"/>
+                </ListView.Background>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove PowerShell v2">
+                    <CheckBox x:Name="RemovePowerShellV2" Content="Remove PowerShell v2" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}" />
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Work Folders">
+                    <CheckBox x:Name="RemoveWorkFolders" Content="Remove Work Folders" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Internet Printing Client">
+                    <CheckBox x:Name="RemoveInternetPrintingClient" Content="Remove Internet Printing Client" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Legacy Windows Media Player">
+                    <CheckBox x:Name="RemoveLegacyWindowsMediaPlayer" Content="Remove Legacy Windows Media Player" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Microsoft Defender Application Guard">
+                    <CheckBox x:Name="RemoveMicrosoftDefenderApplicationGuard" Content="Remove Microsoft Defender Application Guard" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Legacy Notepad">
+                    <CheckBox x:Name="RemoveLegacyNotepad" Content="Remove Legacy Notepad" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove VBSCRIPT">
+                    <CheckBox x:Name="RemoveVBSCRIPT" Content="Remove VBSCRIPT" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Internet Explorer Mode For Edge">
+                    <CheckBox x:Name="RemoveInternetExplorerModeForEdge" Content="Remove Internet Explorer Mode For Edge" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove WMIC, unsafe and deprecated">
+                    <CheckBox x:Name="RemoveWMIC" Content="Remove WMIC" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove WordPad, it's deprecated">
+                    <CheckBox x:Name="RemoveWordPad" Content="Remove WordPad" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove PowerShell ISE">
+                    <CheckBox x:Name="RemovePowerShellISE" Content="Remove PowerShell ISE" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Steps Recorder">
+                    <CheckBox x:Name="RemoveStepsRecorder" Content="Remove Steps Recorder" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Math Recognizer if you don't need it">
+                    <CheckBox x:Name="RemoveMathRecognizer" Content="Remove Math Recognizer" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Print Management if you don't use printers">
+                    <CheckBox x:Name="RemovePrintManagement" Content="Remove Print Management" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove OpenSSH Client if you don't use SSH">
+                    <CheckBox x:Name="RemoveOpenSSHClient" Content="Remove OpenSSH Client" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Facial Recognition if your device doesn't have a webcam and you do not use Windows Hello facial recognition for login">
+                    <CheckBox x:Name="RemoveFacialRecognition" Content="Remove Facial Recognition" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Remove Extended Theme Content">
+                    <CheckBox x:Name="RemoveExtendedThemeContent" Content="Remove Extended Theme Content" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Enable Windows Sandbox - Great feature for testing unsafe software or temporarily installing a program">
+                    <CheckBox x:Name="EnableWindowsSandbox" Content="Enable Windows Sandbox" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Enable Hyper-V">
+                    <CheckBox x:Name="EnableHyperV" Content="Enable Hyper-V" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                </ListViewItem>
+            </ListView>
+        </Grid>
+
+
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center">
+
+            <Button x:Name="RetrieveOptionalFeaturesStatus" Style="{StaticResource CustomButtonStyle2}" Margin="0,0,0,10" ToolTipService.InitialShowDelay="1000" ToolTip="Using this button will retrieve the latest status of the optional features displayed in this page">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Retrieve Optional Features Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="ApplyOptionalFeaturesButton" Style="{StaticResource CustomButtonStyle2}" ToolTipService.InitialShowDelay="1000" ToolTip="Apply the selected optional features">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Apply Optional Features" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+
+
+
+
+        <Grid Grid.Row="0" Margin="10" Grid.Column="1" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <CheckBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Content="Select All" VerticalContentAlignment="Center" Margin="7,0,0,2" Padding="10,10,40,10" x:Name="SelectAllApps" Template="{StaticResource CustomCheckBoxTemplate}"/>
+            <!-- ListViews for Optional Features -->
+            <ListView x:Name="Apps" BorderThickness="0" ToolTip="Select the optional features to add and remove" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.PanningMode="Both">
+                <!-- Background color for the ListView -->
+                <ListView.Background>
+                    <SolidColorBrush Color="transparent"/>
+                </ListView.Background>
+            </ListView>
+        </Grid>
+
+
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center">
+
+            <Button x:Name="RetrieveRemovableApps" Style="{StaticResource CustomButtonStyle2}" Margin="0,0,0,10" ToolTipService.InitialShowDelay="1000" ToolTip="Using this button will retrieve the latest status of the optional features displayed in this page">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Retrieve Removable Apps" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="RemoveApps" Style="{StaticResource CustomButtonStyle2}" ToolTipService.InitialShowDelay="1000" ToolTip="Apply the selected optional features">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Remove Apps For All Users" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>

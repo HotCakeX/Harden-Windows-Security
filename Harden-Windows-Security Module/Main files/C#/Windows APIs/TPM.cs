@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 
 namespace HardenWindowsSecurity;
 
@@ -27,7 +26,7 @@ public static partial class TpmStatus
 		string? errorMessage = null;
 
 		// Call TpmIsEnabled and check result
-		uint result = TpmCoreProvisioningFunctions.TpmIsEnabled(out byte isEnabledByte);
+		uint result = NativeMethods.TpmIsEnabled(out byte isEnabledByte);
 		if (result == 0)
 		{
 			isEnabled = isEnabledByte != 0;
@@ -38,7 +37,7 @@ public static partial class TpmStatus
 		}
 
 		// Call TpmIsActivated and check result
-		result = TpmCoreProvisioningFunctions.TpmIsActivated(out byte isActivatedByte);
+		result = NativeMethods.TpmIsActivated(out byte isActivatedByte);
 		if (result == 0)
 		{
 			isActivated = isActivatedByte != 0;
@@ -50,20 +49,6 @@ public static partial class TpmStatus
 
 		return new TpmResult { IsEnabled = isEnabled, IsActivated = isActivated, ErrorMessage = errorMessage };
 	}
-
-
-	// Class that imports TpmCoreProvisioning.dll and use its exported functions
-	private static class TpmCoreProvisioningFunctions
-	{
-		[DllImport("TpmCoreProvisioning", CharSet = CharSet.Unicode)]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static extern uint TpmIsEnabled(out byte pfIsEnabled);
-
-		[DllImport("TpmCoreProvisioning", CharSet = CharSet.Unicode)]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static extern uint TpmIsActivated(out byte pfIsActivated);
-	}
-
 
 
 	/// <summary>

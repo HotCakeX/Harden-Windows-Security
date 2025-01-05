@@ -1039,3 +1039,6 @@ dotnet_diagnostic.CA1002.severity = error
 
 # SYSLIB1054: Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 dotnet_diagnostic.SYSLIB1054.severity = silent
+
+# CA1060: Move P/Invokes to NativeMethods class
+dotnet_diagnostic.CA1060.severity = error

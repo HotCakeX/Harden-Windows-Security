@@ -10,11 +10,6 @@ public static partial class NonAdminCommands
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🏷️ Non-Admins");
 
 		Logger.LogMessage("Running the Non-Admin category", LogTypeIntel.Information);

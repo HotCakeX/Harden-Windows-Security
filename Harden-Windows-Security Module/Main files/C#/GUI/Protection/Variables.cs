@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
@@ -33,10 +35,10 @@ public static partial class GUIProtectWinSecurity
 	internal static Grid? parentGrid;
 	internal static ToggleButton? mainTabControlToggle;
 	internal static ContentControl? mainContentControl;
-	internal static System.Windows.Style? mainContentControlStyle;
+	internal static Style? mainContentControlStyle;
 
 	// Defining the correlation between Categories and which Sub-Categories they activate
-	internal static System.Collections.Hashtable correlation = new(StringComparer.OrdinalIgnoreCase)
+	internal static Hashtable correlation = new(StringComparer.OrdinalIgnoreCase)
 			{
 				{ "MicrosoftSecurityBaselines", new string[] { "SecBaselines_NoOverrides" } },
 				{ "MicrosoftDefender", new string[] { "MSFTDefender_SAC", "MSFTDefender_NoDiagData", "MSFTDefender_NoScheduledTask", "MSFTDefender_BetaChannels" } },

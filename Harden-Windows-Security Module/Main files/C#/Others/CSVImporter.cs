@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -21,14 +20,11 @@ public static class HardeningRegistryKeys
 	// Define a public method to parse the CSV file and save the records to RegistryCSVItems
 	public static void ReadCsv()
 	{
-		// Ensure GlobalVars.path is not null
-		string basePath = GlobalVars.path ?? throw new ArgumentNullException(nameof(GlobalVars.path), "GlobalVars.path cannot be null.");
-
 		// Ensure RegistryCSVItems is initialized
 		List<CsvRecord> registryCSVItems = GlobalVars.RegistryCSVItems;
 
 		// Define the path to the CSV file
-		string path = Path.Combine(basePath, "Resources", "Registry.csv");
+		string path = Path.Combine(GlobalVars.path, "Resources", "Registry.csv");
 
 		// Open the file and read the contents
 		using StreamReader reader = new(path);

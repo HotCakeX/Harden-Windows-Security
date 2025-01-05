@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Globalization;
-using System.Runtime.InteropServices;
 
 namespace HardenWindowsSecurity;
 
@@ -33,10 +31,6 @@ internal sealed class LocalUser
 /// </summary>
 internal static class LocalUserRetriever
 {
-	// https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsida
-	[DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	private static extern bool ConvertSidToStringSid(IntPtr pSID, out IntPtr ptrSid);
 
 	/// <summary>
 	/// Retrieves local user accounts on the system and returns them as a list of LocalUser objects

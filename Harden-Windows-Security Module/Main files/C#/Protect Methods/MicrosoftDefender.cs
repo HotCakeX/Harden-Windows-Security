@@ -13,11 +13,6 @@ public static partial class MicrosoftDefender
 	public static void Invoke()
 	{
 
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🍁 MSFT Defender");
 
 		Logger.LogMessage("Running the Microsoft Defender category", LogTypeIntel.Information);

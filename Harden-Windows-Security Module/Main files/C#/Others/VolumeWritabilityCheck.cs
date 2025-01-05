@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace HardenWindowsSecurity;
 
@@ -42,7 +43,7 @@ internal static partial class VolumeWritabilityCheck
 				using (FileStream fs = File.Create(testFilePath))
 				{
 					// Write some data
-					byte[] testData = new System.Text.UTF8Encoding(true).GetBytes("test");
+					byte[] testData = new UTF8Encoding(true).GetBytes("test");
 					fs.Write(testData, 0, testData.Length);
 				}
 

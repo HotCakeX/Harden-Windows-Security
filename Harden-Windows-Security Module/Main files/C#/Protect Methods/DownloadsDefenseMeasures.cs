@@ -12,22 +12,12 @@ public static partial class DownloadsDefenseMeasures
 	// GUID for the Downloads folder
 	private static Guid FolderDownloads = new("374DE290-123F-4565-9164-39C4925E467B");
 
-	[DllImport("shell32.dll")]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	private static extern int SHGetKnownFolderPath(
-		ref Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr ppszPath);
-
 
 	/// <summary>
 	/// Prevents executables originating from the Downloads folder from running, using AppControl policy
 	/// </summary>
 	public static void Invoke()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
 
 		Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
@@ -65,7 +55,7 @@ public static partial class DownloadsDefenseMeasures
 			try
 			{
 				// Get the System Downloads folder path
-				int result = SHGetKnownFolderPath(ref FolderDownloads, 0, IntPtr.Zero, out pathPtr);
+				int result = NativeMethods.SHGetKnownFolderPath(ref FolderDownloads, 0, IntPtr.Zero, out pathPtr);
 
 				if (result is 0) // S_OK
 				{

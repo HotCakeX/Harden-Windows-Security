@@ -28,8 +28,7 @@ internal static class MDM
 	private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
 	{
 		// Set the location of the CSV file containing the MDM list
-		string path = GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path is null");
-		string csvFilePath = Path.Combine(path, "Resources", "MDMResultClasses.csv");
+		string csvFilePath = Path.Combine(GlobalVars.path, "Resources", "MDMResultClasses.csv");
 
 		// Create a dictionary where keys are the class names and values are lists of dictionaries
 		Dictionary<string, List<Dictionary<string, object>>> results = [];

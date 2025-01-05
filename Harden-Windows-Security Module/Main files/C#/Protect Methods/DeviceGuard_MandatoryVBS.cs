@@ -11,12 +11,6 @@ public partial class DeviceGuard
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void DeviceGuard_MandatoryVBS()
 	{
-
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🖥️ Device Guard");
 
 		Logger.LogMessage("Setting VBS and Memory Integrity in Mandatory Mode", LogTypeIntel.Information);

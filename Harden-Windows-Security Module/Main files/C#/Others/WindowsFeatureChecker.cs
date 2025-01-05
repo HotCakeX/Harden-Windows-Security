@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Management;
 
 namespace HardenWindowsSecurity;
@@ -23,6 +24,7 @@ public static class WindowsFeatureChecker
 		public string? LegacyWordPad { get; set; }
 		public string? PowerShellISE { get; set; }
 		public string? StepsRecorder { get; set; }
+		public string? VBSCRIPT { get; set; }
 	}
 
 	public static FeatureStatus CheckWindowsFeatures()
@@ -45,7 +47,8 @@ public static class WindowsFeatureChecker
 			LegacyNotepad = GetCapabilityState("Microsoft.Windows.Notepad.System"),
 			LegacyWordPad = GetCapabilityState("Microsoft.Windows.WordPad"),
 			PowerShellISE = GetCapabilityState("Microsoft.Windows.PowerShell.ISE"),
-			StepsRecorder = GetCapabilityState("App.StepsRecorder")
+			StepsRecorder = GetCapabilityState("App.StepsRecorder"),
+			VBSCRIPT = GetCapabilityState("VBSCRIPT")
 		};
 	}
 
@@ -141,8 +144,8 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
 		// Start the DISM process
 		using Process? process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start the process.");
 
-		using System.IO.StreamReader outputReader = process.StandardOutput;
-		using System.IO.StreamReader errorReader = process.StandardError;
+		using StreamReader outputReader = process.StandardOutput;
+		using StreamReader errorReader = process.StandardError;
 		string output = outputReader.ReadToEnd();
 		string error = errorReader.ReadToEnd();
 

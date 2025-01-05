@@ -12,11 +12,6 @@ public static partial class MiscellaneousConfigurations
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🥌 Miscellaneous");
 
 		Logger.LogMessage("Running the Miscellaneous Configurations category", LogTypeIntel.Information);

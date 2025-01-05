@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 
 namespace HardenWindowsSecurity;
 
@@ -25,11 +24,6 @@ public static partial class GUIMain
 			{
 				CurrentView = cachedView;
 				return;
-			}
-
-			if (GlobalVars.path is null)
-			{
-				throw new InvalidOperationException("GlobalVars.path cannot be null.");
 			}
 
 			// if Admin privileges are not available, return and do not proceed any further
@@ -54,35 +48,8 @@ public static partial class GUIMain
 
 			#region finding elements
 
-			// Finding the Execute Button Grid
-			Grid? ExecuteButtonGrid = GUIASRRules.ParentGrid.FindName("ExecuteButtonGrid") as Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the ASRRules View");
-
-			// Finding the Execute Button
-			if (ExecuteButtonGrid.FindName("ExecuteButton") is not ToggleButton ExecuteButton)
-			{
-				throw new InvalidOperationException("Couldn't find the ExecuteButton in ASRRules view");
-			}
-
-			// Apply the template to make sure it's available
-			_ = ExecuteButton.ApplyTemplate();
-
-			// Access the image within the Execute Button's template
-			if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not Image RefreshIconImage)
-			{
-				throw new InvalidOperationException("RefreshIconImage could not be found in the ASRRules view");
-			}
-
-			// Update the image source for the Refresh button
-			// Load the Refresh icon image into memory and set it as the source
-			BitmapImage RefreshIconBitmapImage = new();
-			RefreshIconBitmapImage.BeginInit();
-			RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-			RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			RefreshIconBitmapImage.EndInit();
-
-			RefreshIconImage.Source = RefreshIconBitmapImage;
-
 			Button RetrieveASRStatusButton = GUIASRRules.ParentGrid.FindName("RetrieveASRStatus") as Button ?? throw new InvalidOperationException("RetrieveASRStatus could not be found in the ASRRules view");
+			Button ApplyASRRulesButton = GUIASRRules.ParentGrid.FindName("ApplyASRRulesButton") as Button ?? throw new InvalidOperationException("ApplyASRRulesButton could not be found in the ASRRules view");
 
 			#endregion
 
@@ -120,11 +87,6 @@ public static partial class GUIMain
 			/// A method that will get the ComboBox and the ASRRuleName, then return the path to the .pol file for the correct ASR rule and action to be applied using LGPO.exe
 			string GetASRRuleConfig(string ASRRuleName, byte ComboBoxIndex)
 			{
-
-				if (GlobalVars.path is null)
-				{
-					throw new InvalidOperationException("GlobalVars.path is null.");
-				}
 
 				if (AttackSurfaceReductionIntel.ASRRulesCorrelation is null)
 				{
@@ -169,12 +131,12 @@ public static partial class GUIMain
 			}
 
 
-			// Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-			ActivityTracker.RegisterUIElement(ExecuteButton);
+			// Register the ApplyASRRulesButton as an element that will be enabled/disabled based on current activity
+			ActivityTracker.RegisterUIElement(ApplyASRRulesButton);
 
 
-			// Set up the Click event handler for the ExecuteButton button
-			ExecuteButton.Click += async (sender, e) =>
+			// Set up the Click event handler for the ApplyASRRulesButton button
+			ApplyASRRulesButton.Click += async (sender, e) =>
 			{
 				// Only continue if there is no activity other places
 				if (!ActivityTracker.IsActive)
@@ -183,7 +145,7 @@ public static partial class GUIMain
 					ActivityTracker.IsActive = true;
 
 					// Set text blocks to empty while new data is being generated
-					System.Windows.Application.Current.Dispatcher.Invoke(() =>
+					Application.Current.Dispatcher.Invoke(() =>
 					{
 						// Get the ListViews
 						if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 || GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
@@ -259,12 +221,6 @@ public static partial class GUIMain
 
 					});
 
-					// Update the UI Elements at the end of the run
-					await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
-					{
-						ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
-					});
-
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
 
@@ -286,7 +242,7 @@ public static partial class GUIMain
 					// Dictionary of ComboBoxes, key is ComboBox name and value is ComboBox element itself
 					Dictionary<string, ComboBox> ComboBoxList = [];
 
-					System.Windows.Application.Current.Dispatcher.Invoke(() =>
+					Application.Current.Dispatcher.Invoke(() =>
 					{
 						// Get the ListViews
 						if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 ||
@@ -369,7 +325,7 @@ public static partial class GUIMain
 							_ = ComboBoxList.TryGetValue(ComboBoxName!, out ComboBox? currentMatchingComboBox);
 
 							// Use the GUI dispatcher to set the ComboBox selected index to the currently applied ASR rule's action
-							System.Windows.Application.Current.Dispatcher.Invoke(() =>
+							Application.Current.Dispatcher.Invoke(() =>
 							{
 								// Make the connection between ASR rule applied action and the ComboBox Item Indexes
 								int selectedIndex = Convert.ToInt32(action, CultureInfo.InvariantCulture) switch
@@ -393,7 +349,6 @@ public static partial class GUIMain
 
 				}
 			};
-
 
 
 			// Cache the view before setting it as the CurrentView

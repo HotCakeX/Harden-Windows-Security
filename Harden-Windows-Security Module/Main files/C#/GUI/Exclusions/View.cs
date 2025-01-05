@@ -28,11 +28,6 @@ public partial class GUIMain
 				return;
 			}
 
-			if (GlobalVars.path is null)
-			{
-				throw new InvalidOperationException("GlobalVars.path cannot be null.");
-			}
-
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
 			if (!UserPrivCheck.IsAdmin())

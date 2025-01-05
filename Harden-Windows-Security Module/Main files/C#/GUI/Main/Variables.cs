@@ -11,7 +11,7 @@ namespace HardenWindowsSecurity;
 public partial class GUIMain
 {
 	// Define the path to the main Window XAML file
-	public static readonly string xamlPath = Path.Combine(GlobalVars.path!, "Resources", "XAML", "Main.xaml");
+	public static readonly string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Main.xaml");
 
 	// Main window instance
 	public static Window? mainGUIWindow;

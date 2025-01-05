@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using Microsoft.Win32;
@@ -26,7 +27,7 @@ internal static class ProcessMitigationsApplication
 		Logger.LogMessage("Removing the existing process mitigations", LogTypeIntel.Information);
 		foreach (IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords> group in groupedMitigations)
 		{
-			string? fileName = System.IO.Path.GetFileName(group.Key);
+			string? fileName = Path.GetFileName(group.Key);
 
 			if (allAvailableMitigations.Contains(fileName))
 			{

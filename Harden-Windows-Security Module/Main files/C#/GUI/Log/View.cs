@@ -27,11 +27,6 @@ public partial class GUIMain
 				return;
 			}
 
-			if (GlobalVars.path is null)
-			{
-				throw new InvalidOperationException("GlobalVars.path cannot be null.");
-			}
-
 			// Construct the file path for the Logs view XAML
 			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Logs.xaml");
 
@@ -56,7 +51,7 @@ public partial class GUIMain
 			// Add image to the ExportLogsIcon
 			BitmapImage ExportLogsIconBitmapImage = new();
 			ExportLogsIconBitmapImage.BeginInit();
-			ExportLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExportIconBlack.png"));
+			ExportLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExportIconBlack.png"));
 			ExportLogsIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			ExportLogsIconBitmapImage.EndInit();
 			ExportLogsIcon.Source = ExportLogsIconBitmapImage;
@@ -65,7 +60,7 @@ public partial class GUIMain
 			// Add image to the ClearLogsIcon
 			BitmapImage ClearLogsIconBitmapImage = new();
 			ClearLogsIconBitmapImage.BeginInit();
-			ClearLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ClearLogsIcon.png"));
+			ClearLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ClearLogsIcon.png"));
 			ClearLogsIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			ClearLogsIconBitmapImage.EndInit();
 			ClearLogsIcon.Source = ClearLogsIconBitmapImage;

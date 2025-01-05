@@ -12,11 +12,6 @@ public static partial class DownloadsDefenseMeasures
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void DangerousScriptHostsBlocking()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		Logger.LogMessage("Running the Dangerous Script Hosts Blocking section", LogTypeIntel.Information);
 
 		string CIPPath = Path.Combine(GlobalVars.WorkingDir, "Dangerous-Script-Hosts-Blocking.cip");

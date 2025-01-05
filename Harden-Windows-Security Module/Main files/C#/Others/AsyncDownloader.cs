@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -235,16 +236,16 @@ public static class AsyncDownloader
 			Logger.LogMessage("Extracting the downloaded zip files", LogTypeIntel.Information);
 
 			// Extract MicrosoftSecurityBaseline.zip
-			System.IO.Compression.ZipFile.ExtractToDirectory(MicrosoftSecurityBaselineZipFilePath, MicrosoftSecurityBaselineDirPath);
+			ZipFile.ExtractToDirectory(MicrosoftSecurityBaselineZipFilePath, MicrosoftSecurityBaselineDirPath);
 
 			// Extract Microsoft365SecurityBaseline.zip
-			System.IO.Compression.ZipFile.ExtractToDirectory(Microsoft365SecurityBaselineZipFilePath, Microsoft365SecurityBaselineDirPath);
+			ZipFile.ExtractToDirectory(Microsoft365SecurityBaselineZipFilePath, Microsoft365SecurityBaselineDirPath);
 
 		}
 
 
 		// Extract LGPO.zip
-		System.IO.Compression.ZipFile.ExtractToDirectory(LGPOZipFilePath, GlobalVars.WorkingDir);
+		ZipFile.ExtractToDirectory(LGPOZipFilePath, GlobalVars.WorkingDir);
 
 		if (!OnlyLGPO)
 		{

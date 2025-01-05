@@ -91,7 +91,7 @@ $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toa
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'System.Drawing.Common.dll'))
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'WinRT.Runtime.dll'))
 
-# Load all of the C# codes
+# Compile all of the C# codes
 # for some reason it tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
 # https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
 Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked'

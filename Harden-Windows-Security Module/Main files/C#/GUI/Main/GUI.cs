@@ -143,6 +143,7 @@ public partial class GUIMain
 		public ICommand ExclusionsCommand { get; set; }
 		public ICommand BitLockerCommand { get; set; }
 		public ICommand LogsCommand { get; set; }
+		public ICommand OptionalFeaturesCommand { get; set; }
 
 		// Dictionary to cache views by their identifiers
 		private readonly Dictionary<string, object> _viewCache = [];
@@ -158,6 +159,7 @@ public partial class GUIMain
 			ExclusionsCommand = new RelayCommand(ExclusionsView); // Command to handle the Exclusions action
 			BitLockerCommand = new RelayCommand(BitLockerView); // Command to handle the BitLocker action
 			LogsCommand = new RelayCommand(LogsView); // Command to handle the Logs action
+			OptionalFeaturesCommand = new RelayCommand(OptionalFeaturesView); // Command to handle the OptionalFeatures action
 
 			// Load the Logs view initially to make it ready for logs to be written to it
 			LogsView(null);
@@ -182,11 +184,6 @@ public partial class GUIMain
 
 	public static void LoadMainXaml()
 	{
-
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
 
 		#region Load Resource Dictionaries (First)
 		// Define the path to the ResourceDictionaries folder
@@ -354,7 +351,7 @@ End time: {DateTime.Now}
 		// Load the background image into memory and set it as the ImageSource for the ImageBrush
 		BitmapImage BackgroundBitmapImage = new();
 		BackgroundBitmapImage.BeginInit();
-		BackgroundBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "background.jpg"));
+		BackgroundBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "background.jpg"));
 		BackgroundBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 		BackgroundBitmapImage.EndInit();
 
@@ -501,6 +498,16 @@ End time: {DateTime.Now}
 		LogsButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 		LogsButtonImage.EndInit();
 		LogsButtonIcon.Source = LogsButtonImage;
+
+		// OptionalFeatures button icon
+		Grid OptionalFeaturesButtonGrid = SidebarGrid.FindName("OptionalFeaturesButtonGrid") as Grid;
+		Image OptionalFeaturesButtonIcon = LogsButtonGrid.FindName("OptionalFeaturesButtonIcon") as Image;
+		BitmapImage OptionalFeaturesButtonImage = new();
+		OptionalFeaturesButtonImage.BeginInit();
+		OptionalFeaturesButtonImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "OptionalFeaturesMenuButtonIcon.png"));
+		OptionalFeaturesButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
+		OptionalFeaturesButtonImage.EndInit();
+		OptionalFeaturesButtonIcon.Source = OptionalFeaturesButtonImage;
 		#endregion
 
 	}

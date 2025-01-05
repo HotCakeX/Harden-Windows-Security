@@ -20,6 +20,13 @@ public static class Initializer
 
 		GlobalVars.LogHeaderHasBeenWritten = false;
 
+		// This check is only necessary to be performed
+		// GlobalVars.path is set to non-nullable intentionally with pragma disable
+		if (string.IsNullOrWhiteSpace(GlobalVars.path))
+		{
+			throw new InvalidOperationException("The PSScriptRoot variable hasn't been set!");
+		}
+
 		// Set the default culture to InvariantCulture globally
 		CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 		CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
@@ -93,7 +100,7 @@ public static class Initializer
 		GlobalVars.MDAVConfigCurrent = ConfigDefenderHelper.GetMpComputerStatus();
 
 		// Total number of Compliant values
-		GlobalVars.TotalNumberOfTrueCompliantValues = 256;
+		GlobalVars.TotalNumberOfTrueCompliantValues = 257;
 
 		// Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
 		GlobalVars.VerbosePreference = VerbosePreference;

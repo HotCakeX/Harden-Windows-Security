@@ -81,7 +81,7 @@ public static class UnprotectWindowsSecurity
 		}
 
 		// Apply the default security policy on the system
-		LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path!, "Resources", "Default Security Policy.inf"), LGPORunner.FileType.INF, Path.Combine(GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
+		LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Default Security Policy.inf"), LGPORunner.FileType.INF, Path.Combine(GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
 		#endregion
 
 

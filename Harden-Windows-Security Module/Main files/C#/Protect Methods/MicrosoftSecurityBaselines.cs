@@ -16,11 +16,6 @@ public static partial class MicrosoftSecurityBaselines
 			throw new InvalidOperationException("The path to the Microsoft Security Baselines has not been set.");
 		}
 
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🔐 Security Baselines");
 
 		Logger.LogMessage("Applying the Microsoft Security Baselines", LogTypeIntel.Information);

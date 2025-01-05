@@ -46,8 +46,7 @@ public static partial class ConfirmSystemComplianceMethods
 		GlobalVars.SystemSecurityPoliciesIniObject = IniFileConverter.ConvertFromIniFile(GlobalVars.securityPolicyInfPath);
 
 		// Process the SecurityPoliciesVerification.csv and save the output to the global variable GlobalVars.SecurityPolicyRecords
-		string basePath = GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path cannot be null.");
-		string fullPath = Path.Combine(basePath, "Resources", "SecurityPoliciesVerification.csv");
+		string fullPath = Path.Combine(GlobalVars.path, "Resources", "SecurityPoliciesVerification.csv");
 
 		GlobalVars.SecurityPolicyRecords = SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(fullPath);
 
@@ -1030,6 +1029,16 @@ public static partial class ConfirmSystemComplianceMethods
 				Compliant = string.Equals(FeaturesCheckResults.StepsRecorder, "Not Present", StringComparison.OrdinalIgnoreCase),
 				Value = FeaturesCheckResults.StepsRecorder,
 				Name = "Steps Recorder is not present",
+				Category = CatName,
+				Method = Method.DISM
+			});
+
+			nestedObjectArray.Add(new IndividualResult
+			{
+				FriendlyName = "VBSCRIPT is not present",
+				Compliant = string.Equals(FeaturesCheckResults.VBSCRIPT, "Not Present", StringComparison.OrdinalIgnoreCase),
+				Value = FeaturesCheckResults.VBSCRIPT,
+				Name = "VBSCRIPT is not present",
 				Category = CatName,
 				Method = Method.DISM
 			});

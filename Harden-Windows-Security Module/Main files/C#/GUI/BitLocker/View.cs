@@ -28,11 +28,6 @@ public partial class GUIMain
 				return;
 			}
 
-			if (GlobalVars.path is null)
-			{
-				throw new InvalidOperationException("GlobalVars.path cannot be null.");
-			}
-
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
 			if (!UserPrivCheck.IsAdmin())
@@ -208,7 +203,7 @@ public partial class GUIMain
 			// Add image to the BackupButtonIcon
 			BitmapImage BackupButtonIconBitmapImage = new();
 			BackupButtonIconBitmapImage.BeginInit();
-			BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExportIconBlack.png"));
+			BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExportIconBlack.png"));
 			BackupButtonIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			BackupButtonIconBitmapImage.EndInit();
 			BackupButtonIcon.Source = BackupButtonIconBitmapImage;
@@ -265,7 +260,7 @@ public partial class GUIMain
 			// Add the same Refresh image to multiple sources
 			BitmapImage RefreshButtonIcon1BitmapImage = new();
 			RefreshButtonIcon1BitmapImage.BeginInit();
-			RefreshButtonIcon1BitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "RefreshButtonIcon.png"));
+			RefreshButtonIcon1BitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "RefreshButtonIcon.png"));
 			RefreshButtonIcon1BitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			RefreshButtonIcon1BitmapImage.EndInit();
 			RefreshButtonIcon1.Source = RefreshButtonIcon1BitmapImage;

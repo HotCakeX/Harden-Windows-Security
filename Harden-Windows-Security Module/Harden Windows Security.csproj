@@ -60,6 +60,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Main files\Resources\XAML\OptionalFeatures.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -85,6 +89,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Main files\Resources\XAML\OptionalFeatures.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

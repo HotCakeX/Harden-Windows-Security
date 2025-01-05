@@ -83,7 +83,7 @@ public class SecOp : INotifyPropertyChanged
 	private static BitmapImage LoadImage(string fileName)
 	{
 		// Construct the full path to the image file
-		string imagePath = Path.Combine(GlobalVars.path!, "Resources", "Media", fileName);
+		string imagePath = Path.Combine(GlobalVars.path, "Resources", "Media", fileName);
 		// Return the loaded image as a BitmapImage
 		return new BitmapImage(new Uri(imagePath, UriKind.Absolute));
 	}

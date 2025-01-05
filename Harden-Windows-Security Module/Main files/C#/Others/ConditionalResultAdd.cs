@@ -28,8 +28,10 @@ internal static class ConditionalResultAdd
 				{
 					// Remove the existing item with Compliant status "False"
 					_ = nestedObjectArray.Remove(existingItem);
+
 					// Add the current item with Compliant status "True"
 					nestedObjectArray.Add(result);
+
 					Logger.LogMessage($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.", LogTypeIntel.Information);
 				}
 				else

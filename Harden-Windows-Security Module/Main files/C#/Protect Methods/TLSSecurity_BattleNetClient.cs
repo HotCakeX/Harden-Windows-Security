@@ -12,11 +12,6 @@ public static partial class TLSSecurity
 	public static void TLSSecurity_BattleNetClient()
 	{
 
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		Logger.LogMessage("Adding (TLS_RSA_WITH_AES_256_CBC_SHA) cipher suite for the BattleNet Client", LogTypeIntel.Information);
 
 		LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "For BattleNetClient", "registry.pol"), LGPORunner.FileType.POL);

@@ -13,11 +13,6 @@ public static class BitLockerSettings
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🔑 BitLocker");
 
 		Logger.LogMessage("Running the Bitlocker category", LogTypeIntel.Information);

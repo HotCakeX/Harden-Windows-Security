@@ -10,7 +10,7 @@ internal static class SYSTEMScheduledTasks
 		Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
 
 		// Path to the PowerShell script
-		string scriptPath = Path.Combine(GlobalVars.path!, "Shared", "SYSTEMInfoGathering.ps1");
+		string scriptPath = Path.Combine(GlobalVars.path, "Shared", "SYSTEMInfoGathering.ps1");
 
 		// Load the PowerShell script into a string
 		string script = File.ReadAllText(scriptPath);

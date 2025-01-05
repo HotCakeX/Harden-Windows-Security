@@ -8,10 +8,6 @@ public static partial class TLSSecurity
 {
 	public static void Invoke()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
 
 		ChangePSConsoleTitle.Set("🛡️ TLS");
 

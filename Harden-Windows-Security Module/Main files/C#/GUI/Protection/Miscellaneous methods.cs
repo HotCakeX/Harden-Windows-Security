@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -94,12 +96,12 @@ public static partial class GUIProtectWinSecurity
 	{
 
 		// Clear the categories and sub-categories lists from the saved variables
-		SelectedCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
-		SelectedSubCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
+		SelectedCategories = new ConcurrentQueue<string>();
+		SelectedSubCategories = new ConcurrentQueue<string>();
 
 		// Gather the selected categories and sub-categories and store them in the GlobalVars HashTable
-		System.Collections.IEnumerable categoriesItems = categories!.Items;
-		System.Collections.IEnumerable subCategoriesItems = subCategories!.Items;
+		IEnumerable categoriesItems = categories!.Items;
+		IEnumerable subCategoriesItems = subCategories!.Items;
 
 		// Get the Categories status and add them to the variables
 		foreach (ListBoxItem categoryItem in categoriesItems)

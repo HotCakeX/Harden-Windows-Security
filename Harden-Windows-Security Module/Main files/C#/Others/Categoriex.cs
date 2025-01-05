@@ -16,7 +16,7 @@ public enum ComplianceCategories
 	UserAccountControl, // 6
 	DeviceGuard, // 10
 	WindowsFirewall, // 20
-	OptionalWindowsFeatures, // 14
+	OptionalWindowsFeatures, // 15
 	WindowsNetworking, // 17
 	MiscellaneousConfigurations, // 20
 	WindowsUpdateConfigurations, // 15

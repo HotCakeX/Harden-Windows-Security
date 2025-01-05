@@ -32,7 +32,7 @@ public static class ToastNotification
 		{
 
 			// Notifications Icon Override for all of the toast notification styles
-			string LogoOverride = Path.Combine(GlobalVars.path!, "Resources", "Media", "NotificationIconOverride.png");
+			string LogoOverride = Path.Combine(GlobalVars.path, "Resources", "Media", "NotificationIconOverride.png");
 
 			// Detect the notification type so we can create the proper notification to be displayed
 			switch (Type)
@@ -42,9 +42,9 @@ public static class ToastNotification
 				case Type.EndOfProtection:
 					{
 						// Combine paths
-						// string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Microsoft Defender.png");
-						// string DismissButtonImage = Path.Combine(GlobalVars.path!, "Resources", "Media", "notification (1).png");
-						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ProtectToastNotificationImage.png");
+						// string Hero = Path.Combine(GlobalVars.path, "Resources", "Media", "Microsoft Defender.png");
+						// string DismissButtonImage = Path.Combine(GlobalVars.path, "Resources", "Media", "notification (1).png");
+						string Inline = Path.Combine(GlobalVars.path, "Resources", "Media", "ProtectToastNotificationImage.png");
 
 						new ToastContentBuilder()
 
@@ -105,7 +105,7 @@ public static class ToastNotification
 					{
 
 						// Combine paths
-						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
+						string Inline = Path.Combine(GlobalVars.path, "Resources", "Media", "ConfirmToastNotificationImage.png");
 
 						new ToastContentBuilder()
 
@@ -135,8 +135,8 @@ public static class ToastNotification
 					{
 
 						// Combine paths
-						string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
-						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ASRRulesToastNotificationImage.png");
+						string Hero = Path.Combine(GlobalVars.path, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
+						string Inline = Path.Combine(GlobalVars.path, "Resources", "Media", "ASRRulesToastNotificationImage.png");
 
 						new ToastContentBuilder()
 
@@ -165,7 +165,7 @@ public static class ToastNotification
 				case Type.EndOfUnprotection:
 					{
 						// Combine paths
-						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+						string Inline = Path.Combine(GlobalVars.path, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
 						new ToastContentBuilder()
 
@@ -190,7 +190,7 @@ public static class ToastNotification
 				case Type.EndOfExclusions:
 					{
 						// Combine paths
-						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+						string Inline = Path.Combine(GlobalVars.path, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
 						new ToastContentBuilder()
 
@@ -215,7 +215,7 @@ public static class ToastNotification
 				case Type.EndOfBitLocker:
 					{
 						// Combine paths
-						string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
+						string Inline = Path.Combine(GlobalVars.path, "Resources", "Media", "BitLockerToastNotificationImage.png");
 
 						new ToastContentBuilder()
 

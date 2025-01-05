@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
@@ -25,11 +24,6 @@ public partial class GUIMain
 			{
 				CurrentView = cachedView;
 				return;
-			}
-
-			if (GlobalVars.path is null)
-			{
-				throw new InvalidOperationException("GlobalVars.path cannot be null.");
 			}
 
 			// if Admin privileges are not available, return and do not proceed any further
@@ -55,28 +49,6 @@ public partial class GUIMain
 			// Find the Parent Grid
 			GUIUnprotect.ParentGrid = (Grid)GUIUnprotect.View.FindName("ParentGrid");
 
-			// Finding the Execute Button Grid
-			Grid? ExecuteButtonGrid = GUIUnprotect.ParentGrid.FindName("ExecuteButtonGrid") as Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the ASRRules View");
-
-			// Finding the Execute Button
-			ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as ToggleButton ?? throw new InvalidOperationException("Couldn't find the ExecuteButton in ASRRules view");
-
-			// Apply the template to make sure it's available
-			_ = ExecuteButton.ApplyTemplate();
-
-			// Access the image within the Execute Button's template
-			Image? RefreshIconImage = ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) as Image ?? throw new InvalidOperationException("RefreshIconImage could not be found in the ASRRules view");
-
-			// Update the image source for the Refresh button
-			// Load the Refresh icon image into memory and set it as the source
-			BitmapImage RefreshIconBitmapImage = new();
-			RefreshIconBitmapImage.BeginInit();
-			RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-			RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			RefreshIconBitmapImage.EndInit();
-
-			RefreshIconImage.Source = RefreshIconBitmapImage;
-
 			if (GUIUnprotect.ParentGrid.FindName("AppControlPolicies") is not ComboBox AppControlPoliciesComboBox)
 			{
 				throw new InvalidOperationException("AppControlPoliciesComboBox is null");
@@ -89,12 +61,13 @@ public partial class GUIMain
 
 
 			Button RefreshDrivesButton = GUIUnprotect.ParentGrid.FindName("RefreshDrivesForSelection") as Button ?? throw new InvalidOperationException("RefreshDrivesForSelection could not be found");
+			Button RemoveProtectionsButton = GUIUnprotect.ParentGrid.FindName("RemoveProtectionsButton") as Button ?? throw new InvalidOperationException("RemoveProtectionsButton could not be found");
 			Image? RefreshDrivesForSelectionButtonIcon = GUIUnprotect.ParentGrid.FindName("RefreshDrivesForSelectionButtonIcon") as Image ?? throw new InvalidOperationException("RefreshDrivesForSelectionButtonIcon could not be found");
 
 			// Add image to the BackupButtonIcon
 			BitmapImage BackupButtonIconBitmapImage = new();
 			BackupButtonIconBitmapImage.BeginInit();
-			BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "RefreshButtonIcon.png"));
+			BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "RefreshButtonIcon.png"));
 			BackupButtonIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			BackupButtonIconBitmapImage.EndInit();
 			RefreshDrivesForSelectionButtonIcon.Source = BackupButtonIconBitmapImage;
@@ -106,8 +79,8 @@ public partial class GUIMain
 			#endregion
 
 
-			// Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-			ActivityTracker.RegisterUIElement(ExecuteButton);
+			// Register the RemoveProtectionsButton as an element that will be enabled/disabled based on current activity
+			ActivityTracker.RegisterUIElement(RemoveProtectionsButton);
 
 			// Add more button to activity tracker
 			ActivityTracker.RegisterUIElement(RefreshDrivesButton);
@@ -194,8 +167,8 @@ public partial class GUIMain
 			};
 
 
-			// Set up the Click event handler for the ExecuteButton button
-			ExecuteButton.Click += async (sender, e) =>
+			// Set up the Click event handler for the RemoveProtectionsButton button
+			RemoveProtectionsButton.Click += async (sender, e) =>
 			{
 				// Only continue if there is no activity other places
 				if (!ActivityTracker.IsActive)
@@ -207,7 +180,7 @@ public partial class GUIMain
 					// mark as activity started
 					ActivityTracker.IsActive = true;
 
-					// Disable the ExecuteButton button while processing
+					// Disable the RemoveProtectionsButton button while processing
 					Application.Current.Dispatcher.Invoke(() =>
 					{
 						// Store the values of the combo boxes in View variables since they need to be acquired through the Application dispatcher since they belong to the UI thread
@@ -292,12 +265,6 @@ public partial class GUIMain
 								break;
 						}
 
-					});
-
-					// Update the UI Elements at the end of the run
-					await Application.Current.Dispatcher.InvokeAsync(() =>
-					{
-						ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
 					});
 
 					// mark as activity completed

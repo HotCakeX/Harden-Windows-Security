@@ -11,11 +11,6 @@ public static class AttackSurfaceReductionRules
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()
 	{
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🪷 ASR Rules");
 
 		Logger.LogMessage("Running the Attack Surface Reduction Rules category", LogTypeIntel.Information);

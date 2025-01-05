@@ -34,11 +34,6 @@ internal static class CategoryProcessing
 		// Create a list to store the records
 		List<CsvRecord> records = [];
 
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("The path to the CSV file is not set.");
-		}
-
 		// Define the path to the CSV file - hardcoded because it doesn't need to change
 		string path = Path.Combine(GlobalVars.path, "Resources", "Registry resources.csv");
 

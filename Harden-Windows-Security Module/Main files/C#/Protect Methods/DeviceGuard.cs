@@ -13,11 +13,6 @@ public static partial class DeviceGuard
 	public static void Invoke()
 	{
 
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		ChangePSConsoleTitle.Set("🖥️ Device Guard");
 
 		Logger.LogMessage("Running the Device Guard category", LogTypeIntel.Information);

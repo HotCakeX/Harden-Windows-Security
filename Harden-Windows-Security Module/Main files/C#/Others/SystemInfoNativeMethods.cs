@@ -15,14 +15,6 @@ internal static class SystemInformationClass
 		SystemDmaGuardPolicyInformation = 202
 	}
 
-	[DllImport("ntdll.dll")]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static extern Int32 NtQuerySystemInformation(
-		SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
-		IntPtr SystemInformation,
-		Int32 SystemInformationLength,
-		out Int32 ReturnLength);
-
 	internal static byte BootDmaCheck()
 	{
 		Int32 result;
@@ -30,7 +22,7 @@ internal static class SystemInformationClass
 		IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
 
 		// https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
-		result = NtQuerySystemInformation(
+		result = NativeMethods.NtQuerySystemInformation(
 			SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
 			SystemInformation,
 			SystemInformationLength,

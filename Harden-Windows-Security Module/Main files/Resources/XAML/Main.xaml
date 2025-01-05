@@ -84,6 +84,13 @@
                                         <TextBlock Text='BitLocker' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+                                <!-- OptionalFeatures -->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding OptionalFeaturesCommand}'>
+                                    <Grid x:Name="OptionalFeaturesButtonGrid">
+                                        <Image x:Name="OptionalFeaturesButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='Apps | Features' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
                                 <!-- Logs -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">

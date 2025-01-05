@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Markup;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 #nullable disable
@@ -25,7 +31,7 @@ public partial class GUIMain
 		private ICollectionView _SecOpsCollectionView;
 
 		// Collection of SecOp objects
-		private System.Collections.ObjectModel.ObservableCollection<SecOp> __SecOpses;
+		private ObservableCollection<SecOp> __SecOpses;
 
 		// Method to handle the "Confirm" view, including loading and modifying it
 		private void ConfirmView(object obj)
@@ -61,7 +67,7 @@ public partial class GUIMain
 			string xamlContent = File.ReadAllText(xamlPath);
 
 			// Parse the XAML content to create a UserControl object
-			GUIConfirmSystemCompliance.View = (UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
+			GUIConfirmSystemCompliance.View = (UserControl)XamlReader.Parse(xamlContent);
 
 			// Set the DataContext for the Confirm view
 			GUIConfirmSystemCompliance.View.DataContext = new ConfirmVM();
@@ -131,7 +137,7 @@ public partial class GUIMain
 			__SecOpses = [];
 
 			// Create a collection view based on the security options collection
-			_SecOpsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
+			_SecOpsCollectionView = CollectionViewSource.GetDefaultView(__SecOpses);
 
 			// Set the ItemSource of the DataGrid in the Confirm view to the collection view
 			if (GUIConfirmSystemCompliance.SecOpsDataGrid is not null)
@@ -173,7 +179,7 @@ public partial class GUIMain
 			// Load the Refresh icon image into memory and set it as the source
 			BitmapImage RefreshIconBitmapImage = new();
 			RefreshIconBitmapImage.BeginInit();
-			RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+			RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExecuteButton.png"));
 			RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			RefreshIconBitmapImage.EndInit();
 
@@ -221,7 +227,7 @@ public partial class GUIMain
 
 					// Disable the Refresh button while processing
 					// Set text blocks to empty while new data is being generated
-					System.Windows.Application.Current.Dispatcher.Invoke(() =>
+					Application.Current.Dispatcher.Invoke(() =>
 						{
 							// Finding the elements
 							TextBlock CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
@@ -243,7 +249,7 @@ public partial class GUIMain
 						});
 
 					// Run the method asynchronously in a different thread
-					await System.Threading.Tasks.Task.Run(() =>
+					await Task.Run(() =>
 						{
 							// Get fresh data for compliance checking
 							Initializer.Initialize(null, true);
@@ -280,7 +286,7 @@ public partial class GUIMain
 						});
 
 					// After InvokeConfirmation is completed, update the security options collection
-					await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+					await Application.Current.Dispatcher.InvokeAsync(() =>
 						{
 							LoadMembers(); // Load updated security options
 							RefreshButton.IsChecked = false; // Uncheck the Refresh button
@@ -307,33 +313,33 @@ public partial class GUIMain
 		/// </summary>
 		/// <param name="category">Name of the category</param>
 		/// <returns>The color of the category to be used for display purposes on the DataGrid GUI</returns>
-		private static System.Windows.Media.Brush GetCategoryColor(string category)
+		private static Brush GetCategoryColor(string category)
 		{
 			// Determine the background color for each category
 			return category switch
 			{
 				// Light Pastel Sky Blue
-				"MicrosoftDefender" => new System.Windows.Media.BrushConverter().ConvertFromString("#B3E5FC") as System.Windows.Media.Brush,
+				"MicrosoftDefender" => new BrushConverter().ConvertFromString("#B3E5FC") as Brush,
 				// Light Pastel Coral
-				"AttackSurfaceReductionRules" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFDAB9") as System.Windows.Media.Brush,
+				"AttackSurfaceReductionRules" => new BrushConverter().ConvertFromString("#FFDAB9") as Brush,
 				// Light Pastel Green
-				"BitLockerSettings" => new System.Windows.Media.BrushConverter().ConvertFromString("#C3FDB8") as System.Windows.Media.Brush,
+				"BitLockerSettings" => new BrushConverter().ConvertFromString("#C3FDB8") as Brush,
 				// Light Pastel Lemon
-				"TLSSecurity" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFFACD") as System.Windows.Media.Brush,
+				"TLSSecurity" => new BrushConverter().ConvertFromString("#FFFACD") as Brush,
 				// Light Pastel Lavender
-				"LockScreen" => new System.Windows.Media.BrushConverter().ConvertFromString("#E6E6FA") as System.Windows.Media.Brush,
+				"LockScreen" => new BrushConverter().ConvertFromString("#E6E6FA") as Brush,
 				// Light Pastel Aqua
-				"UserAccountControl" => new System.Windows.Media.BrushConverter().ConvertFromString("#C1F0F6") as System.Windows.Media.Brush,
+				"UserAccountControl" => new BrushConverter().ConvertFromString("#C1F0F6") as Brush,
 				// Light Pastel Teal
-				"DeviceGuard" => new System.Windows.Media.BrushConverter().ConvertFromString("#B2DFDB") as System.Windows.Media.Brush,
+				"DeviceGuard" => new BrushConverter().ConvertFromString("#B2DFDB") as Brush,
 				// Light Pastel Pink
-				"WindowsFirewall" => new System.Windows.Media.BrushConverter().ConvertFromString("#F8BBD0") as System.Windows.Media.Brush,
+				"WindowsFirewall" => new BrushConverter().ConvertFromString("#F8BBD0") as Brush,
 				// Light Pastel Peach
-				"OptionalWindowsFeatures" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFE4E1") as System.Windows.Media.Brush,
+				"OptionalWindowsFeatures" => new BrushConverter().ConvertFromString("#FFE4E1") as Brush,
 				// Light Pastel Mint
-				"WindowsNetworking" => new System.Windows.Media.BrushConverter().ConvertFromString("#F5FFFA") as System.Windows.Media.Brush,
+				"WindowsNetworking" => new BrushConverter().ConvertFromString("#F5FFFA") as Brush,
 				// Light Pastel Gray
-				_ => new System.Windows.Media.BrushConverter().ConvertFromString("#EDEDED") as System.Windows.Media.Brush,
+				_ => new BrushConverter().ConvertFromString("#EDEDED") as Brush,
 			};
 		}
 

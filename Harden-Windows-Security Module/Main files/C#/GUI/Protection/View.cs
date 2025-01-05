@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
@@ -30,11 +31,6 @@ public partial class GUIMain
 				return;
 			}
 
-			if (GlobalVars.path is null)
-			{
-				throw new InvalidOperationException("GlobalVars.path cannot be null.");
-			}
-
 			// Construct the file path for the Protect view XAML
 			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Protect.xaml");
 
@@ -53,15 +49,11 @@ public partial class GUIMain
 
 
 			// Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
-			GUIProtectWinSecurity.mainContentControlStyle = (System.Windows.Style)GUIProtectWinSecurity.mainContentControl.FindName("MainContentControlStyle");
+			GUIProtectWinSecurity.mainContentControlStyle = (Style)GUIProtectWinSecurity.mainContentControl.FindName("MainContentControlStyle");
 
 			// Assigning image source paths to the buttons
 			// Need to cast the Style to the INameScope before using FindName method on it
 			// more info: https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/explicit-interface-implementation
-			// in PowerShell this would simply work:
-			//
-			// [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
-			// $MainContentControlStyle.FindName('PathIcon1').Source
 
 			// PathIcon1
 			BitmapImage PathIcon1Image = new();
@@ -131,7 +123,7 @@ public partial class GUIMain
 									 string presetName = "preset: basic";
 
 									 // Check if the preset exists in the dictionary
-									 if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+									 if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out Dictionary<string, List<string>> categoriesAndSubcategories))
 									 {
 										 // Access the categories and subcategories
 										 List<string> categories = categoriesAndSubcategories["Categories"];
@@ -177,7 +169,6 @@ public partial class GUIMain
 
 											 }
 
-
 										 }
 									 }
 									 else
@@ -197,7 +188,7 @@ public partial class GUIMain
 									string presetName = "preset: recommended";
 
 									// Check if the preset exists in the dictionary
-									if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+									if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out Dictionary<string, List<string>> categoriesAndSubcategories))
 									{
 										// Access the categories and subcategories
 										List<string> categories = categoriesAndSubcategories["Categories"];
@@ -243,7 +234,6 @@ public partial class GUIMain
 
 											}
 
-
 										}
 									}
 									else
@@ -260,7 +250,7 @@ public partial class GUIMain
 								string presetName = "preset: complete";
 
 								// Check if the preset exists in the dictionary
-								if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+								if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out Dictionary<string, List<string>> categoriesAndSubcategories))
 								{
 									// Access the categories and subcategories
 									List<string> categories = categoriesAndSubcategories["Categories"];
@@ -340,7 +330,7 @@ public partial class GUIMain
 			// Load the Execute button image into memory and set it as the source
 			BitmapImage ExecuteButtonBitmapImage = new();
 			ExecuteButtonBitmapImage.BeginInit();
-			ExecuteButtonBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+			ExecuteButtonBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExecuteButton.png"));
 			ExecuteButtonBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			ExecuteButtonBitmapImage.EndInit();
 
@@ -438,22 +428,22 @@ public partial class GUIMain
 				// Add a new row definition for the text message
 				RowDefinition offlineModeUnavailableRow = new()
 				{
-					Height = new System.Windows.GridLength(50)
+					Height = new GridLength(50)
 				};
 				GUIProtectWinSecurity.grid2.RowDefinitions.Add(offlineModeUnavailableRow);
 
 				// Create a new text box
 				TextBox offlineModeUnavailableNoticeBox = new()
 				{
-					HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
-					VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
-					TextWrapping = System.Windows.TextWrapping.Wrap,
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch,
+					TextWrapping = TextWrapping.Wrap,
 					Text = "To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline",
-					TextAlignment = System.Windows.TextAlignment.Center,
+					TextAlignment = TextAlignment.Center,
 					Background = Brushes.Transparent,
 					FontSize = 20,
-					BorderThickness = new System.Windows.Thickness(0),
-					Margin = new System.Windows.Thickness(10, 20, 10, 0),
+					BorderThickness = new Thickness(0),
+					Margin = new Thickness(10, 20, 10, 0),
 					ToolTip = "To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline"
 				};
 				offlineModeUnavailableNoticeBox.SetValue(Grid.ColumnSpanProperty, 2);

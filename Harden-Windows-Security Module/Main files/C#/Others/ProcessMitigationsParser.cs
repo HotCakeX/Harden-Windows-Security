@@ -23,15 +23,8 @@ internal static class ProcessMitigationsParser
 		// Initializing the path variable for the CSV file
 		string path;
 
-		if (GlobalVars.path is not null)
-		{
-			// Define the path to the CSV file
-			path = Path.Combine(GlobalVars.path, "Resources", "ProcessMitigations.csv");
-		}
-		else
-		{
-			throw new InvalidOperationException("GlobalVars.path is null.");
-		}
+		// Define the path to the CSV file
+		path = Path.Combine(GlobalVars.path, "Resources", "ProcessMitigations.csv");
 
 		// Open the file and read the contents
 		using StreamReader reader = new(path);

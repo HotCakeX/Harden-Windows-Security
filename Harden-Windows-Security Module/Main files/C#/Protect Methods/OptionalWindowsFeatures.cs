@@ -5,24 +5,16 @@ namespace HardenWindowsSecurity;
 
 public static class OptionalWindowsFeatures
 {
-	// Declare the _FeaturesCheckResults as a private static field
-	private static WindowsFeatureChecker.FeatureStatus? _FeaturesCheckResults;
 
 	/// <summary>
-	/// A Private method that removes the capability if it is present
+	/// A method that removes the capability if it is present
 	/// </summary>
 	/// <param name="CapabilityIdentity">the capability's identity, the one that will be used to query its state and to remove it</param>
 	/// <param name="CapabilityName">The name of the capability, used to display in the log messages</param>
-	private static void RemoveCapability(string CapabilityIdentity, string CapabilityName)
+	internal static void RemoveCapability(string CapabilityIdentity, string CapabilityName)
 	{
-
-		ArgumentNullException.ThrowIfNull(CapabilityIdentity);
-		ArgumentNullException.ThrowIfNull(CapabilityName);
-
 		// The queried state of the capability
-		string CapabilityState;
-
-		CapabilityState = WindowsFeatureChecker.GetCapabilityState(CapabilityIdentity);
+		string CapabilityState = WindowsFeatureChecker.GetCapabilityState(CapabilityIdentity);
 
 		if (string.Equals(CapabilityState, "Not Present", StringComparison.OrdinalIgnoreCase))
 		{
@@ -64,7 +56,7 @@ Remove-WindowsCapability -Online
 	/// Since the method uses the values in WindowsFeatureChecker.FeatureStatus class
 	/// and they are stored under different names, we need this parameter to create the correct connections
 	/// </param>
-	private static void ConfigureWindowsOptionalFeature(bool Action, string FeatureNameToActOn, string FriendlyName, string FeatureNameToCheckWith)
+	internal static void ConfigureWindowsOptionalFeature(bool Action, string FeatureNameToActOn, string FriendlyName, string FeatureNameToCheckWith, WindowsFeatureChecker.FeatureStatus featureResults)
 	{
 		// If the action is to enable a feature, then check if it's disabled and vise versa
 		string ValueToCheckFor = Action ? "Disabled" : "Enabled";
@@ -74,14 +66,14 @@ Remove-WindowsCapability -Online
 		string TextToUseForMessages = Action ? "Enabling" : "Disabling";
 
 		// Use reflection to get the property value
-		PropertyInfo? propertyInfo = _FeaturesCheckResults?.GetType().GetProperty(FeatureNameToCheckWith);
+		PropertyInfo? propertyInfo = featureResults?.GetType().GetProperty(FeatureNameToCheckWith);
 
-		// To store the value of the property of the _FeaturesCheckResults
+		// To store the value of the property of the featureResults
 		string? propertyValue = string.Empty;
 
 		if (propertyInfo is not null)
 		{
-			propertyValue = propertyInfo.GetValue(_FeaturesCheckResults)?.ToString();
+			propertyValue = propertyInfo.GetValue(featureResults)?.ToString();
 		}
 
 		if (string.IsNullOrWhiteSpace(propertyValue))
@@ -112,15 +104,15 @@ Remove-WindowsCapability -Online
 		Logger.LogMessage("Running the Optional Windows Features category", LogTypeIntel.Information);
 
 		// Get the results of all optional features once and store them in the static variable to be reused later
-		_FeaturesCheckResults = WindowsFeatureChecker.CheckWindowsFeatures();
+		WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = WindowsFeatureChecker.CheckWindowsFeatures();
 
-		ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2", "PowerShell v2", "PowerShellv2");
-		ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2Root", "PowerShell v2 root", "PowerShellv2Engine");
-		ConfigureWindowsOptionalFeature(false, "WorkFolders-Client", "Work Folders", "WorkFoldersClient");
-		ConfigureWindowsOptionalFeature(false, "Printing-Foundation-InternetPrinting-Client", "Internet Printing Client", "InternetPrintingClient");
-		ConfigureWindowsOptionalFeature(false, "Windows-Defender-ApplicationGuard", "Deprecated Microsoft Defender Application Guard (MDAG)", "MDAG");
-		ConfigureWindowsOptionalFeature(true, "Containers-DisposableClientVM", "Windows Sandbox", "WindowsSandbox");
-		ConfigureWindowsOptionalFeature(true, "Microsoft-Hyper-V", "Hyper-V", "HyperV");
+		ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2", "PowerShell v2", "PowerShellv2", FeaturesCheckResults);
+		ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2Root", "PowerShell v2 root", "PowerShellv2Engine", FeaturesCheckResults);
+		ConfigureWindowsOptionalFeature(false, "WorkFolders-Client", "Work Folders", "WorkFoldersClient", FeaturesCheckResults);
+		ConfigureWindowsOptionalFeature(false, "Printing-Foundation-InternetPrinting-Client", "Internet Printing Client", "InternetPrintingClient", FeaturesCheckResults);
+		ConfigureWindowsOptionalFeature(false, "Windows-Defender-ApplicationGuard", "Deprecated Microsoft Defender Application Guard (MDAG)", "MDAG", FeaturesCheckResults);
+		ConfigureWindowsOptionalFeature(true, "Containers-DisposableClientVM", "Windows Sandbox", "WindowsSandbox", FeaturesCheckResults);
+		ConfigureWindowsOptionalFeature(true, "Microsoft-Hyper-V", "Hyper-V", "HyperV", FeaturesCheckResults);
 
 		RemoveCapability("Media.WindowsMediaPlayer", "The old Windows Media Player");
 		RemoveCapability("WMIC", "Deprecated WMIC");

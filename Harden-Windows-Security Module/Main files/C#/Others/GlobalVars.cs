@@ -21,8 +21,11 @@ public static class GlobalVars
 	// Create full OS build number as seen in Windows Settings
 	internal static string? FullOSBuild;
 
+#pragma warning disable CS8618
 	// Stores the value of $PSScriptRoot in a global variable to allow the internal functions to use it when navigating the module structure
-	public static string? path;
+	// The check for being empty or whitespace is performed in the Initializer class.
+	public static string path;
+#pragma warning restore
 
 	// Stores the output of Get-MpComputerStatus which happens early on in the root module .psm1 file
 	public static dynamic? MDAVConfigCurrent;

@@ -95,11 +95,10 @@ public static partial class GUIProtectWinSecurity
 
 
 		// Add Checked and Unchecked event handlers to category checkboxes
-		foreach (var item in categories.Items)
+		foreach (ListViewItem item in categories.Items)
 		{
-			ListViewItem categoryItem = (ListViewItem)item;
-			CheckBox checkBox = (CheckBox)categoryItem.Content;
-			checkBox.DataContext = categoryItem;
+			CheckBox checkBox = (CheckBox)item.Content;
+			checkBox.DataContext = item;
 			checkBox.Checked += (sender, e) => UpdateSubCategories();
 			checkBox.Unchecked += (sender, e) => UpdateSubCategories();
 		}
@@ -112,12 +111,11 @@ public static partial class GUIProtectWinSecurity
 			{
 				throw new ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
 			}
-			foreach (var item in categories.Items)
+			foreach (ListViewItem item in categories.Items)
 			{
-				ListViewItem categoryItem = (ListViewItem)item;
-				if (GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
+				if (GlobalVars.HardeningCategorieX.Contains(((CheckBox)item.Content).Name))
 				{
-					((CheckBox)categoryItem.Content).IsChecked = true;
+					((CheckBox)item.Content).IsChecked = true;
 				}
 			}
 		};
@@ -125,9 +123,9 @@ public static partial class GUIProtectWinSecurity
 		// Add click event for 'Uncheck All' button
 		selectAllCategories.Unchecked += (sender, e) =>
 		{
-			foreach (var item in categories.Items)
+			foreach (ListViewItem item in categories.Items)
 			{
-				((CheckBox)((ListViewItem)item).Content).IsChecked = false;
+				((CheckBox)(item).Content).IsChecked = false;
 			}
 		};
 
@@ -135,12 +133,11 @@ public static partial class GUIProtectWinSecurity
 		selectAllSubCategories.Checked += (sender, e) =>
 		{
 
-			foreach (var item in subCategories.Items)
+			foreach (ListViewItem item in subCategories.Items)
 			{
-				ListViewItem subCategoryItem = (ListViewItem)item;
-				if (subCategoryItem.IsEnabled)
+				if (item.IsEnabled)
 				{
-					((CheckBox)subCategoryItem.Content).IsChecked = true;
+					((CheckBox)item.Content).IsChecked = true;
 				}
 			}
 		};
@@ -148,10 +145,9 @@ public static partial class GUIProtectWinSecurity
 		// Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
 		selectAllSubCategories.Unchecked += (sender, e) =>
 		{
-
-			foreach (var item in subCategories.Items)
+			foreach (ListViewItem item in subCategories.Items)
 			{
-				((CheckBox)((ListViewItem)item).Content).IsChecked = false;
+				((CheckBox)(item).Content).IsChecked = false;
 			}
 		};
 
@@ -312,7 +308,7 @@ public static partial class GUIProtectWinSecurity
 						string presetName = "preset: recommended";
 
 						// Check if the preset exists in the dictionary
-						if (PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+						if (PresetsIntel.TryGetValue(presetName, out Dictionary<string, List<string>>? categoriesAndSubcategories))
 						{
 							// Access the categories and subcategories
 							List<string> categories = categoriesAndSubcategories["Categories"];
@@ -323,13 +319,10 @@ public static partial class GUIProtectWinSecurity
 							{
 
 								// Loop over each category in the GUI
-								foreach (var item in GUIProtectWinSecurity.categories.Items)
+								foreach (ListViewItem item in GUIProtectWinSecurity.categories.Items)
 								{
-									// Get the category item list view item
-									ListViewItem categoryItem = (ListViewItem)item;
-
 									// get the name of the list view item as string
-									string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
+									string categoryItemName = ((CheckBox)item.Content).Name.ToString();
 
 									// if the category is authorized to be available
 									if (GlobalVars.HardeningCategorieX!.Contains(categoryItemName))
@@ -337,7 +330,7 @@ public static partial class GUIProtectWinSecurity
 										// If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
 										if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
 										{
-											((CheckBox)categoryItem.Content).IsChecked = true;
+											((CheckBox)item.Content).IsChecked = true;
 										}
 
 									}
@@ -348,18 +341,15 @@ public static partial class GUIProtectWinSecurity
 							{
 
 								// Loop over each sub-category in the GUI
-								foreach (var item in subCategories.Items)
+								foreach (ListViewItem item in subCategories.Items)
 								{
-									// Get the sub-category item list view item
-									ListViewItem SubCategoryItem = (ListViewItem)item;
-
 									// get the name of the list view item as string
-									string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
+									string SubcategoryItemName = ((CheckBox)item.Content).Name.ToString();
 
 									// If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
 									if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
 									{
-										((CheckBox)SubCategoryItem.Content).IsChecked = true;
+										((CheckBox)item.Content).IsChecked = true;
 									}
 
 								}

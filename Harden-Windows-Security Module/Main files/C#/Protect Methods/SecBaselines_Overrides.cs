@@ -19,11 +19,6 @@ public static partial class MicrosoftSecurityBaselines
 			throw new InvalidOperationException("The path to the Microsoft Security Baselines has not been set.");
 		}
 
-		if (GlobalVars.path is null)
-		{
-			throw new ArgumentNullException("GlobalVars.path cannot be null.");
-		}
-
 		// Sleep for 1 second (1000 milliseconds)
 		Thread.Sleep(1000);
 

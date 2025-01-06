@@ -144,6 +144,7 @@ public partial class GUIMain
 		public ICommand BitLockerCommand { get; set; }
 		public ICommand LogsCommand { get; set; }
 		public ICommand OptionalFeaturesCommand { get; set; }
+		public ICommand FileReputationCommand { get; set; }
 
 		// Dictionary to cache views by their identifiers
 		private readonly Dictionary<string, object> _viewCache = [];
@@ -160,6 +161,7 @@ public partial class GUIMain
 			BitLockerCommand = new RelayCommand(BitLockerView); // Command to handle the BitLocker action
 			LogsCommand = new RelayCommand(LogsView); // Command to handle the Logs action
 			OptionalFeaturesCommand = new RelayCommand(OptionalFeaturesView); // Command to handle the OptionalFeatures action
+			FileReputationCommand = new RelayCommand(FileReputationView); // Command to handle the FileReputation action
 
 			// Load the Logs view initially to make it ready for logs to be written to it
 			LogsView(null);
@@ -501,13 +503,23 @@ End time: {DateTime.Now}
 
 		// OptionalFeatures button icon
 		Grid OptionalFeaturesButtonGrid = SidebarGrid.FindName("OptionalFeaturesButtonGrid") as Grid;
-		Image OptionalFeaturesButtonIcon = LogsButtonGrid.FindName("OptionalFeaturesButtonIcon") as Image;
+		Image OptionalFeaturesButtonIcon = OptionalFeaturesButtonGrid.FindName("OptionalFeaturesButtonIcon") as Image;
 		BitmapImage OptionalFeaturesButtonImage = new();
 		OptionalFeaturesButtonImage.BeginInit();
 		OptionalFeaturesButtonImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "OptionalFeaturesMenuButtonIcon.png"));
 		OptionalFeaturesButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 		OptionalFeaturesButtonImage.EndInit();
 		OptionalFeaturesButtonIcon.Source = OptionalFeaturesButtonImage;
+
+		// FileReputation button icon
+		Grid FileReputationButtonGrid = SidebarGrid.FindName("FileReputationButtonGrid") as Grid;
+		Image FileReputationButtonIcon = FileReputationButtonGrid.FindName("FileReputationButtonIcon") as Image;
+		BitmapImage FileReputationButtonImage = new();
+		FileReputationButtonImage.BeginInit();
+		FileReputationButtonImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "FileReputationMenuButton.png"));
+		FileReputationButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
+		FileReputationButtonImage.EndInit();
+		FileReputationButtonIcon.Source = FileReputationButtonImage;
 		#endregion
 
 	}

@@ -32,6 +32,14 @@ public partial class GUIMain
 				return;
 			}
 
+			// if Admin privileges are not available, return and do not proceed any further
+			// Will prevent the page from being loaded since the CurrentView won't be set/changed
+			if (!UserPrivCheck.IsAdmin())
+			{
+				Logger.LogMessage("Optional Features and Apps page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
+				return;
+			}
+
 			// Construct the file path for the OptionalFeatures view XAML
 			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "OptionalFeatures.xaml");
 
@@ -719,7 +727,7 @@ public partial class GUIMain
 
 								await Task.Run(() =>
 								   {
-
+									   // Remove the app
 									   IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = GUIOptionalFeatures.packageMgr.RemovePackageAsync(fullName, RemovalOptions.RemoveForAllUsers);
 
 									   // This event is signaled when the operation completes
@@ -783,6 +791,9 @@ public partial class GUIMain
 
 			#endregion
 
+
+			// Retrieve the removable apps on the system once the view is loaded
+			_ = _RetrieveRemovableApps();
 
 			// Cache the view before setting it as the CurrentView
 			_viewCache["OptionalFeaturesView"] = GUIOptionalFeatures.View;

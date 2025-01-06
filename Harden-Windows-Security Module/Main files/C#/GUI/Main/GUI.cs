@@ -145,6 +145,7 @@ public partial class GUIMain
 		public ICommand LogsCommand { get; set; }
 		public ICommand OptionalFeaturesCommand { get; set; }
 		public ICommand FileReputationCommand { get; set; }
+		public ICommand AppControlManagerCommand { get; set; }
 
 		// Dictionary to cache views by their identifiers
 		private readonly Dictionary<string, object> _viewCache = [];
@@ -162,6 +163,7 @@ public partial class GUIMain
 			LogsCommand = new RelayCommand(LogsView); // Command to handle the Logs action
 			OptionalFeaturesCommand = new RelayCommand(OptionalFeaturesView); // Command to handle the OptionalFeatures action
 			FileReputationCommand = new RelayCommand(FileReputationView); // Command to handle the FileReputation action
+			AppControlManagerCommand = new RelayCommand(AppControlManagerView); // Command to handle the AppControlManager action
 
 			// Load the Logs view initially to make it ready for logs to be written to it
 			LogsView(null);
@@ -520,6 +522,16 @@ End time: {DateTime.Now}
 		FileReputationButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 		FileReputationButtonImage.EndInit();
 		FileReputationButtonIcon.Source = FileReputationButtonImage;
+
+		// AppControlManager button icon
+		Grid AppControlManagerButtonGrid = SidebarGrid.FindName("AppControlManagerButtonGrid") as Grid;
+		Image AppControlManagerButtonIcon = AppControlManagerButtonGrid.FindName("AppControlManagerButtonIcon") as Image;
+		BitmapImage AppControlManagerButtonImage = new();
+		AppControlManagerButtonImage.BeginInit();
+		AppControlManagerButtonImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "AppControlManagerMenuButtonIcon.png"));
+		AppControlManagerButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
+		AppControlManagerButtonImage.EndInit();
+		AppControlManagerButtonIcon.Source = AppControlManagerButtonImage;
 		#endregion
 
 	}

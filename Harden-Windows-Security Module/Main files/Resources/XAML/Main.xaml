@@ -98,6 +98,13 @@
                                         <TextBlock Text='File Reputation' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+                                <!-- AppControlManager -->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding AppControlManagerCommand}'>
+                                    <Grid x:Name="AppControlManagerButtonGrid">
+                                        <Image x:Name="AppControlManagerButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='AppControl Manager' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
                                 <!-- Logs -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">

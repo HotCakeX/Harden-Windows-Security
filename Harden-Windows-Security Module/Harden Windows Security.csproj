@@ -60,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Main files\Resources\XAML\AppControlManager.xaml" />
     <Page Remove="Main files\Resources\XAML\FileReputation.xaml" />
     <Page Remove="Main files\Resources\XAML\OptionalFeatures.xaml" />
   </ItemGroup>
@@ -94,6 +95,9 @@
 
   <ItemGroup>
     <Content Update="Main files\Resources\XAML\FileReputation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Content>
+    <Content Update="Main files\Resources\XAML\AppControlManager.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Content>
     <Content Update="Main files\Resources\XAML\OptionalFeatures.xaml">

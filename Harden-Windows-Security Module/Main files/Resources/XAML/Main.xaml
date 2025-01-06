@@ -91,6 +91,13 @@
                                         <TextBlock Text='Apps | Features' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+                                <!-- FileReputation -->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding FileReputationCommand}'>
+                                    <Grid x:Name="FileReputationButtonGrid">
+                                        <Image x:Name="FileReputationButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='File Reputation' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
                                 <!-- Logs -->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">

@@ -20,7 +20,7 @@ public static class Initializer
 
 		GlobalVars.LogHeaderHasBeenWritten = false;
 
-		// This check is only necessary to be performed
+		// This check is only necessary to be performed once.
 		// GlobalVars.path is set to non-nullable intentionally with pragma disable
 		if (string.IsNullOrWhiteSpace(GlobalVars.path))
 		{

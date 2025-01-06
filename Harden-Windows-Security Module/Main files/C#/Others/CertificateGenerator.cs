@@ -102,7 +102,14 @@ internal static class CertificateGenerator
 			keyStorageFlags |= X509KeyStorageFlags.Exportable;
 		}
 
-		X509Certificate2 generatedCert = X509CertificateLoader.LoadPkcs12(certData, pfxPassword, keyStorageFlags);
+
+		// Requires .NET 9
+		// X509Certificate2 generatedCert = X509CertificateLoader.LoadPkcs12(certData, pfxPassword, keyStorageFlags);
+
+#pragma warning disable SYSLIB0057, CA2000
+		X509Certificate2 generatedCert = new(certData, pfxPassword, keyStorageFlags);
+#pragma warning restore
+
 
 		// Set the friendly name if provided
 		if (!string.IsNullOrEmpty(friendlyName))
@@ -154,7 +161,14 @@ internal static class CertificateGenerator
 
 			// Reload the certificate from the exported public key data and replace the incoming data to eliminate the private key
 			// https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadcertificate
-			cert = X509CertificateLoader.LoadCertificate(publicKeyData);
+
+			// requires .NET 9
+			// cert = X509CertificateLoader.LoadCertificate(publicKeyData);
+
+#pragma warning disable SYSLIB0057, CA2000
+			cert = new(publicKeyData);
+#pragma warning restore
+
 		}
 
 

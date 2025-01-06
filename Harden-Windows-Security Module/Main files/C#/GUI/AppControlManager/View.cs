@@ -39,6 +39,14 @@ public partial class GUIMain
 				return;
 			}
 
+			// if Admin privileges are not available, return and do not proceed any further
+			// Will prevent the page from being loaded since the CurrentView won't be set/changed
+			if (!UserPrivCheck.IsAdmin())
+			{
+				Logger.LogMessage("AppControl Manager section can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
+				return;
+			}
+
 			// Construct the file path for the AppControlManager view XAML
 			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "AppControlManager.xaml");
 
@@ -342,7 +350,7 @@ public partial class GUIMain
 
 						_ = GUIAppControlManager.packageMgr.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
 
-						Logger.LogMessage($"Installing has been successful.", LogTypeIntel.InformationInteractionRequired);
+						Logger.LogMessage($"AppControl Manager Installing has been successful.", LogTypeIntel.InformationInteractionRequired);
 
 					});
 				}

@@ -56,22 +56,22 @@ public static partial class ConfirmSystemComplianceMethods
 
 	// Defining delegates for the methods
 	private static readonly Dictionary<string, Func<Task>> methodDictionary = new(StringComparer.OrdinalIgnoreCase)
-		{
-			{ "AttackSurfaceReductionRules", VerifyAttackSurfaceReductionRules },
-			{ "WindowsUpdateConfigurations", VerifyWindowsUpdateConfigurations },
-			{ "NonAdminCommands", VerifyNonAdminCommands },
-			{ "EdgeBrowserConfigurations", VerifyEdgeBrowserConfigurations },
-			{ "DeviceGuard", VerifyDeviceGuard },
-			{ "BitLockerSettings", VerifyBitLockerSettings },
-			{ "MiscellaneousConfigurations", VerifyMiscellaneousConfigurations },
-			{ "WindowsNetworking", VerifyWindowsNetworking },
-			{ "LockScreen", VerifyLockScreen },
-			{ "UserAccountControl", VerifyUserAccountControl },
-			{ "OptionalWindowsFeatures", VerifyOptionalWindowsFeatures },
-			{ "TLSSecurity", VerifyTLSSecurity },
-			{ "WindowsFirewall", VerifyWindowsFirewall },
-			{ "MicrosoftDefender", VerifyMicrosoftDefender }
-		};
+	{
+		{ "AttackSurfaceReductionRules", VerifyAttackSurfaceReductionRules },
+		{ "WindowsUpdateConfigurations", VerifyWindowsUpdateConfigurations },
+		{ "NonAdminCommands", VerifyNonAdminCommands },
+		{ "EdgeBrowserConfigurations", VerifyEdgeBrowserConfigurations },
+		{ "DeviceGuard", VerifyDeviceGuard },
+		{ "BitLockerSettings", VerifyBitLockerSettings },
+		{ "MiscellaneousConfigurations", VerifyMiscellaneousConfigurations },
+		{ "WindowsNetworking", VerifyWindowsNetworking },
+		{ "LockScreen", VerifyLockScreen },
+		{ "UserAccountControl", VerifyUserAccountControl },
+		{ "OptionalWindowsFeatures", VerifyOptionalWindowsFeatures },
+		{ "TLSSecurity", VerifyTLSSecurity },
+		{ "WindowsFirewall", VerifyWindowsFirewall },
+		{ "MicrosoftDefender", VerifyMicrosoftDefender }
+	};
 
 
 	// Task status codes: https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus

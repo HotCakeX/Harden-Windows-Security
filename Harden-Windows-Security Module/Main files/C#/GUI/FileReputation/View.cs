@@ -49,21 +49,10 @@ public partial class GUIMain
 
 			#endregion
 
-			// Register the elements that will be enabled/disabled based on current activity
-			ActivityTracker.RegisterUIElement(BrowseForFileButton);
-
-
 			// Event handler for Retrieve ASR Status Button
 			BrowseForFileButton.Click += async (sender, e) =>
 			{
-				// Only continue if there is no activity other places
-				if (ActivityTracker.IsActive)
-				{
-					return;
-				}
-
-				// mark as activity started
-				ActivityTracker.IsActive = true;
+				BrowseForFileButton.IsEnabled = false;
 
 				FileReputationTextBlock.Text = null;
 				ReputationSourceTextBlock.Text = null;
@@ -122,8 +111,7 @@ public partial class GUIMain
 				}
 				finally
 				{
-					// mark as activity completed
-					ActivityTracker.IsActive = false;
+					BrowseForFileButton.IsEnabled = true;
 				}
 
 			};

@@ -34,6 +34,7 @@ System.Security.Principal
 System.Diagnostics.Process
 Microsoft.Win32.Primitives
 System.Diagnostics.EventLog
+System.Security.Cryptography
 System.Management.Automation
 System.IO.Compression.zipfile
 System.Security.AccessControl
@@ -45,6 +46,7 @@ System.Text.RegularExpressions
 System.Text.Encoding.Extensions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
+System.Diagnostics.FileVersionInfo
 System.ComponentModel.TypeConverter
 Microsoft.Management.Infrastructure
 System.DirectoryServices.AccountManagement

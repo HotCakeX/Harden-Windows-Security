@@ -229,6 +229,9 @@
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="System cryptography: Force strong key protection for user keys stored on the computer">
                                                     <CheckBox x:Name="MiscellaneousConfigurations_StrongKeyProtection" Content="Force strong key protection" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Applies the policies that reduce the telemetry in the OS">
+                                                    <CheckBox x:Name="MiscellaneousConfigurations_ReducedTelemetry" Content="Reduced Telemetry" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Blocks OFAC sanctioned countries' IPs in Firewall.">
                                                     <CheckBox x:Name="CountryIPBlocking_OFAC" Content="Block OFAC Sanctions Countries" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>

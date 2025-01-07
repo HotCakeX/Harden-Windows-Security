@@ -46,7 +46,7 @@ public static partial class GUIProtectWinSecurity
 				{ "UserAccountControl", new string[] { "UAC_NoFastSwitching", "UAC_OnlyElevateSigned" } },
 				{ "WindowsNetworking", new string[] { "WindowsNetworking_BlockNTLM" } },
 				{ "TLSSecurity", new string[] { "TLSSecurity_BattleNetClient" } },
-				{ "MiscellaneousConfigurations", new string[] { "Miscellaneous_WindowsProtectedPrint", "MiscellaneousConfigurations_LongPathSupport", "MiscellaneousConfigurations_StrongKeyProtection" } },
+				{ "MiscellaneousConfigurations", new string[] { "Miscellaneous_WindowsProtectedPrint", "MiscellaneousConfigurations_LongPathSupport", "MiscellaneousConfigurations_StrongKeyProtection", "MiscellaneousConfigurations_ReducedTelemetry" } },
 				{ "DeviceGuard", new string[] { "DeviceGuard_MandatoryVBS" } },
 				{ "CountryIPBlocking", new string[] { "CountryIPBlocking_OFAC" } },
 				{ "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } }

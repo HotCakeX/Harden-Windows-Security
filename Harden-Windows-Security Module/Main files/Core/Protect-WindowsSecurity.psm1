@@ -86,7 +86,7 @@ Function Protect-WindowsSecurity {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'WindowsNetworking_BlockNTLM'
         }
         if ('MiscellaneousConfigurations' -in $PSBoundParameters['Categories']) {
-            'Miscellaneous_WindowsProtectedPrint', 'MiscellaneousConfigurations_LongPathSupport', 'MiscellaneousConfigurations_StrongKeyProtection' | ForEach-Object -Process { Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList $_ }
+            'Miscellaneous_WindowsProtectedPrint', 'MiscellaneousConfigurations_LongPathSupport', 'MiscellaneousConfigurations_StrongKeyProtection' , 'MiscellaneousConfigurations_ReducedTelemetry' | ForEach-Object -Process { Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList $_ }
         }
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'CountryIPBlocking_OFAC'
@@ -280,7 +280,7 @@ Function Protect-WindowsSecurity {
         'MSFTDefender_BetaChannels', 'LockScreen_CtrlAltDel', 'LockScreen_NoLastSignedIn', 'UAC_NoFastSwitching',
         'UAC_OnlyElevateSigned', 'WindowsNetworking_BlockNTLM', 'Miscellaneous_WindowsProtectedPrint', 'CountryIPBlocking_OFAC',
         'PathToLGPO', 'PathToMSFT365AppsSecurityBaselines', 'PathToMSFTSecurityBaselines', 'DangerousScriptHostsBlocking',
-        'MiscellaneousConfigurations_LongPathSupport', 'DeviceGuard_MandatoryVBS', 'MiscellaneousConfigurations_StrongKeyProtection') | ForEach-Object -Process {
+        'MiscellaneousConfigurations_LongPathSupport', 'DeviceGuard_MandatoryVBS', 'MiscellaneousConfigurations_StrongKeyProtection', 'MiscellaneousConfigurations_ReducedTelemetry') | ForEach-Object -Process {
             New-Variable -Name $_ -Value $($PSBoundParameters[$_]) -Force
         }
         # Set the default value for LogPath to the current working directory if not specified
@@ -472,6 +472,7 @@ Function Protect-WindowsSecurity {
     MiscellaneousConfigurations_LongPathSupport -> Enables support for long paths for applications
     DeviceGuard_MandatoryVBS -> Enforces VBS and Memory Integrity in Mandatory mode
     MiscellaneousConfigurations_StrongKeyProtection -> System cryptography: Force strong key protection for user keys stored on the computer
+    MiscellaneousConfigurations_ReducedTelemetry -> Applies the policies that reduce the telemetry in the OS. See the Readme for more info.
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
     For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.

@@ -319,6 +319,12 @@ Function Invoke-MiscellaneousConfigurations {
                 } 'No' { break MiscellaneousConfigurations_StrongKeyProtection }
                 'Exit' { break MainSwitchLabel }
             }
+            :MiscellaneousConfigurations_ReducedTelemetry switch ($RunUnattended ? ($MiscellaneousConfigurations_ReducedTelemetry ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nApply policies that reduce telemetry in the OS ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                'Yes' {
+                    [HardenWindowsSecurity.MiscellaneousConfigurations]::MiscellaneousConfigurations_ReducedTelemetry()
+                } 'No' { break MiscellaneousConfigurations_ReducedTelemetry }
+                'Exit' { break MainSwitchLabel }
+            }
         } 'No' { break MiscellaneousLabel }
         'Exit' { break MainSwitchLabel }
     }

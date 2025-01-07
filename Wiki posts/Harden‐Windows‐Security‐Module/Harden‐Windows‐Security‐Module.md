@@ -22,7 +22,7 @@ Furthermore, this module is invaluable for security researchers and penetration 
 
 <br>
 
-## Comprehensive Logging Capabilities
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Logging.svg" width="35" alt="Comprehensive Logging Capabilities Harden Windows Security"> Comprehensive Logging Capabilities
 
 Harden Windows Security includes detailed logging features that track every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot. You can choose where these logs are saved:
 
@@ -36,9 +36,39 @@ These logging options ensure that all actions taken by Harden Windows Security a
 
 <br>
 
-## Automatic Updates
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Update.svg" width="35" alt="Automatic Update Harden Windows Security"> Automatic Updates
 
 The module checks for updates every time you run it and updates itself if there is a new version available, so you don't have to manually do anything.
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Apps.svg" width="35" alt="Remove Pre-installed Windows Apps Harden Windows Security"> Remove Pre-installed Windows Apps
+
+The Harden Windows Security provides an intuitive GUI to display a list of pre-installed apps on your device, enabling effortless removal. Once removed, these apps are deleted for all users and will not reappear when new user accounts are created. To reinstall them, you must download them from the Microsoft Store
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/AttackSurfaceReductionRules.svg" width="35" alt="Manage Individual Attack Surface Reduction (ASR) Rules Harden Windows Security"> Manage Individual Attack Surface Reduction (ASR) Rules
+
+With the GUI, you can configure each Attack Surface Reduction (ASR) rule individually. Additionally, you can quickly check the current status of any specific ASR rule.
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/OptionalFeatures.svg" width="35" alt="Remove Each individual Optional Windows Features Harden Windows Security"> Remove Each individual Optional Windows Features
+
+The Harden Windows Security's GUI allows you to manage and remove optional Windows features and capabilities individually. It also provides a convenient way to check the status of each feature and capability.
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/FileReputation.svg" width="35" alt="Verify File Reputation Using Smart App Control or SmartScreen Harden Windows Security"> Verify File Reputation Using Smart App Control or SmartScreen
+
+The Harden Windows Security includes a unique feature that lets you verify a file's reputation using Smart App Control or SmartScreen intelligence, depending on which service is currently active.
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/BitLocker.svg" width="35" alt="BitLocker Encryption, Decryption And Backup Harden Windows Security"> BitLocker Encryption, Decryption And Backup
+
+Leverage the Harden Windows Security GUI to securely encrypt your internal and external drives using advanced security configurations, including TPM + PIN + Startup Key for triple-factor authentication or TPM + PIN for 2-factor authentication. You can also back up your recovery keys to a file effortlessly, ensuring safe storage in case they are needed in the future.
 
 <br>
 
@@ -83,24 +113,6 @@ Unprotect-WindowsSecurity
 ```powershell
 Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
 ```
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Quick Demo
-
-<div align="center">
-
-https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/51259ec0-aba3-45c4-9e4a-d1923f905cc8
-
-</div>
-
-<br>
-
-* #### [YouTube demo of the Module's GUI](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8)
 
 <br>
 

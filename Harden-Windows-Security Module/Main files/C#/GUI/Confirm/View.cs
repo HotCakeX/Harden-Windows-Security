@@ -389,7 +389,7 @@ public partial class GUIMain
 			}
 
 			// Display a notification if it's allowed to do so, and ShowNotification is set to true
-			if (GlobalVars.UseNewNotificationsExp && ShowNotification)
+			if (ShowNotification)
 			{
 				ToastNotification.Show(ToastNotification.Type.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
 			}

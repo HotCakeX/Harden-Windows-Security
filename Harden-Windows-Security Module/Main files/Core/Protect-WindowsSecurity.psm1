@@ -271,6 +271,7 @@ Function Protect-WindowsSecurity {
         }
     }
     begin {
+        try { LoadHardenWindowsSecurityNecessaryDLLsInternal }  catch { Write-Verbose $global:ReRunText; ReRunTheModuleAgain -C $MyInvocation.Statement }
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
         [System.Boolean]$ErrorsOccurred = $false

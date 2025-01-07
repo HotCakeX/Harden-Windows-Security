@@ -10,7 +10,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Use this page to install the AppControl Manager. Since AppControl Manager uses on-device generated self-signed certificate, the 'Only Elevate Signed' policy and Smart App Control must not be enabled. Smart App Control must be off either way if you intend to take full control of Applicaton Control in your system using the AppControl Manager."
+        <TextBlock Grid.Row="0" Text="Use this page to install the AppControl Manager. Since it uses certificate generated on your device, Smart App Control might not let it run. Smart App Control must be off either way if you intend to take full control of Applicaton Control in your system using the AppControl Manager."
             Foreground="Black"
             FontSize="14"
             Margin="20,10,20,15"

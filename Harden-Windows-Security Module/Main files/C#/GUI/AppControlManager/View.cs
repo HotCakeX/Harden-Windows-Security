@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 using Windows.ApplicationModel;
 using Windows.Management.Deployment;
 
@@ -351,6 +352,36 @@ public partial class GUIMain
 						_ = GUIAppControlManager.packageMgr.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
 
 						Logger.LogMessage($"AppControl Manager installation has been successful.", LogTypeIntel.InformationInteractionRequired);
+
+						try
+						{
+							string registryPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System";
+							string registryName = "ValidateAdminCodeSignatures";
+
+							using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(registryPath))
+							{
+								if (key is not null)
+								{
+									// Get the registry value
+									object? registryValue = key.GetValue(registryName);
+
+									if (registryValue is not null && string.Equals(registryValue.ToString(), "1", StringComparison.OrdinalIgnoreCase))
+									{
+
+										Logger.LogMessage("Warning: A policy named 'Only elevate executables that are signed and validated' " +
+											"is conflicting with the AppControl Manager app and won't let it start because it's self-signed " +
+											"with your on-device keys. Please disable the policy. It can be found in Group Policy Editor -> " +
+											"Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> " +
+											"'User Account Control: Only elevate executable files that are signed and validated'", LogTypeIntel.WarningInteractionRequired);
+
+									}
+								}
+							}
+						}
+						catch
+						{
+							Logger.LogMessage("Could not verify that 'Only Elevate signed' policy is not active.", LogTypeIntel.Warning);
+						}
 
 					});
 				}

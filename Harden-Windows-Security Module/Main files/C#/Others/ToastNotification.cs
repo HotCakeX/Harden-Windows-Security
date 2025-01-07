@@ -20,9 +20,6 @@ public static class ToastNotification
 
 	/// <summary>
 	/// Displays modern toast notification on Windows
-	/// The caller must check for GlobalVars.UseNewNotificationsExp and if it's true then use this method
-	/// So that it will only display the notifications if the required DLLs have been loaded in the PowerShell session via Add-Type
-	/// That is different than the DLLs being made available to the Add-Type during C# code compilation
 	/// </summary>
 	/// <param name="Type">The type of the toast notification to use</param>
 	public static void Show(Type Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)

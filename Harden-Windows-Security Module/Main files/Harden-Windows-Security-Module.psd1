@@ -12,7 +12,7 @@
   PowerShellVersion    = '7.4.5'
   RequiredAssemblies   = @()
   NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
-  FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity', 'Update-HardenWindowsSecurity')
+  FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity', 'Update-HardenWindowsSecurity', 'LoadHardenWindowsSecurityNecessaryDLLsInternal', 'ReRunTheModuleAgain')
   CmdletsToExport      = @()
   VariablesToExport    = '*'
   AliasesToExport      = @()

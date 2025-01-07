@@ -723,10 +723,7 @@ public static partial class GUIProtectWinSecurity
 							   }
 						   }
 
-						   if (GlobalVars.UseNewNotificationsExp)
-						   {
-							   ToastNotification.Show(ToastNotification.Type.EndOfProtection, null, null, null, null);
-						   }
+						   ToastNotification.Show(ToastNotification.Type.EndOfProtection, null, null, null, null);
 					   }
 					   else
 					   {

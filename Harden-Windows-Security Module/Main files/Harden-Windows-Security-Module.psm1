@@ -76,14 +76,12 @@ function Update-HardenWindowsSecurity {
         }
     }
 }
-
 try {
     $PSStyle.Progress.UseOSCIndicator = $true
     # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
     Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 }
 catch {}
-
 $ToastNotificationDLLs = [System.Collections.Generic.List[System.String]]::new()
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Toolkit.Uwp.Notifications.dll'))
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Win32.SystemEvents.dll'))
@@ -96,20 +94,14 @@ $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toa
 # https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
 Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked'
 
-try {
+Function LoadHardenWindowsSecurityNecessaryDLLsInternal {
     # when we use the -ReferencedAssemblies parameter of Add-Type, The DLLs are only added and made available to the C# compilation, not the PowerShell host itself
-    # In order to display the toast notifications, they needed to be added to the PowerShell itself as well
+    # In order to display the toast notifications and other codes that rely on them, they needed to be added to the PowerShell itself as well
     foreach ($DLLPath in $ToastNotificationDLLs) {
         Add-Type -Path $DLLPath
     }
 }
-catch {
-    [HardenWindowsSecurity.GlobalVars]::UseNewNotificationsExp = $false
-}
-try {
-    [HardenWindowsSecurity.GlobalVars]::Host = $HOST
-}
-catch {
-    [HardenWindowsSecurity.GlobalVars]::Host = $null
-}
+try { [HardenWindowsSecurity.GlobalVars]::Host = $HOST }catch { [HardenWindowsSecurity.GlobalVars]::Host = $null }
 [HardenWindowsSecurity.GlobalVars]::path = $PSScriptRoot
+Function ReRunTheModuleAgain($C) { pwsh.exe -NoProfile -NoLogo -NoExit -command $C }
+$global:ReRunText = 'Re-running the module because of a possible dependency conflict with other modules such as CommandNotFound in PowerToys'

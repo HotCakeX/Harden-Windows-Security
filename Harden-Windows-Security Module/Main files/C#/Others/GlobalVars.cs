@@ -65,11 +65,6 @@ public static class GlobalVars
 	// The path to the LGPO.exe utility
 	internal static string? LGPOExe;
 
-	// A flag to determine whether the new notifications experience should be used or not
-	// It won't be used if there is an interferences detected with DLL load due to other addons being loaded in the PowerShell session
-	// Such as PowerToys' CommandNotFound or WinGet's PowerShell module
-	public static bool UseNewNotificationsExp = true;
-
 	// Initialize the RegistryCSVItems list so that the HardeningRegistryKeys.ReadCsv() method can write to it
 	internal static readonly List<HardeningRegistryKeys.CsvRecord> RegistryCSVItems = [];
 

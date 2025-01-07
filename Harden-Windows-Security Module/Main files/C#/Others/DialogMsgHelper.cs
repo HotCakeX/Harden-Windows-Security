@@ -22,7 +22,7 @@ internal static class DialogMsgHelper
 			{
 				Title = Title,
 				Width = 450,
-				Height = 300,
+				Height = 350,
 				WindowStartupLocation = WindowStartupLocation.CenterScreen,
 				ResizeMode = ResizeMode.NoResize
 

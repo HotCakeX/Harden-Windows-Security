@@ -323,6 +323,7 @@ The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the z
 | Miscellaneous_WindowsProtectedPrint | Enables Windows Protected Print Mode | MiscellaneousConfigurations |
 | MiscellaneousConfigurations_LongPathSupport | Enables support for long paths for the programs | MiscellaneousConfigurations |
 | MiscellaneousConfigurations_StrongKeyProtection | Forces strong key protection | MiscellaneousConfigurations |
+| MiscellaneousConfigurations_ReducedTelemetry | Implements policies that reduce OS telemetry | MiscellaneousConfigurations |
 | CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
 | DangerousScriptHostsBlocking | Deploys the Dangerous Script Hosts Blocking App Control Policy | DownloadsDefenseMeasures |
 

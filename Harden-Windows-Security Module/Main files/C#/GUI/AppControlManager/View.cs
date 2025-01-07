@@ -350,7 +350,7 @@ public partial class GUIMain
 
 						_ = GUIAppControlManager.packageMgr.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
 
-						Logger.LogMessage($"AppControl Manager Installing has been successful.", LogTypeIntel.InformationInteractionRequired);
+						Logger.LogMessage($"AppControl Manager installation has been successful.", LogTypeIntel.InformationInteractionRequired);
 
 					});
 				}

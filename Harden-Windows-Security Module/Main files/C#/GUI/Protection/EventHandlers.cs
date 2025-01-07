@@ -671,6 +671,11 @@ public static partial class GUIProtectWinSecurity
 											   MiscellaneousConfigurations.MiscellaneousConfigurations_StrongKeyProtection();
 										   }
 
+										   if (SelectedSubCategories.Contains("MiscellaneousConfigurations_ReducedTelemetry"))
+										   {
+											   MiscellaneousConfigurations.MiscellaneousConfigurations_ReducedTelemetry();
+										   }
+
 										   break;
 									   }
 								   case "WindowsUpdateConfigurations":

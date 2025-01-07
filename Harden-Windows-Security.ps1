@@ -161,35 +161,15 @@ Function AppControl {
         Write-Verbose -Message "Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else."
         $null = Import-Certificate -FilePath $CertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root'
 
-        Write-Verbose -Message 'Checking for the existence of the application'
-        $PossibleExistingApp = Get-AppxPackage -Name 'AppControlManager'
-        if ($null -ne $PossibleExistingApp) {
-            [string]$InstalledAppVersionBefore = $PossibleExistingApp.Version
-            [string]$InstalledAppArchitectureBefore = $PossibleExistingApp.Architecture
-            Write-Verbose -Message "The AppControl Manager app is already installed with version '$InstalledAppVersionBefore' and architecture '$InstalledAppArchitectureBefore'"
-        }
-
-        Write-Verbose -Message "Installing AppControl Manager MSIX Package version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
-        Add-AppPackage -Path $MSIXPath -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse
-
         try {
+            Write-Verbose -Message 'Removing any possible ASR Rules exclusions that belong to the previous app version.'
+            [string[]]$PossiblePreviousASRExclusions = (Get-MpPreference).AttackSurfaceReductionOnlyExclusions | Where-Object -FilterScript { $_ -like '*__sadt7br7jpt02\AppControlManager*' }
+            if ($null -ne $PossiblePreviousASRExclusions -and $PossiblePreviousASRExclusions.Length -gt 0) { Remove-MpPreference -AttackSurfaceReductionOnlyExclusions $PossiblePreviousASRExclusions }
+
             [string]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
             Write-Verbose -Message "Adding the new app install's files To the ASR Rules exclusions."
             # The cmdlet won't add duplicates
             Add-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstallingAppLocationToAdd + 'AppControlManager.exe'), ($InstallingAppLocationToAdd + 'AppControlManager.dll')) -ErrorAction Stop
-
-            # If the app version being installed is not the same as the app version currently installed
-            if ($InstallingAppVersion -ne $InstalledAppVersionBefore) {
-                if (![string]::IsNullOrWhiteSpace($InstalledAppVersionBefore) -and ![string]::IsNullOrWhiteSpace($InstalledAppArchitectureBefore)) {
-                    Write-Verbose -Message 'Removing ASR Rules exclusions that belong to the previous app version.'
-                    # No check is needed since the Remove-MpPreference accepts any string and only removes them if they exist
-                    [string]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02\'
-                    Remove-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstalledAppLocationToRemove + 'AppControlManager.exe'), ($InstalledAppLocationToRemove + 'AppControlManager.dll')) -ErrorAction Stop
-                }
-            }
-            else {
-                Write-Verbose -Message 'Current and new AppControl Manager versions are the same, skipping removing previous ASR rules exclusions.'
-            }
 
             $ValidateAdminCodeSignaturesRegName = 'ValidateAdminCodeSignatures'
             $ValidateAdminCodeSignaturesRegValue = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name $ValidateAdminCodeSignaturesRegName -ErrorAction SilentlyContinue
@@ -199,6 +179,9 @@ Function AppControl {
             }
         }
         catch { Write-Verbose -Message "You can safely ignore this error: $_" } # If this section fails for some reason such as running the script in Windows Sandbox, no error should be thrown
+
+        Write-Verbose -Message "Installing AppControl Manager MSIX Package version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
+        Add-AppPackage -Path $MSIXPath -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse
     }
     finally { [System.IO.Directory]::Delete($WorkingDir, $true) } # Cleaning up the working directory in the TEMP directory
 }

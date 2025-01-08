@@ -41,7 +41,7 @@ function Confirm-SystemCompliance {
         if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
-        try { LoadHardenWindowsSecurityNecessaryDLLsInternal }  catch { Write-Verbose $global:ReRunText; ReRunTheModuleAgain $MyInvocation.Statement }
+        try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain $MyInvocation.Statement }
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
         if (-NOT $Offline) {
             [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)

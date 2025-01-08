@@ -27,7 +27,7 @@ public static class WindowsFeatureChecker
 		public string? VBSCRIPT { get; set; }
 	}
 
-	public static FeatureStatus CheckWindowsFeatures()
+	internal static FeatureStatus CheckWindowsFeatures()
 	{
 		// Get the states of optional features using Cim Instance only once so that we can use it multiple times
 		Dictionary<string, string>? optionalFeatureStates = GetOptionalFeatureStates();
@@ -52,7 +52,7 @@ public static class WindowsFeatureChecker
 		};
 	}
 
-	public static Dictionary<string, string> GetOptionalFeatureStates()
+	internal static Dictionary<string, string> GetOptionalFeatureStates()
 	{
 		// Initialize a dictionary to store the states of optional features
 		// Ensure case-insensitive key comparison
@@ -88,7 +88,7 @@ public static class WindowsFeatureChecker
 	/// </summary>
 	/// <param name="capabilityName">The name of the capability to check its state</param>
 	/// <returns></returns>
-	public static string GetCapabilityState(string capabilityName)
+	internal static string GetCapabilityState(string capabilityName)
 	{
 		// Define the PowerShell script template with placeholder
 		string scriptTemplate = """
@@ -127,6 +127,31 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
 
 		return "Unknown";
 	}
+
+
+	/// <summary>
+	/// A method that will remove Windows capabilities whose names match a certain pattern
+	/// </summary>
+	/// <param name="capabilityPattern"></param>
+	internal static void BulkCapabilityRemoval(string capabilityPattern)
+	{
+
+		// Define the PowerShell script template with placeholder
+		string scriptTemplate = """
+Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
+Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '{CompatibilityName}' -and $_.State -eq 'Installed' } |
+ForEach-Object -Process {
+    Write-Verbose -Message "Removing $($_.Name)" -Verbose
+    Remove-WindowsCapability -Online -Name $_.Name
+}
+""";
+		// Replace the placeholder with the actual value
+		string script = scriptTemplate.Replace("{CompatibilityName}", capabilityPattern, StringComparison.OrdinalIgnoreCase);
+
+		// Execute the script and return the output - true means the PowerShell script will return string output and won't write the normal output to the console or GUI
+		_ = PowerShellExecutor.ExecuteScript(script, false);
+	}
+
 
 	private static string RunDismCommand(string arguments)
 	{
@@ -199,7 +224,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
 	/// </summary>
 	/// <param name="featureName">feature name to enable/disable</param>
 	/// <param name="enable">true means enable, false means disable</param>
-	public static void SetWindowsFeature(string featureName, bool enable)
+	internal static void SetWindowsFeature(string featureName, bool enable)
 	{
 		// Determine the command based on whether we are enabling or disabling the feature
 		// And construct the arguments for the DISM command

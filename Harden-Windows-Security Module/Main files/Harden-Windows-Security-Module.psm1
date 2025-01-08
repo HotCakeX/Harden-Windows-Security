@@ -2,13 +2,12 @@ $script:ErrorActionPreference = 'Stop'
 if (!$IsWindows) {
     Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'
 }
-
 function Update-HardenWindowsSecurity {
     <#
     .SYNOPSIS
         Make sure the latest version of the module is installed and if not, automatically update it, clean up any old versions
     .PARAMETER InvocationStatement
-        The command that was used to invoke the main function/cmdlet that invoked the Update-HardenWindowsSecurity function, this is used to re-run the command after the module has been updated.
+        The command that was used to invoke the main function that invoked the Update-HardenWindowsSecurity function, this is used to re-run the command after the module has been updated.
         It checks to make sure the Update-HardenWindowsSecurity function was called by an authorized command, that is one of the main cmdlets of the Harden-Windows-Security module, otherwise it will throw an error.
         The parameter also shouldn't contain any backtick or semicolon characters used to chain commands together.
     .INPUTS
@@ -17,7 +16,6 @@ function Update-HardenWindowsSecurity {
         System.String
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $false, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         [AllowNull()]
@@ -28,7 +26,6 @@ function Update-HardenWindowsSecurity {
 
     # Get the current module's version
     [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Harden-Windows-Security-Module.psd1").Version
-
     # Get the latest version from GitHub
     [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue
 
@@ -82,26 +79,22 @@ try {
     Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 }
 catch {}
-$ToastNotificationDLLs = [System.Collections.Generic.List[System.String]]::new()
-$ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Toolkit.Uwp.Notifications.dll'))
-$ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Win32.SystemEvents.dll'))
-$ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Windows.SDK.NET.dll'))
-$ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'System.Drawing.Common.dll'))
-$ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'WinRT.Runtime.dll'))
+
+[System.String[]]$DLLsToLoad = [System.IO.Directory]::GetFiles("$PSScriptRoot\DLLs", '*.dll', [System.IO.SearchOption]::TopDirectoryOnly)
 
 # Compile all of the C# codes
 # for some reason it tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
 # https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
-Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked'
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $DLLsToLoad) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked'
 
 Function LoadHardenWindowsSecurityNecessaryDLLsInternal {
+    # Do not reload the required DLLs if they have been already loaded
+    if ([HardenWindowsSecurity.GlobalVars]::RequiredDLLsLoaded) { return }
     # when we use the -ReferencedAssemblies parameter of Add-Type, The DLLs are only added and made available to the C# compilation, not the PowerShell host itself
     # In order to display the toast notifications and other codes that rely on them, they needed to be added to the PowerShell itself as well
-    foreach ($DLLPath in $ToastNotificationDLLs) {
-        Add-Type -Path $DLLPath
-    }
+    foreach ($DLLPath in $DLLsToLoad) { Add-Type -Path $DLLPath }
+    [HardenWindowsSecurity.GlobalVars]::RequiredDLLsLoaded = $true # Set that DLLs have been loaded
 }
-try { [HardenWindowsSecurity.GlobalVars]::Host = $HOST }catch { [HardenWindowsSecurity.GlobalVars]::Host = $null }
+try { [HardenWindowsSecurity.GlobalVars]::Host = $HOST } catch { [HardenWindowsSecurity.GlobalVars]::Host = $null }
 [HardenWindowsSecurity.GlobalVars]::path = $PSScriptRoot
 Function ReRunTheModuleAgain($C) { pwsh.exe -NoProfile -NoLogo -NoExit -command $C }
-$global:ReRunText = 'Re-running the module because of a possible dependency conflict with other modules such as CommandNotFound in PowerToys'

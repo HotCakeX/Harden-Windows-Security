@@ -23,7 +23,7 @@ Function Unprotect-WindowsSecurity {
         if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
-        try { LoadHardenWindowsSecurityNecessaryDLLsInternal }  catch { Write-Verbose $global:ReRunText; ReRunTheModuleAgain $MyInvocation.Statement }
+        try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain $MyInvocation.Statement }
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
         [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)

@@ -90,6 +90,11 @@ public static class GlobalVars
 	// stored at the beginning of each cmdlet in the begin block through the Initialize() method
 	public static string? VerbosePreference;
 
+	// To track the load of the DLLs in the module that occurs at the beginning of each cmdlet
+	public static bool RequiredDLLsLoaded;
+
+	public const string ReRunText = "Re-running the module because of a possible dependency conflict with other modules such as CommandNotFound in PowerToys";
+
 	// Create an empty ConcurrentDictionary to store the final results of the cmdlets
 	public static readonly ConcurrentDictionary<ComplianceCategories, List<IndividualResult>> FinalMegaObject = [];
 

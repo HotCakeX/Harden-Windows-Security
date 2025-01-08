@@ -388,7 +388,7 @@ public partial class GUIMain
 				NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
 			}
 
-			// Display a notification if it's allowed to do so, and ShowNotification is set to true
+			// Display a notification if ShowNotification is set to true
 			if (ShowNotification)
 			{
 				ToastNotification.Show(ToastNotification.Type.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);

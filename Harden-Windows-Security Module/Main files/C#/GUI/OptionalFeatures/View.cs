@@ -63,6 +63,9 @@ public partial class GUIMain
 			Button RetrieveRemovableApps = (Button)(GUIOptionalFeatures.ParentGrid).FindName("RetrieveRemovableApps");
 			Button RemoveApps = (Button)(GUIOptionalFeatures.ParentGrid).FindName("RemoveApps");
 
+			ComboBox NetworkAdaptersCompanyListComboBox = (ComboBox)(GUIOptionalFeatures.ParentGrid).FindName("NetworkAdaptersCompanyListComboBox");
+			Button RemoveNetworkAdapters = (Button)(GUIOptionalFeatures.ParentGrid).FindName("RemoveNetworkAdapters");
+
 			// A dictionary to store all checkboxes
 			Dictionary<string, CheckBox> featureCheckboxes = [];
 
@@ -103,6 +106,7 @@ public partial class GUIMain
 			ActivityTracker.RegisterUIElement(RetrieveOptionalFeaturesStatus);
 			ActivityTracker.RegisterUIElement(RemoveApps);
 			ActivityTracker.RegisterUIElement(RetrieveRemovableApps);
+			ActivityTracker.RegisterUIElement(RemoveNetworkAdapters);
 
 
 			// Event handler for the apply button
@@ -794,6 +798,75 @@ public partial class GUIMain
 
 			// Retrieve the removable apps on the system once the view is loaded
 			_ = _RetrieveRemovableApps();
+
+
+
+
+			// Event handler for the network adapters remove button
+			RemoveNetworkAdapters.Click += async (sender, e) =>
+			{
+
+				// Only continue if there is no activity other places
+				if (ActivityTracker.IsActive)
+				{
+					return;
+				}
+
+				// mark as activity started
+				ActivityTracker.IsActive = true;
+
+				try
+				{
+					// When "*" is used in the middle of the name, it means both WIFI and Ethernet drivers will be targeted for removal
+					switch (NetworkAdaptersCompanyListComboBox.SelectedIndex)
+					{
+						case 0: // Intel
+							{
+								await Task.Run(() => WindowsFeatureChecker.BulkCapabilityRemoval("Microsoft.Windows.*.Client.Intel*"));
+								break;
+							}
+						case 1: // Broadcom
+							{
+								await Task.Run(() => WindowsFeatureChecker.BulkCapabilityRemoval("Microsoft.Windows.Wifi.Client.Broadcom*"));
+								break;
+							}
+						case 2: // Marvel
+							{
+								await Task.Run(() => WindowsFeatureChecker.BulkCapabilityRemoval("Microsoft.Windows.Wifi.Client.Marvel*"));
+								break;
+							}
+						case 3: // Qualcomm
+							{
+								await Task.Run(() => WindowsFeatureChecker.BulkCapabilityRemoval("Microsoft.Windows.Wifi.Client.Qualcomm*"));
+								break;
+							}
+						case 4: // Ralink
+							{
+								await Task.Run(() => WindowsFeatureChecker.BulkCapabilityRemoval("Microsoft.Windows.Wifi.Client.Ralink*"));
+								break;
+							}
+						case 5: // Realtek
+							{
+								await Task.Run(() => WindowsFeatureChecker.BulkCapabilityRemoval("Microsoft.Windows.*.Client.Realtek*"));
+								break;
+							}
+						default:
+							{
+								break;
+							}
+					}
+
+
+				}
+				finally
+				{
+					// mark as activity completed
+					ActivityTracker.IsActive = false;
+				}
+
+			};
+
+
 
 			// Cache the view before setting it as the CurrentView
 			_viewCache["OptionalFeaturesView"] = GUIOptionalFeatures.View;

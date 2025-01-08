@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -89,7 +90,7 @@ public partial class GUIMain
 			// Event handler for when the refresh button is pressed
 			RefreshDrivesButton.Click += async (sender, e) =>
 			{
-				await System.Threading.Tasks.Task.Run(() =>
+				await Task.Run(() =>
 				{
 					// Get the drives list
 					List<BitLocker.BitLockerVolume> allDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, false);
@@ -127,7 +128,7 @@ public partial class GUIMain
 
 
 					// Perform the main tasks on another thread to avoid freezing the GUI
-					await System.Threading.Tasks.Task.Run(() =>
+					await Task.Run(() =>
 					{
 						if (SelectedDriveFromComboBox is null)
 						{
@@ -190,7 +191,7 @@ public partial class GUIMain
 					});
 
 					// Run the Unprotect commands asynchronously in a different thread
-					await System.Threading.Tasks.Task.Run(() =>
+					await Task.Run(() =>
 					{
 						// if LGPO doesn't already exist in the working directory, then download it
 						if (!Path.Exists(GlobalVars.LGPOExe))

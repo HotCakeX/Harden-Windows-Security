@@ -19,5 +19,4 @@ public static class GUIAppControlManager
 	);
 
 	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt");
-
 }

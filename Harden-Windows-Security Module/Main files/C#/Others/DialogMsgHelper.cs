@@ -1,6 +1,6 @@
-﻿using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace HardenWindowsSecurity;
 
@@ -14,20 +14,34 @@ internal static class DialogMsgHelper
 	/// <param name="Title"></param>
 	internal static void Show(string Message, string? Title = "An Error Occurred")
 	{
-		Thread thread = new(() =>
+		// Needs to be on the UI thread
+		Application.Current.Dispatcher.Invoke(() =>
 		{
-
-			// Create a custom error window
-			Window errorWindow = new()
+			// Create a custom dialog window
+			Window dialogWindow = new()
 			{
 				Title = Title,
 				Width = 450,
 				Height = 350,
 				WindowStartupLocation = WindowStartupLocation.CenterScreen,
-				ResizeMode = ResizeMode.NoResize
+				ResizeMode = ResizeMode.NoResize,
+				Owner = Application.Current.MainWindow, // Associate the dialog with the main Window
 
 				// Enable this when the time is right
 				// ThemeMode = ThemeMode.System
+
+				WindowStyle = WindowStyle.None,  // Hides the title bar
+
+				Background = new LinearGradientBrush(
+				Color.FromRgb(15, 32, 39),
+				Color.FromRgb(32, 58, 67),
+				45),
+
+				BorderThickness = new Thickness(1),
+				BorderBrush = new LinearGradientBrush(
+				Color.FromRgb(255, 105, 180),
+				Color.FromRgb(255, 20, 147),
+				90)
 			};
 
 			StackPanel stackPanel = new() { Margin = new Thickness(20) };
@@ -37,7 +51,10 @@ internal static class DialogMsgHelper
 				Text = Message,
 				Margin = new Thickness(0, 0, 0, 20),
 				TextWrapping = TextWrapping.Wrap,
+				Foreground = Brushes.White,
 				FontSize = 14,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				TextAlignment = TextAlignment.Center,
 				FontWeight = FontWeights.SemiBold
 			};
 
@@ -52,7 +69,7 @@ internal static class DialogMsgHelper
 
 			okButton.Click += (sender, args) =>
 			{
-				errorWindow.Close();
+				dialogWindow.Close();
 			};
 
 			StackPanel buttonPanel = new() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
@@ -61,13 +78,8 @@ internal static class DialogMsgHelper
 			_ = stackPanel.Children.Add(errorMessage);
 			_ = stackPanel.Children.Add(buttonPanel);
 
-			errorWindow.Content = stackPanel;
-			_ = errorWindow.ShowDialog();
-
+			dialogWindow.Content = stackPanel;
+			_ = dialogWindow.ShowDialog();
 		});
-
-		// Required since we're displaying GUI elements
-		thread.SetApartmentState(ApartmentState.STA);
-		thread.Start();
 	}
 }

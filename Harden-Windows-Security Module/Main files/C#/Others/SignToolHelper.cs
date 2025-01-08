@@ -105,7 +105,13 @@ internal static class SignToolHelper
 
 		// Extract the .nupkg file
 		string extractPath = Path.Combine(GlobalVars.WorkingDir, "extracted");
-		ZipFile.ExtractToDirectory(filePath, extractPath);
+
+		if (Directory.Exists(extractPath))
+		{
+			Directory.Delete(extractPath, true);
+		}
+
+		ZipFile.ExtractToDirectory(filePath, extractPath, true);
 
 		Logger.LogMessage($"Extracted package to {extractPath}", LogTypeIntel.Information);
 

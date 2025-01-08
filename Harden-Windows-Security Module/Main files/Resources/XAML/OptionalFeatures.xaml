@@ -2,10 +2,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" FontSize="16" Style="{StaticResource Page_Style}">
+
     <Grid x:Name="ParentGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="3*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -157,6 +159,32 @@
             <Button x:Name="RemoveApps" Style="{StaticResource CustomButtonStyle2}" ToolTipService.InitialShowDelay="1000" ToolTip="Remove the selected apps from the system for all users">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="Remove Apps For All Users" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+
+
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,30,0,20" HorizontalAlignment="Center"
+                    ToolTipService.ToolTip="Windows has certain pre-installed network adapter drivers by default. You can remove them if you do not need them or you install your own drivers. This can save disk space.">
+
+            <Label Content="Built-in Network Adapter Drivers Removal" Style="{StaticResource ModernLabelStyle}" Margin="0,0,10,0"/>
+            <ComboBox x:Name="NetworkAdaptersCompanyListComboBox"
+                Width="110" Margin="10,0,10,0"
+                Style="{StaticResource ModernComboBoxStyle}"
+                SelectedIndex="0"
+                ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
+                <ComboBoxItem Content="Intel" />
+                <ComboBoxItem Content="Broadcom" />
+                <ComboBoxItem Content="Marvel" />
+                <ComboBoxItem Content="Qualcomm" />
+                <ComboBoxItem Content="Ralink" />
+                <ComboBoxItem Content="Realtek" />
+            </ComboBox>
+
+            <Button x:Name="RemoveNetworkAdapters" Style="{StaticResource CustomButtonStyle2}" ToolTipService.InitialShowDelay="1000" ToolTip="Remove all pre-installed network adapters that belong to the selected company">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Remove" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
                 </StackPanel>
             </Button>
 

@@ -23,6 +23,18 @@ public enum LogTypeIntel
 public static class Logger
 {
 
+	public static string? LogFilePathCLI;
+
+
+	private static readonly string LogHeaderText = $"""
+**********************
+Harden Windows Security operation log start
+Start time: {DateTime.Now}
+Username: {Environment.UserName}
+Machine: {Environment.MachineName}
+**********************
+""";
+
 	/// <summary>
 	/// The main method that manages other methods
 	/// Writes the input text to the following destinations depending on their availabilities:
@@ -38,7 +50,7 @@ public static class Logger
 	{
 
 		// Avoid writing empty messages that only have time stamps
-		if (string.IsNullOrWhiteSpace(text) || string.IsNullOrEmpty(text))
+		if (string.IsNullOrWhiteSpace(text))
 		{
 			return;
 		}
@@ -61,7 +73,7 @@ public static class Logger
 		}
 
 
-		// If there is no GUI Window, or there was a GUI window but it was closed by the user
+		// If there is no GUI Window, or there was a GUI window but it was closed by the user, or if module is being used in CLI or unattended mode
 		// then use Console for writing logs
 		if (GUILogs.View is null || GUILogs.View.Dispatcher.HasShutdownStarted)
 		{
@@ -78,6 +90,8 @@ public static class Logger
 				// If PowerShell console host is not available then write to the console that works for both C# and PS consoles
 				Console.WriteLine(CurrentText);
 			}
+
+			LogToFileCLI(CurrentText);
 		}
 		// If GUI Window is available
 		else
@@ -93,15 +107,7 @@ public static class Logger
 					// only write the header to the log file if it hasn't already been written to it
 					if (!GlobalVars.LogHeaderHasBeenWritten)
 					{
-
-						LogToFile($"""
-**********************
-Harden Windows Security operation log start
-Start time: {DateTime.Now}
-Username: {Environment.UserName}
-Machine: {Environment.MachineName}
-**********************
-""");
+						LogToFile(LogHeaderText);
 
 						// set the flag to true so that the log file header will only be written once to the file per session
 						// it is reset back to false in the Initialize() method
@@ -184,8 +190,8 @@ Machine: {Environment.MachineName}
 	/// <param name="Text">The text to store in the log file.</param>
 	private static void LogToFile(string Text)
 	{
-		//  if the log file path is not empty
-		if (GUIProtectWinSecurity.txtFilePath is not null && !string.IsNullOrEmpty(GUIProtectWinSecurity.txtFilePath.Text))
+		// if the log file path is not empty
+		if (GUIProtectWinSecurity.txtFilePath is not null && !string.IsNullOrWhiteSpace(GUIProtectWinSecurity.txtFilePath.Text))
 		{
 
 			// trim any white spaces, single or double quotes in case the user entered the path with quotes around it
@@ -198,12 +204,44 @@ Machine: {Environment.MachineName}
 			try
 			{
 				using StreamWriter sw = File.AppendText(GUIProtectWinSecurity.txtFilePath.Text);
-				sw.WriteLine($"{Text}");
+				sw.WriteLine(Text);
 			}
 			catch
 			{
 				Console.WriteLine($"Couldn't save the logs in the selected path: {GUIProtectWinSecurity.txtFilePath.Text}");
 			}
+		}
+	}
+
+
+	/// <summary>
+	/// Used to directly log to a file, for CLI/Unattended mode
+	/// </summary>
+	/// <param name="Text"></param>
+	private static void LogToFileCLI(string Text)
+	{
+		try
+		{
+			if (LogFilePathCLI is not null)
+			{
+				// only write the header to the log file if it hasn't already been written to it
+				if (!GlobalVars.LogHeaderHasBeenWritten)
+				{
+					using StreamWriter sw1 = File.AppendText(LogFilePathCLI);
+					sw1.WriteLine(LogHeaderText);
+
+					// set the flag to true so that the log file header will only be written once to the file per session
+					// it is reset back to false in the Initialize() method
+					GlobalVars.LogHeaderHasBeenWritten = true;
+				}
+
+				using StreamWriter sw = File.AppendText(LogFilePathCLI);
+				sw.WriteLine(Text);
+			}
+		}
+		catch
+		{
+			Console.WriteLine($"Couldn't save the logs in the selected path: {LogFilePathCLI}");
 		}
 	}
 

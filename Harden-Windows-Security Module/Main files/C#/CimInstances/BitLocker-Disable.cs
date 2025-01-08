@@ -110,7 +110,7 @@ internal partial class BitLocker
 
 		if (DecryptMethodInvocationResultCode is 0)
 		{
-			Logger.LogMessage($"Successfully Decrypted the drive {DriveLetter}", LogTypeIntel.InformationInteractionRequired);
+			Logger.LogMessage($"Successfully started decrypting the drive {DriveLetter}", LogTypeIntel.InformationInteractionRequired);
 		}
 		else
 		{

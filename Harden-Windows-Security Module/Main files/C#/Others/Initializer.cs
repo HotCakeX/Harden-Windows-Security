@@ -20,6 +20,9 @@ public static class Initializer
 
 		GlobalVars.LogHeaderHasBeenWritten = false;
 
+		// Clear the log path in the Logger class, it should be set by each cmdlet that uses the -Log parameter every time
+		Logger.LogFilePathCLI = null;
+
 		// This check is only necessary to be performed once.
 		// GlobalVars.path is set to non-nullable intentionally with pragma disable
 		if (string.IsNullOrWhiteSpace(GlobalVars.path))

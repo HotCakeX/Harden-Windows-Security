@@ -271,7 +271,7 @@ Function Protect-WindowsSecurity {
         }
     }
     begin {
-        try { LoadHardenWindowsSecurityNecessaryDLLsInternal }  catch { Write-Verbose $global:ReRunText; ReRunTheModuleAgain -C $MyInvocation.Statement }
+        try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain -C $MyInvocation.Statement }
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
         [System.Boolean]$ErrorsOccurred = $false
@@ -349,12 +349,10 @@ Function Protect-WindowsSecurity {
             # Import all of the required functions
             . "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
 
-            # Start the transcript if the -Log switch is used
+            # If the -Log switch is used
             if ($Log) {
-                Start-Transcript -IncludeInvocationHeader -Path $LogPath
-
+                [HardenWindowsSecurity.Logger]::LogFilePathCLI = $LogPath
                 # Create a new stopwatch object to measure the execution time
-                [HardenWindowsSecurity.Logger]::LogMessage('Starting the stopwatch...', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
             }
 
@@ -434,17 +432,12 @@ Function Protect-WindowsSecurity {
             [HardenWindowsSecurity.Miscellaneous]::CleanUp()
 
             if ($Log) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Stopping the stopwatch', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 $StopWatch.Stop()
                 [HardenWindowsSecurity.Logger]::LogMessage("Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds", [HardenWindowsSecurity.LogTypeIntel]::Information)
-                [HardenWindowsSecurity.Logger]::LogMessage('Stopping the transcription', [HardenWindowsSecurity.LogTypeIntel]::Information)
-                Stop-Transcript
             }
 
             # If no errors Occurred, recycle the current session for there can't be more than 1 Application in the same App Domain
-            if (!$ErrorsOccurred) {
-                pwsh.exe -NoProfile -NoLogo -NoExit
-            }
+            if (!$ErrorsOccurred) { pwsh.exe -NoProfile -NoLogo -NoExit }
         }
     }
     <#

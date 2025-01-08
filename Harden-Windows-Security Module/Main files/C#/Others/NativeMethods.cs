@@ -16,11 +16,6 @@ internal static class NativeMethods
 		public ulong ValidityDurationMs; // Validity of the trust score in milliseconds
 	}
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsida
-	[DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static extern bool ConvertSidToStringSid(IntPtr pSID, out IntPtr ptrSid);
-
 	[DllImport("TpmCoreProvisioning", CharSet = CharSet.Unicode)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static extern uint TpmIsEnabled(out byte pfIsEnabled);

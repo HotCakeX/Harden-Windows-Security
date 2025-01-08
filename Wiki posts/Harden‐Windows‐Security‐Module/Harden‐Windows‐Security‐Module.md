@@ -620,6 +620,8 @@ The repository includes a Visual Studio solution that allows you to build the so
 
 <br>
 
+<br>
+
 Any feedback or suggestions? Please use GitHub [issues](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussions](https://github.com/HotCakeX/Harden-Windows-Security/discussions)
 
 <br>

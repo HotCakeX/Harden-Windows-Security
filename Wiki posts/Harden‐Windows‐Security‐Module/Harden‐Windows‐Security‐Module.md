@@ -72,6 +72,14 @@ Leverage the Harden Windows Security GUI to securely encrypt your internal and e
 
 <br>
 
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/513aaf059d12f64b903a32428ea5da3c77b5ecb5/Pictures/SVG/NetworkAdapterRemoval.svg" width="35" alt="Remove Pre-loaded Network Adapter Drivers"> Remove Pre-loaded Network Adapter Drivers
+
+Windows includes pre-loaded Ethernet and Wi-Fi network adapter drivers to enable internet connectivity during the Out-of-Box Experience (OOBE) without requiring manual driver installation. These drivers support hardware from manufacturers such as Intel, Qualcomm, Broadcom, Marvell, Realtek, Ralink, and others.
+
+Using the Harden Windows Security, you can remove unnecessary drivers or those associated with OEM hardware you do not own. This process helps freeing up disk space.
+
+<br>
+
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>

@@ -25,7 +25,7 @@ public sealed partial class CreateDenyPolicy : Page
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Assign this instance to the static field
 		_instance = this;

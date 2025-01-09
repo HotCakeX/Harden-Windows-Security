@@ -17,7 +17,7 @@ public sealed partial class GetCIHashes : Page
 	public GetCIHashes()
 	{
 		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 	/// <summary>

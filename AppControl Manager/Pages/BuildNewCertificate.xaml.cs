@@ -18,7 +18,7 @@ public sealed partial class BuildNewCertificate : Page
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		CheckFieldContents();
 	}

@@ -44,7 +44,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Initialize the lists
 		FileIdentities = [];

@@ -25,7 +25,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		if (GlobalVars.IsOlderThan24H2)
 		{

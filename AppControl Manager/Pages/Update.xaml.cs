@@ -14,19 +14,24 @@ using AppControlManager.Logic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel;
 using Windows.Management.Deployment;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
 namespace AppControlManager.Pages;
 
-
 public sealed partial class Update : Page
 {
 	// Pattern for AppControl Manager version and architecture extraction from file path and download link URL
 	[GeneratedRegex(@"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
 	private static partial Regex MyRegex();
+
+	// Pattern for finding ASR rules that belong to the AppControl Manager
+	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+	private static partial Regex MyRegex1();
+
+	// Common name of the on-device generated certificate used to sign the AppControl Manager MSIX package
+	private const string commonName = "SelfSignedCertForAppControlManager";
 
 	// Create a Regex object
 	internal readonly Regex regex = MyRegex();
@@ -226,9 +231,6 @@ public sealed partial class Update : Page
 					// Random password to temporarily encrypt the private key of the newly generated certificate
 					string PassWord = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID();
 
-					// Common name of the certificate
-					string commonName = "SelfSignedCertForAppControlManager";
-
 					// Path where the .cer file will be saved
 					string CertificateOutputPath = Path.Combine(stagingArea, $"{commonName}.cer");
 
@@ -263,52 +265,66 @@ public sealed partial class Update : Page
 						throw new InvalidOperationException("Could not get the version of the installing app");
 					}
 
-
 					// Signing the App Control Manager MSIX package
 					// In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
 					ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{commonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
 
-					PackageManager packageManager = new();
-					IEnumerable<Package> PossibleExistingApp = packageManager.FindPackages("AppControlManager", "CN=SelfSignedCertForAppControlManager");
-
-					Package? PossibleExistingPackage = PossibleExistingApp.FirstOrDefault();
-
-					// Get the version of the first matching package
-					string? InstalledAppVersionBefore = $"{PossibleExistingPackage?.Id.Version.Major}.{PossibleExistingPackage?.Id.Version.Minor}.{PossibleExistingPackage?.Id.Version.Build}.{PossibleExistingPackage?.Id.Version.Revision}";
-
-					// Get the architecture of the first matching package
-					string? InstalledAppArchitectureBefore = PossibleExistingPackage?.Id.Architecture.ToString();
-
-					Logger.Write($"Installing AppControl Manager MSIX package version '{InstallingAppVersion}' with architecture '{InstallingAppArchitecture}'");
-
-					// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
-					AddPackageOptions options = new()
-					{
-						DeferRegistrationWhenPackagesAreInUse = true,
-						ForceUpdateFromAnyVersion = true
-					};
-
-					_ = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
-
-
 					// Remove any certificates with the specified common name again
-					// Because the existing one contains private keys and don't want that
+					// Because the existing one contains private keys and we don't want that
 					CertificateGenerator.DeleteCertificateByCN(commonName);
 
-					// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else
+					// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only.
+					// This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else.
 					CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
 
 					try
 					{
 
-						// Connect to the WMI namespace
+						// Execute the query to get the MpPreferences
+						using ManagementObjectSearcher searcher = new("ROOT\\Microsoft\\Windows\\Defender", $"SELECT AttackSurfaceReductionOnlyExclusions FROM MSFT_MpPreference");
+						ManagementObjectCollection results = searcher.Get();
+
+						// Retrieve the property value for AttackSurfaceReductionOnlyExclusions
+						ManagementBaseObject? result = results.Cast<ManagementBaseObject>().FirstOrDefault();
+						string[]? currentAttackSurfaceReductionExclusions = result?["AttackSurfaceReductionOnlyExclusions"] as string[];
+
+						// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
+						// Before adding new ones for the new version
+						if (currentAttackSurfaceReductionExclusions is not null)
+						{
+
+							List<string> asrRulesToRemove = [];
+
+							// Find all the rules that belong to the AppControl Manager
+							foreach (string item in currentAttackSurfaceReductionExclusions)
+							{
+								if (MyRegex1().Match(item).Success)
+								{
+									asrRulesToRemove.Add(item);
+								}
+							}
+
+							// If any of the rules belong to the AppControl Manager
+							if (asrRulesToRemove.Count > 0)
+							{
+								string[] stringArrayRepo = [.. asrRulesToRemove];
+
+								// Remove ASR rule exclusions that belong to all previous app versions
+								using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
+								ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
+								inParams["AttackSurfaceReductionOnlyExclusions"] = stringArrayRepo;
+								_ = managementClass.InvokeMethod("Remove", inParams, null);
+							}
+						}
+
+						// Connect to the WMI namespace again
 						ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
 						scope.Connect();
 
 						// Create an instance of the MSFT_MpPreference class for Add method
 						using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
 
-
+						// Construct the paths to the .exe and .dll files of the AppControl Manager
 						StringBuilder InstallingAppLocationToAdd = new();
 						_ = InstallingAppLocationToAdd.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
 						_ = InstallingAppLocationToAdd.Append(InstallingAppVersion);
@@ -323,49 +339,31 @@ public sealed partial class Update : Page
 						// Get the available methods for the class
 						ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
 
+						// Create a string array containing the paths which is what AttackSurfaceReductionOnlyExclusions accepts
 						methodParams["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
 
-						// Invoke the method to apply the settings
+						// Invoke the Add method to add the paths to the ASR rules exclusions
 						_ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
-
-
-						// Remove ASR rule exclusions that belong to the previous app version if it existed
-						if (!string.IsNullOrWhiteSpace(InstalledAppVersionBefore) && !string.IsNullOrWhiteSpace(InstalledAppArchitectureBefore))
-						{
-
-							// Removing ASR Rules exclusions that belong to the previous app version.
-
-							StringBuilder InstalledAppLocationToRemove = new();
-							_ = InstalledAppLocationToRemove.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
-							_ = InstalledAppLocationToRemove.Append(InstalledAppVersionBefore);
-							_ = InstalledAppLocationToRemove.Append('_');
-							_ = InstalledAppLocationToRemove.Append(InstalledAppArchitectureBefore);
-							_ = InstalledAppLocationToRemove.Append("__sadt7br7jpt02\\");
-
-							// Create an instance of the MSFT_MpPreference class for Remove Method
-							using ManagementClass mpPreferenceClass2 = new(scope, new ManagementPath("MSFT_MpPreference"), null);
-
-
-							path1 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.exe");
-							path2 = Path.Combine(InstalledAppLocationToRemove.ToString(), "AppControlManager.dll");
-
-
-							// Get the available methods for the class
-							ManagementBaseObject methodParams2 = mpPreferenceClass2.GetMethodParameters("Remove");
-
-							methodParams2["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
-
-							// Invoke the method to apply the settings
-							_ = mpPreferenceClass2.InvokeMethod("Remove", methodParams2, null);
-
-						}
-
 					}
 
 					catch (Exception ex)
 					{
 						Logger.Write($"An error occurred while trying to add the ASR rule exclusions which you can ignore: {ex.Message}");
 					}
+
+
+					PackageManager packageManager = new();
+
+					Logger.Write($"Installing AppControl Manager MSIX package version '{InstallingAppVersion}' with architecture '{InstallingAppArchitecture}'");
+
+					// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
+					AddPackageOptions options = new()
+					{
+						DeferRegistrationWhenPackagesAreInUse = true,
+						ForceUpdateFromAnyVersion = true
+					};
+
+					_ = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
 
 				});
 

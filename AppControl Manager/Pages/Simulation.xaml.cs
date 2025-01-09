@@ -28,7 +28,7 @@ public sealed partial class Simulation : Page
 	public Simulation()
 	{
 		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		SimulationOutputs = [];
 		AllSimulationOutputs = [];

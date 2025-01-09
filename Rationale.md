@@ -1,26 +1,29 @@
 # <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/585563111520600091.png" alt="Emoji of a Windows eating moomoo"> Rationale
 
-This document provides the justification and objective of this GitHub repository and its contents. It outlines how it addresses various threats and how to adjust your expectations for different scenarios and environments. It also supplies additional resources.
+This document provides the justification and objective of this GitHub repository and its contents. It outlines how it addresses various threats and how to adjust your expectations for different scenarios and environments. It also supplies lots of useful additional resources.
+
+This repository currently has 2 ***main*** products. <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif" alt="head shaking girl">
+
+1. [**The Harden Windows Security module**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+2. [**The AppControl Manager**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+
+<br>
+
+Let's explore each of them in detail below
 
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows365.png" alt="Windows modern logo"> Harden Windows Security Module
 
-### [The module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) has 3 modes <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif" alt="head shaking girl">
+Use the Harden Windows Security module to secure your personal and enterprise devices against the majority of advanced threats. The module is suitable to be used by everyone.
 
-1. Applying the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
-2. Checking and Auditing the Compliance of the system with the hardening measures
-3. Removing the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
-
-Use the Harden Windows Security module to secure your personal and enterprise devices against the majority of advanced threats.
-
-The module is suitable to be used by everyone.
-
-If you are a personal user, you can use the Harden Windows Security to harden your Operation System, check its security score or undo the hardening.
+If you are a personal user, you can use the Harden Windows Security to harden your Operation System, remove unnecessary features, apps and so on, check its security score or undo the hardening measures.
 
 If you are an enterprise user or admin, you can use the [provided Intune security policies](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files) from this repository and apply them from your Intune Portal to all of your workstations using [Microsoft Graph API](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph-Explorer-and-API-Basics). You can then use the module to verify the compliance of the workstations against the applied policies and receive a security score.
 
-It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state.
+It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state. It does not install any outside components and does not increase your attack surface at all.
+
+Let's Take a look at the infographics below:
 
 <br>
 
@@ -38,27 +41,30 @@ It uses the same security features built into your device and Windows operating 
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png" alt="Modern Windows 11 logo"> App Control for Business
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png" alt="Modern Windows 11 logo"> AppControl Manager
 
-[App Control for Business resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
+[AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) is a secure [open-source](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager) Windows application designed to help you easily configure Application Control in your system. It is suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
-When a proper App Control policy is deployed on your device, it will be secure against 99.999% of the threats [^1], either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
+> [!TIP]\
+> If you aren't familiar with what App Control is, [please refer to this article](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) where it's explained in great detail.
 
-I've created an application called [**AppControl Manager**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager), designed with the aim of automating Application and File whitelisting in Windows using App Control for Business feature.
+Proper usage of Application Control, when coupled with the Harden Windows Security module's policies, [can provide 99% protection from various threats](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies), either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
-Full details, guides and [videos](https://www.youtube.com/watch?v=SzMs13n7elE) available [here on GitHub](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) and on [my website.](https://spynetgirl.github.io/AppControl%20Manager/AppControl%20Manager/)
+* [Here is a walkthrough video of the AppControl Manager](https://www.youtube.com/watch?v=SzMs13n7elE)
+
+* [Here is the AppControl Manager's landing page on this repository](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
 <br>
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png" alt="Microsoft Zune logo"> How Do You Make the Right Choice?
 
-First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against at least ~98% of the threats when you use Standard (non-Privileged) account for everyday work. These threats aren't the usual computer viruses, they are ***motivated nation state threat actors.***
+First use the Harden Windows Security Module to apply the hardening measures described [in the Readme](https://github.com/HotCakeX/Harden-Windows-Security#hardening-categories). After applying these hardening measures, your system will be secure against at least ~98% of the threats when you use Standard (non-Privileged) account for everyday work. These threats aren't the usual computer viruses, they are ***motivated nation state threat actors.***
 
 ### If you want even more security and control, you have at least 2 more options:
 
 1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based App Control policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
 
-2. Use [AppControl Manager](https://spynetgirl.github.io/AppControl%20Manager/AppControl%20Manager/) to deploy an App Control for Business policy and have even more control over the operation of the Windows Application Control.
+2. Use [AppControl Manager](https://spynetgirl.github.io/AppControl%20Manager/AppControl%20Manager/) to deploy an App Control policy and have even more control over the operation of the Windows Application Control.
 
 These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [**Kernel-level Zero-Trust strategy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
@@ -208,7 +214,7 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/en-us/windows-server/remote/multipoint-services/create-a-standard-user-account).
    * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
 
-2. First apply the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control#system-behavior) App Control policy.
+2. First apply the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies) App Control policy.
 
 <br>
 
@@ -226,9 +232,5 @@ How to properly perform a pentest and benchmark a system hardened by this reposi
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/WhiteGhost.gif" alt="Ghost emoji"> [Any questions or suggestions?](#-any-questions-or-suggestions)
 
 Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/issues) or [discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) in the repository.
-
-<br>
-
-[^1]: *For Personal users, this is true only when Harden Windows Security module is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
 
 <br>

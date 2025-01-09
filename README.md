@@ -39,11 +39,11 @@
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink%20inverted.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 > [!IMPORTANT]\
-> Click/Tap on Each of the Items Below to Access Them on This GitHub Repository
+> Here are the Access Points to Other Important Pages In This Repository
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-cyan.gif" alt="Indicator for App Control for Business Resources"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction"> App Control for Business Resources </a>
 >
-> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The AppControl Manager app"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"> AppControl Manager application </a>
+> ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/tada-purple.gif" alt="Indicator for The AppControl Manager app"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"> AppControl Manager Application </a>
 >
 > ### <img width="50" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/colorful-heart.gif" alt="Indicator for the Rationale Behind This GitHub Repository"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Rationale.md"> Read the Rationale Behind This GitHub Repository </a>
 
@@ -58,7 +58,7 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Start The Harden Windows Security Using GUI [(Graphical User Interface)](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Install + Start Harden Windows Security Using GUI (Graphical User Interface)
 
 ```powershell
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
@@ -66,9 +66,9 @@
 
 <br>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Or Just Install the Harden Windows Security
 
-[**Check the documentation and How to use**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+[**Check the Documentation for How to use and Complete Info**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
 <details>
 <summary>
@@ -82,13 +82,16 @@ Install-Module -Name 'Harden-Windows-Security-Module' -Force
 </summary>
 
 ```powershell
-Protect-WindowsSecurity -GUI
+Protect-WindowsSecurity -GUI # GUI Mode
 ```
 ```powershell
-Confirm-SystemCompliance
+Protect-WindowsSecurity # CLI Mode
 ```
 ```powershell
-Unprotect-WindowsSecurity
+Confirm-SystemCompliance # CLI Mode
+```
+```powershell
+Unprotect-WindowsSecurity # CLI Mode
 ```
 
 </details>

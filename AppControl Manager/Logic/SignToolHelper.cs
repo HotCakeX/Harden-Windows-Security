@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using AppControlManager.Logging;
-using AppControlManager.Logic;
 
 namespace AppControlManager;
 
@@ -77,7 +76,7 @@ internal static class SignToolHelper
 	{
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("GetSignTool");
 
-		using HttpClient client = new SecHttpClient();
+		using HttpClient client = new();
 
 		string packageName = "microsoft.windows.sdk.buildtools"; // Important that this stays all lower case
 
@@ -109,7 +108,7 @@ internal static class SignToolHelper
 
 		// Extract the .nupkg file
 		string extractPath = Path.Combine(stagingArea.FullName, "extracted");
-		ZipFile.ExtractToDirectory(filePath, extractPath);
+		ZipFile.ExtractToDirectory(filePath, extractPath, true);
 
 		Logger.Write($"Extracted package to {extractPath}");
 

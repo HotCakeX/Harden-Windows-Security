@@ -281,7 +281,7 @@ internal static partial class BasePolicyCreator
 		}
 
 		// Download the zip file
-		using (HttpClient client = new SecHttpClient())
+		using (HttpClient client = new())
 		{
 			// Download the file synchronously
 			byte[] fileBytes = client.GetByteArrayAsync(DriversBlockListZipDownloadLink).GetAwaiter().GetResult();

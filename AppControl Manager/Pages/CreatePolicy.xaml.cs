@@ -27,7 +27,7 @@ public sealed partial class CreatePolicy : Page
 		SignedAndReputableLogSizeInput.IsEnabled = false;
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 	}
 

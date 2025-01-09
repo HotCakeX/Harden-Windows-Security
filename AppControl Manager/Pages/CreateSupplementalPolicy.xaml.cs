@@ -28,7 +28,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Assign this instance to the static field
 		_instance = this;

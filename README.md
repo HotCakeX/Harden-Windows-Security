@@ -1860,7 +1860,6 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 <a href="https://steamcommunity.com/id/HotCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/steam.svg" alt="Steam profile and icon"></a>
 <a href="https://www.twitch.tv/hot_cakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/twitch.svg" alt="Twitch profile and icon"></a>
 <a href="https://hotcakex.github.io/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/website-96.png" alt="Website and icon"></a>
-<a href="https://x.com/CyberCakeX"><img width="30" height="40" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/a99ff15b77daf6246b05e66f2357c900482bead5/Private/Images/Socials/X%20logo.svg" alt="X profile and icon"></a>
 <a href="https://www.xbox.com/en-US/play/user/HottCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/xbox.svg" alt="Xbox profile and icon"></a>
 <a href="https://www.youtube.com/@hotcakex"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/youtube.svg" alt="YouTube profile and icon"></a>
 <a href="https://www.reddit.com/user/HotCakeXXXXXXXXXXXXX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/reddit.svg" alt="Reddit profile and icon"></a>
@@ -1869,7 +1868,7 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 <a href="https://techcommunity.microsoft.com/t5/user/viewprofilepage/user-id/310193"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/microsoft.png" alt="Microsoft Tech Community profile and icon"></a>
 <a href="mailto:spynetgirl@outlook.com"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/outlook.svg" alt="OutLook Email address and icon"></a>
 <a href="https://orcid.org/0009-0000-6616-4938"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/orcid_icon.png" alt="Orcid profile and icon"></a>
-<a href="https://spynetgirl.medium.com/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/e0759dbc5b10c7ff9c10d09a49639e40ec780151/Private/Images/Socials/medium.svg" alt="Medium profile and icon"></a> <a href="https://www.facebook.com/VioletCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Facebook.svg" alt="Facebook profile and icon"></a>
+<a href="https://spynetgirl.medium.com/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/e0759dbc5b10c7ff9c10d09a49639e40ec780151/Private/Images/Socials/medium.svg" alt="Medium profile and icon"></a>
 <a href="https://mvp.microsoft.com/en-US/mvp/profile/4edbca65-7979-4779-b7e4-d182e123259b"><img width="30" height="35" src="https://mvp.microsoft.com/Assets/UserProfile/MVP/Badge.svg" alt="MVP profile and icon"></a>
 </p>
 

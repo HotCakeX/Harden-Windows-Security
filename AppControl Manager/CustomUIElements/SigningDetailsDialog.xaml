@@ -90,7 +90,7 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="Certificate Common Name"
-                 Description="Used during the signing operation"                      
+                 Description="Used during the signing operation"
                  HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
@@ -142,7 +142,7 @@
                             <TextBlock x:Name="VerifyButtonContentTextBlock" VerticalAlignment="Center" FontWeight="SemiBold" Text="Verify"/>
                         </StackPanel>
                     </Button.Content>
-                    
+
                 </Button>
 
 

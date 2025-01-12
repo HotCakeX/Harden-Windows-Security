@@ -39,7 +39,7 @@
                 <!-- Button to trigger file picker -->
                 <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
             HorizontalAlignment="Center"
-            ToolTipService.ToolTip="Click/Tap to choose a file from your device." 
+            ToolTipService.ToolTip="Click/Tap to choose a file from your device."
             Style="{StaticResource AccentButtonStyle}"/>
 
                 <!-- Grid for SHA1 Page -->

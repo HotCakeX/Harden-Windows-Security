@@ -223,16 +223,5 @@ internal sealed class CodeIntegrityPolicy
 
 		#endregion
 
-
-		// TODO: The TESTCiPolicy must accept XML Document
-		/*
-
-            // Validate the XML file at the end
-            if (!(bool)CiPolicyTest.TestCiPolicy(filePath, null)!)
-            {
-                throw new InvalidOperationException("The XML file created at the end is not compliant with the CI policy schema");
-            }
-            */
-
 	}
 }

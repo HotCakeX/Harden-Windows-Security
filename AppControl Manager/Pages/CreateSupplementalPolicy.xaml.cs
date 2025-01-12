@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Logging;
+using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
@@ -40,15 +41,17 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	private string? unsignedBasePolicyPathFromSidebar;
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
 	{
 		// Light up the local page's button icons
 		FilesAndFoldersBasePolicyLightAnimatedIcon.Visibility = visibility;
 		CertificatesBasePolicyPathLightAnimatedIcon.Visibility = visibility;
+		ISGBasePolicyPathLightAnimatedIcon.Visibility = visibility;
 
 		// Light up the sidebar buttons' icons
 		button1.Visibility = visibility;
 		button2.Visibility = visibility;
+		button3.Visibility = visibility;
 
 		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
 		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
@@ -59,6 +62,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			// Assign sidebar buttons' content texts
 			button1.Content = "Files And Folders Supplemental Policy";
 			button2.Content = "Certificates Based Supplemental Policy";
+			button3.Content = "ISG Supplemental Policy";
 
 			// Assign a local event handler to the sidebar button
 			button1.Click += LightUp1;
@@ -69,6 +73,11 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			button2.Click += LightUp2;
 			// Save a reference to the event handler we just set for tracking
 			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect2EventHandler = LightUp2;
+
+			// Assign a local event handler to the sidebar button
+			button3.Click += LightUp3;
+			// Save a reference to the event handler we just set for tracking
+			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect3EventHandler = LightUp3;
 		}
 
 	}
@@ -94,6 +103,17 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
 		CertificatesBasedBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+	}
+	private void LightUp3(object sender, RoutedEventArgs e)
+	{
+		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
+		if (ISGBrowseForBasePolicyButton.XamlRoot is not null)
+		{
+			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicyButton);
+		}
+
+		ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
+		ISGBasedBasePolicyPath = unsignedBasePolicyPathFromSidebar;
 	}
 
 	#endregion
@@ -834,7 +854,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					return;
 				}
 
-				SiPolicy.Merger.Merge(EmptyPolicyPath, [EmptyPolicyPath]);
+				Merger.Merge(EmptyPolicyPath, [EmptyPolicyPath]);
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CertificatesBasedSupplementalPolicyName}.xml");
 
@@ -928,6 +948,203 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
 	}
 
+
+
 	#endregion
+
+
+
+
+
+
+
+
+	#region ISG
+
+
+	private string? ISGBasedBasePolicyPath;
+
+	private bool ISGBasedDeployButton;
+
+	// Selected Supplemental policy name
+	private string? ISGBasedSupplementalPolicyName;
+
+
+	/// <summary>
+	/// Event handler for the main button - to create Supplemental ISG based policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void CreateISGSupplementalPolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool errorsOccurred = false;
+
+		if (ISGBasedBasePolicyPath is null)
+		{
+			CreateISGSupplementalPolicyTeachingTip.IsOpen = true;
+			CreateISGSupplementalPolicyTeachingTip.Title = "Select base policy";
+			CreateISGSupplementalPolicyTeachingTip.Subtitle = "You need to select a base policy before you can create a Supplemental policy.";
+			return;
+		}
+
+
+		try
+		{
+
+			CreateISGSupplementalPolicyButton.IsEnabled = false;
+			ISGPolicyDeployToggleButton.IsEnabled = false;
+			ISGPolicyNameTextBox.IsEnabled = false;
+			ISGBrowseForBasePolicyButton.IsEnabled = false;
+
+
+			ISGInfoBar.IsOpen = true;
+			ISGInfoBar.Message = $"Creating the ISG-based Supplemental policy.";
+			ISGInfoBar.Severity = InfoBarSeverity.Informational;
+
+
+			await Task.Run(() =>
+			{
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("ISGBasedSupplementalPolicy");
+
+				// Defining the paths
+				string savePathTemp = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.xml");
+				string savePathFinal = Path.Combine(GlobalVars.UserConfigDir, "ISGBasedSupplementalPolicy.xml");
+				string cipPath = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.cip");
+
+				// Instantiate the user-selected base policy
+				CodeIntegrityPolicy basePolicyObj = new(ISGBasedBasePolicyPath, null);
+
+				// Instantiate the supplemental policy
+				SiPolicy.SiPolicy supplementalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath);
+
+				// If policy name was provided by user
+				if (!string.IsNullOrWhiteSpace(ISGBasedSupplementalPolicyName))
+				{
+					// Finding the policy name in the settings
+					List<Setting> nameSettings = [.. supplementalPolicyObj.Settings.Where(x =>
+					string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase))];
+
+					SettingValueType settingVal = new()
+					{
+						Item = ISGBasedSupplementalPolicyName
+					};
+
+					foreach (Setting setting in nameSettings)
+					{
+						setting.Value = settingVal;
+					}
+				}
+
+				// Replace the BasePolicyID in the Supplemental policy
+				supplementalPolicyObj.BasePolicyID = basePolicyObj.BasePolicyID;
+
+				// Save the policy object to XML file in the staging Area
+				Management.SavePolicyToFile(supplementalPolicyObj, savePathTemp);
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(savePathTemp, savePathFinal, true);
+
+				// If the policy is to be deployed
+				if (ISGBasedDeployButton)
+				{
+					// Prepare the ISG services
+					ConfigureISGServices.Configure();
+
+					// Convert the XML file to CIP
+					PolicyToCIPConverter.Convert(savePathTemp, cipPath);
+
+					// Deploy the signed CIP file
+					CiToolHelper.UpdatePolicy(cipPath);
+				}
+
+			});
+
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+
+			ISGInfoBar.Severity = InfoBarSeverity.Error;
+			ISGInfoBar.Message = $"An error occurred while creating ISG based Supplemental policy: {ex.Message}";
+
+			Logger.Write($"An error occurred while creating ISG based Supplemental policy: {ex.Message}");
+
+			throw;
+		}
+		finally
+		{
+
+			if (!errorsOccurred)
+			{
+				ISGInfoBar.Severity = InfoBarSeverity.Success;
+
+				ISGInfoBar.Message = $"Successfully created an ISG-based Supplemental policy.";
+			}
+
+			CreateISGSupplementalPolicyButton.IsEnabled = true;
+			ISGPolicyDeployToggleButton.IsEnabled = true;
+			ISGPolicyNameTextBox.IsEnabled = true;
+			ISGBrowseForBasePolicyButton.IsEnabled = true;
+
+		}
+	}
+
+
+	private void ISGPolicyDeployToggleButton_Click(object sender, RoutedEventArgs e)
+	{
+		ISGBasedDeployButton = ((ToggleButton)sender).IsChecked ?? false;
+	}
+
+
+	private void ISGPolicyNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		ISGBasedSupplementalPolicyName = ((TextBox)sender).Text;
+	}
+
+
+
+	private void ISGBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			ISGBasedBasePolicyPath = selectedFile;
+
+			ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+
+		ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
+	}
+
+
+	private void ISGBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			ISGBasedBasePolicyPath = selectedFile;
+
+			ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+	}
+
+
+	private void ISGBrowseForBasePolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		ISGBasedBasePolicyPath = null;
+		ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
+	}
+
+
+	#endregion
+
 
 }

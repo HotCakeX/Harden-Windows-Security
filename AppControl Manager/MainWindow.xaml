@@ -10,7 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"    
+    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     mc:Ignorable="d"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     Title="AppControl Manager">
@@ -108,15 +108,15 @@
            Margin="8,0,4,0"/>
 
             <!-- App title bar -->
-            <TextBlock x:Name="TitleBarTextBlock"                       
+            <TextBlock x:Name="TitleBarTextBlock"
                        Style="{StaticResource CaptionTextBlockStyle}"
                        Grid.Column="4"
                        VerticalAlignment="Center" />
 
             <!-- Main search area at the top -->
-            <AutoSuggestBox x:Name="TitleBarSearchBox" 
-                            Grid.Column="6" 
-                            QueryIcon="Find"                        
+            <AutoSuggestBox x:Name="TitleBarSearchBox"
+                            Grid.Column="6"
+                            QueryIcon="Find"
                             VerticalAlignment="Center"
                             MaxWidth="600" TextChanged="SearchBox_TextChanged"
                             SuggestionChosen="SearchBox_SuggestionChosen"
@@ -124,7 +124,7 @@
 
 
             <!-- Sidebar access point -->
-            <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8" 
+            <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8"
                     Height="32" Margin="5,0,30,0">
 
                 <Button.Content>
@@ -149,7 +149,7 @@
                     IsTabStop="True"
                     ItemInvoked="MainNavigation_ItemInvoked"
                     IsBackButtonVisible="Collapsed"
-                    IsBackEnabled="False"                    
+                    IsBackEnabled="False"
                     AlwaysShowHeader="False"
                     Grid.Row="1"
                     IsTitleBarAutoPaddingEnabled="False"
@@ -176,7 +176,7 @@
                         SuggestionChosen="SearchBox_SuggestionChosen"
                         PlaceholderText="Search menu items..."/>
             </NavigationView.AutoSuggestBox>
-            
+
            -->
 
 
@@ -253,7 +253,7 @@
             </NavigationView.FooterMenuItems>
 
             <!-- Split view to create the sidebar -->
-            <SplitView x:Name="MainSidebar" PaneBackground="Transparent" 
+            <SplitView x:Name="MainSidebar" PaneBackground="Transparent"
                  IsPaneOpen="False" OpenPaneLength="256"
                  CompactPaneLength="48" DisplayMode="Inline" PanePlacement="Right">
                 <SplitView.Pane>
@@ -295,8 +295,8 @@
                                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
 
 
-                                        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"                                                
-                                        x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"                                                 
+                                        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"
+                                        x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"
                                         Width="150" />
 
                                         <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyBrowseButton" Click="SidebarBasePolicyBrowseButton_Click" Content="Browse" Style="{ThemeResource AccentButtonStyle}" />
@@ -323,8 +323,9 @@
                                             <Button.Flyout>
                                                 <Flyout Placement="Bottom">
                                                     <StackPanel Orientation="Vertical" Spacing="10">
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect1" Content="Select 1" Visibility="Collapsed" />
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect2" Content="Select 2" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect1" HorizontalAlignment="Stretch" Content="Select 1" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect2" HorizontalAlignment="Stretch" Content="Select 2" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect3" HorizontalAlignment="Stretch" Content="Select 3" Visibility="Collapsed" />
                                                     </StackPanel>
                                                 </Flyout>
                                             </Button.Flyout>
@@ -359,10 +360,10 @@
 
                     <!-- BreadCrumBar that that also acts as a sticky header -->
                     <BreadcrumbBar x:Name="BreadcrumbBar" VerticalAlignment="Top"
-                        Grid.Row="0" 
-                        Padding="10" 
+                        Grid.Row="0"
+                        Padding="10"
                         Margin="20,10,0,10"
-                        ItemsSource="{x:Bind Breadcrumbs}" 
+                        ItemsSource="{x:Bind Breadcrumbs}"
                         ItemClicked="BreadcrumbBar_ItemClicked">
 
                         <BreadcrumbBar.ItemTemplate>

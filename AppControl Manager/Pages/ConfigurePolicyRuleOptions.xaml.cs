@@ -49,7 +49,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
 	{
 		// Light up the local page's button icons
 		PickPolicyFileButtonAnimatedIconLight.Visibility = visibility;

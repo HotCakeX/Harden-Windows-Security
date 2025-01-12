@@ -144,7 +144,7 @@ internal static class SupplementalForSelf
 		// Sign the CIP
 		SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
 
-		// Rename the .p7 signed file to .cip 
+		// Rename the .p7 signed file to .cip
 		File.Move(CIPp7SignedFilePath, CIPFilePath, true);
 
 		// Deploy the signed CIP file

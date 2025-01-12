@@ -49,8 +49,11 @@ internal static class GlobalVars
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
 
-	// Get the base directory where the app is running
+	// Path to the AppControlManagerSpecialPolicyName.xml file
 	internal static readonly string AppControlManagerSpecialPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", $"{AppControlManagerSpecialPolicyName}.xml");
+
+	// Path to the ISGBasedSupplementalPolicy.xml file
+	internal static readonly string ISGOnlySupplementalPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "ISGBasedSupplementalPolicy.xml");
 
 	// Get the current OS version
 	private static readonly Version CurrentOSVersion = Environment.OSVersion.Version;

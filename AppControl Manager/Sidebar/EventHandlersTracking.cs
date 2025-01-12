@@ -11,4 +11,5 @@ internal static class EventHandlersTracking
 {
 	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect1EventHandler;
 	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect2EventHandler;
+	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect3EventHandler;
 }

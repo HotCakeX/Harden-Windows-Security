@@ -40,7 +40,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	private string? unsignedBasePolicyPathFromSidebar;
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
 	{
 		// Light up the local page's button icons
 		UnsignedXMLFilesLightAnimatedIcon.Visibility = visibility;
@@ -331,7 +331,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 					// Sign the CIP
 					SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
 
-					// Rename the .p7 signed file to .cip 
+					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePath, CIPFilePath, true);
 
 					// Get all of the deployed base and supplemental policies on the system

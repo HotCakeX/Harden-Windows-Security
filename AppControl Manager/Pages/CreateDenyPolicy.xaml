@@ -52,7 +52,7 @@
                 <TextBlock
                     TextWrapping="WrapWholeWords"
                     Style="{StaticResource BodyTextBlockStyle}">
-                    
+
                     <Span>
                         Create a <Bold>Deny</Bold> <Underline>base</Underline> policy that will <Run Foreground="{ThemeResource SystemAccentColor}">explicitly deny</Run> files or applications. Keep in mind that Application Control is fundamentally based on allow-listing, which means anything that is not allowed by a policy is <Bold>already automatically denied.</Bold>
                     </Span>
@@ -170,7 +170,7 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
 
                             <TextBox x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" PlaceholderText="Deny Policy Name"/>
 
-                        </controls:SettingsCard>                       
+                        </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
                         Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">

@@ -13,379 +13,470 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
-        <!--  Spacing between cards  -->
-        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
-        <!--  Style (inc. the correct spacing) of a section header  -->
-        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-      BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-      TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Margin" Value="1,30,0,6" />
-            </Style.Setters>
+  <Page.Resources>
+    <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
+    <!--  Spacing between cards  -->
+    <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+    <!--  Style (inc. the correct spacing) of a section header  -->
+    <Style x:Key="SettingsSectionHeaderTextBlockStyle"
+  BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+  TargetType="TextBlock">
+      <Style.Setters>
+        <Setter Property="Margin" Value="1,30,0,6" />
+      </Style.Setters>
+    </Style>
+  </Page.Resources>
+
+  <ScrollView>
+
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+
+      <Grid.Resources>
+        <Style x:Key="GridCardStyle" TargetType="Border">
+          <Style.Setters>
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+          </Style.Setters>
         </Style>
-    </Page.Resources>
 
-    <ScrollView>
+      </Grid.Resources>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+      <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
-            <Grid.Resources>
-                <Style x:Key="GridCardStyle" TargetType="Border">
-                    <Style.Setters>
-                        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                        <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                        <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                    </Style.Setters>
-                </Style>
-
-            </Grid.Resources>
-
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
-
-                <TextBlock
+        <TextBlock
 TextWrapping="WrapWholeWords"
 Style="{StaticResource BodyTextBlockStyle}">
 
-<Span>
-    Create a <Bold>Supplemental</Bold> policy that will <Run Foreground="{ThemeResource SystemAccentColor}">expand</Run> the scope of a base policy. Supplemental policies can only allow files, they cannot have deny rules in them.
-</Span>
-                </TextBlock>
+          <Span>
+            Create a <Bold>Supplemental</Bold> policy that will <Run Foreground="{ThemeResource SystemAccentColor}">expand</Run> the scope of a base policy. Supplemental policies can only allow files, they cannot have deny rules in them.
+          </Span>
+        </TextBlock>
 
-                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
+        <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
 
-            </controls:WrapPanel>
+      </controls:WrapPanel>
 
-            <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
+      <StackPanel HorizontalAlignment="Stretch"
+                  Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
 
-                <win:StackPanel.ChildrenTransitions>
-                    <win:EntranceThemeTransition FromVerticalOffset="50" />
-                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
-                </win:StackPanel.ChildrenTransitions>
+        <win:StackPanel.ChildrenTransitions>
+          <win:EntranceThemeTransition FromVerticalOffset="50" />
+          <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+        </win:StackPanel.ChildrenTransitions>
 
-                <!-- Files and Folders Scan -->
+        <!-- Files and Folders Scan -->
 
-                <controls:SettingsExpander x:Name="FilesAndFoldersSettingsCard"
-                           Description="Create Supplemental policy by scanning files and folders"
-                           Header="Files and Folders"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}" IsExpanded="True">
+        <controls:SettingsExpander x:Name="FilesAndFoldersSettingsCard"
+                   Description="Create Supplemental policy by scanning files and folders"
+                   Header="Files and Folders"
+                   HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}" IsExpanded="True">
 
-                    <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="FilesAndFoldersInfoBar"
-                              Title="Current Status"
-                              BorderThickness="0"
-                              CornerRadius="0"
-                              IsIconVisible="True"
-                              IsOpen="False"
-                              IsClosable="False"
-                              Severity="Informational">
-                        </InfoBar>
-                    </controls:SettingsExpander.ItemsHeader>
-
-
-                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
-
-                        <Button x:Name="CreateFilesAndFoldersSupplementalPolicyButton" Content="Create Supplemental Policy"
-            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="CreateFilesAndFoldersSupplementalPolicyButton_Click" />
-
-                        <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
+          <controls:SettingsExpander.ItemsHeader>
+            <InfoBar x:Name="FilesAndFoldersInfoBar"
+                  Title="Current Status"
+                  BorderThickness="0"
+                  CornerRadius="0"
+                  IsIconVisible="True"
+                  IsOpen="False"
+                  IsClosable="False"
+                  Severity="Informational">
+            </InfoBar>
+          </controls:SettingsExpander.ItemsHeader>
 
 
-                        <TeachingTip x:Name="CreateSupplementalPolicyTeachingTip"
+          <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+            <Button x:Name="CreateFilesAndFoldersSupplementalPolicyButton" Content="Create Supplemental Policy"
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="CreateFilesAndFoldersSupplementalPolicyButton_Click" />
+
+            <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
+
+
+            <TeachingTip x:Name="CreateSupplementalPolicyTeachingTip"
  Target="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton}" />
 
 
+          </controls:WrapPanel>
+
+          <controls:SettingsExpander.Items>
+
+            <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" Description="Browse for file paths to scan and include in the Supplemental policy."
+                   Header="Browse For Files"
+                   IsClickEnabled="True" IsActionIconVisible="False" Click="FilesAndFoldersBrowseForFilesSettingsCard_Click">
+
+              <Button x:Name="FilesAndFoldersBrowseForFilesButton" Content="Browse" Click="FilesAndFoldersBrowseForFilesButton_Click">
+
+                <Button.Flyout>
+                  <Flyout x:Name="FilesAndFoldersBrowseForFilesButton_Flyout">
+
+                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                      <Button Content="Clear" Click="FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click" />
+
+                      <TextBlock Text="View the files you selected." TextWrapping="WrapWholeWords" />
+
+                      <TextBox x:Name="FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox"
+                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                          SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
                     </controls:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
-
-                        <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" Description="Browse for file paths to scan and include in the Supplemental policy."
-                               Header="Browse For Files"
-                               IsClickEnabled="True" IsActionIconVisible="False" Click="FilesAndFoldersBrowseForFilesSettingsCard_Click">
-
-                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" Content="Browse" Click="FilesAndFoldersBrowseForFilesButton_Click">
-
-                                <Button.Flyout>
-                                    <Flyout x:Name="FilesAndFoldersBrowseForFilesButton_Flyout">
-
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
-
-                                            <Button Content="Clear" Click="FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click" />
-
-                                            <TextBlock Text="View the files you selected." TextWrapping="WrapWholeWords" />
-
-                                            <TextBox x:Name="FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
-
-                                        </controls:WrapPanel>
-
-                                    </Flyout>
-                                </Button.Flyout>
+                  </Flyout>
+                </Button.Flyout>
 
 
-                            </Button>
+              </Button>
 
-                        </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Browse for Folder paths to scan and include in the Supplemental policy. The folders will be scanned recursively."
-            Header="Browse For Folders" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+            <controls:SettingsCard Description="Browse for Folder paths to scan and include in the Supplemental policy. The folders will be scanned recursively."
+Header="Browse For Folders" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" Content="Browse" Click="FilesAndFoldersBrowseForFoldersButton_Click">
+              <Button x:Name="FilesAndFoldersBrowseForFoldersButton" Content="Browse" Click="FilesAndFoldersBrowseForFoldersButton_Click">
 
-                                <Button.Flyout>
-                                    <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
+                <Button.Flyout>
+                  <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
 
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button Content="Clear" Click="FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click" />
+                      <Button Content="Clear" Click="FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click" />
 
-                                            <TextBlock Text="View the folders you selected." TextWrapping="WrapWholeWords" />
+                      <TextBlock Text="View the folders you selected." TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox"
+                      <TextBox x:Name="FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox"
                   TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                   SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
 
-                                        </controls:WrapPanel>
+                    </controls:WrapPanel>
 
-                                    </Flyout>
-                                </Button.Flyout>
+                  </Flyout>
+                </Button.Flyout>
 
-                            </Button>
+              </Button>
 
-                        </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="The name of the Supplemental policy that is going to be created."
+            <controls:SettingsCard Description="The name of the Supplemental policy that is going to be created."
 Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
 
-                            <TextBox x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" PlaceholderText="Supplemental Policy Name"/>
+              <TextBox x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" PlaceholderText="Supplemental Policy Name"/>
 
-                        </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
-                        Header="Base Policy File" IsClickEnabled="True" Click="FilesAndFoldersBrowseForBasePolicySettingsCard_Click"
-                        x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" IsActionIconVisible="False">
+            <controls:SettingsCard Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+            Header="Base Policy File" IsClickEnabled="True" Click="FilesAndFoldersBrowseForBasePolicySettingsCard_Click"
+            x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
+              <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
 
-                                <Button.Flyout>
-                                    <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
+                <Button.Flyout>
+                  <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
 
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button Content="Clear" Click="FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click" />
+                      <Button Content="Clear" Click="FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click" />
 
-                                            <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+                      <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
-
-                                        </controls:WrapPanel>
-
-                                    </Flyout>
-                                </Button.Flyout>
-
-                                <Button.Content>
-                                    <controls:WrapPanel Orientation="Horizontal">
-
-                                        <AnimatedIcon x:Name="FilesAndFoldersBasePolicyLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
-                                            <AnimatedIcon.Source>
-                                                <animatedvisuals:Light/>
-                                            </AnimatedIcon.Source>
-                                        </AnimatedIcon>
-
-                                        <TextBlock Text="Browse" />
-
-                                    </controls:WrapPanel>
-                                </Button.Content>
-
-
-                            </Button>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
-                        Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
-
-                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" ToolTipService.ToolTip="Pick a level based on which the selected files will be scanned"
-                                  SelectedIndex="0">
-                                <ComboBoxItem>FilePublisher</ComboBoxItem>
-                                <ComboBoxItem>Publisher</ComboBoxItem>
-                                <ComboBoxItem>Hash</ComboBoxItem>
-                            </ComboBox>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard Description="The higher this number, the faster the scan completes and the more system resources will be consumed."
-                        Header="Scalability" IsClickEnabled="False" IsActionIconVisible="False">
-
-                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15">
-
-                                <!-- Scalability Button with RadialGauge Flyout -->
-                                <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.">
-                                    <Button.Flyout>
-                                        <Flyout>
-                                            <StackPanel>
-                                                <controls:RadialGauge x:Name="ScalabilityRadialGauge"
-                                                    StepSize="1"
-                                                    TickSpacing="2"
-                                                    ScaleWidth="12"
-                                                    NeedleWidth="5"
-                                                    NeedleLength="80"
-                                                    TickLength="8"
-                                                    TickWidth="0"
-                                                    ScalePadding="0"
-                                                    TickPadding="24"
-                                                    Width="200"
-                                                    Maximum="120"
-                                                    Minimum="2"
-                                                    ValueChanged="ScalabilityRadialGauge_ValueChanged"
-                                                    ValueStringFormat="N0"/>
-                                            </StackPanel>
-                                        </Flyout>
-                                    </Button.Flyout>
-                                </Button>
-
-                                <ProgressBar x:Name="FilesAndFoldersProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
-
-                            </controls:WrapPanel>
-
-                        </controls:SettingsCard>
-
-                        <controls:SettingsCard Description="View the details of all of the files that were detected in the file and folder paths you selected."
-                                           Header="View detected file details"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
-                                           IsClickEnabled="True" IsActionIconVisible="True"
-                                           IsEnabled="False"
-                                           x:Name="FilesAndFoldersViewFileDetailsSettingsCard"
-                                           Click="FilesAndFoldersViewFileDetailsSettingsCard_Click">
-
-                        </controls:SettingsCard>
-
-                    </controls:SettingsExpander.Items>
-
-                </controls:SettingsExpander>
-
-
-                <!-- Certificate -->
-
-                <controls:SettingsExpander x:Name="CertificatesSettingsCard"
-                           Description="Create Supplemental policy based on certificates"
-                           Header="Certificates"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEB95;}">
-
-                    <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="CertificatesInfoBar"
-                            Title="Current Status"
-                            BorderThickness="0"
-                            CornerRadius="0"
-                            IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
-                        </InfoBar>
-                    </controls:SettingsExpander.ItemsHeader>
-
-
-                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
-
-                        <Button x:Name="CreateCertificatesSupplementalPolicyButton" Click="CreateCertificatesSupplementalPolicyButton_Click" Content="Create Supplemental Policy"
-            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
-
-                        <ToggleButton x:Name="CertificatesPolicyDeployToggleButton" Click="CertificatesPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="CreateCertificateBasedSupplementalPolicyTeachingTip"
-                Target="{x:Bind CreateCertificatesSupplementalPolicyButton}" />
+                      <TextBox x:Name="FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                          SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
 
                     </controls:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                  </Flyout>
+                </Button.Flyout>
 
-                        <controls:SettingsCard Description="Browse for certificate file paths to scan and include in the Supplemental policy."
-                            x:Name="CertificatesBrowseForCertsSettingsCard"
-                            Header="Browse For Certificates" Click="CertificatesBrowseForCertsSettingsCard_Click"
-                            IsClickEnabled="True" IsActionIconVisible="False">
+                <Button.Content>
+                  <controls:WrapPanel Orientation="Horizontal">
 
-                            <Button x:Name="CertificatesBrowseForCertsButton" Content="Browse" Click="CertificatesBrowseForCertsButton_Click" />
+                    <AnimatedIcon x:Name="FilesAndFoldersBasePolicyLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                      <AnimatedIcon.Source>
+                        <animatedvisuals:Light/>
+                      </AnimatedIcon.Source>
+                    </AnimatedIcon>
 
-                        </controls:SettingsCard>
+                    <TextBlock Text="Browse" />
+
+                  </controls:WrapPanel>
+                </Button.Content>
 
 
-                        <controls:SettingsCard Description="The name of the Supplemental policy that is going to be created."
+              </Button>
+
+            </controls:SettingsCard>
+
+            <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
+            Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
+
+              <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" ToolTipService.ToolTip="Pick a level based on which the selected files will be scanned"
+                    SelectedIndex="0">
+                <ComboBoxItem>FilePublisher</ComboBoxItem>
+                <ComboBoxItem>Publisher</ComboBoxItem>
+                <ComboBoxItem>Hash</ComboBoxItem>
+              </ComboBox>
+
+            </controls:SettingsCard>
+
+            <controls:SettingsCard Description="The higher this number, the faster the scan completes and the more system resources will be consumed."
+            Header="Scalability" IsClickEnabled="False" IsActionIconVisible="False">
+
+              <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15">
+
+                <!-- Scalability Button with RadialGauge Flyout -->
+                <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.">
+                  <Button.Flyout>
+                    <Flyout>
+                      <StackPanel>
+                        <controls:RadialGauge x:Name="ScalabilityRadialGauge"
+                            StepSize="1"
+                            TickSpacing="2"
+                            ScaleWidth="12"
+                            NeedleWidth="5"
+                            NeedleLength="80"
+                            TickLength="8"
+                            TickWidth="0"
+                            ScalePadding="0"
+                            TickPadding="24"
+                            Width="200"
+                            Maximum="120"
+                            Minimum="2"
+                            ValueChanged="ScalabilityRadialGauge_ValueChanged"
+                            ValueStringFormat="N0"/>
+                      </StackPanel>
+                    </Flyout>
+                  </Button.Flyout>
+                </Button>
+
+                <ProgressBar x:Name="FilesAndFoldersProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
+
+              </controls:WrapPanel>
+
+            </controls:SettingsCard>
+
+            <controls:SettingsCard Description="View the details of all of the files that were detected in the file and folder paths you selected."
+                               Header="View detected file details"
+                               HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
+                               IsClickEnabled="True" IsActionIconVisible="True"
+                               IsEnabled="False"
+                               x:Name="FilesAndFoldersViewFileDetailsSettingsCard"
+                               Click="FilesAndFoldersViewFileDetailsSettingsCard_Click">
+
+            </controls:SettingsCard>
+
+          </controls:SettingsExpander.Items>
+
+        </controls:SettingsExpander>
+
+
+        <!-- Certificate -->
+
+        <controls:SettingsExpander x:Name="CertificatesSettingsCard"
+                   Description="Create Supplemental policy based on certificates"
+                   Header="Certificates"
+                   HeaderIcon="{ui:FontIcon Glyph=&#xEB95;}">
+
+          <controls:SettingsExpander.ItemsHeader>
+            <InfoBar x:Name="CertificatesInfoBar"
+                Title="Current Status"
+                BorderThickness="0"
+                CornerRadius="0"
+                IsIconVisible="True"
+                IsOpen="False"
+                IsClosable="False"
+                Severity="Informational">
+            </InfoBar>
+          </controls:SettingsExpander.ItemsHeader>
+
+
+          <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+            <Button x:Name="CreateCertificatesSupplementalPolicyButton" Click="CreateCertificatesSupplementalPolicyButton_Click" Content="Create Supplemental Policy"
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+            <ToggleButton x:Name="CertificatesPolicyDeployToggleButton" Click="CertificatesPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
+
+            <TeachingTip x:Name="CreateCertificateBasedSupplementalPolicyTeachingTip"
+    Target="{x:Bind CreateCertificatesSupplementalPolicyButton}" />
+
+          </controls:WrapPanel>
+
+          <controls:SettingsExpander.Items>
+
+            <controls:SettingsCard Description="Browse for certificate file paths to scan and include in the Supplemental policy."
+                x:Name="CertificatesBrowseForCertsSettingsCard"
+                Header="Browse For Certificates" Click="CertificatesBrowseForCertsSettingsCard_Click"
+                IsClickEnabled="True" IsActionIconVisible="False">
+
+              <Button x:Name="CertificatesBrowseForCertsButton" Content="Browse" Click="CertificatesBrowseForCertsButton_Click" />
+
+            </controls:SettingsCard>
+
+
+            <controls:SettingsCard Description="The name of the Supplemental policy that is going to be created."
 Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
 
-                            <TextBox x:Name="CertificatesPolicyNameTextBox" TextChanged="CertificatesPolicyNameTextBox_TextChanged" PlaceholderText="Supplemental Policy Name"/>
+              <TextBox x:Name="CertificatesPolicyNameTextBox" TextChanged="CertificatesPolicyNameTextBox_TextChanged" PlaceholderText="Supplemental Policy Name"/>
 
-                        </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="CertificatesBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+            <controls:SettingsCard x:Name="CertificatesBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
 Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="CertificatesBrowseForBasePolicySettingsCard_Click">
 
-                            <Button x:Name="CertificatesBrowseForBasePolicyButton" Click="CertificatesBrowseForBasePolicyButton_Click">
+              <Button x:Name="CertificatesBrowseForBasePolicyButton" Click="CertificatesBrowseForBasePolicyButton_Click">
 
-                                <Button.Flyout>
-                                    <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
+                <Button.Flyout>
+                  <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
 
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button Content="Clear" Click="CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click" />
+                      <Button Content="Clear" Click="CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click" />
 
-                                            <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+                      <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                      <TextBox x:Name="CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                  SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
 
-                                        </controls:WrapPanel>
+                    </controls:WrapPanel>
 
-                                    </Flyout>
-                                </Button.Flyout>
+                  </Flyout>
+                </Button.Flyout>
 
-                                <Button.Content>
-                                    <controls:WrapPanel Orientation="Horizontal">
+                <Button.Content>
+                  <controls:WrapPanel Orientation="Horizontal">
 
-                                        <AnimatedIcon x:Name="CertificatesBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
-                                            <AnimatedIcon.Source>
-                                                <animatedvisuals:Light/>
-                                            </AnimatedIcon.Source>
-                                        </AnimatedIcon>
+                    <AnimatedIcon x:Name="CertificatesBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                      <AnimatedIcon.Source>
+                        <animatedvisuals:Light/>
+                      </AnimatedIcon.Source>
+                    </AnimatedIcon>
 
-                                        <TextBlock Text="Browse" />
+                    <TextBlock Text="Browse" />
 
-                                    </controls:WrapPanel>
-                                </Button.Content>
+                  </controls:WrapPanel>
+                </Button.Content>
 
 
-                            </Button>
+              </Button>
 
-                        </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="CertificatesSigningScenarioSettingsCard" Description="Choose wether this certificate will be added to the User Mode or Kernel Mode Signing Scenario"
-                            Header="Signing Scenario" IsClickEnabled="False" IsActionIconVisible="False">
+            <controls:SettingsCard x:Name="CertificatesSigningScenarioSettingsCard" Description="Choose wether this certificate will be added to the User Mode or Kernel Mode Signing Scenario"
+                Header="Signing Scenario" IsClickEnabled="False" IsActionIconVisible="False">
 
-                            <RadioButtons Header="Signing Scenario" x:Name="SigningScenariosRadioButtons">
-                                <RadioButton Content="User Mode" IsChecked="True" Checked="UserModeRadioButton_Checked"/>
-                                <RadioButton Content="Kernel Mode" Checked="KernelModeRadioButton_Checked"/>
-                            </RadioButtons>
+              <RadioButtons Header="Signing Scenario" x:Name="SigningScenariosRadioButtons">
+                <RadioButton Content="User Mode" IsChecked="True" Checked="UserModeRadioButton_Checked"/>
+                <RadioButton Content="Kernel Mode" Checked="KernelModeRadioButton_Checked"/>
+              </RadioButtons>
 
-                        </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                    </controls:SettingsExpander.Items>
+          </controls:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+        </controls:SettingsExpander>
 
-            </StackPanel>
 
-        </Grid>
 
-    </ScrollView>
+
+        <!-- ISG -->
+
+        <controls:SettingsExpander x:Name="ISGSettingsCard"
+                   Description="Create a Supplemental policy that only enables the usage of the Intelligent Security Graph to automatically authorize reputable apps and files"
+                   Header="ISG"
+                   HeaderIcon="{ui:FontIcon Glyph=&#xE734;}">
+
+          <controls:SettingsExpander.ItemsHeader>
+            <InfoBar x:Name="ISGInfoBar"
+                Title="Current Status"
+                BorderThickness="0"
+                CornerRadius="0"
+                IsIconVisible="True"
+                IsOpen="False"
+                IsClosable="False"
+                Severity="Informational">
+            </InfoBar>
+          </controls:SettingsExpander.ItemsHeader>
+
+          <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+            <Button x:Name="CreateISGSupplementalPolicyButton" Click="CreateISGSupplementalPolicyButton_Click" Content="Create Supplemental Policy"
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+            <ToggleButton x:Name="ISGPolicyDeployToggleButton" Click="ISGPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
+
+            <TeachingTip x:Name="CreateISGSupplementalPolicyTeachingTip"
+    Target="{x:Bind CreateISGSupplementalPolicyButton}" />
+
+          </controls:WrapPanel>
+
+          <controls:SettingsExpander.Items>
+
+            <controls:SettingsCard Description="The name of the Supplemental policy that is going to be created."
+Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
+
+              <TextBox x:Name="ISGPolicyNameTextBox" TextChanged="ISGPolicyNameTextBox_TextChanged" PlaceholderText="Supplemental Policy Name"/>
+
+            </controls:SettingsCard>
+
+            <controls:SettingsCard x:Name="ISGBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="ISGBrowseForBasePolicySettingsCard_Click">
+
+              <Button x:Name="ISGBrowseForBasePolicyButton" Click="ISGBrowseForBasePolicyButton_Click">
+
+                <Button.Flyout>
+                  <Flyout x:Name="ISGBrowseForBasePolicyButton_FlyOut">
+
+                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                      <Button Content="Clear" Click="ISGBrowseForBasePolicyButton_Flyout_Clear_Click" />
+
+                      <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+
+                      <TextBox x:Name="ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                 SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
+                    </controls:WrapPanel>
+
+                  </Flyout>
+                </Button.Flyout>
+
+                <Button.Content>
+                  <controls:WrapPanel Orientation="Horizontal">
+
+                    <AnimatedIcon x:Name="ISGBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                      <AnimatedIcon.Source>
+                        <animatedvisuals:Light/>
+                      </AnimatedIcon.Source>
+                    </AnimatedIcon>
+
+                    <TextBlock Text="Browse" />
+
+                  </controls:WrapPanel>
+                </Button.Content>
+
+
+              </Button>
+
+            </controls:SettingsCard>
+
+          </controls:SettingsExpander.Items>
+
+        </controls:SettingsExpander>
+
+
+
+      </StackPanel>
+
+    </Grid>
+
+  </ScrollView>
 
 </Page>

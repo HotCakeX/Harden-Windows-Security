@@ -217,7 +217,7 @@
 
 
 
-                <controls:SettingsCard 
+                <controls:SettingsCard
                     Description="Browse for CIP Binary file(s) to deploy on the system"
                     Header="Select CIP Binary file(s)"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}" IsClickEnabled="False" IsActionIconVisible="False" >

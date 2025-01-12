@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Input;
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>
-/// A custom implementation of MenuFlyout that prevents the flyout from automatically closing 
+/// A custom implementation of MenuFlyout that prevents the flyout from automatically closing
 /// when a menu item is selected. This is achieved by tracking pointer interactions on the flyout items.
 /// </summary>
 internal sealed partial class MenuFlyoutV2 : MenuFlyout
@@ -35,7 +35,7 @@ internal sealed partial class MenuFlyoutV2 : MenuFlyout
 		// Loop through each menu item in the flyout's Items collection
 		foreach (MenuFlyoutItemBase menuItem in Items)
 		{
-			// Ensure existing handlers are removed to avoid multiple attachments 
+			// Ensure existing handlers are removed to avoid multiple attachments
 			// (to prevent duplicate event triggers if the flyout is opened multiple times)
 			menuItem.PointerEntered -= MenuItem_PointerEntered;
 			menuItem.PointerEntered += MenuItem_PointerEntered;

@@ -90,7 +90,7 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Header="Certificate Common Name"
-                 Description="Used during the signing operation"                      
+                 Description="Used during the signing operation"
                  HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
@@ -138,7 +138,7 @@
                     <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 
                         <Button x:Name="XMLPolicyFileBrowseButton" Click="XMLPolicyFileBrowseButton_Click" HorizontalAlignment="Center" Content="Browse"/>
-                      
+
                         <TextBox MaxWidth="700" x:Name="XMLPolicyFileTextBox" PlaceholderText="XML file path" TextWrapping="Wrap"/>
 
                     </controls:WrapPanel>

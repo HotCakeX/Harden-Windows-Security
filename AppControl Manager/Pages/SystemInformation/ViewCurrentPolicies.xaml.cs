@@ -322,7 +322,7 @@ public sealed partial class ViewCurrentPolicies : Page
 
 					foreach (CiPolicyInfo policy in policiesToRemove)
 					{
-						// Remove the policy directly from the system if it's unsigned						
+						// Remove the policy directly from the system if it's unsigned
 						if (!policy.IsSignedPolicy ||
 							// or supplemental
 							!string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase) ||
@@ -391,7 +391,7 @@ public sealed partial class ViewCurrentPolicies : Page
 							// Sign the CIP
 							SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
 
-							// Rename the .p7 signed file to .cip 
+							// Rename the .p7 signed file to .cip
 							File.Move(CIPp7SignedFilePath, CIPFilePath, true);
 
 							// Deploy the signed CIP file

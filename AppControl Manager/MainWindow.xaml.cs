@@ -454,7 +454,7 @@ public sealed partial class MainWindow : Window
 
 
 	/*
-	 
+
 	 This will make keep the title bar text white even on light theme, making it unreadable
 	 It's not even necessary to change the text based on Window being in focus or not
 
@@ -1569,7 +1569,7 @@ public sealed partial class MainWindow : Window
 
 		if (ContentFrame.Content is IAnimatedIconsManager currentPage)
 		{
-			currentPage.SetVisibility(visibility, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2);
+			currentPage.SetVisibility(visibility, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3);
 
 			// Set the visibility of the AnimatedIcon on Sidebar's Select button for Unsigned policy
 			SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = visibility;
@@ -1597,16 +1597,22 @@ public sealed partial class MainWindow : Window
 		{
 			SidebarUnsignedBasePolicyConnect2.Click -= EventHandlersTracking.SidebarUnsignedBasePolicyConnect2EventHandler;
 		}
+		if (EventHandlersTracking.SidebarUnsignedBasePolicyConnect3EventHandler is not null)
+		{
+			SidebarUnsignedBasePolicyConnect3.Click -= EventHandlersTracking.SidebarUnsignedBasePolicyConnect3EventHandler;
+		}
 
 		// Remove the content of the sidebar buttons
 		SidebarUnsignedBasePolicyConnect1.Content = null;
 		SidebarUnsignedBasePolicyConnect2.Content = null;
+		SidebarUnsignedBasePolicyConnect3.Content = null;
 
 		// Collapse the sidebar buttons
 		// The following actions happen because we don't know the next page user visits implements the interface or not
 		// Not all pages are eligible for this augmentation
 		SidebarUnsignedBasePolicyConnect1.Visibility = Visibility.Collapsed;
 		SidebarUnsignedBasePolicyConnect2.Visibility = Visibility.Collapsed;
+		SidebarUnsignedBasePolicyConnect3.Visibility = Visibility.Collapsed;
 
 		// Check if the currently displayed content (page) in the ContentFrame implements the IAnimatedIconsManager interface.
 		// If it does, cast ContentFrame.Content to IAnimatedIconsManager
@@ -1615,12 +1621,12 @@ public sealed partial class MainWindow : Window
 		{
 			if (isUnsignedBasePolicyPathAvailable)
 			{
-				currentPage.SetVisibility(Visibility.Visible, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2);
+				currentPage.SetVisibility(Visibility.Visible, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3);
 				SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = Visibility.Visible;
 			}
 			else
 			{
-				currentPage.SetVisibility(Visibility.Collapsed, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2);
+				currentPage.SetVisibility(Visibility.Collapsed, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3);
 				SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = Visibility.Collapsed;
 			}
 		}

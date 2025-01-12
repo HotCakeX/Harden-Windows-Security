@@ -146,7 +146,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
 	{
 		// Light up the local page's button icons
 		BrowseForXMLPolicyButtonLightAnimatedIcon.Visibility = visibility;
@@ -405,7 +405,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					// Sign the CIP
 					SignToolHelper.Sign(new FileInfo(AuditModeCIP), new FileInfo(_SignToolPath!), _CertCN!);
 
-					// Rename the .p7 signed file to .cip 
+					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePathAudit, AuditModeCIP, true);
 
 
@@ -423,7 +423,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					// Sign the CIP
 					SignToolHelper.Sign(new FileInfo(tempEnforcedModeCIPPath), new FileInfo(_SignToolPath!), _CertCN!);
 
-					// Rename the .p7 signed file to .cip 
+					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePathEnforced, EnforcedModeCIP, true);
 
 				}
@@ -982,7 +982,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						// Sign the CIP
 						SignToolHelper.Sign(new FileInfo(CIPPath), new FileInfo(_SignToolPath!), _CertCN!);
 
-						// Rename the .p7 signed file to .cip 
+						// Rename the .p7 signed file to .cip
 						File.Move(CIPp7SignedFilePath, CIPPath, true);
 					}
 

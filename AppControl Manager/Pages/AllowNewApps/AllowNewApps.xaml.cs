@@ -58,7 +58,7 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
 	{
 		// Light up the local page's button icons
 		AllowNewAppsStart.Instance.BrowseForXMLPolicyButtonLightAnimatedIconPub.Visibility = visibility;

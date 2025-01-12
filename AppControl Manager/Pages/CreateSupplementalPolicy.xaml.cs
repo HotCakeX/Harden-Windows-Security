@@ -1051,6 +1051,9 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
 				{
+					// Prepare the ISG services
+					ConfigureISGServices.Configure();
+
 					// Convert the XML file to CIP
 					PolicyToCIPConverter.Convert(savePathTemp, cipPath);
 

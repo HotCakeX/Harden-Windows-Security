@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AppControlManager.Logging;
@@ -33,7 +34,8 @@ public sealed partial class UserConfiguration(
 		Guid? strictKernelNoFlightRootsPolicyGUID,
 		DateTime? lastUpdateCheck,
 		DateTime? strictKernelModePolicyTimeOfDeployment,
-		bool? autoUpdateCheck
+		bool? autoUpdateCheck,
+		Dictionary<string, DateTime>? signedPolicyStage1RemovalTimes = null
 	)
 {
 	[JsonPropertyOrder(1)]
@@ -66,6 +68,9 @@ public sealed partial class UserConfiguration(
 	[JsonPropertyOrder(10)]
 	public bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
 
+	[JsonPropertyOrder(11)]
+	public Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
+
 
 
 	/// <summary>
@@ -82,6 +87,7 @@ public sealed partial class UserConfiguration(
 	/// <param name="LastUpdateCheck"></param>
 	/// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
 	/// <param name="AutoUpdateCheck"></param>
+	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static UserConfiguration Set(
@@ -94,7 +100,8 @@ public sealed partial class UserConfiguration(
 		Guid? StrictKernelNoFlightRootsPolicyGUID = null,
 		DateTime? LastUpdateCheck = null,
 		DateTime? StrictKernelModePolicyTimeOfDeployment = null,
-		bool? AutoUpdateCheck = null
+		bool? AutoUpdateCheck = null,
+		Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null
 		)
 	{
 		// Validate certificateCommonName
@@ -154,6 +161,11 @@ public sealed partial class UserConfiguration(
 		if (StrictKernelModePolicyTimeOfDeployment.HasValue) UserConfiguration.StrictKernelModePolicyTimeOfDeployment = StrictKernelModePolicyTimeOfDeployment;
 		if (AutoUpdateCheck.HasValue) UserConfiguration.AutoUpdateCheck = AutoUpdateCheck;
 
+		if (SignedPolicyStage1RemovalTimes is not null)
+		{
+			UserConfiguration.SignedPolicyStage1RemovalTimes = SignedPolicyStage1RemovalTimes;
+		}
+
 		// Write the updated properties back to the JSON file
 		WriteUserConfiguration(UserConfiguration);
 
@@ -186,6 +198,7 @@ public sealed partial class UserConfiguration(
 	/// <param name="LastUpdateCheck"></param>
 	/// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
 	/// <param name="AutoUpdateCheck"></param>
+	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	internal static void Remove(
 	bool SignedPolicyPath = false,
 	bool UnsignedPolicyPath = false,
@@ -196,7 +209,8 @@ public sealed partial class UserConfiguration(
 	bool StrictKernelNoFlightRootsPolicyGUID = false,
 	bool LastUpdateCheck = false,
 	bool StrictKernelModePolicyTimeOfDeployment = false,
-	bool AutoUpdateCheck = false
+	bool AutoUpdateCheck = false,
+	bool SignedPolicyStage1RemovalTimes = false
 	)
 	{
 		// Read the current configuration
@@ -213,12 +227,14 @@ public sealed partial class UserConfiguration(
 		if (LastUpdateCheck) currentConfig.LastUpdateCheck = null;
 		if (StrictKernelModePolicyTimeOfDeployment) currentConfig.StrictKernelModePolicyTimeOfDeployment = null;
 		if (AutoUpdateCheck) currentConfig.AutoUpdateCheck = null;
+		if (SignedPolicyStage1RemovalTimes) currentConfig.SignedPolicyStage1RemovalTimes = null;
 
 		// Write the updated configuration back to the JSON file
 		WriteUserConfiguration(currentConfig);
 
 		Logger.Write("The specified properties have been removed and set to null in the UserConfigurations.json file.");
 	}
+
 
 	private static UserConfiguration ReadUserConfiguration()
 	{
@@ -276,7 +292,8 @@ public sealed partial class UserConfiguration(
 			TryGetGuidProperty(root, nameof(StrictKernelNoFlightRootsPolicyGUID)),
 			TryGetDateTimeProperty(root, nameof(LastUpdateCheck)),
 			TryGetDateTimeProperty(root, nameof(StrictKernelModePolicyTimeOfDeployment)),
-			TryGetBoolProperty(root, nameof(AutoUpdateCheck))
+			TryGetBoolProperty(root, nameof(AutoUpdateCheck)),
+			TryGetKeyValuePairsProperty(root, nameof(SignedPolicyStage1RemovalTimes))
 		);
 
 		static string? TryGetStringProperty(JsonElement root, string propertyName)
@@ -326,6 +343,21 @@ public sealed partial class UserConfiguration(
 				return null;
 			}
 		}
+
+		static Dictionary<string, DateTime>? TryGetKeyValuePairsProperty(JsonElement root, string propertyName)
+		{
+			try
+			{
+				return root.TryGetProperty(propertyName, out var propertyValue) && propertyValue.ValueKind == JsonValueKind.Object
+					? propertyValue.EnumerateObject().ToDictionary(e => e.Name, e => e.Value.GetDateTime().ToUniversalTime())
+					: null;
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 	}
 
 
@@ -341,4 +373,81 @@ public sealed partial class UserConfiguration(
 		File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
 		Logger.Write("The UserConfigurations.json file has been updated successfully.");
 	}
+
+
+
+
+	/// <summary>
+	/// Adds a new key-value pair to the SignedPolicyStage1RemovalTimes dictionary.
+	/// </summary>
+	/// <param name="key">The key to add.</param>
+	/// <param name="value">The value to associate with the key.</param>
+	internal static void Add(string key, DateTime value)
+	{
+		// Get the current user configuration
+		UserConfiguration currentConfig = ReadUserConfiguration();
+
+		// Initialize the dictionary if it doesn't exist
+		currentConfig.SignedPolicyStage1RemovalTimes ??= [];
+
+		// Add the key-value pair to the dictionary
+		currentConfig.SignedPolicyStage1RemovalTimes[key] = value; // This will add or update the value for the key
+
+		// Write the updated configuration back to the JSON file
+		WriteUserConfiguration(currentConfig);
+
+		Logger.Write($"Key-value pair added to the SignedPolicyStage1RemovalTimes: {key} = {value}");
+	}
+
+
+
+	/// <summary>
+	/// Queries the SignedPolicyStage1RemovalTimes dictionary by key and returns the corresponding value.
+	/// </summary>
+	/// <param name="key">The key to query.</param>
+	/// <returns>The value associated with the key, or null if the key does not exist.</returns>
+	internal static DateTime? Query(string key)
+	{
+		// Get the current user configuration
+		UserConfiguration currentConfig = ReadUserConfiguration();
+
+		// Return the value if the key exists, otherwise return null
+		if (currentConfig.SignedPolicyStage1RemovalTimes is not null && currentConfig.SignedPolicyStage1RemovalTimes.TryGetValue(key, out DateTime value))
+		{
+			return value;
+		}
+
+		// Return null if the key doesn't exist
+		return null;
+	}
+
+
+
+	/// <summary>
+	/// Removes a key-value pair from the SignedPolicyStage1RemovalTimes dictionary by key.
+	/// </summary>
+	/// <param name="key">The key to remove.</param>
+	/// <returns>True if the key was successfully removed; false if the key was not found.</returns>
+	internal static void RemoveKey(string key)
+	{
+		// Get the current user configuration
+		UserConfiguration currentConfig = ReadUserConfiguration();
+
+		// Check if the dictionary exists and contains the key
+		if (currentConfig.SignedPolicyStage1RemovalTimes is not null && currentConfig.SignedPolicyStage1RemovalTimes.ContainsKey(key))
+		{
+			// Remove the key-value pair
+			_ = currentConfig.SignedPolicyStage1RemovalTimes.Remove(key);
+
+			// Write the updated configuration back to the JSON file
+			WriteUserConfiguration(currentConfig);
+
+			Logger.Write($"Key '{key}' removed from the SignedPolicyStage1RemovalTimes dictionary.");
+		}
+		else
+		{
+			Logger.Write($"Key '{key}' not found in the SignedPolicyStage1RemovalTimes dictionary.");
+		}
+	}
+
 }

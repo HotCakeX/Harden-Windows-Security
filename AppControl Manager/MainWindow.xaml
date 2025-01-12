@@ -190,9 +190,9 @@
 
                 <NavigationViewItemHeader Content="Creation"/>
 
-                <NavigationViewItem x:Name="CreatePolicyNavItem" Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics"/>
-                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" Content="Create Supplemental Policy" ToolTipService.ToolTip="Create Supplemental AppControl Policies"/>
-                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" Content="Create Deny Policy" ToolTipService.ToolTip="Create Deny App Control Policies"/>
+                <NavigationViewItem x:Name="CreatePolicyNavItem" x:Uid="CreatePolicyNavItem"/>
+                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" x:Uid="CreateSupplementalPolicyNavItem"/>
+                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" x:Uid="CreateDenyPolicyNavItem"/>
 
                 <NavigationViewItemHeader Content="Certificates"/>
 

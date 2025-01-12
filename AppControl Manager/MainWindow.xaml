@@ -190,49 +190,49 @@
 
                 <NavigationViewItemHeader Content="Creation"/>
 
-                <NavigationViewItem x:Name="CreatePolicyNavItem" Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics"/>
-                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" Content="Create Supplemental Policy" ToolTipService.ToolTip="Create Supplemental AppControl Policies"/>
-                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" Content="Create Deny Policy" ToolTipService.ToolTip="Create Deny App Control Policies"/>
+                <NavigationViewItem x:Name="CreatePolicyNavItem" x:Uid="CreatePolicyNavItem"/>
+                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" x:Uid="CreateSupplementalPolicyNavItem"/>
+                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" x:Uid="CreateDenyPolicyNavItem"/>
 
                 <NavigationViewItemHeader Content="Certificates"/>
 
-                <NavigationViewItem x:Name="BuildNewCertificateNavItem" Content="Build New Certificate" ToolTipService.ToolTip="Generate Certificates that are suitable for signing App Control Policies"/>
-                <NavigationViewItem x:Name="ViewFileCertificatesNavItem" Content="View File Certificates" ToolTipService.ToolTip="View advanced and highly detailed information about all certificates of signed files"/>
+                <NavigationViewItem x:Name="BuildNewCertificateNavItem" x:Uid="BuildNewCertificateNavItem"/>
+                <NavigationViewItem x:Name="ViewFileCertificatesNavItem" x:Uid="ViewFileCertificatesNavItem"/>
 
                 <NavigationViewItemHeader Content="Logs Processing"/>
 
-                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create App Control policy either from the local event logs or EVTX files"/>
-                <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" Content="MDE Advanced Hunting" ToolTipService.ToolTip="Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs"/>
+                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" x:Uid="CreatePolicyFromEventLogsNavItem"/>
+                <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" x:Uid="CreatePolicyFromMDEAHNavItem"/>
 
 
                 <NavigationViewItemHeader Content="Tactical"/>
 
-                <NavigationViewItem x:Name="SimulationNavItem" Content="Simulation" ToolTipService.ToolTip="Simulate deployment of App Control policies"/>
-                <NavigationViewItem x:Name="AllowNewAppsNavItem" Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running."/>
+                <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem"/>
+                <NavigationViewItem x:Name="AllowNewAppsNavItem" x:Uid="AllowNewAppsNavItem"/>
 
 
                 <NavigationViewItemHeader Content="Info Gathering"/>
 
-                <NavigationViewItem x:Name="SystemInformationNavItem" Content="System Information" ToolTipService.ToolTip="View information about the system"/>
-                <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files"/>
-                <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies"/>
+                <NavigationViewItem x:Name="SystemInformationNavItem" x:Uid="SystemInformationNavItem"/>
+                <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" x:Uid="GetCodeIntegrityHashesNavItem"/>
+                <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" x:Uid="GetSecurePolicySettingsNavItem"/>
 
 
                 <NavigationViewItemHeader Content="Policy Management"/>
 
-                <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options"/>
-                <NavigationViewItem x:Name="MergePoliciesNavItem" Content="Merge App Control Policies" ToolTipService.ToolTip="Merge 2 App Control policeis together or deduplicate a single policy"/>
-                <NavigationViewItem x:Name="DeploymentNavItem" Content="Deploy App Control Policy" ToolTipService.ToolTip="Deploy signed or unsigned AppControl policies on the system"/>
-                <NavigationViewItem x:Name="ValidatePoliciesNavItem" Content="Validate Policies" ToolTipService.ToolTip="Validate App Control Policies"/>
+                <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" x:Uid="ConfigurePolicyRuleOptionsNavItem"/>
+                <NavigationViewItem x:Name="MergePoliciesNavItem" x:Uid="MergePoliciesNavItem"/>
+                <NavigationViewItem x:Name="DeploymentNavItem" x:Uid="DeploymentNavItem"/>
+                <NavigationViewItem x:Name="ValidatePoliciesNavItem" x:Uid="ValidatePoliciesNavItem"/>
 
                 <NavigationViewItemHeader Content="Documentation"/>
 
-                <NavigationViewItem x:Name="GitHubDocsNavItem" Content="GitHub Documentation" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application"/>
-                <NavigationViewItem x:Name="MSFTDocsNavItem" Content="Microsoft Documentation" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies"/>
+                <NavigationViewItem x:Name="GitHubDocsNavItem" x:Uid="GitHubDocsNavItem"/>
+                <NavigationViewItem x:Name="MSFTDocsNavItem" x:Uid="MSFTDocsNavItem"/>
 
                 <NavigationViewItemSeparator/>
 
-                <NavigationViewItem x:Name="LogsNavItem" Content="Logs" ToolTipService.ToolTip="View the application logs in real time"/>
+                <NavigationViewItem x:Name="LogsNavItem" x:Uid="LogsNavItem"/>
 
             </NavigationView.MenuItems>
 

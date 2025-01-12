@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+<root><!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,79 +25,79 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -136,5 +135,101 @@
   </data>
   <data name="CreateSupplementalPolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create Supplemental AppControl Policies</value>
+  </data>
+  <data name="BuildNewCertificateNavItem.Content" xml:space="preserve">
+    <value>Build New Certificate</value>
+  </data>
+  <data name="BuildNewCertificateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generate Certificates that are suitable for signing App Control Policies</value>
+  </data>
+  <data name="ViewFileCertificatesNavItem.Content" xml:space="preserve">
+    <value>View File Certificates</value>
+  </data>
+  <data name="ViewFileCertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View advanced and highly detailed information about all certificates of signed files</value>
+  </data>
+  <data name="CreatePolicyFromEventLogsNavItem.Content" xml:space="preserve">
+    <value>Create policy from Event Logs</value>
+  </data>
+  <data name="CreatePolicyFromEventLogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create App Control policy either from the local event logs or EVTX files</value>
+  </data>
+  <data name="CreatePolicyFromMDEAHNavItem.Content" xml:space="preserve">
+    <value>MDE Advanced Hunting</value>
+  </data>
+  <data name="CreatePolicyFromMDEAHNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs</value>
+  </data>
+  <data name="SimulationNavItem.Content" xml:space="preserve">
+    <value>Simulation</value>
+  </data>
+  <data name="SimulationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Simulate deployment of App Control policies</value>
+  </data>
+  <data name="AllowNewAppsNavItem.Content" xml:space="preserve">
+    <value>Allow New Apps</value>
+  </data>
+  <data name="AllowNewAppsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running.</value>
+  </data>
+  <data name="SystemInformationNavItem.Content" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="SystemInformationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View information about the system</value>
+  </data>
+  <data name="GetCodeIntegrityHashesNavItem.Content" xml:space="preserve">
+    <value>Get Code Integrity Hashes</value>
+  </data>
+  <data name="GetCodeIntegrityHashesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get Code Integrity Hashes of files</value>
+  </data>
+  <data name="GetSecurePolicySettingsNavItem.Content" xml:space="preserve">
+    <value>Get Secure Policy Settings</value>
+  </data>
+  <data name="GetSecurePolicySettingsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get the secure policy settings among the deployed policies</value>
+  </data>
+  <data name="ConfigurePolicyRuleOptionsNavItem.Content" xml:space="preserve">
+    <value>Configure Policy Rule Options</value>
+  </data>
+  <data name="ConfigurePolicyRuleOptionsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configure Policy Rule Options</value>
+  </data>
+  <data name="MergePoliciesNavItem.Content" xml:space="preserve">
+    <value>Merge App Control Policies</value>
+  </data>
+  <data name="MergePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Merge 2 App Control policies together or deduplicate a single policy</value>
+  </data>
+  <data name="DeploymentNavItem.Content" xml:space="preserve">
+    <value>Deploy App Control Policy</value>
+  </data>
+  <data name="DeploymentNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deploy signed or unsigned AppControl policies on the system</value>
+  </data>
+  <data name="ValidatePoliciesNavItem.Content" xml:space="preserve">
+    <value>Validate Policies</value>
+  </data>
+  <data name="ValidatePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Validate App Control Policies</value>
+  </data>
+  <data name="GitHubDocsNavItem.Content" xml:space="preserve">
+    <value>GitHub Documentation</value>
+  </data>
+  <data name="GitHubDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get online documentation from GitHub about how to use the application</value>
+  </data>
+  <data name="MSFTDocsNavItem.Content" xml:space="preserve">
+    <value>Microsoft Documentation</value>
+  </data>
+  <data name="MSFTDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get online documentation from Microsoft about App Control for Business policies</value>
+  </data>
+  <data name="LogsNavItem.Content" xml:space="preserve">
+    <value>Logs</value>
+  </data>
+  <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View the application logs in real time</value>
   </data>
 </root>

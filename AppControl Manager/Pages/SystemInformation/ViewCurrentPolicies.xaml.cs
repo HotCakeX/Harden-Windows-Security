@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
+using AppControlManager.Logging;
 using AppControlManager.SiPolicyIntel;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI;
@@ -322,14 +323,8 @@ public sealed partial class ViewCurrentPolicies : Page
 
 					foreach (CiPolicyInfo policy in policiesToRemove)
 					{
-						// Remove the policy directly from the system if it's unsigned
-						if (!policy.IsSignedPolicy ||
-							// or supplemental
-							!string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase) ||
-							// or signed base policy with the EnabledUnsignedSystemIntegrityPolicy policy rule option
-							(policy.IsSignedPolicy && string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase) &&
-							 policy.PolicyOptions is not null && policy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase)
-							))
+						// Remove the policy directly from the system if it's unsigned or supplemental
+						if (!policy.IsSignedPolicy || !string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 						{
 							await Task.Run(() =>
 							{
@@ -337,78 +332,122 @@ public sealed partial class ViewCurrentPolicies : Page
 							});
 						}
 
-						// If the policy is base and signed
+						// At this point the policy is definitely a Signed Base policy
 						else
 						{
-							#region Signing Details acquisition
-
-							string CertCN;
-							string CertPath;
-							string SignToolPath;
-							string XMLPolicyPath;
-
-							// Instantiate the Content Dialog
-							SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
-
-							// Show the dialog and await its result
-							ContentDialogResult result = await customDialog.ShowAsync();
-
-							// Ensure primary button was selected
-							if (result is ContentDialogResult.Primary)
+							// If the EnabledUnsignedSystemIntegrityPolicy policy rule option exists
+							// Which means 1st stage already happened
+							if (policy.PolicyOptions is not null && policy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase))
 							{
-								SignToolPath = customDialog.SignToolPath!;
-								CertPath = customDialog.CertificatePath!;
-								CertCN = customDialog.CertificateCommonName!;
-								XMLPolicyPath = customDialog.XMLPolicyPath!;
+								// And if system was rebooted once after performing the 1st removal stage
+								if (VerifyRemovalEligibility(policy.PolicyID!))
+								{
+									CiToolHelper.RemovePolicy(policy.PolicyID!);
 
-								// Sometimes the content dialog lingers on or re-appears so making sure it hides
-								customDialog.Hide();
+									// Remove the PolicyID from the SignedPolicyStage1RemovalTimes dictionary
+									UserConfiguration.RemoveSignedPolicyStage1RemovalTime(policy.PolicyID!);
+								}
+								else
+								{
+									// Create and display a ContentDialog
+									ContentDialog dialog = new()
+									{
+										Title = "Warning",
+										Content = $"Before you can safely remove the signed policy named '{policy.FriendlyName}' with the ID '{policy.PolicyID}', you must restart your system.",
+										PrimaryButtonText = "I Understand",
+										BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
+										BorderThickness = new Thickness(1),
+										XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
+									};
 
+									// Show the dialog and wait for user response
+									_ = await dialog.ShowAsync();
+
+									// Exit the method, nothing more can be done about the selected policy
+									return;
+								}
 							}
+
+							// Treat it as a new signed policy removal
 							else
 							{
-								return;
+
+
+								#region Signing Details acquisition
+
+								string CertCN;
+								string CertPath;
+								string SignToolPath;
+								string XMLPolicyPath;
+
+								// Instantiate the Content Dialog
+								SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
+
+								// Show the dialog and await its result
+								ContentDialogResult result = await customDialog.ShowAsync();
+
+								// Ensure primary button was selected
+								if (result is ContentDialogResult.Primary)
+								{
+									SignToolPath = customDialog.SignToolPath!;
+									CertPath = customDialog.CertificatePath!;
+									CertCN = customDialog.CertificateCommonName!;
+									XMLPolicyPath = customDialog.XMLPolicyPath!;
+
+									// Sometimes the content dialog lingers on or re-appears so making sure it hides
+									customDialog.Hide();
+
+								}
+								else
+								{
+									return;
+								}
+
+								#endregion
+
+								// Add the unsigned policy rule option to the policy
+								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+
+								// Making sure SupplementalPolicySigners do not exist in the XML policy
+								CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
+
+								// Define the path for the CIP file
+								string randomString = GUIDGenerator.GenerateUniqueGUID();
+								string xmlFileName = Path.GetFileName(XMLPolicyPath);
+								string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
+
+								string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
+
+								// Convert the XML file to CIP, overwriting the unsigned one
+								PolicyToCIPConverter.Convert(XMLPolicyPath, CIPFilePath);
+
+								// Sign the CIP
+								SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
+
+								// Rename the .p7 signed file to .cip
+								File.Move(CIPp7SignedFilePath, CIPFilePath, true);
+
+								// Deploy the signed CIP file
+								CiToolHelper.UpdatePolicy(CIPFilePath);
+
+								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLPolicyPath);
+
+								// The time of first stage of the signed policy removal
+								// Since policy object has the full ID, in upper case with curly brackets,
+								// We need to normalize them to match what the CiPolicyInfo class uses
+								UserConfiguration.AddSignedPolicyStage1RemovalTime(policyObj.PolicyID.Trim('{', '}').ToLowerInvariant(), DateTime.UtcNow);
 							}
-
-							#endregion
-
-							// Add the unsigned policy rule option to the policy
-							CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
-
-							// Making sure SupplementalPolicySigners do not exist in the XML policy
-							CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
-
-							// Define the path for the CIP file
-							string randomString = GUIDGenerator.GenerateUniqueGUID();
-							string xmlFileName = Path.GetFileName(XMLPolicyPath);
-							string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
-
-							string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
-
-							// Convert the XML file to CIP, overwriting the unsigned one
-							PolicyToCIPConverter.Convert(XMLPolicyPath, CIPFilePath);
-
-							// Sign the CIP
-							SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
-
-							// Rename the .p7 signed file to .cip
-							File.Move(CIPp7SignedFilePath, CIPFilePath, true);
-
-							// Deploy the signed CIP file
-							CiToolHelper.UpdatePolicy(CIPFilePath);
-
 						}
 					}
-
-
-					// Refresh the DataGrid's policies and their count
-					RetrievePolicies();
 				}
 			}
 		}
 
 		finally
 		{
+			// Refresh the DataGrid's policies and their count
+			RetrievePolicies();
+
 			DeployedPolicies.IsHitTestVisible = true;
 			RetrievePoliciesButton.IsEnabled = true;
 			SearchBox.IsEnabled = true;
@@ -658,5 +697,37 @@ public sealed partial class ViewCurrentPolicies : Page
 	}
 
 #pragma warning restore CA1822
+
+
+	/// <summary>
+	/// If returns true, the signed policy can be removed
+	/// </summary>
+	/// <param name="policyID"></param>
+	/// <returns></returns>
+	private static bool VerifyRemovalEligibility(string policyID)
+	{
+		// When system was last reboot
+		DateTime lastRebootTimeUtc = DateTime.UtcNow - TimeSpan.FromMilliseconds(Environment.TickCount64);
+
+		Logger.Write($"System's last reboot was {lastRebootTimeUtc} (UTC)");
+
+		// When the policy's 1st stage was completed
+		DateTime? stage1RemovalTime = UserConfiguration.QuerySignedPolicyStage1RemovalTime(policyID);
+
+		if (stage1RemovalTime is not null)
+		{
+			Logger.Write($"Signed policy with the ID '{policyID}' completed its 1st stage at {stage1RemovalTime} (UTC)");
+
+			if (stage1RemovalTime < lastRebootTimeUtc)
+			{
+				Logger.Write("Signed policy is safe to be removed because system was restarted after 1st stage");
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 }

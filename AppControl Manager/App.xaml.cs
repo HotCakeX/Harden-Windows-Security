@@ -2,7 +2,8 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Logging;
+using AppControlManager.AppSettings;
+using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -57,7 +58,7 @@ public partial class App : Application
 		#region
 
 		// Check for the SoundSetting in the local settings
-		bool soundSetting = AppSettings.GetSetting<bool>(AppSettings.SettingKeys.SoundSetting);
+		bool soundSetting = AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.SoundSetting);
 
 		if (soundSetting)
 		{

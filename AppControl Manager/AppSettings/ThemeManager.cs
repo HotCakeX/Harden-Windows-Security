@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AppControlManager;
+namespace AppControlManager.AppSettings;
 
 // Custom EventArgs class for the event
 internal sealed class BackgroundChangedEventArgs(string? newBackground) : EventArgs

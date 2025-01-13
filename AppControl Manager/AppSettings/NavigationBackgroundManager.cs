@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AppControlManager;
+namespace AppControlManager.AppSettings;
 
 // Custom EventArgs class for navigation background changes
 internal sealed class NavigationBackgroundChangedEventArgs(bool isBackgroundOn) : EventArgs

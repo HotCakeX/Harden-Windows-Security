@@ -6,7 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.Logging;
+using AppControlManager.Main;
+using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
 using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI;
@@ -18,7 +19,6 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
 namespace AppControlManager.Pages;
-
 
 public sealed partial class ViewCurrentPolicies : Page
 {

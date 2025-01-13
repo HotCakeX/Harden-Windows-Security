@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AppControlManager.Logging;
+using AppControlManager.AppSettings;
+using AppControlManager.IntelGathering;
+using AppControlManager.Main;
+using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.UI.ViewManagement;
-using static AppControlManager.AppSettings;
-
+using static AppControlManager.AppSettings.AppSettingsCls;
 
 namespace AppControlManager.Pages;
 

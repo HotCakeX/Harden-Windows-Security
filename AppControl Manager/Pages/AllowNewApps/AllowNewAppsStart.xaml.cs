@@ -7,7 +7,8 @@ using System.Numerics;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.IntelGathering;
-using AppControlManager.Logging;
+using AppControlManager.Main;
+using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
@@ -16,6 +17,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+
 
 namespace AppControlManager.Pages;
 

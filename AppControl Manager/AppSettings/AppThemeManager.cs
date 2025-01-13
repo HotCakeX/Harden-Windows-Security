@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AppControlManager;
+namespace AppControlManager.AppSettings;
 
 // Custom EventArgs class for app theme changes
 internal sealed class AppThemeChangedEventArgs(string? newTheme) : EventArgs

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using AppControlManager.IntelGathering;
-using AppControlManager.Logging;
+using AppControlManager.Others;
 
 namespace AppControlManager.XMLOps;
 

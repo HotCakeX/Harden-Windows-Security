@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AppControlManager;
+namespace AppControlManager.AppSettings;
 
 // Custom EventArgs class for navigation view location changes
 internal sealed class NavigationViewLocationChangedEventArgs(string newLocation) : EventArgs

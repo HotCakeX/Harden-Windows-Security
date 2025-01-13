@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AppControlManager;
+namespace AppControlManager.AppSettings;
 
 // Custom EventArgs class for sound setting changes
 internal sealed class SoundSettingChangedEventArgs(bool isSoundOn) : EventArgs

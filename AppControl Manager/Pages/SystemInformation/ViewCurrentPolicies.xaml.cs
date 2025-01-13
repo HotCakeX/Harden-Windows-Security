@@ -345,14 +345,14 @@ public sealed partial class ViewCurrentPolicies : Page
 									CiToolHelper.RemovePolicy(policy.PolicyID!);
 
 									// Remove the PolicyID from the SignedPolicyStage1RemovalTimes dictionary
-									UserConfiguration.RemoveKey(policy.PolicyID!);
+									UserConfiguration.RemoveSignedPolicyStage1RemovalTime(policy.PolicyID!);
 								}
 								else
 								{
 									// Create and display a ContentDialog
 									ContentDialog dialog = new()
 									{
-										Title = "WARNING",
+										Title = "Warning",
 										Content = $"Before you can safely remove the signed policy named '{policy.FriendlyName}' with the ID '{policy.PolicyID}', you must restart your system.",
 										PrimaryButtonText = "I Understand",
 										BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
@@ -367,6 +367,8 @@ public sealed partial class ViewCurrentPolicies : Page
 									return;
 								}
 							}
+
+							// Treat it as a new signed policy removal
 							else
 							{
 
@@ -433,7 +435,7 @@ public sealed partial class ViewCurrentPolicies : Page
 								// The time of first stage of the signed policy removal
 								// Since policy object has the full ID, in upper case with curly brackets,
 								// We need to normalize them to match what the CiPolicyInfo class uses
-								UserConfiguration.Add(policyObj.PolicyID.Trim('{', '}').ToLowerInvariant(), DateTime.UtcNow);
+								UserConfiguration.AddSignedPolicyStage1RemovalTime(policyObj.PolicyID.Trim('{', '}').ToLowerInvariant(), DateTime.UtcNow);
 							}
 						}
 					}
@@ -710,11 +712,11 @@ public sealed partial class ViewCurrentPolicies : Page
 		Logger.Write($"System's last reboot was {lastRebootTimeUtc} (UTC)");
 
 		// When the policy's 1st stage was completed
-		DateTime? stage1RemovalTime = UserConfiguration.Query(policyID);
+		DateTime? stage1RemovalTime = UserConfiguration.QuerySignedPolicyStage1RemovalTime(policyID);
 
 		if (stage1RemovalTime is not null)
 		{
-			Logger.Write($"Signed policy with the ID '{policyID}' completed its 1st state at {stage1RemovalTime} (UTC)");
+			Logger.Write($"Signed policy with the ID '{policyID}' completed its 1st stage at {stage1RemovalTime} (UTC)");
 
 			if (stage1RemovalTime < lastRebootTimeUtc)
 			{

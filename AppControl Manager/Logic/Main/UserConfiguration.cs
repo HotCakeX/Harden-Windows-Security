@@ -265,7 +265,7 @@ public sealed partial class UserConfiguration(
 			Logger.Write($"Error reading or parsing the user configuration file: {ex.Message} A new configuration with default values will be created.");
 
 			// Create a new configuration with default values and write it to the file
-			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null, null);
+			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null, null, null);
 			WriteUserConfiguration(defaultConfig);
 
 			return defaultConfig;
@@ -382,7 +382,7 @@ public sealed partial class UserConfiguration(
 	/// </summary>
 	/// <param name="key">The key to add.</param>
 	/// <param name="value">The value to associate with the key.</param>
-	internal static void Add(string key, DateTime value)
+	internal static void AddSignedPolicyStage1RemovalTime(string key, DateTime value)
 	{
 		// Get the current user configuration
 		UserConfiguration currentConfig = ReadUserConfiguration();
@@ -406,7 +406,7 @@ public sealed partial class UserConfiguration(
 	/// </summary>
 	/// <param name="key">The key to query.</param>
 	/// <returns>The value associated with the key, or null if the key does not exist.</returns>
-	internal static DateTime? Query(string key)
+	internal static DateTime? QuerySignedPolicyStage1RemovalTime(string key)
 	{
 		// Get the current user configuration
 		UserConfiguration currentConfig = ReadUserConfiguration();
@@ -428,7 +428,7 @@ public sealed partial class UserConfiguration(
 	/// </summary>
 	/// <param name="key">The key to remove.</param>
 	/// <returns>True if the key was successfully removed; false if the key was not found.</returns>
-	internal static void RemoveKey(string key)
+	internal static void RemoveSignedPolicyStage1RemovalTime(string key)
 	{
 		// Get the current user configuration
 		UserConfiguration currentConfig = ReadUserConfiguration();

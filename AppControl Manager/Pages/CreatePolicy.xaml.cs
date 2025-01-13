@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using AppControlManager.Main;
+using AppControlManager.Others;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI;
 using Microsoft.UI.Text;

@@ -1096,3 +1096,9 @@ dotnet_diagnostic.CA1002.severity = error
 
 # CA1034: Nested types should not be visible
 dotnet_diagnostic.CA1034.severity = error
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = error
+
+# IDE0320: Make anonymous function static
+dotnet_diagnostic.IDE0320.severity = error

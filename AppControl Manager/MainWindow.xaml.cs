@@ -5,7 +5,9 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using AnimatedVisuals;
-using AppControlManager.Logging;
+using AppControlManager.AppSettings;
+using AppControlManager.Main;
+using AppControlManager.Others;
 using AppControlManager.Sidebar;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -306,7 +308,7 @@ public sealed partial class MainWindow : Window
 			   // If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
 			   // If a new version is available.
 			   // Will also check for update if it's null meaning user hasn't configured the auto update check yet
-			   if (AppSettings.TryGetSetting<bool?>(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
+			   if (AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
 			   {
 
 				   Logger.Write("Checking for update on startup");
@@ -339,16 +341,16 @@ public sealed partial class MainWindow : Window
 			.First(item => string.Equals(item.Content.ToString(), "Create Policy", StringComparison.OrdinalIgnoreCase));
 
 		// Set the initial background setting based on the user's settings
-		OnNavigationBackgroundChanged(null, new(AppSettings.GetSetting<bool>(AppSettings.SettingKeys.NavViewBackground)));
+		OnNavigationBackgroundChanged(null, new(AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.NavViewBackground)));
 
 		// Set the initial BackDrop setting based on the user's settings
-		OnBackgroundChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.BackDropBackground)));
+		OnBackgroundChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.BackDropBackground)));
 
 		// Set the initial App Theme based on the user's settings
-		OnAppThemeChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.AppTheme)));
+		OnAppThemeChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.AppTheme)));
 
 		// Set the initial Icons styles abased on the user's settings
-		OnIconsStylesChanged(null, new(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle)));
+		OnIconsStylesChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle)));
 
 		// Restore window size on startup
 		RestoreWindowSize();
@@ -496,8 +498,8 @@ public sealed partial class MainWindow : Window
 		SizeInt32 size = appWindow.Size;
 
 		// Save to window width and height to the app settings
-		AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowWidth, size.Width);
-		AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowHeight, size.Height);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowWidth, size.Width);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowHeight, size.Height);
 
 		Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
 
@@ -507,11 +509,11 @@ public sealed partial class MainWindow : Window
 		// Save the maximized status of the window before closing to the app settings
 		if (windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED)
 		{
-			AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowIsMaximized, true);
+			AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowIsMaximized, true);
 		}
 		else
 		{
-			AppSettings.SaveSetting(AppSettings.SettingKeys.MainWindowIsMaximized, false);
+			AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowIsMaximized, false);
 		}
 	}
 
@@ -525,7 +527,7 @@ public sealed partial class MainWindow : Window
 		AppWindow appWindow = GetAppWindowForCurrentWindow();
 
 		// If the window was last maximized then restore it to maximized
-		if (AppSettings.GetSetting<bool>(AppSettings.SettingKeys.MainWindowIsMaximized))
+		if (AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.MainWindowIsMaximized))
 		{
 			// Set the presenter to maximized
 			((OverlappedPresenter)appWindow.Presenter).Maximize();
@@ -535,8 +537,8 @@ public sealed partial class MainWindow : Window
 		else
 		{
 			// Retrieve stored values
-			int width = AppSettings.GetSetting<int>(AppSettings.SettingKeys.MainWindowWidth);
-			int height = AppSettings.GetSetting<int>(AppSettings.SettingKeys.MainWindowHeight);
+			int width = AppSettingsCls.GetSetting<int>(AppSettingsCls.SettingKeys.MainWindowWidth);
+			int height = AppSettingsCls.GetSetting<int>(AppSettingsCls.SettingKeys.MainWindowHeight);
 
 			// If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
 			if (width > 200 && height > 200)
@@ -1169,7 +1171,7 @@ public sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Light;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 
 						AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -1194,7 +1196,7 @@ public sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Dark;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 
 						AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -1223,7 +1225,7 @@ public sealed partial class MainWindow : Window
 					if (currentColorMode is ElementTheme.Dark)
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 
 							AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -1244,7 +1246,7 @@ public sealed partial class MainWindow : Window
 					else
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(AppSettings.GetSetting<string>(AppSettings.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 
 							AllowNewAppsNavItem.Icon = new AnimatedIcon
@@ -1668,7 +1670,7 @@ public sealed partial class MainWindow : Window
 		SidebarBasePolicyPathTextBox.Text = UserConfiguration.Get().UnsignedPolicyPath;
 
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
-		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettings.TryGetSetting<bool?>(AppSettings.SettingKeys.AutomaticAssignmentSidebar) ?? true;
+		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar) ?? true;
 	}
 
 
@@ -1712,7 +1714,7 @@ public sealed partial class MainWindow : Window
 		AutomaticAssignmentSidebarToggleSwitch.IsOn = !AutomaticAssignmentSidebarToggleSwitch.IsOn;
 
 		// Save the status in app settings
-		AppSettings.SaveSetting(AppSettings.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
 	}
 
 
@@ -1724,7 +1726,7 @@ public sealed partial class MainWindow : Window
 	private void AutomaticAssignmentSidebarToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 	{
 		// Save the status in app settings
-		AppSettings.SaveSetting(AppSettings.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
 	}
 
 

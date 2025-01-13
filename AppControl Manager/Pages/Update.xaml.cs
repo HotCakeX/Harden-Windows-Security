@@ -9,8 +9,9 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AppControlManager.Logging;
-using AppControlManager.Logic;
+using AppControlManager.AppSettings;
+using AppControlManager.Main;
+using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -416,7 +417,7 @@ public sealed partial class Update : Page
 	/// <param name="e"></param>
 	private void AutoUpdateCheckToggle_Toggled(object sender, RoutedEventArgs e)
 	{
-		AppSettings.SaveSetting(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
 	}
 
 
@@ -432,7 +433,7 @@ public sealed partial class Update : Page
 		base.OnNavigatedTo(e);
 
 		// Set the toggle for Auto Update Check based on app settings
-		AutoUpdateCheckToggle.IsOn = AppSettings.TryGetSetting<bool?>(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup) ?? true;
+		AutoUpdateCheckToggle.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true;
 
 		// Grab the latest text for the CheckForUpdateButton button
 		CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
@@ -459,7 +460,7 @@ public sealed partial class Update : Page
 	{
 		AutoUpdateCheckToggle.IsOn = !AutoUpdateCheckToggle.IsOn;
 
-		AppSettings.SaveSetting(AppSettings.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
 	}
 
 

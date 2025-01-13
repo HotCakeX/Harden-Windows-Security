@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AppControlManager.Logging;
+using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.SiPolicy;

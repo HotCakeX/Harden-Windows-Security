@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AppControlManager;
+namespace AppControlManager.AppSettings;
 
 // Custom EventArgs class for Icons Style changes
 internal sealed class IconsStyleChangedEventArgs(string? newIconsStyle) : EventArgs

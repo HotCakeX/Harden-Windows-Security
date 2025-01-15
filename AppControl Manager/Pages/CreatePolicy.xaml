@@ -349,6 +349,57 @@ Style="{StaticResource AccentButtonStyle}" Click="RecommendedUserModeBlockRulesC
                 </controls:SettingsCard>
 
 
+                <!-- Strict Kernel-mode policy -->
+
+                <controls:SettingsExpander x:Name="StrictKernelModePolicySection"
+                     Description="This policy will only enforce Kernel-mode files and has no effect on user-mode files"
+                     Header="Create Strict Kernel-mode Policy"
+                     HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}" IsExpanded="False">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="StrictKernelModePolicyInfoBar"
+                        Title="Current Status"
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        IsOpen="False"
+                        IsClosable="False"
+                        Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button x:Name="StrictKernelModePolicyCreateButton" Content="Create" Click="StrictKernelModePolicyCreateButton_Click"
+                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"  />
+
+                        <ToggleButton x:Name="StrictKernelModePolicyToggleButtonForDeploy" Content="Deploy"
+                             Margin="0,0,15,0" />
+
+                        <TeachingTip x:Name="PrepareCreateButtonTeachingTip"
+                            Target="{x:Bind StrictKernelModePolicyCreateButton}" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
+                                Header="Audit" IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModePolicyAuditSettingsCard_Click">
+                            <ToggleSwitch x:Name="StrictKernelModePolicyAudit" />
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard" Description="Do not allow flight root certificates"
+                             Header="No flight root certificates"
+                             IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click">
+
+                            <ToggleSwitch x:Name="StrictKernelModePolicyUseNoFlightRootsToggleSwitch" />
+
+                        </controls:SettingsCard>
+
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
             </StackPanel>
 
         </Grid>

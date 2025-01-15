@@ -301,9 +301,6 @@ public sealed partial class Settings : Page
 		SignToolCustomPathTextBox.Text = userConfig.SignToolCustomPath ?? string.Empty;
 		CertificateCommonNameAutoSuggestBox.Text = userConfig.CertificateCommonName ?? string.Empty;
 		CertificatePathTextBox.Text = userConfig.CertificatePath ?? string.Empty;
-		StrictKernelPolicyGUIDTextBox.Text = userConfig.StrictKernelPolicyGUID?.ToString() ?? string.Empty;
-		StrictKernelNoFlightRootsPolicyGUIDTextBox.Text = userConfig.StrictKernelNoFlightRootsPolicyGUID?.ToString() ?? string.Empty;
-		LastUpdateCheckTextBox.Text = userConfig.LastUpdateCheck?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? string.Empty;
 		StrictKernelModePolicyTimeTextBox.Text = userConfig.StrictKernelModePolicyTimeOfDeployment?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? string.Empty;
 	}
 
@@ -332,15 +329,6 @@ public sealed partial class Settings : Page
 			case "CertificatePath":
 				newValue = CertificatePathTextBox.Text;
 				break;
-			case "StrictKernelPolicyGUID":
-				newValue = StrictKernelPolicyGUIDTextBox.Text;
-				break;
-			case "StrictKernelNoFlightRootsPolicyGUID":
-				newValue = StrictKernelNoFlightRootsPolicyGUIDTextBox.Text;
-				break;
-			case "LastUpdateCheck":
-				newValue = LastUpdateCheckTextBox.Text;
-				break;
 			case "StrictKernelModePolicyTime":
 				newValue = StrictKernelModePolicyTimeTextBox.Text;
 				break;
@@ -349,15 +337,12 @@ public sealed partial class Settings : Page
 		}
 
 		_ = UserConfiguration.Set(
-			string.Equals(fieldName, "SignedPolicyPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			string.Equals(fieldName, "UnsignedPolicyPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			string.Equals(fieldName, "SignToolCustomPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			string.Equals(fieldName, "CertificateCommonName", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			string.Equals(fieldName, "StrictKernelPolicyGUID", StringComparison.OrdinalIgnoreCase) ? TryParseGuid(newValue) : null,
-			string.Equals(fieldName, "StrictKernelNoFlightRootsPolicyGUID", StringComparison.OrdinalIgnoreCase) ? TryParseGuid(newValue) : null,
-			string.Equals(fieldName, "LastUpdateCheck", StringComparison.OrdinalIgnoreCase) ? TryParseDateTime(newValue) : null,
-			string.Equals(fieldName, "StrictKernelModePolicyTime", StringComparison.OrdinalIgnoreCase) ? TryParseDateTime(newValue) : null
+			SignedPolicyPath: string.Equals(fieldName, "SignedPolicyPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
+			UnsignedPolicyPath: string.Equals(fieldName, "UnsignedPolicyPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
+			SignToolCustomPath: string.Equals(fieldName, "SignToolCustomPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
+			CertificateCommonName: string.Equals(fieldName, "CertificateCommonName", StringComparison.OrdinalIgnoreCase) ? newValue : null,
+			CertificatePath: string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
+			StrictKernelModePolicyTimeOfDeployment: string.Equals(fieldName, "StrictKernelModePolicyTime", StringComparison.OrdinalIgnoreCase) ? TryParseDateTime(newValue) : null
 		);
 
 		Logger.Write($"Edited {fieldName} to {newValue}");
@@ -377,7 +362,6 @@ public sealed partial class Settings : Page
 			string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase),
 			string.Equals(fieldName, "StrictKernelPolicyGUID", StringComparison.OrdinalIgnoreCase),
 			string.Equals(fieldName, "StrictKernelNoFlightRootsPolicyGUID", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "LastUpdateCheck", StringComparison.OrdinalIgnoreCase),
 			string.Equals(fieldName, "StrictKernelModePolicyTime", StringComparison.OrdinalIgnoreCase)
 		);
 
@@ -397,15 +381,6 @@ public sealed partial class Settings : Page
 				break;
 			case "CertificatePath":
 				CertificatePathTextBox.Text = string.Empty;
-				break;
-			case "StrictKernelPolicyGUID":
-				StrictKernelPolicyGUIDTextBox.Text = string.Empty;
-				break;
-			case "StrictKernelNoFlightRootsPolicyGUID":
-				StrictKernelNoFlightRootsPolicyGUIDTextBox.Text = string.Empty;
-				break;
-			case "LastUpdateCheck":
-				LastUpdateCheckTextBox.Text = string.Empty;
 				break;
 			case "StrictKernelModePolicyTime":
 				StrictKernelModePolicyTimeTextBox.Text = string.Empty;

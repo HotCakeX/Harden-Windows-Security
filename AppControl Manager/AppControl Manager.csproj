@@ -207,6 +207,7 @@
     <None Remove="Pages\MicrosoftDocumentation.xaml" />
     <None Remove="Pages\Settings.xaml" />
     <None Remove="Pages\Simulation.xaml" />
+    <None Remove="Pages\StrictKernelPolicyScanResults.xaml" />
     <None Remove="Pages\SystemInformation\CodeIntegrityInfo.xaml" />
     <None Remove="Pages\SystemInformation\SystemInformation.xaml" />
     <None Remove="Pages\Update.xaml" />
@@ -215,6 +216,8 @@
     <None Remove="Pages\ViewFileCertificates.xaml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
     <None Remove="Resources\ISGBasedSupplementalPolicy.xml" />
+    <None Remove="Resources\StrictKernelMode.xml" />
+    <None Remove="Resources\StrictKernelMode_NoFlightRoots.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -227,6 +230,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ISGBasedSupplementalPolicy.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\StrictKernelMode.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\StrictKernelMode_NoFlightRoots.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -324,6 +333,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\StrictKernelPolicyScanResults.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\ViewFileCertificates.xaml">

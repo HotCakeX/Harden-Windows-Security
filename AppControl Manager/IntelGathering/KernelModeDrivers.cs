@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
@@ -59,6 +60,20 @@ internal static class KernelModeDrivers
 		bool hasSIP = false;
 		bool isPE = false;
 		UserOrKernelMode Verdict = UserOrKernelMode.UserMode;
+
+
+		// If the file is a .sys file then it's a kernel-mode driver, do not proceed further
+		if (string.Equals(Path.GetExtension(filePath), ".sys", StringComparison.OrdinalIgnoreCase))
+		{
+			return new KernelUserVerdict
+			{
+				Verdict = UserOrKernelMode.KernelMode,
+				IsPE = true,
+				HasSIP = false,
+				Imports = importNames
+			};
+		}
+
 
 		try
 		{

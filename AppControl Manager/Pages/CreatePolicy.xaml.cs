@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI;
 using Microsoft.UI.Text;
@@ -743,6 +745,147 @@ public sealed partial class CreatePolicy : Page
 	}
 
 
+
+
+	#endregion
+
+
+
+
+
+	#region For Strict Kernel-mode policy
+
+
+	/// <summary>
+	/// Event handler to prepare the system for Strict Kernel-mode policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void StrictKernelModePolicyCreateButton_Click(object sender, RoutedEventArgs e)
+	{
+		StrictKernelModePolicyCreateButton.IsEnabled = false;
+		StrictKernelModePolicyToggleButtonForDeploy.IsEnabled = false;
+		StrictKernelModePolicyInfoBar.IsClosable = false;
+		StrictKernelModePolicyInfoBar.IsOpen = true;
+		StrictKernelModePolicySection.IsExpanded = true;
+
+		bool useNoFlightRoots = StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
+
+		bool deploy = StrictKernelModePolicyToggleButtonForDeploy.IsChecked ?? false;
+
+		bool audit = StrictKernelModePolicyAudit.IsOn;
+
+		bool errorsOccurred = false;
+
+		try
+		{
+			StrictKernelModePolicyInfoBar.Message = "Creating the Strict Kernel-mode policy";
+			Logger.Write("Creating the Strict Kernel-mode policy");
+			StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Informational;
+
+			await Task.Run(() =>
+			{
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Strict Kernel-Mode policy Prepare");
+
+				string fileName = useNoFlightRoots ? "StrictKernelMode_NoFlightRoots" : "StrictKernelMode";
+
+				// Path of the policy file in the staging area
+				string policyPath = Path.Combine(stagingArea.FullName, $"{fileName}.xml");
+
+				// path of the policy in the app's resources directory
+				string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+
+				// path of the policy in user configurations directory
+				string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
+
+				// Copy the policy from app's directory to the staging area
+				File.Copy(policyPathInResourcesDir, policyPath, true);
+
+				if (audit)
+				{
+					// Add the audit mode rule option to the policy
+					CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+				}
+
+				// Set policy name and reset the policy ID
+				string policyID = SetCiPolicyInfo.Set(policyPath, true, null, null, null);
+
+				// Save the policyID and time of deployment of the audit mode policy in user configs
+				if (useNoFlightRoots)
+				{
+					_ = UserConfiguration.Set(StrictKernelNoFlightRootsPolicyGUID: Guid.Parse(policyID), StrictKernelModePolicyTimeOfDeployment: DateTime.UtcNow);
+				}
+				else
+				{
+					_ = UserConfiguration.Set(StrictKernelPolicyGUID: Guid.Parse(policyID), StrictKernelModePolicyTimeOfDeployment: DateTime.UtcNow);
+				}
+
+				// Copy the policy to the user configurations directory
+				File.Copy(policyPath, finalPolicyPath, true);
+
+				// If it is to be deployed
+				if (deploy)
+				{
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						StrictKernelModePolicyInfoBar.Message = "Deploying the Strict Kernel-mode policy";
+						Logger.Write("Deploying the Strict Kernel-mode policy");
+					});
+
+					string cipPath = Path.Combine(stagingArea.FullName, $"{fileName}.cip");
+
+					// Convert the XML to CiP
+					PolicyToCIPConverter.Convert(policyPath, cipPath);
+
+					// Deploy the CiP file
+					CiToolHelper.UpdatePolicy(cipPath);
+				}
+
+
+			});
+
+		}
+
+		catch (Exception ex)
+		{
+			StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Error;
+
+			StrictKernelModePolicyInfoBar.Message = $"There was an error creating Strict Kernel-mode policy: {ex.Message}";
+
+			errorsOccurred = true;
+
+			throw;
+		}
+
+		finally
+		{
+
+			if (!errorsOccurred)
+			{
+				StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Success;
+				StrictKernelModePolicyInfoBar.Message = "Successfully created the Strict Kernel-mode policy";
+				Logger.Write("Successfully created the Strict Kernel-mode policy");
+			}
+
+			StrictKernelModePolicyInfoBar.IsClosable = true;
+			StrictKernelModePolicyCreateButton.IsEnabled = true;
+			StrictKernelModePolicyToggleButtonForDeploy.IsEnabled = true;
+		}
+	}
+
+	private void StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn = !StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
+	}
+
+
+
+	private void StrictKernelModePolicyAuditSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		StrictKernelModePolicyAudit.IsOn = !StrictKernelModePolicyAudit.IsOn;
+	}
 
 
 	#endregion

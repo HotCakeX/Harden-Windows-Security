@@ -10,6 +10,7 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -1143,6 +1144,498 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		ISGBasedBasePolicyPath = null;
 		ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
 	}
+
+
+	#endregion
+
+
+
+
+
+	#region Strict Kernel-Mode Supplemental Policy
+
+
+	private string? StrictKernelModeBasePolicyPath;
+
+
+	// Used to store the scan results and as the source for the results DataGrids
+	internal ObservableCollection<FileIdentity> ScanResults = [];
+	internal List<FileIdentity> ScanResultsList = [];
+
+
+
+	private void StrictKernelModeScanButton_Click(object sender, RoutedEventArgs e)
+	{
+		StrictKernelModePerformScans(false);
+	}
+
+	private void DetectedKernelModeFilesDetailsSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		MainWindow.Instance.NavView_Navigate(typeof(StrictKernelPolicyScanResults), null);
+	}
+
+
+
+
+
+
+	/// <summary>
+	/// Browse for Base Policy - Settings Card Click
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void StrictKernelModeBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			StrictKernelModeBasePolicyPath = selectedFile;
+
+			// Add the file path to the GUI's text box
+			StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+
+		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+		StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
+	}
+
+
+	/// <summary>
+	/// Browse for Base Policy - Button Click
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void StrictKernelModeBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			StrictKernelModeBasePolicyPath = selectedFile;
+
+			// Add the file path to the GUI's text box
+			StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+	}
+
+
+
+
+	/// <summary>
+	/// Event handler for the clear button for the text box of selected Base policy path
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		StrictKernelModeBasePolicyPath = null;
+		StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
+	}
+
+
+
+
+	private void StrictKernelModeScanSinceLastRebootButton_Click(object sender, RoutedEventArgs e)
+	{
+		StrictKernelModePerformScans(true);
+	}
+
+
+
+
+	private async void StrictKernelModePerformScans(bool OnlyAfterReboot)
+	{
+		bool ErrorsOccurred = false;
+
+		try
+		{
+			StrictKernelModeScanButton.IsEnabled = false;
+			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = false;
+
+			StrictKernelModeInfoBar.IsClosable = false;
+			StrictKernelModeInfoBar.IsOpen = true;
+			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
+			StrictKernelModeInfoBar.Message = "Scanning the system for events";
+			StrictKernelModeSection.IsExpanded = true;
+
+			// Clear variables responsible for the DataGrid
+			ScanResults.Clear();
+			ScanResultsList.Clear();
+
+
+			// Grab the App Control Logs
+			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents();
+
+			// Filter the logs
+			// Only DLL and SYS files must be included
+			await Task.Run(() =>
+			{
+				if (OnlyAfterReboot)
+				{
+					DateTime lastRebootTime = DateTime.Now - TimeSpan.FromMilliseconds(Environment.TickCount64);
+
+					// Signed kernel-mode files that were run after last reboot
+					Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= lastRebootTime && fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
+				}
+				else
+				{
+					// Signed kernel-mode files
+					Output = [.. Output.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
+				}
+			});
+
+
+
+			// If any logs were generated since audit mode policy was deployed
+			if (Output.Count > 0)
+			{
+				StrictKernelModeInfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
+
+				// Add the event logs to the DataGrid
+				foreach (FileIdentity item in Output)
+				{
+					ScanResults.Add(item);
+					ScanResultsList.Add(item);
+				}
+
+				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
+			}
+			else
+			{
+				StrictKernelModeInfoBar.Message = "No logs were generated during the Audit phase";
+				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Warning;
+				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = false;
+				ErrorsOccurred = true;
+				return;
+			}
+
+
+		}
+
+		catch (Exception ex)
+		{
+			ErrorsOccurred = true;
+
+			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
+			StrictKernelModeInfoBar.Message = $"An error occurred while scanning the system for events: {ex.Message}";
+		}
+		finally
+		{
+			StrictKernelModeScanButton.IsEnabled = true;
+			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = true;
+
+			if (!ErrorsOccurred)
+			{
+				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
+				StrictKernelModeInfoBar.Message = "Successfully scanned the system for events";
+			}
+
+
+
+		}
+	}
+
+
+
+	/// <summary>
+	/// Event handler for the create button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void StrictKernelModeCreateButton_Click(object sender, RoutedEventArgs e)
+	{
+		// Close the teaching tip if it's open when user presses the button
+		// it will be opened again if necessary
+		StrictKernelModeCreateButtonTeachingTip.IsOpen = false;
+
+		if (ScanResults.Count is 0)
+		{
+			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
+			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
+			StrictKernelModeCreateButtonTeachingTip.Subtitle = "No item exists in the detected Kernel-mode files data grid";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(StrictKernelModePolicyNameTextBox.Text))
+		{
+			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
+			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
+			StrictKernelModeCreateButtonTeachingTip.Subtitle = "No policy name was selected for the supplemental policy";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(StrictKernelModeBasePolicyPath))
+		{
+			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
+			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
+			StrictKernelModeCreateButtonTeachingTip.Subtitle = "No Base policy file was selected for the supplemental policy";
+			return;
+		}
+
+		bool ErrorsOccurred = false;
+
+		try
+		{
+			StrictKernelModeCreateButton.IsEnabled = false;
+			StrictKernelModeDeployToggleButton.IsEnabled = false;
+			StrictKernelModeAutoDetectAllDriversSettingsCard.IsEnabled = false;
+			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = false;
+			StrictKernelModeScanButton.IsEnabled = false;
+			StrictKernelModeScanSinceLastRebootButton.IsEnabled = false;
+			StrictKernelModeBrowseForBasePolicyButton.IsEnabled = false;
+
+			StrictKernelModeInfoBar.IsClosable = false;
+			StrictKernelModeInfoBar.IsOpen = true;
+			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
+			StrictKernelModeInfoBar.Message = $"Creating Strict Kernel-mode supplemental policy for {ScanResults.Count} files";
+			StrictKernelModeSection.IsExpanded = true;
+
+
+			bool shouldDeploy = StrictKernelModeDeployToggleButton.IsChecked ?? false;
+
+			string policyNameChosenByUser = string.Empty;
+
+			// Enqueue the work to the UI thread
+			await DispatcherQueue.EnqueueAsync(() =>
+			{
+				policyNameChosenByUser = StrictKernelModePolicyNameTextBox.Text;
+			});
+
+			await Task.Run(() =>
+			{
+
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("StrictKernelModeSupplementalPolicy");
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. ScanResults], level: ScanLevels.FilePublisher);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+
+				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyNameChosenByUser}.xml");
+
+				// Instantiate the user selected Base policy - To get its BasePolicyID
+				CodeIntegrityPolicy codeIntegrityPolicy = new(StrictKernelModeBasePolicyPath, null);
+
+				// Set the BasePolicyID of our new policy to the one from user selected policy
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyNameChosenByUser, codeIntegrityPolicy.BasePolicyID, null);
+
+				// Configure policy rule options
+				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+				// Set policy version
+				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				RemoveUserModeSS.Remove(EmptyPolicyPath);
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+
+				// If user selected to deploy the policy
+				if (shouldDeploy)
+				{
+
+					string msg4 = "Deploying the Supplemental policy on the system";
+
+					Logger.Write(msg4);
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						StrictKernelModeInfoBar.Message = msg4;
+					});
+
+
+					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+
+					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+
+
+			});
+
+		}
+
+		catch (Exception ex)
+		{
+			ErrorsOccurred = true;
+
+			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
+			StrictKernelModeInfoBar.Message = $"There was an error: {ex.Message}";
+
+			throw;
+		}
+
+		finally
+		{
+
+			if (!ErrorsOccurred)
+			{
+				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
+				StrictKernelModeInfoBar.Message = "Successfully created strict Kernel-mode supplemental policy";
+			}
+
+
+			StrictKernelModeCreateButton.IsEnabled = true;
+			StrictKernelModeDeployToggleButton.IsEnabled = true;
+			StrictKernelModeAutoDetectAllDriversSettingsCard.IsEnabled = true;
+			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = true;
+			StrictKernelModeScanButton.IsEnabled = true;
+			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
+			StrictKernelModeBrowseForBasePolicyButton.IsEnabled = true;
+
+		}
+
+	}
+
+
+
+
+	/// <summary>
+	/// Event handler for the button that auto detects system drivers
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void StrictKernelModeAutoDetectAllDriversButton_Click(object sender, RoutedEventArgs e)
+	{
+		DriverAutoDetector();
+	}
+
+	private async void DriverAutoDetector()
+	{
+		bool ErrorsOccurred = false;
+
+		try
+		{
+
+			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = false;
+			StrictKernelModeScanButton.IsEnabled = false;
+			StrictKernelModeScanSinceLastRebootButton.IsEnabled = false;
+
+			StrictKernelModeInfoBar.IsClosable = false;
+			StrictKernelModeInfoBar.IsOpen = true;
+			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
+			StrictKernelModeInfoBar.Message = "Scanning the system for drivers";
+			StrictKernelModeSection.IsExpanded = true;
+
+
+			List<FileInfo> kernelModeDriversList = [];
+
+			ScanResults.Clear();
+			ScanResultsList.Clear();
+
+			await Task.Run(() =>
+			{
+
+				// Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
+
+				// Get the system drive
+				string systemDrive = Environment.GetEnvironmentVariable("SystemDrive")!;
+
+				// Define the directory path
+				string directoryPath = Path.Combine(systemDrive, "Windows", "Boot", "Resources");
+
+				// Iterate through each directory in the specified path
+				foreach (string directory in Directory.GetDirectories(directoryPath))
+				{
+					// Add the desired file path to the list
+					kernelModeDriversList.Add(new FileInfo(Path.Combine(directory, "bootres.dll.mui")));
+				}
+
+				DirectoryInfo sys32Dir = new(Path.Combine(systemDrive, "Windows", "System32"));
+
+				List<FileInfo> filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
+
+				foreach (FileInfo file in filesOutput)
+				{
+					kernelModeDriversList.Add(file);
+				}
+
+			});
+
+
+
+			if (kernelModeDriversList.Count > 0)
+			{
+
+				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
+			}
+			else
+			{
+				StrictKernelModeInfoBar.Message = "No kernel-mode drivers could be detected";
+				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Warning;
+				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = false;
+				ErrorsOccurred = true;
+				return;
+			}
+
+			StrictKernelModeInfoBar.Message = $"Scanning {kernelModeDriversList.Count} files";
+
+			await Task.Run(() =>
+			{
+
+				// Scan all of the detected files from the user selected directories
+				HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 2, null, null);
+
+				// Add the results to the DataGrid
+				foreach (FileIdentity item in LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0)) // && fileIdentity.SignatureStatus is SignatureStatus.IsSigned
+				{
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						ScanResults.Add(item);
+						ScanResultsList.Add(item);
+
+					});
+				}
+
+			});
+
+
+		}
+
+		catch (Exception ex)
+		{
+			ErrorsOccurred = true;
+
+			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
+			StrictKernelModeInfoBar.Message = $"There was an error: {ex.Message}";
+
+			throw;
+		}
+		finally
+		{
+
+			if (!ErrorsOccurred)
+			{
+				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
+				StrictKernelModeInfoBar.Message = "Successfully scanned the system for drivers";
+			}
+
+			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = true;
+			StrictKernelModeScanButton.IsEnabled = true;
+			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
+		}
+	}
+
+
+
+
+	private void StrictKernelModeAutoDetectAllDriversSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		DriverAutoDetector();
+	}
+
 
 
 	#endregion

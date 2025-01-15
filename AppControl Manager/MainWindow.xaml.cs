@@ -61,12 +61,12 @@ public sealed partial class MainWindow : Window
 	{
 		[typeof(Pages.CreatePolicy)] = new PageTitleMap
 		{
-			Titles = ["Create Policy"],
+			Titles = [GlobalVars.GetString("CreatePolicyNavItem/Content")],
 			Pages = [typeof(Pages.CreatePolicy)]
 		},
 		[typeof(Pages.GetCIHashes)] = new PageTitleMap
 		{
-			Titles = ["Get Code Integrity Hashes"],
+			Titles = [GlobalVars.GetString("GetCodeIntegrityHashesNavItem/Content")],
 			Pages = [typeof(Pages.GetCIHashes)]
 		},
 		[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
@@ -81,7 +81,7 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
 		{
-			Titles = ["Get Secure Policy Settings"],
+			Titles = [GlobalVars.GetString("GetSecurePolicySettingsNavItem/Content")],
 			Pages = [typeof(Pages.GetSecurePolicySettings)]
 		},
 		[typeof(Pages.Settings)] = new PageTitleMap
@@ -91,12 +91,12 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.SystemInformation)] = new PageTitleMap
 		{
-			Titles = ["System Information"],
+			Titles = [GlobalVars.GetString("SystemInformationNavItem/Content")],
 			Pages = [typeof(Pages.SystemInformation)]
 		},
 		[typeof(Pages.ConfigurePolicyRuleOptions)] = new PageTitleMap
 		{
-			Titles = ["Configure Policy Rule Options"],
+			Titles = [GlobalVars.GetString("ConfigurePolicyRuleOptionsNavItem/Content")],
 			Pages = [typeof(Pages.ConfigurePolicyRuleOptions)]
 		},
 		[typeof(Pages.Logs)] = new PageTitleMap
@@ -106,77 +106,82 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.Simulation)] = new PageTitleMap
 		{
-			Titles = ["Simulation"],
+			Titles = [GlobalVars.GetString("SimulationNavItem/Content")],
 			Pages = [typeof(Pages.Simulation)]
 		},
 		[typeof(Pages.Update)] = new PageTitleMap
 		{
-			Titles = ["Update", "Custom MSIX Path"],
+			Titles = [GlobalVars.GetString("Update"), "Custom MSIX Path"],
 			Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
 		{
-			Titles = ["Update", "Custom MSIX Path"],
+			Titles = [GlobalVars.GetString("Update"), "Custom MSIX Path"],
 			Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.Deployment)] = new PageTitleMap
 		{
-			Titles = ["Deploy App Control Policy"],
+			Titles = [GlobalVars.GetString("DeploymentNavItem/Content")],
 			Pages = [typeof(Pages.Deployment)]
 		},
 		[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
 		{
-			Titles = ["Create policy from Event Logs"],
+			Titles = [GlobalVars.GetString("CreatePolicyFromEventLogsNavItem/Content")],
 			Pages = [typeof(Pages.EventLogsPolicyCreation)]
 		},
 		[typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
 		{
-			Titles = ["MDE Advanced Hunting"],
+			Titles = [GlobalVars.GetString("CreatePolicyFromMDEAHNavItem/Content")],
 			Pages = [typeof(Pages.MDEAHPolicyCreation)]
 		},
 		[typeof(Pages.AllowNewApps)] = new PageTitleMap
 		{
-			Titles = ["Allow New Apps"],
+			Titles = [GlobalVars.GetString("AllowNewAppsNavItem/Content")],
 			Pages = [typeof(Pages.AllowNewApps)]
 		},
 		[typeof(Pages.BuildNewCertificate)] = new PageTitleMap
 		{
-			Titles = ["Build New Certificate"],
+			Titles = [GlobalVars.GetString("BuildNewCertificateNavItem/Content")],
 			Pages = [typeof(Pages.BuildNewCertificate)]
 		},
 		[typeof(Pages.MergePolicies)] = new PageTitleMap
 		{
-			Titles = ["Merge App Control Policies"],
+			Titles = [GlobalVars.GetString("MergePoliciesNavItem/Content")],
 			Pages = [typeof(Pages.MergePolicies)]
 		},
 		[typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
 		{
-			Titles = ["Create Supplemental Policy", "Scan Results"],
+			Titles = [GlobalVars.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
 		},
 		[typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)] = new PageTitleMap // sub-page
 		{
-			Titles = ["Create Supplemental Policy", "Scan Results"],
+			Titles = [GlobalVars.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
+		},
+		[typeof(Pages.StrictKernelPolicyScanResults)] = new PageTitleMap // sub-page
+		{
+			Titles = [GlobalVars.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.GetString("ScanResults")],
+			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.StrictKernelPolicyScanResults)]
 		},
 		[typeof(Pages.CreateDenyPolicy)] = new PageTitleMap
 		{
-			Titles = ["Create Deny Policy", "Scan Results"],
+			Titles = [GlobalVars.GetString("CreateDenyPolicyNavItem/Content"), GlobalVars.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
 		},
 		[typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)] = new PageTitleMap
 		{
-			Titles = ["Create Deny Policy", "Scan Results"],
+			Titles = [GlobalVars.GetString("CreateDenyPolicyNavItem/Content"), GlobalVars.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
 		},
 		[typeof(Pages.ValidatePolicy)] = new PageTitleMap
 		{
-			Titles = ["Validate Policies"],
+			Titles = [GlobalVars.GetString("ValidatePoliciesNavItem/Content")],
 			Pages = [typeof(Pages.ValidatePolicy)]
 		},
 		[typeof(Pages.ViewFileCertificates)] = new PageTitleMap
 		{
-			Titles = ["View File Certificates"],
+			Titles = [GlobalVars.GetString("ViewFileCertificatesNavItem/Content")],
 			Pages = [typeof(Pages.ViewFileCertificates)]
 		}
 	};
@@ -184,7 +189,7 @@ public sealed partial class MainWindow : Window
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	private readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb("Create Policy", typeof(Pages.CreatePolicy))];
+	private readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy))];
 
 	/// <summary>
 	/// Event handler for the BreadCrumbBar's ItemClicked event

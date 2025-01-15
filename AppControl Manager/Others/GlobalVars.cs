@@ -1,11 +1,20 @@
 using System;
 using System.IO;
+using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace AppControlManager.Others;
 
 // This class defines constant variables
 internal static class GlobalVars
 {
+	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
+	private static readonly ResourceLoader _resourceLoader = new();
+
+	// Get the string from the Resource.resw file using the key
+	internal static string GetString(string resourceKey)
+	{
+		return _resourceLoader.GetString(resourceKey);
+	}
 
 	// User Mode block rules
 	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
@@ -73,3 +82,4 @@ internal static class GlobalVars
 		}
 	}
 }
+

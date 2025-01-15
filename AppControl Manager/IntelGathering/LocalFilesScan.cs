@@ -26,6 +26,31 @@ internal static class LocalFilesScan
 	internal static HashSet<FileIdentity> Scan(List<FileInfo> files, ushort scalability, ProgressBar? UIProgressBar, ProgressRing? UIProgressRing)
 	{
 
+		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
+		Dictionary<string, string> AllSecurityCatalogHashes = [];
+
+		// Get the .cat files in the CatRoot directory
+		List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast([new DirectoryInfo(@"C:\Windows\System32\CatRoot")], null, [".cat"]);
+
+		Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the scan process");
+
+		foreach (FileInfo file in detectedCatFiles)
+		{
+			// Get the hashes of the security catalog file
+			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
+
+			// If the security catalog file has hashes, then add them to the dictionary
+			if (catHashes.Count > 0)
+			{
+				foreach (string hash in catHashes)
+				{
+					_ = AllSecurityCatalogHashes.TryAdd(hash, file.FullName);
+				}
+			}
+		}
+
+
+
 		// Store the output of all of the parallel tasks in this
 		ConcurrentDictionary<FileInfo, FileIdentity> temporaryOutput = [];
 
@@ -123,6 +148,23 @@ internal static class LocalFilesScan
 						{
 							fileIsSigned = true;
 						}
+
+						// If the file doesn't have certificates in itself, check for catalog signers
+						else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
+						{
+							FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+						}
+						else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
+						{
+							FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
+						}
+
+						// Check the signatures again
+						if (FileSignatureResults.Count > 0)
+						{
+							fileIsSigned = true;
+						}
+
 
 						#endregion
 

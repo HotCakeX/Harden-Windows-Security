@@ -6,7 +6,6 @@ Function New-DenyWDACConfig {
         ConfirmImpact = 'High'
     )]
     Param(
-        [Alias('N')][Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$Normal,
         [Alias('D')][Parameter(Mandatory = $false, ParameterSetName = 'Drivers')][switch]$Drivers,
         [Alias('P')][parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
         [Alias('W')][Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$PathWildCards,
@@ -26,30 +25,11 @@ Function New-DenyWDACConfig {
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'One of the paths you selected is not a valid folder path.')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.IO.DirectoryInfo[]]$ScanLocations,
 
         [Parameter(Mandatory = $false)][switch]$Deploy,
-
-        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$Level = 'WHQLFilePublisher',
-
-        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
-
-        [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.String]$SpecificFileNameLevel,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoUserPEs,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoScript,
-
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$Force,
-
         [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$EmbeddedVerboseOutput
     )
     Begin {
@@ -74,84 +54,8 @@ Function New-DenyWDACConfig {
         # Flag indicating the final files should not be copied to the main user config directory
         [System.Boolean]$NoCopy = $false
     }
-
     process {
-
-        Try {
-            # Create deny supplemental policy for general files, apps etc.
-            if ($Normal) {
-
-                # The total number of the main steps for the progress bar to render
-                $TotalSteps = $Deploy ? 4us : 3us
-                $CurrentStep = 0us
-
-                # An array to hold the temporary xml files of each user-selected folders
-                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
-
-                $CurrentStep++
-                Write-Progress -Id 22 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Processing Program Folders From User input')
-                for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
-
-                    # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                    [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                        FilePath               = (Join-Path -Path $StagingArea -ChildPath "ProgramDir_ScanResults$($i).xml")
-                        ScanPath               = $ScanLocations[$i]
-                        Level                  = $Level
-                        Fallback               = $Fallbacks
-                        MultiplePolicyFormat   = $true
-                        UserWriteablePaths     = $true
-                        Deny                   = $true
-                        AllowFileNameFallbacks = $true
-                    }
-                    # Assess user input parameters and add the required parameters to the hash table
-                    if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                    if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
-                    if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
-
-                    [WDACConfig.Logger]::Write("Currently scanning and creating a deny policy for the folder: $($ScanLocations[$i])")
-                    New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
-
-                    $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath "ProgramDir_ScanResults$($i).xml")
-                }
-
-                Write-ColorfulTextWDACConfig -Color Pink -InputText 'The Deny policy with the following configuration is being created'
-                $UserInputProgramFoldersPolicyMakerHashTable
-
-                [WDACConfig.Logger]::Write('Adding the AllowAll default template policy path to the array of policy paths to merge')
-                $PolicyXMLFilesArray += $AllowAllPolicyPath
-
-                $CurrentStep++
-                Write-Progress -Id 22 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Creating the final Deny base policy from the xml files in the paths array')
-                $null = Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $FinalDenyPolicyPath
-
-                $CurrentStep++
-                Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
-                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
-
-                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
-
-                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
-
-                [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
-                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
-
-                if ($Deploy) {
-                    $CurrentStep++
-                    Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
-
-                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
-                }
-                Write-Progress -Id 22 -Activity 'Complete.' -Completed
-            }
-
+        Try {           
             # Create Deny base policy for Driver files
             if ($Drivers) {
 
@@ -387,58 +291,4 @@ Function New-DenyWDACConfig {
             }
         }
     }
-
-    <#
-.SYNOPSIS
-    Creates Deny App Control for Business base policies
-.LINK
-    https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
-.DESCRIPTION
-    Using official Microsoft methods to create Deny App Control for Business base policies
-.PARAMETER PolicyName
-    It's used by the entire Cmdlet. It is the name of the base policy that will be created.
-.PARAMETER Normal
-    Creates a Deny standalone base policy by scanning a directory for files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
-.PARAMETER Level
-    The level that determines how the selected folder will be scanned.
-    The default value for it is FilePublisher.
-.PARAMETER Fallbacks
-    The fallback level(s) that determine how the selected folder will be scanned.
-    The default value for it is Hash.
-.PARAMETER EmbeddedVerboseOutput
-    Used for when the WDACConfig module is in the embedded mode by the Harden Windows Security module
-.PARAMETER Deploy
-    It's used by the entire Cmdlet. Indicates that the created Base deny policy will be deployed on the system.
-.PARAMETER Drivers
-    Creates a Deny standalone base policy for drivers only by scanning a directory for driver files. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
-.PARAMETER InstalledAppXPackages
-    Creates a Deny standalone base policy for an installed App based on Appx package family names
-.PARAMETER Force
-    It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
-.PARAMETER PackageName
-    The name of the Appx package to create a Deny base policy for.
-.PARAMETER ScanLocations
-    The path(s) to scan for files to create a Deny base policy for.
-.PARAMETER SpecificFileNameLevel
-    The more specific level that determines how the selected folder will be scanned.
-.PARAMETER NoUserPEs
-    Indicates that the selected folder will not be scanned for user PE files.
-.PARAMETER NoScript
-    Indicates that the selected folder will not be scanned for script files.
-.PARAMETER PathWildCards
-    Creates a Deny standalone base policy for a folder using wildcards. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
-.PARAMETER FolderPath
-    The folder path to add to the deny base policy using wildcards.
-.INPUTS
-    System.String[]
-    System.String
-    System.IO.DirectoryInfo
-    System.IO.DirectoryInfo[]
-    System.Management.Automation.SwitchParameter
-.OUTPUTS
-    System.String
-.EXAMPLE
-    New-DenyWDACConfig -PolicyName 'MyDenyPolicy' -Normal -ScanLocations 'C:\Program Files', 'C:\Program Files (x86)'
-    Creates a Deny standalone base policy by scanning the specified folders for files.
-#>
 }

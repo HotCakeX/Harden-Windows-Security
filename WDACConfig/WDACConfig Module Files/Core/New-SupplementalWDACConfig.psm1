@@ -32,18 +32,6 @@ Function New-SupplementalWDACConfig {
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-SupplementalWDACConfig')
 
-        #Region User-Configurations-Processing-Validation
-        # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
-        if (!$PolicyPath) {
-            if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath))) {
-                $PolicyPath = [WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath
-            }
-            else {
-                throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for UnsignedPolicyPath.'
-            }
-        }
-        #Endregion User-Configurations-Processing-Validation
-
         # Ensure when user selects the -Deploy parameter, the base policy is not signed
         if ($Deploy) {
             if ([WDACConfig.PolicyFileSigningStatusDetection]::Check($PolicyPath) -eq [WDACConfig.PolicyFileSigningStatusDetection+SigningStatus]::Signed) {
@@ -209,48 +197,5 @@ Function New-SupplementalWDACConfig {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
         }
-    }
-
-    <#
-.SYNOPSIS
-    Use this cmdlet to create Supplemental policies for your base policies using various methods.
-    It can be used to create Supplemental policies based on directories, installed apps, and certificates.
-.LINK
-    https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig
-.DESCRIPTION
-    Using official Microsoft methods, configure and use App Control for Business
-.PARAMETER Normal
-    Make a Supplemental policy by scanning a directory, you can optionally use other parameters too to fine tune the scan process.
-.PARAMETER PathWildCards
-    This parameter allows you to select a folder and create a policy that will allow any files in that folder and its sub-folders to be allowed to run.
-.PARAMETER InstalledAppXPackages
-    Make a Supplemental policy based on the Package Family Name of an installed Windows app
-.PARAMETER PackageName
-    Enter the package name of an installed app. Supports wildcard * character. e.g., *Edge* or "*Microsoft*".
-.PARAMETER ScanLocation
-    The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
-.PARAMETER FolderPath
-    Path of a folder that you want to allow using wildcards *.
-.PARAMETER SuppPolicyName
-    Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
-    It is used by the entire Cmdlet.
-.PARAMETER PolicyPath
-    Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports file picker GUI by showing only .xml files.
-    Press tab to open the GUI.
-    It is used by the entire Cmdlet.
-.PARAMETER Deploy
-    Indicates that the module will automatically deploy the Supplemental policy after creation.
-    It is used by the entire Cmdlet.
-.PARAMETER Force
-    It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
-.INPUTS
-    System.String[]
-    System.String
-    System.IO.DirectoryInfo
-    System.IO.FileInfo
-    System.IO.FileInfo[]
-    System.Management.Automation.SwitchParameter
-.OUTPUTS
-    System.String
-#>
+    }   
 }

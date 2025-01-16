@@ -79,6 +79,14 @@
 
             </controls:SettingsCard>
 
+            <controls:SettingsCard Description="Many files are signed using Security Catalogs. Enabling this option ensures accurate results. Security Catalogs are processed only once and reused in subsequent checks, enhancing performance."
+                          x:Name="IncludeSecurityCatalogsSettingsCard"
+       Header="Include Catalog Signers" Click="IncludeSecurityCatalogsSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+
+                <ToggleSwitch x:Name="IncludeSecurityCatalogsToggleSwitch" IsOn="True" />
+
+            </controls:SettingsCard>
+
         </StackPanel>
 
 

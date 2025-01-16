@@ -152,11 +152,25 @@ internal static class LocalFilesScan
 						// If the file doesn't have certificates in itself, check for catalog signers
 						else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
 						{
-							FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+							try
+							{
+								FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+							}
+							catch (HashMismatchInCertificateException)
+							{
+								Logger.Write($"The file '{file.FullName}' has hash mismatch.");
+							}
 						}
 						else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
 						{
-							FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
+							try
+							{
+								FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
+							}
+							catch (HashMismatchInCertificateException)
+							{
+								Logger.Write($"The file '{file.FullName}' has hash mismatch.");
+							}
 						}
 
 						// Check the signatures again

@@ -1383,7 +1383,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		{
 			StrictKernelModeCreateButton.IsEnabled = false;
 			StrictKernelModeDeployToggleButton.IsEnabled = false;
-			StrictKernelModeAutoDetectAllDriversSettingsCard.IsEnabled = false;
+			StrictKernelModeAutoDetectAllDriversSettingsCard.IsClickEnabled = false;
 			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = false;
 			StrictKernelModeScanButton.IsEnabled = false;
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = false;
@@ -1489,7 +1489,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			StrictKernelModeCreateButton.IsEnabled = true;
 			StrictKernelModeDeployToggleButton.IsEnabled = true;
-			StrictKernelModeAutoDetectAllDriversSettingsCard.IsEnabled = true;
+			StrictKernelModeAutoDetectAllDriversSettingsCard.IsClickEnabled = true;
 			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = true;
 			StrictKernelModeScanButton.IsEnabled = true;
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
@@ -1522,6 +1522,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = false;
 			StrictKernelModeScanButton.IsEnabled = false;
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = false;
+			StrictKernelModeAutoDetectAllDriversSettingsCard.IsClickEnabled = false;
+			StrictKernelModeCreateButton.IsEnabled = false;
 
 			StrictKernelModeInfoBar.IsClosable = false;
 			StrictKernelModeInfoBar.IsOpen = true;
@@ -1625,6 +1627,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = true;
 			StrictKernelModeScanButton.IsEnabled = true;
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
+			StrictKernelModeAutoDetectAllDriversSettingsCard.IsClickEnabled = true;
+			StrictKernelModeCreateButton.IsEnabled = true;
 		}
 	}
 

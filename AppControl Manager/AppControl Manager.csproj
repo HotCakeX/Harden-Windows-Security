@@ -113,7 +113,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.0" />
+    <DotNetCliToolReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.1" />
   </ItemGroup>
 
   <!--

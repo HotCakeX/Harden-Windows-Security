@@ -811,16 +811,6 @@ public sealed partial class CreatePolicy : Page
 				// Set policy name and reset the policy ID
 				string policyID = SetCiPolicyInfo.Set(policyPath, true, null, null, null);
 
-				// Save the policyID and time of deployment of the audit mode policy in user configs
-				if (useNoFlightRoots)
-				{
-					_ = UserConfiguration.Set(StrictKernelNoFlightRootsPolicyGUID: Guid.Parse(policyID), StrictKernelModePolicyTimeOfDeployment: DateTime.UtcNow);
-				}
-				else
-				{
-					_ = UserConfiguration.Set(StrictKernelPolicyGUID: Guid.Parse(policyID), StrictKernelModePolicyTimeOfDeployment: DateTime.UtcNow);
-				}
-
 				// Copy the policy to the user configurations directory
 				File.Copy(policyPath, finalPolicyPath, true);
 

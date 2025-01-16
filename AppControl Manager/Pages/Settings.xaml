@@ -117,14 +117,6 @@ Style="{StaticResource BodyTextBlockStyle}">
                                         <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="CertificatePath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
-                                <!-- Strict Kernel Mode Policy Time of Deployment -->
-                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Strict Kernel Mode Policy Time of Deployment (YYYY-MM-DD):" x:Name="StrictKernelModePolicyTimeTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelModePolicyTime"/>
-                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelModePolicyTime"/>
-                                    </CommandBar>
-                                </controls:WrapPanel>
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>

@@ -37,7 +37,7 @@
             <TextBlock
                 TextWrapping="WrapWholeWords"
                 Style="{StaticResource BodyTextBlockStyle}">
-                
+
                 <Span>
                     View the detected Kernel-mode files that will be used to create the <Run Foreground="{ThemeResource SystemAccentColor}">enforced mode</Run> policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.
                 </Span>

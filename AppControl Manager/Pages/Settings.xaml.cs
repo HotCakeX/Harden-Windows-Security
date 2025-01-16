@@ -301,7 +301,6 @@ public sealed partial class Settings : Page
 		SignToolCustomPathTextBox.Text = userConfig.SignToolCustomPath ?? string.Empty;
 		CertificateCommonNameAutoSuggestBox.Text = userConfig.CertificateCommonName ?? string.Empty;
 		CertificatePathTextBox.Text = userConfig.CertificatePath ?? string.Empty;
-		StrictKernelModePolicyTimeTextBox.Text = userConfig.StrictKernelModePolicyTimeOfDeployment?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? string.Empty;
 	}
 
 	// When the edit button of any field is pressed
@@ -329,9 +328,6 @@ public sealed partial class Settings : Page
 			case "CertificatePath":
 				newValue = CertificatePathTextBox.Text;
 				break;
-			case "StrictKernelModePolicyTime":
-				newValue = StrictKernelModePolicyTimeTextBox.Text;
-				break;
 			default:
 				break;
 		}
@@ -341,8 +337,7 @@ public sealed partial class Settings : Page
 			UnsignedPolicyPath: string.Equals(fieldName, "UnsignedPolicyPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
 			SignToolCustomPath: string.Equals(fieldName, "SignToolCustomPath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
 			CertificateCommonName: string.Equals(fieldName, "CertificateCommonName", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			CertificatePath: string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase) ? newValue : null,
-			StrictKernelModePolicyTimeOfDeployment: string.Equals(fieldName, "StrictKernelModePolicyTime", StringComparison.OrdinalIgnoreCase) ? TryParseDateTime(newValue) : null
+			CertificatePath: string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase) ? newValue : null
 		);
 
 		Logger.Write($"Edited {fieldName} to {newValue}");
@@ -355,14 +350,11 @@ public sealed partial class Settings : Page
 		string? fieldName = button!.Tag.ToString();
 
 		UserConfiguration.Remove(
-			string.Equals(fieldName, "SignedPolicyPath", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "UnsignedPolicyPath", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "SignToolCustomPath", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "CertificateCommonName", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "StrictKernelPolicyGUID", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "StrictKernelNoFlightRootsPolicyGUID", StringComparison.OrdinalIgnoreCase),
-			string.Equals(fieldName, "StrictKernelModePolicyTime", StringComparison.OrdinalIgnoreCase)
+			SignedPolicyPath: string.Equals(fieldName, "SignedPolicyPath", StringComparison.OrdinalIgnoreCase),
+			UnsignedPolicyPath: string.Equals(fieldName, "UnsignedPolicyPath", StringComparison.OrdinalIgnoreCase),
+			SignToolCustomPath: string.Equals(fieldName, "SignToolCustomPath", StringComparison.OrdinalIgnoreCase),
+			CertificateCommonName: string.Equals(fieldName, "CertificateCommonName", StringComparison.OrdinalIgnoreCase),
+			CertificatePath: string.Equals(fieldName, "CertificatePath", StringComparison.OrdinalIgnoreCase)
 		);
 
 		switch (fieldName)
@@ -381,9 +373,6 @@ public sealed partial class Settings : Page
 				break;
 			case "CertificatePath":
 				CertificatePathTextBox.Text = string.Empty;
-				break;
-			case "StrictKernelModePolicyTime":
-				StrictKernelModePolicyTimeTextBox.Text = string.Empty;
 				break;
 			default:
 				break;

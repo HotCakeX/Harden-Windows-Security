@@ -52,3 +52,33 @@ If you have certificate `.cer` files, you can use this feature to scan them and 
 * **Signing Scenario**: Choose between User Mode or Kernel Mode signing scenarios. If you choose User Mode, the supplemental policy will only allow User Mode files signed by that certificate to run and Kernel mode files such as drivers will remain blocked.
 
 <br>
+
+## Create ISG-based Supplemental Policy
+
+This supplemental policy does not explicitly permit any files or applications by default. Instead, it leverages [the Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph#how-does-wdac-work-with-the-isg) to dynamically evaluate and automatically authorize trusted files and applications.
+
+### Configuration Details
+
+* **Policy Name**: Enter a name for the Supplemental policy. You will be able to use this name to detect it after deployment in the **System Information** section of the AppControl Manager.
+
+* **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
+
+<br>
+
+## Create Kernel-mode Supplemental Policy
+
+This supplemental policy can be created only for Kernel-mode files/drivers, typically after creating and deploying the [Strict Kernel-mode base policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection). When you press the `Create Supplemental Policy` button, any logs available in the `View Detected Kernel-mode files` section will be included in the policy. You can select and delete logs that you don't want to be included.
+
+### Configuration Details
+
+* **Auto Driver Detection**: Use this feature to automatically detect all drivers on the system. The results will be available in the `View Detected Kernel-mode files` section at the bottom.
+
+* **Scan for All Kernel-mode logs**: Use this button to scan the entire Code Integrity logs for Kernel-mode files and display the results in the `View Detected Kernel-mode files` section.
+
+* **Scan for All Kernel-mode logs Since Last Reboot**: Use this button to scan the Code Integrity logs that were generated since the last computer reboot for Kernel-mode files and display the results in the `View Detected Kernel-mode files` section.
+
+* **Policy Name**: Enter a name for the Supplemental policy. You will be able to use this name to detect it after deployment in the **System Information** section of the AppControl Manager.
+
+* **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
+
+<br>

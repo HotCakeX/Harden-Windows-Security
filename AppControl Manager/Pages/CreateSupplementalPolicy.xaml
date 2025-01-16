@@ -509,25 +509,25 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="StrictKernel
 
 
                         <controls:SettingsCard x:Name="StrictKernelModeAutoDetectAllDriversSettingsCard" Description="Automatically detect and list all of the drivers on the system"
-          Header="Auto Driver Detection"
-          IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModeAutoDetectAllDriversSettingsCard_Click">
+                             Header="Auto Driver Detection"
+                             IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModeAutoDetectAllDriversSettingsCard_Click">
 
                             <Button x:Name="StrictKernelModeAutoDetectAllDriversButton" Content="Begin" Click="StrictKernelModeAutoDetectAllDriversButton_Click" />
 
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Name="StrictKernelModeScanButtonSettingsCard" Description="Scan the event logs for Kernel-mode files only"
-                 Header="Scan Event Logs"
-                 IsClickEnabled="False" IsActionIconVisible="False" >
+                             Header="Scan Event Logs"
+                             IsClickEnabled="False" IsActionIconVisible="False" >
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
                                 <Button x:Name="StrictKernelModeScanButton" Click="StrictKernelModeScanButton_Click" HorizontalAlignment="Center" Content="Scan for All Kernel-mode Logs" />
 
                                 <Button x:Name="StrictKernelModeScanSinceLastRebootButton" Click="StrictKernelModeScanSinceLastRebootButton_Click" HorizontalAlignment="Center" Content="Scan for Kernel-mode Logs Since Last Reboot" />
-                           
+
                             </controls:WrapPanel>
-                       
+
                         </controls:SettingsCard>
 
 

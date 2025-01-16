@@ -7,6 +7,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using Microsoft.UI.Xaml;
@@ -23,7 +24,7 @@ public sealed partial class ViewFileCertificates : Page
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 	// Main collection assigned to the DataGrid
@@ -31,6 +32,36 @@ public sealed partial class ViewFileCertificates : Page
 
 	// Collection used during search
 	private ObservableCollection<FileCertificateInfoCol> FilteredCertificates = [];
+
+	// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
+	private readonly Dictionary<string, string> AllSecurityCatalogHashes = [];
+
+	private bool SecurityCatalogsWereCached;
+
+	private void GatherSecurityCatalogs()
+	{
+
+		// Get the .cat files in the CatRoot directory
+		List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast([new DirectoryInfo(@"C:\Windows\System32\CatRoot")], null, [".cat"]);
+
+		Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the file certificate acquisition process");
+
+		foreach (FileInfo file in detectedCatFiles)
+		{
+			// Get the hashes of the security catalog file
+			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
+
+			// If the security catalog file has hashes, then add them to the dictionary
+			if (catHashes.Count > 0)
+			{
+				foreach (string hash in catHashes)
+				{
+					_ = AllSecurityCatalogHashes.TryAdd(hash, file.FullName);
+				}
+			}
+		}
+	}
+
 
 
 	/// <summary>
@@ -251,15 +282,59 @@ public sealed partial class ViewFileCertificates : Page
 	/// </summary>
 	/// <param name="file"></param>
 	/// <returns></returns>
-	private static async Task<List<FileCertificateInfoCol>> Fetch(string file)
+	private async Task<List<FileCertificateInfoCol>> Fetch(string file)
 	{
 		// A List to return at the end
 		List<FileCertificateInfoCol> output = [];
+
+		// Query the UI toggle switch
+		bool shouldProcessSecurityCats = IncludeSecurityCatalogsToggleSwitch.IsOn;
 
 		await Task.Run(() =>
 		{
 			// Get all of the file's certificates
 			List<AllFileSigners> signerDetails = AllCertificatesGrabber.GetAllFileSigners(file);
+
+			// If the file has no signers and the user wants to include security catalogs
+			if (signerDetails.Count is 0 && shouldProcessSecurityCats)
+			{
+				// Process the security catalogs if they haven't been processed
+				if (!SecurityCatalogsWereCached)
+				{
+					GatherSecurityCatalogs();
+					SecurityCatalogsWereCached = true;
+				}
+
+				// Grab the file's Code Integrity hashes
+				CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(file);
+
+
+				if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
+				{
+					try
+					{
+						signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+					}
+					catch (HashMismatchInCertificateException)
+					{
+						Logger.Write($"The file '{file}' has hash mismatch.");
+					}
+				}
+				else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
+				{
+					try
+					{
+						signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
+					}
+					catch (HashMismatchInCertificateException)
+					{
+						Logger.Write($"The file '{file}' has hash mismatch.");
+					}
+				}
+
+			}
+
+
 
 			// Get full chains of all of the file's certificates
 			List<ChainPackage> result = GetCertificateDetails.Get([.. signerDetails]);
@@ -515,4 +590,9 @@ public sealed partial class ViewFileCertificates : Page
 		FileCertificatesDataGrid.ItemsSource = FilteredCertificates;
 	}
 
+
+	private void IncludeSecurityCatalogsSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		IncludeSecurityCatalogsToggleSwitch.IsOn = !IncludeSecurityCatalogsToggleSwitch.IsOn;
+	}
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Xml;
 
 namespace AppControlManager.Others;
 
@@ -55,13 +54,6 @@ internal static partial class MeowParser
 		// Initializes a new HashSet to store the hashes.
 		HashSet<string> OutputHashSet = [];
 
-		// Creates a new XmlDocument instance.
-		XmlDocument PurrfectCatalogXMLDoc = new()
-		{
-			// Disables the XML resolver for security reasons.
-			XmlResolver = null
-		};
-
 		IntPtr MainCryptProviderHandle = IntPtr.Zero; // Initializes the handle to zero.
 		IntPtr MeowLogHandle = IntPtr.Zero; // Initializes the catalog context handle to zero.
 		IntPtr KittyPointer = IntPtr.Zero; // Pointer to iterate through catalog members, initialized to zero.
@@ -86,12 +78,6 @@ internal static partial class MeowParser
 				int lastWin32Error = Marshal.GetLastWin32Error();
 				Logger.Write($"CryptCATOpen failed with error code: {lastWin32Error}");
 			}
-
-			// Creates an XML element to represent the catalog file.
-			XmlElement catalogElement = PurrfectCatalogXMLDoc.CreateElement("MeowFile");
-
-			// Appends the element to the XML document.
-			_ = PurrfectCatalogXMLDoc.AppendChild(catalogElement);
 
 			// Iterates through the catalog members.
 			while ((KittyPointer = WinTrust.CryptCATEnumerateMember(MeowLogHandle, KittyPointer)) != IntPtr.Zero)

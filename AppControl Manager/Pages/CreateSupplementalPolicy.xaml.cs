@@ -1335,7 +1335,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				StrictKernelModeInfoBar.Message = "Successfully scanned the system for events";
 			}
 
-
+			StrictKernelModeInfoBar.IsClosable = true;
 
 		}
 	}
@@ -1494,6 +1494,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeScanButton.IsEnabled = true;
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
 			StrictKernelModeBrowseForBasePolicyButton.IsEnabled = true;
+			StrictKernelModeInfoBar.IsClosable = true;
 
 		}
 
@@ -1530,7 +1531,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
 			StrictKernelModeInfoBar.Message = "Scanning the system for drivers";
 			StrictKernelModeSection.IsExpanded = true;
-
 
 			List<FileInfo> kernelModeDriversList = [];
 
@@ -1591,7 +1591,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 2, null, null);
 
 				// Add the results to the DataGrid
-				foreach (FileIdentity item in LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0)) // && fileIdentity.SignatureStatus is SignatureStatus.IsSigned
+				// Only signed kernel-mode files
+				foreach (FileIdentity item in LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned))
 				{
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
@@ -1629,6 +1630,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
 			StrictKernelModeAutoDetectAllDriversSettingsCard.IsClickEnabled = true;
 			StrictKernelModeCreateButton.IsEnabled = true;
+
+			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
 

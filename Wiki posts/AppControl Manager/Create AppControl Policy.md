@@ -24,6 +24,8 @@ Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
    * **Auto update**: It will create a scheduled task on the system that will check every week for the latest Microsoft Recommended block rules and update the policy automatically. [Please refer to this page for more info.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
 
+* **Strict Kernel-mode policy**: It's a special kind of policy that will only enforce Kernel-mode files without blocking user-mode files. Please refer [to this article](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for more information.
+
 <br>
 
 Deploying any of them is optional. You can create the policies and then deploying them on remote systems using Intune or other methods.

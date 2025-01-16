@@ -19,6 +19,11 @@ Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Securit
 
 <br>
 
+> [!NOTE]\
+> This feature supports displaying the certificates of the files signed by Security Catalogs.
+
+<br>
+
 The following data is displayed for each member of the certificate chain:
 
 | Name                | Description                                                                                         |

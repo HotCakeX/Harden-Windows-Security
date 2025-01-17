@@ -82,6 +82,48 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
+                <controls:SettingsExpander x:Name="IntuneDeploymentSettingsExpander"
+                     Description="Deploy the policies remotely to the Intune instead of the local system"
+                     Header="Use Intune Deployment"
+           HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
+
+                    <TextBlock x:Name="LocalIntuneStatusTextBox" Text="Local Deployment is Currently Active" TextWrapping="Wrap" />
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard
+                            Description="Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions."
+                            Header="Entra ID Sign In"
+                            HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                <Button Content="Sign In" x:Name="IntuneSignInButton" Click="IntuneSignInButton_Click"/>
+                                
+                                <Button Content="Sign Out" IsEnabled="False" x:Name="IntuneSignOutButton" Click="IntuneSignOutButton_Click"/>
+
+                            </controls:WrapPanel>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard
+                    Description="Select one of the security groups to assign to the policy in Intune"
+                    Header="Group Assignment (Optional)"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xF0B9;}" IsClickEnabled="False" IsActionIconVisible="False">
+
+                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                <Button IsEnabled="False" x:Name="RefreshIntuneGroupsButton" Content="Refresh" Click="RefreshIntuneGroupsButton_Click" />
+
+                                <ComboBox IsEnabled="False" x:Name="IntuneGroupsComboBox" />
+
+                            </controls:WrapPanel>
+
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
+
                 <controls:SettingsCard
                 Description="Browse for XML policy file(s) to deploy unsigned on the system"
                 Header="Select unsigned XML policy file(s)"

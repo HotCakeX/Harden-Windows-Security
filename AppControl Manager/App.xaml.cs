@@ -45,7 +45,7 @@ public partial class App : Application
 	{
 		this.InitializeComponent();
 
-		Logger.Write("App Startup");
+		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus

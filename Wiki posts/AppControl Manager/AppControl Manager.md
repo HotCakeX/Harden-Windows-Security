@@ -213,6 +213,8 @@ AppControl -MSIXPath "Path To the MSIX" -SignTool "Path to signtool.exe" -Verbos
 <br>
 
 * Q: Why isn't the MSIX package pre-signed?
-* A: Because I haven't started paying for a code-signing certificate yet. [Read more about signing](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Rethinking-Trust:-Advanced-Security-Measures-for-High%E2%80%90Stakes-Systems)
+* A: Because I haven't started paying for a code-signing certificate yet. [Read more about signing](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Rethinking-Trust:-Advanced-Security-Measures-for-High%E2%80%90Stakes-Systems).
+
+   * To truly trust an application, you should review its code and bless it yourself.
 
 <br>

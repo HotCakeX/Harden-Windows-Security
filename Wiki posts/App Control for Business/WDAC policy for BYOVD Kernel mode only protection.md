@@ -1,4 +1,4 @@
-# WDAC Policy for BYOVD Kernel Mode Only Protection
+# App Control Policy for BYOVD Kernel Mode Only Protection
 
 This scenario involves removing the trust to any Kernel mode driver, whether they are vulnerable or not. It does not affect User-mode binaries or drivers. Any 3rd party software/hardware Kernel mode driver will need to be explicitly allowed. This scenario protects against all **BYOVD** scenarios and much more.
 
@@ -15,18 +15,6 @@ People who seek to obtain code signing certificates, even for Extended Validatio
 * Do not waste your time playing cat and mouse with threat actors.
 * Do not use blacklisting for highly secure workstations, sensitive environments and such; it’s ineffective and insecure for a high security level.
 * Whitelisting is the proper answer. This entire document and others in this repository, are exactly for this purpose.
-
-<br>
-
-<p align="center">
-<b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with App Control policy in Windows</b><br><br>
-  <a href="https://www.youtube.com/watch?v=SQCo9l2P7uw">
-    <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoBYOVD.png" width="700"
-         alt="YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with App Control policy in Windows - Windows Defender">
-  </a>
-  </p>
-
-<br>
 
 <br>
 
@@ -306,7 +294,8 @@ Remove this item which is for Windows Store EKU
 
 ## How to Use and Automate This Entire Process
 
-**Use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)** to automatically Audit and deploy the Strict Kernel-mode App Control policies.
+> [!IMPORTANT]\
+> **Use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Create-and-Maintain-Strict-Kernel%E2%80%90Mode-App-Control-Policy)** to automatically Audit and deploy the Strict Kernel-mode App Control policies.
 
 As mentioned earlier, this policy only enforces and applies to Kernel-mode drivers, so your non-Kernel mode files are unaffected. Keep in mind that Kernel-mode does not mean programs that require Administrator privileges, those 2 categories are completely different. Also, not all drivers are Kernel mode, [**there are user-mode drivers too.**](https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode)
 
@@ -328,13 +317,13 @@ Now the Allow all rules that exist in the first policy are neutralized. [Only ap
 
 So far, we've only been doing Kernel-mode administration. We can use User-mode App Control policies as well.
 
-After using those 2 Kernel-mode policies, I deploy a 3rd policy which is going to authorize and validate User-mode binaries too. I choose the [Lightly managed App Control policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices) that utilizes [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). This policy applies to both Kernel and User modes, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers. Our User-mode App Control policy that utilizes ISG validates User-mode binaries only.
+After using those 2 Kernel-mode policies, we can deploy a 3rd policy which is going to authorize and validate User-mode binaries too, such as the [`Allow Microsoft` policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy). This policy applies to both Kernel and User mode files, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers.
 
 <br>
 
 ### A rule of thumb
 
-The strictest policy wins the race in multiple base policy deployments, which in this case is the Strict Kernel-Mode policy. Even though ISG policy which uses Allow Microsoft rules and allows all the WHQL signed drivers, they still won't be able to run unless the Kernel-Mode policy authorizes them, because for a Kernel driver to be allowed to run in this scenario, all base policies must allow it.
+The strictest policy wins the race in multiple base policy deployments, which in this case is the Strict Kernel-Mode policy. Even though the `Allow Microsoft` policy allows all WHQL signed drivers, they still won't be able to run unless the Strict Kernel-Mode policy authorizes them as well, because for a Kernel driver to be allowed to run in this scenario, all base policies must allow it.
 
 So only the policy that has the least allow listings in common with all other policies takes priority.
 
@@ -342,7 +331,7 @@ So only the policy that has the least allow listings in common with all other po
 
 ### Supplemental policy
 
-Each of the deployed policies (except for the automatically deployed block rules by HVCI) support having supplemental policies. So, whenever you feel the need to allow additional files that are Kernel-mode drivers or User-mode binaries blocked by ISG, you can add a Supplemental policy for them.
+Each of the deployed policies (except for the automatically deployed block rules by HVCI) support having supplemental policies. So, whenever you feel the need to allow additional files that are Kernel-mode drivers or User-mode binaries, you can add a Supplemental policy for them.
 
 <br>
 

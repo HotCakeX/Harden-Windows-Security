@@ -181,7 +181,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 					if (deployToIntune)
 					{
-						await DeployToIntunePrivate(CIPFilePath, file);
+						await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
 
 						// Delete the CIP file after deployment
 						File.Delete(CIPFilePath);
@@ -353,7 +353,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 					if (deployToIntune)
 					{
-						await DeployToIntunePrivate(CIPFilePath, file);
+						await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
 					}
 					else
 					{
@@ -474,10 +474,11 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 						StatusInfoBar.Message = $"Currently Deploying CIP file: '{file}'";
 					});
 
+					string randomPolicyID = Guid.CreateVersion7().ToString().ToUpperInvariant();
 
 					if (deployToIntune)
 					{
-						await DeployToIntunePrivate(file);
+						await DeployToIntunePrivate(file, randomPolicyID, null);
 					}
 					else
 					{
@@ -777,7 +778,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 
 
-	private async Task DeployToIntunePrivate(string file, string? xmlFile = null)
+	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
 		string? groupID = null;
 
@@ -811,7 +812,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		});
 
 
-		await Intune.UploadPolicyToIntune(file, groupID, policyName);
+		await Intune.UploadPolicyToIntune(file, groupID, policyName, policyID);
 	}
 
 

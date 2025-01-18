@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 
@@ -18,6 +19,7 @@ internal static class Intune
 	private const string ClientId = "14d82eec-204b-4c2f-b7e8-296a70dab67e";
 
 	// Scopes required to create and assign device configurations
+	// https://learn.microsoft.com/en-us/graph/permissions-reference
 	private static readonly string[] Scopes = [
 		"Group.Read.All", // For Groups enumeration
 		"Group.ReadWrite.All",  // For Groups enumeration
@@ -50,7 +52,14 @@ internal static class Intune
 
 	private const string GroupsUrl = "https://graph.microsoft.com/v1.0/groups";
 
+	// To manage Sign in cancellation
+	private static CancellationTokenSource? _cts;
 
+	/// <summary>
+	/// Fetches the security groups
+	/// </summary>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task FetchGroups()
 	{
 		if (authenticationResult is null)
@@ -64,56 +73,60 @@ internal static class Intune
 		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-		try
+		// Make the request to get all groups
+		HttpResponseMessage response = await httpClient.GetAsync(new Uri(GroupsUrl));
+
+		if (response.IsSuccessStatusCode)
 		{
-			// Make the request to get all groups
-			HttpResponseMessage response = await httpClient.GetAsync(new Uri(GroupsUrl));
+			string content = await response.Content.ReadAsStringAsync();
+			JsonElement groupsJson = JsonSerializer.Deserialize<JsonElement>(content);
 
-			if (response.IsSuccessStatusCode)
+			if (groupsJson.TryGetProperty("value", out JsonElement groups))
 			{
-				string content = await response.Content.ReadAsStringAsync();
-				JsonElement groupsJson = JsonSerializer.Deserialize<JsonElement>(content);
+				Groups.Clear(); // Clear the dictionary before adding new entries
 
-				if (groupsJson.TryGetProperty("value", out JsonElement groups))
+				foreach (JsonElement group in groups.EnumerateArray())
 				{
-					Groups.Clear(); // Clear the dictionary before adding new entries
+					string? groupName = group.GetProperty("displayName").GetString();
+					string? groupId = group.GetProperty("id").GetString();
 
-					foreach (JsonElement group in groups.EnumerateArray())
+					if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(groupId))
 					{
-						string? groupName = group.GetProperty("displayName").GetString();
-						string? groupId = group.GetProperty("id").GetString();
-
-						if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(groupId))
-						{
-							Groups[groupName] = groupId;
-						}
+						Groups[groupName] = groupId;
 					}
+				}
 
-					Logger.Write($"Successfully fetched {Groups.Count} groups.");
-				}
-				else
-				{
-					Logger.Write("No groups found in the response.");
-				}
+				Logger.Write($"Successfully fetched {Groups.Count} groups.");
 			}
 			else
 			{
-				Logger.Write($"Failed to fetch groups. Status code: {response.StatusCode}");
-				string errorContent = await response.Content.ReadAsStringAsync();
-				Logger.Write($"Error details: {errorContent}");
+				Logger.Write("No groups found in the response.");
 			}
 		}
-		catch (Exception ex)
+		else
 		{
-			Logger.Write($"An error occurred while fetching groups: {ex.Message}");
+			Logger.Write($"Failed to fetch groups. Status code: {response.StatusCode}");
+			string errorContent = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
+
 	}
 
+
+	/// <summary>
+	/// Returns the Groups dictionary
+	/// </summary>
+	/// <returns></returns>
 	internal static Dictionary<string, string> GetGroups()
 	{
-		return new Dictionary<string, string>(Groups); // Return a copy of the groups dictionary
+		return Groups;
 	}
 
+
+	/// <summary>
+	/// Signs into a tenant
+	/// </summary>
+	/// <returns></returns>
 	internal static async Task SignIn()
 	{
 
@@ -129,15 +142,47 @@ internal static class Intune
 		}
 		catch (MsalUiRequiredException)
 		{
+
 			// Fall back to interactive login if silent authentication fails
-			authenticationResult = await App.AcquireTokenInteractive(Scopes)
-				.WithPrompt(Prompt.SelectAccount)
-				.WithUseEmbeddedWebView(false)
-				.ExecuteAsync();
+			_cts = new CancellationTokenSource();
+
+			try
+			{
+				authenticationResult = await App.AcquireTokenInteractive(Scopes)
+					.WithPrompt(Prompt.SelectAccount)
+					.WithUseEmbeddedWebView(false)
+					.ExecuteAsync(_cts.Token);
+			}
+			catch (OperationCanceledException)
+			{
+				throw new OperationCanceledException("The operation was canceled after 1 minute. Browser might have been closed or timeout occurred.");
+			}
+			finally
+			{
+				_cts.Dispose();
+				_cts = null; // Reset for future operations
+			}
+
 		}
 	}
 
 
+	/// <summary>
+	/// Cancels the current sign-in operation
+	/// </summary>
+	internal static void CancelSignIn()
+	{
+		if (_cts is not null && !_cts.Token.IsCancellationRequested)
+		{
+			_cts.Cancel();
+		}
+	}
+
+
+	/// <summary>
+	/// Signs out the user
+	/// </summary>
+	/// <returns></returns>
 	internal static async Task SignOut()
 	{
 		if (authenticationResult is null)
@@ -150,32 +195,30 @@ internal static class Intune
 		// Get the cached accounts
 		IEnumerable<IAccount> accounts = await App.GetAccountsAsync();
 
-		try
+		foreach (IAccount account in accounts)
 		{
-			foreach (IAccount account in accounts)
-			{
-				await App.RemoveAsync(account);
-				Logger.Write($"Signed out account: {account.Username}");
-			}
-
-			// Clear the current authentication result
-			authenticationResult = null;
-
-			Logger.Write("All accounts signed out successfully.");
+			await App.RemoveAsync(account);
+			Logger.Write($"Signed out account: {account.Username}");
 		}
-		catch (Exception ex)
-		{
-			Logger.Write($"An error occurred during sign-out: {ex.Message}");
-		}
+
+		// Clear the current authentication result
+		authenticationResult = null;
+
+		Logger.Write("All accounts signed out successfully.");
+
 	}
 
 
 
 	/// <summary>
-	/// Grabs the path to a CIP file and upload it to Intune
+	/// Grabs the path to a CIP file and upload it to Intune.
 	/// </summary>
 	/// <param name="policyPath"></param>
-	internal static async Task UploadPolicyToIntune(string policyPath, string? groupName)
+	/// <param name="groupName"></param>
+	/// <param name="policyName"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static async Task UploadPolicyToIntune(string policyPath, string? groupName, string? policyName)
 	{
 
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("IntuneCIPUpload");
@@ -193,7 +236,7 @@ internal static class Intune
 		}
 
 		// Call Microsoft Graph API to create the custom policy
-		string? policyId = await CreateCustomPolicy(authenticationResult.AccessToken, base64String);
+		string? policyId = await CreateCustomPolicy(authenticationResult.AccessToken, base64String, policyName);
 
 		Logger.Write($"{policyId} is the ID of the policy that was created");
 
@@ -202,19 +245,25 @@ internal static class Intune
 		{
 			if (Groups.TryGetValue(groupName, out string? groupId))
 			{
-				await AssignPolicyToUsers(policyId, authenticationResult.AccessToken, groupId);
+				await AssignPolicyToGroup(policyId, authenticationResult.AccessToken, groupId);
 			}
 		}
 
-
-		//		await GetPoliciesAndAssignments(result.AccessToken);
+		// await GetPoliciesAndAssignments(result.AccessToken);
 	}
 
 
 
 
-
-	private static async Task AssignPolicyToUsers(string policyId, string accessToken, string groupID)
+	/// <summary>
+	/// Assigns a group to the created Intune policy
+	/// </summary>
+	/// <param name="policyId"></param>
+	/// <param name="accessToken"></param>
+	/// <param name="groupID"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	private static async Task AssignPolicyToGroup(string policyId, string accessToken, string groupID)
 	{
 		using SecHttpClient httpClient = new();
 
@@ -254,7 +303,7 @@ internal static class Intune
 		{
 			Logger.Write($"Failed to assign policy. Status code: {response.StatusCode}");
 			string errorContent = await response.Content.ReadAsStringAsync();
-			Logger.Write($"Error details: {errorContent}");
+			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
 
@@ -268,21 +317,26 @@ internal static class Intune
 	/// <param name="accessToken"></param>
 	/// <param name="policyData"></param>
 	/// <returns></returns>
-	private static async Task<string?> CreateCustomPolicy(string accessToken, string policyData)
+	private static async Task<string?> CreateCustomPolicy(string accessToken, string policyData, string? policyName)
 	{
+
+		string descriptionText = $"Application Control Policy Uploaded from AppControl Manager on {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss 'UTC'}";
+
+		string displayNameText = !string.IsNullOrWhiteSpace(policyName) ? $"{policyName} App Control Policy" : "App Control Policy";
+
 		// Create the policy object
 		Windows10CustomConfiguration customPolicy = new()
 		{
 			ODataType = "#microsoft.graph.windows10CustomConfiguration",
-			DisplayName = "Custom OMA-URI Policy",
-			Description = "Custom policy for Application Control",
+			DisplayName = displayNameText,
+			Description = descriptionText,
 			OmaSettings =
 			[
 				new OmaSettingBase64
 				{
 					ODataType = "microsoft.graph.omaSettingBase64",
-					DisplayName = "Application Control Policy",
-					Description = "Configure application control policy using OMA-URI.",
+					DisplayName = displayNameText,
+					Description = descriptionText,
 					OmaUri = "./Vendor/MSFT/ApplicationControl/Policies/d41d8cd9-8f00-b204-e980-0998ecf8427e/Policy",
 					FileName = "Policy.bin",
 					Value = policyData
@@ -323,8 +377,7 @@ internal static class Intune
 		{
 			Logger.Write($"Failed to create custom policy. Status code: {response.StatusCode}");
 			string errorContent = await response.Content.ReadAsStringAsync();
-			Logger.Write($"Error details: {errorContent}");
-			return null;
+			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
 
@@ -340,73 +393,66 @@ internal static class Intune
 		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-		try
+		// Fetch all policies
+		HttpResponseMessage response = await httpClient.GetAsync(new Uri(DeviceConfigurationsURL));
+
+		if (response.IsSuccessStatusCode)
 		{
-			// Fetch all policies
-			HttpResponseMessage response = await httpClient.GetAsync(new Uri(DeviceConfigurationsURL));
+			string content = await response.Content.ReadAsStringAsync();
+			JsonElement policiesJson = JsonSerializer.Deserialize<JsonElement>(content);
 
-			if (response.IsSuccessStatusCode)
+			// Iterate through each policy
+			if (policiesJson.TryGetProperty("value", out JsonElement policies))
 			{
-				string content = await response.Content.ReadAsStringAsync();
-				JsonElement policiesJson = JsonSerializer.Deserialize<JsonElement>(content);
-
-				// Iterate through each policy
-				if (policiesJson.TryGetProperty("value", out JsonElement policies))
+				foreach (JsonElement policy in policies.EnumerateArray())
 				{
-					foreach (JsonElement policy in policies.EnumerateArray())
+					string? policyId = policy.GetProperty("id").GetString();
+					string? policyName = policy.GetProperty("displayName").GetString();
+					Logger.Write($"Policy ID: {policyId}");
+					Logger.Write($"Policy Name: {policyName}");
+
+					// Fetch assignments for the current policy
+					HttpResponseMessage assignmentsResponse = await httpClient.GetAsync(new Uri($"{DeviceConfigurationsURL}/{policyId}/assignments"));
+
+					if (assignmentsResponse.IsSuccessStatusCode)
 					{
-						string? policyId = policy.GetProperty("id").GetString();
-						string? policyName = policy.GetProperty("displayName").GetString();
-						Logger.Write($"Policy ID: {policyId}");
-						Logger.Write($"Policy Name: {policyName}");
+						string assignmentsContent = await assignmentsResponse.Content.ReadAsStringAsync();
+						JsonElement assignmentsJson = JsonSerializer.Deserialize<JsonElement>(assignmentsContent);
 
-						// Fetch assignments for the current policy
-						HttpResponseMessage assignmentsResponse = await httpClient.GetAsync(new Uri($"{DeviceConfigurationsURL}/{policyId}/assignments"));
-
-						if (assignmentsResponse.IsSuccessStatusCode)
+						if (assignmentsJson.TryGetProperty("value", out JsonElement assignments))
 						{
-							string assignmentsContent = await assignmentsResponse.Content.ReadAsStringAsync();
-							JsonElement assignmentsJson = JsonSerializer.Deserialize<JsonElement>(assignmentsContent);
-
-							if (assignmentsJson.TryGetProperty("value", out JsonElement assignments))
+							Logger.Write("Assignments:");
+							foreach (JsonElement assignment in assignments.EnumerateArray())
 							{
-								Logger.Write("Assignments:");
-								foreach (JsonElement assignment in assignments.EnumerateArray())
+								JsonElement target = assignment.GetProperty("target");
+								string? targetType = target.GetProperty("@odata.type").GetString();
+								Logger.Write($" - Target Type: {targetType}");
+
+								if (targetType == "#microsoft.graph.groupAssignmentTarget" && target.TryGetProperty("groupId", out JsonElement groupId))
 								{
-									JsonElement target = assignment.GetProperty("target");
-									string? targetType = target.GetProperty("@odata.type").GetString();
-									Logger.Write($" - Target Type: {targetType}");
-
-									if (targetType == "#microsoft.graph.groupAssignmentTarget" && target.TryGetProperty("groupId", out JsonElement groupId))
-									{
-										Logger.Write($"   Group ID: {groupId.GetString()}");
-									}
+									Logger.Write($"   Group ID: {groupId.GetString()}");
 								}
-							}
-							else
-							{
-								Logger.Write("No assignments found.");
 							}
 						}
 						else
 						{
-							Logger.Write($"Failed to fetch assignments for Policy ID: {policyId}. Status code: {assignmentsResponse.StatusCode}");
+							Logger.Write("No assignments found.");
 						}
-
-						Logger.Write(""); // Add a blank line between policies
 					}
+					else
+					{
+						Logger.Write($"Failed to fetch assignments for Policy ID: {policyId}. Status code: {assignmentsResponse.StatusCode}");
+					}
+
+					Logger.Write(""); // Add a blank line between policies
 				}
 			}
-			else
-			{
-				Logger.Write($"Failed to fetch policies. Status code: {response.StatusCode}");
-				string errorContent = await response.Content.ReadAsStringAsync();
-				Logger.Write($"Error details: {errorContent}");
-			}
 		}
-		catch (Exception ex)
+		else
 		{
-			Logger.Write($"An error occurred: {ex.Message}");
+			Logger.Write($"Failed to fetch policies. Status code: {response.StatusCode}");
+			string errorContent = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
 
@@ -461,7 +507,7 @@ internal static class Intune
 		// Check the file size
 		if (fileInfo.Length > maxSizeInBytes)
 		{
-			throw new InvalidOperationException($"The file size exceeds the limit of {maxSizeInBytes} bytes.");
+			throw new InvalidOperationException($"The CIP policy file size exceeds the limit of {maxSizeInBytes} bytes.");
 		}
 
 		// Read the file and convert to Base64

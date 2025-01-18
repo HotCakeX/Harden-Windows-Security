@@ -99,8 +99,10 @@
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
 
                                 <Button Content="Sign In" x:Name="IntuneSignInButton" Click="IntuneSignInButton_Click"/>
-                                
+
                                 <Button Content="Sign Out" IsEnabled="False" x:Name="IntuneSignOutButton" Click="IntuneSignOutButton_Click"/>
+
+                                <Button Content="Cancel Sign In" x:Name="IntuneCancelSignInButton" IsEnabled="False" Click="IntuneCancelSignInButton_Click"/>
 
                             </controls:WrapPanel>
 

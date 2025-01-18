@@ -181,7 +181,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 					if (deployToIntune)
 					{
-						await DeployToIntunePrivate(CIPFilePath);
+						await DeployToIntunePrivate(CIPFilePath, file);
 
 						// Delete the CIP file after deployment
 						File.Delete(CIPFilePath);
@@ -353,7 +353,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 					if (deployToIntune)
 					{
-						await DeployToIntunePrivate(CIPFilePath);
+						await DeployToIntunePrivate(CIPFilePath, file);
 					}
 					else
 					{
@@ -652,6 +652,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
+			IntuneCancelSignInButton.IsEnabled = true;
 
 			IntuneSignInButton.IsEnabled = false;
 
@@ -673,6 +674,14 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			RefreshIntuneGroupsButton.IsEnabled = true;
 		}
 
+		catch (OperationCanceledException)
+		{
+			signInSuccessful = false;
+			Logger.Write("Sign in to Intune was cancelled by the user");
+			StatusInfoBar.Message = "Sign in to Intune was cancelled by the user";
+			StatusInfoBar.Severity = InfoBarSeverity.Warning;
+		}
+
 		catch (Exception ex)
 		{
 			StatusInfoBar.Message = $"There was an error signing into Intune: {ex.Message}";
@@ -691,6 +700,8 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			}
 
 			StatusInfoBar.IsClosable = true;
+
+			IntuneCancelSignInButton.IsEnabled = false;
 		}
 
 	}
@@ -766,7 +777,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 
 
-	private async Task DeployToIntunePrivate(string file)
+	private async Task DeployToIntunePrivate(string file, string? xmlFile = null)
 	{
 		string? groupID = null;
 
@@ -776,6 +787,41 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 		});
 
-		await Intune.UploadPolicyToIntune(file, groupID);
+		string? policyName = null;
+
+		await Task.Run(() =>
+		{
+			if (xmlFile is not null)
+			{
+
+				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile);
+
+				// Finding the policy name in the settings
+				Setting? nameSetting = policyObj.Settings.FirstOrDefault(x =>
+					string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase));
+
+				if (nameSetting is not null)
+				{
+					policyName = nameSetting.Value.Item.ToString();
+				}
+			}
+
+		});
+
+
+		await Intune.UploadPolicyToIntune(file, groupID, policyName);
+	}
+
+
+	/// <summary>
+	/// Event handler for the Cancel Sign In button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void IntuneCancelSignInButton_Click(object sender, RoutedEventArgs e)
+	{
+		Intune.CancelSignIn();
 	}
 }

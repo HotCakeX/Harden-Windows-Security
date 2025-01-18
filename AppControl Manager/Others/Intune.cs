@@ -384,7 +384,7 @@ internal static class Intune
 
 
 
-
+	/*
 	private static async Task GetPoliciesAndAssignments(string accessToken)
 	{
 		using SecHttpClient httpClient = new();
@@ -455,10 +455,10 @@ internal static class Intune
 			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
-
+	*/
 
 	// Define the class structure for the custom policy
-	public class Windows10CustomConfiguration
+	public sealed class Windows10CustomConfiguration
 	{
 		[JsonPropertyName("@odata.type")]
 		public string? ODataType { get; set; }
@@ -477,7 +477,7 @@ internal static class Intune
 	}
 
 
-	public class OmaSettingBase64
+	public sealed class OmaSettingBase64
 	{
 		[JsonPropertyName("@odata.type")]
 		public string? ODataType { get; set; }

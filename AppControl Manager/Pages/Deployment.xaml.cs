@@ -9,6 +9,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -21,6 +22,9 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	private readonly HashSet<string> XMLFiles = [];
 	private readonly HashSet<string> SignedXMLFiles = [];
 	private readonly HashSet<string> CIPFiles = [];
+
+	// When true, policies will be deployed to Intune instead of locally
+	private bool deployToIntune;
 
 	public Deployment()
 	{
@@ -143,7 +147,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			MainProgressRing.Visibility = Visibility.Visible;
 
 			// Deploy the selected files
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("UnsignedDeployments");
@@ -174,24 +178,35 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 					// Convert the XML file to CIP
 					PolicyToCIPConverter.Convert(file, CIPFilePath);
 
-					// Deploy the CIP file
-					CiToolHelper.UpdatePolicy(CIPFilePath);
 
-					// Delete the CIP file after deployment
-					File.Delete(CIPFilePath);
-
-					// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
-					if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
+					if (deployToIntune)
 					{
-						if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
+						await DeployToIntunePrivate(CIPFilePath, file);
+
+						// Delete the CIP file after deployment
+						File.Delete(CIPFilePath);
+					}
+					else
+					{
+						// Deploy the CIP file locally
+						CiToolHelper.UpdatePolicy(CIPFilePath);
+
+						// Delete the CIP file after deployment
+						File.Delete(CIPFilePath);
+
+						// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
+						if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
 						{
-							// Make sure the policy is a base policy and it doesn't have allow all rule
-							if (policyObject.PolicyType is PolicyType.BasePolicy)
+							if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
 							{
-								if (!CheckForAllowAll.Check(file))
+								// Make sure the policy is a base policy and it doesn't have allow all rule
+								if (policyObject.PolicyType is PolicyType.BasePolicy)
 								{
-									// Deploy the AppControlManager supplemental policy
-									SupplementalForSelf.Deploy(stagingArea.FullName, policyObject.PolicyID);
+									if (!CheckForAllowAll.Check(file))
+									{
+										// Deploy the AppControlManager supplemental policy
+										SupplementalForSelf.Deploy(stagingArea.FullName, policyObject.PolicyID);
+									}
 								}
 							}
 						}
@@ -298,7 +313,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			MainProgressRing.Visibility = Visibility.Visible;
 
 			// Deploy the selected files
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("SignedDeployments");
@@ -335,38 +350,48 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePath, CIPFilePath, true);
 
-					// Get all of the deployed base and supplemental policies on the system
-					List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
 
-					CiPolicyInfo? possibleAlreadyDeployedUnsignedVersion = policies.
-					FirstOrDefault(x => string.Equals(policyObject.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
-
-					if (possibleAlreadyDeployedUnsignedVersion is not null)
+					if (deployToIntune)
 					{
-						Logger.Write($"A policy with the same PolicyID {possibleAlreadyDeployedUnsignedVersion.PolicyID} is already deployed on the system in Unsigned version. Removing it before deployed the signed version to prevent boot failures.");
-
-						CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
+						await DeployToIntunePrivate(CIPFilePath, file);
 					}
-
-					// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
-					if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
+					else
 					{
-						if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
+
+						// Get all of the deployed base and supplemental policies on the system
+						List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
+
+						CiPolicyInfo? possibleAlreadyDeployedUnsignedVersion = policies.
+						FirstOrDefault(x => string.Equals(policyObject.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
+
+						if (possibleAlreadyDeployedUnsignedVersion is not null)
 						{
-							// Make sure the policy is a base policy and it doesn't have allow all rule
-							if (policyObject.PolicyType is PolicyType.BasePolicy)
+							Logger.Write($"A policy with the same PolicyID {possibleAlreadyDeployedUnsignedVersion.PolicyID} is already deployed on the system in Unsigned version. Removing it before deployed the signed version to prevent boot failures.");
+
+							CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
+						}
+
+						// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
+						if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
+						{
+							if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
 							{
-								if (!CheckForAllowAll.Check(file))
+								// Make sure the policy is a base policy and it doesn't have allow all rule
+								if (policyObject.PolicyType is PolicyType.BasePolicy)
 								{
-									// Sign and deploy the required AppControlManager supplemental policy
-									SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
+									if (!CheckForAllowAll.Check(file))
+									{
+										// Sign and deploy the required AppControlManager supplemental policy
+										SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
+									}
 								}
 							}
 						}
-					}
 
-					// Deploy the signed CIP file
-					CiToolHelper.UpdatePolicy(CIPFilePath);
+
+						// Deploy the CIP file locally
+						CiToolHelper.UpdatePolicy(CIPFilePath);
+					}
 				}
 			});
 		}
@@ -440,7 +465,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			MainProgressRing.Visibility = Visibility.Visible;
 
 			// Deploy the selected CIP files
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 				foreach (string file in CIPFiles)
 				{
@@ -449,7 +474,17 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 						StatusInfoBar.Message = $"Currently Deploying CIP file: '{file}'";
 					});
 
-					CiToolHelper.UpdatePolicy(file);
+
+					if (deployToIntune)
+					{
+						await DeployToIntunePrivate(file);
+					}
+					else
+					{
+						// Deploy the CIP file
+						CiToolHelper.UpdatePolicy(file);
+					}
+
 				}
 			});
 		}
@@ -598,5 +633,195 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
+	/// <summary>
+	/// Event handler for the SignIn button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void IntuneSignInButton_Click(object sender, RoutedEventArgs e)
+	{
 
+		bool signInSuccessful = false;
+
+		try
+		{
+
+			StatusInfoBar.Visibility = Visibility.Visible;
+			StatusInfoBar.IsOpen = true;
+			StatusInfoBar.Message = "Signing into Intune";
+			StatusInfoBar.Severity = InfoBarSeverity.Informational;
+			StatusInfoBar.IsClosable = false;
+
+			IntuneCancelSignInButton.IsEnabled = true;
+
+			IntuneSignInButton.IsEnabled = false;
+
+			await Intune.SignIn();
+
+			StatusInfoBar.Message = "Successfully signed into Intune";
+			StatusInfoBar.Severity = InfoBarSeverity.Success;
+
+			deployToIntune = true;
+
+			LocalIntuneStatusTextBox.Text = "Cloud Deployment is Currently Active";
+
+			// Enable the sign out button
+			IntuneSignOutButton.IsEnabled = true;
+
+			signInSuccessful = true;
+
+			IntuneGroupsComboBox.IsEnabled = true;
+			RefreshIntuneGroupsButton.IsEnabled = true;
+		}
+
+		catch (OperationCanceledException)
+		{
+			signInSuccessful = false;
+			Logger.Write("Sign in to Intune was cancelled by the user");
+			StatusInfoBar.Message = "Sign in to Intune was cancelled by the user";
+			StatusInfoBar.Severity = InfoBarSeverity.Warning;
+		}
+
+		catch (Exception ex)
+		{
+			StatusInfoBar.Message = $"There was an error signing into Intune: {ex.Message}";
+			StatusInfoBar.Severity = InfoBarSeverity.Error;
+
+			throw;
+		}
+
+		finally
+		{
+
+			// If sign in wasn't successful, keep the button enabled
+			if (!signInSuccessful)
+			{
+				IntuneSignInButton.IsEnabled = true;
+			}
+
+			StatusInfoBar.IsClosable = true;
+
+			IntuneCancelSignInButton.IsEnabled = false;
+		}
+
+	}
+
+
+	private async void IntuneSignOutButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool signOutSuccessful = false;
+
+		try
+		{
+			StatusInfoBar.Visibility = Visibility.Visible;
+			StatusInfoBar.IsOpen = true;
+			StatusInfoBar.Message = "Signing out of Intune";
+			StatusInfoBar.Severity = InfoBarSeverity.Informational;
+			StatusInfoBar.IsClosable = false;
+
+
+			IntuneSignOutButton.IsEnabled = false;
+
+			await Intune.SignOut();
+
+			signOutSuccessful = true;
+
+			// Enable the Sign in button
+			IntuneSignInButton.IsEnabled = true;
+
+			StatusInfoBar.Message = "Successfully signed out of Intune";
+			StatusInfoBar.Severity = InfoBarSeverity.Success;
+
+			deployToIntune = false;
+			IntuneGroupsComboBox.IsEnabled = false;
+			RefreshIntuneGroupsButton.IsEnabled = false;
+
+			LocalIntuneStatusTextBox.Text = "Local Deployment is Currently Active";
+		}
+
+		catch (Exception ex)
+		{
+			StatusInfoBar.Message = $"There was an error signing out of Intune: {ex.Message}";
+			StatusInfoBar.Severity = InfoBarSeverity.Error;
+
+			throw;
+		}
+
+		finally
+		{
+			// If sign out wasn't successful, keep the button enabled
+			if (!signOutSuccessful)
+			{
+
+				IntuneSignOutButton.IsEnabled = true;
+			}
+
+			StatusInfoBar.IsClosable = true;
+		}
+
+	}
+
+
+	private async void RefreshIntuneGroupsButton_Click(object sender, RoutedEventArgs e)
+	{
+		await Intune.FetchGroups();
+		Dictionary<string, string> groups = Intune.GetGroups();
+
+		// Update the ComboBox with group names
+		IntuneGroupsComboBox.ItemsSource = groups.Keys;
+		IntuneGroupsComboBox.SelectedIndex = 0;
+	}
+
+
+
+
+
+	private async Task DeployToIntunePrivate(string file, string? xmlFile = null)
+	{
+		string? groupID = null;
+
+		await DispatcherQueue.EnqueueAsync(() =>
+		{
+			groupID = IntuneGroupsComboBox.SelectedItem as string;
+
+		});
+
+		string? policyName = null;
+
+		await Task.Run(() =>
+		{
+			if (xmlFile is not null)
+			{
+
+				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile);
+
+				// Finding the policy name in the settings
+				Setting? nameSetting = policyObj.Settings.FirstOrDefault(x =>
+					string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase));
+
+				if (nameSetting is not null)
+				{
+					policyName = nameSetting.Value.Item.ToString();
+				}
+			}
+
+		});
+
+
+		await Intune.UploadPolicyToIntune(file, groupID, policyName);
+	}
+
+
+	/// <summary>
+	/// Event handler for the Cancel Sign In button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void IntuneCancelSignInButton_Click(object sender, RoutedEventArgs e)
+	{
+		Intune.CancelSignIn();
+	}
 }

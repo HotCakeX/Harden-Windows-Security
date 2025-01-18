@@ -1,4 +1,4 @@
-# WDAC Policy for BYOVD Kernel Mode Only Protection
+# App Control Policy for BYOVD Kernel Mode Only Protection
 
 This scenario involves removing the trust to any Kernel mode driver, whether they are vulnerable or not. It does not affect User-mode binaries or drivers. Any 3rd party software/hardware Kernel mode driver will need to be explicitly allowed. This scenario protects against all **BYOVD** scenarios and much more.
 

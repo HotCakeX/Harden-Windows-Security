@@ -27,7 +27,27 @@ Navigate to the [Create App Control policy](https://github.com/HotCakeX/Harden-W
 
 ## Creating the Supplemental Policy
 
-After restarting the system and relaunching the AppControl Manager, navigate to the [Create Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy#create-kernel-mode-supplemental-policy) page. Scroll down to the `Kernel-mode policy` section.
+After restarting the system and relaunching the AppControl Manager, navigate to the [System Information](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information) page. Press the `Retrieve Policies` button, locate the Strict kernel-mode base policy, and remove it from the system.
+
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/8a4f06e919efc7ddd5b833203445ac9ea64b184c/Pictures/PNG%20and%20JPG/How%20To%20Create%20and%20Maintain%20Strict%20Kernel-Mode%20App%20Control%20Policy/Remove%20base%20policy.png" alt="Removing app control policy using AppControl Manager">
+
+<br>
+
+<br>
+
+Once removed, redeploy the same base policy using the [Create App Control policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) page, but this time ensure that Audit Mode is disabled.
+
+<br>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/d14d7437685416117edda8a56496180a2047984f/Pictures/PNG%20and%20JPG/How%20To%20Create%20and%20Maintain%20Strict%20Kernel-Mode%20App%20Control%20Policy/redeploy%20base%20policy%20in%20enforced%20mode.png" alt="redeploy strict kernel mode base policy in enforced mode">
+
+<br>
+
+<br>
+
+Now navigate to the [Create Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy#create-kernel-mode-supplemental-policy) page. Scroll down to the `Kernel-mode policy` section.
 
 <br>
 

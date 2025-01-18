@@ -91,7 +91,7 @@
     <AssemblyName>AppControlManager</AssemblyName>
     <PublishAot>False</PublishAot>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.8.4.0</FileVersion>
+    <FileVersion>1.8.5.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -145,7 +145,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.67.2" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.162">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -46,9 +46,9 @@ By ensuring these permissions are in place, you can seamlessly deploy App Contro
 
 ## Select Policies To Deploy
 
-Select one or more XML files to deploy to Intune. You have the option to deploy them as-is (unsigned) or cryptographically sign them before deployment. Each XML file will be deployed as a separate Intune configuration policy, as Intune does not allow two OMA-URI custom policies to exist within the same configuration policy.
+Select one or more XML files to deploy to Intune. You have the option to deploy them as-is (unsigned) or cryptographically sign them before deployment. Each XML file will be deployed as a separate Intune configuration policy for better management of policies.
 
-The name defined in the XML file will become the name of the corresponding Intune configuration policy visible in the Intune portal.
+The name specified in the XML file will appear as the name of the corresponding Intune configuration policy in the Intune portal. Similarly, the policy ID from the XML file will be used as the uploaded policy's ID, enabling easy identification of policies on workstations after deployment.
 
 You can optionally use the `Refresh` button and select a group to assign to the policies you upload to Intune.
 

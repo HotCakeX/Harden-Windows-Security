@@ -22,13 +22,8 @@ internal static class Intune
 	// https://learn.microsoft.com/en-us/graph/permissions-reference
 	private static readonly string[] Scopes = [
 		"Group.Read.All", // For Groups enumeration
-		"Group.ReadWrite.All",  // For Groups enumeration
-		"DeviceManagementConfiguration.ReadWrite.All",
-		"DeviceManagementConfiguration.Read.All" ,
-		"DeviceManagementManagedDevices.ReadWrite.All",
-		"DeviceManagementApps.ReadWrite.All"
+		"DeviceManagementConfiguration.ReadWrite.All" // For uploading policy
 		];
-
 
 	private const string DeviceConfigurationsURL = "https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations";
 
@@ -218,7 +213,7 @@ internal static class Intune
 	/// <param name="policyName"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static async Task UploadPolicyToIntune(string policyPath, string? groupName, string? policyName)
+	internal static async Task UploadPolicyToIntune(string policyPath, string? groupName, string? policyName, string policyID)
 	{
 
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("IntuneCIPUpload");
@@ -236,7 +231,7 @@ internal static class Intune
 		}
 
 		// Call Microsoft Graph API to create the custom policy
-		string? policyId = await CreateCustomPolicy(authenticationResult.AccessToken, base64String, policyName);
+		string? policyId = await CreateCustomPolicy(authenticationResult.AccessToken, base64String, policyName, policyID);
 
 		Logger.Write($"{policyId} is the ID of the policy that was created");
 
@@ -317,12 +312,16 @@ internal static class Intune
 	/// <param name="accessToken"></param>
 	/// <param name="policyData"></param>
 	/// <returns></returns>
-	private static async Task<string?> CreateCustomPolicy(string accessToken, string policyData, string? policyName)
+	private static async Task<string?> CreateCustomPolicy(string accessToken, string policyData, string? policyName, string policyID)
 	{
 
 		string descriptionText = $"Application Control Policy Uploaded from AppControl Manager on {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss 'UTC'}";
 
 		string displayNameText = !string.IsNullOrWhiteSpace(policyName) ? $"{policyName} App Control Policy" : "App Control Policy";
+
+		// Making sure the policy ID doesn't have the curly brackets
+		// https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-custom-app-control-policies-on-windows-10-1903
+		policyID = policyID.Trim('{', '}');
 
 		// Create the policy object
 		Windows10CustomConfiguration customPolicy = new()
@@ -337,7 +336,7 @@ internal static class Intune
 					ODataType = "microsoft.graph.omaSettingBase64",
 					DisplayName = displayNameText,
 					Description = descriptionText,
-					OmaUri = "./Vendor/MSFT/ApplicationControl/Policies/d41d8cd9-8f00-b204-e980-0998ecf8427e/Policy",
+					OmaUri = $"./Vendor/MSFT/ApplicationControl/Policies/{policyID}/Policy",
 					FileName = "Policy.bin",
 					Value = policyData
 				}

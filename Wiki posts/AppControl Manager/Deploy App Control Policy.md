@@ -49,3 +49,9 @@ Once you've provided all 3 items, press the **Verify** button. It will verify yo
 All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.
 
 <br>
+
+## Intune Cloud Deployment
+
+Please [**refer to this page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Upload-App-Control-Policies-To-Intune-Using-AppControl-Manager) for details on how to upload App Control Policies to Intune using AppControl Manager.
+
+<br>

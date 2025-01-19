@@ -182,6 +182,7 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 | https://www.youtube.com/@hotcakex | Mentioned in the Links section at the bottom of the About section in Settings |
 | https://x.com/CyberCakeX | Mentioned in the Links section at the bottom of the About section in Settings |
 | https://icons8.com | Mentioned in the Links section at the bottom of the About section in Settings as credit |
+| https://graph.microsoft.com | Used when signing into your Azure tenant for uploading policies to Intune |
 
 </div>
 

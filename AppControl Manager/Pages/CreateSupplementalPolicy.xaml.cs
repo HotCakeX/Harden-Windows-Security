@@ -145,6 +145,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private bool filesAndFoldersDeployButton;
 
+	private bool usingWildCardFilePathRules;
+
 	// Used to store the scan results and as the source for the results DataGrids
 	internal ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
 	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
@@ -343,6 +345,23 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
 			}
+
+			// For Wildcard file path rules, only folder paths should be used
+			if (filesAndFoldersScanLevel is ScanLevels.WildCardFilePath)
+			{
+				FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
+				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
+
+				usingWildCardFilePathRules = true;
+			}
+			else
+			{
+				FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
+
+				usingWildCardFilePathRules = false;
+			}
+
 		}
 	}
 
@@ -471,60 +490,71 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Convert user selected file paths that are strings to FileInfo objects
 				selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
 
-				// Collect all of the AppControl compatible files from user selected directories and files
-				List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
+				HashSet<FileIdentity> LocalFilesResults = [];
 
-
-				// Make sure there are AppControl compatible files
-				if (DetectedFilesInSelectedDirectories.Count == 0)
+				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
+				if (!usingWildCardFilePathRules)
 				{
+
+					// Collect all of the AppControl compatible files from user selected directories and files
+					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
+
+
+					// Make sure there are AppControl compatible files
+					if (DetectedFilesInSelectedDirectories.Count == 0)
+					{
+						_ = DispatcherQueue.TryEnqueue(() =>
+						{
+							CreateSupplementalPolicyTeachingTip.IsOpen = true;
+							CreateSupplementalPolicyTeachingTip.Title = "No compatible files detected";
+							CreateSupplementalPolicyTeachingTip.Subtitle = "No AppControl compatible files have been detected in any of the files and folder paths you selected";
+							errorsOccurred = true;
+							FilesAndFoldersInfoBar.IsOpen = false;
+							FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
+							FilesAndFoldersInfoBar.Message = null;
+						});
+
+						return;
+					}
+
+
+					string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Count} AppControl compatible files...";
+					Logger.Write(msg2);
+
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						CreateSupplementalPolicyTeachingTip.IsOpen = true;
-						CreateSupplementalPolicyTeachingTip.Title = "No compatible files detected";
-						CreateSupplementalPolicyTeachingTip.Subtitle = "No AppControl compatible files have been detected in any of the files and folder paths you selected";
-						errorsOccurred = true;
-						FilesAndFoldersInfoBar.IsOpen = false;
-						FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
-						FilesAndFoldersInfoBar.Message = null;
+						FilesAndFoldersInfoBar.Message = msg2;
 					});
 
-					return;
-				}
 
 
-				string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Count} AppControl compatible files...";
-				Logger.Write(msg2);
 
-				_ = DispatcherQueue.TryEnqueue(() =>
-				{
-					FilesAndFoldersInfoBar.Message = msg2;
-				});
+					// Scan all of the detected files from the user selected directories
+					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
+
+					// Add the results of the directories scans to the DataGrid
+					foreach (FileIdentity item in LocalFilesResults)
+					{
+						_ = DispatcherQueue.TryEnqueue(() =>
+						{
+							filesAndFoldersScanResults.Add(item);
+							filesAndFoldersScanResultsList.Add(item);
+
+						});
+					}
 
 
-				// Scan all of the detected files from the user selected directories
-				HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
 
-				// Add the results of the directories scans to the DataGrid
-				foreach (FileIdentity item in LocalFilesResults)
-				{
+					string msg3 = "Scan completed, creating the Supplemental policy";
+
+					Logger.Write(msg3);
+
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						filesAndFoldersScanResults.Add(item);
-						filesAndFoldersScanResultsList.Add(item);
-
+						FilesAndFoldersInfoBar.Message = msg3;
 					});
+
 				}
-
-
-				string msg3 = "Scan completed, creating the Supplemental policy";
-
-				Logger.Write(msg3);
-
-				_ = DispatcherQueue.TryEnqueue(() =>
-				{
-					FilesAndFoldersInfoBar.Message = msg3;
-				});
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersSupplementalPolicy");
 
@@ -532,7 +562,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
@@ -603,8 +633,15 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			FilesAndFoldersPolicyDeployToggleButton.IsEnabled = true;
 			CreateFilesAndFoldersSupplementalPolicyButton.IsEnabled = true;
-			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
-			FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+
+			// Only re-enable these buttons if wildcard file path is not used
+			// Because only folder paths are required for wildcard FileRule paths
+			if (!usingWildCardFilePathRules)
+			{
+				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
+				FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+			}
+
 			FilesAndFoldersBrowseForFoldersSettingsCard.IsEnabled = true;
 			FilesAndFoldersBrowseForFoldersButton.IsEnabled = true;
 			FilesAndFoldersPolicyNameTextBox.IsEnabled = true;

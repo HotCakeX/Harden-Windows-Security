@@ -220,6 +220,8 @@ Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="S
                                 <ComboBoxItem>FilePublisher</ComboBoxItem>
                                 <ComboBoxItem>Publisher</ComboBoxItem>
                                 <ComboBoxItem>Hash</ComboBoxItem>
+                                <ComboBoxItem>FilePath</ComboBoxItem>
+                                <ComboBoxItem>WildCardFilePath</ComboBoxItem>
                             </ComboBox>
 
                         </controls:SettingsCard>
@@ -580,6 +582,101 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
+
+
+
+
+
+
+                <!-- Package Family Name (PFN -->
+
+                <controls:SettingsExpander x:Name="PFNSettingsCard"
+                    Description="Create a Supplemental policy based on an app's Package Family Name (PFN)"
+                    Header="Package Family Name"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE734;}">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="PFNInfoBar"
+                            Title="Current Status"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            IsOpen="False"
+                            IsClosable="False"
+                            Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button x:Name="CreateISGSupplementalPolicyButton" Click="CreateISGSupplementalPolicyButton_Click" Content="Create Supplemental Policy"
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+                        <ToggleButton x:Name="ISGPolicyDeployToggleButton" Click="ISGPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
+
+                        <TeachingTip x:Name="CreateISGSupplementalPolicyTeachingTip"
+    Target="{x:Bind CreateISGSupplementalPolicyButton}" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard Description="The name of the Supplemental policy that is going to be created."
+Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
+
+                            <TextBox x:Name="ISGPolicyNameTextBox" TextChanged="ISGPolicyNameTextBox_TextChanged" PlaceholderText="Supplemental Policy Name"/>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Name="ISGBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="ISGBrowseForBasePolicySettingsCard_Click">
+
+                            <Button x:Name="ISGBrowseForBasePolicyButton" Click="ISGBrowseForBasePolicyButton_Click">
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="ISGBrowseForBasePolicyButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button Content="Clear" Click="ISGBrowseForBasePolicyButton_Flyout_Clear_Click" />
+
+                                            <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+
+                                            <TextBox x:Name="ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                 SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </Button.Flyout>
+
+                                <Button.Content>
+                                    <controls:WrapPanel Orientation="Horizontal">
+
+                                        <AnimatedIcon x:Name="ISGBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+
+                                        <TextBlock Text="Browse" />
+
+                                    </controls:WrapPanel>
+                                </Button.Content>
+
+
+                            </Button>
+
+                        </controls:SettingsCard>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+
+
+
 
             </StackPanel>
 

@@ -5,7 +5,7 @@ using AppControlManager.Others;
 
 namespace AppControlManager.XMLOps;
 
-internal class NewFilePathRules
+internal static class NewFilePathRules
 {
 
 	/// <summary>

@@ -12,10 +12,14 @@ using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.ApplicationModel;
+using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
@@ -35,6 +39,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		// Assign this instance to the static field
 		_instance = this;
+
 	}
 
 
@@ -341,13 +346,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		{
 			string selectedText = selectedItem.Content.ToString()!;
 
-			if (!Enum.TryParse(selectedText, out filesAndFoldersScanLevel))
+			// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
+			if (!Enum.TryParse(selectedText.Replace(" ", ""), out filesAndFoldersScanLevel))
 			{
 				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
 			}
 
 			// For Wildcard file path rules, only folder paths should be used
-			if (filesAndFoldersScanLevel is ScanLevels.WildCardFilePath)
+			if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 			{
 				FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
 				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
@@ -994,10 +1000,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 
-
-
-
-
 	#region ISG
 
 
@@ -1184,7 +1186,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 	#endregion
-
 
 
 
@@ -1679,6 +1680,497 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		DriverAutoDetector();
 	}
+
+
+
+	#endregion
+
+
+
+
+
+
+	#region Package Family Names
+
+	// Package Manager object used by the PFN section
+	private readonly PackageManager packageManager = new();
+
+	/// <summary>
+	/// Gets the list of all installed Packaged Apps
+	/// </summary>
+	/// <returns></returns>
+	internal async Task<List<PackagedAppView>> GetAppsList()
+	{
+		return await Task.Run(() =>
+		{
+			// The list to return as output
+			List<PackagedAppView> apps = [];
+
+			// Get all of the packages on the system
+			IEnumerable<Package> allApps = packageManager.FindPackages();
+
+			// Loop over each package
+			foreach (Package item in allApps)
+			{
+				// Create a new instance of the class that displays each app in the ListView
+				apps.Add(new PackagedAppView(
+					displayName: item.DisplayName,
+					version: $"Version: {item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
+					packageFamilyName: $"PFN: {item.Id.FamilyName}",
+					logo: item.Logo.ToString(),
+					packageFamilyNameActual: item.Id.FamilyName
+					));
+			}
+
+			return apps;
+		});
+
+	}
+
+
+
+	/// <summary>
+	/// Event handler for the Refresh button to get the apps list
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void PFNRefreshAppsListButton_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PFNRefreshAppsListButton.IsEnabled = false;
+
+			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+		}
+		finally
+		{
+			PFNRefreshAppsListButton.IsEnabled = true;
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler for the touch-initiated refresh action
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private async void PFNRefreshContainer_RefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs args)
+	{
+		try
+		{
+			PFNRefreshAppsListButton.IsEnabled = false;
+
+			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+		}
+		finally
+		{
+			PFNRefreshAppsListButton.IsEnabled = true;
+		}
+	}
+
+
+	// Since we have a ScrollView around the page, it captures the mouse Scroll Wheel events.
+	// We have to disable its scrolling ability while pointer is inside of the ListView.
+	// Scrolling via touch or dragging the ListView's scrollbar via mouse doesn't require this and they work either way.
+	private void PFNPackagedAppsListView_PointerEntered(object sender, PointerRoutedEventArgs e)
+	{
+		if (e.Pointer.PointerDeviceType is PointerDeviceType.Mouse)
+		{
+			// Disable vertical scrolling for the outer ScrollView only for mouse input
+			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Disabled;
+		}
+	}
+
+	private void PFNPackagedAppsListView_PointerExited(object sender, PointerRoutedEventArgs e)
+	{
+		// Re-enable vertical scrolling for the outer ScrollView
+		MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
+
+	}
+
+	private void MainScrollView_PointerPressed(object sender, PointerRoutedEventArgs e)
+	{
+		if (e.Pointer.PointerDeviceType is not PointerDeviceType.Mouse)
+		{
+			// Always enable vertical scrolling for input that's not mouse
+			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
+		}
+	}
+
+
+
+
+
+
+	// To create a collection of grouped items, create a query that groups
+	// an existing list, or returns a grouped collection from a database.
+	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
+	private async Task<ObservableCollection<GroupInfoListForPackagedAppView>> GetContactsGroupedAsync()
+	{
+		// Grab Apps objects from pre-existing list (list is returned from method GetAppsList())
+		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await GetAppsList()
+
+																 // Ensure DisplayName is not null before grouping
+																 // This also prevents apps without a DisplayName to exist in the returned apps list
+															 where !string.IsNullOrWhiteSpace(item.DisplayName)
+
+															 // Group the items returned from the query, sort and select the ones you want to keep
+															 group item by item.DisplayName[..1].ToUpper() into g
+															 orderby g.Key
+
+															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
+															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
+															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
+															 select new GroupInfoListForPackagedAppView(g) { Key = g.Key };
+
+		return [.. query];
+	}
+
+
+
+
+	/// <summary>
+	/// Event handler to select all apps in the ListView
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void PFNSelectAllAppsListButton_Click(object sender, RoutedEventArgs e)
+	{
+		// Ensure the ListView has items
+		if (PFNPackagedAppsListView.ItemsSource is IEnumerable<object> items)
+		{
+			PFNPackagedAppsListView.SelectedItems.Clear(); // Clear any existing selection
+
+			foreach (object item in items)
+			{
+				PFNPackagedAppsListView.SelectedItems.Add(item); // Add each item to SelectedItems
+			}
+		}
+	}
+
+	/// <summary>
+	/// Event handler to remove all selections of apps in the ListView
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void PFNRemoveSelectionAppsListButton_Click(object sender, RoutedEventArgs e)
+	{
+		PFNPackagedAppsListView.SelectedItems.Clear(); // Clear all selected items
+	}
+
+
+
+
+
+	/// <summary>
+	/// Event handler to display the selected apps count on the UI TextBlock
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void PFNPackagedAppsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
+		PFNSelectedItemsCount.Text = $"Selected Apps: {selectedCount}";
+	}
+
+
+
+	// Used to store the original Apps collection so when we filter the results and then remove the filters,
+	// We can still have access to the original collection of apps
+	private ObservableCollection<GroupInfoListForPackagedAppView>? _originalContacts;
+
+
+	/// <summary>
+	/// Event handler for when the search box of apps list changes
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void PFNAppFilteringTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		// Store the original collection if it hasn't been saved yet
+		_originalContacts ??= (ObservableCollection<GroupInfoListForPackagedAppView>)PackagedAppsCollectionViewSource.Source;
+
+		// Get the text from text box
+		string filterText = PFNAppFilteringTextBox.Text;
+
+		if (string.IsNullOrWhiteSpace(filterText))
+		{
+			// If the filter is cleared, restore the original collection
+			PackagedAppsCollectionViewSource.Source = _originalContacts;
+			return;
+		}
+
+		// Filter the original collection
+		List<GroupInfoListForPackagedAppView> filtered = [.. _originalContacts
+			.Select(group => new GroupInfoListForPackagedAppView(group.Where(app =>
+				app.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase)))
+			{
+				Key = group.Key // Preserve the group key
+			})
+			.Where(group => group.Any())];
+
+		// Update the ListView source with the filtered data
+		PackagedAppsCollectionViewSource.Source = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
+	}
+
+
+
+	private bool packagesLoadedOnExpand;
+
+	/// <summary>
+	/// Event handler to happen only once when the section is expanded and apps list is loaded
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void PFNSettingsCard_Expanded(object sender, EventArgs e)
+	{
+		if (!packagesLoadedOnExpand)
+		{
+			try
+			{
+				PFNRefreshAppsListButton.IsEnabled = false;
+
+				PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+
+				packagesLoadedOnExpand = true;
+			}
+			finally
+			{
+				PFNRefreshAppsListButton.IsEnabled = true;
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+	private string? PFNBasePolicyPath;
+
+
+
+
+	private void PFNBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			PFNBasePolicyPath = selectedFile;
+
+			// Add the file path to the GUI's text box
+			PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+
+		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+		PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
+	}
+
+
+
+
+	private void PFNBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			PFNBasePolicyPath = selectedFile;
+
+			// Add the file path to the GUI's text box
+			PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+	}
+
+
+
+	private void PFNBasePolicyClearButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		PFNBasePolicyPath = null;
+		PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
+
+	}
+
+
+
+	/// <summary>
+	/// Main button's event handler - Create Supplemental policy based on PFNs
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void CreatePFNSupplementalPolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		string? PFNBasedSupplementalPolicyName = PFNPolicyNameTextBox.Text;
+
+		bool shouldDeploy = PFNPolicyDeployToggleButton.IsChecked ?? false;
+
+		// Close the teaching tip if it's open when user presses the button
+		// it will be opened again if necessary
+		CreatePFNSupplementalPolicyTeachingTip.IsOpen = false;
+
+		if (PFNPackagedAppsListView.SelectedItems.Count is 0)
+		{
+			CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
+			CreatePFNSupplementalPolicyTeachingTip.Title = "PFN based Supplemental policy";
+			CreatePFNSupplementalPolicyTeachingTip.Subtitle = "No app was selected to create a supplemental policy for";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(PFNBasedSupplementalPolicyName))
+		{
+			CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
+			CreatePFNSupplementalPolicyTeachingTip.Title = "PFN based Supplemental policy";
+			CreatePFNSupplementalPolicyTeachingTip.Subtitle = "No policy name was selected for the supplemental policy";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(PFNBasePolicyPath))
+		{
+			CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
+			CreatePFNSupplementalPolicyTeachingTip.Title = "PFN based Supplemental policy";
+			CreatePFNSupplementalPolicyTeachingTip.Subtitle = "No Base policy file was selected for the supplemental policy";
+			return;
+		}
+
+
+
+		bool ErrorsOccurred = false;
+
+		try
+		{
+
+			CreatePFNSupplementalPolicyButton.IsEnabled = false;
+			PFNBrowseForBasePolicySettingsCard.IsEnabled = false;
+			PFNBrowseForBasePolicyButton.IsEnabled = false;
+			PFNSelectPackagedAppsSettingsCard.IsEnabled = false;
+			PFNPolicyNameTextBox.IsEnabled = false;
+
+			PFNInfoBar.IsClosable = false;
+			PFNInfoBar.IsOpen = true;
+			PFNInfoBar.Severity = InfoBarSeverity.Informational;
+			PFNInfoBar.Message = "Creating the Supplemental policy based on Package Family Names";
+			PFNSettingsCard.IsExpanded = true;
+
+
+			// A list to store the selected PackagedAppView items
+			List<string> selectedAppsPFNs = [];
+
+
+
+
+			// Loop through the selected items
+			foreach (var selectedItem in PFNPackagedAppsListView.SelectedItems)
+			{
+				if (selectedItem is PackagedAppView appView)
+				{
+					// Add the selected item's PFN to the list
+					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
+				}
+			}
+
+
+
+
+
+			await Task.Run(() =>
+			{
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PFNSupplementalPolicy");
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(level: ScanLevels.PFN, packageFamilyNames: selectedAppsPFNs);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+
+				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedSupplementalPolicyName}.xml");
+
+				// Instantiate the user selected Base policy - To get its BasePolicyID
+				CodeIntegrityPolicy codeIntegrityPolicy = new(PFNBasePolicyPath, null);
+
+				// Set the BasePolicyID of our new policy to the one from user selected policy
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, codeIntegrityPolicy.BasePolicyID, null);
+
+				// Configure policy rule options
+				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+				// Set policy version
+				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+
+				// If user selected to deploy the policy
+				if (shouldDeploy)
+				{
+
+					string msg4 = "Deploying the Supplemental policy on the system";
+
+					Logger.Write(msg4);
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						PFNInfoBar.Message = msg4;
+					});
+
+
+					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+
+					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+
+
+
+			});
+
+
+		}
+
+		catch (Exception ex)
+		{
+			ErrorsOccurred = true;
+
+			PFNInfoBar.Severity = InfoBarSeverity.Error;
+			PFNInfoBar.Message = $"There was an error: {ex.Message}";
+
+			throw;
+		}
+		finally
+		{
+
+			if (!ErrorsOccurred)
+			{
+				PFNInfoBar.Severity = InfoBarSeverity.Success;
+				PFNInfoBar.Message = "Successfully created the supplemental policy";
+			}
+
+			CreatePFNSupplementalPolicyButton.IsEnabled = true;
+			PFNBrowseForBasePolicySettingsCard.IsEnabled = true;
+			PFNBrowseForBasePolicyButton.IsEnabled = true;
+			PFNSelectPackagedAppsSettingsCard.IsEnabled = true;
+			PFNPolicyNameTextBox.IsEnabled = true;
+
+			PFNInfoBar.IsClosable = true;
+		}
+
+
+	}
+
+
 
 
 

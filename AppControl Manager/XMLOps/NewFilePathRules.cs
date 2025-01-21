@@ -26,7 +26,7 @@ internal static class NewFilePathRules
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
-		Logger.Write($"NewHashLevelRules: There are {data.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
+		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
 
 		#region
 
@@ -126,7 +126,7 @@ internal static class NewFilePathRules
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
-		Logger.Write($"NewHashLevelRules: There are {data.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
+		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
 
 		#region
 

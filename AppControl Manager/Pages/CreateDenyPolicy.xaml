@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:others="using:AppControlManager.Others"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -26,7 +27,7 @@
         </Style>
     </Page.Resources>
 
-    <ScrollView>
+    <ScrollView x:Name="MainScrollView">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -43,6 +44,63 @@
                         <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
                     </Style.Setters>
                 </Style>
+
+
+
+                <!-- For the Packaged Apps ListView Grouping -->
+                <CollectionViewSource x:Name="PackagedAppsCollectionViewSource" IsSourceGrouped="True"/>
+
+
+                <!-- Defines a single App that is displayed in the ListView -->
+
+                <DataTemplate x:Key="PackagedAppsListViewTemplate" x:DataType="others:PackagedAppView">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+
+
+                        <Border CornerRadius="15" VerticalAlignment="Center"
+HorizontalAlignment="Center" BorderThickness="0" Grid.RowSpan="3" Grid.Column="0">
+                            <Image 
+                                Width ="32"
+                                Height="32"
+                                Margin="6"
+                                Source="{x:Bind Logo}" />
+                        </Border>
+
+
+
+                        <TextBlock Grid.Column="1"
+Grid.Row="0"                                   
+Text="{x:Bind DisplayName}"
+x:Phase="1"
+Style="{ThemeResource BaseTextBlockStyle}"
+Margin="12,6,0,0"/>
+                        <TextBlock  Grid.Column="1"
+Grid.Row="1"
+Text="{x:Bind Version}"
+x:Phase="2"
+Style="{ThemeResource BodyTextBlockStyle}"
+Margin="12,6,0,0"/>
+
+
+                        <TextBlock  Grid.Column="1"
+Grid.Row="2"
+Text="{x:Bind PackageFamilyName}"
+x:Phase="2"
+Style="{ThemeResource BodyTextBlockStyle}"
+Margin="12,0,0,6"/>
+                    </Grid>
+                </DataTemplate>
+
 
             </Grid.Resources>
 
@@ -78,7 +136,7 @@
                 <controls:SettingsExpander x:Name="FilesAndFoldersSettingsCard"
                            Description="Create Deny policy by scanning files and folders"
                            Header="Files and Folders"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}" IsExpanded="True">
+                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="FilesAndFoldersInfoBar"
@@ -177,9 +235,11 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
 
                             <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" ToolTipService.ToolTip="Pick a level based on which the selected files will be scanned"
                                   SelectedIndex="0">
-                                <ComboBoxItem>FilePublisher</ComboBoxItem>
+                                <ComboBoxItem>File Publisher</ComboBoxItem>
                                 <ComboBoxItem>Publisher</ComboBoxItem>
                                 <ComboBoxItem>Hash</ComboBoxItem>
+                                <ComboBoxItem>File Path</ComboBoxItem>
+                                <ComboBoxItem>WildCard Folder Path</ComboBoxItem>
                             </ComboBox>
 
                         </controls:SettingsCard>
@@ -233,6 +293,122 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
+
+
+
+
+
+
+
+                <!-- Package Family Name (PFN -->
+
+                <controls:SettingsExpander x:Name="PFNSettingsCard"
+                    Description="Create a Deny policy based on an app's Package Family Name (PFN)"
+                    Header="Package Family Name"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE734;}" Expanded="PFNSettingsCard_Expanded">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="PFNInfoBar"
+                            Title="Current Status"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            IsOpen="False"
+                            IsClosable="False"
+                            Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button x:Name="CreatePFNDenyPolicyButton" Click="CreatePFNDenyPolicyButton_Click" Content="Create Deny Policy"
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+                        <ToggleButton x:Name="PFNPolicyDeployToggleButton" Content="Deploy after Creation" Margin="0,0,15,0" />
+
+                        <TeachingTip x:Name="CreatePFNDenyPolicyTeachingTip"
+    Target="{x:Bind CreatePFNDenyPolicyButton}" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard Description="The name of the Deny policy that is going to be created."
+                            Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
+
+                            <TextBox x:Name="PFNPolicyNameTextBox" PlaceholderText="Deny Policy Name"/>
+
+                        </controls:SettingsCard>
+
+                        
+
+                        <controls:SettingsCard Description="Select one or more installed packages to create a Deny policy for"
+                            Header="Package Family Names" x:Name="PFNSelectPackagedAppsSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+
+
+                            <controls:WrapPanel Orientation="Horizontal">
+
+
+                                <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
+
+                                    <TextBox x:Name="PFNAppFilteringTextBox" TextChanged="PFNAppFilteringTextBox_TextChanged" PlaceholderText="Search among the apps"/>
+
+                                    <TextBlock x:Name="PFNSelectedItemsCount" HorizontalAlignment="Center" Text="Selected Apps: 0"/>
+                                    <Button Content="Refresh" HorizontalAlignment="Center" x:Name="PFNRefreshAppsListButton" Click="PFNRefreshAppsListButton_Click" />
+                                    <Button Content="Select All" HorizontalAlignment="Center" x:Name="PFNSelectAllAppsListButton" Click="PFNSelectAllAppsListButton_Click" />
+                                    <Button Content="Remove Selections" HorizontalAlignment="Center" x:Name="PFNRemoveSelectionAppsListButton" Click="PFNRemoveSelectionAppsListButton_Click" />
+
+                                </controls:WrapPanel>
+
+
+                                <RefreshContainer x:Name="PFNRefreshContainer" RefreshRequested="PFNRefreshContainer_RefreshRequested">
+
+
+                                    <ListView
+                                 x:Name="PFNPackagedAppsListView"                                 
+                                 BorderThickness="1"
+                                 CornerRadius="5"
+                                 ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
+                                 BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                 Width="450"
+                                 Height="400"
+                                 HorizontalAlignment="Left"
+                                 SelectionMode="Multiple"                               
+                                 PointerEntered="PFNPackagedAppsListView_PointerEntered"
+                                 PointerExited="PFNPackagedAppsListView_PointerExited"
+                                 SelectionChanged="PFNPackagedAppsListView_SelectionChanged"
+                                 ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
+
+                                        <ListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsStackPanel AreStickyGroupHeadersEnabled="True"/>
+                                            </ItemsPanelTemplate>
+                                        </ListView.ItemsPanel>
+                                        <ListView.GroupStyle>
+                                            <GroupStyle >
+                                                <GroupStyle.HeaderTemplate>
+                                                    <DataTemplate x:DataType="others:GroupInfoListForPackagedAppView">
+                                                        <Border AutomationProperties.AccessibilityView="Raw">
+                                                            <TextBlock Text="{x:Bind Key}" Style="{ThemeResource TitleTextBlockStyle}" AutomationProperties.AccessibilityView="Raw"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </GroupStyle.HeaderTemplate>
+                                            </GroupStyle>
+                                        </ListView.GroupStyle>
+
+                                    </ListView>
+
+                                </RefreshContainer>
+
+
+                            </controls:WrapPanel>
+
+                        </controls:SettingsCard>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
 
 
             </StackPanel>

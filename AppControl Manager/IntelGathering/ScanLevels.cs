@@ -5,5 +5,8 @@ public enum ScanLevels
 {
 	FilePublisher,
 	Publisher,
-	Hash
+	Hash,
+	FilePath,
+	WildCardFolderPath,
+	PFN
 }

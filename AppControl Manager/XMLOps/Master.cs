@@ -20,6 +20,8 @@ internal static class Master
 			NewFilePublisherLevelRules.CreateAllow(xmlFilePath, incomingData.FilePublisherSigners);
 			NewPublisherLevelRules.CreateAllow(xmlFilePath, incomingData.PublisherSigners);
 			NewHashLevelRules.CreateAllow(xmlFilePath, incomingData.CompleteHashes);
+			NewFilePathRules.CreateAllow(xmlFilePath, incomingData.FilePaths);
+			NewPFNLevelRules.CreateAllow(xmlFilePath, incomingData.PFNRules);
 
 			Logger.Write("Merging");
 			SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath]);
@@ -29,6 +31,8 @@ internal static class Master
 			NewFilePublisherLevelRules.CreateDeny(xmlFilePath, incomingData.FilePublisherSigners);
 			NewPublisherLevelRules.CreateDeny(xmlFilePath, incomingData.PublisherSigners);
 			NewHashLevelRules.CreateDeny(xmlFilePath, incomingData.CompleteHashes);
+			NewFilePathRules.CreateDeny(xmlFilePath, incomingData.FilePaths);
+			NewPFNLevelRules.CreateDeny(xmlFilePath, incomingData.PFNRules);
 
 			Logger.Write("Merging");
 

@@ -40,7 +40,7 @@ internal static class SignerAndHashBuilder
 	/// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
 	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
 	/// <returns></returns>
-	internal static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false)
+	internal static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity>? data = null, HashSet<string>? folderPaths = null, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false, List<string>? packageFamilyNames = null)
 	{
 		// To store the Signers created with FilePublisher Level
 		List<FilePublisherSignerCreator> filePublisherSigners = [];
@@ -51,10 +51,19 @@ internal static class SignerAndHashBuilder
 		// To store the FileAttributes created using Hash Level
 		List<HashCreator> completeHashes = [];
 
+		// To store the file rules created using FilePath Level (including Wildcard Path rules)
+		List<FilePathCreator> filePaths = [];
+
+		// To store the PackageFamilyName rules using the PFN Level
+		List<PFNRuleCreator> pfnRules = [];
+
 		// Lists to separate data initially
 		List<FileIdentity> signedFilePublisherData = [];
 		List<FileIdentity> signedPublisherData = [];
 		List<FileIdentity> unsignedData = [];
+		List<FileIdentity> filePathData = [];
+		HashSet<string> wildCardFilePathData = [];
+		List<string> PFNs = [];
 
 		Logger.Write("BuildSignerAndHashObjects: Starting the data separation process.");
 
@@ -63,83 +72,125 @@ internal static class SignerAndHashBuilder
 		{
 			// If Hash level is used then add everything to the Unsigned data so Hash rules will be created for them
 			case ScanLevels.Hash:
+				{
 
-				Logger.Write("BuildSignerAndHashObjects: Using only Hash level.");
+					Logger.Write("BuildSignerAndHashObjects: Using only Hash level.");
 
-				// Assign the entire data to the unsigned Data list
-				unsignedData = data;
+					if (data is not null)
+					{
+						// Assign the entire data to the unsigned Data list
+						unsignedData = data;
+					}
 
-				break;
-
+					break;
+				}
 			// If Publisher level is used then add all Signed data to the SignedPublisherData list and Unsigned data to the Hash list
 			case ScanLevels.Publisher:
-
-				Logger.Write("BuildSignerAndHashObjects: Using Publisher -> Hash levels.");
-
-				foreach (FileIdentity item in data)
 				{
-					// If the current data is signed and publisherToHash is not used, which would indicate Hash level rules must be created for Publisher level data
-					// And make sure the file is not ECC Signed
-					if (item.SignatureStatus is SignatureStatus.IsSigned && !publisherToHash && item.IsECCSigned != true)
+
+					if (data is not null)
 					{
-						signedPublisherData.Add(item);
-					}
-					else
-					{
-						// Assign the data to the Hash list
-						unsignedData.Add(item);
-					}
-				}
-				break;
 
-			case ScanLevels.FilePublisher:
+						Logger.Write("BuildSignerAndHashObjects: Using Publisher -> Hash levels.");
 
-				// Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
-
-				Logger.Write("BuildSignerAndHashObjects: Using FilePublisher -> Publisher -> Hash levels.");
-
-				// Loop over each data
-				foreach (FileIdentity item in data)
-				{
-					// If the file's version is empty or it has no file attribute, then add it to the Publishers array
-					// because FilePublisher rule cannot be created for it
-					if (item.SignatureStatus is SignatureStatus.IsSigned && item.IsECCSigned != true)
-					{
-						// Get values from the item and check for null, empty or whitespace
-						bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
-													string.IsNullOrWhiteSpace(item.InternalName) &&
-													string.IsNullOrWhiteSpace(item.FileDescription) &&
-													string.IsNullOrWhiteSpace(item.ProductName);
-
-						bool hasNoFileVersion = item.FileVersion is null;
-
-						if (hasNoFileAttributes || hasNoFileVersion)
+						foreach (FileIdentity item in data)
 						{
-							// if PublisherToHash is not used then add it to the Publisher array normally
-							if (!publisherToHash)
+							// If the current data is signed and publisherToHash is not used, which would indicate Hash level rules must be created for Publisher level data
+							// And make sure the file is not ECC Signed
+							if (item.SignatureStatus is SignatureStatus.IsSigned && !publisherToHash && item.IsECCSigned != true)
 							{
 								signedPublisherData.Add(item);
 							}
 							else
 							{
-								Logger.Write($"BuildSignerAndHashObjects: Passing Publisher rule to the hash array for the file: {item.FilePath}");
-								// Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
+								// Assign the data to the Hash list
 								unsignedData.Add(item);
 							}
 						}
-						else
+					}
+					break;
+				}
+			case ScanLevels.FilePublisher:
+				{
+
+					if (data is not null)
+					{
+
+						// Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
+
+						Logger.Write("BuildSignerAndHashObjects: Using FilePublisher -> Publisher -> Hash levels.");
+
+						// Loop over each data
+						foreach (FileIdentity item in data)
 						{
-							// If the file has the required info for a FilePublisher rule level creation, add the data to the FilePublisher list
-							signedFilePublisherData.Add(item);
+							// If the file's version is empty or it has no file attribute, then add it to the Publishers array
+							// because FilePublisher rule cannot be created for it
+							if (item.SignatureStatus is SignatureStatus.IsSigned && item.IsECCSigned != true)
+							{
+								// Get values from the item and check for null, empty or whitespace
+								bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
+															string.IsNullOrWhiteSpace(item.InternalName) &&
+															string.IsNullOrWhiteSpace(item.FileDescription) &&
+															string.IsNullOrWhiteSpace(item.ProductName);
+
+								bool hasNoFileVersion = item.FileVersion is null;
+
+								if (hasNoFileAttributes || hasNoFileVersion)
+								{
+									// if PublisherToHash is not used then add it to the Publisher array normally
+									if (!publisherToHash)
+									{
+										signedPublisherData.Add(item);
+									}
+									else
+									{
+										Logger.Write($"BuildSignerAndHashObjects: Passing Publisher rule to the hash array for the file: {item.FilePath}");
+										// Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
+										unsignedData.Add(item);
+									}
+								}
+								else
+								{
+									// If the file has the required info for a FilePublisher rule level creation, add the data to the FilePublisher list
+									signedFilePublisherData.Add(item);
+								}
+							}
+							else
+							{
+								// Add the data to the Hash list
+								unsignedData.Add(item);
+							}
 						}
 					}
-					else
-					{
-						// Add the data to the Hash list
-						unsignedData.Add(item);
-					}
+					break;
 				}
-				break;
+			case ScanLevels.FilePath:
+				{
+					if (data is not null)
+					{
+						filePathData = data;
+					}
+					break;
+				}
+
+			case ScanLevels.WildCardFolderPath:
+				{
+					if (folderPaths is not null && folderPaths.Count > 0)
+					{
+						wildCardFilePathData = folderPaths;
+					}
+
+					break;
+				}
+
+			case ScanLevels.PFN:
+				{
+					if (packageFamilyNames is not null && packageFamilyNames.Count > 0)
+
+						PFNs = packageFamilyNames;
+
+					break;
+				}
 
 			default:
 
@@ -301,8 +352,61 @@ internal static class SignerAndHashBuilder
 			));
 		}
 
+		Logger.Write("BuildSignerAndHashObjects: Processing FilePath data");
+
+		foreach (FileIdentity item in filePathData)
+		{
+
+			if (!string.IsNullOrWhiteSpace(item.FilePath))
+			{
+
+				filePaths.Add(new FilePathCreator(
+					item.FilePath,
+					"0.0.0.0", // Minimum version of all files allowed by path
+					item.SISigningScenario
+					));
+			}
+		}
+
+		Logger.Write("BuildSignerAndHashObjects: Processing WildCard FilePath data");
+
+		foreach (string item in wildCardFilePathData)
+		{
+			// Create wildcard path
+			string wildcardPath = item + @"\" + "*";
+
+			// Since we can't know if a folder contains user mode files or kernel mode files
+			// We should create rules for both signing scenarios
+
+			filePaths.Add(new FilePathCreator(
+				wildcardPath,
+				"0.0.0.0", // Minimum version of all files allowed by path
+				1 // for User Mode
+				));
+
+
+			filePaths.Add(new FilePathCreator(
+				wildcardPath,
+				"0.0.0.0", // Minimum version of all files allowed by path
+				0 // for Kernel Mode
+				));
+		}
+
+		Logger.Write("BuildSignerAndHashObjects: Processing PFN data");
+
+		foreach (string item in PFNs)
+		{
+
+			pfnRules.Add(new PFNRuleCreator(
+				item,
+				"0.0.0.0", // Minimum version of the app allowed by PFN
+				1 // for User Mode
+				));
+
+		}
+
 		Logger.Write("BuildSignerAndHashObjects: Completed the process.");
 
-		return new FileBasedInfoPackage(filePublisherSigners, publisherSigners, completeHashes);
+		return new FileBasedInfoPackage(filePublisherSigners, publisherSigners, completeHashes, filePaths, pfnRules);
 	}
 }

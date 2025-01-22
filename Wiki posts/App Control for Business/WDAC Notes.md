@@ -160,8 +160,6 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 
 ### Using System Information
 
-<image>
-
 * App Control for Business Policy (Kernel Mode)
 * App Control for Business User Mode Policy (User Mode)
 

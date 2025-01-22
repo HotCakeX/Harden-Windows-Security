@@ -184,7 +184,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				{
 
 					Origin = FileIdentityOrigin.MDEAdvancedHunting,
-					Action = EventAction.Audit,
+					Action = EventAction.Block,
 					TimeCreated = GetEventDataDateTimeValue(possibleCodeIntegrityBlockEvent.Timestamp),
 					ComputerName = possibleCodeIntegrityBlockEvent.DeviceName,
 					UserID = possibleCodeIntegrityBlockEvent.InitiatingProcessAccountName,
@@ -396,7 +396,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				{
 
 					Origin = FileIdentityOrigin.MDEAdvancedHunting,
-					Action = EventAction.Audit,
+					Action = EventAction.Block,
 					TimeCreated = GetEventDataDateTimeValue(possibleAppLockerBlockEvent.Timestamp),
 					ComputerName = possibleAppLockerBlockEvent.DeviceName,
 					UserID = possibleAppLockerBlockEvent.InitiatingProcessAccountName,

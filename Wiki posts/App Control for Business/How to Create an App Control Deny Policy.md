@@ -34,7 +34,7 @@ In the [Create Deny Policy](https://github.com/HotCakeX/Harden-Windows-Security/
 
 Having selected all of the required details, you can now press the **Create Deny Policy button** and wait for the scan to finish.
 
-All of the files and folders that you selected will be recursively scanned and any App Control compatible files that is found in them will be added to **View detected file details** page at the bottom of the section to show you the exact files that will be included in the deny policy.
+All of the files and folders that you selected will be recursively scanned and any App Control compatible files that are found in them will be added to **View detected file details** page at the bottom of the section to show you the exact files that will be included in the deny policy.
 
 <br>
 

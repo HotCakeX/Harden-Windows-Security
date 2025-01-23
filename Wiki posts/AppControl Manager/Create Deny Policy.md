@@ -18,6 +18,11 @@ All Deny policies have 2 allow all rules so that anything not denied by them wil
 
 <br>
 
+> [!IMPORTANT]\
+> [How to Create an App Control Deny Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-an-App-Control-Deny-Policy)
+
+<br>
+
 ## Create a Deny Policy by Files or Folders Scan
 
 With AppControl Manager, you can easily create a Deny base policy by scanning files or folders.
@@ -36,5 +41,21 @@ With AppControl Manager, you can easily create a Deny base policy by scanning fi
 
 > [!TIP]\
 > Use the ***View Detected File Details*** section to view highly detailed results of the files and folder scans.
+
+<br>
+
+## Create a Deny Policy Based on Package Family Names
+
+You can create Deny policies for the installed packaged apps. This is useful for only blocking specific apps that are installed on the system.
+
+### Configuration Details
+
+* **Policy Name**: Enter a name for the Deny policy.
+
+* **Package Family Names**: In this section, you can view the list of all installed apps. Use the search bar to looking for a specific app and after finding them, click/tap on them to select them.
+
+   * Use the "Select All" and "Remove Selections" buttons to select/deselect all apps currently available in the list.
+
+   * Use the Refresh button to refresh the list of installed apps in case you removed/installed any apps after the list was loaded.
 
 <br>

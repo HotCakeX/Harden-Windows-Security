@@ -209,7 +209,6 @@ internal static class CiToolHelper
 
 
 
-
 	/// <summary>
 	/// Removes multiple deployed App Control policy from the system
 	/// </summary>
@@ -347,7 +346,6 @@ internal static class CiToolHelper
 	}
 
 }
-
 
 
 

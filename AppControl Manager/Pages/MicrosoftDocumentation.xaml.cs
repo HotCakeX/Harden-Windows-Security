@@ -1,4 +1,5 @@
 using System;
+using AppControlManager.Others;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -67,7 +68,7 @@ public sealed partial class MicrosoftDocumentation : Page
 		catch (ObjectDisposedException ex)
 		{
 			// Log the exception, but avoid crashing the app
-			System.Diagnostics.Debug.WriteLine("WebView2 in Microsoft Documentation page has been disposed: " + ex.Message);
+			Logger.Write("WebView2 in Microsoft Documentation page has been disposed: " + ex.Message);
 		}
 	}
 }

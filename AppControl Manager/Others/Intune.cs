@@ -249,7 +249,6 @@ internal static class Intune
 
 
 
-
 	/// <summary>
 	/// Assigns a group to the created Intune policy
 	/// </summary>
@@ -301,8 +300,6 @@ internal static class Intune
 			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
-
-
 
 
 
@@ -379,7 +376,6 @@ internal static class Intune
 			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
-
 
 
 

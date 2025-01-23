@@ -209,8 +209,6 @@ internal static partial class Merger
 
 
 
-
-
 		// Create the final policy data, it will replace the content in the main XML file
 		SiPolicy output = new()
 		{

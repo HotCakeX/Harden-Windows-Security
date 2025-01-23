@@ -39,11 +39,12 @@ internal static class CloseEmptyXmlNodesSemantic
 
           */
 
+	// Defining the base node names that should not be removed even if empty
+	private static readonly string[] baseNodeNames = [ "SiPolicy", "Rules", "EKUs", "FileRules", "Signers", "SigningScenarios",
+						"UpdatePolicySigners", "CiSigners", "HvciOptions", "BasePolicyID", "PolicyID" ];
+
 	internal static void Close(string xmlFilePath)
 	{
-		// Define the base node names that should not be removed even if empty
-		string[] baseNodeNames = [ "SiPolicy", "Rules", "EKUs", "FileRules", "Signers", "SigningScenarios",
-						"UpdatePolicySigners", "CiSigners", "HvciOptions", "BasePolicyID", "PolicyID" ];
 
 		// Load the XML file
 		XmlDocument xmlDoc = new();
@@ -56,7 +57,12 @@ internal static class CloseEmptyXmlNodesSemantic
 		xmlDoc.Save(xmlFilePath);
 	}
 
-	// Helper method to recursively close empty XML nodes
+
+	/// <summary>
+	/// Helper method to recursively close empty XML nodes
+	/// </summary>
+	/// <param name="xmlNode"></param>
+	/// <param name="baseNodeNames"></param>
 	private static void CloseEmptyNodesRecursively(XmlElement xmlNode, string[] baseNodeNames)
 	{
 		// Iterate through child nodes in reverse to avoid modifying collection while iterating

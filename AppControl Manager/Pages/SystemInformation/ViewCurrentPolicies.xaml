@@ -35,7 +35,6 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
-
                 <Button>
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
@@ -110,26 +109,26 @@
         <Border Grid.Row="1" Style="{StaticResource GridCardStyle}" Margin="0" Padding="5">
 
             <tk7controls:DataGrid
-        x:Name="DeployedPolicies"
-        ItemsSource="{x:Bind AllPolicies, Mode=OneWay}"
-        AllowDrop="False"
-        AreRowDetailsFrozen="True"
-        AutoGenerateColumns="False"
-        CanDrag="False"
-        HeadersVisibility="Column"
-        IsReadOnly="True"
-        IsTabStop="True"
-        RowDetailsVisibilityMode="Collapsed"
-        SelectionMode="Single"
-        TabIndex="2"
-        ScrollViewer.HorizontalScrollBarVisibility="Visible"
-        ScrollViewer.VerticalScrollBarVisibility="Visible"
-        ScrollViewer.VerticalScrollMode="Auto"
-        ScrollViewer.HorizontalScrollMode="Auto"
-        SelectionChanged="DeployedPolicies_SelectionChanged"
-        Sorting="DeployedPoliciesDataGrid_Sorting"
-        CanUserSortColumns="True"
-        Loaded="DeployedPoliciesDataGrid_Loaded">
+                x:Name="DeployedPolicies"
+                ItemsSource="{x:Bind AllPolicies, Mode=OneWay}"
+                AllowDrop="False"
+                AreRowDetailsFrozen="True"
+                AutoGenerateColumns="False"
+                CanDrag="False"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                IsTabStop="True"
+                RowDetailsVisibilityMode="Collapsed"
+                SelectionMode="Single"
+                TabIndex="2"
+                ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                ScrollViewer.VerticalScrollMode="Auto"
+                ScrollViewer.HorizontalScrollMode="Auto"
+                SelectionChanged="DeployedPolicies_SelectionChanged"
+                Sorting="DeployedPoliciesDataGrid_Sorting"
+                CanUserSortColumns="True"
+                Loaded="DeployedPoliciesDataGrid_Loaded">
                 <tk7controls:DataGrid.ContextFlyout>
                     <MenuFlyout>
 

@@ -65,8 +65,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 
 
-
-
 	/// <summary>
 	/// Main button's event handler for files and folder Deny policy creation
 	/// </summary>
@@ -158,7 +156,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 
 					// Make sure there are AppControl compatible files
-					if (DetectedFilesInSelectedDirectories.Count == 0)
+					if (DetectedFilesInSelectedDirectories.Count is 0)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
@@ -615,9 +613,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 
 
-
-
-
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
@@ -641,7 +636,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 		return [.. query];
 	}
-
 
 
 
@@ -673,8 +667,6 @@ public sealed partial class CreateDenyPolicy : Page
 	{
 		PFNPackagedAppsListView.SelectedItems.Clear(); // Clear all selected items
 	}
-
-
 
 
 
@@ -759,7 +751,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 
 
-
 	/// <summary>
 	/// Main button's event handler - Create Deny policy based on PFNs
 	/// </summary>
@@ -815,7 +806,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 
 
-
 			// Loop through the selected items
 			foreach (var selectedItem in PFNPackagedAppsListView.SelectedItems)
 			{
@@ -825,8 +815,6 @@ public sealed partial class CreateDenyPolicy : Page
 					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
 				}
 			}
-
-
 
 
 
@@ -914,8 +902,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 
 	}
-
-
 
 
 

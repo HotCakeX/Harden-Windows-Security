@@ -17,12 +17,9 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
-                <TextBlock
-                    TextWrapping="WrapWholeWords"
-                    Style="{StaticResource BodyTextBlockStyle}">
+                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
                     <Span>
                         Calculate the <Italic>Code Integrity</Italic>

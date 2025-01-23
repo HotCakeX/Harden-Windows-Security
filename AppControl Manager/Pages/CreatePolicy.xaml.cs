@@ -35,93 +35,15 @@ public sealed partial class CreatePolicy : Page
 
 	}
 
-	#region Methods so that only 1 Deploy button will be available at any time to prevent conflicts
-
-	private void DisableDeployButtons()
-	{
-		AllowMicrosoftCreateAndDeploy.IsEnabled = false;
-		DefaultWindowsCreateAndDeploy.IsEnabled = false;
-		SignedAndReputableCreateAndDeploy.IsEnabled = false;
-		RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
-		RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
-	}
-
-	private void EnableDeployButtons()
-	{
-		AllowMicrosoftCreateAndDeploy.IsEnabled = true;
-		DefaultWindowsCreateAndDeploy.IsEnabled = true;
-		SignedAndReputableCreateAndDeploy.IsEnabled = true;
-		RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
-		RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
-	}
-	#endregion
-
-
 	#region For Allow Microsoft Policy
 
-	// Event handler for creating AllowMicrosoft policy
+
+	/// <summary>
+	/// Event handler for creating/deploying AllowMicrosoft policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private async void AllowMicrosoftCreate_Click(object sender, RoutedEventArgs e)
-	{
-
-		try
-		{
-
-			// Disable the buttons to prevent multiple clicks (on the UI thread)
-			AllowMicrosoftCreate.IsEnabled = false;
-			AllowMicrosoftCreateAndDeploy.IsEnabled = false;
-
-			string stagingArea = StagingArea.NewStagingArea("BuildAllowMicrosoft").ToString();
-
-			// Capture the values from the UI elements (on the UI thread)
-			bool auditEnabled = AllowMicrosoftAudit.IsOn;
-			bool requireEVSigners = AllowMicrosoftRequireEVSigners.IsOn;
-			bool enableScriptEnforcement = AllowMicrosoftEnableScriptEnforcement.IsOn;
-			bool testMode = AllowMicrosoftTestMode.IsOn;
-
-			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
-			ulong? logSize = null;
-
-			if (AllowMicrosoftLogSizeInput.IsEnabled)
-			{
-				// Get the NumberBox value which is a double (entered in megabytes)
-				double inputValue = AllowMicrosoftLogSizeInput.Value;
-
-				// Convert the value from megabytes to bytes
-				double bytesValue = inputValue * 1024 * 1024;
-
-				// Convert the value to ulong
-				logSize = Convert.ToUInt64(bytesValue);
-			}
-			#endregion
-
-			// Run the background operation using captured values
-			await Task.Run(() =>
-			{
-				BasePolicyCreator.BuildAllowMSFT(stagingArea,
-					auditEnabled,
-					logSize,
-					false, // Do not deploy, only create
-					requireEVSigners,
-					enableScriptEnforcement,
-					testMode,
-					false
-				);
-			});
-
-		}
-
-		finally
-		{
-
-			// Re-enable the buttons once the work is done (back on the UI thread)
-			AllowMicrosoftCreate.IsEnabled = true;
-			AllowMicrosoftCreateAndDeploy.IsEnabled = true;
-		}
-	}
-
-
-	// Event handler for creating & deploying AllowMicrosoft policy
-	private async void AllowMicrosoftCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -129,7 +51,6 @@ public sealed partial class CreatePolicy : Page
 
 			// Disable the buttons to prevent multiple clicks
 			AllowMicrosoftCreate.IsEnabled = false;
-			DisableDeployButtons();
 
 			string stagingArea = StagingArea.NewStagingArea("BuildAllowMicrosoft").ToString();
 
@@ -138,6 +59,7 @@ public sealed partial class CreatePolicy : Page
 			bool requireEVSigners = AllowMicrosoftRequireEVSigners.IsOn;
 			bool enableScriptEnforcement = AllowMicrosoftEnableScriptEnforcement.IsOn;
 			bool testMode = AllowMicrosoftTestMode.IsOn;
+			bool shouldDeploy = AllowMicrosoftCreateAndDeploy.IsChecked ?? false;
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -161,7 +83,7 @@ public sealed partial class CreatePolicy : Page
 				BasePolicyCreator.BuildAllowMSFT(stagingArea,
 					auditEnabled,
 					logSize,
-					true, // Deploy it as well
+					shouldDeploy,
 					requireEVSigners,
 					enableScriptEnforcement,
 					testMode,
@@ -173,11 +95,8 @@ public sealed partial class CreatePolicy : Page
 		}
 		finally
 		{
-
 			// Re-enable the buttons once the work is done
 			AllowMicrosoftCreate.IsEnabled = true;
-			EnableDeployButtons();
-
 		}
 	}
 
@@ -208,69 +127,12 @@ public sealed partial class CreatePolicy : Page
 
 	#region For Default Windows Policy
 
-	// Event handler for creating DefaultWindows policy
+	/// <summary>
+	/// Event handler for creating/deploying DefaultWindows policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private async void DefaultWindowsCreate_Click(object sender, RoutedEventArgs e)
-	{
-
-		try
-		{
-
-			// Disable the buttons to prevent multiple clicks (on the UI thread)
-			DefaultWindowsCreate.IsEnabled = false;
-			DefaultWindowsCreateAndDeploy.IsEnabled = false;
-
-			string stagingArea = StagingArea.NewStagingArea("BuildDefaultWindows").ToString();
-
-			// Capture the values from the UI elements (on the UI thread)
-			bool auditEnabled = DefaultWindowsAudit.IsOn;
-			bool requireEVSigners = DefaultWindowsRequireEVSigners.IsOn;
-			bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
-			bool testMode = DefaultWindowsTestMode.IsOn;
-
-			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
-			ulong? logSize = null;
-
-			if (DefaultWindowsLogSizeInput.IsEnabled)
-			{
-				// Get the NumberBox value which is a double (entered in megabytes)
-				double inputValue = DefaultWindowsLogSizeInput.Value;
-
-				// Convert the value from megabytes to bytes
-				double bytesValue = inputValue * 1024 * 1024;
-
-				// Convert the value to ulong
-				logSize = Convert.ToUInt64(bytesValue);
-			}
-			#endregion
-
-			// Run the background operation using captured values
-			await Task.Run(() =>
-			{
-				BasePolicyCreator.BuildDefaultWindows(stagingArea,
-					auditEnabled,
-					logSize,
-					false, // Do not deploy, only create
-					requireEVSigners,
-					enableScriptEnforcement,
-					testMode,
-					false
-				);
-			});
-
-		}
-
-		finally
-		{
-
-			// Re-enable the buttons once the work is done (back on the UI thread)
-			DefaultWindowsCreate.IsEnabled = true;
-			DefaultWindowsCreateAndDeploy.IsEnabled = true;
-		}
-	}
-
-
-	// Event handler for creating & deploying DefaultWindows policy
-	private async void DefaultWindowsCreateAndDeploy_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
@@ -278,7 +140,6 @@ public sealed partial class CreatePolicy : Page
 
 			// Disable the buttons to prevent multiple clicks
 			DefaultWindowsCreate.IsEnabled = false;
-			DisableDeployButtons();
 
 			string stagingArea = StagingArea.NewStagingArea("BuildDefaultWindows").ToString();
 
@@ -287,6 +148,7 @@ public sealed partial class CreatePolicy : Page
 			bool requireEVSigners = DefaultWindowsRequireEVSigners.IsOn;
 			bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
 			bool testMode = DefaultWindowsTestMode.IsOn;
+			bool shouldDeploy = DefaultWindowsCreateAndDeploy.IsChecked ?? false;
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -310,7 +172,7 @@ public sealed partial class CreatePolicy : Page
 				BasePolicyCreator.BuildDefaultWindows(stagingArea,
 					auditEnabled,
 					logSize,
-					true, // Deploy it as well
+					shouldDeploy,
 					requireEVSigners,
 					enableScriptEnforcement,
 					testMode,
@@ -322,11 +184,8 @@ public sealed partial class CreatePolicy : Page
 		}
 		finally
 		{
-
 			// Re-enable the buttons once the work is done
 			DefaultWindowsCreate.IsEnabled = true;
-			EnableDeployButtons();
-
 		}
 	}
 
@@ -356,76 +215,20 @@ public sealed partial class CreatePolicy : Page
 
 	#region For Signed and Reputable Policy
 
-	// Event handler for creating SignedAndReputable policy
+
+	/// <summary>
+	/// Event handler for creating/deploying SignedAndReputable policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private async void SignedAndReputableCreate_Click(object sender, RoutedEventArgs e)
 	{
-		try
-		{
-
-			// Disable the buttons
-			SignedAndReputableCreate.IsEnabled = false;
-			SignedAndReputableCreateAndDeploy.IsEnabled = false;
-
-			string stagingArea = StagingArea.NewStagingArea("BuildSignedAndReputable").ToString();
-
-			// Capture the values from the UI elements
-			bool auditEnabled = SignedAndReputableAudit.IsOn;
-			bool requireEVSigners = SignedAndReputableRequireEVSigners.IsOn;
-			bool enableScriptEnforcement = SignedAndReputableEnableScriptEnforcement.IsOn;
-			bool testMode = SignedAndReputableTestMode.IsOn;
-
-			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
-			ulong? logSize = null;
-
-			if (SignedAndReputableLogSizeInput.IsEnabled)
-			{
-				// Get the NumberBox value which is a double (entered in megabytes)
-				double inputValue = SignedAndReputableLogSizeInput.Value;
-
-				// Convert the value from megabytes to bytes
-				double bytesValue = inputValue * 1024 * 1024;
-
-				// Convert the value to ulong
-				logSize = Convert.ToUInt64(bytesValue);
-			}
-			#endregion
-
-			// Run the background operation using captured values
-			await Task.Run(() =>
-			{
-				BasePolicyCreator.BuildSignedAndReputable(stagingArea,
-					auditEnabled,
-					logSize,
-					false, // Do not deploy, only create
-					requireEVSigners,
-					enableScriptEnforcement,
-					testMode,
-					false
-				);
-			});
-
-		}
-
-		finally
-		{
-
-			// Re-enable buttons
-			SignedAndReputableCreate.IsEnabled = true;
-			SignedAndReputableCreateAndDeploy.IsEnabled = true;
-		}
-	}
-
-
-	// Event handler for creating & deploying SignedAndReputable policy
-	private async void SignedAndReputableCreateAndDeploy_Click(object sender, RoutedEventArgs e)
-	{
 
 		try
 		{
 
 			// Disable the buttons
 			SignedAndReputableCreate.IsEnabled = false;
-			DisableDeployButtons();
 
 			string stagingArea = StagingArea.NewStagingArea("BuildSignedAndReputable").ToString();
 
@@ -434,6 +237,7 @@ public sealed partial class CreatePolicy : Page
 			bool requireEVSigners = SignedAndReputableRequireEVSigners.IsOn;
 			bool enableScriptEnforcement = SignedAndReputableEnableScriptEnforcement.IsOn;
 			bool testMode = SignedAndReputableTestMode.IsOn;
+			bool shouldDeploy = SignedAndReputableCreateAndDeploy.IsChecked ?? false;
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -456,7 +260,7 @@ public sealed partial class CreatePolicy : Page
 				BasePolicyCreator.BuildSignedAndReputable(stagingArea,
 					auditEnabled,
 					logSize,
-					true, // Deploy it as well
+					shouldDeploy,
 					requireEVSigners,
 					enableScriptEnforcement,
 					testMode,
@@ -468,7 +272,6 @@ public sealed partial class CreatePolicy : Page
 		finally
 		{
 			SignedAndReputableCreate.IsEnabled = true;
-			EnableDeployButtons();
 		}
 	}
 
@@ -562,8 +365,11 @@ public sealed partial class CreatePolicy : Page
 
 
 
-
-	// Event handler for creating SignedAndReputable policy
+	/// <summary>
+	/// Event handler for creating/deploying Microsoft recommended driver block rules policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private async void RecommendedDriverBlockRulesCreate_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -571,48 +377,22 @@ public sealed partial class CreatePolicy : Page
 
 			// Disable the buttons
 			RecommendedDriverBlockRulesCreate.IsEnabled = false;
-			RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
+
+			bool shouldDeploy = RecommendedDriverBlockRulesCreateAndDeploy.IsChecked ?? false;
 
 			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
 
 			// Run the background operation using captured values
 			await Task.Run(() =>
 			{
-				BasePolicyCreator.GetDriversBlockRules(stagingArea);
-			});
-
-			// Dynamically add the formatted TextBlock after gathering block list info
-			// Can remove await and the info will populate after policy is created which is fine too
-			await AddDriverBlockRulesInfo();
-
-		}
-
-		finally
-		{
-
-			// Re-enable buttons
-			RecommendedDriverBlockRulesCreate.IsEnabled = true;
-			RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
-		}
-	}
-
-
-	// Event handler for creating SignedAndReputable policy
-	private async void RecommendedDriverBlockRulesCreateAndDeploy_Click(object sender, RoutedEventArgs e)
-	{
-		try
-		{
-
-			// Disable the buttons
-			RecommendedDriverBlockRulesCreate.IsEnabled = false;
-			DisableDeployButtons();
-
-			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
-
-			// Run the background operation using captured values
-			await Task.Run(() =>
-			{
-				BasePolicyCreator.DeployDriversBlockRules(stagingArea);
+				if (shouldDeploy)
+				{
+					BasePolicyCreator.DeployDriversBlockRules(stagingArea);
+				}
+				else
+				{
+					BasePolicyCreator.GetDriversBlockRules(stagingArea);
+				}
 			});
 
 			// Dynamically add the formatted TextBlock after gathering block list info
@@ -622,10 +402,8 @@ public sealed partial class CreatePolicy : Page
 
 		finally
 		{
-
 			// Re-enable buttons
 			RecommendedDriverBlockRulesCreate.IsEnabled = true;
-			EnableDeployButtons();
 		}
 	}
 
@@ -684,72 +462,39 @@ public sealed partial class CreatePolicy : Page
 
 	#region For Microsoft Recommended User Mode Block Rules
 
-	// Event handler for creating SignedAndReputable policy
+
+	/// <summary>
+	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private async void RecommendedUserModeBlockRulesCreate_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
-
 			// Disable the buttons
 			RecommendedUserModeBlockRulesCreate.IsEnabled = false;
-			RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
+
+			bool shouldDeploy = RecommendedUserModeBlockRulesCreateAndDeploy.IsChecked ?? false;
 
 			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
 
 			// Run the background operation using captured values
 			await Task.Run(() =>
 			{
-				BasePolicyCreator.GetBlockRules(stagingArea, false);
-			});
-
-		}
-
-		finally
-		{
-
-			// Re-enable buttons
-			RecommendedUserModeBlockRulesCreate.IsEnabled = true;
-			RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
-		}
-	}
-
-
-	// Event handler for creating SignedAndReputable policy
-	private async void RecommendedUserModeBlockRulesCreateAndDeploy_Click(object sender, RoutedEventArgs e)
-	{
-		try
-		{
-
-			// Disable the buttons
-			RecommendedUserModeBlockRulesCreate.IsEnabled = false;
-			DisableDeployButtons();
-
-			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
-
-			// Run the background operation using captured values
-			await Task.Run(() =>
-			{
-				BasePolicyCreator.GetBlockRules(stagingArea, true);
+				BasePolicyCreator.GetBlockRules(stagingArea, shouldDeploy);
 
 			});
-
 		}
-
 		finally
 		{
-
 			// Re-enable buttons
 			RecommendedUserModeBlockRulesCreate.IsEnabled = true;
-			EnableDeployButtons();
 		}
 	}
-
-
 
 
 	#endregion
-
-
 
 
 
@@ -770,11 +515,8 @@ public sealed partial class CreatePolicy : Page
 		StrictKernelModePolicySection.IsExpanded = true;
 
 		bool useNoFlightRoots = StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
-
 		bool deploy = StrictKernelModePolicyToggleButtonForDeploy.IsChecked ?? false;
-
 		bool audit = StrictKernelModePolicyAudit.IsOn;
-
 		bool errorsOccurred = false;
 
 		try
@@ -833,11 +575,8 @@ public sealed partial class CreatePolicy : Page
 					CiToolHelper.UpdatePolicy(cipPath);
 				}
 
-
 			});
-
 		}
-
 		catch (Exception ex)
 		{
 			StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Error;
@@ -848,10 +587,8 @@ public sealed partial class CreatePolicy : Page
 
 			throw;
 		}
-
 		finally
 		{
-
 			if (!errorsOccurred)
 			{
 				StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Success;
@@ -877,8 +614,6 @@ public sealed partial class CreatePolicy : Page
 		StrictKernelModePolicyAudit.IsOn = !StrictKernelModePolicyAudit.IsOn;
 	}
 
-
 	#endregion
-
 
 }

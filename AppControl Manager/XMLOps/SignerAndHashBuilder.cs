@@ -40,7 +40,13 @@ internal static class SignerAndHashBuilder
 	/// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
 	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
 	/// <returns></returns>
-	internal static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity>? data = null, HashSet<string>? folderPaths = null, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false, List<string>? packageFamilyNames = null)
+	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
+		List<FileIdentity>? data = null,
+		HashSet<string>? folderPaths = null,
+		ScanLevels level = ScanLevels.FilePublisher,
+		bool publisherToHash = false,
+		List<string>? packageFamilyNames = null
+	)
 	{
 		// To store the Signers created with FilePublisher Level
 		List<FilePublisherSignerCreator> filePublisherSigners = [];
@@ -175,20 +181,19 @@ internal static class SignerAndHashBuilder
 
 			case ScanLevels.WildCardFolderPath:
 				{
-					if (folderPaths is not null && folderPaths.Count > 0)
+					if (folderPaths is not null)
 					{
 						wildCardFilePathData = folderPaths;
 					}
-
 					break;
 				}
 
 			case ScanLevels.PFN:
 				{
-					if (packageFamilyNames is not null && packageFamilyNames.Count > 0)
-
+					if (packageFamilyNames is not null)
+					{
 						PFNs = packageFamilyNames;
-
+					}
 					break;
 				}
 
@@ -200,6 +205,9 @@ internal static class SignerAndHashBuilder
 		Logger.Write($"BuildSignerAndHashObjects: {signedFilePublisherData.Count} FilePublisher Rules.");
 		Logger.Write($"BuildSignerAndHashObjects: {signedPublisherData.Count} Publisher Rules.");
 		Logger.Write($"BuildSignerAndHashObjects: {unsignedData.Count} Hash Rules.");
+		Logger.Write($"BuildSignerAndHashObjects: {filePathData.Count} FilePath Rules.");
+		Logger.Write($"BuildSignerAndHashObjects: {wildCardFilePathData.Count} WildCard FilePath Rules.");
+		Logger.Write($"BuildSignerAndHashObjects: {PFNs.Count} PFN Rules.");
 
 		Logger.Write("BuildSignerAndHashObjects: Processing FilePublisher data.");
 

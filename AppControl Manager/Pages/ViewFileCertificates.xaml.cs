@@ -233,8 +233,6 @@ public sealed partial class ViewFileCertificates : Page
 
 
 
-
-
 	/// <summary>
 	/// Fetch for the .cer files
 	/// </summary>
@@ -272,8 +270,6 @@ public sealed partial class ViewFileCertificates : Page
 
 		return output;
 	}
-
-
 
 
 

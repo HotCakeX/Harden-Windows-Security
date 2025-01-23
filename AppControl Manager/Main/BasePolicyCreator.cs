@@ -355,7 +355,7 @@ internal static partial class BasePolicyCreator
 		string xmlPath = Path.Combine(StagingArea, $"{name}.xml");
 
 		// Save the XML content to a file
-		codeIntegrityPolicy.XmlDocument.Save(xmlPath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlPath);
 
 		CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
 
@@ -530,7 +530,6 @@ internal static partial class BasePolicyCreator
 
 
 
-
 	/// <summary>
 	/// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
 	/// It generates a XML file compliant with CI Policies Schema.
@@ -579,7 +578,7 @@ internal static partial class BasePolicyCreator
 		string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
 
 		// Save the XML content to a file
-		codeIntegrityPolicy.XmlDocument.Save(tempPolicyPath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, tempPolicyPath);
 
 		CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot, CiRuleOptions.PolicyRuleOptions.DisabledScriptEnforcement], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode, CiRuleOptions.PolicyRuleOptions.EnabledAdvancedBootOptionsMenu]);
 

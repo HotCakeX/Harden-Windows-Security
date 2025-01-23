@@ -1,5 +1,4 @@
-﻿
-namespace AppControlManager.IntelGathering;
+﻿namespace AppControlManager.IntelGathering;
 
 public enum FileIdentityOrigin
 {

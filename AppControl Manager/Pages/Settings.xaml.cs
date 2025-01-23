@@ -174,7 +174,6 @@ public sealed partial class Settings : Page
 
 
 
-
 	/// <summary>
 	/// Event handler for the Background ComboBox selection change event.
 	/// </summary>
@@ -196,7 +195,6 @@ public sealed partial class Settings : Page
 
 		SaveSetting(SettingKeys.BackDropBackground, selectedBackdrop);
 	}
-
 
 
 
@@ -229,7 +227,6 @@ public sealed partial class Settings : Page
 	/// <param name="e"></param>
 	private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-
 		// Get the ComboBox that triggered the event
 		ComboBox? comboBox = sender as ComboBox;
 
@@ -241,7 +238,6 @@ public sealed partial class Settings : Page
 			// Raise the global BackgroundChanged event
 			AppThemeManager.OnAppThemeChanged(selectedTheme);
 		}
-
 
 		SaveSetting(SettingKeys.AppTheme, selectedTheme);
 	}
@@ -266,9 +262,6 @@ public sealed partial class Settings : Page
 
 		SaveSetting(SettingKeys.NavViewBackground, isBackgroundOn);
 	}
-
-
-
 
 
 
@@ -301,6 +294,9 @@ public sealed partial class Settings : Page
 		SignToolCustomPathTextBox.Text = userConfig.SignToolCustomPath ?? string.Empty;
 		CertificateCommonNameAutoSuggestBox.Text = userConfig.CertificateCommonName ?? string.Empty;
 		CertificatePathTextBox.Text = userConfig.CertificatePath ?? string.Empty;
+
+		// Expand the settings expander to make the configurations visible
+		MainUserConfigurationsSettingsExpander.IsExpanded = true;
 	}
 
 	// When the edit button of any field is pressed
@@ -416,10 +412,10 @@ public sealed partial class Settings : Page
 				UnsignedPolicyPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 				break;
 			case "SignToolCustomPath":
-				SignToolCustomPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("EXE file|*.exe");
+				SignToolCustomPathTextBox.Text = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
 				break;
 			case "CertificatePath":
-				CertificatePathTextBox.Text = FileDialogHelper.ShowFilePickerDialog("Certificate file|*.cer");
+				CertificatePathTextBox.Text = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
 				break;
 			default:
 				break;

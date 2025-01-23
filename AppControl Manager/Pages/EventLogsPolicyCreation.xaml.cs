@@ -163,7 +163,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 
 
 
-
 	/// <summary>
 	/// Event handler for the ScanLogs click
 	/// </summary>
@@ -233,10 +232,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 	/// <param name="e"></param>
 	private void SelectCodeIntegrityEVTXFiles_Click(object sender, RoutedEventArgs e)
 	{
-
-		string filter = "EVTX log file|*.evtx";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -255,10 +251,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 	/// <param name="e"></param>
 	private void SelectAppLockerEVTXFiles_Click(object sender, RoutedEventArgs e)
 	{
-
-		string filter = "EVTX log file|*.evtx";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
@@ -283,7 +276,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 
 		UpdateTotalLogs(true);
 	}
-
 
 
 
@@ -764,7 +756,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
 
-			if (FileIdentities.Count == 0)
+			if (FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException("There are no logs. Use the scan button first.");
 			}
@@ -838,8 +830,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 				if (PolicyToAddLogsTo is not null)
 				{
 
-					// Backup any possible Macros so they won't be lost during merge operations
-					var MacrosBackup = Macros.Backup(PolicyToAddLogsTo);
 
 					// Set policy name and reset the policy ID of our new policy
 					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
@@ -851,9 +841,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 					SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
 					UpdateHvciOptions.Update(PolicyToAddLogsTo);
-
-					// Restore any possible Macros
-					Macros.Restore(PolicyToAddLogsTo, MacrosBackup);
 
 
 					// If user selected to deploy the policy

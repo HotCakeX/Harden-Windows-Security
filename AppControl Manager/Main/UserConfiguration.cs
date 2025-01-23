@@ -31,9 +31,7 @@ public sealed partial class UserConfiguration(
 		string? certificateCommonName,
 		string? certificatePath,
 		Guid? strictKernelPolicyGUID,
-		Guid? strictKernelNoFlightRootsPolicyGUID,
 		DateTime? lastUpdateCheck,
-		DateTime? strictKernelModePolicyTimeOfDeployment,
 		bool? autoUpdateCheck,
 		Dictionary<string, DateTime>? signedPolicyStage1RemovalTimes = null
 	)
@@ -57,18 +55,12 @@ public sealed partial class UserConfiguration(
 	public Guid? StrictKernelPolicyGUID { get; set; } = strictKernelPolicyGUID;
 
 	[JsonPropertyOrder(7)]
-	public Guid? StrictKernelNoFlightRootsPolicyGUID { get; set; } = strictKernelNoFlightRootsPolicyGUID;
-
-	[JsonPropertyOrder(8)]
 	public DateTime? LastUpdateCheck { get; set; } = lastUpdateCheck;
 
-	[JsonPropertyOrder(9)]
-	public DateTime? StrictKernelModePolicyTimeOfDeployment { get; set; } = strictKernelModePolicyTimeOfDeployment;
-
-	[JsonPropertyOrder(10)]
+	[JsonPropertyOrder(8)]
 	public bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
 
-	[JsonPropertyOrder(11)]
+	[JsonPropertyOrder(9)]
 	public Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
 
 
@@ -83,9 +75,7 @@ public sealed partial class UserConfiguration(
 	/// <param name="CertificateCommonName"></param>
 	/// <param name="CertificatePath"></param>
 	/// <param name="StrictKernelPolicyGUID"></param>
-	/// <param name="StrictKernelNoFlightRootsPolicyGUID"></param>
 	/// <param name="LastUpdateCheck"></param>
-	/// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
 	/// <param name="AutoUpdateCheck"></param>
 	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	/// <returns></returns>
@@ -97,9 +87,7 @@ public sealed partial class UserConfiguration(
 		string? CertificateCommonName = null,
 		string? CertificatePath = null,
 		Guid? StrictKernelPolicyGUID = null,
-		Guid? StrictKernelNoFlightRootsPolicyGUID = null,
 		DateTime? LastUpdateCheck = null,
-		DateTime? StrictKernelModePolicyTimeOfDeployment = null,
 		bool? AutoUpdateCheck = null,
 		Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null
 		)
@@ -156,9 +144,7 @@ public sealed partial class UserConfiguration(
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName)) UserConfiguration.CertificateCommonName = CertificateCommonName;
 		if (!string.IsNullOrWhiteSpace(CertificatePath)) UserConfiguration.CertificatePath = CertificatePath;
 		if (StrictKernelPolicyGUID.HasValue) UserConfiguration.StrictKernelPolicyGUID = StrictKernelPolicyGUID;
-		if (StrictKernelNoFlightRootsPolicyGUID.HasValue) UserConfiguration.StrictKernelNoFlightRootsPolicyGUID = StrictKernelNoFlightRootsPolicyGUID;
 		if (LastUpdateCheck.HasValue) UserConfiguration.LastUpdateCheck = LastUpdateCheck;
-		if (StrictKernelModePolicyTimeOfDeployment.HasValue) UserConfiguration.StrictKernelModePolicyTimeOfDeployment = StrictKernelModePolicyTimeOfDeployment;
 		if (AutoUpdateCheck.HasValue) UserConfiguration.AutoUpdateCheck = AutoUpdateCheck;
 
 		if (SignedPolicyStage1RemovalTimes is not null)
@@ -194,9 +180,7 @@ public sealed partial class UserConfiguration(
 	/// <param name="CertificateCommonName"></param>
 	/// <param name="CertificatePath"></param>
 	/// <param name="StrictKernelPolicyGUID"></param>
-	/// <param name="StrictKernelNoFlightRootsPolicyGUID"></param>
 	/// <param name="LastUpdateCheck"></param>
-	/// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
 	/// <param name="AutoUpdateCheck"></param>
 	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	internal static void Remove(
@@ -206,9 +190,7 @@ public sealed partial class UserConfiguration(
 	bool CertificateCommonName = false,
 	bool CertificatePath = false,
 	bool StrictKernelPolicyGUID = false,
-	bool StrictKernelNoFlightRootsPolicyGUID = false,
 	bool LastUpdateCheck = false,
-	bool StrictKernelModePolicyTimeOfDeployment = false,
 	bool AutoUpdateCheck = false,
 	bool SignedPolicyStage1RemovalTimes = false
 	)
@@ -223,9 +205,7 @@ public sealed partial class UserConfiguration(
 		if (CertificateCommonName) currentConfig.CertificateCommonName = null;
 		if (CertificatePath) currentConfig.CertificatePath = null;
 		if (StrictKernelPolicyGUID) currentConfig.StrictKernelPolicyGUID = null;
-		if (StrictKernelNoFlightRootsPolicyGUID) currentConfig.StrictKernelNoFlightRootsPolicyGUID = null;
 		if (LastUpdateCheck) currentConfig.LastUpdateCheck = null;
-		if (StrictKernelModePolicyTimeOfDeployment) currentConfig.StrictKernelModePolicyTimeOfDeployment = null;
 		if (AutoUpdateCheck) currentConfig.AutoUpdateCheck = null;
 		if (SignedPolicyStage1RemovalTimes) currentConfig.SignedPolicyStage1RemovalTimes = null;
 
@@ -265,7 +245,7 @@ public sealed partial class UserConfiguration(
 			Logger.Write($"Error reading or parsing the user configuration file: {ex.Message} A new configuration with default values will be created.");
 
 			// Create a new configuration with default values and write it to the file
-			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null, null, null);
+			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null);
 			WriteUserConfiguration(defaultConfig);
 
 			return defaultConfig;
@@ -289,9 +269,7 @@ public sealed partial class UserConfiguration(
 			TryGetStringProperty(root, nameof(CertificateCommonName)),
 			TryGetStringProperty(root, nameof(CertificatePath)),
 			TryGetGuidProperty(root, nameof(StrictKernelPolicyGUID)),
-			TryGetGuidProperty(root, nameof(StrictKernelNoFlightRootsPolicyGUID)),
 			TryGetDateTimeProperty(root, nameof(LastUpdateCheck)),
-			TryGetDateTimeProperty(root, nameof(StrictKernelModePolicyTimeOfDeployment)),
 			TryGetBoolProperty(root, nameof(AutoUpdateCheck)),
 			TryGetKeyValuePairsProperty(root, nameof(SignedPolicyStage1RemovalTimes))
 		);
@@ -373,7 +351,6 @@ public sealed partial class UserConfiguration(
 		File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
 		Logger.Write("The UserConfigurations.json file has been updated successfully.");
 	}
-
 
 
 

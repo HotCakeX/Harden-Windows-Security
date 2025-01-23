@@ -38,9 +38,7 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
-                <TextBlock
-TextWrapping="WrapWholeWords"
-Style="{StaticResource BodyTextBlockStyle}">
+                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
 <Span>
     Merge <Italic>App Control for Business</Italic>
@@ -87,7 +85,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                         <Button x:Name="MergeButton" Content="Merge"
                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="MergeButton_Click" />
 
-                        <ToggleButton x:Name="DeployToggleButton" Content="Deploy" Click="DeployToggleButton_Click" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="DeployToggleButton" Content="Deploy after Merge" Click="DeployToggleButton_Click" Margin="0,0,15,0" />
 
                         <ProgressRing IsIndeterminate="True" Visibility="Collapsed" x:Name="MergeProgressRing" />
 
@@ -114,7 +112,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                                             <TextBox x:Name="MainPolicy_Flyout_TextBox"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                                                MinWidth="400" IsReadOnly="True" />
 
                                         </controls:WrapPanel>
 
@@ -141,7 +139,7 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                                             <TextBox x:Name="OtherPolicies_Flyout_TextBox"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                                                MinWidth="400" IsReadOnly="True" />
 
                                         </controls:WrapPanel>
 

@@ -19,7 +19,7 @@ internal static class NewFilePathRules
 
 		if (data.Count is 0)
 		{
-			Logger.Write($"NewFilePathRules: no FilePath rules detected to create rules for.");
+			Logger.Write($"NewFilePathRules: no FilePath rules detected to create allow rules for.");
 			return;
 		}
 
@@ -27,44 +27,6 @@ internal static class NewFilePathRules
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
 		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
-
-		#region
-
-		// Find FileRulesRef node in each ProductSigners node
-		XmlNode? UMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		XmlNode? KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-
-		// Check if FileRulesRef node exists, if not, create it
-		if (UMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			XmlElement UMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.UMCI_ProductSignersNode?.AppendChild(UMCI_FileRulesRefNew);
-
-			UMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (UMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			throw new InvalidOperationException("UMCI Product Signers FileRulesRef node not found despite creating it");
-		}
-
-		// Check if FileRulesRef node exists, if not, create it
-		if (KMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			XmlElement KMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_FileRulesRefNew);
-			KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (KMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			throw new InvalidOperationException("KMCI Product Signers FileRulesRef node not found despite creating it");
-		}
-
-		#endregion
-
-		// Find the FileRules node
-		XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!;
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
@@ -77,33 +39,33 @@ internal static class NewFilePathRules
 			// Create a new Allow FilePath rule
 			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", codeIntegrityPolicy.NameSpaceURI);
 			newFileRule.SetAttribute("ID", allowRuleID);
-			newFileRule.SetAttribute("FriendlyName", $"{item.FilePath} FileRule");
+			newFileRule.SetAttribute("FriendlyName", "File Path Rule");
 			newFileRule.SetAttribute("MinimumFileVersion", item.MinimumFileVersion);
 			newFileRule.SetAttribute("FilePath", item.FilePath);
 			// Add the new node to the FileRules node
-			_ = fileRulesNode.AppendChild(newFileRule);
+			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
 
 
 			// For User-Mode files
-			if (item.SiSigningScenario == 1)
+			if (item.SiSigningScenario is 1)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
 				NewUMCIFileRuleRefNode.SetAttribute("RuleID", allowRuleID);
-				_ = UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
+				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
 			}
 
 			// For Kernel-Mode files
-			else if (item.SiSigningScenario == 0)
+			else if (item.SiSigningScenario is 0)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
 				XmlElement NewKMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
 				NewKMCIFileRuleRefNode.SetAttribute("RuleID", allowRuleID);
-				_ = KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNode);
+				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNode);
 			}
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
 
 
@@ -119,7 +81,7 @@ internal static class NewFilePathRules
 
 		if (data.Count is 0)
 		{
-			Logger.Write($"NewFilePathRules: no FilePath rules detected to create rules for.");
+			Logger.Write($"NewFilePathRules: no FilePath rules detected to create deny rules for.");
 			return;
 		}
 
@@ -127,44 +89,6 @@ internal static class NewFilePathRules
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
 		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
-
-		#region
-
-		// Find FileRulesRef node in each ProductSigners node
-		XmlNode? UMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		XmlNode? KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-
-		// Check if FileRulesRef node exists, if not, create it
-		if (UMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			XmlElement UMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.UMCI_ProductSignersNode?.AppendChild(UMCI_FileRulesRefNew);
-
-			UMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (UMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			throw new InvalidOperationException("UMCI Product Signers FileRulesRef node not found despite creating it");
-		}
-
-		// Check if FileRulesRef node exists, if not, create it
-		if (KMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			XmlElement KMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_FileRulesRefNew);
-			KMCI_ProductSigners_FileRulesRef_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (KMCI_ProductSigners_FileRulesRef_Node is null)
-		{
-			throw new InvalidOperationException("KMCI Product Signers FileRulesRef node not found despite creating it");
-		}
-
-		#endregion
-
-		// Find the FileRules node
-		XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!;
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
@@ -177,33 +101,32 @@ internal static class NewFilePathRules
 			// Create a new Deny FilePath rule
 			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", codeIntegrityPolicy.NameSpaceURI);
 			newFileRule.SetAttribute("ID", denyRuleID);
-			newFileRule.SetAttribute("FriendlyName", $"{item.FilePath} FileRule");
-			newFileRule.SetAttribute("MinimumFileVersion", item.MinimumFileVersion);
+			newFileRule.SetAttribute("FriendlyName", "File Path Rule");
 			newFileRule.SetAttribute("FilePath", item.FilePath);
 			// Add the new node to the FileRules node
-			_ = fileRulesNode.AppendChild(newFileRule);
+			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
 
 
 			// For User-Mode files
-			if (item.SiSigningScenario == 1)
+			if (item.SiSigningScenario is 1)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
 				NewUMCIFileRuleRefNode.SetAttribute("RuleID", denyRuleID);
-				_ = UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
+				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
 			}
 
 			// For Kernel-Mode files
-			else if (item.SiSigningScenario == 0)
+			else if (item.SiSigningScenario is 0)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
 				XmlElement NewKMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
 				NewKMCIFileRuleRefNode.SetAttribute("RuleID", denyRuleID);
-				_ = KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNode);
+				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNode);
 			}
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
 
 }

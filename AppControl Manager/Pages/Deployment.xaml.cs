@@ -36,7 +36,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		{
 			DeploySignedXMLButton.IsEnabled = false;
 			DeploySignedXMLButtonContentTextBlock.Text = "Requires Windows 11 24H2 or later";
-		};
+		}
 	}
 
 
@@ -45,7 +45,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	private string? unsignedBasePolicyPathFromSidebar;
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons
 		UnsignedXMLFilesLightAnimatedIcon.Visibility = visibility;
@@ -110,7 +110,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	}
 
 	#endregion
-
 
 
 
@@ -246,8 +245,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.IsClosable = true;
 		}
 	}
-
-
 
 
 
@@ -430,9 +427,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 
 
-
-
-
 	/// <summary>
 	/// Deploy CIP files button
 	/// </summary>
@@ -520,8 +514,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.IsClosable = true;
 		}
 	}
-
-
 
 
 
@@ -646,7 +638,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 		try
 		{
-
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
 			StatusInfoBar.Message = "Signing into Intune";
@@ -693,7 +684,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 		finally
 		{
-
 			// If sign in wasn't successful, keep the button enabled
 			if (!signInSuccessful)
 			{
@@ -721,7 +711,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
-
 			IntuneSignOutButton.IsEnabled = false;
 
 			await Intune.SignOut();
@@ -740,7 +729,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			LocalIntuneStatusTextBox.Text = "Local Deployment is Currently Active";
 		}
-
 		catch (Exception ex)
 		{
 			StatusInfoBar.Message = $"There was an error signing out of Intune: {ex.Message}";
@@ -748,13 +736,11 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			throw;
 		}
-
 		finally
 		{
 			// If sign out wasn't successful, keep the button enabled
 			if (!signOutSuccessful)
 			{
-
 				IntuneSignOutButton.IsEnabled = true;
 			}
 
@@ -773,8 +759,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		IntuneGroupsComboBox.ItemsSource = groups.Keys;
 		IntuneGroupsComboBox.SelectedIndex = 0;
 	}
-
-
 
 
 

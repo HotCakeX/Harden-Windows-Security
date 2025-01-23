@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
+using AppControlManager.SiPolicyIntel;
 
 #pragma warning disable CS0649
 
@@ -59,7 +60,7 @@ internal static class KernelModeDrivers
 		// Output variables
 		bool hasSIP = false;
 		bool isPE = false;
-		UserOrKernelMode Verdict = UserOrKernelMode.UserMode;
+		SSType Verdict = SSType.UserMode;
 
 
 		// If the file is a .sys file then it's a kernel-mode driver, do not proceed further
@@ -67,7 +68,7 @@ internal static class KernelModeDrivers
 		{
 			return new KernelUserVerdict
 			{
-				Verdict = UserOrKernelMode.KernelMode,
+				Verdict = SSType.KernelMode,
 				IsPE = true,
 				HasSIP = false,
 				Imports = importNames
@@ -334,7 +335,7 @@ internal static class KernelModeDrivers
 			// Kernel-mode components do not interact with these user-mode DLLs. Instead, they access the kernel directly through SysCalls and low-level APIs.
 			List<string> userModeDlls = ["kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"];
 
-			Verdict = importNames.Any(import => userModeDlls.Any(dll => string.Equals(import, dll, StringComparison.OrdinalIgnoreCase))) ? UserOrKernelMode.UserMode : UserOrKernelMode.KernelMode;
+			Verdict = importNames.Any(import => userModeDlls.Any(dll => string.Equals(import, dll, StringComparison.OrdinalIgnoreCase))) ? SSType.UserMode : SSType.KernelMode;
 
 			// Return the actual output which happens when no errors occurred before
 			return new KernelUserVerdict

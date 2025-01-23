@@ -152,7 +152,6 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 
 
 
-
 	/// <summary>
 	/// Merge FileAttribElements of the ignored rule into the existing one
 	/// </summary>

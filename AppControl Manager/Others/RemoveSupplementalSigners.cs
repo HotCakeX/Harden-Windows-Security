@@ -94,6 +94,6 @@ internal static class CiPolicyHandler
 		}
 
 		// Save the updated XML content back to the file
-		codeIntegrityPolicy.XmlDocument.Save(path);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, path);
 	}
 }

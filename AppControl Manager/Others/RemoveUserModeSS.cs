@@ -18,6 +18,6 @@ internal static class RemoveUserModeSS
 		_ = (codeIntegrityPolicy.UMCI_SigningScenarioNode?.ParentNode?.RemoveChild(codeIntegrityPolicy.UMCI_SigningScenarioNode));
 
 		// Save the modified XML document back to the file
-		codeIntegrityPolicy.XmlDocument.Save(filePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
 	}
 }

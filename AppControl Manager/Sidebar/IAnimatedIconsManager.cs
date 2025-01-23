@@ -8,5 +8,5 @@ namespace AppControlManager.Sidebar;
 /// </summary>
 internal interface IAnimatedIconsManager
 {
-	void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3);
+	void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5);
 }

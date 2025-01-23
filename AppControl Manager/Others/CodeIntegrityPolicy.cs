@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml;
+using AppControlManager.XMLOps;
 
 namespace AppControlManager.Others;
 
-// This class represents a single Code Integrity XML policy
+// This class represents a single Code Integrity XML policy.
+// It operates as a custom XML serializer/deserializer.
 // It Makes sure PolicyType attribute, BasePolicyID node and PolicyID nodes exist and remove PolicyTypeID node if it exists
 
 internal sealed class CodeIntegrityPolicy
 {
-
 	// NameSpace URI
 	internal readonly string NameSpaceURI = "urn:schemas-microsoft-com:sipolicy";
 
@@ -27,21 +29,33 @@ internal sealed class CodeIntegrityPolicy
 	internal XmlNode PolicyIDNode { get; }
 	internal XmlNode BasePolicyIDNode { get; }
 
+	internal XmlNode FileRulesNode { get; }
+
 	internal XmlNode SignersNode { get; }
-
-	internal XmlNode? UMCI_SigningScenarioNode { get; }
-	internal XmlNode? KMCI_SigningScenarioNode { get; }
-
-	internal XmlNode? UMCI_ProductSignersNode { get; }
-	internal XmlNode? KMCI_ProductSignersNode { get; }
 
 	internal XmlNode CiSignersNode { get; }
 
 	internal XmlNode VersionExNode { get; }
 
+	internal XmlNode UMCI_SigningScenarioNode { get; }
+	internal XmlNode KMCI_SigningScenarioNode { get; }
+
+	internal XmlNode UMCI_ProductSignersNode { get; }
+	internal XmlNode KMCI_ProductSignersNode { get; }
+
+	// FileRulesRef nodes for UMCI and KMCI
+	internal XmlNode UMCI_ProductSigners_FileRulesRef_Node { get; }
+	internal XmlNode KMCI_ProductSigners_FileRulesRef_Node { get; }
+
+	// AllowedSigners nodes for UMCI and KMCI
+	internal XmlNode UMCI_ProductSigners_AllowedSigners_Node { get; }
+	internal XmlNode KMCI_ProductSigners_AllowedSigners_Node { get; }
+
+	internal XmlNode UMCI_ProductSigners_DeniedSigners_Node { get; }
+	internal XmlNode KMCI_ProductSigners_DeniedSigners_Node { get; }
+
 	internal CodeIntegrityPolicy(string? xmlFilePath, XmlDocument? xmlDocument)
 	{
-
 		if (xmlFilePath is not null)
 		{
 			XmlDocument = new XmlDocument();
@@ -68,18 +82,31 @@ internal sealed class CodeIntegrityPolicy
 		SignersNode = SiPolicyNode.SelectSingleNode("ns:Signers", NamespaceManager)
 			?? throw new InvalidOperationException("Signers node not found");
 
-		// Find the SigningScenario Node for User Mode - It is nullable because Kernel-Mode Strict policy won't have this section
-		UMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']", NamespaceManager);
+		// Find or ensure SigningScenario Node for User Mode
+		UMCI_SigningScenarioNode = EnsureUMCISigningScenario();
 
-		// Find the SigningScenario Node for Kernel Mode
-		KMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']", NamespaceManager);
+		// Find or ensure SigningScenario Node for Kernel Mode
+		KMCI_SigningScenarioNode = EnsureKMCISigningScenario();
 
-		// Find the ProductSigners Node for User Mode - It is nullable because Kernel-Mode Strict policy won't have this section
-		UMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']/ns:ProductSigners", NamespaceManager);
+		// Find or ensure ProductSigners Node for User Mode
+		UMCI_ProductSignersNode = UMCI_SigningScenarioNode.SelectSingleNode("ns:ProductSigners", NamespaceManager)
+			?? throw new InvalidOperationException("Failed to create or retrieve UMCI_ProductSignersNode");
 
-		// Find the ProductSigners Node for Kernel Mode
-		KMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']/ns:ProductSigners", NamespaceManager);
+		// Find or ensure ProductSigners Node for Kernel Mode
+		KMCI_ProductSignersNode = KMCI_SigningScenarioNode.SelectSingleNode("ns:ProductSigners", NamespaceManager)
+			?? throw new InvalidOperationException("Failed to create or retrieve KMCI_ProductSignersNode");
 
+		// Ensure FileRulesRef nodes exist
+		UMCI_ProductSigners_FileRulesRef_Node = EnsureFileRulesRefNode(UMCI_ProductSignersNode, "UMCI");
+		KMCI_ProductSigners_FileRulesRef_Node = EnsureFileRulesRefNode(KMCI_ProductSignersNode, "KMCI");
+
+		// Ensure AllowedSigners nodes exist
+		UMCI_ProductSigners_AllowedSigners_Node = EnsureAllowedSignersNode(UMCI_ProductSignersNode, "UMCI");
+		KMCI_ProductSigners_AllowedSigners_Node = EnsureAllowedSignersNode(KMCI_ProductSignersNode, "KMCI");
+
+		// Ensure DeniedSigners nodes exist
+		UMCI_ProductSigners_DeniedSigners_Node = EnsureDeniedSignersNode(UMCI_ProductSignersNode, "UMCI");
+		KMCI_ProductSigners_DeniedSigners_Node = EnsureDeniedSignersNode(KMCI_ProductSignersNode, "KMCI");
 
 		#region CiSigners Node
 
@@ -96,6 +123,25 @@ internal sealed class CodeIntegrityPolicy
 		else
 		{
 			CiSignersNode = ciSignersNode;
+		}
+
+		#endregion
+
+
+		#region FileRules node
+
+		XmlNode? fileRulesNode = SiPolicyNode.SelectSingleNode("ns:FileRules", NamespaceManager);
+
+		if (fileRulesNode is null)
+		{
+			XmlElement newFileRulesNode = XmlDocument.CreateElement("FileRules", NameSpaceURI);
+			_ = SiPolicyNode.AppendChild(newFileRulesNode);
+
+			FileRulesNode = newFileRulesNode;
+		}
+		else
+		{
+			FileRulesNode = fileRulesNode;
 		}
 
 		#endregion
@@ -122,13 +168,11 @@ internal sealed class CodeIntegrityPolicy
 
 		#endregion
 
-
 		// Generate a new GUID
 		Guid newRandomGUID = Guid.CreateVersion7();
 
 		// Convert it to string
 		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
-
 
 		#region BasePolicyID
 
@@ -153,13 +197,10 @@ internal sealed class CodeIntegrityPolicy
 		{
 			BasePolicyIDNode = basePolicyIDNode;
 
-
 			BasePolicyID = basePolicyIDNode.InnerText;
 		}
 
-
 		#endregion
-
 
 		#region PolicyID
 
@@ -189,21 +230,7 @@ internal sealed class CodeIntegrityPolicy
 
 		#endregion
 
-
 		#region PolicyTypeID
-
-		/*
-            // Dictionary to map Code Integrity Policy Type GUIDs to their purpose
-            Dictionary<Guid, string> ciPolicyDictionary = new()
-            {
-                { Guid.Parse("4e61c68c-97f6-430b-9cd7-9b1004706770"), "Advanced Threat Protection Code Integrity Policy" },
-                { Guid.Parse("976d12c8-cb9f-4730-be52-54600843238e"), "SKU Code Integrity Policy" },
-                { Guid.Parse("5951a96a-e0b5-4d3d-8fb8-3e5b61030784"), "Windows Lockdown Code Integrity Policy" },
-                { Guid.Parse("d2bda982-ccf6-4344-ac5b-0b44427b6816"), "Driver Code Integrity Policy" },
-                { Guid.Parse("a244370e-44c9-4c06-b551-f6016e563076"), "Enterprise Code Integrity Policy" },
-                { Guid.Parse("2a5a0136-f09f-498e-99cc-51099011157c"), "Windows Revoke Code Integrity Policy" },
-            };
-            */
 
 		XmlNode? policyTypeIDNode = SiPolicyNode.SelectSingleNode("ns:PolicyTypeID", NamespaceManager);
 
@@ -216,12 +243,142 @@ internal sealed class CodeIntegrityPolicy
 
 		#endregion
 
-
 		#region VersionEx
 
 		VersionExNode = SiPolicyNode.SelectSingleNode("ns:VersionEx", NamespaceManager) ?? throw new InvalidOperationException($"VersionEx was not found.");
 
 		#endregion
-
 	}
+
+	private XmlNode EnsureFileRulesRefNode(XmlNode parentNode, string mode)
+	{
+		// Find the FileRulesRef node
+		XmlNode? fileRulesRefNode = parentNode.SelectSingleNode("ns:FileRulesRef", NamespaceManager);
+
+		// If it doesn't exist, create it
+		if (fileRulesRefNode is null)
+		{
+			XmlElement newFileRulesRefNode = XmlDocument.CreateElement("FileRulesRef", NameSpaceURI);
+			_ = parentNode.AppendChild(newFileRulesRefNode);
+
+			fileRulesRefNode = parentNode.SelectSingleNode("ns:FileRulesRef", NamespaceManager);
+
+			if (fileRulesRefNode is null)
+			{
+				throw new InvalidOperationException($"{mode} Product Signers FileRulesRef node not found despite creating it.");
+			}
+		}
+
+		return fileRulesRefNode;
+	}
+
+	private XmlNode EnsureAllowedSignersNode(XmlNode parentNode, string mode)
+	{
+		// Find the AllowedSigners node
+		XmlNode? allowedSignersNode = parentNode.SelectSingleNode("ns:AllowedSigners", NamespaceManager);
+
+		// If it doesn't exist, create it
+		if (allowedSignersNode is null)
+		{
+			XmlElement newAllowedSignersNode = XmlDocument.CreateElement("AllowedSigners", NameSpaceURI);
+			_ = parentNode.AppendChild(newAllowedSignersNode);
+
+			allowedSignersNode = parentNode.SelectSingleNode("ns:AllowedSigners", NamespaceManager);
+
+			if (allowedSignersNode is null)
+			{
+				throw new InvalidOperationException($"{mode} Product Signers AllowedSigners node not found despite creating it.");
+			}
+		}
+
+		return allowedSignersNode;
+	}
+
+	private XmlNode EnsureDeniedSignersNode(XmlNode parentNode, string mode)
+	{
+		// Find the DeniedSigners node
+		XmlNode? deniedSignersNode = parentNode.SelectSingleNode("ns:DeniedSigners", NamespaceManager);
+
+		// If it doesn't exist, create it
+		if (deniedSignersNode is null)
+		{
+			XmlElement newDeniedSignersNode = XmlDocument.CreateElement("DeniedSigners", NameSpaceURI);
+			_ = parentNode.AppendChild(newDeniedSignersNode);
+
+			deniedSignersNode = parentNode.SelectSingleNode("ns:DeniedSigners", NamespaceManager);
+
+			if (deniedSignersNode is null)
+			{
+				throw new InvalidOperationException($"{mode} Product Signers DeniedSigners node not found despite creating it.");
+			}
+		}
+
+		return deniedSignersNode;
+	}
+
+
+	/// <summary>
+	/// Creates the Signing Scenarios node or each Signing Scenario and their respective Product Signers
+	/// </summary>
+	/// <param name="scenarioValue"></param>
+	/// <param name="scenarioId"></param>
+	/// <returns></returns>
+	private XmlNode EnsureSigningScenario(uint scenarioValue, string scenarioId)
+	{
+		// Find or create the SigningScenarios node
+		XmlNode? signingScenariosNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios", NamespaceManager);
+
+		if (signingScenariosNode is null)
+		{
+			XmlElement newSigningScenariosNode = XmlDocument.CreateElement("SigningScenarios", NameSpaceURI);
+			signingScenariosNode = SiPolicyNode.AppendChild(newSigningScenariosNode);
+		}
+
+		// Find the specific SigningScenario node
+		XmlNode? signingScenarioNode = signingScenariosNode!.SelectSingleNode($"ns:SigningScenario[@Value='{scenarioValue}']", NamespaceManager);
+
+		if (signingScenarioNode is null)
+		{
+			// Create the SigningScenario node
+			XmlElement newSigningScenarioNode = XmlDocument.CreateElement("SigningScenario", NameSpaceURI);
+			newSigningScenarioNode.SetAttribute("Value", scenarioValue.ToString(CultureInfo.InvariantCulture));
+			newSigningScenarioNode.SetAttribute("ID", scenarioId);
+			newSigningScenarioNode.SetAttribute("FriendlyName", scenarioValue is 12 ? "User Mode Signing Scenario" : "Kernel Mode Signing Scenario");
+
+			// Append the new SigningScenario node to the SigningScenarios node
+			signingScenarioNode = signingScenariosNode.AppendChild(newSigningScenarioNode);
+
+			// Create and append the ProductSigners node
+			XmlElement newProductSignersNode = XmlDocument.CreateElement("ProductSigners", NameSpaceURI);
+			_ = signingScenarioNode!.AppendChild(newProductSignersNode);
+		}
+
+		return signingScenarioNode;
+	}
+
+	private XmlNode EnsureUMCISigningScenario()
+	{
+		// Value="12" is for User Mode Signing Scenario
+		return EnsureSigningScenario(12, "ID_SIGNINGSCENARIO_UMCI");
+	}
+
+	private XmlNode EnsureKMCISigningScenario()
+	{
+		// Value="131" is for Kernel Mode Signing Scenario
+		return EnsureSigningScenario(131, "ID_SIGNINGSCENARIO_KMCI");
+	}
+
+
+	/// <summary>
+	/// Saves the XML object to a file and removes any unused nodes that would cause errors if left without members
+	/// </summary>
+	/// <param name="XMLObject"></param>
+	/// <param name="XMLFilePath"></param>
+	internal static void Save(XmlDocument XMLObject, string XMLFilePath)
+	{
+		XMLObject.Save(XMLFilePath);
+		CloseEmptyXmlNodesSemantic.Close(XMLFilePath);
+	}
+
+
 }

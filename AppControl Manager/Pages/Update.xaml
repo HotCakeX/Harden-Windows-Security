@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
 
@@ -37,9 +36,7 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
-                <TextBlock
-TextWrapping="WrapWholeWords"
-Style="{StaticResource BodyTextBlockStyle}">
+                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
 <Span>
     Check for <Run Foreground="{ThemeResource SystemAccentColor}">updates</Run> in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.

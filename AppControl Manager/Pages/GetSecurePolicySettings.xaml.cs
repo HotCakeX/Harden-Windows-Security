@@ -37,7 +37,7 @@ public sealed partial class GetSecurePolicySettings : Page
 		// Call the Invoke method
 		SecurePolicySetting result = GetCIPolicySetting.Invoke(provider, key, valueName);
 
-		if (result.StatusCode != 0)
+		if (result.StatusCode is not 0)
 		{
 			InfoBar.Message = "There is no policy deployed on the system that contains the selected secure setting.";
 			InfoBar.Severity = InfoBarSeverity.Informational;

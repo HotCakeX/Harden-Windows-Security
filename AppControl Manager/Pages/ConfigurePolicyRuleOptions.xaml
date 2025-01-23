@@ -36,15 +36,13 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,5,6,5">
 
-                <TextBlock
-TextWrapping="WrapWholeWords"
-Style="{StaticResource BodyTextBlockStyle}">
+                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
-<Span>
-    Configure <Italic>App Control for Business</Italic>
-        <Run Foreground="{ThemeResource SystemAccentColor}">policies'</Run>
-    <Bold>rule options</Bold>.
-  </Span>
+                <Span>
+                    Configure <Italic>App Control for Business</Italic>
+                        <Run Foreground="{ThemeResource SystemAccentColor}">policies'</Run>
+                    <Bold>rule options</Bold>.
+                  </Span>
                 </TextBlock>
 
                 <HyperlinkButton Margin="0,-6,0,0" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
@@ -67,8 +65,8 @@ Style="{StaticResource BodyTextBlockStyle}">
                             <TextBlock Text="View the policy path you selected." TextWrapping="WrapWholeWords" />
 
                             <TextBox x:Name="PickPolicyFileButton_TextBox"
-                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                             MinWidth="400" IsReadOnly="True" />
 
                         </controls:WrapPanel>
 

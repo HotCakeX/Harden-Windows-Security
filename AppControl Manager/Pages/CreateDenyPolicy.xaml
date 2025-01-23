@@ -46,7 +46,6 @@
                 </Style>
 
 
-
                 <!-- For the Packaged Apps ListView Grouping -->
                 <CollectionViewSource x:Name="PackagedAppsCollectionViewSource" IsSourceGrouped="True"/>
 
@@ -65,39 +64,31 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-
-
                         <Border CornerRadius="15" VerticalAlignment="Center"
-HorizontalAlignment="Center" BorderThickness="0" Grid.RowSpan="3" Grid.Column="0">
-                            <Image 
-                                Width ="32"
-                                Height="32"
-                                Margin="6"
-                                Source="{x:Bind Logo}" />
+                            HorizontalAlignment="Center" BorderThickness="0" Grid.RowSpan="3" Grid.Column="0">
+                            <Image Width ="32" Height="32" Margin="6" Source="{x:Bind Logo}" />
                         </Border>
 
-
-
                         <TextBlock Grid.Column="1"
-Grid.Row="0"                                   
-Text="{x:Bind DisplayName}"
-x:Phase="1"
-Style="{ThemeResource BaseTextBlockStyle}"
-Margin="12,6,0,0"/>
+                        Grid.Row="0"                                   
+                        Text="{x:Bind DisplayName}"
+                        x:Phase="1"
+                        Style="{ThemeResource BaseTextBlockStyle}"
+                        Margin="12,6,0,0"/>
                         <TextBlock  Grid.Column="1"
-Grid.Row="1"
-Text="{x:Bind Version}"
-x:Phase="2"
-Style="{ThemeResource BodyTextBlockStyle}"
-Margin="12,6,0,0"/>
+                        Grid.Row="1"
+                        Text="{x:Bind Version}"
+                        x:Phase="2"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Margin="12,6,0,0"/>
 
 
                         <TextBlock  Grid.Column="1"
-Grid.Row="2"
-Text="{x:Bind PackageFamilyName}"
-x:Phase="2"
-Style="{ThemeResource BodyTextBlockStyle}"
-Margin="12,0,0,6"/>
+                        Grid.Row="2"
+                        Text="{x:Bind PackageFamilyName}"
+                        x:Phase="2"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Margin="12,0,0,6"/>
                     </Grid>
                 </DataTemplate>
 
@@ -107,9 +98,7 @@ Margin="12,0,0,6"/>
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
-                <TextBlock
-                    TextWrapping="WrapWholeWords"
-                    Style="{StaticResource BodyTextBlockStyle}">
+                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
                     <Span>
                         Create a <Bold>Deny</Bold> <Underline>base</Underline> policy that will <Run Foreground="{ThemeResource SystemAccentColor}">explicitly deny</Run> files or applications. Keep in mind that Application Control is fundamentally based on allow-listing, which means anything that is not allowed by a policy is <Bold>already automatically denied.</Bold>
@@ -119,8 +108,6 @@ Margin="12,0,0,6"/>
                 <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy" />
 
             </controls:WrapPanel>
-
-
 
 
             <StackPanel HorizontalAlignment="Stretch"
@@ -158,10 +145,8 @@ Margin="12,0,0,6"/>
 
                         <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
 
-
                         <TeachingTip x:Name="CreateDenyPolicyTeachingTip"
  Target="{x:Bind CreateFilesAndFoldersDenyPolicyButton}" />
-
 
                     </controls:WrapPanel>
 
@@ -184,13 +169,12 @@ Margin="12,0,0,6"/>
 
                                             <TextBox x:Name="FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                                                MinWidth="400" IsReadOnly="True" />
 
                                         </controls:WrapPanel>
 
                                     </Flyout>
                                 </Button.Flyout>
-
 
                             </Button>
 
@@ -211,8 +195,8 @@ Margin="12,0,0,6"/>
                                             <TextBlock Text="View the folders you selected." TextWrapping="WrapWholeWords" />
 
                                             <TextBox x:Name="FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox"
-                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                  SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                MinWidth="400" IsReadOnly="True" />
 
                                         </controls:WrapPanel>
 
@@ -296,16 +280,12 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
 
 
 
-
-
-
-
                 <!-- Package Family Name (PFN -->
 
                 <controls:SettingsExpander x:Name="PFNSettingsCard"
                     Description="Create a Deny policy based on an app's Package Family Name (PFN)"
                     Header="Package Family Name"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE734;}" Expanded="PFNSettingsCard_Expanded">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}" Expanded="PFNSettingsCard_Expanded">
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="PFNInfoBar"
@@ -340,14 +320,12 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                         </controls:SettingsCard>
 
-                        
 
                         <controls:SettingsCard Description="Select one or more installed packages to create a Deny policy for"
                             Header="Package Family Names" x:Name="PFNSelectPackagedAppsSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
 
 
                             <controls:WrapPanel Orientation="Horizontal">
-
 
                                 <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
 
@@ -363,21 +341,20 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                                 <RefreshContainer x:Name="PFNRefreshContainer" RefreshRequested="PFNRefreshContainer_RefreshRequested">
 
-
                                     <ListView
-                                 x:Name="PFNPackagedAppsListView"                                 
-                                 BorderThickness="1"
-                                 CornerRadius="5"
-                                 ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
-                                 BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                                 Width="450"
-                                 Height="400"
-                                 HorizontalAlignment="Left"
-                                 SelectionMode="Multiple"                               
-                                 PointerEntered="PFNPackagedAppsListView_PointerEntered"
-                                 PointerExited="PFNPackagedAppsListView_PointerExited"
-                                 SelectionChanged="PFNPackagedAppsListView_SelectionChanged"
-                                 ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
+                                        x:Name="PFNPackagedAppsListView"                                 
+                                        BorderThickness="1"
+                                        CornerRadius="5"
+                                        ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
+                                        BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                        Width="450"
+                                        Height="400"
+                                        HorizontalAlignment="Left"
+                                        SelectionMode="Multiple"                               
+                                        PointerEntered="PFNPackagedAppsListView_PointerEntered"
+                                        PointerExited="PFNPackagedAppsListView_PointerExited"
+                                        SelectionChanged="PFNPackagedAppsListView_SelectionChanged"
+                                        ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
 
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -400,7 +377,6 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                                 </RefreshContainer>
 
-
                             </controls:WrapPanel>
 
                         </controls:SettingsCard>
@@ -409,12 +385,7 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                 </controls:SettingsExpander>
 
-
-
             </StackPanel>
-
-
-
 
         </Grid>
     </ScrollView>

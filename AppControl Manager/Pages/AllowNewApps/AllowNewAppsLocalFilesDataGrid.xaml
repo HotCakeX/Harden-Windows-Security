@@ -9,8 +9,7 @@
     mc:Ignorable="d"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations">
+    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls">
 
     <Grid>
 

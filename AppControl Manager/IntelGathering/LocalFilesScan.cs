@@ -19,7 +19,6 @@ internal static class LocalFilesScan
 {
 
 	private const string WHQLOid = "1.3.6.1.4.1.311.10.3.5";
-
 	private const string ECCOID = "1.2.840.10045.2.1";
 
 
@@ -192,7 +191,7 @@ internal static class LocalFilesScan
 							SHA256Hash = fileHashes.SHA256Authenticode,
 							SHA1PageHash = fileHashes.SHA1Page,
 							SHA256PageHash = fileHashes.SHA256Page,
-							SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(fileString).Verdict is UserOrKernelMode.UserMode ? 1 : 0,
+							SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(fileString).Verdict is SiPolicyIntel.SSType.UserMode ? 1 : 0,
 							OriginalFileName = ExtendedFileInfo.OriginalFileName,
 							InternalName = ExtendedFileInfo.InternalName,
 							FileDescription = ExtendedFileInfo.FileDescription,

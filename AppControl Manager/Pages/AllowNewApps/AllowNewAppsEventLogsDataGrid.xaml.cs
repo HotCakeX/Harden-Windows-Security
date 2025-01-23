@@ -138,7 +138,6 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page
 
 
 
-
 	// https://learn.microsoft.com/en-us/windows/communitytoolkit/controls/datagrid_guidance/group_sort_filter
 	// Column sorting logic for the entire DataGrid
 	private void FileIdentitiesDataGrid_Sorting(object sender, DataGridColumnEventArgs e)

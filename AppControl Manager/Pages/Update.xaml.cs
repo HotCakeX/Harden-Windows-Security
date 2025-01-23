@@ -69,14 +69,12 @@ public sealed partial class Update : Page
 	public static Update Instance => _instance ?? throw new InvalidOperationException("Update is not initialized.");
 
 
-
 	// Event handler for check for update button
 	private async void CheckForUpdateButton_Click(object sender, RoutedEventArgs e)
 	{
 
 		try
 		{
-
 			UpdateStatusInfoBar.IsClosable = false;
 			CheckForUpdateButton.IsEnabled = false;
 			CheckForUpdate.IsClickEnabled = false;

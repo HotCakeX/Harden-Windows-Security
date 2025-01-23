@@ -10,7 +10,6 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager.Others;
 
-
 // a class to throw a custom exception when the certificate has HashMismatch
 internal sealed class HashMismatchInCertificateException : Exception
 {

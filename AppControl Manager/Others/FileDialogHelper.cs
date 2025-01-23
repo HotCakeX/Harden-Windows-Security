@@ -12,6 +12,8 @@ namespace AppControlManager.Others;
 /// <summary>
 /// https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100
 /// This class uses unmanaged code, "allowMarshaling" should be "false" for CsWin32 JSON settings.
+/// Using P/Invoke because when running as Admin, WinAppSDK's file picker doesn't work.
+/// https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100#in-a-desktop-app-that-requires-elevation
 /// </summary>
 internal static class FileDialogHelper
 {
@@ -293,8 +295,6 @@ internal static class FileDialogHelper
 
 
 
-
-
 	/// <summary>
 	/// Opens a folder picker dialog to select a single folder.
 	/// </summary>
@@ -383,8 +383,6 @@ internal static class FileDialogHelper
 			}
 		}
 	}
-
-
 
 
 

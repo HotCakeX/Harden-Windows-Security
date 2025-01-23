@@ -455,9 +455,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <param name="e"></param>
 	private void SignToolBrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Executable file|*.exe";
-
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFiles))
 		{
@@ -474,9 +472,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <param name="e"></param>
 	private void CertFileBrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Certificate file|*.cer";
-
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFiles))
 		{

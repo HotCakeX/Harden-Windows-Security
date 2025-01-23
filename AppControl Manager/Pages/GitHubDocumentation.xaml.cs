@@ -1,4 +1,5 @@
 using System;
+using AppControlManager.Others;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -52,7 +53,6 @@ public sealed partial class GitHubDocumentation : Page
 	}
 
 	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-
 	private void WebView2_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
 	{
 
@@ -70,7 +70,7 @@ public sealed partial class GitHubDocumentation : Page
 		catch (ObjectDisposedException ex)
 		{
 			// Log the exception, but avoid crashing the app
-			System.Diagnostics.Debug.WriteLine("WebView2 in GitHub Documentation Page has been disposed: " + ex.Message);
+			Logger.Write("WebView2 in GitHub Documentation Page has been disposed: " + ex.Message);
 		}
 	}
 }

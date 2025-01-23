@@ -18,58 +18,14 @@ internal static class NewFilePublisherLevelRules
 	internal static void CreateAllow(string xmlFilePath, List<FilePublisherSignerCreator> filePublisherSigners)
 	{
 
-		if (filePublisherSigners is null || filePublisherSigners.Count == 0)
+		if (filePublisherSigners.Count is 0)
 		{
-			Logger.Write($"NewFilePublisherLevelRules: no FilePublisher signers detected to create rules for.");
+			Logger.Write($"NewFilePublisherLevelRules: no FilePublisher signers detected to create allow rules for.");
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
-
-		// This method isn't suitable for strict Kernel-Mode policy
-		if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
-		{
-			throw new InvalidOperationException("NewFilePublisherLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
-		}
-
-
-		#region
-
-		// Find AllowedSigners node in each ProductSigners node
-		XmlNode? UMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
-		XmlNode? KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
-
-		// Check if AllowedSigners node exists, if not, create it
-		if (UMCI_ProductSigners_AllowedSigners_Node is null)
-		{
-			XmlElement UMCI_AllowedSignersNew = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigners", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.UMCI_ProductSignersNode.AppendChild(UMCI_AllowedSignersNew);
-
-			UMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (UMCI_ProductSigners_AllowedSigners_Node is null)
-		{
-			throw new InvalidOperationException("UMCI Product Signers AllowedSigners node not found despite creating it");
-		}
-
-		// Check if AllowedSigners node exists, if not, create it
-		if (KMCI_ProductSigners_AllowedSigners_Node is null)
-		{
-			XmlElement KMCI_AllowedSignersNew = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigners", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_AllowedSignersNew);
-			KMCI_ProductSigners_AllowedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (KMCI_ProductSigners_AllowedSigners_Node is null)
-		{
-			throw new InvalidOperationException("KMCI Product Signers AllowedSigners node not found despite creating it");
-		}
-
-		#endregion
-
-		XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!;
 
 		Logger.Write($"NewFilePublisherLevelRules: There are {filePublisherSigners.Count} File Publisher Signers to be added to the XML file");
 
@@ -113,7 +69,7 @@ internal static class NewFilePublisherLevelRules
 			newFileAttribNode.SetAttribute("MinimumFileVersion", filePublisherData.FileVersion!.ToString());
 
 			// Add the new node to the FileRules node
-			_ = fileRulesNode.AppendChild(newFileAttribNode);
+			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileAttribNode);
 
 			#endregion Creating File Attributes
 
@@ -158,13 +114,13 @@ internal static class NewFilePublisherLevelRules
 				#region Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (filePublisherData.SiSigningScenario == 1)
+				if (filePublisherData.SiSigningScenario is 1)
 				{
 
 					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", codeIntegrityPolicy.NameSpaceURI);
 					newUMCIAllowedSignerNode.SetAttribute("SignerId", signerID);
-					_ = UMCI_ProductSigners_AllowedSigners_Node.AppendChild(newUMCIAllowedSignerNode);
+					_ = codeIntegrityPolicy.UMCI_ProductSigners_AllowedSigners_Node.AppendChild(newUMCIAllowedSignerNode);
 
 					// Create a CI Signer for the User Mode Signer
 					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", codeIntegrityPolicy.NameSpaceURI);
@@ -174,13 +130,13 @@ internal static class NewFilePublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (filePublisherData.SiSigningScenario == 0)
+				else if (filePublisherData.SiSigningScenario is 0)
 				{
 
 					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", codeIntegrityPolicy.NameSpaceURI);
 					newKMCIAllowedSignerNode.SetAttribute("SignerId", signerID);
-					_ = KMCI_ProductSigners_AllowedSigners_Node.AppendChild(newKMCIAllowedSignerNode);
+					_ = codeIntegrityPolicy.KMCI_ProductSigners_AllowedSigners_Node.AppendChild(newKMCIAllowedSignerNode);
 
 					// Kernel-Mode signers don't need CI Signers
 				}
@@ -191,15 +147,8 @@ internal static class NewFilePublisherLevelRules
 			#endregion Creating Signers
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
-
-
-
-
-
-
-
 
 
 	/// <summary>
@@ -212,58 +161,14 @@ internal static class NewFilePublisherLevelRules
 	internal static void CreateDeny(string xmlFilePath, List<FilePublisherSignerCreator> filePublisherSigners)
 	{
 
-		if (filePublisherSigners is null || filePublisherSigners.Count == 0)
+		if (filePublisherSigners.Count is 0)
 		{
-			Logger.Write($"NewFilePublisherLevelRules: no FilePublisher signers detected to create rules for.");
+			Logger.Write($"NewFilePublisherLevelRules: no FilePublisher signers detected to create deny rules for.");
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
-
-		// This method isn't suitable for strict Kernel-Mode policy
-		if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
-		{
-			throw new InvalidOperationException("NewFilePublisherLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
-		}
-
-
-		#region
-
-		// Find DeniedSigners node in each ProductSigners node
-		XmlNode? UMCI_ProductSigners_DeniedSigners_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:DeniedSigners", codeIntegrityPolicy.NamespaceManager);
-		XmlNode? KMCI_ProductSigners_DeniedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:DeniedSigners", codeIntegrityPolicy.NamespaceManager);
-
-		// Check if DeniedSigners node exists, if not, create it
-		if (UMCI_ProductSigners_DeniedSigners_Node is null)
-		{
-			XmlElement UMCI_DeniedSignersNew = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigners", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.UMCI_ProductSignersNode.AppendChild(UMCI_DeniedSignersNew);
-
-			UMCI_ProductSigners_DeniedSigners_Node = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:DeniedSigners", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (UMCI_ProductSigners_DeniedSigners_Node is null)
-		{
-			throw new InvalidOperationException("UMCI Product Signers DeniedSigners node not found despite creating it");
-		}
-
-		// Check if DeniedSigners node exists, if not, create it
-		if (KMCI_ProductSigners_DeniedSigners_Node is null)
-		{
-			XmlElement KMCI_DeniedSignersNew = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigners", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.KMCI_ProductSignersNode?.AppendChild(KMCI_DeniedSignersNew);
-			KMCI_ProductSigners_DeniedSigners_Node = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:DeniedSigners", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (KMCI_ProductSigners_DeniedSigners_Node is null)
-		{
-			throw new InvalidOperationException("KMCI Product Signers DeniedSigners node not found despite creating it");
-		}
-
-		#endregion
-
-		XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!;
 
 		Logger.Write($"NewFilePublisherLevelRules: There are {filePublisherSigners.Count} File Publisher Signers to be added to the XML file");
 
@@ -307,7 +212,7 @@ internal static class NewFilePublisherLevelRules
 			newFileAttribNode.SetAttribute("MinimumFileVersion", filePublisherData.FileVersion!.ToString());
 
 			// Add the new node to the FileRules node
-			_ = fileRulesNode.AppendChild(newFileAttribNode);
+			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileAttribNode);
 
 			#endregion Creating File Attributes
 
@@ -352,13 +257,13 @@ internal static class NewFilePublisherLevelRules
 				#region Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (filePublisherData.SiSigningScenario == 1)
+				if (filePublisherData.SiSigningScenario is 1)
 				{
 
 					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", codeIntegrityPolicy.NameSpaceURI);
 					newUMCIDeniedSignerNode.SetAttribute("SignerId", signerID);
-					_ = UMCI_ProductSigners_DeniedSigners_Node.AppendChild(newUMCIDeniedSignerNode);
+					_ = codeIntegrityPolicy.UMCI_ProductSigners_DeniedSigners_Node.AppendChild(newUMCIDeniedSignerNode);
 
 					// Create a CI Signer for the User Mode Signer
 					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", codeIntegrityPolicy.NameSpaceURI);
@@ -368,13 +273,13 @@ internal static class NewFilePublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (filePublisherData.SiSigningScenario == 0)
+				else if (filePublisherData.SiSigningScenario is 0)
 				{
 
 					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", codeIntegrityPolicy.NameSpaceURI);
 					newKMCIDeniedSignerNode.SetAttribute("SignerId", signerID);
-					_ = KMCI_ProductSigners_DeniedSigners_Node.AppendChild(newKMCIDeniedSignerNode);
+					_ = codeIntegrityPolicy.KMCI_ProductSigners_DeniedSigners_Node.AppendChild(newKMCIDeniedSignerNode);
 
 					// Kernel-Mode signers don't need CI Signers
 				}
@@ -385,9 +290,8 @@ internal static class NewFilePublisherLevelRules
 			#endregion Creating Signers
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
-
 
 
 }

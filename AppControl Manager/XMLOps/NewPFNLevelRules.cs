@@ -18,35 +18,12 @@ internal static class NewPFNLevelRules
 
 		if (PFNData.Count is 0)
 		{
-			Logger.Write($"NewPFNLevelRules: no PackageFamilyNames detected to create rules for.");
+			Logger.Write($"NewPFNLevelRules: no PackageFamilyNames detected to create allow rules for.");
 			return;
 		}
 
-
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
-
-
-		// This method isn't suitable for strict Kernel-Mode policy
-		if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
-		{
-			throw new InvalidOperationException("NewPFNLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
-		}
-
-
-		// Find the FileRules node
-		XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager) ?? throw new InvalidOperationException("file rules node could not be found.");
-
-		// Check if FileRulesRef node exists for User-Mode, if not, create it
-		XmlNode? UMCI_FileRulesRefNode = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-
-		if (UMCI_FileRulesRefNode is null)
-		{
-			XmlElement UMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.UMCI_ProductSignersNode.AppendChild(UMCI_FileRulesRefNew);
-			UMCI_FileRulesRefNode = UMCI_FileRulesRefNew;
-		}
-
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
@@ -59,20 +36,20 @@ internal static class NewPFNLevelRules
 
 			// Fill it with the required attributes
 			newPFNRule.SetAttribute("ID", ID);
-			newPFNRule.SetAttribute("FriendlyName", $"Allowing packaged app by its Family Name: {PFN.PackageFamilyName}");
+			newPFNRule.SetAttribute("FriendlyName", "Allowing Packaged App by its Family Name");
 			newPFNRule.SetAttribute("MinimumFileVersion", PFN.MinimumFileVersion);
 			newPFNRule.SetAttribute("PackageFamilyName", PFN.PackageFamilyName);
 
 			// Add the new element which is a node to the FileRules node
-			_ = fileRulesNode.AppendChild(newPFNRule);
+			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newPFNRule);
 
 			// Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
 			newUMCIFileRuleRefNode.SetAttribute("RuleID", ID);
-			_ = UMCI_FileRulesRefNode.AppendChild(newUMCIFileRuleRefNode);
+			_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(newUMCIFileRuleRefNode);
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
 
 
@@ -88,35 +65,12 @@ internal static class NewPFNLevelRules
 
 		if (PFNData.Count is 0)
 		{
-			Logger.Write($"NewPFNLevelRules: no PackageFamilyNames detected to create rules for.");
+			Logger.Write($"NewPFNLevelRules: no PackageFamilyNames detected to create deny rules for.");
 			return;
 		}
 
-
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
-
-
-		// This method isn't suitable for strict Kernel-Mode policy
-		if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
-		{
-			throw new InvalidOperationException("NewPFNLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
-		}
-
-
-		// Find the FileRules node
-		XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager) ?? throw new InvalidOperationException("file rules node could not be found.");
-
-		// Check if FileRulesRef node exists for User-Mode, if not, create it
-		XmlNode? UMCI_FileRulesRefNode = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-
-		if (UMCI_FileRulesRefNode is null)
-		{
-			XmlElement UMCI_FileRulesRefNew = codeIntegrityPolicy.XmlDocument.CreateElement("FileRulesRef", codeIntegrityPolicy.NameSpaceURI);
-			_ = codeIntegrityPolicy.UMCI_ProductSignersNode.AppendChild(UMCI_FileRulesRefNew);
-			UMCI_FileRulesRefNode = UMCI_FileRulesRefNew;
-		}
-
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
@@ -129,20 +83,20 @@ internal static class NewPFNLevelRules
 
 			// Fill it with the required attributes
 			newPFNRule.SetAttribute("ID", ID);
-			newPFNRule.SetAttribute("FriendlyName", $"Denying packaged app by its Family Name: {PFN.PackageFamilyName}");
+			newPFNRule.SetAttribute("FriendlyName", "Denying Packaged App by its Family Name");
 			newPFNRule.SetAttribute("MinimumFileVersion", PFN.MinimumFileVersion);
 			newPFNRule.SetAttribute("PackageFamilyName", PFN.PackageFamilyName);
 
 			// Add the new element which is a node to the FileRules node
-			_ = fileRulesNode.AppendChild(newPFNRule);
+			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newPFNRule);
 
 			// Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
 			newUMCIFileRuleRefNode.SetAttribute("RuleID", ID);
-			_ = UMCI_FileRulesRefNode.AppendChild(newUMCIFileRuleRefNode);
+			_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(newUMCIFileRuleRefNode);
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
 
 }

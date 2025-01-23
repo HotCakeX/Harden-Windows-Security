@@ -64,7 +64,6 @@ internal static class AddSigningDetails
 
 
 
-
 		// If the policy has <Signers> node
 		if (policyObject.Signers is not null)
 		{

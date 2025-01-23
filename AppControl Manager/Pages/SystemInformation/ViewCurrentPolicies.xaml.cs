@@ -543,7 +543,6 @@ public sealed partial class ViewCurrentPolicies : Page
 
 
 
-
 	/// <summary>
 	/// Event handler for the Copy Individual Items SubMenu. It will populate the submenu items in the flyout of the data grid.
 	/// </summary>

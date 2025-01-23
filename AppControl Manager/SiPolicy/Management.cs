@@ -87,7 +87,6 @@ internal static class Management
 
 
 
-
 	/// <summary>
 	/// Saves the SiPolicy object to a XML file
 	/// </summary>

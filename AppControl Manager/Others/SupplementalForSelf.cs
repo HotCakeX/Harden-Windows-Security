@@ -38,7 +38,7 @@ internal static class SupplementalForSelf
 		string cipPath = Path.Combine(StagingArea, $"{GlobalVars.AppControlManagerSpecialPolicyName}.cip");
 
 		// Save the XML to the path as XML file
-		codeIntegrityPolicy.XmlDocument.Save(savePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, savePath);
 
 		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
 
@@ -98,7 +98,7 @@ internal static class SupplementalForSelf
 		string savePath = Path.Combine(stagingArea.FullName, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
 
 		// Save the XML to the path as XML file
-		codeIntegrityPolicy.XmlDocument.Save(savePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, savePath);
 
 		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
 

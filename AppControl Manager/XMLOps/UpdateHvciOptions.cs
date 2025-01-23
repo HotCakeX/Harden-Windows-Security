@@ -26,7 +26,7 @@ internal static class UpdateHvciOptions
 		if (hvciOptionsNode is not null)
 		{
 			// Ensure the value is "2"
-			if (hvciOptionsNode.InnerText != "2")
+			if (!string.Equals(hvciOptionsNode.InnerText, "2", StringComparison.OrdinalIgnoreCase))
 			{
 				hvciOptionsNode.InnerText = "2";
 			}
@@ -43,7 +43,7 @@ internal static class UpdateHvciOptions
 		}
 
 		// Save the modified XML document
-		codeIntegrityPolicy.XmlDocument.Save(filePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
 
 		// Validate the XML file at the end
 		if (!CiPolicyTest.TestCiPolicy(filePath))

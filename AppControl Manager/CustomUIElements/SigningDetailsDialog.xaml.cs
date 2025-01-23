@@ -282,7 +282,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 				{
 					ShowTeachingTip("The selected certificate is not present in the XML policy file as an UpdatePolicySigner or the selected common name does not match the selected certificate's common name, thus it cannot be used to re-sign the policy. Please select the correct certificate.");
 					return;
-				};
+				}
 
 			}
 
@@ -383,9 +383,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// <param name="e"></param>
 	private void SignToolBrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Executable file|*.exe";
-
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFiles))
 		{
@@ -402,9 +400,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// <param name="e"></param>
 	private void CertFileBrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Certificate file|*.cer";
-
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(filter);
+		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFiles))
 		{

@@ -39,14 +39,12 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,5,6,5">
 
-                <TextBlock
-TextWrapping="WrapWholeWords"
-Style="{StaticResource BodyTextBlockStyle}">
+                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
-<Span>
-    Use this page to <Run Foreground="{ThemeResource SystemAccentColor}">Allow</Run>
-    new or already installed apps or files to run on the system.
-</Span>
+                    <Span>
+                        Use this page to <Run Foreground="{ThemeResource SystemAccentColor}">Allow</Run>
+                        new or already installed apps or files to run on the system.
+                    </Span>
                 </TextBlock>
 
                 <HyperlinkButton Margin="0,-8,0,8" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
@@ -95,8 +93,8 @@ Style="{StaticResource BodyTextBlockStyle}">
                                         <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
 
                                         <TextBox x:Name="BrowseForXMLPolicyButton_SelectedBasePolicyTextBox"
-                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                  SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                            MinWidth="400" IsReadOnly="True" />
 
                                     </controls:WrapPanel>
 
@@ -169,8 +167,8 @@ LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_Va
                                         <TextBlock Text="View the directories you selected."  TextWrapping="WrapWholeWords" Width="400" />
 
                                         <TextBox x:Name="SelectedDirectoriesTextBox"
-TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"
-SelectionHighlightColor="Pink" MinWidth="400" IsReadOnly="True" />
+                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"
+                                            MinWidth="400" IsReadOnly="True" />
 
                                     </controls:WrapPanel>
 

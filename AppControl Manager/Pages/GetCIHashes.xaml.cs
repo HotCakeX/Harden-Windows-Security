@@ -12,10 +12,6 @@ namespace AppControlManager.Pages;
 
 public sealed partial class GetCIHashes : Page
 {
-
-	// Using P/Invoke because when running as Admin, WinAppSDK's file picker doesn't work.
-	// https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100#in-a-desktop-app-that-requires-elevation
-
 	public GetCIHashes()
 	{
 		this.InitializeComponent();

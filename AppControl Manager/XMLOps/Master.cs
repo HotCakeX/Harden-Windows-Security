@@ -14,6 +14,7 @@ internal static class Master
 	/// <param name="xmlFilePath"></param>
 	internal static void Initiate(FileBasedInfoPackage incomingData, string xmlFilePath, SiPolicyIntel.Authorization authorization, string? stagingArea = null)
 	{
+		Logger.Write("Merging");
 
 		if (authorization is SiPolicyIntel.Authorization.Allow)
 		{
@@ -23,7 +24,6 @@ internal static class Master
 			NewFilePathRules.CreateAllow(xmlFilePath, incomingData.FilePaths);
 			NewPFNLevelRules.CreateAllow(xmlFilePath, incomingData.PFNRules);
 
-			Logger.Write("Merging");
 			SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath]);
 		}
 		else
@@ -33,8 +33,6 @@ internal static class Master
 			NewHashLevelRules.CreateDeny(xmlFilePath, incomingData.CompleteHashes);
 			NewFilePathRules.CreateDeny(xmlFilePath, incomingData.FilePaths);
 			NewPFNLevelRules.CreateDeny(xmlFilePath, incomingData.PFNRules);
-
-			Logger.Write("Merging");
 
 			// Path to the AllowAll XML file on the system
 			string AllowAllFilePath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory)!, @"Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml");
@@ -46,7 +44,6 @@ internal static class Master
 			// Merge the policy with the AllowAll XML policy since this is a Deny policy type
 			SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath, finalAllowAllFilePath]);
 		}
-
 
 	}
 }

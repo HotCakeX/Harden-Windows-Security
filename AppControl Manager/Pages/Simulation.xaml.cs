@@ -41,7 +41,6 @@ public sealed partial class Simulation : Page
 	}
 
 
-
 	#region
 
 	// Without the following steps, when the user begins data fetching process and then navigates away from this page
@@ -62,7 +61,6 @@ public sealed partial class Simulation : Page
 	}
 
 	#endregion
-
 
 
 
@@ -284,8 +282,6 @@ public sealed partial class Simulation : Page
 			}
 		}
 	}
-
-
 
 
 

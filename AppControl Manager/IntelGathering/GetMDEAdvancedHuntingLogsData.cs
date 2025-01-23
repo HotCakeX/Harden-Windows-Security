@@ -166,9 +166,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 
 
-
-
-
 			// If the current group has Code Integrity Blocked log
 			else if (possibleCodeIntegrityBlockEvent is not null)
 			{
@@ -492,7 +489,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 		// Return the internal data which is the right return type
 		return fileIdentities.FileIdentitiesInternal;
 	}
-
 
 
 

@@ -46,7 +46,7 @@ public sealed partial class MergePolicies : Page
 			return;
 		}
 
-		if (otherPolicies.Count == 0)
+		if (otherPolicies.Count is 0)
 		{
 			MergeButtonTeachingTip.IsOpen = true;
 			MergeButtonTeachingTip.Title = "Select other policies";

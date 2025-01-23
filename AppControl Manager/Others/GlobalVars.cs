@@ -4,7 +4,7 @@ using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace AppControlManager.Others;
 
-// This class defines constant variables
+// This class defines constants and other variables used by the entire application
 internal static class GlobalVars
 {
 	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
@@ -49,11 +49,12 @@ internal static class GlobalVars
 	// Handle of the main Window - acquired in the MainWindow.xaml.cs
 	internal static nint hWnd;
 
-	// The filter for the file picker dialog to select XML files
+	// The filters for the file pickers dialogs to select files based on specific extensions
 	internal const string XMLFilePickerFilter = "XML file|*.xml";
-
-	// The filter for the file picker dialog to select Any files
 	internal const string AnyFilePickerFilter = "Any file (*.*)|*.*";
+	internal const string ExecutablesPickerFilter = "Executable file|*.exe";
+	internal const string CertificatePickerFilter = "Certificate file|*.cer";
+	internal const string EVTXPickerFilter = "EVTX log file|*.evtx";
 
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
@@ -82,4 +83,3 @@ internal static class GlobalVars
 		}
 	}
 }
-

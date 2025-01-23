@@ -76,7 +76,7 @@ internal static class CiRuleOptions
 	};
 
 
-	internal static readonly Dictionary<int, string> PolicyRuleOptionsActualInverted = new()
+	private static readonly Dictionary<int, string> PolicyRuleOptionsActualInverted = new()
 	{
 		{ (int)PolicyRuleOptions.EnabledUMCI, "Enabled:UMCI" },
 		{ (int)PolicyRuleOptions.EnabledBootMenuProtection, "Enabled:Boot Menu Protection" },
@@ -471,7 +471,7 @@ internal static class CiRuleOptions
 		}
 
 		// Save the XML
-		codeIntegrityPolicy.XmlDocument.Save(filePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
 
 		// Close the empty XML nodes
 		CloseEmptyXmlNodesSemantic.Close(filePath);

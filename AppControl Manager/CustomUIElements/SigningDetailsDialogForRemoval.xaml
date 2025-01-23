@@ -129,8 +129,6 @@
 
 
 
-
-
                 <controls:SettingsCard Header="XML File"
                     Description="The XML file of the Signed policy that is going to be removed"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
@@ -145,8 +143,6 @@
 
 
                 </controls:SettingsCard>
-
-
 
 
 

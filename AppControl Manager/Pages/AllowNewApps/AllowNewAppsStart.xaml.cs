@@ -148,7 +148,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons
 		BrowseForXMLPolicyButtonLightAnimatedIcon.Visibility = visibility;
@@ -185,7 +185,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
 		selectedXMLFilePath = unsignedBasePolicyPathFromSidebar;
 	}
-
 
 
 

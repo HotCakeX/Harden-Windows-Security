@@ -1020,10 +1020,8 @@ public sealed partial class MainWindow : Window
 
 					break;
 				}
-		};
+		}
 	}
-
-
 
 
 
@@ -1072,7 +1070,7 @@ public sealed partial class MainWindow : Window
 					MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Auto;
 					break;
 				}
-		};
+		}
 
 	}
 
@@ -1109,8 +1107,6 @@ public sealed partial class MainWindow : Window
 		// Switch back to the current theme
 		RootGrid.RequestedTheme = currentTheme;
 	}
-
-
 
 
 
@@ -1576,7 +1572,7 @@ public sealed partial class MainWindow : Window
 
 		if (ContentFrame.Content is IAnimatedIconsManager currentPage)
 		{
-			currentPage.SetVisibility(visibility, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3);
+			currentPage.SetVisibility(visibility, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
 
 			// Set the visibility of the AnimatedIcon on Sidebar's Select button for Unsigned policy
 			SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = visibility;
@@ -1613,6 +1609,8 @@ public sealed partial class MainWindow : Window
 		SidebarUnsignedBasePolicyConnect1.Content = null;
 		SidebarUnsignedBasePolicyConnect2.Content = null;
 		SidebarUnsignedBasePolicyConnect3.Content = null;
+		SidebarUnsignedBasePolicyConnect4.Content = null;
+		SidebarUnsignedBasePolicyConnect5.Content = null;
 
 		// Collapse the sidebar buttons
 		// The following actions happen because we don't know the next page user visits implements the interface or not
@@ -1620,6 +1618,8 @@ public sealed partial class MainWindow : Window
 		SidebarUnsignedBasePolicyConnect1.Visibility = Visibility.Collapsed;
 		SidebarUnsignedBasePolicyConnect2.Visibility = Visibility.Collapsed;
 		SidebarUnsignedBasePolicyConnect3.Visibility = Visibility.Collapsed;
+		SidebarUnsignedBasePolicyConnect4.Visibility = Visibility.Collapsed;
+		SidebarUnsignedBasePolicyConnect5.Visibility = Visibility.Collapsed;
 
 		// Check if the currently displayed content (page) in the ContentFrame implements the IAnimatedIconsManager interface.
 		// If it does, cast ContentFrame.Content to IAnimatedIconsManager
@@ -1628,12 +1628,12 @@ public sealed partial class MainWindow : Window
 		{
 			if (isUnsignedBasePolicyPathAvailable)
 			{
-				currentPage.SetVisibility(Visibility.Visible, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3);
+				currentPage.SetVisibility(Visibility.Visible, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
 				SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = Visibility.Visible;
 			}
 			else
 			{
-				currentPage.SetVisibility(Visibility.Collapsed, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3);
+				currentPage.SetVisibility(Visibility.Collapsed, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
 				SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = Visibility.Collapsed;
 			}
 		}

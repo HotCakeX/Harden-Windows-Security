@@ -492,10 +492,6 @@ internal static class GetEventLogsData
 
 
 
-
-
-
-
 	/// <summary>
 	/// Retrieves the AppLocker events from the local and EVTX files
 	/// </summary>
@@ -902,7 +898,6 @@ internal static class GetEventLogsData
 
 
 
-
 	#region Helper methods to extract values
 
 	/// <summary>
@@ -1052,7 +1047,6 @@ internal static class GetEventLogsData
 	}
 
 	#endregion
-
 
 
 

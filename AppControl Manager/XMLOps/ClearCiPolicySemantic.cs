@@ -20,30 +20,14 @@ internal static class ClearCiPolicySemantic
 
 		List<XmlNode> baseNodes = [];
 		baseNodes.Add(codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:EKUs", codeIntegrityPolicy.NamespaceManager)!);
-		baseNodes.Add(codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!);
-		baseNodes.Add(codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:Signers", codeIntegrityPolicy.NamespaceManager)!);
+		baseNodes.Add(codeIntegrityPolicy.FileRulesNode);
+		baseNodes.Add(codeIntegrityPolicy.SignersNode);
 
-		if (codeIntegrityPolicy.UMCI_ProductSignersNode is not null)
-		{
-			baseNodes.Add(codeIntegrityPolicy.UMCI_ProductSignersNode);
-		}
+		baseNodes.Add(codeIntegrityPolicy.UMCI_ProductSignersNode);
+		baseNodes.Add(codeIntegrityPolicy.KMCI_ProductSignersNode);
 
-		if (codeIntegrityPolicy.KMCI_ProductSignersNode is not null)
-		{
-			baseNodes.Add(codeIntegrityPolicy.KMCI_ProductSignersNode);
-		}
-
-		XmlNode? fileRulesRefUMC = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		if (fileRulesRefUMC is not null)
-		{
-			baseNodes.Add(fileRulesRefUMC);
-		}
-
-		XmlNode? fileRulesRefKMCS = codeIntegrityPolicy.KMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
-		if (fileRulesRefKMCS is not null)
-		{
-			baseNodes.Add(fileRulesRefKMCS);
-		}
+		baseNodes.Add(codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node);
+		baseNodes.Add(codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node);
 
 		XmlNode? updatePolicySigners = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:UpdatePolicySigners", codeIntegrityPolicy.NamespaceManager);
 
@@ -79,6 +63,6 @@ internal static class ClearCiPolicySemantic
 			}
 		}
 
-		codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
 }

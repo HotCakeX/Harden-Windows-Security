@@ -22,6 +22,6 @@ internal static class PolicyEditor
 		codeIntegrityPolicy.PolicyIDNode.InnerText = policyId;
 		codeIntegrityPolicy.BasePolicyIDNode.InnerText = policyId;
 
-		codeIntegrityPolicy.XmlDocument.Save(policyFilePathInput.FullName);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, policyFilePathInput.FullName);
 	}
 }

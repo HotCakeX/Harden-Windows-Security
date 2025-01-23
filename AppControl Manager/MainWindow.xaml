@@ -29,7 +29,6 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-
         <Grid.Resources>
             <!-- For the BreadCrumbBar's size -->
             <x:Double x:Key="BreadcrumbBarChevronFontSize">30</x:Double>
@@ -179,7 +178,6 @@
 
            -->
 
-
             <!--
             <NavigationView.PaneCustomContent>
                 <HyperlinkButton x:Name="PaneHyperlink" Content="More info" Margin="12,0" Visibility="Visible" />
@@ -204,19 +202,16 @@
                 <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" x:Uid="CreatePolicyFromEventLogsNavItem"/>
                 <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" x:Uid="CreatePolicyFromMDEAHNavItem"/>
 
-
                 <NavigationViewItemHeader Content="Tactical"/>
 
                 <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem"/>
                 <NavigationViewItem x:Name="AllowNewAppsNavItem" x:Uid="AllowNewAppsNavItem"/>
-
 
                 <NavigationViewItemHeader Content="Info Gathering"/>
 
                 <NavigationViewItem x:Name="SystemInformationNavItem" x:Uid="SystemInformationNavItem"/>
                 <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" x:Uid="GetCodeIntegrityHashesNavItem"/>
                 <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" x:Uid="GetSecurePolicySettingsNavItem"/>
-
 
                 <NavigationViewItemHeader Content="Policy Management"/>
 
@@ -326,6 +321,8 @@
                                                         <Button x:Name="SidebarUnsignedBasePolicyConnect1" HorizontalAlignment="Stretch" Content="Select 1" Visibility="Collapsed" />
                                                         <Button x:Name="SidebarUnsignedBasePolicyConnect2" HorizontalAlignment="Stretch" Content="Select 2" Visibility="Collapsed" />
                                                         <Button x:Name="SidebarUnsignedBasePolicyConnect3" HorizontalAlignment="Stretch" Content="Select 3" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect4" HorizontalAlignment="Stretch" Content="Select 4" Visibility="Collapsed" />
+                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect5" HorizontalAlignment="Stretch" Content="Select 5" Visibility="Collapsed" />
                                                     </StackPanel>
                                                 </Flyout>
                                             </Button.Flyout>

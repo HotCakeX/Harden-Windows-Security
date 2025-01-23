@@ -227,7 +227,7 @@ internal static class SetCiPolicyInfo
 
 
 		// Save the changes to the XML file
-		codeIntegrityPolicy.XmlDocument.Save(filePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
 
 		// Validate the XML file at the end
 		if (!CiPolicyTest.TestCiPolicy(filePath))
@@ -260,7 +260,7 @@ internal static class SetCiPolicyInfo
 		codeIntegrityPolicy.VersionExNode.InnerText = version.ToString();
 
 		// Save the changes to the XML file
-		codeIntegrityPolicy.XmlDocument.Save(filePath);
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
 
 		// Validate the XML file at the end
 		if (!CiPolicyTest.TestCiPolicy(filePath))

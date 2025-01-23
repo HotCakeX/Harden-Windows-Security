@@ -159,7 +159,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 
 
-
 	/// <summary>
 	/// Event handler for the ScanLogs click
 	/// </summary>
@@ -191,7 +190,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 			HashSet<FileIdentity> Output = [];
 
 			// Grab the App Control Logs
-
 			await Task.Run(() =>
 			{
 
@@ -250,7 +248,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 	/// <param name="e"></param>
 	private void BrowseForLogs_Click(object sender, RoutedEventArgs e)
 	{
-
 		string filter = "CSV file|*.csv";
 
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
@@ -262,12 +259,9 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 			Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
 
-
 			ScanLogs.IsEnabled = true;
-
 		}
 	}
-
 
 
 
@@ -283,8 +277,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 		UpdateTotalLogs(true);
 	}
-
-
 
 
 
@@ -532,7 +524,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 
 
-
 	/// <summary>
 	/// Event handler for the Copy Individual Items SubMenu. Populates items in the flyout of the data grid.
 	/// </summary>
@@ -775,7 +766,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
 
-			if (FileIdentities.Count == 0)
+			if (FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException("There are no logs. Use the scan button first or adjust the filters.");
 			}
@@ -849,9 +840,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 				if (PolicyToAddLogsTo is not null)
 				{
 
-					// Backup any possible Macros so they won't be lost during merge operations
-					var MacrosBackup = Macros.Backup(PolicyToAddLogsTo);
-
 					// Set policy name and reset the policy ID of our new policy
 					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
 
@@ -863,20 +851,15 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 					UpdateHvciOptions.Update(PolicyToAddLogsTo);
 
-					// Restore any possible Macros
-					Macros.Restore(PolicyToAddLogsTo, MacrosBackup);
-
 
 					// If user selected to deploy the policy
 					if (DeployAtTheEnd)
 					{
-
 						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
 						PolicyToCIPConverter.Convert(PolicyToAddLogsTo, CIPPath);
 
 						CiToolHelper.UpdatePolicy(CIPPath);
-
 					}
 				}
 
@@ -903,13 +886,11 @@ public sealed partial class MDEAHPolicyCreation : Page
 					// If user selected to deploy the policy
 					if (DeployAtTheEnd)
 					{
-
 						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
 						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 						CiToolHelper.UpdatePolicy(CIPPath);
-
 					}
 
 				}

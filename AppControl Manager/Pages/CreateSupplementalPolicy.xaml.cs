@@ -23,7 +23,6 @@ using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
-
 public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIconsManager
 {
 
@@ -39,7 +38,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		// Assign this instance to the static field
 		_instance = this;
-
 	}
 
 
@@ -48,17 +46,21 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	private string? unsignedBasePolicyPathFromSidebar;
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons
 		FilesAndFoldersBasePolicyLightAnimatedIcon.Visibility = visibility;
 		CertificatesBasePolicyPathLightAnimatedIcon.Visibility = visibility;
 		ISGBasePolicyPathLightAnimatedIcon.Visibility = visibility;
+		StrictKernelModeBasePolicyLightAnimatedIcon.Visibility = visibility;
+		PFNBasePolicyPathLightAnimatedIcon.Visibility = visibility;
 
 		// Light up the sidebar buttons' icons
 		button1.Visibility = visibility;
 		button2.Visibility = visibility;
 		button3.Visibility = visibility;
+		button4.Visibility = visibility;
+		button5.Visibility = visibility;
 
 		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
 		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
@@ -70,6 +72,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			button1.Content = "Files And Folders Supplemental Policy";
 			button2.Content = "Certificates Based Supplemental Policy";
 			button3.Content = "ISG Supplemental Policy";
+			button4.Content = "Strict Kernel-Mode Supplemental Policy";
+			button5.Content = "PFN-Based Supplemental Policy";
 
 			// Assign a local event handler to the sidebar button
 			button1.Click += LightUp1;
@@ -81,10 +85,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			// Save a reference to the event handler we just set for tracking
 			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect2EventHandler = LightUp2;
 
-			// Assign a local event handler to the sidebar button
 			button3.Click += LightUp3;
-			// Save a reference to the event handler we just set for tracking
 			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect3EventHandler = LightUp3;
+
+			button4.Click += LightUp4;
+			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect4EventHandler = LightUp4;
+
+			button5.Click += LightUp5;
+			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect5EventHandler = LightUp5;
 		}
 
 	}
@@ -96,7 +104,12 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void LightUp1(object sender, RoutedEventArgs e)
 	{
-		FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicyButton);
+		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
+		if (FilesAndFoldersBrowseForBasePolicyButton.XamlRoot is not null)
+		{
+			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicyButton);
+		}
+
 		FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
 		filesAndFoldersBasePolicyPath = unsignedBasePolicyPathFromSidebar;
 	}
@@ -113,7 +126,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 	private void LightUp3(object sender, RoutedEventArgs e)
 	{
-		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
 		if (ISGBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicyButton);
@@ -123,8 +135,29 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		ISGBasedBasePolicyPath = unsignedBasePolicyPathFromSidebar;
 	}
 
-	#endregion
+	private void LightUp4(object sender, RoutedEventArgs e)
+	{
+		if (StrictKernelModeBrowseForBasePolicyButton.XamlRoot is not null)
+		{
+			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicyButton);
+		}
 
+		StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
+		StrictKernelModeBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+	}
+
+	private void LightUp5(object sender, RoutedEventArgs e)
+	{
+		if (PFNBrowseForBasePolicyButton.XamlRoot is not null)
+		{
+			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
+		}
+
+		PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
+		PFNBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+	}
+
+	#endregion
 
 
 	// Public property to access the singleton instance from other classes
@@ -145,7 +178,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	// Selected Supplemental policy name
 	private string? filesAndFoldersSupplementalPolicyName;
 
-	// The user selected scan level
+	// The default selected scan level
 	private ScanLevels filesAndFoldersScanLevel = ScanLevels.FilePublisher;
 
 	private bool filesAndFoldersDeployButton;
@@ -174,7 +207,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				// Append the new file to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
-
 			}
 		}
 
@@ -200,7 +232,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				// Append the new file to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
-
 			}
 		}
 	}
@@ -224,7 +255,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				// Append the new directory to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
-
 			}
 		}
 
@@ -250,7 +280,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				// Append the new directory to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
-
 			}
 		}
 	}
@@ -424,7 +453,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		FilesAndFoldersInfoBar.IsClosable = false;
 
-		if (filesAndFoldersFilePaths.Count == 0 && filesAndFoldersFolderPaths.Count == 0)
+		if (filesAndFoldersFilePaths.Count is 0 && filesAndFoldersFolderPaths.Count is 0)
 		{
 			CreateSupplementalPolicyTeachingTip.IsOpen = true;
 			CreateSupplementalPolicyTeachingTip.Title = "Select files or folders";
@@ -453,9 +482,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		try
 		{
-
-			CreateCertificatesSupplementalPolicyButton.IsEnabled = false;
-
 			FilesAndFoldersPolicyDeployToggleButton.IsEnabled = false;
 			CreateFilesAndFoldersSupplementalPolicyButton.IsEnabled = false;
 			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
@@ -505,9 +531,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					// Collect all of the AppControl compatible files from user selected directories and files
 					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
 
-
 					// Make sure there are AppControl compatible files
-					if (DetectedFilesInSelectedDirectories.Count == 0)
+					if (DetectedFilesInSelectedDirectories.Count is 0)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
@@ -533,8 +558,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					});
 
 
-
-
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
 
@@ -548,7 +571,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 						});
 					}
-
 
 
 					string msg3 = "Scan completed, creating the Supplemental policy";
@@ -613,8 +635,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				}
 
 
-
-
 			});
 
 		}
@@ -656,8 +676,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ScanLevelComboBoxSettingsCard.IsEnabled = true;
 			ScanLevelComboBox.IsEnabled = true;
 
-			CreateCertificatesSupplementalPolicyButton.IsEnabled = true;
-
 			ScalabilityRadialGauge.IsEnabled = true;
 		}
 	}
@@ -687,7 +705,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 	#endregion
-
 
 
 
@@ -722,9 +739,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForCertsButton_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Certificate file|*.cer";
-
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{
@@ -737,9 +752,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForCertsSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		string filter = "Certificate file|*.cer";
-
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{
@@ -809,7 +822,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		bool errorsOccurred = false;
 
-		if (CertificatesBasedCertFilePaths.Count == 0)
+		if (CertificatesBasedCertFilePaths.Count is 0)
 		{
 			CreateCertificateBasedSupplementalPolicyTeachingTip.IsOpen = true;
 			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = "Select certificates";
@@ -839,7 +852,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			CreateCertificatesSupplementalPolicyButton.IsEnabled = false;
 			CertificatesPolicyDeployToggleButton.IsEnabled = false;
-			CreateFilesAndFoldersSupplementalPolicyButton.IsEnabled = false;
 			CertificatesBrowseForCertsButton.IsEnabled = false;
 			CertificatesBrowseForCertsSettingsCard.IsEnabled = false;
 			CertificatesPolicyNameTextBox.IsEnabled = false;
@@ -855,7 +867,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			await Task.Run(() =>
 			{
-
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("CertificatesSupplementalPolicy");
 
@@ -884,7 +895,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				if (certificateResults.Count > 0)
 				{
 					// Generating signer rules
-					NewCertificateSignerRules.Create(EmptyPolicyPath, certificateResults);
+					NewCertificateSignerRules.CreateAllow(EmptyPolicyPath, certificateResults);
 				}
 				else
 				{
@@ -964,11 +975,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			}
 
-
-
 			CreateCertificatesSupplementalPolicyButton.IsEnabled = true;
 			CertificatesPolicyDeployToggleButton.IsEnabled = true;
-			CreateFilesAndFoldersSupplementalPolicyButton.IsEnabled = true;
 			CertificatesBrowseForCertsButton.IsEnabled = true;
 			CertificatesBrowseForCertsSettingsCard.IsEnabled = true;
 			CertificatesPolicyNameTextBox.IsEnabled = true;
@@ -994,15 +1002,13 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	#endregion
-
 
 
 
 	#region ISG
 
-
+	// Path to the base policy for the ISG based supplemental policy
 	private string? ISGBasedBasePolicyPath;
 
 	private bool ISGBasedDeployButton;
@@ -1029,20 +1035,16 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			return;
 		}
 
-
 		try
 		{
-
 			CreateISGSupplementalPolicyButton.IsEnabled = false;
 			ISGPolicyDeployToggleButton.IsEnabled = false;
 			ISGPolicyNameTextBox.IsEnabled = false;
 			ISGBrowseForBasePolicyButton.IsEnabled = false;
 
-
 			ISGInfoBar.IsOpen = true;
 			ISGInfoBar.Message = $"Creating the ISG-based Supplemental policy.";
 			ISGInfoBar.Severity = InfoBarSeverity.Informational;
-
 
 			await Task.Run(() =>
 			{
@@ -1118,7 +1120,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		}
 		finally
 		{
-
 			if (!errorsOccurred)
 			{
 				ISGInfoBar.Severity = InfoBarSeverity.Success;
@@ -1130,7 +1131,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ISGPolicyDeployToggleButton.IsEnabled = true;
 			ISGPolicyNameTextBox.IsEnabled = true;
 			ISGBrowseForBasePolicyButton.IsEnabled = true;
-
 		}
 	}
 
@@ -1189,17 +1189,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 
-
 	#region Strict Kernel-Mode Supplemental Policy
 
-
+	// Path to the base policy for the Strict kernel-mode supplemental policy
 	private string? StrictKernelModeBasePolicyPath;
-
 
 	// Used to store the scan results and as the source for the results DataGrids
 	internal ObservableCollection<FileIdentity> ScanResults = [];
 	internal List<FileIdentity> ScanResultsList = [];
-
 
 
 	private void StrictKernelModeScanButton_Click(object sender, RoutedEventArgs e)
@@ -1211,9 +1208,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(StrictKernelPolicyScanResults), null);
 	}
-
-
-
 
 
 
@@ -1263,7 +1257,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -1277,12 +1270,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 
-
 	private void StrictKernelModeScanSinceLastRebootButton_Click(object sender, RoutedEventArgs e)
 	{
 		StrictKernelModePerformScans(true);
 	}
-
 
 
 
@@ -1352,7 +1343,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				return;
 			}
 
-
 		}
 
 		catch (Exception ex)
@@ -1374,7 +1364,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			}
 
 			StrictKernelModeInfoBar.IsClosable = true;
-
 		}
 	}
 
@@ -1447,7 +1436,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			await Task.Run(() =>
 			{
 
-
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("StrictKernelModeSupplementalPolicy");
 
 				// Get the path to an empty policy file
@@ -1500,9 +1488,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
 
-
 			});
-
 		}
 
 		catch (Exception ex)
@@ -1524,7 +1510,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				StrictKernelModeInfoBar.Message = "Successfully created strict Kernel-mode supplemental policy";
 			}
 
-
 			StrictKernelModeCreateButton.IsEnabled = true;
 			StrictKernelModeDeployToggleButton.IsEnabled = true;
 			StrictKernelModeAutoDetectAllDriversSettingsCard.IsClickEnabled = true;
@@ -1535,9 +1520,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.IsClosable = true;
 
 		}
-
 	}
-
 
 
 
@@ -1605,7 +1588,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			});
 
 
-
 			if (kernelModeDriversList.Count > 0)
 			{
 
@@ -1642,7 +1624,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			});
 
-
 		}
 
 		catch (Exception ex)
@@ -1656,7 +1637,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		}
 		finally
 		{
-
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
@@ -1674,19 +1654,13 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
-
 	private void StrictKernelModeAutoDetectAllDriversSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		DriverAutoDetector();
 	}
 
 
-
 	#endregion
-
-
-
 
 
 
@@ -1694,6 +1668,12 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	// Package Manager object used by the PFN section
 	private readonly PackageManager packageManager = new();
+
+	// To track whether the expandable settings section for the PFN supplemental policy has expanded so the apps list can be pre-loaded
+	private bool packagesLoadedOnExpand;
+
+	// Path to the base policy for the PFN based supplemental policy
+	private string? PFNBasePolicyPath;
 
 	/// <summary>
 	/// Gets the list of all installed Packaged Apps
@@ -1726,7 +1706,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		});
 
 	}
-
 
 
 	/// <summary>
@@ -1798,10 +1777,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
-
-
-
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
@@ -1825,7 +1800,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		return [.. query];
 	}
-
 
 
 
@@ -1860,8 +1834,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 
-
-
 	/// <summary>
 	/// Event handler to display the selected apps count on the UI TextBlock
 	/// </summary>
@@ -1872,7 +1844,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
 		PFNSelectedItemsCount.Text = $"Selected Apps: {selectedCount}";
 	}
-
 
 
 	// Used to store the original Apps collection so when we filter the results and then remove the filters,
@@ -1915,8 +1886,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 
-	private bool packagesLoadedOnExpand;
-
 	/// <summary>
 	/// Event handler to happen only once when the section is expanded and apps list is loaded
 	/// </summary>
@@ -1942,18 +1911,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
-
-
-
-
-
-
-	private string? PFNBasePolicyPath;
-
-
-
-
 	private void PFNBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -1972,8 +1929,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
-
 	private void PFNBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -1989,7 +1944,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void PFNBasePolicyClearButton_Click(object sender, RoutedEventArgs e)
 	{
 
@@ -1997,7 +1951,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
 
 	}
-
 
 
 	/// <summary>
@@ -2041,7 +1994,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		}
 
 
-
 		bool ErrorsOccurred = false;
 
 		try
@@ -2064,8 +2016,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			List<string> selectedAppsPFNs = [];
 
 
-
-
 			// Loop through the selected items
 			foreach (var selectedItem in PFNPackagedAppsListView.SelectedItems)
 			{
@@ -2075,9 +2025,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
 				}
 			}
-
-
-
 
 
 			await Task.Run(() =>
@@ -2133,8 +2080,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
 
-
-
 			});
 
 
@@ -2151,7 +2096,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		}
 		finally
 		{
-
 			if (!ErrorsOccurred)
 			{
 				PFNInfoBar.Severity = InfoBarSeverity.Success;
@@ -2167,14 +2111,9 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			PFNInfoBar.IsClosable = true;
 		}
 
-
 	}
 
 
-
-
-
 	#endregion
-
 
 }

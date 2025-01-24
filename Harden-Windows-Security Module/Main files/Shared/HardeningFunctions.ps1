@@ -1,37 +1,23 @@
 $script:ErrorActionPreference = 'Stop'
-#Region Helper-Functions
 Function Select-Option {
-    <#
-    .synopsis
-        Function to show a prompt to the user to select an option from a list of options
-    .PARAMETER Message
-        Contains the main prompt message
-    .PARAMETER ExtraMessage
-        Contains any extra notes for sub-categories
-    #>
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $True)][System.String]$Message,
         [parameter(Mandatory = $True)][System.String[]]$Options,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SubCategory,
+        [parameter(Mandatory = $false)][Switch]$SubCategory,
         [parameter(Mandatory = $false)][System.String]$ExtraMessage
     )
-
     $Selected = $null
     while ($null -eq $Selected) {
 
         # Use this style if showing main categories only
-        if (!$SubCategory) {
-            Write-ColorfulText -Color Fuchsia -I $Message
-        }
+        if (!$SubCategory) { Write-ColorfulText -Color Fuchsia -I $Message }
         # Use this style if showing sub-categories only that need additional confirmation
         else {
             # Show sub-category's main prompt
             Write-ColorfulText -Color Orange -I $Message
             # Show sub-category's notes/extra message if any
-            if ($ExtraMessage) {
-                Write-ColorfulText -Color PinkBoldBlink -I $ExtraMessage
-            }
+            if ($ExtraMessage) { Write-ColorfulText -Color PinkBoldBlink -I $ExtraMessage }
         }
 
         for ($I = 0; $I -lt $Options.Length; $I++) {
@@ -45,22 +31,16 @@ Function Select-Option {
             if ($SelectedIndex -gt 0 -and $SelectedIndex -le $Options.Length) {
                 $Selected = $Options[$SelectedIndex - 1]
             }
-            else {
-                Write-Warning -Message 'Invalid Option.'
-            }
+            else { Write-Warning -Message 'Invalid Option.' }
         }
-        else {
-            Write-Warning -Message 'Invalid input. Please only enter a positive number.'
-        }
+        else { Write-Warning -Message 'Invalid input. Please only enter a positive number.' }
     }
     [HardenWindowsSecurity.Logger]::LogMessage("Selected: $Selected", [HardenWindowsSecurity.LogTypeIntel]::Information)
     return [System.String]$Selected
 }
 Function Write-ColorfulText {
     param (
-        [Parameter(Mandatory = $True)]
-        [ValidateSet('Fuchsia', 'Orange', 'MintGreen', 'PinkBoldBlink', 'Rainbow' )]
-        [System.String]$Color,
+        [Parameter(Mandatory = $True)][ValidateSet('Fuchsia', 'Orange', 'MintGreen', 'PinkBoldBlink', 'Rainbow' )][System.String]$Color,
         [parameter(Mandatory = $True)][System.String]$InputText
     )
     switch ($Color) {
@@ -69,19 +49,7 @@ Function Write-ColorfulText {
         'MintGreen' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
         'PinkBoldBlink' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
         'Rainbow' {
-            [System.Drawing.Color[]]$RainbowColors = @(
-                [System.Drawing.Color]::Pink,
-                [System.Drawing.Color]::HotPink,
-                [System.Drawing.Color]::SkyBlue,
-                [System.Drawing.Color]::HotPink,
-                [System.Drawing.Color]::SkyBlue,
-                [System.Drawing.Color]::LightSkyBlue,
-                [System.Drawing.Color]::LightGreen,
-                [System.Drawing.Color]::Coral,
-                [System.Drawing.Color]::Plum,
-                [System.Drawing.Color]::Gold
-            )
-
+            [System.Drawing.Color[]]$RainbowColors = @([System.Drawing.Color]::Pink, [System.Drawing.Color]::HotPink, [System.Drawing.Color]::SkyBlue, [System.Drawing.Color]::HotPink, [System.Drawing.Color]::SkyBlue, [System.Drawing.Color]::LightSkyBlue, [System.Drawing.Color]::LightGreen, [System.Drawing.Color]::Coral, [System.Drawing.Color]::Plum, [System.Drawing.Color]::Gold)
             $StringBuilder = [System.Text.StringBuilder]::new()
             for ($I = 0; $I -lt $InputText.Length; $I++) {
                 $CurrentColor = $RainbowColors[$I % $RainbowColors.Length]
@@ -93,15 +61,10 @@ Function Write-ColorfulText {
         Default { Throw 'Unspecified Color' }
     }
 }
-#Endregion Helper-Functions
-
-#Region Hardening-Categories-Functions
 Function Invoke-MicrosoftSecurityBaselines {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
-        'Yes' {
-            [HardenWindowsSecurity.MicrosoftSecurityBaselines]::Invoke()
-        }
+        'Yes' { [HardenWindowsSecurity.MicrosoftSecurityBaselines]::Invoke() }
         'Yes, With the Optional Overrides (Recommended)' {
             [HardenWindowsSecurity.MicrosoftSecurityBaselines]::Invoke()
             [HardenWindowsSecurity.MicrosoftSecurityBaselines]::SecBaselines_Overrides()
@@ -111,7 +74,7 @@ Function Invoke-MicrosoftSecurityBaselines {
     }
 }
 Function Invoke-Microsoft365AppsSecurityBaselines {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :Microsoft365AppsSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?")) {
         'Yes' {
             [HardenWindowsSecurity.Microsoft365AppsSecurityBaselines]::Invoke()
@@ -120,7 +83,7 @@ Function Invoke-Microsoft365AppsSecurityBaselines {
     }
 }
 Function Invoke-MicrosoftDefender {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
         'Yes' {
             [HardenWindowsSecurity.MicrosoftDefender]::Invoke()
@@ -180,7 +143,7 @@ Function Invoke-MicrosoftDefender {
     }
 }
 Function Invoke-AttackSurfaceReductionRules {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :ASRRulesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?")) {
         'Yes' {
             [HardenWindowsSecurity.AttackSurfaceReductionRules]::Invoke()
@@ -189,7 +152,7 @@ Function Invoke-AttackSurfaceReductionRules {
     }
 }
 Function Invoke-BitLockerSettings {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :BitLockerCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?")) {
         'Yes' {
             [HardenWindowsSecurity.BitLockerSettings]::Invoke()
@@ -198,7 +161,7 @@ Function Invoke-BitLockerSettings {
     }
 }
 Function Invoke-DeviceGuard {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :DeviceGuardCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?")) {
         'Yes' {
             [HardenWindowsSecurity.DeviceGuard]::Invoke()
@@ -213,7 +176,7 @@ Function Invoke-DeviceGuard {
     }
 }
 Function Invoke-TLSSecurity {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {
         'Yes' {
             [HardenWindowsSecurity.TLSSecurity]::Invoke()
@@ -222,7 +185,7 @@ Function Invoke-TLSSecurity {
     }
 }
 Function Invoke-LockScreen {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :LockScreenLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?")) {
         'Yes' {
             [HardenWindowsSecurity.LockScreen]::Invoke()
@@ -243,7 +206,7 @@ Function Invoke-LockScreen {
     }
 }
 Function Invoke-UserAccountControl {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :UACLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?")) {
         'Yes' {
             [HardenWindowsSecurity.UserAccountControl]::Invoke()
@@ -264,7 +227,7 @@ Function Invoke-UserAccountControl {
     }
 }
 Function Invoke-WindowsFirewall {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :WindowsFirewallLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsFirewall]::Invoke()
@@ -273,7 +236,7 @@ Function Invoke-WindowsFirewall {
     }
 }
 Function Invoke-OptionalWindowsFeatures {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :OptionalFeaturesLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?")) {
         'Yes' {
             [HardenWindowsSecurity.OptionalWindowsFeatures]::Invoke()
@@ -282,7 +245,7 @@ Function Invoke-OptionalWindowsFeatures {
     }
 }
 Function Invoke-WindowsNetworking {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsNetworking]::Invoke()
@@ -297,7 +260,7 @@ Function Invoke-WindowsNetworking {
     }
 }
 Function Invoke-MiscellaneousConfigurations {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
         'Yes' {
             [HardenWindowsSecurity.MiscellaneousConfigurations]::Invoke()
@@ -330,7 +293,7 @@ Function Invoke-MiscellaneousConfigurations {
     }
 }
 Function Invoke-WindowsUpdateConfigurations {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :WindowsUpdateLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsUpdateConfigurations]::Invoke()
@@ -339,7 +302,7 @@ Function Invoke-WindowsUpdateConfigurations {
     }
 }
 Function Invoke-EdgeBrowserConfigurations {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :MSEdgeLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?")) {
         'Yes' {
             [HardenWindowsSecurity.EdgeBrowserConfigurations]::Invoke()
@@ -348,7 +311,7 @@ Function Invoke-EdgeBrowserConfigurations {
     }
 }
 Function Invoke-CertificateCheckingCommands {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
         'Yes' {
             [HardenWindowsSecurity.CertificateCheckingCommands]::Invoke()
@@ -358,7 +321,7 @@ Function Invoke-CertificateCheckingCommands {
 }
 Function Invoke-CountryIPBlocking {
     param(
-        [System.Management.Automation.SwitchParameter]$RunUnattended
+        [Switch]$RunUnattended
     )
     :IPBlockingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?")) {
         'Yes' {
@@ -377,7 +340,7 @@ Function Invoke-CountryIPBlocking {
     }
 }
 Function Invoke-DownloadsDefenseMeasures {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
         'Yes' {
             [HardenWindowsSecurity.DownloadsDefenseMeasures]::Invoke()
@@ -391,13 +354,13 @@ Function Invoke-DownloadsDefenseMeasures {
     }
 }
 Function Invoke-NonAdminCommands {
-    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    param([Switch]$RunUnattended)
     :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
         'Yes' {
             [HardenWindowsSecurity.NonAdminCommands]::Invoke()
             # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
             if (!$RunUnattended) {
-                if (!$Categories -and [HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
+                if (!$Categories -and [System.Environment]::IsPrivilegedProcess) {
                     Write-Host -Object "`r`n"
                     Write-ColorfulText -Color Rainbow -I "################################################################################################`r`n"
                     Write-ColorfulText -Color MintGreen -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
@@ -408,4 +371,3 @@ Function Invoke-NonAdminCommands {
         'Exit' { break MainSwitchLabel }
     }
 }
-#Endregion Hardening-Categories-Functions

@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity;
 
-public static class GUIUnprotect
+internal static class GUIUnprotect
 {
 	internal static UserControl? View;
 

@@ -102,14 +102,7 @@ internal static class CertificateGenerator
 			keyStorageFlags |= X509KeyStorageFlags.Exportable;
 		}
 
-
-		// Requires .NET 9
-		// X509Certificate2 generatedCert = X509CertificateLoader.LoadPkcs12(certData, pfxPassword, keyStorageFlags);
-
-#pragma warning disable SYSLIB0057, CA2000
-		X509Certificate2 generatedCert = new(certData, pfxPassword, keyStorageFlags);
-#pragma warning restore
-
+		X509Certificate2 generatedCert = X509CertificateLoader.LoadPkcs12(certData, pfxPassword, keyStorageFlags);
 
 		// Set the friendly name if provided
 		if (!string.IsNullOrEmpty(friendlyName))

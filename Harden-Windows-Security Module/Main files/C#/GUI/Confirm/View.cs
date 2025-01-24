@@ -11,10 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Markup;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-#nullable disable
 
 namespace HardenWindowsSecurity;
 
@@ -24,15 +21,6 @@ public partial class GUIMain
 	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
-
-		// Private fields to hold the collection view and security options collection
-
-		// Collection view for filtering and sorting
-		private ICollectionView _SecOpsCollectionView;
-
-		// Collection of SecOp objects
-		private ObservableCollection<SecOp> __SecOpses;
-
 		// Method to handle the "Confirm" view, including loading and modifying it
 		private void ConfirmView(object obj)
 		{
@@ -41,59 +29,52 @@ public partial class GUIMain
 			{
 				// Use the cached view if available
 				CurrentView = cachedView;
-
-				// Only update the UI if work is not being done (i.e. the confirmation job is not already active)
-				if (!ActivityTracker.IsActive)
-				{
-					// Update the UI every time the user switches to Confirm tab but do not display toast notification when it happens because it won't make sense
-					UpdateTotalCount(false);
-				}
-
 				return;
 			}
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("Confirmation page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the full file path to the Confirm view XAML file
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Confirm.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Confirm.xaml"));
 
 			// Parse the XAML content to create a UserControl object
-			GUIConfirmSystemCompliance.View = (UserControl)XamlReader.Parse(xamlContent);
-
-			// Set the DataContext for the Confirm view
-			GUIConfirmSystemCompliance.View.DataContext = new ConfirmVM();
+			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
 			// Find the SecOpsDataGrid
-			GUIConfirmSystemCompliance.SecOpsDataGrid = (DataGrid)GUIConfirmSystemCompliance.View.FindName("SecOpsDataGrid");
+			DataGrid SecOpsDataGrid = (DataGrid)View.FindName("SecOpsDataGrid");
 
-			TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCurrentlyDisplayedSecOps");
+			TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (TextBlock)View.FindName("TotalCurrentlyDisplayedSecOps");
 
 			#region ToggleButtons
-			ToggleButton CompliantItemsToggleButton = (ToggleButton)GUIConfirmSystemCompliance.View.FindName("CompliantItemsToggleButton");
-			ToggleButton NonCompliantItemsToggleButton = (ToggleButton)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsToggleButton");
-
-			// Apply the templates so that we can set the IsChecked property to true
-			_ = CompliantItemsToggleButton.ApplyTemplate();
-			_ = NonCompliantItemsToggleButton.ApplyTemplate();
+			ToggleButton CompliantItemsToggleButton = (ToggleButton)View.FindName("CompliantItemsToggleButton");
+			ToggleButton NonCompliantItemsToggleButton = (ToggleButton)View.FindName("NonCompliantItemsToggleButton");
 
 			CompliantItemsToggleButton.IsChecked = true;
 			NonCompliantItemsToggleButton.IsChecked = true;
 			#endregion
 
+			// Initialize an empty security options collection
+			ObservableCollection<SecOp> SecOpsObservableCollection = [];
+
+			// Create a collection view based on the security options collection for filtering and sorting
+			ICollectionView SecOpsCollectionView = CollectionViewSource.GetDefaultView(SecOpsObservableCollection);
+
+			// Set the ItemSource of the DataGrid in the Confirm view to the collection view
+			// Bind the DataGrid to the collection view
+			SecOpsDataGrid.ItemsSource = SecOpsCollectionView;
+
 			// Method to update the text block showing the total count of currently displayed items in the GUI
 			void UpdateCurrentVisibleItemsTextBlock()
 			{
 				// Get the count of all of the current items in the CollectionView
-				string totalDisplayedItemsCount = _SecOpsCollectionView.Cast<SecOp>().Count().ToString(CultureInfo.InvariantCulture);
+				int totalDisplayedItemsCount = SecOpsCollectionView!.OfType<SecOp>().Count();
+
 				// Display the count in a text box in the GUI
 				TotalCurrentlyDisplayedSecOpsTextBlock.Text = $"Showing {totalDisplayedItemsCount} Items";
 			}
@@ -101,53 +82,35 @@ public partial class GUIMain
 			// A Method to apply filters on the DataGrid based on the filter text and toggle buttons
 			void ApplyFilters(string filterText, bool includeCompliant, bool includeNonCompliant)
 			{
-				// Make sure the collection has data and is not null
-				if (_SecOpsCollectionView is not null)
+				// Apply a filter to the collection view based on the filter text and toggle buttons
+				SecOpsCollectionView!.Filter = memberObj =>
 				{
-					// Apply a filter to the collection view based on the filter text and toggle buttons
-					_SecOpsCollectionView.Filter = memberObj =>
+					if (memberObj is SecOp member)
 					{
-						if (memberObj is SecOp member)
-						{
-							// Check if the item passes the text filter
-							bool passesTextFilter =
-								   (member.FriendlyName?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-								   (member.Value?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-								   (member.Name?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-								   (member.Category.ToString()?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-								   (member.Method?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false);
+						// Check if the item passes the text filter
+						bool passesTextFilter =
+							   (member.FriendlyName?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+							   (member.Value?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+							   (member.Name?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+							   (member.Category.ToString()?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+							   (member.Method?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false);
 
-							// Check if the item passes the compliant toggle buttons filters
-							bool passesCompliantFilter = (includeCompliant && member.Compliant) ||
-														 (includeNonCompliant && !member.Compliant);
+						// Check if the item passes the compliant toggle buttons filters
+						bool passesCompliantFilter = (includeCompliant && member.Compliant) || (includeNonCompliant && !member.Compliant);
 
-							// Return true if the item passes all filters
-							return passesTextFilter && passesCompliantFilter;
-						}
-						return false;
-					};
+						// Return true if the item passes all filters
+						return passesTextFilter && passesCompliantFilter;
+					}
+					return false;
+				};
 
-					_SecOpsCollectionView.Refresh(); // Refresh the collection view to apply the filter
+				SecOpsCollectionView.Refresh(); // Refresh the collection view to apply the filter
 
-					UpdateCurrentVisibleItemsTextBlock();
-				}
-			}
-
-			// Initialize an empty security options collection
-			__SecOpses = [];
-
-			// Create a collection view based on the security options collection
-			_SecOpsCollectionView = CollectionViewSource.GetDefaultView(__SecOpses);
-
-			// Set the ItemSource of the DataGrid in the Confirm view to the collection view
-			if (GUIConfirmSystemCompliance.SecOpsDataGrid is not null)
-			{
-				// Bind the DataGrid to the collection view
-				GUIConfirmSystemCompliance.SecOpsDataGrid.ItemsSource = _SecOpsCollectionView;
+				UpdateCurrentVisibleItemsTextBlock();
 			}
 
 			// Finding the textboxFilter element
-			TextBox textBoxFilter = GUIConfirmSystemCompliance.View.FindName("textBoxFilter") as TextBox;
+			TextBox textBoxFilter = (TextBox)View.FindName("textBoxFilter");
 
 			#region event handlers for data filtration
 			// Attach event handlers to the text box filter and toggle buttons
@@ -164,7 +127,7 @@ public partial class GUIMain
 			// Find the Refresh button and attach the Click event handler
 
 			// Access the grid containing the Refresh Button
-			Grid RefreshButtonGrid = GUIConfirmSystemCompliance.View.FindName("RefreshButtonGrid") as Grid;
+			Grid RefreshButtonGrid = (Grid)View.FindName("RefreshButtonGrid");
 
 			// Access the Refresh Button
 			ToggleButton RefreshButton = (ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
@@ -173,7 +136,7 @@ public partial class GUIMain
 			_ = RefreshButton.ApplyTemplate();
 
 			// Access the image within the Refresh Button's template
-			Image RefreshIconImage = RefreshButton.Template.FindName("RefreshIconImage", RefreshButton) as Image;
+			Image RefreshIconImage = (Image)RefreshButton.Template.FindName("RefreshIconImage", RefreshButton);
 
 			// Update the image source for the Refresh button
 			// Load the Refresh icon image into memory and set it as the source
@@ -182,23 +145,19 @@ public partial class GUIMain
 			RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExecuteButton.png"));
 			RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
 			RefreshIconBitmapImage.EndInit();
-
 			RefreshIconImage.Source = RefreshIconBitmapImage;
-
 
 			#endregion
 
 
 			#region ComboBox
 			// Finding the ComplianceCategoriesSelectionComboBox ComboBox
-			ComboBox ComplianceCategoriesSelectionComboBox = GUIConfirmSystemCompliance.View.FindName("ComplianceCategoriesSelectionComboBox") as ComboBox;
-
+			ComboBox ComplianceCategoriesSelectionComboBox = (ComboBox)View.FindName("ComplianceCategoriesSelectionComboBox");
 
 			// Get the valid compliance category names
 			List<string> catsList = [.. Enum.GetNames<ComplianceCategories>()];
 
 			// Add an empty item to the list at the beginning
-			// Add an empty string as the first item
 			catsList.Insert(0, "");
 
 			// Set the ComboBox's ItemsSource to the updated list
@@ -206,10 +165,8 @@ public partial class GUIMain
 
 			#endregion
 
-
 			// Register the RefreshButton as an element that will be enabled/disabled based on current activity
 			ActivityTracker.RegisterUIElement(RefreshButton);
-
 
 			// Set up the Click event handler for the Refresh button
 			RefreshButton.Click += async (sender, e) =>
@@ -222,22 +179,14 @@ public partial class GUIMain
 					ActivityTracker.IsActive = true;
 
 					// Clear the current security options before starting data generation
-					__SecOpses.Clear();
-					_SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
+					SecOpsObservableCollection.Clear();
+					SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
 
 					// Disable the Refresh button while processing
 					// Set text blocks to empty while new data is being generated
 					Application.Current.Dispatcher.Invoke(() =>
 						{
-							// Finding the elements
-							TextBlock CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
-							TextBlock NonCompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
-
-							// Setting these texts the same as the text in the XAML for these text blocks so that every time Refresh button is pressed, they lose their numbers until the new data is generated and new counts are calculated
-							CompliantItemsTextBlock.Text = "Compliant Items";
-							NonCompliantItemsTextBlock.Text = "Non-Compliant Items";
-
-							TextBlock TotalCountTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
+							TextBlock TotalCountTextBlock = (TextBlock)View.FindName("TotalCountTextBlock");
 
 							if (TotalCountTextBlock is not null)
 							{
@@ -255,12 +204,11 @@ public partial class GUIMain
 							Initializer.Initialize(null, true);
 
 							// initialize the variable to null
-							string SelectedCategory = string.Empty;
+							string? SelectedCategory = null;
 
 							// Use the App dispatcher since this is being done in a different thread
 							app.Dispatcher.Invoke(() =>
 							{
-
 								if (ComplianceCategoriesSelectionComboBox.SelectedItem is not null)
 								{
 									// Get the currently selected value in the Compliance Checking category ComboBox if it exists
@@ -269,7 +217,6 @@ public partial class GUIMain
 									// Get the currently selected compliance category
 									SelectedCategory = SelectedComplianceCategories?.ToString();
 								}
-
 							});
 
 							// if user selected a category for compliance checking
@@ -299,136 +246,89 @@ public partial class GUIMain
 				}
 			};
 
-			// Cache the Confirm view for future use
-			_viewCache["ConfirmView"] = GUIConfirmSystemCompliance.View;
-
-			// Set the CurrentView to the modified Confirm view
-			CurrentView = GUIConfirmSystemCompliance.View;
-		}
-
-
-		/// <summary>
-		/// Method that returns background color based on the category
-		/// Used by the LoadMembers() method only
-		/// </summary>
-		/// <param name="category">Name of the category</param>
-		/// <returns>The color of the category to be used for display purposes on the DataGrid GUI</returns>
-		private static Brush GetCategoryColor(string category)
-		{
-			// Determine the background color for each category
-			return category switch
+			/// <summary>
+			/// Method to load security options from the FinalMegaObject and update the DataGrid
+			/// Also sets custom background colors for each category
+			/// </summary>
+			void LoadMembers()
 			{
-				// Light Pastel Sky Blue
-				"MicrosoftDefender" => new BrushConverter().ConvertFromString("#B3E5FC") as Brush,
-				// Light Pastel Coral
-				"AttackSurfaceReductionRules" => new BrushConverter().ConvertFromString("#FFDAB9") as Brush,
-				// Light Pastel Green
-				"BitLockerSettings" => new BrushConverter().ConvertFromString("#C3FDB8") as Brush,
-				// Light Pastel Lemon
-				"TLSSecurity" => new BrushConverter().ConvertFromString("#FFFACD") as Brush,
-				// Light Pastel Lavender
-				"LockScreen" => new BrushConverter().ConvertFromString("#E6E6FA") as Brush,
-				// Light Pastel Aqua
-				"UserAccountControl" => new BrushConverter().ConvertFromString("#C1F0F6") as Brush,
-				// Light Pastel Teal
-				"DeviceGuard" => new BrushConverter().ConvertFromString("#B2DFDB") as Brush,
-				// Light Pastel Pink
-				"WindowsFirewall" => new BrushConverter().ConvertFromString("#F8BBD0") as Brush,
-				// Light Pastel Peach
-				"OptionalWindowsFeatures" => new BrushConverter().ConvertFromString("#FFE4E1") as Brush,
-				// Light Pastel Mint
-				"WindowsNetworking" => new BrushConverter().ConvertFromString("#F5FFFA") as Brush,
-				// Light Pastel Gray
-				_ => new BrushConverter().ConvertFromString("#EDEDED") as Brush,
-			};
-		}
+				// Clear the current security options
+				SecOpsObservableCollection.Clear();
 
-		/// <summary>
-		/// Method to update the total count of security options displayed on the Text Block
-		/// In the Confirmation page view
-		/// </summary>
-		/// <param name="ShowNotification">If set to true, this method will display end of confirmation toast notification</param>
-		private void UpdateTotalCount(bool ShowNotification)
-		{
-
-			// calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
-			int totalCount = GlobalVars.FinalMegaObject.Values.Sum(list => list.Count);
-
-			// Find the TextBlock used to display the total count
-			TextBlock TotalCountTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
-			if (TotalCountTextBlock is not null)
-			{
-				// Update the text of the TextBlock to show the total count
-				TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
-			}
-
-			// Get the count of the compliant items
-			string CompliantItemsCount = _SecOpsCollectionView.SourceCollection
-				.Cast<SecOp>()
-				.Count(item => item.Compliant).ToString(CultureInfo.InvariantCulture);
-
-			// Get the count of the Non-compliant items
-			string NonCompliantItemsCount = _SecOpsCollectionView.SourceCollection
-				.Cast<SecOp>()
-				.Count(item => !item.Compliant).ToString(CultureInfo.InvariantCulture);
-
-			// Find the text blocks that display counts of true/false items
-			TextBlock CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
-			TextBlock NonCompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
-
-			if (CompliantItemsTextBlock is not null)
-			{
-				// Set the text block's text
-				CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
-			}
-
-			if (NonCompliantItemsTextBlock is not null)
-			{
-				// Set the text block's text
-				NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
-			}
-
-			// Display a notification if ShowNotification is set to true
-			if (ShowNotification)
-			{
-				ToastNotification.Show(ToastNotification.Type.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
-			}
-		}
-
-		/// <summary>
-		/// Method to load security options from the FinalMegaObject and update the DataGrid
-		/// Also sets custom background colors for each category
-		/// </summary>
-		private void LoadMembers()
-		{
-			// Clear the current security options
-			__SecOpses.Clear();
-
-			// Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
-			foreach (KeyValuePair<ComplianceCategories, List<IndividualResult>> kvp in GlobalVars.FinalMegaObject)
-			{
-				// Loop over the results for the category
-				foreach (IndividualResult result in kvp.Value)
+				// Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
+				foreach (KeyValuePair<ComplianceCategories, List<IndividualResult>> kvp in GlobalVars.FinalMegaObject)
 				{
-					// Add each result as a new SecOp object to the collection
-					__SecOpses.Add(new SecOp
+					// Loop over the results for the category
+					foreach (IndividualResult result in kvp.Value)
 					{
-						FriendlyName = result.FriendlyName,
-						Value = result.Value,
-						Name = result.Name,
-						Category = result.Category,
-						Method = result.Method.ToString(),
-						Compliant = result.Compliant,
-						BgColor = GetCategoryColor(result.Category.ToString()) // Set the background color based on the category
-					});
+						// Add each result as a new SecOp object to the collection
+						SecOpsObservableCollection.Add(new SecOp
+						{
+							FriendlyName = result.FriendlyName,
+							Value = result.Value,
+							Name = result.Name,
+							Category = result.Category,
+							Method = result.Method.ToString(),
+							Compliant = result.Compliant
+						});
+					}
+				}
+
+				// Refresh the collection view to update the DataGrid
+				SecOpsCollectionView.Refresh();
+
+				// Update the total count display
+				UpdateTotalCount(true);
+			}
+
+
+			/// <summary>
+			/// Method to update the total count of security options displayed on the Text Block
+			/// In the Confirmation page view
+			/// </summary>
+			/// <param name="ShowNotification">If set to true, this method will display end of confirmation toast notification</param>
+			void UpdateTotalCount(bool ShowNotification)
+			{
+
+				// calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
+				int totalCount = GlobalVars.FinalMegaObject.Values.Sum(list => list.Count);
+
+				// Find the TextBlock used to display the total count
+				TextBlock TotalCountTextBlock = (TextBlock)View.FindName("TotalCountTextBlock");
+				if (TotalCountTextBlock is not null)
+				{
+					// Update the text of the TextBlock to show the total count
+					TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
+				}
+
+				// Get the count of the compliant items
+				string CompliantItemsCount = SecOpsCollectionView.SourceCollection
+					.Cast<SecOp>()
+					.Count(item => item.Compliant).ToString(CultureInfo.InvariantCulture);
+
+				// Get the count of the Non-compliant items
+				string NonCompliantItemsCount = SecOpsCollectionView.SourceCollection
+					.Cast<SecOp>()
+					.Count(item => !item.Compliant).ToString(CultureInfo.InvariantCulture);
+
+				// Set the text block's text
+				CompliantItemsToggleButton.Content = $"{CompliantItemsCount} Compliant Items";
+
+				// Set the text block's text
+				NonCompliantItemsToggleButton.Content = $"{NonCompliantItemsCount} Non-Compliant Items";
+
+				// Display a notification if ShowNotification is set to true
+				if (ShowNotification)
+				{
+					ToastNotification.Show(ToastNotification.Type.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
 				}
 			}
 
-			// Refresh the collection view to update the DataGrid
-			_SecOpsCollectionView.Refresh();
+			// Cache the Confirm view for future use
+			_viewCache["ConfirmView"] = View;
 
-			// Update the total count display
-			UpdateTotalCount(true);
+			// Set the CurrentView to the modified Confirm view
+			CurrentView = View;
 		}
 	}
 }

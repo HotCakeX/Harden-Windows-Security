@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 
 namespace HardenWindowsSecurity;
@@ -17,7 +18,7 @@ internal static class ActivityTracker
 
 	// An object used for locking critical sections of code to make them thread-safe.
 	// This ensures that only one thread can access the locked section at a time.
-	private static readonly object _lock = new();
+	private static readonly Lock _lock = new();
 
 	// A list to keep track of UIElements that should be disabled/enabled based on the application's activity status.
 	private static readonly List<UIElement> _uiElements = [];

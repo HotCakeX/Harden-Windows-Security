@@ -11,7 +11,7 @@ public static class InvokeConfirmation
 	/// This method will perform the system compliance checking and verification
 	/// </summary>
 	/// <param name="Categories"></param>
-	public static void Invoke(string[] Categories)
+	public static void Invoke(string[]? Categories)
 	{
 		ControlledFolderAccessHandler.Start(true, false);
 

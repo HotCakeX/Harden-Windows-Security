@@ -2,43 +2,32 @@ function Confirm-SystemCompliance {
     [CmdletBinding()]
     param (
         [ArgumentCompleter({
-                # Get the current command and the already bound parameters
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
-
-                # Find all string constants in the AST
                 $Existing = $CommandAst.FindAll(
                     # The predicate scriptblock to define the criteria for filtering the AST nodes
                     {
                         $Args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     },
-                    # The recurse flag, whether to search nested scriptblocks or not.
-                    $false
+                    $false # The recurse flag, whether to search nested scriptblocks or not.
                 ).Value
 
                 foreach ($Item in [Enum]::GetNames([HardenWindowsSecurity.ComplianceCategories])) {
-                    if ($Item -notin $Existing) {
-                        $Item
-                    }
+                    if ($Item -notin $Existing) { $Item }
                 }
-
             })]
         [ValidateScript({
                 if ($_ -notin [Enum]::GetNames([HardenWindowsSecurity.ComplianceCategories])) { throw "Invalid Category Name: $_" }
                 $true # Return true if everything is okay
             })]
         [System.String[]]$Categories,
-        [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$ExportToCSV,
-        [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$ShowAsObjectsOnly,
-        [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$DetailedDisplay,
-        [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Offline
+        [parameter(Mandatory = $false)][Switch]$ExportToCSV,
+        [parameter(Mandatory = $false)][Switch]$ShowAsObjectsOnly,
+        [parameter(Mandatory = $false)][Switch]$DetailedDisplay,
+        [parameter(Mandatory = $false)][Switch]$Offline
     )
     begin {
         $script:ErrorActionPreference = 'Stop'
-        if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
+        if (![System.Environment]::IsPrivilegedProcess) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
         try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain $MyInvocation.Statement }
@@ -119,16 +108,7 @@ function Confirm-SystemCompliance {
                 return [System.String[]]$Colorsx
             }
         }
-        [System.Drawing.Color[]]$Global:Colors = @(
-            [System.Drawing.Color]::SkyBlue,
-            [System.Drawing.Color]::Pink,
-            [System.Drawing.Color]::HotPink,
-            [System.Drawing.Color]::Lavender,
-            [System.Drawing.Color]::LightGreen,
-            [System.Drawing.Color]::Coral,
-            [System.Drawing.Color]::Plum,
-            [System.Drawing.Color]::Gold
-        )
+        [System.Drawing.Color[]]$Global:Colors = @([System.Drawing.Color]::SkyBlue, [System.Drawing.Color]::Pink, [System.Drawing.Color]::HotPink, [System.Drawing.Color]::Lavender, [System.Drawing.Color]::LightGreen, [System.Drawing.Color]::Coral, [System.Drawing.Color]::Plum, [System.Drawing.Color]::Gold)
 
         [System.Management.Automation.ScriptBlock]$WriteRainbow = {
             Param([System.String]$Text)
@@ -144,7 +124,6 @@ function Confirm-SystemCompliance {
     process {
         try {
             Write-Progress -Activity 'Performing Compliance Check...' -Status 'Running' -PercentComplete 50
-
             [HardenWindowsSecurity.InvokeConfirmation]::Invoke($Categories)
 
             if ($ExportToCSV) {
@@ -158,22 +137,18 @@ function Confirm-SystemCompliance {
                         }
                     }
                 }
-
                 # Store the results in the current working directory in a CSV files
                 $AllOrderedResults | ConvertTo-Csv | Out-File -FilePath ".\Compliance Check Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").CSV" -Force
             }
             function Set-CategoryFormat {
                 [CmdletBinding()]
                 param (
-                    [ValidateSet([Colorsx])]
-                    [Parameter(Mandatory)][System.String]$ColorInput,
+                    [ValidateSet([Colorsx])][Parameter(Mandatory)][System.String]$ColorInput,
                     [Parameter(Mandatory)][System.String]$CategoryName,
                     [Parameter(Mandatory)][System.String]$DisplayName,
                     [Parameter(Mandatory)][System.Collections.Hashtable]$ColorMap,
-                    [AllowNull()]
-                    [Parameter(Mandatory)][System.String[]]$Categories,
-                    [ValidateSet('List', 'Table')]
-                    [Parameter(Mandatory)][System.String]$Type
+                    [AllowNull()][Parameter(Mandatory)][System.String[]]$Categories,
+                    [ValidateSet('List', 'Table')][Parameter(Mandatory)][System.String]$Type
                 )
                 # If user selected specific categories and the current function call's category name is not included in them, return from this function
                 if (($null -ne $Categories) -and ($CategoryName -notin $Categories)) { Return }

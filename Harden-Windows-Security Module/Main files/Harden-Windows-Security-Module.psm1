@@ -1,7 +1,5 @@
 $script:ErrorActionPreference = 'Stop'
-if (!$IsWindows) {
-    Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'
-}
+if (!$IsWindows) { Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.' }
 function Update-HardenWindowsSecurity {
     <#
     .SYNOPSIS
@@ -10,10 +8,6 @@ function Update-HardenWindowsSecurity {
         The command that was used to invoke the main function that invoked the Update-HardenWindowsSecurity function, this is used to re-run the command after the module has been updated.
         It checks to make sure the Update-HardenWindowsSecurity function was called by an authorized command, that is one of the main cmdlets of the Harden-Windows-Security module, otherwise it will throw an error.
         The parameter also shouldn't contain any backtick or semicolon characters used to chain commands together.
-    .INPUTS
-        System.String
-    .OUTPUTS
-        System.String
     #>
     [CmdletBinding()]
     param(
@@ -33,7 +27,7 @@ function Update-HardenWindowsSecurity {
         Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
 
         # Only attempt to auto update the module if running as Admin, because Controlled Folder Access exclusion modification requires Admin privs
-        if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
+        if (![System.Environment]::IsPrivilegedProcess) {
             Throw 'There is a new update available, please run the cmdlet as Admin to update the module.'
         }
 
@@ -51,9 +45,7 @@ function Update-HardenWindowsSecurity {
             Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -ErrorAction Stop
             # Will not import the new module version in the current session. New version is automatically imported and used when the main cmdlet is run in a new session.
         }
-        finally {
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
-        }
+        finally { [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset() }
 
         Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
@@ -64,9 +56,7 @@ function Update-HardenWindowsSecurity {
                 pwsh.exe -NoProfile -NoLogo -NoExit -command $InvocationStatement
             }
             # This is for when user might invoke the function standalone
-            else {
-                pwsh.exe -NoProfile -NoLogo -NoExit
-            }
+            else { pwsh.exe -NoProfile -NoLogo -NoExit }
         }
         catch {
             Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'
@@ -82,10 +72,9 @@ catch {}
 
 [System.String[]]$DLLsToLoad = [System.IO.Directory]::GetFiles("$PSScriptRoot\DLLs", '*.dll', [System.IO.SearchOption]::TopDirectoryOnly)
 
-# Compile all of the C# codes
-# for some reason it tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
+# Let the compilation begin - For some reason PowerShell tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
 # https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
-Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $DLLsToLoad) -CompilerOptions '/langversion:preview', '/nowarn:1701', '/nullable:enable', '/checked'
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $DLLsToLoad) -CompilerOptions '/langversion:preview', '/nowarn:1701,WPF0001', '/nullable:enable', '/checked'
 
 Function LoadHardenWindowsSecurityNecessaryDLLsInternal {
     # Do not reload the required DLLs if they have been already loaded

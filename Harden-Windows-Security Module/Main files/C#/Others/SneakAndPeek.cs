@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -23,7 +24,7 @@ public static class SneakAndPeek
 		using ZipArchive zipArchive = ZipFile.OpenRead(zipFile);
 
 		// Make sure the selected zip has the required file
-		var content = zipArchive.Entries.Where(entry => regex.IsMatch(entry.FullName)).ToList();
+		List<ZipArchiveEntry> content = [.. zipArchive.Entries.Where(entry => regex.IsMatch(entry.FullName))];
 
 		// Return true if the number of files found is greater than 0
 		return content.Count > 0;

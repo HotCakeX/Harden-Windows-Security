@@ -7,12 +7,11 @@ using Windows.Management.Deployment;
 
 namespace HardenWindowsSecurity;
 
-public static class GUIOptionalFeatures
+internal static class GUIOptionalFeatures
 {
 	internal static UserControl? View;
 
 	internal static Grid? ParentGrid;
-
 
 	public class SafeToRemoveApp
 	{
@@ -30,18 +29,13 @@ public static class GUIOptionalFeatures
 		public required IReadOnlyCollection<SafeToRemoveApp> SafeToRemoveAppsList { get; set; }
 	}
 
-
 	internal static Dictionary<string, string> nameToDescriptionApps = [];
 	internal static Dictionary<string, string> descriptionToNameApps = [];
-
-
-	internal static readonly ControlTemplate CustomCheckBoxTemplate = (ControlTemplate)Application.Current.FindResource("CustomCheckBoxTemplate");
 
 	internal static readonly Thickness thicc = new(10, 10, 40, 10);
 
 	// A dictionary to store all checkboxes for Apps ListView
 	internal static Dictionary<string, CheckBox> appsCheckBoxes = [];
-
 
 	internal static PackageManager packageMgr = new();
 

@@ -1,16 +1,11 @@
 System
 System.IO
 System.Xml
-System.Data
-WindowsBase
 System.Xaml
 System.Linq
 System.Memory
 System.Console
-System.Windows
-System.Runtime
 System.Net.Http
-System.Xml.Linq
 System.Security
 PresentationCore
 System.Text.Json
@@ -19,8 +14,6 @@ System.Threading
 System.Management
 System.ObjectModel
 System.Collections
-System.Net.Primitives
-System.ComponentModel
 PresentationFramework
 System.IO.Compression
 System.Security.Claims
@@ -30,7 +23,6 @@ System.Threading.Thread
 System.Xml.ReaderWriter
 System.DirectoryServices
 Microsoft.Win32.Registry
-System.Security.Principal
 System.Diagnostics.Process
 Microsoft.Win32.Primitives
 System.Diagnostics.EventLog
@@ -40,13 +32,10 @@ System.IO.Compression.zipfile
 System.Security.AccessControl
 System.Collections.NonGeneric
 System.Collections.Concurrent
-System.Runtime.InteropServices
-System.Windows.Controls.Ribbon
 System.Text.RegularExpressions
 System.Text.Encoding.Extensions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
 System.Diagnostics.FileVersionInfo
-System.ComponentModel.TypeConverter
 Microsoft.Management.Infrastructure
 System.DirectoryServices.AccountManagement

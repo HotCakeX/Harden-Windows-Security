@@ -15,7 +15,7 @@ public static class Initializer
 	/// <param name="IsConfirmationDuringRunTime"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	/// <exception cref="PlatformNotSupportedException"></exception>
-	public static void Initialize(string VerbosePreference = "SilentlyContinue", bool IsConfirmationDuringRunTime = false)
+	public static void Initialize(string? VerbosePreference = "SilentlyContinue", bool IsConfirmationDuringRunTime = false)
 	{
 
 		GlobalVars.LogHeaderHasBeenWritten = false;
@@ -115,7 +115,7 @@ public static class Initializer
 		GlobalVars.SystemSecurityPoliciesIniObject.Clear();
 
 		// Make sure Admin privileges exist before running this method
-		if (UserPrivCheck.IsAdmin())
+		if (Environment.IsPrivilegedProcess)
 		{
 			// Process the MDM related CimInstances and store them in a global variable
 			GlobalVars.MDMResults = MDMClassProcessor.Process();

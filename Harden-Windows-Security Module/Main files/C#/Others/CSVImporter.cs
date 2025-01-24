@@ -36,7 +36,7 @@ public static class HardeningRegistryKeys
 		if (header is null)
 		{
 			return;
-		};
+		}
 
 		// Read the rest of the file line by line
 		while (!reader.EndOfStream)

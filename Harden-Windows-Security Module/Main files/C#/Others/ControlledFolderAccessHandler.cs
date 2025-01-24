@@ -76,7 +76,7 @@ public static class ControlledFolderAccessHandler
 	public static void Start(bool PowerShell, bool PowerCFG)
 	{
 		// Make sure the user has Admin privileges
-		if (!UserPrivCheck.IsAdmin())
+		if (!Environment.IsPrivilegedProcess)
 		{
 			return;
 		}
@@ -147,7 +147,7 @@ public static class ControlledFolderAccessHandler
 	public static void Reset()
 	{
 		// Make sure the user as Admin privileges
-		if (UserPrivCheck.IsAdmin())
+		if (Environment.IsPrivilegedProcess)
 		{
 			// Since this method is called in multiple places, make sure it only runs once during app exit
 			if (HasResetHappenedBefore)

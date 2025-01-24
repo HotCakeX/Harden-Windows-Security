@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 
 namespace HardenWindowsSecurity;
 
@@ -30,17 +29,14 @@ public partial class GUIMain
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("BitLocker page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the file path for the Logs view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "BitLocker.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "BitLocker.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIBitLocker.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -48,7 +44,7 @@ public partial class GUIMain
 			// Find the Parent Grid
 			GUIBitLocker.ParentGrid = (Grid)GUIBitLocker.View.FindName("ParentGrid");
 
-			GUIBitLocker.TabControl = GUIBitLocker.ParentGrid.FindName("TabControl") as TabControl ?? throw new InvalidOperationException("TabControl could not be found");
+			GUIBitLocker.TabControl = (TabControl)GUIBitLocker.ParentGrid.FindName("TabControl");
 
 			if (GUIBitLocker.TabControl.FindName("OSDriveGrid") is not Grid OSDriveGrid ||
 				GUIBitLocker.TabControl.FindName("NonOSDrivesGrid") is not Grid NonOSDrivesGrid ||
@@ -61,14 +57,13 @@ public partial class GUIMain
 
 			#region OS Drives
 
-			GUIBitLocker.TextBlockStartupKeySelection = OSDriveGrid.FindName("TextBlockStartupKeySelection") as TextBlock;
-			GUIBitLocker.BitLockerSecurityLevelComboBox = OSDriveGrid.FindName("BitLockerSecurityLevelComboBox") as ComboBox ?? throw new InvalidOperationException("BitLockerSecurityLevelComboBox could not be found");
-			GUIBitLocker.PIN1 = OSDriveGrid.FindName("PIN1") as PasswordBox ?? throw new InvalidOperationException("PIN1 password box could not be found");
-			GUIBitLocker.PIN2 = OSDriveGrid.FindName("PIN2") as PasswordBox ?? throw new InvalidOperationException("PIN2 password box could not be found");
-			GUIBitLocker.RefreshRemovableDrivesInOSDriveSection = OSDriveGrid.FindName("RefreshRemovableDrivesInOSDriveSection") as Button ?? throw new InvalidOperationException("RefreshRemovableDrivesInOSDriveSection button could not be found");
-			Image? RefreshButtonIcon1 = OSDriveGrid.FindName("RefreshButtonIcon1") as Image ?? throw new InvalidOperationException("RefreshButtonIcon1 could not be found");
-			GUIBitLocker.RemovableDrivesComboBox = OSDriveGrid.FindName("RemovableDrivesComboBox") as ComboBox ?? throw new InvalidOperationException("RemovableDrivesComboBox could not be found");
-			Button OSDriveEncryptButton = OSDriveGrid.FindName("OSDriveEncryptButton") as Button ?? throw new InvalidOperationException("OSDriveEncryptButton could not be found.");
+			GUIBitLocker.TextBlockStartupKeySelection = (TextBlock)OSDriveGrid.FindName("TextBlockStartupKeySelection");
+			GUIBitLocker.BitLockerSecurityLevelComboBox = (ComboBox)OSDriveGrid.FindName("BitLockerSecurityLevelComboBox");
+			GUIBitLocker.PIN1 = (PasswordBox)OSDriveGrid.FindName("PIN1");
+			GUIBitLocker.PIN2 = (PasswordBox)OSDriveGrid.FindName("PIN2");
+			GUIBitLocker.RefreshRemovableDrivesInOSDriveSection = (Button)OSDriveGrid.FindName("RefreshRemovableDrivesInOSDriveSection");
+			GUIBitLocker.RemovableDrivesComboBox = (ComboBox)OSDriveGrid.FindName("RemovableDrivesComboBox");
+			Button OSDriveEncryptButton = (Button)OSDriveGrid.FindName("OSDriveEncryptButton");
 
 			// Event handler for when the refresh button is pressed
 			GUIBitLocker.RefreshRemovableDrivesInOSDriveSection.Click += async (sender, e) =>
@@ -137,10 +132,10 @@ public partial class GUIMain
 
 
 			#region Non-OS Drives
-			GUIBitLocker.RefreshNonOSDrives = NonOSDrivesGrid.FindName("RefreshNonOSDrives") as Button ?? throw new InvalidOperationException("RefreshNonOSDrives button could not be found");
-			Image? RefreshButtonIcon2 = NonOSDrivesGrid.FindName("RefreshButtonIcon2") as Image ?? throw new InvalidOperationException("RefreshButtonIcon2 could not be found");
-			GUIBitLocker.NonOSDrivesComboBox = NonOSDrivesGrid.FindName("NonOSDrivesComboBox") as ComboBox ?? throw new InvalidOperationException("NonOSDrivesComboBox button could not be found");
-			Button NonOSDriveEncryptButton = NonOSDrivesGrid.FindName("NonOSDriveEncryptButton") as Button ?? throw new InvalidOperationException("NonOSDriveEncryptButton button could not be found");
+			GUIBitLocker.RefreshNonOSDrives = (Button)NonOSDrivesGrid.FindName("RefreshNonOSDrives");
+
+			GUIBitLocker.NonOSDrivesComboBox = (ComboBox)NonOSDrivesGrid.FindName("NonOSDrivesComboBox");
+			Button NonOSDriveEncryptButton = (Button)NonOSDrivesGrid.FindName("NonOSDriveEncryptButton");
 
 			// Event handler for when the refresh button is pressed
 			GUIBitLocker.RefreshNonOSDrives.Click += async (sender, e) =>
@@ -163,12 +158,12 @@ public partial class GUIMain
 
 
 			#region Removable Drives
-			GUIBitLocker.RefreshRemovableDrivesForRemovableDrivesSection = RemovableDrivesGrid.FindName("RefreshRemovableDrivesForRemovableDrivesSection") as Button ?? throw new InvalidOperationException("RefreshRemovableDrivesForRemovableDrivesSection button could not be found");
-			Image? RefreshButtonIcon3 = RemovableDrivesGrid.FindName("RefreshButtonIcon3") as Image ?? throw new InvalidOperationException("RefreshButtonIcon3 could not be found");
-			GUIBitLocker.RemovableDrivesInRemovableDrivesGridComboBox = RemovableDrivesGrid.FindName("RemovableDrivesInRemovableDrivesGridComboBox") as ComboBox ?? throw new InvalidOperationException("RemovableDrivesInRemovableDrivesGridComboBox button could not be found");
-			GUIBitLocker.Password1 = RemovableDrivesGrid.FindName("Password1") as PasswordBox ?? throw new InvalidOperationException("Password1 password box could not be found");
-			GUIBitLocker.Password2 = RemovableDrivesGrid.FindName("Password2") as PasswordBox ?? throw new InvalidOperationException("Password2 password box could not be found");
-			Button RemovableDriveEncryptButton = NonOSDrivesGrid.FindName("RemovableDriveEncryptButton") as Button ?? throw new InvalidOperationException("RemovableDriveEncryptButton button could not be found");
+			GUIBitLocker.RefreshRemovableDrivesForRemovableDrivesSection = (Button)RemovableDrivesGrid.FindName("RefreshRemovableDrivesForRemovableDrivesSection");
+
+			GUIBitLocker.RemovableDrivesInRemovableDrivesGridComboBox = (ComboBox)RemovableDrivesGrid.FindName("RemovableDrivesInRemovableDrivesGridComboBox");
+			GUIBitLocker.Password1 = (PasswordBox)RemovableDrivesGrid.FindName("Password1");
+			GUIBitLocker.Password2 = (PasswordBox)RemovableDrivesGrid.FindName("Password2");
+			Button RemovableDriveEncryptButton = (Button)NonOSDrivesGrid.FindName("RemovableDriveEncryptButton");
 
 
 			// Event handler for when the refresh button is pressed
@@ -194,25 +189,15 @@ public partial class GUIMain
 
 			#region Backup
 
-			GUIBitLocker.RecoveryKeysDataGrid = BackupGrid.FindName("RecoveryKeysDataGrid") as DataGrid ?? throw new InvalidOperationException("RecoveryKeysDataGrid could not be found");
-			GUIBitLocker.BackupButton = BackupGrid.FindName("BackupButton") as Button ?? throw new InvalidOperationException("BackupButton could not be found");
-			GUIBitLocker.RefreshButtonForBackup = BackupGrid.FindName("RefreshButtonForBackup") as Button ?? throw new InvalidOperationException("RefreshButtonForBackup could not be found");
-			Image? RefreshButtonForBackupIcon = BackupGrid.FindName("RefreshButtonForBackupIcon") as Image ?? throw new InvalidOperationException("RefreshButtonForBackupIcon could not be found");
-			Image? BackupButtonIcon = BackupGrid.FindName("BackupButtonIcon") as Image ?? throw new InvalidOperationException("BackupButtonIcon could not be found");
-
-			// Add image to the BackupButtonIcon
-			BitmapImage BackupButtonIconBitmapImage = new();
-			BackupButtonIconBitmapImage.BeginInit();
-			BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExportIconBlack.png"));
-			BackupButtonIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			BackupButtonIconBitmapImage.EndInit();
-			BackupButtonIcon.Source = BackupButtonIconBitmapImage;
+			GUIBitLocker.RecoveryKeysDataGrid = (DataGrid)BackupGrid.FindName("RecoveryKeysDataGrid");
+			GUIBitLocker.BackupButton = (Button)BackupGrid.FindName("BackupButton");
+			GUIBitLocker.RefreshButtonForBackup = (Button)BackupGrid.FindName("RefreshButtonForBackup");
 
 			#region Make the scrolling using mouse wheel or trackpad work on DataGrid
 			// The DataGrid needs to hand over the scrolling event to the main ScrollViewer element
 
 			// Find the ScrollViewer element
-			ScrollViewer MainScrollViewer = GUIBitLocker.ParentGrid.FindName("MainScrollViewer") as ScrollViewer ?? throw new InvalidOperationException("No scrollbar founds");
+			ScrollViewer MainScrollViewer = (ScrollViewer)GUIBitLocker.ParentGrid.FindName("MainScrollViewer");
 
 			// Handle the PreviewMouseWheel event of the DataGrid by handing it off to the main ScrollViewer
 			GUIBitLocker.RecoveryKeysDataGrid.PreviewMouseWheel += (object sender, MouseWheelEventArgs e) =>
@@ -257,23 +242,11 @@ public partial class GUIMain
 
 			#endregion
 
-			// Add the same Refresh image to multiple sources
-			BitmapImage RefreshButtonIcon1BitmapImage = new();
-			RefreshButtonIcon1BitmapImage.BeginInit();
-			RefreshButtonIcon1BitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "RefreshButtonIcon.png"));
-			RefreshButtonIcon1BitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			RefreshButtonIcon1BitmapImage.EndInit();
-			RefreshButtonIcon1.Source = RefreshButtonIcon1BitmapImage;
-			RefreshButtonIcon2.Source = RefreshButtonIcon1BitmapImage;
-			RefreshButtonIcon3.Source = RefreshButtonIcon1BitmapImage;
-			RefreshButtonForBackupIcon.Source = RefreshButtonIcon1BitmapImage;
-
 			// Register the buttons and TabControl that will be enabled/disabled based on current activity
 			ActivityTracker.RegisterUIElement(OSDriveEncryptButton);
 			ActivityTracker.RegisterUIElement(NonOSDriveEncryptButton);
 			ActivityTracker.RegisterUIElement(RemovableDriveEncryptButton);
 			ActivityTracker.RegisterUIElement(GUIBitLocker.TabControl);
-
 
 
 			// To ensure BitLocker settings have been applied prior to using BitLocker encryption

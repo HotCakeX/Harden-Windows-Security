@@ -1,42 +1,32 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Style="{StaticResource Page_Style}">
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" FontSize="16">
     <Grid x:Name="ParentGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!-- Top controls row -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" >
-            <TextBlock x:Name="AutoScrollTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Auto-Scroll" Foreground="Black" FontSize="16" FontWeight="Normal" Margin="5,0,5,0" />
-            <ToggleButton x:Name="AutoScrollToggleButton" VerticalAlignment="Center"
-HorizontalAlignment="Center"
-Width="75" Height="27.5"
-Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
-            <Button x:Name="ExportLogsButton" Style="{StaticResource CustomButtonStyle2}" Margin="12,0,5,0">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="0">
+            <ToggleButton x:Name="AutoScrollToggleButton" VerticalAlignment="Center" Content="Auto Scroll"
+HorizontalAlignment="Center"/>
+            <Button x:Name="ExportLogsButton" Margin="12,0,5,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image x:Name="ExportLogsIcon" Width="40" Height="30"/>
+                    <TextBlock Margin="28,0,15,0" FontFamily="{DynamicResource SymbolThemeFontFamily}" VerticalAlignment="Center" FontSize="20" Text="&#xE78C;"/>
                     <TextBlock Text="Export Logs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
                 </StackPanel>
             </Button>
-
-            <Button x:Name="ClearLogsButton" Style="{StaticResource CustomButtonStyle2}" Margin="12,0,5,0">
+            <Button x:Name="ClearLogsButton" Margin="12,0,5,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Image x:Name="ClearLogsIcon" Width="40" Height="30"/>
+                    <TextBlock Margin="28,0,15,0" FontFamily="{DynamicResource SymbolThemeFontFamily}" VerticalAlignment="Center" FontSize="20" Text="&#xEF19;"/>
                     <TextBlock Text="Clear Logs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
                 </StackPanel>
             </Button>
-
         </StackPanel>
         <!-- Logging Area -->
-        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" x:Name="ScrollerForOutputTextBox" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
-            <!-- its max width is being dynamically set using code behind (PowerShell) -->
-            <TextBox x:Name="MainLoggerTextBox" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="15"/>
+        <ScrollViewer Grid.Row="1" x:Name="ScrollerForOutputTextBox" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
+            <TextBox x:Name="MainLoggerTextBox" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" BorderThickness="0" IsReadOnly="True" Cursor="IBeam" MinHeight="50" MinWidth="100"/>
         </ScrollViewer>
     </Grid>
 </UserControl>

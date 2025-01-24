@@ -5,7 +5,6 @@ using System.Management;
 
 namespace HardenWindowsSecurity;
 
-
 public enum ComplianceCategories
 {
 	MicrosoftDefender, // 55 + Number of Process Mitigations which are dynamically increased
@@ -25,7 +24,7 @@ public enum ComplianceCategories
 }
 
 
-// # This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
+// This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
 public static class ProtectionCategoriex
 {
 	// a method to detect Windows edition SKU number
@@ -89,11 +88,11 @@ public static class ProtectionCategoriex
 	public static string[] GetValidValues()
 	{
 		// if running under unelevated context then only return the NonAdminCommands category
-		if (!UserPrivCheck.IsAdmin()) return ["NonAdminCommands"];
+		if (!Environment.IsPrivilegedProcess) return ["NonAdminCommands"];
 
 		HashSet<string> categoriex =
-	[
-		"MicrosoftSecurityBaselines",
+		[
+			"MicrosoftSecurityBaselines",
 			"Microsoft365AppsSecurityBaselines",
 			"MicrosoftDefender",
 			"AttackSurfaceReductionRules",
@@ -112,14 +111,14 @@ public static class ProtectionCategoriex
 			"CountryIPBlocking",
 			"DownloadsDefenseMeasures",
 			"NonAdminCommands"
-	];
+		];
 
 		// Remove the categories that are not applicable to Windows Home editions
 		if (IsWindowsHome())
 		{
 			string[] homeEditionCategories =
 			[
-			"BitLockerSettings",
+				"BitLockerSettings",
 				"DeviceGuard",
 				"DownloadsDefenseMeasures",
 				"TLSSecurity",

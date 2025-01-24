@@ -20,7 +20,7 @@ public enum ComplianceCategories
 	WindowsNetworking, // 17
 	MiscellaneousConfigurations, // 20
 	WindowsUpdateConfigurations, // 15
-	EdgeBrowserConfigurations, // 14
+	EdgeBrowserConfigurations, // 18
 	NonAdminCommands // 9
 }
 

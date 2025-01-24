@@ -103,7 +103,7 @@ public static class Initializer
 		GlobalVars.MDAVConfigCurrent = ConfigDefenderHelper.GetMpComputerStatus();
 
 		// Total number of Compliant values
-		GlobalVars.TotalNumberOfTrueCompliantValues = 257;
+		GlobalVars.TotalNumberOfTrueCompliantValues = 261;
 
 		// Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
 		GlobalVars.VerbosePreference = VerbosePreference;

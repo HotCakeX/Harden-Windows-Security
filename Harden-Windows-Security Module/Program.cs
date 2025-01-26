@@ -32,8 +32,6 @@ public static class Program
 		}
 		#endregion
 
-		GlobalVars.Offline = true;
-
 		// Launch the GUI
 		GUIHandOff.Boot();
 

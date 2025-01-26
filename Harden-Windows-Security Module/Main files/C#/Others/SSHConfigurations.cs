@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace HardenWindowsSecurity;
 
@@ -110,7 +109,7 @@ internal static class SSHConfigurations
 		if (File.Exists(programDataSSHConfigFile))
 		{
 			// Read all lines into a list
-			var configLines = File.ReadAllLines(programDataSSHConfigFile).ToList();
+			List<string> configLines = [.. File.ReadAllLines(programDataSSHConfigFile)];
 
 			// Check if any line starts with "MACs "
 			for (int i = 0; i < configLines.Count; i++)

@@ -25,7 +25,7 @@ public static class Program
 		// Prepare the environment and variables
 		Initializer.Initialize();
 
-		if (UserPrivCheck.IsAdmin())
+		if (Environment.IsPrivilegedProcess)
 		{
 			ControlledFolderAccessHandler.Start(true, false);
 			Miscellaneous.RequirementsCheck();

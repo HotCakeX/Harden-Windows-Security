@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 namespace HardenWindowsSecurity;
 
-public static partial class GUIProtectWinSecurity
+internal static partial class GUIProtectWinSecurity
 {
 	// During offline mode, this is the path that the button for MicrosoftSecurityBaselineZipPath assigns
 	internal static string MicrosoftSecurityBaselineZipPath = string.Empty;
@@ -32,10 +31,8 @@ public static partial class GUIProtectWinSecurity
 	// View for the ProtectWindowsSecurity
 	internal static UserControl? View;
 
-	internal static Grid? parentGrid;
-	internal static ToggleButton? mainTabControlToggle;
-	internal static ContentControl? mainContentControl;
-	internal static Style? mainContentControlStyle;
+	internal static Grid? ProtectionParentGrid;
+	internal static Grid? OfflineConfigurationsGrid;
 
 	// Defining the correlation between Categories and which Sub-Categories they activate
 	internal static Hashtable correlation = new(StringComparer.OrdinalIgnoreCase)
@@ -64,7 +61,6 @@ public static partial class GUIProtectWinSecurity
 	internal static ToggleButton? EventLogging;
 
 	// fields for Offline-Mode related elements
-	internal static Grid? grid2;
 	internal static ToggleButton? enableOfflineMode;
 	internal static Button? microsoftSecurityBaselineZipButton;
 	internal static TextBox? microsoftSecurityBaselineZipTextBox;
@@ -77,7 +73,6 @@ public static partial class GUIProtectWinSecurity
 	internal static ToggleButton? ExecuteButton;
 	internal static Grid? ExecuteButtonGrid;
 	internal static Image? ExecuteButtonImage;
-
 
 	// Flag to run the event for view load only once to prevent file download multiple times when switching between views etc.
 	internal static bool LoadEventHasBeenTriggered;
@@ -111,6 +106,4 @@ public static partial class GUIProtectWinSecurity
 		}
 		}
 		};
-
 }
-

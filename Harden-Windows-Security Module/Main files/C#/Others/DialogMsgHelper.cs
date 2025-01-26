@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace HardenWindowsSecurity;
 
@@ -24,24 +23,8 @@ internal static class DialogMsgHelper
 				Width = 450,
 				Height = 350,
 				WindowStartupLocation = WindowStartupLocation.CenterScreen,
-				ResizeMode = ResizeMode.NoResize,
 				Owner = Application.Current.MainWindow, // Associate the dialog with the main Window
-
-				// Enable this when the time is right
-				// ThemeMode = ThemeMode.System
-
-				WindowStyle = WindowStyle.None,  // Hides the title bar
-
-				Background = new LinearGradientBrush(
-				Color.FromRgb(15, 32, 39),
-				Color.FromRgb(32, 58, 67),
-				45),
-
-				BorderThickness = new Thickness(1),
-				BorderBrush = new LinearGradientBrush(
-				Color.FromRgb(255, 105, 180),
-				Color.FromRgb(255, 20, 147),
-				90)
+				ThemeMode = ThemeMode.System
 			};
 
 			StackPanel stackPanel = new() { Margin = new Thickness(20) };
@@ -51,7 +34,6 @@ internal static class DialogMsgHelper
 				Text = Message,
 				Margin = new Thickness(0, 0, 0, 20),
 				TextWrapping = TextWrapping.Wrap,
-				Foreground = Brushes.White,
 				FontSize = 14,
 				HorizontalAlignment = HorizontalAlignment.Center,
 				TextAlignment = TextAlignment.Center,

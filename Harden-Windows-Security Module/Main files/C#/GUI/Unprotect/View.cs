@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 
 namespace HardenWindowsSecurity;
 
@@ -29,17 +28,14 @@ public partial class GUIMain
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("Unprotect page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the file path for the Unprotect view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Unprotect.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Unprotect.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIUnprotect.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -60,22 +56,10 @@ public partial class GUIMain
 				throw new InvalidOperationException("UnprotectCategoriesComboBox is null");
 			}
 
-
-			Button RefreshDrivesButton = GUIUnprotect.ParentGrid.FindName("RefreshDrivesForSelection") as Button ?? throw new InvalidOperationException("RefreshDrivesForSelection could not be found");
-			Button RemoveProtectionsButton = GUIUnprotect.ParentGrid.FindName("RemoveProtectionsButton") as Button ?? throw new InvalidOperationException("RemoveProtectionsButton could not be found");
-			Image? RefreshDrivesForSelectionButtonIcon = GUIUnprotect.ParentGrid.FindName("RefreshDrivesForSelectionButtonIcon") as Image ?? throw new InvalidOperationException("RefreshDrivesForSelectionButtonIcon could not be found");
-
-			// Add image to the BackupButtonIcon
-			BitmapImage BackupButtonIconBitmapImage = new();
-			BackupButtonIconBitmapImage.BeginInit();
-			BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "RefreshButtonIcon.png"));
-			BackupButtonIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			BackupButtonIconBitmapImage.EndInit();
-			RefreshDrivesForSelectionButtonIcon.Source = BackupButtonIconBitmapImage;
-
-			Button DecryptButton = GUIUnprotect.ParentGrid.FindName("DecryptButton") as Button ?? throw new InvalidOperationException("DecryptButton could not be found");
-
-			ComboBox ListOfDrivesComboBox = GUIUnprotect.ParentGrid.FindName("ListOfDrivesComboBox") as ComboBox ?? throw new InvalidOperationException("ListOfDrivesComboBox could not be found");
+			Button RefreshDrivesButton = (Button)GUIUnprotect.ParentGrid.FindName("RefreshDrivesForSelection");
+			Button RemoveProtectionsButton = (Button)GUIUnprotect.ParentGrid.FindName("RemoveProtectionsButton");
+			Button DecryptButton = (Button)GUIUnprotect.ParentGrid.FindName("DecryptButton");
+			ComboBox ListOfDrivesComboBox = (ComboBox)GUIUnprotect.ParentGrid.FindName("ListOfDrivesComboBox");
 
 			#endregion
 

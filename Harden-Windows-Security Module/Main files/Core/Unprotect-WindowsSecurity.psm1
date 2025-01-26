@@ -1,26 +1,20 @@
 Function Unprotect-WindowsSecurity {
-    [CmdletBinding(
-        SupportsShouldProcess = $true,
-        ConfirmImpact = 'High',
-        DefaultParameterSetName = 'All'
-    )]
-    [OutputType([System.String])]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High', DefaultParameterSetName = 'All')]
     param (
         [Parameter(Mandatory = $false, ParameterSetName = 'OnlyProcessMitigations')]
-        [System.Management.Automation.SwitchParameter]$OnlyProcessMitigations,
+        [Switch]$OnlyProcessMitigations,
 
         [ValidateSet('Downloads-Defense-Measures', 'Dangerous-Script-Hosts-Blocking')]
         [Parameter(Mandatory = $false, ParameterSetName = 'OnlyWDACPolicies')]
         [System.String[]]$WDACPoliciesToRemove,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'OnlyCountryIPBlockingFirewallRules')]
-        [System.Management.Automation.SwitchParameter]$OnlyCountryIPBlockingFirewallRules,
+        [Switch]$OnlyCountryIPBlockingFirewallRules,
 
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Force
+        [Parameter(Mandatory = $false)][Switch]$Force
     )
     begin {
-        if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
+        if (![System.Environment]::IsPrivilegedProcess) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
         try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain $MyInvocation.Statement }
@@ -31,9 +25,7 @@ Function Unprotect-WindowsSecurity {
 
         # do not prompt for confirmation if the -Force switch is used
         # if both -Force and -Confirm switches are used, the prompt for confirmation will still be correctly shown
-        if ($Force -and -Not $Confirm) {
-            $ConfirmPreference = 'None'
-        }
+        if ($Force -and -Not $Confirm) { $ConfirmPreference = 'None' }
     }
     process {
         # Prompt for confirmation before proceeding

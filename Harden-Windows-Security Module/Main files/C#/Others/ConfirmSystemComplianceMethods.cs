@@ -33,7 +33,7 @@ public static partial class ConfirmSystemComplianceMethods
 	/// </summary>
 	/// <param name="methodNames"></param>
 	/// <exception cref="Exception"></exception>
-	internal static void OrchestrateComplianceChecks(params string[] methodNames)
+	internal static void OrchestrateComplianceChecks(params string[]? methodNames)
 	{
 		// The "LanmanWorkstation" with the display name of "Workstation" is necessary to be running for at least one category to perform successfully, which is the Miscellaneous Category
 		ProcessStarter.RunCommand("sc.exe", "config LanmanWorkstation start=auto", true);
@@ -81,7 +81,7 @@ public static partial class ConfirmSystemComplianceMethods
 	/// <param name="methodNames">These are the parameter names from the official category names
 	/// if no input is supplied for this parameter, all categories will run</param>
 	/// <returns>Returns the Task object</returns>
-	private static async Task RunComplianceMethodsInParallelAsync(params string[] methodNames)
+	private static async Task RunComplianceMethodsInParallelAsync(params string[]? methodNames)
 	{
 		// Define a list to store the methods to run
 		List<Func<Task>> methodsToRun;
@@ -1644,7 +1644,7 @@ public static partial class ConfirmSystemComplianceMethods
 				// Ensure the ProgramName is not null
 				if (item.ProgramName is not null && item.Mitigations is not null)
 				{
-					TargetMitigations[item.ProgramName] = item.Mitigations!; // Suppressing the warning
+					TargetMitigations[item.ProgramName] = item.Mitigations!;
 				}
 			}
 

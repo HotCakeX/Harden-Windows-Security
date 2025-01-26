@@ -1,24 +1,18 @@
 Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
-    [OutputType([System.String])]
     param (
-        [parameter(Mandatory = $false, ParameterSetName = 'GUI')]
-        [System.Management.Automation.SwitchParameter]$GUI,
+        [parameter(Mandatory = $false, ParameterSetName = 'GUI')][Switch]$GUI,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
         [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
         [ArgumentCompleter({
-                # Get the current command and the already bound parameters
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
-
-                # Find all string constants in the AST
                 $Existing = $CommandAst.FindAll(
                     # The predicate scriptblock to define the criteria for filtering the AST nodes
                     {
                         $Args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     },
-                    # The recurse flag, whether to search nested scriptblocks or not.
-                    $false
+                    $false # The recurse flag, whether to search nested scriptblocks or not.
                 ).Value
 
                 ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX) | ForEach-Object -Process {
@@ -35,14 +29,12 @@ Function Protect-WindowsSecurity {
 
         [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
         [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
-        [System.Management.Automation.SwitchParameter]$Log,
+        [Switch]$Log,
 
-        [System.Management.Automation.SwitchParameter]$Offline
+        [Switch]$Offline
     )
     # This offers granular control over sub-category automation, handles the parameter validation and correlation between selected categories and the subcategory switch parameter, doesn't populate the argument completer on the console with unrelated parameters
     DynamicParam {
-
-        # Create a new dynamic parameter dictionary
         $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
 
         # A script block to create and add dynamic parameters to the dictionary for the sub-categories
@@ -62,7 +54,7 @@ Function Protect-WindowsSecurity {
             # Add the dynamic parameter to the param dictionary
             $ParamDictionary.Add($Name, [System.Management.Automation.RuntimeDefinedParameter]::new(
                     $Name, # Define parameter name
-                    [System.Management.Automation.SwitchParameter], # Define parameter type
+                    [Switch], # Define parameter type
                     [System.Management.Automation.ParameterAttribute[]]@($ParamAttrib1, $ParamAttrib2) # Add both attributes to the parameter
                 ))
         }
@@ -99,7 +91,7 @@ Function Protect-WindowsSecurity {
         if ($PSBoundParameters.Offline.IsPresent) {
 
             # Opens File picker GUI so that user can select a .zip file using WPF
-            [System.Management.Automation.ScriptBlock]$ArgumentCompleterZipFilePathsPicker = {
+            [scriptblock]$ArgumentCompleterZipFilePathsPicker = {
                 Add-Type -AssemblyName 'PresentationFramework'
                 [Microsoft.Win32.OpenFileDialog]$Dialog = [Microsoft.Win32.OpenFileDialog]::new()
                 $Dialog.Filter = 'Zip files (*.zip)|*.zip'
@@ -274,7 +266,7 @@ Function Protect-WindowsSecurity {
         try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain -C $MyInvocation.Statement }
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
-        [System.Boolean]$ErrorsOccurred = $false
+        [bool]$ErrorsOccurred = $false
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         ('SecBaselines_NoOverrides', 'MSFTDefender_SAC', 'MSFTDefender_NoDiagData', 'MSFTDefender_NoScheduledTask',
@@ -304,17 +296,13 @@ Function Protect-WindowsSecurity {
         Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
 
         # Get the current title of the PowerShell
-        try {
-            [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
-        }
-        catch {
-            [System.String]$CurrentPowerShellTitle = $null
-        }
+        try { [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle }
+        catch { [System.String]$CurrentPowerShellTitle = $null }
 
         # Change the title of the Windows Terminal for PowerShell tab
         [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('❤️‍🔥Harden Windows Security❤️‍🔥')
 
-        if ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
+        if ([System.Environment]::IsPrivilegedProcess) {
             [HardenWindowsSecurity.Miscellaneous]::RequirementsCheck()
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start($true, $false)
         }
@@ -327,17 +315,11 @@ Function Protect-WindowsSecurity {
                 # [HardenWindowsSecurity.GUIHandOff]::Boot()
             }
         }
-        catch {
-            $_
-            $_.Exception
-            $_.InvocationInfo
-            $ErrorsOccurred = $true
-        }
+        catch { $_; $_.Exception; $_.InvocationInfo; $ErrorsOccurred = $true }
 
         # Return from the Begin block if GUI was used and then closed
         if ($PSBoundParameters.GUI.IsPresent) { Return }
     }
-
     process {
         # doing a try-catch-finally block on the entire code so that when CTRL + C is pressed to forcefully exit the operation,
         # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
@@ -412,9 +394,9 @@ Function Protect-WindowsSecurity {
             # No code should be placed after this.
         }
         catch {
+            $ErrorsOccurred = $true
             # Throw whatever error that occurred
             Throw $_
-            $ErrorsOccurred = $true
         }
         finally {
             Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed

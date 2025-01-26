@@ -29,7 +29,7 @@ public static class Miscellaneous
 	{
 
 		// Check if the user has Administrator privileges before performing the following system requirement checks
-		if (UserPrivCheck.IsAdmin())
+		if (Environment.IsPrivilegedProcess)
 		{
 
 			// Check if the system is running UEFI firmware

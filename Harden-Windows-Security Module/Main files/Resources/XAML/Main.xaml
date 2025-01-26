@@ -2,139 +2,100 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title='Harden Windows Security App' WindowStartupLocation='CenterScreen'>
-    <!-- Window Border -->
-    <Border x:Name="OuterMostBorder">
-        <Border.Background>
-            <ImageBrush Stretch="UniformToFill"></ImageBrush>
-        </Border.Background>
-        <Border x:Name="InnerBorder">
-            <Border.Background>
-                <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5" Opacity="0.96">
-                    <!-- Center color -->
-                    <GradientStop Color="#ffdde1" Offset="0.0" />
-                    <!-- Edge color - original background color -->
-                    <GradientStop Color="#FFFFC0CB" Offset="1.0" />
-                </RadialGradientBrush>
-            </Border.Background>
-            <Grid x:Name="MainGridInWindow">
-                <!-- Base Grid -->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width='228' />
-                    <ColumnDefinition Width='*' />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <ProgressBar x:Name="MainProgressBar"
+        Title='Harden Windows Security App' WindowStartupLocation='CenterScreen' ThemeMode="System">
+    <Grid x:Name="MainGridInWindow">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width='228' />
+            <ColumnDefinition Width='*' />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ProgressBar x:Name="MainProgressBar"
     Grid.Row="0"
     IsIndeterminate="True"
     Height="5"
-    Background="Transparent"
-    Foreground="DeepPink"
     Margin="0,0,0,5"
     Grid.ColumnSpan="2"
     BorderThickness="0" />
-                <!-- Navigation Panel -->
-                <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
-                    <!-- background of the tabs sidebar can be set using border background -->
-                    <Border>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <StackPanel Width='228'>
-                                <!-- Protect -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ProtectCommand}' IsChecked='True'>
-                                    <Grid Name="ProtectButtonGrid">
-                                        <Image x:Name="ProtectButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='Protect' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- Confirm -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ConfirmCommand}'>
-                                    <Grid x:Name="ConfirmButtonGrid">
-                                        <Image x:Name="ConfirmButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='Confirm &amp; Verify' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- ASRRules -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ASRRulesCommand}'>
-                                    <Grid x:Name="ASRRulesButtonGrid">
-                                        <Image x:Name="ASRRulesButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='ASR Rules' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- Unprotect -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding UnprotectCommand}'>
-                                    <Grid x:Name="UnprotectButtonGrid">
-                                        <Image x:Name="UnprotectButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- Exclusions -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ExclusionsCommand}'>
-                                    <Grid x:Name="ExclusionsButtonGrid">
-                                        <Image x:Name="ExclusionsButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='Exclusions' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- BitLocker -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding BitLockerCommand}'>
-                                    <Grid x:Name="BitLockerButtonGrid">
-                                        <Image x:Name="BitLockerButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='BitLocker' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- OptionalFeatures -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding OptionalFeaturesCommand}'>
-                                    <Grid x:Name="OptionalFeaturesButtonGrid">
-                                        <Image x:Name="OptionalFeaturesButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='Apps | Features' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- FileReputation -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding FileReputationCommand}'>
-                                    <Grid x:Name="FileReputationButtonGrid">
-                                        <Image x:Name="FileReputationButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='File Reputation' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- AppControlManager -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding AppControlManagerCommand}'>
-                                    <Grid x:Name="AppControlManagerButtonGrid">
-                                        <Image x:Name="AppControlManagerButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='AppControl Manager' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-                                <!-- Logs -->
-                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
-                                    <Grid x:Name="LogsButtonGrid">
-                                        <Image x:Name="LogsButtonIcon" Style="{StaticResource Image_Style}" />
-                                        <TextBlock Text='Logs' Style='{StaticResource Text_Style}' />
-                                    </Grid>
-                                </RadioButton>
-
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
-                </Grid>
-                <Grid Grid.Column='1' Grid.Row="1" x:Name="CurrentViewGrid">
-                    <ContentControl x:Name='Pages' Content='{Binding CurrentView}' />
-                </Grid>
-                <!-- Stackpanel that holds the bottom left elements related to background -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="1">
-                    <!-- Slider in the bottom left corner -->
-                    <Slider x:Name="BackgroundOpacitySlider"
-                       Width="140"
-                       Margin="3,0,3,0"
-                       Minimum="0"
-                       Maximum="100"
-                       TickFrequency="1"
-                       IsSnapToTickEnabled="False"
-                       Value="96"/>
-                    <!-- Change background button -->
-                    <Button Content="Background" x:Name="BackgroundChangeButton" Width="70" Height="20" FontSize="11" Background="Transparent" BorderThickness="0" ></Button>
+        <!-- Navigation Panel -->
+        <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width='228'>
+                    <!-- Protect -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ProtectCommand}' IsChecked='True'>
+                        <Grid Name="ProtectButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xE83D;"/>
+                            <TextBlock Text='Protect' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- Confirm -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ConfirmCommand}'>
+                        <Grid x:Name="ConfirmButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xE762;"/>
+                            <TextBlock Text='Confirm &amp; Verify' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- ASRRules -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ASRRulesCommand}'>
+                        <Grid x:Name="ASRRulesButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xF552;"/>
+                            <TextBlock Text='ASR Rules' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- Unprotect -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding UnprotectCommand}'>
+                        <Grid x:Name="UnprotectButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xE7A7;"/>
+                            <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- Exclusions -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ExclusionsCommand}'>
+                        <Grid x:Name="ExclusionsButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xEBD2;"/>
+                            <TextBlock Text='Exclusions' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- BitLocker -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding BitLockerCommand}'>
+                        <Grid x:Name="BitLockerButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xE72E;"/>
+                            <TextBlock Text='BitLocker' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- OptionalFeatures -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding OptionalFeaturesCommand}'>
+                        <Grid x:Name="OptionalFeaturesButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xE8F1;"/>
+                            <TextBlock Text='Apps | Features' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- FileReputation -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding FileReputationCommand}'>
+                        <Grid x:Name="FileReputationButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xF4A5;"/>
+                            <TextBlock Text='File Reputation' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- AppControlManager -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding AppControlManagerCommand}'>
+                        <Grid x:Name="AppControlManagerButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xEC1B;"/>
+                            <TextBlock Text='AppControl Manager' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
+                    <!-- Logs -->
+                    <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
+                        <Grid x:Name="LogsButtonGrid">
+                            <TextBlock Margin="28,0,15,0" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{DynamicResource {x:Static SystemColors.AccentColorBrushKey}}" VerticalAlignment="Center" FontSize="30" Text="&#xF571;"/>
+                            <TextBlock Text='Logs' Style='{StaticResource Text_Style}' />
+                        </Grid>
+                    </RadioButton>
                 </StackPanel>
-            </Grid>
-        </Border>
-    </Border>
+            </ScrollViewer>
+        </Grid>
+        <ContentControl Content='{Binding CurrentView}' Grid.Column="1" Grid.Row="1"/>
+    </Grid>
 </Window>

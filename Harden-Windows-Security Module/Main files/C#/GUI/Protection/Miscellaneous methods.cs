@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -8,28 +9,27 @@ using System.Windows.Controls;
 
 namespace HardenWindowsSecurity;
 
-public static partial class GUIProtectWinSecurity
+internal static partial class GUIProtectWinSecurity
 {
 
 	/// <summary>
 	/// A method to update sub-category items based on the checked categories
 	/// </summary>
-	public static void UpdateSubCategories()
+	internal static void UpdateSubCategories()
 	{
 		// Disable all sub-category items first
-		foreach (var item in subCategories!.Items)
+		foreach (ListViewItem item in subCategories!.Items)
 		{
-			((ListViewItem)item).IsEnabled = false;
+			item.IsEnabled = false;
 		}
 
 		// Get all checked categories
-		var checkedCategories = categories!.Items
+		List<ListViewItem> checkedCategories = [.. categories!.Items
 			.Cast<ListViewItem>()
-			.Where(item => ((CheckBox)item.Content).IsChecked == true)
-			.ToList();
+			.Where(item => ((CheckBox)item.Content).IsChecked == true)];
 
 		// Enable the corresponding sub-category items
-		foreach (var categoryItem in checkedCategories)
+		foreach (ListViewItem categoryItem in checkedCategories)
 		{
 			string categoryContent = ((CheckBox)categoryItem.Content).Name;
 			if (correlation.Contains(categoryContent))
@@ -38,9 +38,8 @@ public static partial class GUIProtectWinSecurity
 				{
 					foreach (string subCategoryName in subCategoryNames)
 					{
-						foreach (var item in subCategories.Items)
+						foreach (ListViewItem subCategoryItem in subCategories.Items)
 						{
-							ListViewItem subCategoryItem = (ListViewItem)item;
 							if (((CheckBox)subCategoryItem.Content).Name == subCategoryName)
 							{
 								subCategoryItem.IsEnabled = true;
@@ -52,9 +51,8 @@ public static partial class GUIProtectWinSecurity
 		}
 
 		// Uncheck sub-category items whose category is not selected
-		foreach (var item in subCategories.Items)
+		foreach (ListViewItem subCategoryItem in subCategories.Items)
 		{
-			ListViewItem subCategoryItem = (ListViewItem)item;
 			if (!subCategoryItem.IsEnabled)
 			{
 				((CheckBox)subCategoryItem.Content).IsChecked = false;
@@ -67,9 +65,8 @@ public static partial class GUIProtectWinSecurity
 		}
 
 		// Disable categories that are not valid for the current session
-		foreach (var item in categories.Items)
+		foreach (ListViewItem categoryItem in categories.Items)
 		{
-			ListViewItem categoryItem = (ListViewItem)item;
 			if (!GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
 			{
 				categoryItem.IsEnabled = false;
@@ -77,9 +74,8 @@ public static partial class GUIProtectWinSecurity
 		}
 	}
 
-
 	// Method to disable the Offline Mode configuration inputs
-	public static void DisableOfflineModeConfigInputs()
+	internal static void DisableOfflineModeConfigInputs()
 	{
 		microsoftSecurityBaselineZipButton!.IsEnabled = false;
 		microsoftSecurityBaselineZipTextBox!.IsEnabled = false;
@@ -92,7 +88,7 @@ public static partial class GUIProtectWinSecurity
 	/// <summary>
 	/// When the execute button is pressed, this method is called to gather the selected categories and sub-categories
 	/// </summary>
-	public static void ExecuteButtonPress()
+	internal static void ExecuteButtonPress()
 	{
 
 		// Clear the categories and sub-categories lists from the saved variables
@@ -122,6 +118,5 @@ public static partial class GUIProtectWinSecurity
 				SelectedSubCategories.Enqueue(subCategoryName);
 			}
 		}
-
 	}
 }

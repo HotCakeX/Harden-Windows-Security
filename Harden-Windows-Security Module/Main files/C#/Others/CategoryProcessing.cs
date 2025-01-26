@@ -151,7 +151,7 @@ internal static class CategoryProcessing
 		List<CsvRecord> csvData = ReadCsv();
 
 		// Filter the items based on category and origin/method
-		var filteredItems = csvData.Where(item =>
+		IEnumerable<CsvRecord> filteredItems = csvData.Where(item =>
 			item.Category == catName &&
 			item.Origin.Equals(method, StringComparison.OrdinalIgnoreCase)
 		);
@@ -240,7 +240,7 @@ internal static class CategoryProcessing
 							}
 
 							// Parse the expected values based on their type in the CSV file
-							var parsedValues = item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? [];
+							List<object> parsedValues = item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? [];
 
 
 							// Check if the registry value matches any of the expected values

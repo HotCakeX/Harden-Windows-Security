@@ -1042,3 +1042,9 @@ dotnet_diagnostic.SYSLIB1054.severity = silent
 
 # CA1060: Move P/Invokes to NativeMethods class
 dotnet_diagnostic.CA1060.severity = error
+
+# WPF0001: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+dotnet_diagnostic.WPF0001.severity = silent
+
+# IDE0330: Prefer 'System.Threading.Lock'
+dotnet_diagnostic.IDE0330.severity = error

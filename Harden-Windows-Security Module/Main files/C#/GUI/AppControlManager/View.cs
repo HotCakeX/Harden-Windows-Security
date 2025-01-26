@@ -42,17 +42,14 @@ public partial class GUIMain
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("AppControl Manager section can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the file path for the AppControlManager view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "AppControlManager.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "AppControlManager.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIAppControlManager.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -61,13 +58,13 @@ public partial class GUIMain
 			GUIAppControlManager.ParentGrid = (Grid)GUIAppControlManager.View.FindName("ParentGrid");
 
 			// Finding other elements
-			Button InstallAppControlManagerButton = GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButton") as Button ?? throw new InvalidOperationException("InstallAppControlManagerButton could not be found in the AppControlManager view");
-			Button ViewDemoOnYouTubeButton = GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButton") as Button ?? throw new InvalidOperationException("ViewDemoOnYouTubeButton could not be found in the AppControlManager view");
-			Button AccessTheGuideOnGitHubButton = GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButton") as Button ?? throw new InvalidOperationException("AccessTheGuideOnGitHubButton could not be found in the AppControlManager view");
-			Image ViewDemoOnYouTubeButtonIcon = GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButtonIcon") as Image ?? throw new InvalidOperationException("ViewDemoOnYouTubeButtonIcon could not be found in the AppControlManager view");
-			Image AccessTheGuideOnGitHubButtonIcon = GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButtonIcon") as Image ?? throw new InvalidOperationException("AccessTheGuideOnGitHubButtonIcon could not be found in the AppControlManager view");
-			Image InstallAppControlManagerButtonIcon = GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButtonIcon") as Image ?? throw new InvalidOperationException("InstallAppControlManagerButtonIcon could not be found in the AppControlManager view");
-			ProgressBar MainProgressBar = GUIAppControlManager.ParentGrid.FindName("MainProgressBar") as ProgressBar ?? throw new InvalidOperationException("MainProgressBar could not be found in the AppControlManager view");
+			Button InstallAppControlManagerButton = (Button)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButton");
+			Button ViewDemoOnYouTubeButton = (Button)GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButton");
+			Button AccessTheGuideOnGitHubButton = (Button)GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButton");
+			Image ViewDemoOnYouTubeButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButtonIcon");
+			Image AccessTheGuideOnGitHubButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButtonIcon");
+			Image InstallAppControlManagerButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButtonIcon");
+			ProgressBar MainProgressBar = (ProgressBar)GUIAppControlManager.ParentGrid.FindName("MainProgressBar");
 
 			#region Assigning icon images for the buttons
 
@@ -404,7 +401,6 @@ public partial class GUIMain
 				});
 			};
 
-
 			AccessTheGuideOnGitHubButton.Click += (sender, e) =>
 			{
 				_ = Process.Start(new ProcessStartInfo
@@ -413,7 +409,6 @@ public partial class GUIMain
 					UseShellExecute = true // Ensure the link opens in the default browser
 				});
 			};
-
 
 			// Cache the view before setting it as the CurrentView
 			_viewCache["AppControlManagerView"] = GUIAppControlManager.View;

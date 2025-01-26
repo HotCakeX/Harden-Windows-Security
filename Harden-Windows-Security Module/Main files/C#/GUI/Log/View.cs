@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
 namespace HardenWindowsSecurity;
@@ -27,11 +26,8 @@ public partial class GUIMain
 				return;
 			}
 
-			// Construct the file path for the Logs view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Logs.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Logs.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUILogs.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -39,35 +35,11 @@ public partial class GUIMain
 			// Find the Parent Grid
 			GUILogs.ParentGrid = (Grid)GUILogs.View.FindName("ParentGrid");
 
-			ToggleButton AutoScrollToggleButton = GUILogs.ParentGrid.FindName("AutoScrollToggleButton") as ToggleButton ?? throw new InvalidOperationException("AutoScrollToggleButton is null.");
-			Button ExportLogsButton = GUILogs.ParentGrid.FindName("ExportLogsButton") as Button ?? throw new InvalidOperationException("ExportLogsButton is null.");
-			GUILogs.MainLoggerTextBox = GUILogs.ParentGrid.FindName("MainLoggerTextBox") as TextBox ?? throw new InvalidOperationException("MainLoggerTextBox is null.");
-			GUILogs.scrollerForOutputTextBox = GUILogs.ParentGrid.FindName("ScrollerForOutputTextBox") as ScrollViewer ?? throw new InvalidOperationException("ScrollerForOutputTextBox is null.");
-			Image ExportLogsIcon = GUILogs.ParentGrid.FindName("ExportLogsIcon") as Image ?? throw new InvalidOperationException("ExportLogsIcon is null.");
-			Button ClearLogsButton = GUILogs.ParentGrid.FindName("ClearLogsButton") as Button ?? throw new InvalidOperationException("ClearLogsButton is null.");
-			Image ClearLogsIcon = GUILogs.ParentGrid.FindName("ClearLogsIcon") as Image ?? throw new InvalidOperationException("ClearLogsIcon is null.");
-
-
-			// Add image to the ExportLogsIcon
-			BitmapImage ExportLogsIconBitmapImage = new();
-			ExportLogsIconBitmapImage.BeginInit();
-			ExportLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExportIconBlack.png"));
-			ExportLogsIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			ExportLogsIconBitmapImage.EndInit();
-			ExportLogsIcon.Source = ExportLogsIconBitmapImage;
-
-
-			// Add image to the ClearLogsIcon
-			BitmapImage ClearLogsIconBitmapImage = new();
-			ClearLogsIconBitmapImage.BeginInit();
-			ClearLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ClearLogsIcon.png"));
-			ClearLogsIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			ClearLogsIconBitmapImage.EndInit();
-			ClearLogsIcon.Source = ClearLogsIconBitmapImage;
-
-
-			// Need to apply the template before we can set the toggle button to true
-			_ = AutoScrollToggleButton.ApplyTemplate();
+			ToggleButton AutoScrollToggleButton = (ToggleButton)GUILogs.ParentGrid.FindName("AutoScrollToggleButton");
+			Button ExportLogsButton = (Button)GUILogs.ParentGrid.FindName("ExportLogsButton");
+			GUILogs.MainLoggerTextBox = (TextBox)GUILogs.ParentGrid.FindName("MainLoggerTextBox");
+			GUILogs.scrollerForOutputTextBox = (ScrollViewer)GUILogs.ParentGrid.FindName("ScrollerForOutputTextBox");
+			Button ClearLogsButton = (Button)GUILogs.ParentGrid.FindName("ClearLogsButton");
 
 			// Set the AutoScrollToggleButton to checked initially when the view is loaded
 			AutoScrollToggleButton.IsChecked = true;
@@ -81,7 +53,6 @@ public partial class GUIMain
 			{
 				GUILogs.AutoScroll = false;
 			};
-
 
 			// Event handler for ExportLogsButton
 			ExportLogsButton.Click += (sender, e) =>
@@ -107,14 +78,12 @@ public partial class GUIMain
 				}
 			};
 
-
 			// Event handler for ClearLogsButton
 			ClearLogsButton.Click += (sender, e) =>
 			{
 				// Set the logs text box to an empty string, clearing all the logs from the GUI logger
 				GUILogs.MainLoggerTextBox.Text = string.Empty;
 			};
-
 
 			// Cache the view before setting it as the CurrentView
 			_viewCache["LogsView"] = GUILogs.View;

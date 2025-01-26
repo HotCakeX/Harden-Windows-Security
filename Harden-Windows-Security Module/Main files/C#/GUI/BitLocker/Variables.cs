@@ -7,7 +7,7 @@ using static HardenWindowsSecurity.BitLocker;
 
 namespace HardenWindowsSecurity;
 
-public static class GUIBitLocker
+internal static class GUIBitLocker
 {
 	internal static UserControl? View;
 

@@ -25,11 +25,8 @@ public partial class GUIMain
 				return;
 			}
 
-			// Construct the file path for the FileReputation view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "FileReputation.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "FileReputation.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIFileReputation.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -39,13 +36,12 @@ public partial class GUIMain
 
 			#region finding elements
 
-			Button BrowseForFileButton = GUIFileReputation.ParentGrid.FindName("BrowseForFileButton") as Button ?? throw new InvalidOperationException("BrowseForFileButton could not be found in the FileReputation view");
-			TextBox FileReputationTextBlock = GUIFileReputation.ParentGrid.FindName("FileReputationTextBlock") as TextBox ?? throw new InvalidOperationException("FileReputationTextBlock could not be found in the FileReputation view");
-			TextBox ReputationSourceTextBlock = GUIFileReputation.ParentGrid.FindName("ReputationSourceTextBlock") as TextBox ?? throw new InvalidOperationException("ReputationSourceTextBlock could not be found in the FileReputation view");
-			TextBox ValidityDurationTextBlock = GUIFileReputation.ParentGrid.FindName("ValidityDurationTextBlock") as TextBox ?? throw new InvalidOperationException("ValidityDurationTextBlock could not be found in the FileReputation view");
-			TextBox FileHandleTextBlock = GUIFileReputation.ParentGrid.FindName("FileHandleTextBlock") as TextBox ?? throw new InvalidOperationException("FileHandleTextBlock could not be found in the FileReputation view");
-			TextBox FilePathTextBlock = GUIFileReputation.ParentGrid.FindName("FilePathTextBlock") as TextBox ?? throw new InvalidOperationException("FilePathTextBlock could not be found in the FileReputation view");
-
+			Button BrowseForFileButton = (Button)GUIFileReputation.ParentGrid.FindName("BrowseForFileButton");
+			TextBox FileReputationTextBlock = (TextBox)GUIFileReputation.ParentGrid.FindName("FileReputationTextBlock");
+			TextBox ReputationSourceTextBlock = (TextBox)GUIFileReputation.ParentGrid.FindName("ReputationSourceTextBlock");
+			TextBox ValidityDurationTextBlock = (TextBox)GUIFileReputation.ParentGrid.FindName("ValidityDurationTextBlock");
+			TextBox FileHandleTextBlock = (TextBox)GUIFileReputation.ParentGrid.FindName("FileHandleTextBlock");
+			TextBox FilePathTextBlock = (TextBox)GUIFileReputation.ParentGrid.FindName("FilePathTextBlock");
 
 			#endregion
 

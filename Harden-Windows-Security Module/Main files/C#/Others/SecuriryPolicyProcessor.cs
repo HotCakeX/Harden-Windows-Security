@@ -38,7 +38,7 @@ internal static class SecurityPolicyChecker
 
 				// Ensure SystemSecurityPoliciesIniObject is not null and check for section
 				if (section is not null && // Check if section is not null
-					GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
+					GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out Dictionary<string, string>? sectionDict) &&
 					sectionDict is not null &&
 					path is not null && // Check if path is not null
 					sectionDict.TryGetValue(path, out string? value))

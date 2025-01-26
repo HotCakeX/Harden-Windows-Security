@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -28,28 +29,25 @@ public static partial class GUIMain
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("ASR Rules page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the file path for the ASRRules view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "ASRRules.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "ASRRules.xaml"));
 
 			// Parse the XAML content to create a UserControl
-			GUIASRRules.View = (UserControl)XamlReader.Parse(xamlContent);
+			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
 			// Find the Parent Grid
-			GUIASRRules.ParentGrid = (Grid)GUIASRRules.View.FindName("ParentGrid");
+			Grid? ParentGrid = (Grid)View.FindName("ParentGrid");
 
 			#region finding elements
 
-			Button RetrieveASRStatusButton = GUIASRRules.ParentGrid.FindName("RetrieveASRStatus") as Button ?? throw new InvalidOperationException("RetrieveASRStatus could not be found in the ASRRules view");
-			Button ApplyASRRulesButton = GUIASRRules.ParentGrid.FindName("ApplyASRRulesButton") as Button ?? throw new InvalidOperationException("ApplyASRRulesButton could not be found in the ASRRules view");
+			Button RetrieveASRStatusButton = (Button)ParentGrid.FindName("RetrieveASRStatus");
+			Button ApplyASRRulesButton = (Button)ParentGrid.FindName("ApplyASRRulesButton");
 
 			#endregion
 
@@ -68,9 +66,6 @@ public static partial class GUIMain
 					// Find the StackPanel inside the ListViewItem
 					if (item.Content is StackPanel stackPanel)
 					{
-						// Find the Label inside the StackPanel
-						// Label label = stackPanel.Children.OfType<Label>().FirstOrDefault();
-
 						// Find the ComboBox inside the StackPanel
 						ComboBox? comboBox = stackPanel.Children.OfType<ComboBox>().FirstOrDefault();
 
@@ -148,7 +143,7 @@ public static partial class GUIMain
 					Application.Current.Dispatcher.Invoke(() =>
 					{
 						// Get the ListViews
-						if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 || GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
+						if (ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 || ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
 						{
 							throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
 						}
@@ -162,7 +157,7 @@ public static partial class GUIMain
 					});
 
 					// Run the loop asynchronously in a different thread
-					await System.Threading.Tasks.Task.Run(() =>
+					await Task.Run(() =>
 					{
 
 						// if LGPO doesn't already exist in the working directory, then download it
@@ -245,8 +240,8 @@ public static partial class GUIMain
 					Application.Current.Dispatcher.Invoke(() =>
 					{
 						// Get the ListViews
-						if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 ||
-							GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
+						if (ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 ||
+							ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
 						{
 							throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
 						}
@@ -273,7 +268,7 @@ public static partial class GUIMain
 					});
 
 					// Run the loop asynchronously in a different thread
-					await System.Threading.Tasks.Task.Run(() =>
+					await Task.Run(() =>
 					{
 
 						// Get the MSFT_MpPreference WMI results and save them to the global variable GlobalVars.MDAVPreferencesCurrent
@@ -346,16 +341,14 @@ public static partial class GUIMain
 
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
-
 				}
 			};
 
-
 			// Cache the view before setting it as the CurrentView
-			_viewCache["ASRRulesView"] = GUIASRRules.View;
+			_viewCache["ASRRulesView"] = View;
 
 			// Set the CurrentView to the ASRRules view
-			CurrentView = GUIASRRules.View;
+			CurrentView = View;
 		}
 	}
 }

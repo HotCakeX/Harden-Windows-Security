@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace HardenWindowsSecurity;
 
-public static class GUIFileReputation
+internal static class GUIFileReputation
 {
 	internal static UserControl? View;
 

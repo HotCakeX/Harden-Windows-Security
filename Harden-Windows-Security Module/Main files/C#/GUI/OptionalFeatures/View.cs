@@ -34,17 +34,14 @@ public partial class GUIMain
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("Optional Features and Apps page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the file path for the OptionalFeatures view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "OptionalFeatures.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "OptionalFeatures.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIOptionalFeatures.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -86,8 +83,11 @@ public partial class GUIMain
 			{
 				foreach (CheckBox item in featureCheckboxes.Values)
 				{
-					item.IsChecked = true;
-
+					// Only enable the check boxes that are enabled. The Retrieve button disables ones that are not applicable.
+					if (item.IsEnabled)
+					{
+						item.IsChecked = true;
+					}
 				}
 			};
 
@@ -568,7 +568,6 @@ public partial class GUIMain
 				foreach (CheckBox item in GUIOptionalFeatures.appsCheckBoxes.Values)
 				{
 					item.IsChecked = true;
-
 				}
 			};
 
@@ -627,8 +626,7 @@ public partial class GUIMain
 						Content = name,
 						VerticalContentAlignment = VerticalAlignment.Center,
 						Padding = GUIOptionalFeatures.thicc,
-						ToolTip = $"Remove {name} from the system for all users",
-						Template = GUIOptionalFeatures.CustomCheckBoxTemplate
+						ToolTip = $"Remove {name} from the system for all users"
 					};
 
 					// Add the checkbox to the dictionary with its Content as the key
@@ -856,7 +854,6 @@ public partial class GUIMain
 							}
 					}
 
-
 				}
 				finally
 				{
@@ -867,13 +864,11 @@ public partial class GUIMain
 			};
 
 
-
 			// Cache the view before setting it as the CurrentView
 			_viewCache["OptionalFeaturesView"] = GUIOptionalFeatures.View;
 
 			// Set the CurrentView to the Protect view
 			CurrentView = GUIOptionalFeatures.View;
-
 		}
 	}
 }

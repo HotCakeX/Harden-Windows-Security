@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
 namespace HardenWindowsSecurity;
@@ -30,17 +29,14 @@ public partial class GUIMain
 
 			// if Admin privileges are not available, return and do not proceed any further
 			// Will prevent the page from being loaded since the CurrentView won't be set/changed
-			if (!UserPrivCheck.IsAdmin())
+			if (!Environment.IsPrivilegedProcess)
 			{
 				Logger.LogMessage("Exclusions page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
 				return;
 			}
 
-			// Construct the file path for the Exclusions view XAML
-			string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Exclusions.xaml");
-
 			// Read the XAML content from the file
-			string xamlContent = File.ReadAllText(xamlPath);
+			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Exclusions.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIExclusions.View = (UserControl)XamlReader.Parse(xamlContent);
@@ -48,32 +44,16 @@ public partial class GUIMain
 			// Find the Parent Grid
 			GUIExclusions.ParentGrid = (Grid)GUIExclusions.View.FindName("ParentGrid");
 
-
 			#region Finding other elements
 
-			ToggleButton? MicrosoftDefenderToggleButton = GUIExclusions.ParentGrid.FindName("MicrosoftDefenderToggleButton") as ToggleButton;
-			ToggleButton? ControlledFolderAccessToggleButton = GUIExclusions.ParentGrid.FindName("ControlledFolderAccessToggleButton") as ToggleButton;
-			ToggleButton? AttackSurfaceReductionRulesToggleButton = GUIExclusions.ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton") as ToggleButton;
-
-			TextBox? SelectedFilePaths = GUIExclusions.ParentGrid.FindName("SelectedFilePaths") as TextBox ?? throw new InvalidOperationException("Couldn't find SelectedFilePaths in the Exclusions view.");
-
-			Button? BrowseForFilesButton = GUIExclusions.ParentGrid.FindName("BrowseForFilesButton") as Button ?? throw new InvalidOperationException("Couldn't find BrowseForFilesButton in the Exclusions view.");
-
-			Button ApplyExclusionsButton = GUIExclusions.ParentGrid.FindName("ApplyExclusionsButton") as Button ?? throw new InvalidOperationException("ApplyExclusionsButton could not be found in the Exclusions view.");
-
-			// Finding the button's image to assign an icon to it
-			Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as Image ?? throw new InvalidOperationException("Couldn't find BrowseButtonIcon in the Exclusions view.");
-
-			// BrowseButtonIconImage
-			BitmapImage BrowseButtonIconImage = new();
-			BrowseButtonIconImage.BeginInit();
-			BrowseButtonIconImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "BrowseButtonIconBlack.png"));
-			BrowseButtonIconImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			BrowseButtonIconImage.EndInit();
-			BrowseButtonIcon.Source = BrowseButtonIconImage;
+			ToggleButton MicrosoftDefenderToggleButton = (ToggleButton)GUIExclusions.ParentGrid.FindName("MicrosoftDefenderToggleButton");
+			ToggleButton ControlledFolderAccessToggleButton = (ToggleButton)GUIExclusions.ParentGrid.FindName("ControlledFolderAccessToggleButton");
+			ToggleButton AttackSurfaceReductionRulesToggleButton = (ToggleButton)GUIExclusions.ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton");
+			TextBox? SelectedFilePaths = (TextBox)GUIExclusions.ParentGrid.FindName("SelectedFilePaths");
+			Button? BrowseForFilesButton = (Button)GUIExclusions.ParentGrid.FindName("BrowseForFilesButton");
+			Button ApplyExclusionsButton = (Button)GUIExclusions.ParentGrid.FindName("ApplyExclusionsButton");
 
 			#endregion
-
 
 			// Event handler for Browse Button
 			BrowseForFilesButton.Click += (sender, e) =>
@@ -141,7 +121,6 @@ public partial class GUIMain
 			}
 
 
-
 			// Set up the Click event handler for the main button
 			ApplyExclusionsButton.Click += async (sender, e) =>
 				{
@@ -158,9 +137,9 @@ public partial class GUIMain
 					// This way, we won't need to run the actual job in the dispatcher thread
 					Application.Current.Dispatcher.Invoke(() =>
 					{
-						GUIExclusions.MicrosoftDefenderToggleButtonStatus = MicrosoftDefenderToggleButton?.IsChecked ?? false;
-						GUIExclusions.ControlledFolderAccessToggleButtonStatus = ControlledFolderAccessToggleButton?.IsChecked ?? false;
-						GUIExclusions.AttackSurfaceReductionRulesToggleButtonStatus = AttackSurfaceReductionRulesToggleButton?.IsChecked ?? false;
+						GUIExclusions.MicrosoftDefenderToggleButtonStatus = MicrosoftDefenderToggleButton.IsChecked ?? false;
+						GUIExclusions.ControlledFolderAccessToggleButtonStatus = ControlledFolderAccessToggleButton.IsChecked ?? false;
+						GUIExclusions.AttackSurfaceReductionRulesToggleButtonStatus = AttackSurfaceReductionRulesToggleButton.IsChecked ?? false;
 
 					});
 

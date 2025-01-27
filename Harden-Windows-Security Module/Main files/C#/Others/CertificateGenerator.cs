@@ -6,7 +6,6 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace HardenWindowsSecurity;
 
-
 internal static class CertificateGenerator
 {
 

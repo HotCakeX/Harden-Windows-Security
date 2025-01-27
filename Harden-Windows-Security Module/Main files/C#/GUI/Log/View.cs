@@ -9,13 +9,11 @@ namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 
 		// Method to handle the Logs view, including loading
-		private void LogsView(object obj)
+		private void LogsView(object? obj)
 		{
 
 			// Check if the view is already cached
@@ -87,7 +85,6 @@ public partial class GUIMain
 			// Cache the view before setting it as the CurrentView
 			_viewCache["LogsView"] = GUILogs.View;
 
-			// Set the CurrentView to the Protect view
 			CurrentView = GUILogs.View;
 		}
 	}

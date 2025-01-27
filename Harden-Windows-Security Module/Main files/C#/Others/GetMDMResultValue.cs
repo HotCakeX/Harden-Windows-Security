@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity;
 
-public static class GetMDMResultValue
+internal static class GetMDMResultValue
 {
 	/// <summary>
 	/// Get the value of a specific MDM result in a resilient way so if the property or value don't exist then return false instead of throwing errors
@@ -11,7 +11,7 @@ public static class GetMDMResultValue
 	/// <param name="propertyName">The Name of the MDM object to use the filter the results by</param>
 	/// <param name="comparisonValue">This value will be used in comparison with the value property of the MDM object we find after filtering</param>
 	/// <returns></returns>
-	public static bool Get(string propertyName, string comparisonValue)
+	internal static bool Get(string propertyName, string comparisonValue)
 	{
 		try
 		{

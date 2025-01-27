@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
-#nullable disable
-
 namespace HardenWindowsSecurity;
 
 internal static partial class GUIProtectWinSecurity
@@ -102,7 +100,7 @@ internal static partial class GUIProtectWinSecurity
 		// Get the Categories status and add them to the variables
 		foreach (ListBoxItem categoryItem in categoriesItems)
 		{
-			if ((bool)((CheckBox)categoryItem.Content).IsChecked)
+			if ((bool)((CheckBox)categoryItem.Content).IsChecked!)
 			{
 				string categoryName = ((CheckBox)categoryItem.Content).Name;
 				SelectedCategories.Enqueue(categoryName);
@@ -112,7 +110,7 @@ internal static partial class GUIProtectWinSecurity
 		// Get the Sub-Categories status and add them to the variables
 		foreach (ListBoxItem subCategoryItem in subCategoriesItems)
 		{
-			if ((bool)((CheckBox)subCategoryItem.Content).IsChecked)
+			if ((bool)((CheckBox)subCategoryItem.Content).IsChecked!)
 			{
 				string subCategoryName = ((CheckBox)subCategoryItem.Content).Name;
 				SelectedSubCategories.Enqueue(subCategoryName);

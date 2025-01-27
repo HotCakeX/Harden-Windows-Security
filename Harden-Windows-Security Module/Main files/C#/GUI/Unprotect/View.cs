@@ -11,13 +11,10 @@ namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
-
 		// Method to handle the Unprotect view, including loading
-		private void UnprotectView(object obj)
+		private void UnprotectView(object? obj)
 		{
 			// Check if the view is already cached
 			if (_viewCache.TryGetValue("UnprotectView", out var cachedView))
@@ -38,54 +35,40 @@ public partial class GUIMain
 			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Unprotect.xaml"));
 
 			// Parse the XAML content to create a UserControl
-			GUIUnprotect.View = (UserControl)XamlReader.Parse(xamlContent);
+			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
+			// Finding the elements
+			Grid ParentGrid = (Grid)View.FindName("ParentGrid");
+			ComboBox AppControlPoliciesComboBox = (ComboBox)ParentGrid.FindName("AppControlPolicies");
+			ComboBox UnprotectCategoriesComboBox = (ComboBox)ParentGrid.FindName("UnprotectCategories");
+			Button RefreshDrivesButton = (Button)ParentGrid.FindName("RefreshDrivesForSelection");
+			Button RemoveProtectionsButton = (Button)ParentGrid.FindName("RemoveProtectionsButton");
+			Button DecryptButton = (Button)ParentGrid.FindName("DecryptButton");
+			ComboBox ListOfDrivesComboBox = (ComboBox)ParentGrid.FindName("ListOfDrivesComboBox");
 
-			#region Finding The Elements
-
-			// Find the Parent Grid
-			GUIUnprotect.ParentGrid = (Grid)GUIUnprotect.View.FindName("ParentGrid");
-
-			if (GUIUnprotect.ParentGrid.FindName("AppControlPolicies") is not ComboBox AppControlPoliciesComboBox)
-			{
-				throw new InvalidOperationException("AppControlPoliciesComboBox is null");
-			}
-
-			if (GUIUnprotect.ParentGrid.FindName("UnprotectCategories") is not ComboBox UnprotectCategoriesComboBox)
-			{
-				throw new InvalidOperationException("UnprotectCategoriesComboBox is null");
-			}
-
-			Button RefreshDrivesButton = (Button)GUIUnprotect.ParentGrid.FindName("RefreshDrivesForSelection");
-			Button RemoveProtectionsButton = (Button)GUIUnprotect.ParentGrid.FindName("RemoveProtectionsButton");
-			Button DecryptButton = (Button)GUIUnprotect.ParentGrid.FindName("DecryptButton");
-			ComboBox ListOfDrivesComboBox = (ComboBox)GUIUnprotect.ParentGrid.FindName("ListOfDrivesComboBox");
-
-			#endregion
-
-
-			// Register the RemoveProtectionsButton as an element that will be enabled/disabled based on current activity
+			// Register the elements that will be enabled/disabled based on current activity
 			ActivityTracker.RegisterUIElement(RemoveProtectionsButton);
-
-			// Add more button to activity tracker
 			ActivityTracker.RegisterUIElement(RefreshDrivesButton);
 			ActivityTracker.RegisterUIElement(DecryptButton);
 
+			byte? UnprotectCategoriesComboBoxSelection = null;
+			byte? AppControlPoliciesComboBoxSelection = null;
+
 			// Event handler for when the refresh button is pressed
 			RefreshDrivesButton.Click += async (sender, e) =>
-			{
-				await Task.Run(() =>
 				{
-					// Get the drives list
-					List<BitLocker.BitLockerVolume> allDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, false);
-
-					// Update the ComboBox with the drives using Application's Dispatcher
-					app.Dispatcher.Invoke(() =>
+					await Task.Run(() =>
 					{
-						ListOfDrivesComboBox.ItemsSource = allDrivesList.Select(D => $"{D.MountPoint}");
+						// Get the drives list
+						List<BitLocker.BitLockerVolume> allDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, false);
+
+						// Update the ComboBox with the drives using Application's Dispatcher
+						app.Dispatcher.Invoke(() =>
+						{
+							ListOfDrivesComboBox.ItemsSource = allDrivesList.Select(D => $"{D.MountPoint}");
+						});
 					});
-				});
-			};
+				};
 
 
 			// Event handler for the Decrypt Button
@@ -122,7 +105,7 @@ public partial class GUIMain
 						{
 							BitLocker.Disable(SelectedDriveFromComboBox);
 						}
-					}); // End of Async Thread
+					});
 
 
 					// mark as activity completed
@@ -169,8 +152,8 @@ public partial class GUIMain
 					Application.Current.Dispatcher.Invoke(() =>
 					{
 						// Store the values of the combo boxes in View variables since they need to be acquired through the Application dispatcher since they belong to the UI thread
-						GUIUnprotect.UnprotectCategoriesComboBoxSelection = (byte)UnprotectCategoriesComboBox.SelectedIndex;
-						GUIUnprotect.AppControlPoliciesComboBoxSelection = (byte)AppControlPoliciesComboBox.SelectedIndex;
+						UnprotectCategoriesComboBoxSelection = (byte)UnprotectCategoriesComboBox.SelectedIndex;
+						AppControlPoliciesComboBoxSelection = (byte)AppControlPoliciesComboBox.SelectedIndex;
 
 					});
 
@@ -189,7 +172,7 @@ public partial class GUIMain
 						}
 
 
-						switch (GUIUnprotect.UnprotectCategoriesComboBoxSelection)
+						switch (UnprotectCategoriesComboBoxSelection)
 						{
 							// Only Remove The Process Mitigations
 							case 0:
@@ -203,14 +186,14 @@ public partial class GUIMain
 							case 1:
 								{
 									// Downloads Defense Measures
-									if (GUIUnprotect.AppControlPoliciesComboBoxSelection == 0)
+									if (AppControlPoliciesComboBoxSelection == 0)
 									{
 										NotificationMessage = "Downloads Defense Measures AppControl Policy";
 
 										UnprotectWindowsSecurity.RemoveAppControlPolicies(true, false);
 									}
 									// Dangerous Script Hosts Blocking
-									else if (GUIUnprotect.AppControlPoliciesComboBoxSelection == 1)
+									else if (AppControlPoliciesComboBoxSelection == 1)
 									{
 										NotificationMessage = "Dangerous Script Hosts Blocking AppControl Policy";
 
@@ -261,10 +244,9 @@ public partial class GUIMain
 			};
 
 			// Cache the view before setting it as the CurrentView
-			_viewCache["UnprotectView"] = GUIUnprotect.View;
+			_viewCache["UnprotectView"] = View;
 
-			// Set the CurrentView to the Protect view
-			CurrentView = GUIUnprotect.View;
+			CurrentView = View;
 		}
 	}
 }

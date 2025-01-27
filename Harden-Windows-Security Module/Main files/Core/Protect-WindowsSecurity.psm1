@@ -290,7 +290,6 @@ Function Protect-WindowsSecurity {
         }
 
         [System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope 'Process'
-
         # Change the execution policy temporarily only for the current PowerShell session
         Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
 
@@ -298,26 +297,16 @@ Function Protect-WindowsSecurity {
         try { [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle }
         catch { [System.String]$CurrentPowerShellTitle = $null }
 
-        # Change the title of the Windows Terminal for PowerShell tab
         [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('❤️‍🔥Harden Windows Security❤️‍🔥')
 
         if ([System.Environment]::IsPrivilegedProcess) {
             [HardenWindowsSecurity.Miscellaneous]::RequirementsCheck()
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start($true, $false)
         }
-        try {
-            # Detecting whether GUI parameter is present or not
-            if ($PSBoundParameters.GUI.IsPresent) {
-                # For PowerShell debugging, loading and running the GUI here, instead of the Boot() method, will display the errors on the PS console properly
-                [HardenWindowsSecurity.GUIMain]::LoadMainXaml()
-                [System.Void] [HardenWindowsSecurity.GUIMain]::app.Run([HardenWindowsSecurity.GUIMain]::mainGUIWindow)
-                # [HardenWindowsSecurity.GUIHandOff]::Boot()
-            }
+        if ($PSBoundParameters.GUI.IsPresent) {
+            [HardenWindowsSecurity.GUIHandOff]::Boot()
+            Return # Return from the Begin block if GUI was used
         }
-        catch { $_; $_.Exception; $_.InvocationInfo; $ErrorsOccurred = $true }
-
-        # Return from the Begin block if GUI was used and then closed
-        if ($PSBoundParameters.GUI.IsPresent) { Return }
     }
     process {
         # doing a try-catch-finally block on the entire code so that when CTRL + C is pressed to forcefully exit the operation,
@@ -343,10 +332,8 @@ Function Protect-WindowsSecurity {
                 Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
                 Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
             }
-            # Change the title of the Windows Terminal for PowerShell tab
             [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('⏬ Downloading')
 
-            # Download the required files
             if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
                 [HardenWindowsSecurity.Logger]::LogMessage('Downloading the required files', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 Write-Progress -Activity 'Downloading the required files' -Status 'Downloading' -PercentComplete 20
@@ -394,20 +381,12 @@ Function Protect-WindowsSecurity {
         }
         catch {
             $ErrorsOccurred = $true
-            # Throw whatever error that occurred
             Throw $_
         }
         finally {
             Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed
-            if ($null -ne $CurrentPowerShellTitle) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Restoring the title of the PowerShell back to what it was prior to running the module', [HardenWindowsSecurity.LogTypeIntel]::Information)
-                [HardenWindowsSecurity.ChangePSConsoleTitle]::Set($CurrentPowerShellTitle)
-            }
-
-            if ($null -ne $CurrentExecutionPolicy) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Setting the execution policy back to what it was prior to running the module', [HardenWindowsSecurity.LogTypeIntel]::Information)
-                Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
-            }
+            if ($null -ne $CurrentPowerShellTitle) { [HardenWindowsSecurity.ChangePSConsoleTitle]::Set($CurrentPowerShellTitle) }
+            if ($null -ne $CurrentExecutionPolicy) { Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force }
 
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
             [HardenWindowsSecurity.Miscellaneous]::CleanUp()

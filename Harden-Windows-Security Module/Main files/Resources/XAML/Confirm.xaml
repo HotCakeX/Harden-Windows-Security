@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" FontSize="16">
-    <Grid x:Name="ParentGrid">
+    <Grid>
         <Grid Margin="30,20,20,20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -281,10 +281,10 @@
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Row="0" HorizontalAlignment="Right">
                 <Label Content="Optional: Select Categories to Verify" VerticalAlignment="Top" Margin="50,0,50,10"/>
                 <!-- Compliance Categories Selection ComboBox -->
-                <ComboBox x:Name="ComplianceCategoriesSelectionComboBox" Width="200" Margin="50,0,50,0" VerticalAlignment="Bottom"/>
+                <ComboBox x:Name="ComplianceCategoriesSelectionComboBox" Margin="50,0,50,0" SelectedIndex="0" VerticalAlignment="Bottom"/>
             </StackPanel>
-            <TextBlock x:Name="TotalCountTextBlock" Grid.Row="1" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBlock Text="Filter by" Grid.Row="1" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <TextBlock x:Name="TotalCountTextBlock" Grid.Row="1" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock Text="Filter by" Grid.Row="1" FontWeight="SemiBold" Margin="0,0,215,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <!--Filter Textbox-->
             <Grid Width="200" HorizontalAlignment="Right" Grid.Row="1">
                 <TextBlock Margin="15 0" VerticalAlignment="Center" IsHitTestVisible="False"
@@ -292,15 +292,18 @@
                         Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty}" />
                 <TextBox Name="textBoxFilter" />
             </Grid>
-
-            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,20">
-                <ToggleButton x:Name="CompliantItemsToggleButton" Margin="0,0,20,0" Content="Compliant Items"/>
-                <ToggleButton x:Name="NonCompliantItemsToggleButton" Margin="0,0,20,0" VerticalAlignment="Center"
-               HorizontalAlignment="Center" Content="Non-Compliant Items"/>
-                <TextBlock x:Name="TotalCurrentlyDisplayedSecOps" FontSize="15" FontWeight="SemiBold"
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,15,0,15">
+                <ToggleButton x:Name="CompliantItemsToggleButton" Margin="0,0,20,0" Content="Compliant Items" IsChecked="True"/>
+                <ToggleButton x:Name="NonCompliantItemsToggleButton" Margin="0,0,20,0" Content="Non-Compliant Items" IsChecked="True"/>
+                <Button x:Name="ExportResultsButton" Margin="0,0,20,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontFamily="{DynamicResource SymbolThemeFontFamily}" VerticalAlignment="Center" FontSize="20" Text="&#xEDE1;"/>
+                        <TextBlock Text="Export Results" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock x:Name="TotalCurrentlyDisplayedSecOps" FontWeight="SemiBold" Text="Showing 0 Items"
 HorizontalAlignment="Right" VerticalAlignment="Center"/>
             </StackPanel>
-
             <!--SecOps Data Grid-->
             <DataGrid Grid.Row="3" AutoGenerateColumns="False" x:Name="SecOpsDataGrid" CanUserAddRows="False">
                 <DataGrid.Columns>

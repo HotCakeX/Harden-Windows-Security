@@ -46,18 +46,15 @@ public partial class GUIMain
 			// Parse the XAML content to create a UserControl object
 			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
-			// Find the SecOpsDataGrid
+			// Finding elements
 			DataGrid SecOpsDataGrid = (DataGrid)View.FindName("SecOpsDataGrid");
-
 			TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (TextBlock)View.FindName("TotalCurrentlyDisplayedSecOps");
-
-			#region ToggleButtons
 			ToggleButton CompliantItemsToggleButton = (ToggleButton)View.FindName("CompliantItemsToggleButton");
 			ToggleButton NonCompliantItemsToggleButton = (ToggleButton)View.FindName("NonCompliantItemsToggleButton");
-
-			CompliantItemsToggleButton.IsChecked = true;
-			NonCompliantItemsToggleButton.IsChecked = true;
-			#endregion
+			Button ExportResultsButton = (Button)View.FindName("ExportResultsButton");
+			TextBox textBoxFilter = (TextBox)View.FindName("textBoxFilter");
+			TextBlock TotalCountTextBlock = (TextBlock)View.FindName("TotalCountTextBlock");
+			ComboBox ComplianceCategoriesSelectionComboBox = (ComboBox)View.FindName("ComplianceCategoriesSelectionComboBox");
 
 			// Initialize an empty security options collection
 			ObservableCollection<SecOp> SecOpsObservableCollection = [];
@@ -73,7 +70,7 @@ public partial class GUIMain
 			void UpdateCurrentVisibleItemsTextBlock()
 			{
 				// Get the count of all of the current items in the CollectionView
-				int totalDisplayedItemsCount = SecOpsCollectionView!.OfType<SecOp>().Count();
+				int totalDisplayedItemsCount = SecOpsCollectionView.OfType<SecOp>().Count();
 
 				// Display the count in a text box in the GUI
 				TotalCurrentlyDisplayedSecOpsTextBlock.Text = $"Showing {totalDisplayedItemsCount} Items";
@@ -83,7 +80,7 @@ public partial class GUIMain
 			void ApplyFilters(string filterText, bool includeCompliant, bool includeNonCompliant)
 			{
 				// Apply a filter to the collection view based on the filter text and toggle buttons
-				SecOpsCollectionView!.Filter = memberObj =>
+				SecOpsCollectionView.Filter = memberObj =>
 				{
 					if (memberObj is SecOp member)
 					{
@@ -108,9 +105,6 @@ public partial class GUIMain
 
 				UpdateCurrentVisibleItemsTextBlock();
 			}
-
-			// Finding the textboxFilter element
-			TextBox textBoxFilter = (TextBox)View.FindName("textBoxFilter");
 
 			#region event handlers for data filtration
 			// Attach event handlers to the text box filter and toggle buttons
@@ -149,101 +143,83 @@ public partial class GUIMain
 
 			#endregion
 
-
 			#region ComboBox
-			// Finding the ComplianceCategoriesSelectionComboBox ComboBox
-			ComboBox ComplianceCategoriesSelectionComboBox = (ComboBox)View.FindName("ComplianceCategoriesSelectionComboBox");
 
 			// Get the valid compliance category names
 			List<string> catsList = [.. Enum.GetNames<ComplianceCategories>()];
 
-			// Add an empty item to the list at the beginning
-			catsList.Insert(0, "");
+			// Add an item to the list at the beginning to be the default value
+			catsList.Insert(0, "All Categories");
 
 			// Set the ComboBox's ItemsSource to the updated list
 			ComplianceCategoriesSelectionComboBox.ItemsSource = catsList;
 
 			#endregion
 
-			// Register the RefreshButton as an element that will be enabled/disabled based on current activity
+			// Register the elements that will be enabled/disabled based on current global activity
 			ActivityTracker.RegisterUIElement(RefreshButton);
+			ActivityTracker.RegisterUIElement(ComplianceCategoriesSelectionComboBox);
 
 			// Set up the Click event handler for the Refresh button
 			RefreshButton.Click += async (sender, e) =>
 			{
-
 				// Only continue if there is no activity other places
-				if (!ActivityTracker.IsActive)
+				if (ActivityTracker.IsActive)
 				{
-					// mark as activity started
-					ActivityTracker.IsActive = true;
-
-					// Clear the current security options before starting data generation
-					SecOpsObservableCollection.Clear();
-					SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
-
-					// Disable the Refresh button while processing
-					// Set text blocks to empty while new data is being generated
-					Application.Current.Dispatcher.Invoke(() =>
-						{
-							TextBlock TotalCountTextBlock = (TextBlock)View.FindName("TotalCountTextBlock");
-
-							if (TotalCountTextBlock is not null)
-							{
-								// Update the text of the TextBlock to show the total count
-								TotalCountTextBlock.Text = "Loading...";
-							}
-
-							UpdateCurrentVisibleItemsTextBlock();
-						});
-
-					// Run the method asynchronously in a different thread
-					await Task.Run(() =>
-						{
-							// Get fresh data for compliance checking
-							Initializer.Initialize(null, true);
-
-							// initialize the variable to null
-							string? SelectedCategory = null;
-
-							// Use the App dispatcher since this is being done in a different thread
-							app.Dispatcher.Invoke(() =>
-							{
-								if (ComplianceCategoriesSelectionComboBox.SelectedItem is not null)
-								{
-									// Get the currently selected value in the Compliance Checking category ComboBox if it exists
-									var SelectedComplianceCategories = ComplianceCategoriesSelectionComboBox.SelectedItem;
-
-									// Get the currently selected compliance category
-									SelectedCategory = SelectedComplianceCategories?.ToString();
-								}
-							});
-
-							// if user selected a category for compliance checking
-							if (!string.IsNullOrEmpty(SelectedCategory))
-							{
-								// Perform the compliance check using the selected compliance category
-								InvokeConfirmation.Invoke([SelectedCategory]);
-							}
-							else
-							{
-								// Perform the compliance check for all categories
-								InvokeConfirmation.Invoke(null);
-							}
-						});
-
-					// After InvokeConfirmation is completed, update the security options collection
-					await Application.Current.Dispatcher.InvokeAsync(() =>
-						{
-							LoadMembers(); // Load updated security options
-							RefreshButton.IsChecked = false; // Uncheck the Refresh button
-
-							UpdateCurrentVisibleItemsTextBlock();
-						});
-
-					// mark as activity completed
-					ActivityTracker.IsActive = false;
+					return;
 				}
+
+				// mark as activity started
+				ActivityTracker.IsActive = true;
+
+				// Clear the current security options before starting data generation
+				SecOpsObservableCollection.Clear();
+				SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
+
+				// Set text blocks to empty while new data is being generated
+				Application.Current.Dispatcher.Invoke(() =>
+					{
+						TotalCountTextBlock.Text = "Loading...";
+						CompliantItemsToggleButton.Content = "Compliant Items";
+						NonCompliantItemsToggleButton.Content = "Non-Compliant Items";
+
+						UpdateCurrentVisibleItemsTextBlock();
+					});
+
+				// Run the method asynchronously in a different thread
+				await Task.Run(() =>
+					{
+						// Get fresh data for compliance checking
+						Initializer.Initialize(null, true);
+
+						// Get the currently selected compliance category - Use the App dispatcher since this is being done in a different thread
+						string SelectedCategory = app.Dispatcher.Invoke(() => ComplianceCategoriesSelectionComboBox.SelectedItem.ToString()!);
+
+						// If all categories is selected which is the default
+						if (string.Equals(SelectedCategory, "All Categories", StringComparison.OrdinalIgnoreCase))
+						{
+							// Perform the compliance check for all categories
+							InvokeConfirmation.Invoke(null);
+						}
+						// if user selected a category for compliance checking
+						else
+						{
+							// Perform the compliance check using the selected compliance category
+							InvokeConfirmation.Invoke([SelectedCategory]);
+						}
+					});
+
+				// After InvokeConfirmation is completed, update the security options collection
+				await Application.Current.Dispatcher.InvokeAsync(() =>
+					{
+						LoadMembers(); // Load updated security options
+						RefreshButton.IsChecked = false; // Uncheck the Refresh button
+
+						UpdateCurrentVisibleItemsTextBlock();
+					});
+
+				// mark as activity completed
+				ActivityTracker.IsActive = false;
 			};
 
 			/// <summary>
@@ -289,17 +265,11 @@ public partial class GUIMain
 			/// <param name="ShowNotification">If set to true, this method will display end of confirmation toast notification</param>
 			void UpdateTotalCount(bool ShowNotification)
 			{
-
 				// calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
 				int totalCount = GlobalVars.FinalMegaObject.Values.Sum(list => list.Count);
 
-				// Find the TextBlock used to display the total count
-				TextBlock TotalCountTextBlock = (TextBlock)View.FindName("TotalCountTextBlock");
-				if (TotalCountTextBlock is not null)
-				{
-					// Update the text of the TextBlock to show the total count
-					TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
-				}
+				// Update the text of the TextBlock to show the total count
+				TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
 
 				// Get the count of the compliant items
 				string CompliantItemsCount = SecOpsCollectionView.SourceCollection
@@ -322,6 +292,82 @@ public partial class GUIMain
 				{
 					ToastNotification.Show(ToastNotification.Type.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
 				}
+			}
+
+			// Event handler for the Export Results button
+			ExportResultsButton.Click += async (sender, e) =>
+			{
+				try
+				{
+					ExportResultsButton.IsEnabled = false;
+
+					await Task.Run(() =>
+					{
+						// Show the save file dialog to let the user pick the save location
+						Microsoft.Win32.SaveFileDialog saveFileDialog = new()
+						{
+							FileName = $"Harden Windows Security Compliance Check Results at {DateTime.Now:yyyy-MM-dd HH-mm-ss}", // Default file name
+							DefaultExt = ".csv",                // Default file extension
+							Filter = "CSV File (.csv)|*.csv"    // Filter files by extension
+						};
+
+						// Show the dialog and check if the user picked a file
+						bool? result = saveFileDialog.ShowDialog();
+
+						if (result == true)
+						{
+							// Get the selected file path from the dialog
+							string filePath = saveFileDialog.FileName;
+
+							ExportSecOpsToCsv(filePath, SecOpsObservableCollection);
+
+							Logger.LogMessage($"Compliance check results have been successfully exported.", LogTypeIntel.InformationInteractionRequired);
+						}
+					});
+				}
+				finally
+				{
+					ExportResultsButton.IsEnabled = true;
+				}
+			};
+
+
+			// To Export the results of the compliance checking to a file
+			void ExportSecOpsToCsv(string filePath, ObservableCollection<SecOp> secOps)
+			{
+				// Defining the header row
+				string[] headers = ["FriendlyName", "Compliant", "Value", "Name", "Category", "Method"];
+
+				// Open the file for writing
+				using StreamWriter writer = new(filePath);
+
+				// Write the header row
+				writer.WriteLine(string.Join(",", headers.Select(header => $"\"{header}\"")));
+
+				// Write each SecOp object as a row in the CSV
+				foreach (SecOp secOp in secOps)
+				{
+					string[] row = [
+						EscapeForCsv(secOp.FriendlyName),
+						EscapeForCsv(secOp.Compliant.ToString(CultureInfo.InvariantCulture)),
+						EscapeForCsv(secOp.Value),
+						EscapeForCsv(secOp.Name),
+						EscapeForCsv(secOp.Category.ToString()),
+						EscapeForCsv(secOp.Method)
+					];
+
+					writer.WriteLine(string.Join(",", row));
+				}
+			}
+
+			// Local method to enclose values in double quotes
+			string EscapeForCsv(string? value)
+			{
+				// If the value is null, empty or whitespace, return an empty string
+				if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+
+				// Otherwise, escape double quotes and wrap the value in double quotes
+				return $"\"{value.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"";
 			}
 
 			// Cache the Confirm view for future use

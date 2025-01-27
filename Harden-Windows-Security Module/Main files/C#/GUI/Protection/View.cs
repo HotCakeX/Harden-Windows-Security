@@ -609,9 +609,7 @@ public partial class GUIMain
 
 								#region Display a Welcome message
 
-								string nameToDisplay = (!string.IsNullOrWhiteSpace(GlobalVars.userFullName)) ? GlobalVars.userFullName : GlobalVars.userName;
-
-								Logger.LogMessage(Environment.IsPrivilegedProcess ? $"Hello {nameToDisplay}, you have Administrator privileges" : $"Hello {nameToDisplay}, you don't have Administrator privileges, some categories are disabled", LogTypeIntel.Information);
+								Logger.LogMessage(Environment.IsPrivilegedProcess ? $"Hello {Environment.UserName}, you have Administrator privileges" : $"Hello {Environment.UserName}, you don't have Administrator privileges, some categories are disabled", LogTypeIntel.Information);
 								#endregion
 
 								// Use Dispatcher.Invoke to update the UI thread

@@ -7,7 +7,8 @@ namespace HardenWindowsSecurity;
 internal static class SSHConfigurations
 {
 
-	private static readonly string SSHClientUserConfigDirectory = Path.Combine(Environment.GetEnvironmentVariable("SystemDrive")!, "Users", GlobalVars.userName, ".ssh");
+	private static readonly string UserDirectory = Path.Combine(GlobalVars.SystemDrive, "Users", Environment.UserName);
+	private static readonly string SSHClientUserConfigDirectory = Path.Combine(UserDirectory, ".ssh");
 	private static readonly string SSHClientUserConfigFile = Path.Combine(SSHClientUserConfigDirectory, "config");
 
 	// Secure MACs configurations for SSH
@@ -17,6 +18,13 @@ internal static class SSHConfigurations
 	{
 
 		Logger.LogMessage("Checking for SSH client user configuration", LogTypeIntel.Information);
+
+		// First ensure the detected username is valid so we don't create a directory in non-existent user directory
+		if (!Path.Exists(UserDirectory))
+		{
+			Logger.LogMessage($"User directory not found at {UserDirectory} because the username {Environment.UserName} was not valid, skipping SSH client configuration check.", LogTypeIntel.Warning);
+			return;
+		}
 
 		// Ensure the SSH client directory exists
 		if (!Directory.Exists(SSHClientUserConfigDirectory))

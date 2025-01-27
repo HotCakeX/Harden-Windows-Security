@@ -6,7 +6,7 @@ namespace HardenWindowsSecurity;
 public static partial class WindowsNetworking
 {
 	/// <summary>
-	///  Runs the Windows Networking Hardening category
+	/// Runs the Windows Networking Hardening category
 	/// </summary>
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()

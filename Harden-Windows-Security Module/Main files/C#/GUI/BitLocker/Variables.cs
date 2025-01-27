@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using static HardenWindowsSecurity.BitLocker;
 
@@ -76,7 +75,6 @@ internal static class GUIBitLocker
 
 		// List of BitLockerVolumeViewModel objects
 		List<BitLockerVolumeViewModel> viewModelList = [];
-
 
 		foreach (BitLockerVolume Volume in AllBitLockerVolumes)
 		{
@@ -153,8 +151,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
 				}
 
 				// Notify the user
-				_ = MessageBox.Show($"BitLocker Recovery Keys have been successfully backed up to {filePath}");
-
+				Logger.LogMessage($"BitLocker Recovery Keys have been successfully backed up to {filePath}", LogTypeIntel.InformationInteractionRequired);
 			}
 		}
 

@@ -100,18 +100,10 @@ public static class ControlledFolderAccessHandler
 
 		if (PowerCFG && !PowerCfgAdded)
 		{
-			// Get the powercfg.exe path
-			string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
-
-			if (string.IsNullOrEmpty(systemDrive))
-			{
-				throw new InvalidOperationException("SystemDrive environment variable is not set.");
-			}
-
 			Logger.LogMessage("Temporarily adding the PowerCfg.exe executable to the Controlled Folder Access allowed apps list to set Hibernate type to full in BitLocker category.", LogTypeIntel.Information);
 
 			// Add the powercfg.exe path to the CFA Exclusion list
-			_ = CFAExclusionsToBeAdded.Add(Path.Combine(systemDrive, "Windows", "System32", "powercfg.exe"));
+			_ = CFAExclusionsToBeAdded.Add(Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "powercfg.exe"));
 
 			PowerCfgAdded = true;
 		}

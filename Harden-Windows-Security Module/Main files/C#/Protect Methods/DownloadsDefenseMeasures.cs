@@ -57,6 +57,7 @@ public static partial class DownloadsDefenseMeasures
 				// Get the System Downloads folder path
 				int result = NativeMethods.SHGetKnownFolderPath(ref FolderDownloads, 0, IntPtr.Zero, out pathPtr);
 
+				// E.g., this will return non-zero if running as SYSTEM
 				if (result is 0) // S_OK
 				{
 					downloadsPath = Marshal.PtrToStringUni(pathPtr);

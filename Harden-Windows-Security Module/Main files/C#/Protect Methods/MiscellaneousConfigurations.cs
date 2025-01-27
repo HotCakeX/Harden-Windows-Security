@@ -56,17 +56,16 @@ public static partial class MiscellaneousConfigurations
 		// auditpol /list /subcategory:* /r
 
 		// Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-		string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? throw new ArgumentNullException("SystemDrive cannot be null.");
 
 		// Create the directory if it doesn't exist
-		if (!Directory.Exists(Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script")))
+		if (!Directory.Exists(Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script")))
 		{
-			_ = Directory.CreateDirectory(Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script"));
+			_ = Directory.CreateDirectory(Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script"));
 		}
 
 		foreach (string file in Directory.GetFiles(Path.Combine(GlobalVars.path, "Resources", "EventViewerCustomViews")))
 		{
-			File.Copy(file, Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script", Path.GetFileName(file)), true);
+			File.Copy(file, Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script", Path.GetFileName(file)), true);
 		}
 
 		SSHConfigurations.SecureMACs();

@@ -18,16 +18,8 @@ internal static class GetOneDriveDirectories
 		// List to store the OneDrive directories found
 		List<string> directoriesList = [];
 
-		// Retrieve the system drive
-		string systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? string.Empty;
-
-		if (string.IsNullOrEmpty(systemDrive))
-		{
-			throw new InvalidOperationException("SystemDrive environment variable is not set.");
-		}
-
 		// Combine system drive with "Users" to get the path to the Users directory
-		string usersPath = Path.Combine(systemDrive, "Users");
+		string usersPath = Path.Combine(GlobalVars.SystemDrive, "Users");
 
 		try
 		{

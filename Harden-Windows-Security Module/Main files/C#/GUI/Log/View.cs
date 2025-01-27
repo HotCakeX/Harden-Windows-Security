@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
@@ -74,7 +73,7 @@ public partial class GUIMain
 					// Write the text content from the TextBox to the file
 					File.WriteAllText(filePath, GUILogs.MainLoggerTextBox.Text);
 
-					_ = MessageBox.Show("Logs successfully saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+					Logger.LogMessage("Logs successfully saved.", LogTypeIntel.InformationInteractionRequired);
 				}
 			};
 

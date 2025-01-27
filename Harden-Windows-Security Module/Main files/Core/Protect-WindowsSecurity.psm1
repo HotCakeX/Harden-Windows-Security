@@ -14,7 +14,6 @@ Function Protect-WindowsSecurity {
                     },
                     $false # The recurse flag, whether to search nested scriptblocks or not.
                 ).Value
-
                 ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX) | ForEach-Object -Process {
                     if ($_ -notin $Existing) {
                         $_
@@ -418,17 +417,18 @@ Function Protect-WindowsSecurity {
                 [HardenWindowsSecurity.Logger]::LogMessage("Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds", [HardenWindowsSecurity.LogTypeIntel]::Information)
             }
 
-            # If no errors Occurred, recycle the current session for there can't be more than 1 Application in the same App Domain
+            # If no errors occurred, recycle the current session for there can't be more than 1 Application in the same App Domain
             if (!$ErrorsOccurred) { pwsh.exe -NoProfile -NoLogo -NoExit }
         }
     }
     <#
 .SYNOPSIS
     Applies the hardening measures described in the GitHub readme.
+    Use the GUI for much better experience: Protect-WindowsSecurity -GUI
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security
 .DESCRIPTION
-    Applies the hardening measures on a Windows client OS. You can run this cmdlet in interactive or headless/unattended mode.
+    Applies the hardening security measures on Windows OS. You can run this cmdlet in interactive or headless/unattended mode.
     In interactive mode, you will be prompted for confirmation before applying each category and sub-category.
     In headless/unattended mode, you can specify which categories to apply without the need for user interaction.
     When running in headless/unattended mode, you can control the sub-categories of each category by using the following switch parameters:
@@ -503,7 +503,7 @@ Function Protect-WindowsSecurity {
 .EXAMPLE
     Protect-WindowsSecurity -GUI
 
-    This example will allow you to use the Graphical User Interface.
+    This example will allow you to use the Graphical User Interface. (highly recommended)
 .EXAMPLE
     Protect-WindowsSecurity -GUI -Offline
 

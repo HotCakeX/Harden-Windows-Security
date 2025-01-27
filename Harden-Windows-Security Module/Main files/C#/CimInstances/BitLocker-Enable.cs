@@ -345,7 +345,7 @@ internal partial class BitLocker
 
 
 		// Make sure the OS Drive is encrypted first, or else we would add recovery password key protector and then get error about the same problem during auto-unlock key protector enablement
-		BitLockerVolume OSDriveVolumeInfo = GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+		BitLockerVolume OSDriveVolumeInfo = GetEncryptedVolumeInfo(GlobalVars.SystemDrive);
 		if (OSDriveVolumeInfo.ProtectionStatus is not ProtectionStatus.Protected)
 		{
 			Logger.LogMessage($"Operation System drive must be encrypted first before encrypting Non-OS drives.", LogTypeIntel.ErrorInteractionRequired);

@@ -319,7 +319,14 @@ public partial class GUIMain
 							// Get the selected file path from the dialog
 							string filePath = saveFileDialog.FileName;
 
-							ExportSecOpsToCsv(filePath, SecOpsObservableCollection);
+							try
+							{
+								ExportSecOpsToCsv(filePath, SecOpsObservableCollection);
+							}
+							catch (Exception ex)
+							{
+								Logger.LogMessage($"Failed to export the results to the file: {ex.Message}", LogTypeIntel.ErrorInteractionRequired);
+							}
 
 							Logger.LogMessage($"Compliance check results have been successfully exported.", LogTypeIntel.InformationInteractionRequired);
 						}

@@ -128,7 +128,7 @@ public static class UnprotectWindowsSecurity
 		#region Custom event viewer views
 
 		// Defining the directory path to the Harden Windows Security's event viewer custom views
-		string directoryPath = Path.Combine(Environment.GetEnvironmentVariable("SystemDrive")!, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
+		string directoryPath = Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
 
 		// Check if the directory exists
 		if (Directory.Exists(directoryPath))

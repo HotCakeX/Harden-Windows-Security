@@ -12,12 +12,11 @@ public partial class ConfirmSystemComplianceMethods
 	{
 		// Assuming securityPolicyInfPath is defined in your environment
 		string securityPolicyInfPath = GlobalVars.securityPolicyInfPath;
-		string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? throw new InvalidOperationException("SystemDrive environment variable is not set.");
 
 		// Create the process start info
 		ProcessStartInfo processStartInfo = new()
 		{
-			FileName = $"{systemDrive}\\Windows\\System32\\Secedit.exe",
+			FileName = $"{GlobalVars.SystemDrive}\\Windows\\System32\\Secedit.exe",
 			Arguments = $"/export /cfg \"{securityPolicyInfPath}\"",
 			// RedirectStandardOutput = false,
 			RedirectStandardError = true, // Redirect the StandardError stream

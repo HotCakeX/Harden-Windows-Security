@@ -26,9 +26,9 @@
 
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block abuse of exploited vulnerable signed drivers" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block abuse of exploited vulnerable signed drivers" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockAbuseOfExploitedVulnerableSignedDrivers"
-                        Width="90" Margin="10,0,0,0">
+                        Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -38,9 +38,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Adobe Reader from creating child processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Adobe Reader from creating child processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockAdobeReaderFromCreatingChildProcesses"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -50,9 +50,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block all Office applications from creating child processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block all Office applications from creating child processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockAllOfficeApplicationsFromCreatingChildProcesses"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -62,9 +62,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block credential stealing from the Windows local security authority subsystem" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block credential stealing from the Windows local security authority subsystem" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockCredentialStealingFromTheWindowsLocalSecurityAuthoritySubsystem"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -74,9 +74,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block executable content from email client and webmail" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block executable content from email client and webmail" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockExecutableContentFromEmailClientAndWebmail"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -86,9 +86,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block executable files from running unless they meet a prevalence, age, or trusted list criterion" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block executable files from running unless they meet a prevalence, age, or trusted list criterion" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockExecutableFilesFromRunningUnlessTheyMeetAPrevalenceAgeOrTrustedListCriterion"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -98,9 +98,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block execution of potentially obfuscated scripts" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block execution of potentially obfuscated scripts" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockExecutionOfPotentiallyObfuscatedScripts"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -110,9 +110,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block JavaScript or VBScript from launching downloaded executable content" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block JavaScript or VBScript from launching downloaded executable content" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -122,9 +122,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Office applications from creating executable content" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Office applications from creating executable content" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockOfficeApplicationsFromCreatingExecutableContent"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -134,9 +134,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Office applications from injecting code into other processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Office applications from injecting code into other processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -148,9 +148,9 @@
         <ListView x:Name="ASRRuleSet2" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" BorderThickness="0" Margin="0,40,0,0" ScrollViewer.PanningMode="Both">
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Office communication application from creating child processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Office communication application from creating child processes" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockOfficeCommunicationApplicationFromCreatingChildProcesses"
-                 Width="90" Margin="10,0,0,0">
+                 Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -160,9 +160,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block persistence through WMI event subscription" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block persistence through WMI event subscription" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockPersistenceThroughWMIEventSubscription"
-      Width="90" Margin="10,0,0,0">
+      Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -172,9 +172,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block process creations originating from PSExec and WMI commands" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block process creations originating from PSExec and WMI commands" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockProcessCreationsOriginatingFromPSExecAndWMICommands"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -184,9 +184,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block rebooting machine in Safe Mode (preview)" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block rebooting machine in Safe Mode (preview)" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockRebootingMachineInSafeMode"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -196,9 +196,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block untrusted and unsigned processes that run from USB" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block untrusted and unsigned processes that run from USB" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockUntrustedAndUnsignedProcessesThatRunFromUSB"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -208,9 +208,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block use of copied or impersonated system tools (preview)" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block use of copied or impersonated system tools (preview)" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockUseOfCopiedOrImpersonatedSystemTools"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -220,9 +220,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Webshell creation for Servers" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Webshell creation for Servers" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockWebshellCreationForServers"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -232,9 +232,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Win32 API calls from Office macros" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Block Win32 API calls from Office macros" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="BlockWin32APICallsFromOfficeMacros"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -244,9 +244,9 @@
             </ListViewItem>
             <ListViewItem Margin="0,5,0,5" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                    <TextBlock Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Use advanced protection against ransomware" TextWrapping="Wrap" Margin="0,0,10,0"/>
+                    <TextBlock Width="250" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Use advanced protection against ransomware" TextWrapping="Wrap" Margin="0,0,10,0"/>
                     <ComboBox x:Name="UseAdvancedProtectionAgainstRansomware"
-             Width="90" Margin="10,0,0,0">
+             Width="110" Margin="10,0,0,0">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />

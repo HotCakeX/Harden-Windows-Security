@@ -31,7 +31,7 @@ Function Unprotect-WindowsSecurity {
         # Prompt for confirmation before proceeding
         if ($PSCmdlet.ShouldProcess('This PC', 'Removing the Hardening Measures Applied by the Protect-WindowsSecurity Cmdlet')) {
 
-            # doing a try-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
+            # doing a try-finally block on the entire section so that when CTRL + C is pressed to forcefully exit the script,
             # or break is passed, clean up will still happen for secure exit
             try {
                 Write-Progress -Activity 'Removing protections from Windows' -Status 'Unprotecting' -PercentComplete 50
@@ -69,11 +69,11 @@ Function Unprotect-WindowsSecurity {
     }
     <#
 .SYNOPSIS
-    Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
+    Removes the hardening security measures from the system. Use the GUI for much better experience: Protect-WindowsSecurity -GUI
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 .DESCRIPTION
-    Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
+    Removes the hardening security measures from the system. Use the GUI for much better experience: Protect-WindowsSecurity -GUI
 .PARAMETER OnlyProcessMitigations
     Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
 .PARAMETER WDACPoliciesToRemove

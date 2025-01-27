@@ -45,7 +45,7 @@ public static class BitLockerSettings
 		// Only perform the check if the system is not a virtual machine
 		var isVirtualMachine = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "IsVirtualMachine");
 		// Get the OS Drive encryption status
-		BitLocker.BitLockerVolume volumeInfo = BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+		BitLocker.BitLockerVolume volumeInfo = BitLocker.GetEncryptedVolumeInfo(GlobalVars.SystemDrive);
 
 		// Only attempt to set Hibernate file size to full if the OS drive is BitLocker encrypted
 		// And system is not virtual machine

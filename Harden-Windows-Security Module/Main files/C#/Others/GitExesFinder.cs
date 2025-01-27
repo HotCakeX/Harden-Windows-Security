@@ -6,11 +6,14 @@ namespace HardenWindowsSecurity;
 
 internal static class GitExesFinder
 {
-	// This method searches for .exe files in the specified path for Standalone Git program and returns a list of FileInfo objects
+	/// <summary>
+	/// This method searches for .exe files in the specified path for Standalone Git program and returns a list of FileInfo objects
+	/// </summary>
+	/// <returns></returns>
 	internal static List<FileInfo>? Find()
 	{
 		// Define the base path to search
-		string basePath = @"C:\Program Files\Git";
+		string basePath = Path.Combine(GlobalVars.SystemDrive, "Program Files", "Git");
 
 		// Check if the base path exists
 		if (!Directory.Exists(basePath))
@@ -34,7 +37,7 @@ internal static class GitExesFinder
 		}
 
 		// Return null if no files were found
-		if (fileList.Count == 0)
+		if (fileList.Count is 0)
 		{
 			return null;
 		}

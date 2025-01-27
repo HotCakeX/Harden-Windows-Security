@@ -10,10 +10,8 @@ internal static class GitHubDesktopFinder
 	// This method searches for .exe files in the specified path and returns a list of FileInfo objects
 	internal static List<FileInfo>? Find()
 	{
-		// Get the current user's name
-		string userName = Environment.UserName;
 		// Define the base path to search
-		string basePath = $@"C:\Users\{userName}\AppData\Local\GitHubDesktop";
+		string basePath = Path.Combine(GlobalVars.SystemDrive, "Users", Environment.UserName, "AppData", "Local", "GitHubDesktop");
 
 		// Check if the base path exists
 		if (!Directory.Exists(basePath))
@@ -38,7 +36,7 @@ internal static class GitHubDesktopFinder
 		}
 
 		// Return null if no files were found
-		if (fileList.Count == 0)
+		if (fileList.Count is 0)
 		{
 			return null;
 		}

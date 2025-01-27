@@ -529,7 +529,7 @@ public static partial class ConfirmSystemComplianceMethods
 			// OS Drive encryption verifications
 			// Check if BitLocker is on for the OS Drive
 			// The ProtectionStatus remains off while the drive is encrypting or decrypting
-			BitLocker.BitLockerVolume volumeInfo = BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+			BitLocker.BitLockerVolume volumeInfo = BitLocker.GetEncryptedVolumeInfo(GlobalVars.SystemDrive);
 
 			if (volumeInfo.ProtectionStatus is BitLocker.ProtectionStatus.Protected)
 			{

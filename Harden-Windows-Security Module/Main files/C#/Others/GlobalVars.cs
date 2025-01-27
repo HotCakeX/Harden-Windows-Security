@@ -27,22 +27,14 @@ public static class GlobalVars
 	public static string path;
 #pragma warning restore
 
-	// Stores the output of Get-MpComputerStatus which happens early on in the root module .psm1 file
+	// Stores the MpComputerStatus CIM results
 	public static dynamic? MDAVConfigCurrent;
 
-	// Stores the output of Get-MpPreference which happens early on in the root module .psm1 file
+	// Stores the MpPreference CIM results
 	public static dynamic? MDAVPreferencesCurrent;
-
-	//
-	// The following variables are only used by the Confirm-SystemCompliance cmdlet
-	//
 
 	// Total number of Compliant values
 	public static int TotalNumberOfTrueCompliantValues;
-
-	//
-	// The following variables are only used by the Protect-WindowsSecurity cmdlet
-	//
 
 	// The working directory used by the Protect-WindowsSecurity cmdlet
 	internal static string WorkingDir = Path.Combine(Path.GetTempPath(), "HardeningXStuff");
@@ -101,13 +93,13 @@ public static class GlobalVars
 	// Create an empty dictionary to store the System Security Policies from the security_policy.inf file
 	internal static Dictionary<string, Dictionary<string, string>> SystemSecurityPoliciesIniObject = [];
 
-	// a variable to store the security policies CSV file parse output
+	// To store the security policies CSV file parse output
 	internal static List<SecurityPolicyRecord>? SecurityPolicyRecords;
 
-	// the explicit path to save the CurrentlyAppliedMitigations.xml file
+	// The explicit path to save the CurrentlyAppliedMitigations.xml file
 	internal static string CurrentlyAppliedMitigations = Path.Combine(WorkingDir, "CurrentlyAppliedMitigations.xml");
 
-	// variable that contains the results of all of the related MDM CimInstances that can be interacted with using Administrator privilege
+	// Contains the results of all of the related MDM CimInstances that can be interacted with using Administrator privilege
 	internal static List<MDMClassProcessor>? MDMResults;
 
 	// To store the Firewall Domain MDM profile parsed JSON output
@@ -125,12 +117,6 @@ public static class GlobalVars
 	// To store the System MDM parsed JSON output
 	internal static Hashtable? MDM_Policy_Result01_System02;
 
-	// Call GetCurrentIdentity() once and store the result in a private static variable
-	private static readonly CurrentUserIdentityResult _identity = WinIdentityUser.GetCurrentIdentity();
-
-	// Initialize the properties using the properties of the single _identity instance
-	internal static readonly string userName = _identity.userName;
-	internal static readonly string userSID = _identity.userSID;
-	internal static readonly string? userFullName = _identity.userFullName;
-
+	// To store the path to the system drive
+	internal static readonly string SystemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? "C:";
 }

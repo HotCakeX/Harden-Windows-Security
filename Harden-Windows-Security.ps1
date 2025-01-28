@@ -3,7 +3,7 @@ Function P {
     param()
     $ErrorActionPreference = 'Stop'
     Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
-    [string]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/PowerShell-7.4.6-win.msixbundle'
+    [string]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.5.0/PowerShell-7.5.0-win.msixbundle'
     [string]$PSMSIXDownloadPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'PowerShell.msixbundle')
     try {
         if ($PSVersionTable.PSEdition -eq 'Desktop' -and !(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {

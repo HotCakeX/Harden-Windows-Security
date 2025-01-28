@@ -40,9 +40,7 @@ public static partial class MicrosoftDefender
 
 		Logger.LogMessage("Enabling Mandatory ASLR Exploit Protection system-wide", LogTypeIntel.Information);
 
-		// Define the PowerShell command to execute
-		string command = "Set-ProcessMitigation -System -Enable ForceRelocateImages";
-		_ = PowerShellExecutor.ExecuteScript(command);
+		_ = PowerShellExecutor.ExecuteScript("Set-ProcessMitigation -System -Enable ForceRelocateImages");
 
 
 		Logger.LogMessage("Excluding GitHub Desktop Git executables from mandatory ASLR if they are found", LogTypeIntel.Information);

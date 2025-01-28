@@ -1396,6 +1396,24 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 <br>
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#defaultwindowmanagementsetting) that automatically denies the window management permission to sites by default. This limits the ability of sites to see information about the device's screens and use that information to open and place windows or request fullscreen on specific screens.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#extensionmanifestv2availability) that will keep support for Manifest V2 extensions enabled even after its depreciation. Manifest V2 extension support is vital for proper functioning of ublock origin (and similar extensions) which is beyond a simple adblocker and can provide lots of protection when browsing the web through its custom lists.
+
+   * Note that this is something being pushed by Google through their controlling power of Chromium, not Microsoft.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#defaultwebusbguardsetting) that will prevent websites to even request access to the local connected USB devices.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#dynamiccodesettings) that will disable dynamic code in Edge browser which is a security feature that prevents the browser process from creating dynamic code. The default value of this policy is not explicitly defined, it could be enable or could be disabled. Setting it explicitly to enabled via this policy ensures that no dynamic code is created by the browser process.
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="25" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/deployedge/configure-edge-with-mdm)
 
 ```

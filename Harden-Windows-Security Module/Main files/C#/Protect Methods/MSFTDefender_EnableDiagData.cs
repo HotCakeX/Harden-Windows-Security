@@ -11,7 +11,6 @@ public static partial class MicrosoftDefender
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void MSFTDefender_EnableDiagData()
 	{
-
 		Logger.LogMessage("Enabling Optional Diagnostic Data", LogTypeIntel.Information);
 
 		LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Microsoft Defender Policies", "Optional Diagnostic Data", "registry.pol"), LGPORunner.FileType.POL);

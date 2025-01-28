@@ -91,7 +91,7 @@
     <AssemblyName>AppControlManager</AssemblyName>
     <PublishAot>False</PublishAot>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.8.6.0</FileVersion>
+    <FileVersion>1.8.7.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

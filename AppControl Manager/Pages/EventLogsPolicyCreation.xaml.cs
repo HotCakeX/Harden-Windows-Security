@@ -240,7 +240,18 @@ public sealed partial class EventLogsPolicyCreation : Page
 			CodeIntegrityEVTX = selectedFile;
 
 			Logger.Write($"Selected {selectedFile} for Code Integrity EVTX log scanning");
+
+			SelectedCodeIntegrityEVTXFilesFlyout_TextBox.Text = selectedFile;
 		}
+
+		SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+
+	private void SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectedCodeIntegrityEVTXFilesFlyout_TextBox.Text = null;
+		CodeIntegrityEVTX = null;
 	}
 
 
@@ -259,9 +270,19 @@ public sealed partial class EventLogsPolicyCreation : Page
 			AppLockerEVTX = selectedFile;
 
 			Logger.Write($"Selected {selectedFile} for AppLocker EVTX log scanning");
+
+			SelectedAppLockerEVTXFilesFlyout_TextBox.Text = selectedFile;
 		}
+
+		SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
 	}
 
+
+	private void SelectedAppLockerEVTXFilesFlyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectedAppLockerEVTXFilesFlyout_TextBox.Text = null;
+		AppLockerEVTX = null;
+	}
 
 
 	/// <summary>

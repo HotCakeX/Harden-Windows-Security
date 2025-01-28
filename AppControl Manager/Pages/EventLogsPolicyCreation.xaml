@@ -78,6 +78,38 @@
                 </Style.Setters>
             </Style>
 
+            <Flyout x:Name="SelectedCodeIntegrityEVTXFilesFlyout">
+
+                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                    <Button Content="Clear" Click="SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click" />
+
+                    <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
+
+                    <TextBox x:Name="SelectedCodeIntegrityEVTXFilesFlyout_TextBox"
+TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+MinWidth="400" IsReadOnly="True" />
+
+                </controls:WrapPanel>
+
+            </Flyout>
+
+            <Flyout x:Name="SelectedAppLockerEVTXFilesFlyout">
+
+                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                    <Button Content="Clear" Click="SelectedAppLockerEVTXFilesFlyout_Clear_Click" />
+
+                    <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
+
+                    <TextBox x:Name="SelectedAppLockerEVTXFilesFlyout_TextBox"
+TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+MinWidth="400" IsReadOnly="True" />
+
+                </controls:WrapPanel>
+
+            </Flyout>
+
         </Grid.Resources>
 
 
@@ -217,7 +249,7 @@
                 </SplitButton>
 
 
-                <DropDownButton Content="Browse for EVTX" ToolTipService.ToolTip="Select EVTX files">
+                <DropDownButton x:Name="BrowseForEVTXDropDownButton" Content="Browse for EVTX" ToolTipService.ToolTip="Select EVTX files">
 
                     <DropDownButton.Flyout>
 

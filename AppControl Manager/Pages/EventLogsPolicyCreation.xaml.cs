@@ -10,8 +10,10 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -240,7 +242,18 @@ public sealed partial class EventLogsPolicyCreation : Page
 			CodeIntegrityEVTX = selectedFile;
 
 			Logger.Write($"Selected {selectedFile} for Code Integrity EVTX log scanning");
+
+			SelectedCodeIntegrityEVTXFilesFlyout_TextBox.Text = selectedFile;
+
+			SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
 		}
+	}
+
+
+	private void SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectedCodeIntegrityEVTXFilesFlyout_TextBox.Text = null;
+		CodeIntegrityEVTX = null;
 	}
 
 
@@ -259,9 +272,19 @@ public sealed partial class EventLogsPolicyCreation : Page
 			AppLockerEVTX = selectedFile;
 
 			Logger.Write($"Selected {selectedFile} for AppLocker EVTX log scanning");
+
+			SelectedAppLockerEVTXFilesFlyout_TextBox.Text = selectedFile;
+
+			SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
 		}
 	}
 
+
+	private void SelectedAppLockerEVTXFilesFlyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectedAppLockerEVTXFilesFlyout_TextBox.Text = null;
+		AppLockerEVTX = null;
+	}
 
 
 	/// <summary>
@@ -966,4 +989,30 @@ public sealed partial class EventLogsPolicyCreation : Page
 		}
 	}
 
+
+	private void BrowseForCodeIntegrityEVTXFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectedCodeIntegrityEVTXFilesFlyout.IsOpen)
+			SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+	private void BrowseForCodeIntegrityEVTXFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectedCodeIntegrityEVTXFilesFlyout.IsOpen)
+				SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+	private void BrowseForAppLockerEVTXFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectedAppLockerEVTXFilesFlyout.IsOpen)
+			SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+	private void BrowseForAppLockerEVTXFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectedAppLockerEVTXFilesFlyout.IsOpen)
+				SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
 }

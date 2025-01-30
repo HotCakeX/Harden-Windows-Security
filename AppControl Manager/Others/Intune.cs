@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
+using static AppControlManager.Others.Intune;
 
 namespace AppControlManager.Others;
 
@@ -26,12 +27,6 @@ internal static class Intune
 		];
 
 	private const string DeviceConfigurationsURL = "https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations";
-
-	private static readonly JsonSerializerOptions JsonOpt = new()
-	{
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-		WriteIndented = true
-	};
 
 	private static AuthenticationResult? authenticationResult;
 
@@ -74,7 +69,8 @@ internal static class Intune
 		if (response.IsSuccessStatusCode)
 		{
 			string content = await response.Content.ReadAsStringAsync();
-			JsonElement groupsJson = JsonSerializer.Deserialize<JsonElement>(content);
+			JsonElement groupsJson = JsonSerializer.Deserialize(content, IntuneJsonContext.Default.JsonElement);
+
 
 			if (groupsJson.TryGetProperty("value", out JsonElement groups))
 			{
@@ -266,9 +262,9 @@ internal static class Intune
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Create the payload with a Dictionary to handle special characters like @odata.type
-		var assignmentPayload = new
+		AssignmentPayload assignmentPayload = new()
 		{
-			target = new Dictionary<string, object>
+			Target = new Dictionary<string, object>
 			{
 				{ "@odata.type", "#microsoft.graph.groupAssignmentTarget" },
 				{ "groupId", groupID }
@@ -276,7 +272,7 @@ internal static class Intune
 		};
 
 		// Serialize the assignment payload to JSON
-		string jsonPayload = JsonSerializer.Serialize(assignmentPayload, JsonOpt);
+		string jsonPayload = JsonSerializer.Serialize(assignmentPayload, IntuneJsonContext.Default.AssignmentPayload);
 
 		using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
 
@@ -342,7 +338,7 @@ internal static class Intune
 		};
 
 		// Serialize the policy object to JSON
-		string jsonPayload = JsonSerializer.Serialize(customPolicy, JsonOpt);
+		string jsonPayload = JsonSerializer.Serialize(customPolicy, IntuneJsonContext.Default.Windows10CustomConfiguration);
 
 		using SecHttpClient httpClient = new();
 
@@ -366,7 +362,8 @@ internal static class Intune
 			Logger.Write(responseContent);
 
 			// Extract the policy ID from the response
-			JsonElement responseJson = JsonSerializer.Deserialize<JsonElement>(responseContent);
+			JsonElement responseJson = JsonSerializer.Deserialize(responseContent, IntuneJsonContext.Default.JsonElement);
+
 			return responseJson.GetProperty("id").GetString();
 		}
 		else
@@ -494,6 +491,12 @@ internal static class Intune
 	}
 
 
+	public sealed class AssignmentPayload
+	{
+		[JsonPropertyName("target")]
+		public Dictionary<string, object>? Target { get; set; }
+	}
+
 
 	private static string ConvertBinFileToBase64(string filePath, int maxSizeInBytes)
 	{
@@ -510,4 +513,14 @@ internal static class Intune
 		return Convert.ToBase64String(fileBytes);
 	}
 
+}
+
+
+[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+[JsonSerializable(typeof(JsonElement))]
+[JsonSerializable(typeof(AssignmentPayload))]
+[JsonSerializable(typeof(Windows10CustomConfiguration))]
+[JsonSerializable(typeof(OmaSettingBase64))]
+internal sealed partial class IntuneJsonContext : JsonSerializerContext
+{
 }

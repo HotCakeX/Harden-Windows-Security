@@ -78,6 +78,38 @@
                 </Style.Setters>
             </Style>
 
+            <Flyout x:Name="SelectedCodeIntegrityEVTXFilesFlyout">
+
+                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                    <Button Content="Clear" Click="SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click" />
+
+                    <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
+
+                    <TextBox x:Name="SelectedCodeIntegrityEVTXFilesFlyout_TextBox"
+TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+MinWidth="400" IsReadOnly="True" />
+
+                </controls:WrapPanel>
+
+            </Flyout>
+
+            <Flyout x:Name="SelectedAppLockerEVTXFilesFlyout">
+
+                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                    <Button Content="Clear" Click="SelectedAppLockerEVTXFilesFlyout_Clear_Click" />
+
+                    <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
+
+                    <TextBox x:Name="SelectedAppLockerEVTXFilesFlyout_TextBox"
+TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+MinWidth="400" IsReadOnly="True" />
+
+                </controls:WrapPanel>
+
+            </Flyout>
+
         </Grid.Resources>
 
 
@@ -217,19 +249,19 @@
                 </SplitButton>
 
 
-                <DropDownButton Content="Browse for EVTX" ToolTipService.ToolTip="Select EVTX files">
+                <DropDownButton x:Name="BrowseForEVTXDropDownButton" Content="Browse for EVTX" ToolTipService.ToolTip="Select EVTX files">
 
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem Text="Select Code Integrity EVTX Files" Click="SelectCodeIntegrityEVTXFiles_Click" ToolTipService.ToolTip="Browse for Code Integrity Operational EVTX logs">
+                            <MenuFlyoutItem x:Name="BrowseForCodeIntegrityEVTXFilesButton" RightTapped="BrowseForCodeIntegrityEVTXFilesButton_RightTapped" Holding="BrowseForCodeIntegrityEVTXFilesButton_Holding" Text="Select Code Integrity EVTX Files" Click="SelectCodeIntegrityEVTXFiles_Click" ToolTipService.ToolTip="Browse for Code Integrity Operational EVTX logs">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC50;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="Select AppLocker EVTX Files" Click="SelectAppLockerEVTXFiles_Click" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
+                            <MenuFlyoutItem x:Name="BrowseForAppLockerEVTXFilesButton" RightTapped="BrowseForAppLockerEVTXFilesButton_RightTapped" Holding="BrowseForAppLockerEVTXFilesButton_Holding" Text="Select AppLocker EVTX Files" Click="SelectAppLockerEVTXFiles_Click" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC50;" />
                                 </MenuFlyoutItem.Icon>

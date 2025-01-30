@@ -467,7 +467,6 @@ internal static class CiRuleOptions
 
 			// Add the new Rule element to the Rules node
 			_ = RulesNode.AppendChild(NewRuleNode);
-
 		}
 
 		// Save the XML

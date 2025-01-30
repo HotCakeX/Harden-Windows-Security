@@ -97,9 +97,10 @@
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard Description="Browse for the path to the main policy XML file." IsClickEnabled="True"
-                               Header="Select Main Policy" x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click" IsActionIconVisible="False">
+                               Header="Select Main Policy" x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click"
+                               Holding="MainPolicySettingsCard_Holding" RightTapped="MainPolicySettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button Content="Browse" x:Name="MainPolicyBrowseButton" Click="MainPolicyBrowseButton_Click">
+                            <Button Content="Browse" RightTapped="MainPolicyBrowseButton_RightTapped" x:Name="MainPolicyBrowseButton" Click="MainPolicyBrowseButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="MainPolicy_Flyout">
@@ -124,9 +125,10 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Select other policies to merge with the main policy" IsClickEnabled="True"
-                            Header="Select other policies" x:Name="OtherPoliciesSettingsCard" Click="OtherPoliciesSettingsCard_Click" IsActionIconVisible="False">
+                            Header="Select other policies" x:Name="OtherPoliciesSettingsCard" Click="OtherPoliciesSettingsCard_Click"
+                            Holding="OtherPoliciesSettingsCard_Holding" RightTapped="OtherPoliciesSettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button Content="Browse" x:Name="OtherPoliciesBrowseButton" Click="OtherPoliciesBrowseButton_Click">
+                            <Button Content="Browse" x:Name="OtherPoliciesBrowseButton" RightTapped="OtherPoliciesBrowseButton_RightTapped" Click="OtherPoliciesBrowseButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="OtherPolicies_Flyout">

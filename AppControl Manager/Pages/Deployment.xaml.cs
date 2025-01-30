@@ -10,8 +10,10 @@ using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -89,9 +91,9 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 				// Append the new file to the TextBox, followed by a newline
 				BrowseForXMLPolicyFilesButton_SelectedFilesTextBox.Text += unsignedBasePolicyPathFromSidebar + Environment.NewLine;
 			}
-		}
 
-		BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
+			BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
+		}
 	}
 
 	private void LightUp2(object sender, RoutedEventArgs e)
@@ -104,9 +106,9 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 				// Append the new file to the TextBox, followed by a newline
 				BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox.Text += unsignedBasePolicyPathFromSidebar + Environment.NewLine;
 			}
-		}
 
-		BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
+			BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
+		}
 	}
 
 	#endregion
@@ -809,4 +811,44 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	{
 		Intune.CancelSignIn();
 	}
+
+	private void BrowseForXMLPolicyFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForXMLPolicyFilesButton_Flyout.IsOpen)
+			BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
+	}
+
+	private void BrowseForXMLPolicyFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForXMLPolicyFilesButton_Flyout.IsOpen)
+				BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
+	}
+
+	private void BrowseForSignedXMLPolicyFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForSignedXMLPolicyFilesButton_Flyout.IsOpen)
+			BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
+	}
+
+	private void BrowseForSignedXMLPolicyFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForSignedXMLPolicyFilesButton_Flyout.IsOpen)
+				BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
+	}
+
+	private void BrowseForCIPBinaryFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForCIPBinaryFilesButton_Flyout.IsOpen)
+				BrowseForCIPBinaryFilesButton_Flyout.ShowAt(BrowseForCIPBinaryFilesButton);
+	}
+
+	private void BrowseForCIPBinaryFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForCIPBinaryFilesButton_Flyout.IsOpen)
+			BrowseForCIPBinaryFilesButton_Flyout.ShowAt(BrowseForCIPBinaryFilesButton);
+	}
+
 }

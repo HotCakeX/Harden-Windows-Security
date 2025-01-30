@@ -15,3 +15,11 @@ Use this page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows
 Additionally, this page offers policy templates. These are pre-configured set of rule options suitable for each use case. Use the drop down menu to select one and apply it to an XML policy file.
 
 <br>
+
+## Configuration Details
+
+* **Apply The Changes**: Press this button to apply the changes you made to the policy rule options.
+
+* **Retrieve Rules States**: **By default, when you select an XML policy file, the checkboxes representing the rule options will be checked or unchecked according to the rule options in that file.** If you want to retrieve the rule options from the XML policy file again, maybe after modifying it manually, press this button.
+
+<br>

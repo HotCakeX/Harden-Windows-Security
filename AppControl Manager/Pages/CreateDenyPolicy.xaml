@@ -140,10 +140,11 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreateFilesAndFoldersDenyPolicyButton" Content="Create Deny Policy"
+                        <Button x:Name="CreateFilesAndFoldersDenyPolicyButton" Content="Create Deny Policy" ToolTipService.ToolTip="Create the deny policy based on the configurations you selected"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="CreateFilesAndFoldersDenyPolicyButton_Click" />
 
-                        <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" Content="Deploy after Creation" Margin="0,0,15,0"
+                                      ToolTipService.ToolTip="Toggling this button means the deny policy will be deployed on the system after it's created"/>
 
                         <TeachingTip x:Name="CreateDenyPolicyTeachingTip"
  Target="{x:Bind CreateFilesAndFoldersDenyPolicyButton}" />
@@ -153,10 +154,10 @@
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" Description="Browse for file paths to scan and include in the Deny policy."
-                               Header="Browse For Files"
+                               Header="Browse For Files" Holding="FilesAndFoldersBrowseForFilesSettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForFilesSettingsCard_RightTapped"
                                IsClickEnabled="True" IsActionIconVisible="False" Click="FilesAndFoldersBrowseForFilesSettingsCard_Click">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" Content="Browse" Click="FilesAndFoldersBrowseForFilesButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" RightTapped="FilesAndFoldersBrowseForFilesButton_RightTapped" Content="Browse" Click="FilesAndFoldersBrowseForFilesButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFilesButton_Flyout">
@@ -181,9 +182,10 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively."
-            Header="Browse For Folders" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+            Header="Browse For Folders" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click"
+             Holding="FilesAndFoldersBrowseForFoldersSettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" Content="Browse" Click="FilesAndFoldersBrowseForFoldersButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" RightTapped="FilesAndFoldersBrowseForFoldersButton_RightTapped" Content="Browse" Click="FilesAndFoldersBrowseForFoldersButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
@@ -302,9 +304,9 @@ Header="Policy Name" IsClickEnabled="False" IsActionIconVisible="False">
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="CreatePFNDenyPolicyButton" Click="CreatePFNDenyPolicyButton_Click" Content="Create Deny Policy"
-Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" ToolTipService.ToolTip="Create the deny policy based on the configurations you selected"/>
 
-                        <ToggleButton x:Name="PFNPolicyDeployToggleButton" Content="Deploy after Creation" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="PFNPolicyDeployToggleButton" Content="Deploy after Creation" Margin="0,0,15,0" ToolTipService.ToolTip="Toggling this button means the deny policy will be deployed on the system after it's created" />
 
                         <TeachingTip x:Name="CreatePFNDenyPolicyTeachingTip"
     Target="{x:Bind CreatePFNDenyPolicyButton}" />

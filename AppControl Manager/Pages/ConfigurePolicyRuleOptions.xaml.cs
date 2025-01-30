@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using static AppControlManager.Main.CiRuleOptions;
 
@@ -30,16 +32,8 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 		// Call the method to generate SettingsCards dynamically
 		GenerateSettingsCards();
 
-		// Register click events for buttons
-		ResetSelections.Click += ResetSelections_Click;
-		Add.Click += Add_Click;
-		Remove.Click += Remove_Click;
-
 		// Register the click event for the new Set button in the PolicyTemplate section
 		SetPolicyTemplate.Click += SetPolicyTemplate_Click;
-
-		// Register the click event for the new Select All button
-		SelectAll.Click += SelectAll_Click;
 	}
 
 
@@ -91,7 +85,6 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	#endregion
 
 
-
 	/// <summary>
 	/// Method to dynamically create SettingsCards based on the dictionary keys
 	/// </summary>
@@ -102,18 +95,25 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			// Create a new SettingsCard
 			SettingsCard settingsCard = new()
 			{
-				ContentAlignment = ContentAlignment.Left
+				ContentAlignment = ContentAlignment.Left,
+				IsClickEnabled = true,
+				IsActionIconVisible = false
 			};
 
 			// Create a new CheckBox
 			CheckBox checkBox = new()
 			{
-				// Set the content to the key from the dictionary
 				Content = key
 			};
 
 			// Add the CheckBox to the SettingsCard
 			settingsCard.Content = checkBox;
+
+			// Attach click event to the SettingsCard so click/tap on settings card will be relayed to the check box
+			settingsCard.Click += (sender, e) =>
+			{
+				checkBox.IsChecked = !checkBox.IsChecked;
+			};
 
 			// Add the SettingsCard to the SettingsExpander.Items collection
 			PolicyRuleExpander.Items.Add(settingsCard);
@@ -126,118 +126,92 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void PickPolicyFileButton_Click(object sender, RoutedEventArgs e)
+	private async void PickPolicyFileButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-		if (!string.IsNullOrEmpty(selectedFile))
+		if (!string.IsNullOrWhiteSpace(selectedFile))
 		{
 			// Display the file in the flyout's text box
 			PickPolicyFileButton_TextBox.Text = selectedFile;
 
 			SelectedFilePath = selectedFile;
+
+			// Expand the settings expander when user selects a policy
+			PolicyRuleExpander.IsExpanded = true;
+
+			// Load the policy options from the XML and update the UI
+			await LoadPolicyOptionsFromXML(selectedFile);
 		}
 	}
 
-
 	/// <summary>
-	/// Event handler for the ResetSelections button click
+	/// When the XML policy file is selected by the user, get its rule options and check/uncheck the check boxes in the UI accordingly
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ResetSelections_Click(object sender, RoutedEventArgs e)
+	/// <param name="filePath"></param>
+	private async Task LoadPolicyOptionsFromXML(string filePath)
 	{
-		// Iterate through each SettingsCard in the PolicyRuleExpander
+
+		CodeIntegrityPolicy codeIntegrityPolicy = null!;
+
+		await Task.Run(() =>
+		{
+			codeIntegrityPolicy = new(filePath, null);
+		});
+
+		// Iterate through UI checkboxes and update their state
 		foreach (var item in PolicyRuleExpander.Items)
 		{
 			if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox)
 			{
-				// Uncheck the CheckBox
-				checkBox.IsChecked = false;
+				string key = checkBox.Content?.ToString()!;
+
+				if (codeIntegrityPolicy.Rules is not null && codeIntegrityPolicy.Rules.Contains(key))
+				{
+					checkBox.IsChecked = true;
+				}
+				else
+				{
+					checkBox.IsChecked = false;
+				}
 			}
 		}
 	}
 
 
 	/// <summary>
-	/// Event handler for the Add button click
+	/// Event handler for when the Apply button is pressed
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private async void Add_Click(object sender, RoutedEventArgs e)
+	private async void ApplyTheChangesButton_Click(object sender, RoutedEventArgs e)
 	{
+
 		try
 		{
-			Add.IsEnabled = false;
-			Remove.IsEnabled = false;
-			SetPolicyTemplate.IsEnabled = false;
+			ManageButtonStates(false);
+			MainTeachingTip.IsOpen = false;
 
 			if (string.IsNullOrWhiteSpace(SelectedFilePath))
 			{
-				ShowMessage("Please select a policy file before adding options.");
+				MainTeachingTip.IsOpen = true;
+				MainTeachingTip.Subtitle = "Please select a policy file before adding options.";
 				return;
 			}
 
 			// Gather selected rules to add
 			PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
 
-			// Call the Set method with selected options to add
 			await Task.Run(() =>
 			{
-				Set(SelectedFilePath, rulesToAdd: selectedOptions);
+				Set(SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
 			});
 
 		}
 		finally
 		{
-			Add.IsEnabled = true;
-			Remove.IsEnabled = true;
-			SetPolicyTemplate.IsEnabled = true;
+			ManageButtonStates(true);
 		}
-
-	}
-
-
-	/// <summary>
-	/// Event handler for the Remove button click
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void Remove_Click(object sender, RoutedEventArgs e)
-	{
-
-		try
-		{
-
-			Add.IsEnabled = false;
-			Remove.IsEnabled = false;
-			SetPolicyTemplate.IsEnabled = false;
-
-			if (string.IsNullOrWhiteSpace(SelectedFilePath))
-			{
-				ShowMessage("Please select a policy file before removing options.");
-				return;
-			}
-
-			// Gather selected rules to remove
-			PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
-
-
-			// Call the Set method with selected options to remove
-			await Task.Run(() =>
-			{
-				Set(SelectedFilePath, rulesToRemove: selectedOptions);
-			});
-
-		}
-		finally
-		{
-			Add.IsEnabled = true;
-			Remove.IsEnabled = true;
-			SetPolicyTemplate.IsEnabled = true;
-		}
-
 	}
 
 
@@ -251,28 +225,30 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 		try
 		{
-
-			Add.IsEnabled = false;
-			Remove.IsEnabled = false;
-			SetPolicyTemplate.IsEnabled = false;
+			ManageButtonStates(false);
+			MainTeachingTip.IsOpen = false;
 
 			if (string.IsNullOrWhiteSpace(SelectedFilePath))
 			{
-				ShowMessage("Please select a policy file before setting a template.");
+				MainTeachingTip.IsOpen = true;
+				MainTeachingTip.Subtitle = "Please select a policy file before setting a template.";
 				return;
 			}
 
 			// Retrieve the selected item from the ComboBox
 			if (PolicyTemplatesComboBox.SelectedItem is not ComboBoxItem selectedComboBoxItem)
 			{
-				ShowMessage("Please select a policy template from the dropdown.");
+
+				MainTeachingTip.IsOpen = true;
+				MainTeachingTip.Subtitle = "Please select a policy template from the dropdown.";
 				return;
 			}
 
 			// Convert the ComboBoxItem content to the corresponding PolicyTemplate enum value
 			if (!Enum.TryParse(selectedComboBoxItem.Content.ToString(), out PolicyTemplate template))
 			{
-				ShowMessage("Invalid policy template selected. Please choose a valid option.");
+				MainTeachingTip.IsOpen = true;
+				MainTeachingTip.Subtitle = "Invalid policy template selected. Please choose a valid option.";
 				return;
 			}
 
@@ -283,14 +259,24 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 				Set(SelectedFilePath, template: template);
 			});
 
+			// Refresh the UI check boxes
+			await LoadPolicyOptionsFromXML(SelectedFilePath);
 		}
 		finally
 		{
-			Add.IsEnabled = true;
-			Remove.IsEnabled = true;
-			SetPolicyTemplate.IsEnabled = true;
+			ManageButtonStates(true);
 		}
+	}
 
+	/// <summary>
+	/// Manages buttons' disablement/enablement
+	/// </summary>
+	/// <param name="Enable"></param>
+	private void ManageButtonStates(bool Enable)
+	{
+		SetPolicyTemplate.IsEnabled = Enable;
+		RefreshRuleOptionsState.IsEnabled = Enable;
+		ApplyTheChangesButton.IsEnabled = Enable;
 	}
 
 
@@ -323,38 +309,18 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 
 	/// <summary>
-	/// Event handler for the "Select All" button click
+	/// Uncheck all of the rule options check boxes in the UI
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
+	private void ClearAllCheckBoxes()
 	{
 		// Iterate through each SettingsCard in the PolicyRuleExpander
 		foreach (var item in PolicyRuleExpander.Items)
 		{
-			if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox)
+			if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox && checkBox.IsChecked == true)
 			{
-				// Set the CheckBox to checked
-				checkBox.IsChecked = true;
+				checkBox.IsChecked = false;
 			}
 		}
-	}
-
-
-	/// <summary>
-	/// Helper method to show a simple message dialog
-	/// </summary>
-	/// <param name="message"></param>
-	private async void ShowMessage(string message)
-	{
-		ContentDialog dialog = new()
-		{
-			Title = "Information",
-			Content = message,
-			CloseButtonText = "OK",
-			XamlRoot = this.Content.XamlRoot
-		};
-		_ = await dialog.ShowAsync();
 	}
 
 
@@ -367,5 +333,48 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	{
 		PickPolicyFileButton_TextBox.Text = null;
 		SelectedFilePath = null;
+		ClearAllCheckBoxes();
+	}
+
+	private void PickPolicyFileButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!PickPolicyFileButton_FlyOut.IsOpen)
+			PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
+	}
+
+	private void PickPolicyFileButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!PickPolicyFileButton_FlyOut.IsOpen)
+				PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
+	}
+
+	/// <summary>
+	/// Event handlers to retrieve latest policy rule option details from the XML file and check/uncheck UI boxes
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void RefreshRuleOptionsState_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			ManageButtonStates(false);
+			MainTeachingTip.IsOpen = false;
+
+			if (SelectedFilePath is not null)
+			{
+				await LoadPolicyOptionsFromXML(SelectedFilePath);
+			}
+			else
+			{
+				MainTeachingTip.IsOpen = true;
+				MainTeachingTip.Subtitle = "Please select a policy file before retrieving its rule options status.";
+				return;
+			}
+		}
+		finally
+		{
+			ManageButtonStates(true);
+		}
 	}
 }

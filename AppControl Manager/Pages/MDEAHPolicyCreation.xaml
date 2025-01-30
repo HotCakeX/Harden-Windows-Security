@@ -207,7 +207,27 @@ Spacing="8">
                 </SplitButton>
 
 
-                <Button x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="BrowseForLogs_Click" >
+                <Button x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="BrowseForLogs_Click"
+                        Holding="BrowseForLogs_Holding" RightTapped="BrowseForLogs_RightTapped">
+
+                    <Button.Flyout>
+                        <Flyout x:Name="BrowseForLogs_Flyout">
+
+                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                <Button Content="Clear" Click="BrowseForLogs_Flyout_Clear_Click" />
+
+                                <TextBlock Text="View the log files you selected." TextWrapping="WrapWholeWords" />
+
+                                <TextBox x:Name="BrowseForLogs_SelectedFilesTextBox"
+                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                    MinWidth="400" IsReadOnly="True" />
+
+                            </controls:WrapPanel>
+
+                        </Flyout>
+                    </Button.Flyout>
+
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />

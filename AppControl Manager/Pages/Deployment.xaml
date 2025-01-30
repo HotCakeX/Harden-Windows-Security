@@ -131,7 +131,8 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForXMLPolicyFilesButton" Click="BrowseForXMLPolicyFilesButton_Click">
+                        <Button x:Name="BrowseForXMLPolicyFilesButton" Click="BrowseForXMLPolicyFilesButton_Click"
+                                RightTapped="BrowseForXMLPolicyFilesButton_RightTapped" Holding="BrowseForXMLPolicyFilesButton_Holding">
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -198,7 +199,8 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="BrowseForSignedXMLPolicyFilesButton_Click">
+                        <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="BrowseForSignedXMLPolicyFilesButton_Click"
+                                RightTapped="BrowseForSignedXMLPolicyFilesButton_RightTapped" Holding="BrowseForSignedXMLPolicyFilesButton_Holding">
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -257,7 +259,6 @@
                 </controls:SettingsCard>
 
 
-
                 <controls:SettingsCard
                     Description="Browse for CIP Binary file(s) to deploy on the system"
                     Header="Select CIP Binary file(s)"
@@ -265,7 +266,8 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForCIPBinaryFilesButton" Content="Browse" Click="BrowseForCIPBinaryFilesButton_Click">
+                        <Button x:Name="BrowseForCIPBinaryFilesButton" Content="Browse" Click="BrowseForCIPBinaryFilesButton_Click"
+                                Holding="BrowseForCIPBinaryFilesButton_Holding" RightTapped="BrowseForCIPBinaryFilesButton_RightTapped">
 
                             <Button.Flyout>
                                 <Flyout x:Name="BrowseForCIPBinaryFilesButton_Flyout">

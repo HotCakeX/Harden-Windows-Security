@@ -255,13 +255,13 @@ MinWidth="400" IsReadOnly="True" />
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem Text="Select Code Integrity EVTX Files" Click="SelectCodeIntegrityEVTXFiles_Click" ToolTipService.ToolTip="Browse for Code Integrity Operational EVTX logs">
+                            <MenuFlyoutItem x:Name="BrowseForCodeIntegrityEVTXFilesButton" RightTapped="BrowseForCodeIntegrityEVTXFilesButton_RightTapped" Holding="BrowseForCodeIntegrityEVTXFilesButton_Holding" Text="Select Code Integrity EVTX Files" Click="SelectCodeIntegrityEVTXFiles_Click" ToolTipService.ToolTip="Browse for Code Integrity Operational EVTX logs">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC50;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="Select AppLocker EVTX Files" Click="SelectAppLockerEVTXFiles_Click" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
+                            <MenuFlyoutItem x:Name="BrowseForAppLockerEVTXFilesButton" RightTapped="BrowseForAppLockerEVTXFilesButton_RightTapped" Holding="BrowseForAppLockerEVTXFilesButton_Holding" Text="Select AppLocker EVTX Files" Click="SelectAppLockerEVTXFiles_Click" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC50;" />
                                 </MenuFlyoutItem.Icon>

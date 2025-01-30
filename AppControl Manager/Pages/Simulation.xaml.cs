@@ -10,9 +10,11 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -155,7 +157,7 @@ public sealed partial class Simulation : Page
 			xmlFilePath = selectedFile;
 
 			// Update the TextBox with the selected XML file path
-			XmlFilePathTextBox.Text = selectedFile;
+			SelectXmlFileButton_SelectedFilesTextBox.Text = selectedFile;
 		}
 	}
 
@@ -168,18 +170,27 @@ public sealed partial class Simulation : Page
 		if (selectedFiles is { Count: > 0 })
 		{
 			filePaths = [.. selectedFiles];
+
+			foreach (string file in selectedFiles)
+			{
+				SelectFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
+			}
 		}
 	}
 
 	// Event handler for the Select Folders button
 	private void SelectFoldersButton_Click(object sender, RoutedEventArgs e)
 	{
+		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		string? selectedFolder = FileDialogHelper.ShowDirectoryPickerDialog();
-
-		if (!string.IsNullOrEmpty(selectedFolder))
+		if (selectedFolders is { Count: > 0 })
 		{
-			folderPaths.Add(selectedFolder);
+			foreach (string folder in selectedFolders)
+			{
+				folderPaths.Add(folder);
+
+				SelectFoldersButton_SelectedFilesTextBox.Text += folder + Environment.NewLine;
+			}
 		}
 	}
 
@@ -424,5 +435,61 @@ public sealed partial class Simulation : Page
 		Clipboard.SetContent(dataPackage);
 	}
 
+	private void SelectXmlFileButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectXmlFileButton_Flyout.IsOpen)
+				SelectXmlFileButton_Flyout.ShowAt(SelectXmlFileButton);
+	}
+
+	private void SelectXmlFileButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectXmlFileButton_Flyout.IsOpen)
+			SelectXmlFileButton_Flyout.ShowAt(SelectXmlFileButton);
+	}
+
+	private void SelectXmlFileButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectXmlFileButton_SelectedFilesTextBox.Text = null;
+		xmlFilePath = null;
+	}
+
+	private void SelectFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectFilesButton_Flyout.IsOpen)
+			SelectFilesButton_Flyout.ShowAt(SelectFilesButton);
+	}
+
+	private void SelectFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectFilesButton_Flyout.IsOpen)
+				SelectFilesButton_Flyout.ShowAt(SelectFilesButton);
+	}
+
+	private void SelectFilesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectFilesButton_SelectedFilesTextBox.Text = null;
+		filePaths.Clear();
+	}
+
+	private void SelectFoldersButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		SelectFoldersButton_SelectedFilesTextBox.Text = null;
+		folderPaths.Clear();
+	}
+
+	private void SelectFoldersButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectFoldersButton_Flyout.IsOpen)
+				SelectFoldersButton_Flyout.ShowAt(SelectFoldersButton);
+	}
+
+	private void SelectFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectFoldersButton_Flyout.IsOpen)
+			SelectFoldersButton_Flyout.ShowAt(SelectFoldersButton);
+	}
 
 }

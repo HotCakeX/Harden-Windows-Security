@@ -13,11 +13,12 @@ using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-
 
 namespace AppControlManager.Pages;
 
@@ -1051,5 +1052,33 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = null;
 		selectedXMLFilePath = null;
 		tempBasePolicyPath = null;
+	}
+
+
+	private void BrowseForXMLPolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForXMLPolicyButton_FlyOut.IsOpen)
+			BrowseForXMLPolicyButton_FlyOut.ShowAt(BrowseForXMLPolicyButton);
+	}
+
+	private void BrowseForXMLPolicyButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForXMLPolicyButton_FlyOut.IsOpen)
+				BrowseForXMLPolicyButton_FlyOut.ShowAt(BrowseForXMLPolicyButton);
+	}
+
+
+	private void BrowseForFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForFoldersButton_FlyOut.IsOpen)
+			BrowseForFoldersButton_FlyOut.ShowAt(BrowseForFoldersButton);
+	}
+
+	private void BrowseForFoldersButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForFoldersButton_FlyOut.IsOpen)
+				BrowseForFoldersButton_FlyOut.ShowAt(BrowseForFoldersButton);
 	}
 }

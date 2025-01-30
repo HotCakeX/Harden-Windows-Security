@@ -10,8 +10,10 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -242,9 +244,9 @@ public sealed partial class EventLogsPolicyCreation : Page
 			Logger.Write($"Selected {selectedFile} for Code Integrity EVTX log scanning");
 
 			SelectedCodeIntegrityEVTXFilesFlyout_TextBox.Text = selectedFile;
-		}
 
-		SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+			SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+		}
 	}
 
 
@@ -272,9 +274,9 @@ public sealed partial class EventLogsPolicyCreation : Page
 			Logger.Write($"Selected {selectedFile} for AppLocker EVTX log scanning");
 
 			SelectedAppLockerEVTXFilesFlyout_TextBox.Text = selectedFile;
-		}
 
-		SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+			SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+		}
 	}
 
 
@@ -987,4 +989,30 @@ public sealed partial class EventLogsPolicyCreation : Page
 		}
 	}
 
+
+	private void BrowseForCodeIntegrityEVTXFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectedCodeIntegrityEVTXFilesFlyout.IsOpen)
+			SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+	private void BrowseForCodeIntegrityEVTXFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectedCodeIntegrityEVTXFilesFlyout.IsOpen)
+				SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+	private void BrowseForAppLockerEVTXFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!SelectedAppLockerEVTXFilesFlyout.IsOpen)
+			SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+	private void BrowseForAppLockerEVTXFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!SelectedAppLockerEVTXFilesFlyout.IsOpen)
+				SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
 }

@@ -190,6 +190,64 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
 
 
+	private void FilesAndFoldersBrowseForFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
+			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
+	}
+
+	private void FilesAndFoldersBrowseForFilesSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
+			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
+				FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFoldersSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
+				FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
+			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
+			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersButton);
+	}
+
+
+	private void FilesAndFoldersBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!FilesAndFoldersBrowseForBasePolicyButton_FlyOut.IsOpen)
+				FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForBasePolicyButton_FlyOut.IsOpen)
+			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForBasePolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForBasePolicyButton_FlyOut.IsOpen)
+			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicyButton);
+	}
+
 	/// <summary>
 	/// Browse for Files - Settings Card Click
 	/// </summary>
@@ -208,12 +266,12 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Append the new file to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
 			}
+
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
 		}
-
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-
 	}
+
 
 	/// <summary>
 	/// Browse for Files - Button Click
@@ -256,10 +314,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Append the new directory to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
 			}
-		}
 
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+		}
 	}
 
 
@@ -302,10 +360,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			// Add the file path to the GUI's text box
 			FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-		}
 
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
+		}
 	}
 
 
@@ -727,6 +785,25 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	// False = Kernel Mode
 	private bool signingScenario = true;
 
+	private void CertificatesBrowseForBasePolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!CertificatesBrowseForBasePolicyButton_FlyOut.IsOpen)
+			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicyButton);
+	}
+
+	private void CertificatesBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!CertificatesBrowseForBasePolicyButton_FlyOut.IsOpen)
+			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
+	}
+
+	private void CertificatesBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!CertificatesBrowseForBasePolicyButton_FlyOut.IsOpen)
+				CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
+	}
+
 	/// <summary>
 	/// Deploy button event handler for Certificates-based Supplemental policy
 	/// </summary>
@@ -780,9 +857,9 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			CertificatesBasedBasePolicyPath = selectedFile;
 
 			CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-		}
 
-		CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
+			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
+		}
 	}
 
 	private void CertificatesBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
@@ -1016,6 +1093,24 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	// Selected Supplemental policy name
 	private string? ISGBasedSupplementalPolicyName;
 
+	private void ISGBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!ISGBrowseForBasePolicyButton_FlyOut.IsOpen)
+				ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
+	}
+
+	private void ISGBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!ISGBrowseForBasePolicyButton_FlyOut.IsOpen)
+			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
+	}
+
+	private void ISGBrowseForBasePolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!ISGBrowseForBasePolicyButton_FlyOut.IsOpen)
+			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicyButton);
+	}
 
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental ISG based policy
@@ -1158,9 +1253,9 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ISGBasedBasePolicyPath = selectedFile;
 
 			ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-		}
 
-		ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
+			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
+		}
 	}
 
 
@@ -1199,6 +1294,25 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	internal List<FileIdentity> ScanResultsList = [];
 
 
+	private void StrictKernelModeBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!StrictKernelModeBrowseForBasePolicyButton_FlyOut.IsOpen)
+			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
+	}
+
+	private void StrictKernelModeBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!StrictKernelModeBrowseForBasePolicyButton_FlyOut.IsOpen)
+				StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
+	}
+
+	private void StrictKernelModeBrowseForBasePolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!StrictKernelModeBrowseForBasePolicyButton_FlyOut.IsOpen)
+			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicyButton);
+	}
+
 	private void StrictKernelModeScanButton_Click(object sender, RoutedEventArgs e)
 	{
 		StrictKernelModePerformScans(false);
@@ -1228,10 +1342,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			// Add the file path to the GUI's text box
 			StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-		}
 
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
+		}
 	}
 
 
@@ -1675,6 +1789,26 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	// Path to the base policy for the PFN based supplemental policy
 	private string? PFNBasePolicyPath;
 
+
+	private void PFNBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!PFNBrowseForBasePolicyButton_FlyOut.IsOpen)
+			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
+	}
+
+	private void PFNBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!PFNBrowseForBasePolicyButton_FlyOut.IsOpen)
+				PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
+	}
+
+	private void PFNBrowseForBasePolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!PFNBrowseForBasePolicyButton_FlyOut.IsOpen)
+			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
+	}
+
 	/// <summary>
 	/// Gets the list of all installed Packaged Apps
 	/// </summary>
@@ -1922,10 +2056,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			// Add the file path to the GUI's text box
 			PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-		}
 
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
+		}
 	}
 
 
@@ -2112,7 +2246,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		}
 
 	}
-
 
 	#endregion
 

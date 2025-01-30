@@ -64,6 +64,46 @@ public sealed partial class CreateDenyPolicy : Page
 	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
 
 
+	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
+				FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFilesSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
+			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
+			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
+	}
+
+
+
+	private void FilesAndFoldersBrowseForFoldersSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
+				FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
+			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+	}
+
+	private void FilesAndFoldersBrowseForFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
+			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersButton);
+	}
+
 
 	/// <summary>
 	/// Main button's event handler for files and folder Deny policy creation
@@ -257,7 +297,6 @@ public sealed partial class CreateDenyPolicy : Page
 				}
 
 
-
 			});
 
 		}
@@ -323,13 +362,11 @@ public sealed partial class CreateDenyPolicy : Page
 
 				// Append the new file to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
-
 			}
+
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
 		}
-
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-
 	}
 
 	/// <summary>
@@ -349,7 +386,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 				// Append the new file to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
-
 			}
 		}
 	}
@@ -372,12 +408,11 @@ public sealed partial class CreateDenyPolicy : Page
 
 				// Append the new directory to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
-
 			}
-		}
 
-		// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-		FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
+			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
+		}
 	}
 
 	/// <summary>
@@ -397,7 +432,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 				// Append the new directory to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
-
 			}
 		}
 	}
@@ -903,9 +937,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 	}
 
-
-
 	#endregion
-
 
 }

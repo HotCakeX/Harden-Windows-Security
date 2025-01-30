@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -81,11 +83,11 @@ public sealed partial class MergePolicies : Page
 				{
 
 					_ = DispatcherQueue.TryEnqueue(() =>
-					 {
-						 PolicyMergerInfoBar.Message = "Deploying the main policy after merge.";
-					 });
+					{
+						PolicyMergerInfoBar.Message = "Deploying the main policy after merge.";
+					});
 
-					string stagingArea = (StagingArea.NewStagingArea("PolicyMerger")).FullName;
+					string stagingArea = StagingArea.NewStagingArea("PolicyMerger").FullName;
 
 					string CIPPath = Path.Combine(stagingArea, "MergedPolicy.cip");
 
@@ -95,16 +97,12 @@ public sealed partial class MergePolicies : Page
 				}
 
 			});
-
 		}
-
 		catch
 		{
 			errorsOccurred = true;
-
 			throw;
 		}
-
 		finally
 		{
 
@@ -160,10 +158,10 @@ public sealed partial class MergePolicies : Page
 
 			// Add the selected main XML policy file path to the flyout's TextBox
 			MainPolicy_Flyout_TextBox.Text = selectedFile;
-		}
 
-		// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself
-		MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
+			// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself
+			MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
+		}
 	}
 
 
@@ -200,10 +198,10 @@ public sealed partial class MergePolicies : Page
 				// Append the new file to the TextBox, followed by a newline
 				OtherPolicies_Flyout_TextBox.Text += file + Environment.NewLine;
 			}
-		}
 
-		// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself
-		OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
+			// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself
+			OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
+		}
 	}
 
 	private void MainPolicy_Flyout_ClearButton(object sender, RoutedEventArgs e)
@@ -218,5 +216,41 @@ public sealed partial class MergePolicies : Page
 		otherPolicies.Clear();
 	}
 
+	private void MainPolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!MainPolicy_Flyout.IsOpen)
+				MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
+	}
 
+	private void MainPolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!MainPolicy_Flyout.IsOpen)
+			MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
+	}
+
+	private void MainPolicyBrowseButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!MainPolicy_Flyout.IsOpen)
+			MainPolicy_Flyout.ShowAt(MainPolicyBrowseButton);
+	}
+
+	private void OtherPoliciesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!OtherPolicies_Flyout.IsOpen)
+				OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
+	}
+
+	private void OtherPoliciesSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!OtherPolicies_Flyout.IsOpen)
+			OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
+	}
+
+	private void OtherPoliciesBrowseButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!OtherPolicies_Flyout.IsOpen)
+			OtherPolicies_Flyout.ShowAt(OtherPoliciesBrowseButton);
+	}
 }

@@ -153,9 +153,9 @@
 
                         <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" Description="Browse for file paths to scan and include in the Supplemental policy."
                             Header="Browse For Files"
-                            IsClickEnabled="True" IsActionIconVisible="False" Click="FilesAndFoldersBrowseForFilesSettingsCard_Click">
+                            IsClickEnabled="True" IsActionIconVisible="False" Click="FilesAndFoldersBrowseForFilesSettingsCard_Click" Holding="FilesAndFoldersBrowseForFilesSettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForFilesSettingsCard_RightTapped">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" Content="Browse" Click="FilesAndFoldersBrowseForFilesButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" Content="Browse" Click="FilesAndFoldersBrowseForFilesButton_Click" RightTapped="FilesAndFoldersBrowseForFilesButton_RightTapped">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFilesButton_Flyout">
@@ -180,9 +180,9 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Browse for Folder paths to scan and include in the Supplemental policy. The folders will be scanned recursively."
-                            Header="Browse For Folders" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+                            Header="Browse For Folders" Holding="FilesAndFoldersBrowseForFoldersSettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" Content="Browse" Click="FilesAndFoldersBrowseForFoldersButton_Click">
+                            <Button RightTapped="FilesAndFoldersBrowseForFoldersButton_RightTapped" x:Name="FilesAndFoldersBrowseForFoldersButton" Content="Browse" Click="FilesAndFoldersBrowseForFoldersButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
@@ -215,9 +215,9 @@
 
                         <controls:SettingsCard Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                             Header="Base Policy File" IsClickEnabled="True" Click="FilesAndFoldersBrowseForBasePolicySettingsCard_Click"
-                            x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" IsActionIconVisible="False">
+                            x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" Holding="FilesAndFoldersBrowseForBasePolicySettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForBasePolicySettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" RightTapped="FilesAndFoldersBrowseForBasePolicyButton_RightTapped" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
@@ -371,9 +371,10 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Name="CertificatesBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
-                                Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="CertificatesBrowseForBasePolicySettingsCard_Click">
+                                Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="CertificatesBrowseForBasePolicySettingsCard_Click"
+                                               RightTapped="CertificatesBrowseForBasePolicySettingsCard_RightTapped" Holding="CertificatesBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="CertificatesBrowseForBasePolicyButton" Click="CertificatesBrowseForBasePolicyButton_Click">
+                            <Button x:Name="CertificatesBrowseForBasePolicyButton" RightTapped="CertificatesBrowseForBasePolicyButton_RightTapped" Click="CertificatesBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
@@ -467,9 +468,10 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Name="ISGBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
-                            Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="ISGBrowseForBasePolicySettingsCard_Click">
+                            Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="ISGBrowseForBasePolicySettingsCard_Click"
+                                               Holding="ISGBrowseForBasePolicySettingsCard_Holding" RightTapped="ISGBrowseForBasePolicySettingsCard_RightTapped">
 
-                            <Button x:Name="ISGBrowseForBasePolicyButton" Click="ISGBrowseForBasePolicyButton_Click">
+                            <Button x:Name="ISGBrowseForBasePolicyButton" Click="ISGBrowseForBasePolicyButton_Click" RightTapped="ISGBrowseForBasePolicyButton_RightTapped">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="ISGBrowseForBasePolicyButton_FlyOut">
@@ -571,9 +573,10 @@
 
 
                         <controls:SettingsCard x:Name="StrictKernelModeBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
-                            Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModeBrowseForBasePolicySettingsCard_Click">
+                            Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModeBrowseForBasePolicySettingsCard_Click"
+                                               RightTapped="StrictKernelModeBrowseForBasePolicySettingsCard_RightTapped" Holding="StrictKernelModeBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" Click="StrictKernelModeBrowseForBasePolicyButton_Click">
+                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" RightTapped="StrictKernelModeBrowseForBasePolicyButton_RightTapped" Click="StrictKernelModeBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="StrictKernelModeBrowseForBasePolicyButton_FlyOut">
@@ -676,9 +679,10 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Name="PFNBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
-                            Header="Base Policy File" IsClickEnabled="True" Click="PFNBrowseForBasePolicySettingsCard_Click" IsActionIconVisible="False">
+                            Header="Base Policy File" IsClickEnabled="True" Click="PFNBrowseForBasePolicySettingsCard_Click" IsActionIconVisible="False"
+                                               RightTapped="PFNBrowseForBasePolicySettingsCard_RightTapped" Holding="PFNBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="PFNBrowseForBasePolicyButton" Click="PFNBrowseForBasePolicyButton_Click">
+                            <Button x:Name="PFNBrowseForBasePolicyButton" RightTapped="PFNBrowseForBasePolicyButton_RightTapped" Click="PFNBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="PFNBrowseForBasePolicyButton_FlyOut">

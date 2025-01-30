@@ -81,7 +81,8 @@
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="15" HorizontalSpacing="15">
 
                         <TextBox x:Name="SupplementalPolicyNameTextBox" Header="Supplemental Policy Name" PlaceholderText="Enter a name for the Supplemental Policy" />
-                        <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0" ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device.">
+                        <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0"
+                               RightTapped="BrowseForXMLPolicyButton_RightTapped" Holding="BrowseForXMLPolicyButton_Holding" ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device.">
 
                             <Button.Flyout>
                                 <Flyout x:Name="BrowseForXMLPolicyButton_FlyOut">
@@ -155,10 +156,11 @@ LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_Va
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
 
-                        <Button x:Name="BrowseForFoldersButton" Click="BrowseForFoldersButton_Click" Content="Browse for folders" ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
+                        <Button x:Name="BrowseForFoldersButton" RightTapped="BrowseForFoldersButton_RightTapped"
+                               Holding="BrowseForFoldersButton_Holding" Click="BrowseForFoldersButton_Click" Content="Browse for folders" ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
 
                             <Button.Flyout>
-                                <Flyout>
+                                <Flyout x:Name="BrowseForFoldersButton_FlyOut">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 

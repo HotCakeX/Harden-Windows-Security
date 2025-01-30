@@ -10,8 +10,10 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -260,6 +262,8 @@ public sealed partial class MDEAHPolicyCreation : Page
 			Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
 
 			ScanLogs.IsEnabled = true;
+
+			BrowseForLogs_SelectedFilesTextBox.Text += selectedFile + Environment.NewLine;
 		}
 	}
 
@@ -969,6 +973,25 @@ public sealed partial class MDEAHPolicyCreation : Page
 				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
 			}
 		}
+	}
+
+	private void BrowseForLogs_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForLogs_Flyout.IsOpen)
+				BrowseForLogs_Flyout.ShowAt(BrowseForLogs);
+	}
+
+	private void BrowseForLogs_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForLogs_Flyout.IsOpen)
+			BrowseForLogs_Flyout.ShowAt(BrowseForLogs);
+	}
+
+	private void BrowseForLogs_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		BrowseForLogs_SelectedFilesTextBox.Text = null;
+		MDEAdvancedHuntingLogs = null;
 	}
 
 }

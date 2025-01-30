@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using AppControlManager.XMLOps;
@@ -28,6 +29,8 @@ internal sealed class CodeIntegrityPolicy
 
 	internal XmlNode PolicyIDNode { get; }
 	internal XmlNode BasePolicyIDNode { get; }
+
+	internal List<string>? Rules { get; }
 
 	internal XmlNode FileRulesNode { get; }
 
@@ -248,7 +251,40 @@ internal sealed class CodeIntegrityPolicy
 		VersionExNode = SiPolicyNode.SelectSingleNode("ns:VersionEx", NamespaceManager) ?? throw new InvalidOperationException($"VersionEx was not found.");
 
 		#endregion
+
+		#region Rules
+		Rules = LoadRules();
+		#endregion
 	}
+
+
+	private List<string>? LoadRules()
+	{
+		XmlNode? rulesNode = SiPolicyNode.SelectSingleNode("ns:Rules", NamespaceManager);
+
+		if (rulesNode is null)
+		{
+			return null;
+		}
+
+		List<string> rulesList = [];
+
+		XmlNodeList? ruleOptions = rulesNode.SelectNodes("ns:Rule/ns:Option", NamespaceManager);
+
+		if (ruleOptions is not null)
+		{
+			foreach (XmlNode ruleNode in ruleOptions)
+			{
+				if (!string.IsNullOrWhiteSpace(ruleNode.InnerText))
+				{
+					rulesList.Add(ruleNode.InnerText);
+				}
+			}
+		}
+
+		return rulesList.Count > 0 ? rulesList : null;
+	}
+
 
 	private XmlNode EnsureFileRulesRefNode(XmlNode parentNode, string mode)
 	{

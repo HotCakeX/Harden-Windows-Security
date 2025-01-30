@@ -33,7 +33,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,5,6,5">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
@@ -50,9 +49,8 @@
             </controls:WrapPanel>
 
 
-
             <Button Grid.Row="1" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="PickPolicyFileButton_Click"
-     HorizontalAlignment="Center"
+     HorizontalAlignment="Center" RightTapped="PickPolicyFileButton_RightTapped" Holding="PickPolicyFileButton_Holding"
     ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device.">
 
                 <Button.Flyout>
@@ -104,16 +102,13 @@
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
-                        <Button x:Name="Add" Content="Add"
-            Style="{StaticResource AccentButtonStyle}" />
-                        <Button x:Name="Remove" Content="Remove"
-Style="{StaticResource AccentButtonStyle}" />
-                        <Button x:Name="ResetSelections" Content="Reset Selections"
-Style="{StaticResource AccentButtonStyle}" />
+                        <Button x:Name="ApplyTheChangesButton" Content="Appy the Changes" Click="ApplyTheChangesButton_Click"
+            Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected" />
 
-                        <!-- Select All button to select all checkboxes -->
-                        <Button x:Name="SelectAll" Content="Select All"
-Style="{StaticResource AccentButtonStyle}" />
+                        <Button x:Name="RefreshRuleOptionsState" Content="Retrieve Rules States" Click="RefreshRuleOptionsState_Click"
+                                ToolTipService.ToolTip="Retrieve the latest state of policy rule options from the policy file you selected"/>
+
+                        <TeachingTip x:Name="MainTeachingTip" Target="{x:Bind PolicyRuleExpander}" Title="Error"/>
                     </controls:WrapPanel>
                 </controls:SettingsExpander>
                 <controls:SettingsCard x:Name="PolicyTemplate"

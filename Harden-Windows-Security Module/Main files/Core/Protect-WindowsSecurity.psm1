@@ -328,9 +328,9 @@ Function Protect-WindowsSecurity {
 
             if (!$Categories) {
                 Write-Host -Object "`r`n"
-                Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
-                Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
-                Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
+                Write-ColorfulText -Color Plum -InputText "############################################################################################################`r`n"
+                Write-ColorfulText -Color Plum -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
+                Write-ColorfulText -Color Plum -InputText "############################################################################################################`r`n"
             }
             [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('⏬ Downloading')
 
@@ -338,12 +338,7 @@ Function Protect-WindowsSecurity {
                 [HardenWindowsSecurity.Logger]::LogMessage('Downloading the required files', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 Write-Progress -Activity 'Downloading the required files' -Status 'Downloading' -PercentComplete 20
             }
-            [HardenWindowsSecurity.AsyncDownloader]::PrepDownloadedFiles(
-                "$PathToLGPO",
-                "$PathToMSFTSecurityBaselines",
-                "$PathToMSFT365AppsSecurityBaselines",
-                $false
-            )
+            [HardenWindowsSecurity.AsyncDownloader]::PrepDownloadedFiles("$PathToLGPO", "$PathToMSFTSecurityBaselines", "$PathToMSFT365AppsSecurityBaselines", $false)
             [HardenWindowsSecurity.Logger]::LogMessage('Finished downloading/processing the required files', [HardenWindowsSecurity.LogTypeIntel]::Information)
 
             Write-Progress -Activity 'Applying the security measures' -Status 'Protecting' -PercentComplete 50

@@ -141,7 +141,6 @@ function Confirm-SystemCompliance {
             }
 
             if ($ShowAsObjectsOnly) {
-                # return the main object that contains multiple nested objects
                 return ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject)
             }
             else {

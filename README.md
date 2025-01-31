@@ -1816,6 +1816,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Windows Security best practices for integrating and managing security tools](https://www.microsoft.com/en-us/security/blog/2024/07/27/windows-security-best-practices-for-integrating-and-managing-security-tools/)
 - [Microsoft Exploitability Index](https://www.microsoft.com/en-us/msrc/exploitability-index)
 - [The Microsoft Incident Response Ninja Hub](https://aka.ms/MicrosoftIRNinjaHub)
+- [Understanding the Microsoft Pluton security processor](https://techcommunity.microsoft.com/blog/windows-itpro-blog/understanding-the-microsoft-pluton-security-processor/4370413)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

@@ -168,14 +168,7 @@ function Confirm-SystemCompliance {
 
                 # Only display the overall score if the user has not specified any categories
                 if (!$Categories) {
-                    switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\1To40.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\41To80.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\81To120.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\121To160.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\161To200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\Above200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    }
+                    & $WriteRainbow "`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!"
                 }
             }
         }

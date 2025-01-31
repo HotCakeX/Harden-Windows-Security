@@ -986,7 +986,7 @@ public partial class GUIMain
 				// Disable the Offline mode toggle button if -Offline parameter was not used with the function
 				GUIProtectWinSecurity.enableOfflineMode.IsEnabled = false;
 
-				// Make the text block notice visible if offline mode is not used				
+				// Make the text block notice visible if offline mode is not used
 				OfflineConfigurationsNoticeTextBlock.Visibility = System.Windows.Visibility.Visible;
 			}
 

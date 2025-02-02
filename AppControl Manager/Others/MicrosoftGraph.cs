@@ -10,25 +10,16 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
-using static AppControlManager.Others.Intune;
+using static AppControlManager.Others.MicrosoftGraph;
 
 namespace AppControlManager.Others;
 
-internal static class Intune
+internal static class MicrosoftGraph
 {
-
+	// For Microsoft Graph Command Line Tools
 	private const string ClientId = "14d82eec-204b-4c2f-b7e8-296a70dab67e";
 
-	// Scopes required to create and assign device configurations
-	// https://learn.microsoft.com/en-us/graph/permissions-reference
-	private static readonly string[] Scopes = [
-		"Group.Read.All", // For Groups enumeration
-		"DeviceManagementConfiguration.ReadWrite.All" // For uploading policy
-		];
-
 	private const string DeviceConfigurationsURL = "https://graph.microsoft.com/v1.0/deviceManagement/deviceConfigurations";
-
-	private static AuthenticationResult? authenticationResult;
 
 	// Initialize the Public Client Application
 	private static readonly IPublicClientApplication App = PublicClientApplicationBuilder.Create(ClientId)
@@ -45,6 +36,115 @@ internal static class Intune
 	// To manage Sign in cancellation
 	private static CancellationTokenSource? _cts;
 
+	// Used to determine which scope to use
+	internal enum AuthenticationContext
+	{
+		Intune,
+		MDEAdvancedHunting
+	}
+
+	// The correlation between scopes and required permissions
+	private static readonly Dictionary<AuthenticationContext, string[]> Scopes = new() {
+
+		// Scopes required to create and assign device configurations for Intune
+		// https://learn.microsoft.com/en-us/graph/permissions-reference
+		{ AuthenticationContext.Intune, [
+		"Group.Read.All", // For Groups enumeration
+		"DeviceManagementConfiguration.ReadWrite.All" // For uploading policy
+		]},
+
+		// Scopes required to retrieve MDE Advanced Hunting results
+		// https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery
+		{AuthenticationContext.MDEAdvancedHunting,  ["ThreatHunting.Read.All"]}
+		};
+
+	// This class defines every account that is authenticated by the user
+	private sealed class AccountIdentity
+	{
+		internal required string AccountIdentifier { get; set; }
+		internal required string Username { get; set; }
+		internal required string TenantID { get; set; }
+		internal required AuthenticationResult AuthResult { get; set; }
+		internal required IAccount Account { get; set; }
+	}
+
+	// A dictionary to keep the record of all of the authenticated accounts
+	private static readonly Dictionary<AuthenticationContext, AccountIdentity> SavedAccounts = [];
+
+
+	/// <summary>
+	/// Perform an Advanced Hunting query using Microsoft Defender for Endpoint
+	/// Accepts a device name as an optional parameter for filtering
+	/// </summary>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static async Task<string?> RunMDEAdvancedHuntingQuery(string? deviceName)
+	{
+		if (!SavedAccounts.TryGetValue(AuthenticationContext.MDEAdvancedHunting, out AccountIdentity? account))
+		{
+			throw new InvalidOperationException("You need to authenticate first.");
+		}
+
+		using SecHttpClient httpClient = new();
+
+		string? output = null;
+
+		// Set up the HTTP headers
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", account.AuthResult.AccessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		QueryPayload queryPayload;
+
+		if (string.IsNullOrWhiteSpace(deviceName))
+		{
+			// Defining the query
+			queryPayload = new()
+			{
+				Query = """
+DeviceEvents
+| where ActionType startswith "AppControlCodeIntegrity"
+   or ActionType startswith "AppControlCIScriptBlocked"
+   or ActionType startswith "AppControlCIScriptAudited"
+"""
+			};
+		}
+		else
+		{
+			queryPayload = new()
+			{
+				Query = $"""
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "{deviceName}"
+"""
+			};
+		}
+
+		string jsonPayload = JsonSerializer.Serialize(queryPayload, IntuneJsonContext.Default.QueryPayload);
+
+		using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
+
+		// Make the POST request
+		HttpResponseMessage response = await httpClient.PostAsync(new Uri("https://graph.microsoft.com/v1.0/security/runHuntingQuery"), content);
+
+		if (response.IsSuccessStatusCode)
+		{
+			output = await response.Content.ReadAsStringAsync();
+			Logger.Write("MDE Advanced Hunting Query has been Successful.");
+
+			return output;
+		}
+		else
+		{
+			Logger.Write($"Failed to run MDE Advanced Hunting Query. Status code: {response.StatusCode}");
+			string errorContent = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException($"Error details: {errorContent}");
+		}
+	}
+
+
 	/// <summary>
 	/// Fetches the security groups
 	/// </summary>
@@ -52,7 +152,7 @@ internal static class Intune
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task FetchGroups()
 	{
-		if (authenticationResult is null)
+		if (!SavedAccounts.TryGetValue(AuthenticationContext.Intune, out AccountIdentity? account))
 		{
 			throw new InvalidOperationException("You need to authenticate first.");
 		}
@@ -60,7 +160,7 @@ internal static class Intune
 		using SecHttpClient httpClient = new();
 
 		// Set up the HTTP headers
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", account.AuthResult.AccessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Make the request to get all groups
@@ -118,42 +218,56 @@ internal static class Intune
 	/// Signs into a tenant
 	/// </summary>
 	/// <returns></returns>
-	internal static async Task SignIn()
+	internal static async Task SignIn(AuthenticationContext context)
 	{
 
-		authenticationResult = null;
+		AuthenticationResult? authResult = null;
 
-		// Attempt silent authentication
-		IEnumerable<IAccount> accounts = await App.GetAccountsAsync();
+		bool error = false;
+
+		if (SavedAccounts.TryGetValue(context, out AccountIdentity? account))
+		{
+			IEnumerable<IAccount> accounts = await App.GetAccountsAsync();
+
+			if (accounts.Any(x => x == account.Account))
+			{
+				Logger.Write($"Account with the UserName {account.Username} for the context {context} is already authenticated");
+				return;
+			}
+		}
+
+		// Fall back to interactive login if silent authentication fails
+		_cts = new CancellationTokenSource();
 
 		try
 		{
-			authenticationResult = await App.AcquireTokenSilent(Scopes, accounts.FirstOrDefault())
-				.ExecuteAsync();
+			authResult = await App.AcquireTokenInteractive(Scopes[context])
+				.WithPrompt(Prompt.SelectAccount)
+				.WithUseEmbeddedWebView(false)
+				.ExecuteAsync(_cts.Token);
 		}
-		catch (MsalUiRequiredException)
+		catch (OperationCanceledException)
 		{
-
-			// Fall back to interactive login if silent authentication fails
-			_cts = new CancellationTokenSource();
-
-			try
+			error = true;
+			throw new OperationCanceledException("The operation was canceled after 1 minute. Browser might have been closed or timeout occurred.");
+		}
+		finally
+		{
+			if (!error && authResult is not null)
 			{
-				authenticationResult = await App.AcquireTokenInteractive(Scopes)
-					.WithPrompt(Prompt.SelectAccount)
-					.WithUseEmbeddedWebView(false)
-					.ExecuteAsync(_cts.Token);
-			}
-			catch (OperationCanceledException)
-			{
-				throw new OperationCanceledException("The operation was canceled after 1 minute. Browser might have been closed or timeout occurred.");
-			}
-			finally
-			{
-				_cts.Dispose();
-				_cts = null; // Reset for future operations
+				// Add the account that was successfully authenticated to the dictionary
+				SavedAccounts[context] = new AccountIdentity
+				{
+					AuthResult = authResult,
+					AccountIdentifier = authResult.Account.HomeAccountId.Identifier,
+					Username = authResult.Account.Username,
+					TenantID = authResult.TenantId,
+					Account = authResult.Account
+				};
 			}
 
+			_cts.Dispose();
+			_cts = null; // Reset for future operations
 		}
 	}
 
@@ -174,29 +288,21 @@ internal static class Intune
 	/// Signs out the user
 	/// </summary>
 	/// <returns></returns>
-	internal static async Task SignOut()
+	internal static async Task SignOut(AuthenticationContext context)
 	{
-		if (authenticationResult is null)
+		if (SavedAccounts.TryGetValue(context, out AccountIdentity? account))
 		{
-			Logger.Write("No user is currently signed in.");
-			return;
-		}
-
-
-		// Get the cached accounts
-		IEnumerable<IAccount> accounts = await App.GetAccountsAsync();
-
-		foreach (IAccount account in accounts)
-		{
-			await App.RemoveAsync(account);
+			await App.RemoveAsync(account.Account);
 			Logger.Write($"Signed out account: {account.Username}");
+			if (!SavedAccounts.Remove(context))
+			{
+				throw new InvalidOperationException($"Failed to remove the account with the username {account.Username} from the saved accounts.");
+			}
 		}
-
-		// Clear the current authentication result
-		authenticationResult = null;
-
-		Logger.Write("All accounts signed out successfully.");
-
+		else
+		{
+			Logger.Write($"No user is currently signed in for the context {context}.");
+		}
 	}
 
 
@@ -212,6 +318,11 @@ internal static class Intune
 	internal static async Task UploadPolicyToIntune(string policyPath, string? groupName, string? policyName, string policyID)
 	{
 
+		if (!SavedAccounts.TryGetValue(AuthenticationContext.Intune, out AccountIdentity? account))
+		{
+			throw new InvalidOperationException("You need to authenticate first.");
+		}
+
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("IntuneCIPUpload");
 
 		string tempPolicyPath = Path.Combine(stagingArea.FullName, "policy.bin");
@@ -221,22 +332,16 @@ internal static class Intune
 		// https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-app-control-policies-with-custom-oma-uri
 		string base64String = ConvertBinFileToBase64(tempPolicyPath, 350000);
 
-		if (authenticationResult is null)
-		{
-			throw new InvalidOperationException("You need to authenticate first");
-		}
-
 		// Call Microsoft Graph API to create the custom policy
-		string? policyId = await CreateCustomPolicy(authenticationResult.AccessToken, base64String, policyName, policyID);
+		string? policyId = await CreateCustomIntunePolicy(account.AuthResult.AccessToken, base64String, policyName, policyID);
 
 		Logger.Write($"{policyId} is the ID of the policy that was created");
-
 
 		if (!string.IsNullOrWhiteSpace(groupName) && policyId is not null)
 		{
 			if (Groups.TryGetValue(groupName, out string? groupId))
 			{
-				await AssignPolicyToGroup(policyId, authenticationResult.AccessToken, groupId);
+				await AssignIntunePolicyToGroup(policyId, account.AuthResult.AccessToken, groupId);
 			}
 		}
 
@@ -253,7 +358,7 @@ internal static class Intune
 	/// <param name="groupID"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static async Task AssignPolicyToGroup(string policyId, string accessToken, string groupID)
+	private static async Task AssignIntunePolicyToGroup(string policyId, string accessToken, string groupID)
 	{
 		using SecHttpClient httpClient = new();
 
@@ -305,7 +410,7 @@ internal static class Intune
 	/// <param name="accessToken"></param>
 	/// <param name="policyData"></param>
 	/// <returns></returns>
-	private static async Task<string?> CreateCustomPolicy(string accessToken, string policyData, string? policyName, string policyID)
+	private static async Task<string?> CreateCustomIntunePolicy(string accessToken, string policyData, string? policyName, string policyID)
 	{
 
 		string descriptionText = $"Application Control Policy Uploaded from AppControl Manager on {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss 'UTC'}";
@@ -497,6 +602,12 @@ internal static class Intune
 		public Dictionary<string, object>? Target { get; set; }
 	}
 
+	public sealed class QueryPayload
+	{
+		[JsonPropertyName("Query")]
+		public string? Query { get; set; }
+	}
+
 
 	private static string ConvertBinFileToBase64(string filePath, int maxSizeInBytes)
 	{
@@ -519,6 +630,7 @@ internal static class Intune
 [JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(JsonElement))]
 [JsonSerializable(typeof(AssignmentPayload))]
+[JsonSerializable(typeof(QueryPayload))]
 [JsonSerializable(typeof(Windows10CustomConfiguration))]
 [JsonSerializable(typeof(OmaSettingBase64))]
 internal sealed partial class IntuneJsonContext : JsonSerializerContext

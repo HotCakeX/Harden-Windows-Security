@@ -88,7 +88,7 @@
         </Border>
 
         <!-- DataGrid for FileIdentity Outputs -->
-        <Border Grid.Row="2" Style="{StaticResource GridCardStyle}" Margin="0,0,0,25" Padding="5">
+        <Border Grid.Row="2" Style="{StaticResource GridCardStyle}" Margin="0,0,0,10" Padding="5">
             <tk7controls:DataGrid
                 ItemsSource="{x:Bind local:CreateSupplementalPolicy.Instance.filesAndFoldersScanResults, Mode=OneWay}"
                 x:Name="FileIdentitiesDataGrid"

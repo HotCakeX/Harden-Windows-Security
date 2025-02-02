@@ -679,16 +679,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 
 
 	/// <summary>
-	/// Changes the main button's text that creates the policy, based on the selected method of creation
-	/// </summary>
-	/// <param name="text"></param>
-	private void CreatePolicyButtonTextChange(string text)
-	{
-		CreatePolicyButton.Content = text;
-	}
-
-
-	/// <summary>
 	/// The button that browses for XML file the logs will be added to
 	/// </summary>
 	/// <param name="sender"></param>
@@ -704,8 +694,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 			PolicyToAddLogsTo = selectedFile;
 
 			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
-
-			CreatePolicyButtonTextChange("Add logs to the selected policy");
 		}
 
 	}
@@ -718,7 +706,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 	/// <param name="e"></param>
 	private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -727,12 +714,8 @@ public sealed partial class EventLogsPolicyCreation : Page
 			BasePolicyXMLFile = selectedFile;
 
 			Logger.Write($"Selected {BasePolicyXMLFile} to associate the Supplemental policy with.");
-
-			CreatePolicyButtonTextChange("Create Policy for Selected Base");
 		}
-
 	}
-
 
 
 	/// <summary>
@@ -746,8 +729,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 		if (Guid.TryParse(BaseGUIDTextBox.Text, out Guid guid))
 		{
 			BasePolicyGUID = guid;
-
-			CreatePolicyButtonTextChange("Create Policy for Base GUID");
 		}
 		else
 		{
@@ -790,7 +771,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 				throw new InvalidOperationException("You must select an option from the policy creation list");
 			}
 
-
 			// Create a policy name if it wasn't provided
 			DateTime now = DateTime.Now;
 			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
@@ -804,7 +784,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 			{
 				policyName = $"Supplemental policy from event logs - {formattedDate}";
 			}
-
 
 
 			// All of the File Identities that will be used to put in the policy XML file
@@ -827,11 +806,12 @@ public sealed partial class EventLogsPolicyCreation : Page
 			}
 
 
-
 			// If user selected to deploy the policy
 			// Need to retrieve it while we're still at the UI thread
 			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
 
+			// See which section of the Segmented control is selected for policy creation
+			int selectedCreationMethod = segmentedControl.SelectedIndex;
 
 			await Task.Run(() =>
 			{
@@ -848,104 +828,120 @@ public sealed partial class EventLogsPolicyCreation : Page
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
 
-
-
-				if (PolicyToAddLogsTo is not null)
+				switch (selectedCreationMethod)
 				{
+					case 0:
+						{
+							if (PolicyToAddLogsTo is not null)
+							{
 
+								// Set policy name and reset the policy ID of our new policy
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
 
-					// Set policy name and reset the policy ID of our new policy
-					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
+								// Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
 
-					// Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
+								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
+								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
-					// Merge the created policy with the user-selected policy which will result in adding the new rules to it
-					SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
+								UpdateHvciOptions.Update(PolicyToAddLogsTo);
 
-					UpdateHvciOptions.Update(PolicyToAddLogsTo);
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
+									PolicyToCIPConverter.Convert(PolicyToAddLogsTo, CIPPath);
 
-					// If user selected to deploy the policy
-					if (DeployAtTheEnd)
-					{
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException("No policy file was selected to add the logs to.");
+							}
 
-						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+							break;
+						}
+					case 1:
+						{
+							if (BasePolicyXMLFile is not null)
+							{
+								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-						PolicyToCIPConverter.Convert(PolicyToAddLogsTo, CIPPath);
+								// Instantiate the user selected Base policy - To get its BasePolicyID
+								CodeIntegrityPolicy codeIntegrityPolicy = new(BasePolicyXMLFile, null);
 
-						CiToolHelper.UpdatePolicy(CIPPath);
+								// Set the BasePolicyID of our new policy to the one from user selected policy
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, codeIntegrityPolicy.BasePolicyID, null);
 
-					}
+								// Configure policy rule options
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+								// Set policy version
+								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+								// Copying the policy file to the User Config directory - outside of the temporary staging area
+								File.Copy(EmptyPolicyPath, OutputPath, true);
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+
+									PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException("No policy file was selected to associate the Supplemental policy with.");
+							}
+
+							break;
+						}
+					case 2:
+						{
+
+							if (BasePolicyGUID is not null)
+							{
+								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+								// Set the BasePolicyID of our new policy to the one supplied by user
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
+
+								// Configure policy rule options
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+								// Set policy version
+								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+								// Copying the policy file to the User Config directory - outside of the temporary staging area
+								File.Copy(EmptyPolicyPath, OutputPath, true);
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+
+									PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException("No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.");
+							}
+
+							break;
+						}
+					default:
+						{
+							break;
+						}
 				}
-
-				else if (BasePolicyXMLFile is not null)
-				{
-					string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
-					// Instantiate the user selected Base policy - To get its BasePolicyID
-					CodeIntegrityPolicy codeIntegrityPolicy = new(BasePolicyXMLFile, null);
-
-					// Set the BasePolicyID of our new policy to the one from user selected policy
-					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, codeIntegrityPolicy.BasePolicyID, null);
-
-					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
-					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
-
-
-					// If user selected to deploy the policy
-					if (DeployAtTheEnd)
-					{
-
-						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
-						CiToolHelper.UpdatePolicy(CIPPath);
-
-					}
-
-				}
-				else if (BasePolicyGUID is not null)
-				{
-					string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
-
-					// Set the BasePolicyID of our new policy to the one supplied by user
-					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
-
-
-					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
-
-					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
-
-
-					// If user selected to deploy the policy
-					if (DeployAtTheEnd)
-					{
-
-						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
-						CiToolHelper.UpdatePolicy(CIPPath);
-
-					}
-
-				}
-
 
 			});
 
@@ -953,7 +949,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 
 		finally
 		{
-
 			// Enable the policy creator button again
 			CreatePolicyButton.IsEnabled = true;
 
@@ -964,7 +959,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
-
 		}
 
 	}
@@ -1014,5 +1008,23 @@ public sealed partial class EventLogsPolicyCreation : Page
 		if (e.HoldingState is HoldingState.Started)
 			if (!SelectedAppLockerEVTXFilesFlyout.IsOpen)
 				SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
+	}
+
+
+	/// <summary>
+	/// Event handler for for the segmented button's selection change
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void SegmentedControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
+		{
+			0 => "Add logs to the selected policy",
+			1 => "Create Policy for Selected Base",
+			2 => "Create Policy for Base GUID",
+			_ => "Create Policy"
+		};
+
 	}
 }

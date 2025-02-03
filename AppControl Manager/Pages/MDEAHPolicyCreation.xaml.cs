@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
@@ -19,8 +21,34 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace AppControlManager.Pages;
 
-public sealed partial class MDEAHPolicyCreation : Page
+public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 {
+
+	#region For the toolbar menu's Selector Bar
+
+	private SelectorBarItem _selectedItem;
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	public bool IsLocalSelected => _selectedItem == SelectorBarItemMain;
+	public bool IsCloudSelected => _selectedItem == SelectorBarItemCloud;
+	public bool IsCreateSelected => _selectedItem == SelectorBarItemCreate;
+
+	private void MenuSelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+	{
+		_selectedItem = sender.SelectedItem;
+		OnPropertyChanged(nameof(IsLocalSelected));
+		OnPropertyChanged(nameof(IsCloudSelected));
+		OnPropertyChanged(nameof(IsCreateSelected));
+	}
+
+	private void OnPropertyChanged(string propertyName)
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
+
+	#endregion
+
+
 	// To store the FileIdentities displayed on the DataGrid
 	// Binding happens on the XAML but methods related to search update the ItemSource of the DataGrid from code behind otherwise there will not be an expected result
 	internal ObservableCollection<FileIdentity> FileIdentities { get; set; }
@@ -40,11 +68,12 @@ public sealed partial class MDEAHPolicyCreation : Page
 	// The user selected scan level
 	private ScanLevels scanLevel = ScanLevels.FilePublisher;
 
-
-
 	public MDEAHPolicyCreation()
 	{
 		this.InitializeComponent();
+
+		// Default selection for the toolbar menu's selector bar
+		_selectedItem = SelectorBarItemMain;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
@@ -56,7 +85,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 		// Add the DateChanged event handler
 		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
 	}
-
 
 	#region
 
@@ -230,11 +258,9 @@ public sealed partial class MDEAHPolicyCreation : Page
 			// Enable the button again
 			ScanLogs.IsEnabled = true;
 
-
 			// Stop displaying the Progress Ring
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
-
 
 			// Enable the Policy creator button again
 			CreatePolicyButton.IsEnabled = true;
@@ -484,7 +510,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 				// Append each row's data with property labels
 				_ = dataBuilder.AppendLine(ConvertRowToText(selectedItem));
 				_ = dataBuilder.AppendLine(new string('-', 50)); // Separator between rows
-
 			}
 
 			// Create a DataPackage and set the formatted text as the content
@@ -525,7 +550,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 			.AppendLine($"File Publishers: {row.FilePublishersToDisplay}")
 			.ToString();
 	}
-
 
 
 	/// <summary>
@@ -670,23 +694,12 @@ public sealed partial class MDEAHPolicyCreation : Page
 
 
 	/// <summary>
-	/// Changes the main button's text that creates the policy, based on the selected method of creation
-	/// </summary>
-	/// <param name="text"></param>
-	private void CreatePolicyButtonTextChange(string text)
-	{
-		CreatePolicyButton.Content = text;
-	}
-
-
-	/// <summary>
 	/// The button that browses for XML file the logs will be added to
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
 	private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -695,10 +708,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 			PolicyToAddLogsTo = selectedFile;
 
 			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
-
-			CreatePolicyButtonTextChange("Add logs to the selected policy");
 		}
-
 	}
 
 
@@ -709,7 +719,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 	/// <param name="e"></param>
 	private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -718,10 +727,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 			BasePolicyXMLFile = selectedFile;
 
 			Logger.Write($"Selected {BasePolicyXMLFile} to associate the Supplemental policy with.");
-
-			CreatePolicyButtonTextChange("Create Policy for Selected Base");
 		}
-
 	}
 
 
@@ -737,14 +743,11 @@ public sealed partial class MDEAHPolicyCreation : Page
 		if (Guid.TryParse(BaseGUIDTextBox.Text, out Guid guid))
 		{
 			BasePolicyGUID = guid;
-
-			CreatePolicyButtonTextChange("Create Policy for Base GUID");
 		}
 		else
 		{
 			throw new ArgumentException("Invalid GUID");
 		}
-
 	}
 
 
@@ -769,12 +772,10 @@ public sealed partial class MDEAHPolicyCreation : Page
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
-
 			if (FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException("There are no logs. Use the scan button first or adjust the filters.");
 			}
-
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
@@ -797,7 +798,6 @@ public sealed partial class MDEAHPolicyCreation : Page
 			}
 
 
-
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
 
@@ -818,11 +818,12 @@ public sealed partial class MDEAHPolicyCreation : Page
 			}
 
 
-
 			// If user selected to deploy the policy
 			// Need to retrieve it while we're still at the UI thread
 			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
 
+			// See which section of the Segmented control is selected for policy creation
+			int selectedCreationMethod = segmentedControl.SelectedIndex;
 
 			await Task.Run(() =>
 			{
@@ -839,110 +840,131 @@ public sealed partial class MDEAHPolicyCreation : Page
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
 
-
-
-				if (PolicyToAddLogsTo is not null)
+				switch (selectedCreationMethod)
 				{
+					case 0:
+						{
+							if (PolicyToAddLogsTo is not null)
+							{
+								// Set policy name and reset the policy ID of our new policy
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
 
-					// Set policy name and reset the policy ID of our new policy
-					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
+								// Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
 
-					// Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
+								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
+								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
-					// Merge the created policy with the user-selected policy which will result in adding the new rules to it
-					SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
-
-					UpdateHvciOptions.Update(PolicyToAddLogsTo);
+								UpdateHvciOptions.Update(PolicyToAddLogsTo);
 
 
-					// If user selected to deploy the policy
-					if (DeployAtTheEnd)
-					{
-						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
-						PolicyToCIPConverter.Convert(PolicyToAddLogsTo, CIPPath);
+									PolicyToCIPConverter.Convert(PolicyToAddLogsTo, CIPPath);
 
-						CiToolHelper.UpdatePolicy(CIPPath);
-					}
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException("No policy file was selected to add the logs to.");
+							}
+
+							break;
+						}
+					case 1:
+						{
+							if (BasePolicyXMLFile is not null)
+							{
+								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+								// Instantiate the user selected Base policy - To get its BasePolicyID
+								CodeIntegrityPolicy codeIntegrityPolicy = new(BasePolicyXMLFile, null);
+
+								// Set the BasePolicyID of our new policy to the one from user selected policy
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, codeIntegrityPolicy.BasePolicyID, null);
+
+								// Configure policy rule options
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+								// Set policy version
+								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+								// Copying the policy file to the User Config directory - outside of the temporary staging area
+								File.Copy(EmptyPolicyPath, OutputPath, true);
+
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+
+									PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException("No policy file was selected to associate the Supplemental policy with.");
+							}
+
+							break;
+						}
+					case 2:
+						{
+
+							if (BasePolicyGUID is not null)
+							{
+								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+
+								// Set the BasePolicyID of our new policy to the one supplied by user
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
+
+								// Configure policy rule options
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+
+								// Set policy version
+								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+								// Copying the policy file to the User Config directory - outside of the temporary staging area
+								File.Copy(EmptyPolicyPath, OutputPath, true);
+
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+
+									PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException("No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.");
+							}
+
+							break;
+						}
+					default:
+						{
+							break;
+						}
 				}
-
-				else if (BasePolicyXMLFile is not null)
-				{
-					string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
-					// Instantiate the user selected Base policy - To get its BasePolicyID
-					CodeIntegrityPolicy codeIntegrityPolicy = new(BasePolicyXMLFile, null);
-
-					// Set the BasePolicyID of our new policy to the one from user selected policy
-					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, codeIntegrityPolicy.BasePolicyID, null);
-
-					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
-					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
-
-
-					// If user selected to deploy the policy
-					if (DeployAtTheEnd)
-					{
-						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
-						CiToolHelper.UpdatePolicy(CIPPath);
-					}
-
-				}
-				else if (BasePolicyGUID is not null)
-				{
-					string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
-
-					// Set the BasePolicyID of our new policy to the one supplied by user
-					string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
-
-
-					// Configure policy rule options
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
-
-					// Set policy version
-					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-					// Copying the policy file to the User Config directory - outside of the temporary staging area
-					File.Copy(EmptyPolicyPath, OutputPath, true);
-
-
-					// If user selected to deploy the policy
-					if (DeployAtTheEnd)
-					{
-
-						string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
-						CiToolHelper.UpdatePolicy(CIPPath);
-
-					}
-
-				}
-
-
 			});
-
 		}
-
 		finally
 		{
-
 			// Enable the policy creator button again
 			CreatePolicyButton.IsEnabled = true;
-
 
 			// enable the scan logs button again
 			ScanLogs.IsEnabled = true;
@@ -950,9 +972,7 @@ public sealed partial class MDEAHPolicyCreation : Page
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
-
 		}
-
 	}
 
 
@@ -992,6 +1012,249 @@ public sealed partial class MDEAHPolicyCreation : Page
 	{
 		BrowseForLogs_SelectedFilesTextBox.Text = null;
 		MDEAdvancedHuntingLogs = null;
+	}
+
+
+
+	/// <summary>
+	/// Event handler for the Cancel Sign In button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void MSGraphCancelSignInButton_Click(object sender, RoutedEventArgs e)
+	{
+		MicrosoftGraph.CancelSignIn();
+	}
+
+
+	/// <summary>
+	/// Event handler for the SignIn button for Microsoft Graph
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void MSGraphSignInButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool signInSuccessful = false;
+
+		try
+		{
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = "Signing into MSGraph";
+			MainInfoBar.Severity = InfoBarSeverity.Informational;
+			MainInfoBar.IsClosable = false;
+
+			MSGraphCancelSignInButton.IsEnabled = true;
+
+			MSGraphSignInButton.IsEnabled = false;
+
+			await MicrosoftGraph.SignIn(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
+
+			MainInfoBar.Message = "Successfully signed into MSGraph";
+			MainInfoBar.Severity = InfoBarSeverity.Success;
+
+			// Enable the sign out button
+			MSGraphSignOutButton.IsEnabled = true;
+
+			// Enable the retrieve the logs button
+			RetrieveTheLogsButton.IsEnabled = true;
+
+			signInSuccessful = true;
+
+		}
+
+		catch (OperationCanceledException)
+		{
+			signInSuccessful = false;
+			Logger.Write("Sign in to MSGraph was cancelled by the user");
+			MainInfoBar.Message = "Sign in to MSGraph was cancelled by the user";
+			MainInfoBar.Severity = InfoBarSeverity.Warning;
+		}
+
+		catch (Exception ex)
+		{
+			MainInfoBar.Message = $"There was an error signing into MSGraph: {ex.Message}";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
+
+			throw;
+		}
+
+		finally
+		{
+			// If sign in wasn't successful, keep the button enabled
+			if (!signInSuccessful)
+			{
+				MSGraphSignInButton.IsEnabled = true;
+			}
+
+			MainInfoBar.IsClosable = true;
+
+			MSGraphCancelSignInButton.IsEnabled = false;
+		}
+
+	}
+
+
+	/// <summary>
+	/// Event handler for signing out of Microsoft Graph
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void MSGraphSignOutButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool signOutSuccessful = false;
+
+		try
+		{
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = "Signing out of MSGraph";
+			MainInfoBar.Severity = InfoBarSeverity.Informational;
+			MainInfoBar.IsClosable = false;
+
+			MSGraphSignOutButton.IsEnabled = false;
+
+			RetrieveTheLogsButton.IsEnabled = false;
+
+			await MicrosoftGraph.SignOut(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
+
+			signOutSuccessful = true;
+
+			// Enable the Sign in button
+			MSGraphSignInButton.IsEnabled = true;
+
+			MainInfoBar.Message = "Successfully signed out of MSGraph";
+			MainInfoBar.Severity = InfoBarSeverity.Success;
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.Message = $"There was an error signing out of MSGraph: {ex.Message}";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
+
+			throw;
+		}
+		finally
+		{
+			// If sign out wasn't successful, keep the button enabled
+			if (!signOutSuccessful)
+			{
+				MSGraphSignOutButton.IsEnabled = true;
+			}
+
+			MainInfoBar.IsClosable = true;
+		}
+
+	}
+
+
+	/// <summary>
+	/// Event handler for the button that retrieves the logs
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void RetrieveTheLogsButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool errorsOccurred = false;
+
+		MainInfoBar.Visibility = Visibility.Visible;
+		MainInfoBar.IsOpen = true;
+		MainInfoBar.Message = "Retrieving the Microsoft Defender for Endpoint Advanced Hunting data";
+		MainInfoBar.Severity = InfoBarSeverity.Informational;
+		MainInfoBar.IsClosable = false;
+
+		MDEAdvancedHuntingDataRootObject? root = null;
+
+		try
+		{
+			RetrieveTheLogsButton.IsEnabled = false;
+			MSGraphDeviceNameButton.IsEnabled = false;
+
+			// Retrieve the MDE Advanced Hunting data as a JSON string
+			string? result = await MicrosoftGraph.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text);
+
+			// If there were results
+			if (result is not null)
+			{
+				// Deserialize the JSON result
+				root = await Task.Run(() => JsonSerializer.Deserialize(result, MDEAdvancedHuntingJSONSerializationContext.Default.MDEAdvancedHuntingDataRootObject));
+
+				if (root is null)
+				{
+					MainInfoBar.Message = $"There were no logs to be retrieved";
+					MainInfoBar.Severity = InfoBarSeverity.Warning;
+					errorsOccurred = true;
+					return;
+				}
+
+				if (root.Results.Count is 0)
+				{
+					MainInfoBar.Message = $"0 logs were retrieved";
+					MainInfoBar.Severity = InfoBarSeverity.Warning;
+					errorsOccurred = true;
+					return;
+				}
+
+				Logger.Write("Deserialization complete. Number of records: " + (root.Results.Count));
+
+				// Grab the App Control Logs
+				HashSet<FileIdentity> Output = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
+
+				AllFileIdentities.Clear();
+				FileIdentities.Clear();
+
+				// Store all of the data in the ObservableCollection and List
+				foreach (FileIdentity fileIdentity in Output)
+				{
+					AllFileIdentities.Add(fileIdentity);
+
+					FileIdentities.Add(fileIdentity);
+				}
+
+				UpdateTotalLogs();
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.Message = $"There was an error retrieving the MDE Advanced Hunting logs from MSGraph: {ex.Message}";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
+			errorsOccurred = true;
+			throw;
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				MainInfoBar.Message = $"Successfully retrieved {root?.Results.Count} logs from the cloud";
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+			}
+
+			RetrieveTheLogsButton.IsEnabled = true;
+			MSGraphDeviceNameButton.IsEnabled = true;
+
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler for for the segmented button's selection change
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void SegmentedControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
+		{
+			0 => "Add logs to the selected policy",
+			1 => "Create Policy for Selected Base",
+			2 => "Create Policy for Base GUID",
+			_ => "Create Policy"
+		};
+
 	}
 
 }

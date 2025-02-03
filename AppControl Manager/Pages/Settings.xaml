@@ -33,7 +33,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,0,6,10">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 
@@ -203,24 +203,35 @@
                     <TextBlock x:Name="VersionTextBlock" win:IsTextSelectionEnabled="True"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard HorizontalContentAlignment="Left"
-                                               ContentAlignment="Left">
-                            <StackPanel Margin="-12,0,0,0"
-                                        Orientation="Vertical">
-                                <HyperlinkButton Content="GitHub repository" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
-                                <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
-                                <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
-                                <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
-                                <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
-                            </StackPanel>
+                        <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+
+                            <controls:WrapPanel Margin="-12,0,0,0" Orientation="Horizontal" HorizontalSpacing="13">
+
+                                <StackPanel Orientation="Vertical">
+                                    <HyperlinkButton Content="GitHub repository" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
+                                    <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Vertical">
+                                    <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
+                                    <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Vertical">
+                                    <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
+                                </StackPanel>
+
+                            </controls:WrapPanel>
+
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
-                    <HyperlinkButton Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+                    <HyperlinkButton Content="Send Feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
                     <HyperlinkButton Content="Icons8 website for all of the Icons used in this app" NavigateUri="https://icons8.com" />
                     <HyperlinkButton Content="Source Code" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager" />
+                    <TextBlock Text="Sponsored by Elliot Labs LLC" FontStyle="Italic" Margin="0,6,0,0" />
                 </controls:WrapPanel>
 
             </StackPanel>

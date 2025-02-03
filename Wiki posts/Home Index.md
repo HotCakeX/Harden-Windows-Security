@@ -6,7 +6,7 @@
 
 # [Harden Windows Security GitHub Wiki content](https://github.com/HotCakeX/Harden-Windows-Security/wiki)
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/WDACConfig/icon.png" alt="AppControl Manager icon" width="50"> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/65086755cd831ab6bbb4eddf10b7b716cee12a48/Pictures/AppControl%20Manager%20Icons/icon.png" alt="AppControl Manager icon" width="50"> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Policy.gif" alt="AppControl Manager Menu Item" width="30"> [Create AppControl Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Supplemental%20Policy.gif" alt="AppControl Manager Menu Item" width="30"> [Create Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy)

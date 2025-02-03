@@ -1,4 +1,11 @@
-# How to Use Microsoft Defender for Endpoint Advanced Hunting With WDAC App Control
+# How to Use Microsoft Defender for Endpoint Advanced Hunting With App Control
+
+<br>
+
+> [!IMPORTANT]\
+> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting) now supports automatically retrieving the Advanced Hunting logs from Microsoft Defender for Endpoint (MDE). The manual steps described below are only additional explanations.
+
+<br>
 
 App Control for Business is a highly effective security feature that empowers you to manage the execution of applications on your endpoints.
 

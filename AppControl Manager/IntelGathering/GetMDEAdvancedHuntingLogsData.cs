@@ -18,7 +18,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	internal static HashSet<FileIdentity> Retrieve(List<MDEAdvancedHuntingData> data)
 	{
 
-
 		// HashSet to store the output, ensures the data are unique and signed data are prioritized over unsigned data
 		FileIdentitySignatureBasedHashSet fileIdentities = new();
 
@@ -89,8 +88,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					SHA256Hash = possibleCodeIntegrityAuditEvent.SHA256,
 					SHA1FlatHash = possibleCodeIntegrityAuditEvent.Sha1FlatHash,
 					SHA256FlatHash = possibleCodeIntegrityAuditEvent.Sha256FlatHash,
-					USN = GetLongValue(possibleCodeIntegrityAuditEvent.USN),
-					SISigningScenario = GetIntValue(possibleCodeIntegrityAuditEvent.SiSigningScenario) ?? 1,
+					USN = possibleCodeIntegrityAuditEvent.USN,
+					SISigningScenario = possibleCodeIntegrityAuditEvent.SiSigningScenario ?? 1,
 					PolicyName = possibleCodeIntegrityAuditEvent.PolicyName,
 					PolicyID = possibleCodeIntegrityAuditEvent.PolicyID,
 					PolicyHash = possibleCodeIntegrityAuditEvent.PolicyHash,
@@ -130,13 +129,13 @@ internal static class GetMDEAdvancedHuntingLogsData
 						FileSignerInfo signerInfo = new()
 						{
 
-							TotalSignatureCount = GetIntValue(correlatedEvent.TotalSignatureCount),
-							Signature = GetIntValue(correlatedEvent.Signature),
+							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
+							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
 							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
 							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
 							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = GetIntValue(correlatedEvent.Flags),
+							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
 							PublisherName = PublisherName,
@@ -196,8 +195,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					SHA256Hash = possibleCodeIntegrityBlockEvent.SHA256,
 					SHA1FlatHash = possibleCodeIntegrityBlockEvent.Sha1FlatHash,
 					SHA256FlatHash = possibleCodeIntegrityBlockEvent.Sha256FlatHash,
-					USN = GetLongValue(possibleCodeIntegrityBlockEvent.USN),
-					SISigningScenario = GetIntValue(possibleCodeIntegrityBlockEvent.SiSigningScenario) ?? 1,
+					USN = possibleCodeIntegrityBlockEvent.USN,
+					SISigningScenario = possibleCodeIntegrityBlockEvent.SiSigningScenario ?? 1,
 					PolicyName = possibleCodeIntegrityBlockEvent.PolicyName,
 					PolicyID = possibleCodeIntegrityBlockEvent.PolicyID,
 					PolicyHash = possibleCodeIntegrityBlockEvent.PolicyHash,
@@ -237,13 +236,13 @@ internal static class GetMDEAdvancedHuntingLogsData
 						FileSignerInfo signerInfo = new()
 						{
 
-							TotalSignatureCount = GetIntValue(correlatedEvent.TotalSignatureCount),
-							Signature = GetIntValue(correlatedEvent.Signature),
+							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
+							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
 							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
 							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
 							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = GetIntValue(correlatedEvent.Flags),
+							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
 							PublisherName = PublisherName,
@@ -303,8 +302,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					SHA256Hash = possibleAppLockerAuditEvent.SHA256,
 					SHA1FlatHash = possibleAppLockerAuditEvent.Sha1FlatHash,
 					SHA256FlatHash = possibleAppLockerAuditEvent.Sha256FlatHash,
-					USN = GetLongValue(possibleAppLockerAuditEvent.USN),
-					SISigningScenario = GetIntValue(possibleAppLockerAuditEvent.SiSigningScenario) ?? 1,
+					USN = possibleAppLockerAuditEvent.USN,
+					SISigningScenario = possibleAppLockerAuditEvent.SiSigningScenario ?? 1,
 					PolicyName = possibleAppLockerAuditEvent.PolicyName,
 					PolicyID = possibleAppLockerAuditEvent.PolicyID,
 					PolicyHash = possibleAppLockerAuditEvent.PolicyHash,
@@ -344,13 +343,13 @@ internal static class GetMDEAdvancedHuntingLogsData
 						FileSignerInfo signerInfo = new()
 						{
 
-							TotalSignatureCount = GetIntValue(correlatedEvent.TotalSignatureCount),
-							Signature = GetIntValue(correlatedEvent.Signature),
+							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
+							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
 							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
 							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
 							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = GetIntValue(correlatedEvent.Flags),
+							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
 							PublisherName = PublisherName,
@@ -408,8 +407,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					SHA256Hash = possibleAppLockerBlockEvent.SHA256,
 					SHA1FlatHash = possibleAppLockerBlockEvent.Sha1FlatHash,
 					SHA256FlatHash = possibleAppLockerBlockEvent.Sha256FlatHash,
-					USN = GetLongValue(possibleAppLockerBlockEvent.USN),
-					SISigningScenario = GetIntValue(possibleAppLockerBlockEvent.SiSigningScenario) ?? 1,
+					USN = possibleAppLockerBlockEvent.USN,
+					SISigningScenario = possibleAppLockerBlockEvent.SiSigningScenario ?? 1,
 					PolicyName = possibleAppLockerBlockEvent.PolicyName,
 					PolicyID = possibleAppLockerBlockEvent.PolicyID,
 					PolicyHash = possibleAppLockerBlockEvent.PolicyHash,
@@ -449,13 +448,13 @@ internal static class GetMDEAdvancedHuntingLogsData
 						FileSignerInfo signerInfo = new()
 						{
 
-							TotalSignatureCount = GetIntValue(correlatedEvent.TotalSignatureCount),
-							Signature = GetIntValue(correlatedEvent.Signature),
+							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
+							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
 							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
 							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
 							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = GetIntValue(correlatedEvent.Flags),
+							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
 							PublisherName = PublisherName,
@@ -480,9 +479,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				// Add the entire event package to the output list
 				_ = fileIdentities.Add(eventData);
 
-
 			}
-
 		}
 
 
@@ -508,7 +505,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 		return null;
 	}
 
-
 	/// <summary>
 	/// Method to safely get an integer value from string
 	/// </summary>
@@ -519,29 +515,23 @@ internal static class GetMDEAdvancedHuntingLogsData
 		return data is not null && int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 	}
 
-
-
 	/// <summary>
-	/// Converts string to DateTime
+	/// Safely converts string to DateTime
 	/// </summary>
 	private static DateTime? GetEventDataDateTimeValue(string? data)
 	{
 		return data is not null && DateTime.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
 	}
 
-
-
-	private static long? GetLongValue(string? data)
-	{
-		return data is not null && long.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out long result) ? result : null;
-	}
-
+	/// <summary>
+	/// Safely converts string to GUID
+	/// </summary>
+	/// <param name="data"></param>
+	/// <returns></returns>
 	private static Guid? GetGuidValue(string? data)
 	{
 		return data is not null && Guid.TryParse(data, out Guid guid) ? guid : null;
 	}
-
-
 
 	/// <summary>
 	/// Resolves the Validated/Requested Signing Level int to friendly string
@@ -562,7 +552,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 		}
 	}
 
-
 	/// <summary>
 	/// Resolves the VerificationError int to a friendly string
 	/// </summary>
@@ -580,7 +569,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 			return null;
 		}
 	}
-
 
 	/// <summary>
 	/// Resolves the SignatureType int to a friendly string
@@ -600,8 +588,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 		}
 	}
 
-
 	#endregion
-
 
 }

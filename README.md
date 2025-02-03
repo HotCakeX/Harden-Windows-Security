@@ -110,7 +110,7 @@ Unprotect-WindowsSecurity # CLI Mode
 
 <br>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/WDACConfig/Icon%20smaller.png" alt="GitHub logo pink SVG"> [Install the AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/65086755cd831ab6bbb4eddf10b7b716cee12a48/Pictures/AppControl%20Manager%20Icons/Icon%20smaller.png" alt="GitHub logo pink SVG"> [Install the AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
 * [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
 * [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)

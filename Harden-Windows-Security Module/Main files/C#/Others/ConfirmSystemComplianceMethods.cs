@@ -449,6 +449,11 @@ public static partial class ConfirmSystemComplianceMethods
 	{
 		return Task.Run(() =>
 		{
+			if (!Initializer.BitLockerInfrastructureAvailable)
+			{
+				Logger.LogMessage("BitLocker infrastructure is not available or enabled on this system. Skipping BitLocker settings verification.", LogTypeIntel.Information);
+				return;
+			}
 
 			// Create a new list to store the results
 			List<IndividualResult> nestedObjectArray = [];

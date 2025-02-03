@@ -95,10 +95,7 @@
                             <Border x:Name="border"
                Background="Transparent"
                CornerRadius="30">
-                                <Grid x:Name="RefreshButtonIconImageGrid">
-                                    <Image x:Name="RefreshIconImage" Source="icon.png"
-                      Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Grid>
+                                <TextBlock FontFamily="{DynamicResource SymbolThemeFontFamily}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="UltraBold" Text="&#xE768;"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">

@@ -4,11 +4,11 @@ using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace HardenWindowsSecurity;
 
-public static class ToastNotification
+internal static class ToastNotification
 {
 
 	// These are the different type of notification types/presets that can be displayed
-	public enum Type
+	internal enum Type
 	{
 		EndOfProtection,
 		EndOfConfirmation,
@@ -22,7 +22,7 @@ public static class ToastNotification
 	/// Displays modern toast notification on Windows
 	/// </summary>
 	/// <param name="Type">The type of the toast notification to use</param>
-	public static void Show(Type Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
+	internal static void Show(Type Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
 	{
 
 		try
@@ -239,9 +239,9 @@ public static class ToastNotification
 					break;
 			}
 		}
-		catch
+		catch (Exception ex)
 		{
-			// Suppress the errors as they are unimportant and there is no need to pollute the logs if user has certain configurations that doesn't allow toast notifications from PowerShell to be generated
+			Logger.LogMessage($"Couldn't display toast notification: {ex.Message}", LogTypeIntel.Warning);
 		}
 
 	}

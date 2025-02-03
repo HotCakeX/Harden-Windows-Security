@@ -30,7 +30,7 @@ public static class AsyncDownloader
 				"MicrosoftSecurityBaseline.zip"
 			},
 			{
-				new Uri("https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip"),
+				new Uri("https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip"),
 				"Microsoft365SecurityBaseline.zip"
 			},
 			{
@@ -126,7 +126,6 @@ public static class AsyncDownloader
 			string[] subDirectories = Directory.GetDirectories(basePath);
 			if (subDirectories.Length > 0)
 			{
-				// Assuming you want the first subdirectory found
 				string fullPath = subDirectories[0];
 				return fullPath;
 			}
@@ -245,7 +244,7 @@ public static class AsyncDownloader
 
 
 		// Extract LGPO.zip
-		ZipFile.ExtractToDirectory(LGPOZipFilePath, GlobalVars.WorkingDir);
+		ZipFile.ExtractToDirectory(LGPOZipFilePath, GlobalVars.WorkingDir, true);
 
 		if (!OnlyLGPO)
 		{

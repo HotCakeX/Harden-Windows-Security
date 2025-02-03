@@ -12,13 +12,11 @@ namespace HardenWindowsSecurity;
 
 public static partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 
 		// Method to handle the ASRRules view, including loading
-		private void ASRRulesView(object obj)
+		private void ASRRulesView(object? obj)
 		{
 			// Check if the view is already cached
 			if (_viewCache.TryGetValue("ASRRulesView", out var cachedView))
@@ -41,16 +39,12 @@ public static partial class GUIMain
 			// Parse the XAML content to create a UserControl
 			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
-			// Find the Parent Grid
-			Grid? ParentGrid = (Grid)View.FindName("ParentGrid");
-
-			#region finding elements
-
+			// Finding the elements
+			Grid ParentGrid = (Grid)View.FindName("ParentGrid");
 			Button RetrieveASRStatusButton = (Button)ParentGrid.FindName("RetrieveASRStatus");
 			Button ApplyASRRulesButton = (Button)ParentGrid.FindName("ApplyASRRulesButton");
-
-			#endregion
-
+			ListView ASRRuleSet1 = (ListView)ParentGrid.FindName("ASRRuleSet1");
+			ListView ASRRuleSet2 = (ListView)ParentGrid.FindName("ASRRuleSet2");
 
 			// Register button to be disabled/enabled based on global activity
 			ActivityTracker.RegisterUIElement(RetrieveASRStatusButton);
@@ -142,12 +136,6 @@ public static partial class GUIMain
 					// Set text blocks to empty while new data is being generated
 					Application.Current.Dispatcher.Invoke(() =>
 					{
-						// Get the ListViews
-						if (ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 || ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
-						{
-							throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
-						}
-
 						// Empty the dictionary from previous ComboBox values in order to collect new data
 						comboBoxDictionary.Clear();
 
@@ -239,13 +227,6 @@ public static partial class GUIMain
 
 					Application.Current.Dispatcher.Invoke(() =>
 					{
-						// Get the ListViews
-						if (ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 ||
-							ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
-						{
-							throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
-						}
-
 						// Combine the items of both ListViews
 						IEnumerable<ListViewItem> combinedItems = ASRRuleSet1.Items.Cast<ListViewItem>()
 										   .Concat(ASRRuleSet2.Items.Cast<ListViewItem>());
@@ -347,7 +328,6 @@ public static partial class GUIMain
 			// Cache the view before setting it as the CurrentView
 			_viewCache["ASRRulesView"] = View;
 
-			// Set the CurrentView to the ASRRules view
 			CurrentView = View;
 		}
 	}

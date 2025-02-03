@@ -14,7 +14,6 @@ using System.Management;
 
 namespace HardenWindowsSecurity;
 
-
 internal partial class BitLocker
 {
 

@@ -12,13 +12,11 @@ namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 
 		// Method to handle the Exclusions view, including loading
-		private void ExclusionsView(object obj)
+		private void ExclusionsView(object? obj)
 		{
 			// Check if the view is already cached
 			if (_viewCache.TryGetValue("ExclusionsView", out var cachedView))
@@ -39,21 +37,16 @@ public partial class GUIMain
 			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Exclusions.xaml"));
 
 			// Parse the XAML content to create a UserControl
-			GUIExclusions.View = (UserControl)XamlReader.Parse(xamlContent);
+			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
-			// Find the Parent Grid
-			GUIExclusions.ParentGrid = (Grid)GUIExclusions.View.FindName("ParentGrid");
-
-			#region Finding other elements
-
-			ToggleButton MicrosoftDefenderToggleButton = (ToggleButton)GUIExclusions.ParentGrid.FindName("MicrosoftDefenderToggleButton");
-			ToggleButton ControlledFolderAccessToggleButton = (ToggleButton)GUIExclusions.ParentGrid.FindName("ControlledFolderAccessToggleButton");
-			ToggleButton AttackSurfaceReductionRulesToggleButton = (ToggleButton)GUIExclusions.ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton");
-			TextBox? SelectedFilePaths = (TextBox)GUIExclusions.ParentGrid.FindName("SelectedFilePaths");
-			Button? BrowseForFilesButton = (Button)GUIExclusions.ParentGrid.FindName("BrowseForFilesButton");
-			Button ApplyExclusionsButton = (Button)GUIExclusions.ParentGrid.FindName("ApplyExclusionsButton");
-
-			#endregion
+			// Find the elements
+			Grid ParentGrid = (Grid)View.FindName("ParentGrid");
+			ToggleButton MicrosoftDefenderToggleButton = (ToggleButton)ParentGrid.FindName("MicrosoftDefenderToggleButton");
+			ToggleButton ControlledFolderAccessToggleButton = (ToggleButton)ParentGrid.FindName("ControlledFolderAccessToggleButton");
+			ToggleButton AttackSurfaceReductionRulesToggleButton = (ToggleButton)ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton");
+			TextBox SelectedFilePaths = (TextBox)ParentGrid.FindName("SelectedFilePaths");
+			Button BrowseForFilesButton = (Button)ParentGrid.FindName("BrowseForFilesButton");
+			Button ApplyExclusionsButton = (Button)ParentGrid.FindName("ApplyExclusionsButton");
 
 			// Event handler for Browse Button
 			BrowseForFilesButton.Click += (sender, e) =>
@@ -265,10 +258,9 @@ public partial class GUIMain
 				};
 
 			// Cache the view before setting it as the CurrentView
-			_viewCache["ExclusionsView"] = GUIExclusions.View;
+			_viewCache["ExclusionsView"] = View;
 
-			// Set the CurrentView to the Exclusions view
-			CurrentView = GUIExclusions.View;
+			CurrentView = View;
 		}
 	}
 }

@@ -18,7 +18,7 @@ public static class HardeningRegistryKeys
 	}
 
 	// Define a public method to parse the CSV file and save the records to RegistryCSVItems
-	public static void ReadCsv()
+	internal static void ReadCsv()
 	{
 		// Ensure RegistryCSVItems is initialized
 		List<CsvRecord> registryCSVItems = GlobalVars.RegistryCSVItems;

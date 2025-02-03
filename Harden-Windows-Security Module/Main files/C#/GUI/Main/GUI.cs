@@ -6,12 +6,12 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-
-#nullable disable
 
 namespace HardenWindowsSecurity;
 
@@ -21,11 +21,11 @@ public partial class GUIMain
 	public class ViewModelBase : INotifyPropertyChanged
 	{
 		// Event that is triggered when a property value changes
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		// Method to raise the PropertyChanged event
 		// The CallerMemberName attribute allows the method to automatically use the name of the calling property
-		public void OnPropertyChanged([CallerMemberName] string propName = null)
+		public void OnPropertyChanged([CallerMemberName] string? propName = null)
 		{
 			// Invoke the PropertyChanged event if there are any subscribers
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
@@ -37,16 +37,16 @@ public partial class GUIMain
 	/// </summary>
 	/// <param name="execute">Assign the execute delegate</param>
 	/// <param name="canExecute">Assign the canExecute delegate (optional)</param>
-	public class RelayCommand(Action<object> execute, Func<object, bool> canExecute = null) : ICommand
+	public class RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null) : ICommand
 	{
 		// Delegate to define the method that will be executed when the command is invoked
-		private readonly Action<object> _execute = execute;
+		private readonly Action<object?> _execute = execute ?? throw new ArgumentNullException(nameof(execute));
 
 		// Delegate to define the method that determines if the command can execute
-		private readonly Func<object, bool> _canExecute = canExecute;
+		private readonly Func<object?, bool>? _canExecute = canExecute;
 
 		// Event that is triggered when the ability of the command to execute changes
-		public event EventHandler CanExecuteChanged
+		public event EventHandler? CanExecuteChanged
 		{
 			// Add event handler to the CommandManager's RequerySuggested event
 			add { CommandManager.RequerySuggested += value; }
@@ -56,20 +56,21 @@ public partial class GUIMain
 		}
 
 		// Check if the command can execute
-		public bool CanExecute(object parameter) => _canExecute is null || _canExecute(parameter);
+		public bool CanExecute(object? parameter) => _canExecute?.Invoke(parameter) ?? true;
 
 		// Execute the command
-		public void Execute(object parameter) => _execute(parameter);
+		public void Execute(object? parameter) => _execute(parameter);
 	}
+
 
 	// ViewModel for handling navigation between different views, inheriting from ViewModelBase
 	public partial class NavigationVM : ViewModelBase
 	{
 		// Field to hold the current view
-		private object _currentView;
+		private object? _currentView;
 
 		// Property to get or set the current view and notify of changes
-		public object CurrentView
+		public object? CurrentView
 		{
 			get { return _currentView; }
 			set
@@ -114,18 +115,6 @@ public partial class GUIMain
 
 			// Load the Protect view next, it will be set as the default startup page because of "CurrentView = GUIProtectWinSecurity.View;"
 			ProtectView(null);
-		}
-	}
-
-	// Btn class
-	// Custom RadioButton control
-	public class Btn : RadioButton
-	{
-		// Static constructor to set default style for Btn
-		static Btn()
-		{
-			// Override the default style key for Btn control
-			DefaultStyleKeyProperty.OverrideMetadata(typeof(Btn), new FrameworkPropertyMetadata(typeof(Btn)));
 		}
 	}
 
@@ -210,50 +199,96 @@ End time: {DateTime.Now}
 		// DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
 		app.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
 		{
-			// Create a custom error window
 			Window errorWindow = new()
 			{
 				Title = "An Error Occurred",
-				Width = 450,
-				Height = 300,
+				Width = 550,
+				Height = 550,
 				WindowStartupLocation = WindowStartupLocation.CenterScreen,
-				ThemeMode = ThemeMode.System
+				ThemeMode = ThemeMode.System,
+				ResizeMode = ResizeMode.CanResize
 			};
 
 			StackPanel stackPanel = new() { Margin = new Thickness(20) };
 
 			TextBlock errorMessage = new()
 			{
-				Text = "An error has occurred in the Harden Windows Security App. Please return to the PowerShell window to review the error details. Reporting this issue on GitHub will greatly assist me in addressing and resolving it promptly. Your feedback is invaluable to improving the software. 💚",
+				FontSize = 14,
 				Margin = new Thickness(0, 0, 0, 20),
 				TextWrapping = TextWrapping.Wrap,
-				FontSize = 14,
 				FontWeight = FontWeights.SemiBold
 			};
 
-			Button okButton = new()
+			errorMessage.Inlines.Add(new Run("An error has occurred in the "));
+
+			errorMessage.Inlines.Add(new Run("Harden Windows Security App")
 			{
-				Content = "OK",
+				FontWeight = FontWeights.Bold
+			});
+
+			errorMessage.Inlines.Add(new Run(". If this is a bug, copying the error details and reporting it on GitHub will greatly assist me in addressing and resolving it promptly.\n"));
+
+			errorMessage.Inlines.Add(new Span(new Run("Your feedback is invaluable to improving the software. Thank You! 💚"))
+			{
+				FontStyle = FontStyles.Italic,
+				Foreground = new SolidColorBrush(Color.FromRgb(255, 105, 180))
+			});
+
+			Expander errorDetailsExpander = new()
+			{
+				Header = "Error Details, Click/Tap to expand",
+				ExpandDirection = ExpandDirection.Down,
+				FontSize = 14,
+				FontWeight = FontWeights.SemiBold,
+				Margin = new Thickness(0, 0, 0, 20),
+				IsExpanded = false
+			};
+
+			// Add ScrollViewer inside Expander to wrap the TextBox
+			ScrollViewer scrollViewer = new()
+			{
+				VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+				HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+				MaxHeight = 250 // Limit the height of the scrollable area
+			};
+
+			TextBox errorDetailsTextBox = new()
+			{
+				Text = $"Exception: {e?.Exception}\n\nException Message: {e?.Exception?.Message}\n\nException HResult: {e?.Exception?.HResult}\n\nException Source: {e?.Exception?.Source}\n\nException TargetSite: {e?.Exception?.TargetSite}\n\nException StackTrace: {e?.Exception?.StackTrace}\n\nInner Exception: {e?.Exception?.InnerException}\n\nInner Exception Message: {e?.Exception?.InnerException?.Message}\n\nInner Exception Source: {e?.Exception?.InnerException?.Source}\n\nInner Exception HResult: {e?.Exception?.InnerException?.HResult}\n\nInner Exception StackTrace: {e?.Exception?.InnerException?.StackTrace}\n\nInner Exception TargetSite: {e?.Exception?.InnerException?.TargetSite}\n",
+				IsReadOnly = true,
+				TextWrapping = TextWrapping.Wrap,
+				Margin = new Thickness(5)
+			};
+
+			// Set TextBox as ScrollViewer content
+			scrollViewer.Content = errorDetailsTextBox;
+
+			// Set ScrollViewer as Expander content
+			errorDetailsExpander.Content = scrollViewer;
+
+			Button exitButton = new()
+			{
+				Content = "Exit",
 				Width = 120,
 				Margin = new Thickness(10),
-				FontSize = 12,
+				FontSize = 16,
 				Height = 50
 			};
 
-			okButton.Click += (sender, args) =>
+			exitButton.Click += (sender, args) =>
 			{
 				errorWindow.Close();
 			};
 
-			Button githubButton = new()
+			Button gitHubButton = new()
 			{
 				Content = "Report on GitHub",
 				Width = 160,
 				Margin = new Thickness(10),
-				FontSize = 12,
+				FontSize = 16,
 				Height = 50
 			};
-			githubButton.Click += (sender, args) =>
+			gitHubButton.Click += (sender, args) =>
 			{
 				// Open the GitHub issues page
 				_ = Process.Start(new ProcessStartInfo
@@ -264,18 +299,35 @@ End time: {DateTime.Now}
 				errorWindow.Close();
 			};
 
+			Button copyButton = new()
+			{
+				Content = "Copy to Clipboard",
+				Width = 160,
+				Margin = new Thickness(10),
+				FontSize = 16,
+				Height = 50
+			};
+			copyButton.Click += (sender, args) =>
+			{
+				Clipboard.SetText(errorMessage.Text + "\n" + errorDetailsTextBox.Text); // Copy the text block and error details to the clipboard
+			};
+
 			StackPanel buttonPanel = new() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-			_ = buttonPanel.Children.Add(okButton);
-			_ = buttonPanel.Children.Add(githubButton);
+			_ = buttonPanel.Children.Add(exitButton);
+			_ = buttonPanel.Children.Add(gitHubButton);
+			_ = buttonPanel.Children.Add(copyButton);
 
 			_ = stackPanel.Children.Add(errorMessage);
 			_ = stackPanel.Children.Add(buttonPanel);
+			_ = stackPanel.Children.Add(errorDetailsExpander);
 
 			errorWindow.Content = stackPanel;
 			_ = errorWindow.ShowDialog();
 
 			// The error will be terminating the application
-			e.Handled = false;
+			if (e is not null)
+				e.Handled = false;
+			app.Shutdown();
 		};
 
 		#endregion

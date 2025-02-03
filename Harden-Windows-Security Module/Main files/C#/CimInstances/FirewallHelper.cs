@@ -11,7 +11,7 @@ namespace HardenWindowsSecurity;
 internal static class FirewallHelper
 {
 	// Method to get firewall rules based on RuleGroup and Direction
-	public static List<ManagementObject> GetFirewallRules(string ruleGroup, ushort direction)
+	internal static List<ManagementObject> GetFirewallRules(string ruleGroup, ushort direction)
 	{
 		string namespacePath = @"root\standardcimv2";
 		string className = "MSFT_NetFirewallRule";
@@ -191,7 +191,7 @@ internal static class FirewallHelper
 	/// <param name="DisplayName">The DisplayName of the Firewall rule</param>
 	/// <param name="ListDownloadURL">Link to the GitHub file that contains the IP Addresses</param>
 	/// <param name="ToAdd">If true, the firewall rules will be added. If false, the firewall rules will only be deleted.</param>
-	public static void BlockIPAddressListsInGroupPolicy(string DisplayName, Uri? ListDownloadURL, bool ToAdd)
+	internal static void BlockIPAddressListsInGroupPolicy(string DisplayName, Uri? ListDownloadURL, bool ToAdd)
 	{
 		// An array to hold the IP Address ranges
 		string[] ipList = [];

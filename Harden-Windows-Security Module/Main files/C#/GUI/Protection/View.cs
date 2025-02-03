@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
 #nullable disable
@@ -32,16 +31,32 @@ public partial class GUIMain
 			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "Protect.xaml"));
 
 			// Parse the XAML content to create a UserControl
-			GUIProtectWinSecurity.View = (UserControl)XamlReader.Parse(xamlContent);
+			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
 			// Finding the grids inside of each TabItem
-			GUIProtectWinSecurity.ProtectionParentGrid = (Grid)GUIProtectWinSecurity.View.FindName("ProtectionParentGrid");
-			GUIProtectWinSecurity.OfflineConfigurationsGrid = (Grid)GUIProtectWinSecurity.View.FindName("OfflineConfigurationsGrid");
+			Grid ProtectionParentGrid = (Grid)View.FindName("ProtectionParentGrid");
+			Grid OfflineConfigurationsGrid = (Grid)View.FindName("OfflineConfigurationsGrid");
+			// Finding other elements
+			GUIProtectWinSecurity.ProtectionPresetComboBox = (ComboBox)ProtectionParentGrid.FindName("ProtectionPresetComboBox");
+			ToggleButton executeButton = (ToggleButton)ProtectionParentGrid.FindName("Execute");
+			GUIProtectWinSecurity.categories = (ListView)ProtectionParentGrid.FindName("Categories");
+			GUIProtectWinSecurity.subCategories = (ListView)ProtectionParentGrid.FindName("SubCategories");
+			GUIProtectWinSecurity.selectAllCategories = (CheckBox)ProtectionParentGrid.FindName("SelectAllCategories");
+			GUIProtectWinSecurity.selectAllSubCategories = (CheckBox)ProtectionParentGrid.FindName("SelectAllSubCategories");
+			GUIProtectWinSecurity.txtFilePath = (TextBox)ProtectionParentGrid.FindName("txtFilePath");
+			GUIProtectWinSecurity.logPath = (Button)ProtectionParentGrid.FindName("LogPath");
+			GUIProtectWinSecurity.log = (ToggleButton)ProtectionParentGrid.FindName("Log");
+			GUIProtectWinSecurity.EventLogging = (ToggleButton)ProtectionParentGrid.FindName("EventLogging");
+			GUIProtectWinSecurity.enableOfflineMode = (ToggleButton)OfflineConfigurationsGrid.FindName("EnableOfflineMode");
+			GUIProtectWinSecurity.microsoftSecurityBaselineZipButton = (Button)OfflineConfigurationsGrid.FindName("MicrosoftSecurityBaselineZipButton");
+			GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox = (TextBox)OfflineConfigurationsGrid.FindName("MicrosoftSecurityBaselineZipTextBox");
+			GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton = (Button)OfflineConfigurationsGrid.FindName("Microsoft365AppsSecurityBaselineZipButton");
+			GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox = (TextBox)OfflineConfigurationsGrid.FindName("Microsoft365AppsSecurityBaselineZipTextBox");
+			GUIProtectWinSecurity.lgpoZipButton = (Button)OfflineConfigurationsGrid.FindName("LGPOZipButton");
+			GUIProtectWinSecurity.lgpoZipTextBox = (TextBox)OfflineConfigurationsGrid.FindName("LGPOZipTextBox");
+			TextBlock OfflineConfigurationsNoticeTextBlock = (TextBlock)OfflineConfigurationsGrid.FindName("OfflineConfigurationsNoticeTextBlock");
 
-			#region Combobox
-			GUIProtectWinSecurity.ProtectionPresetComboBox = (ComboBox)GUIProtectWinSecurity.ProtectionParentGrid.FindName("ProtectionPresetComboBox");
-
-			// Attach the event handler using a lambda expression
+			// Attach an event handler to the Preset selection ComboBox
 			GUIProtectWinSecurity.ProtectionPresetComboBox.SelectionChanged += (sender, args) =>
 			{
 				// Cast the sender back to a ComboBox and get the selected item as a ComboBoxItem
@@ -246,50 +261,6 @@ public partial class GUIMain
 				}
 			};
 
-			#endregion
-
-			// Access the grid containing the Execute Button
-			GUIProtectWinSecurity.ExecuteButtonGrid = (Grid)GUIProtectWinSecurity.ProtectionParentGrid.FindName("ExecuteButtonGrid");
-
-			// Access the Execute Button
-			GUIProtectWinSecurity.ExecuteButton = (ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
-
-			// Apply the template to make sure it's available
-			_ = GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
-
-			// Access the image within the Execute Button's template
-			GUIProtectWinSecurity.ExecuteButtonImage = (Image)GUIProtectWinSecurity.ExecuteButton.Template.FindName("ExecuteIconImage", GUIProtectWinSecurity.ExecuteButton);
-
-			// Update the image source for the execute button
-			// Load the Execute button image into memory and set it as the source
-			BitmapImage ExecuteButtonBitmapImage = new();
-			ExecuteButtonBitmapImage.BeginInit();
-			ExecuteButtonBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExecuteButton.png"));
-			ExecuteButtonBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			ExecuteButtonBitmapImage.EndInit();
-
-			GUIProtectWinSecurity.ExecuteButtonImage.Source = ExecuteButtonBitmapImage;
-
-			GUIProtectWinSecurity.categories = (ListView)GUIProtectWinSecurity.ProtectionParentGrid.FindName("Categories");
-			GUIProtectWinSecurity.subCategories = (ListView)GUIProtectWinSecurity.ProtectionParentGrid.FindName("SubCategories");
-			GUIProtectWinSecurity.selectAllCategories = (CheckBox)GUIProtectWinSecurity.ProtectionParentGrid.FindName("SelectAllCategories");
-			GUIProtectWinSecurity.selectAllSubCategories = (CheckBox)GUIProtectWinSecurity.ProtectionParentGrid.FindName("SelectAllSubCategories");
-
-			// For Log related elements
-			GUIProtectWinSecurity.txtFilePath = (TextBox)GUIProtectWinSecurity.ProtectionParentGrid.FindName("txtFilePath");
-			GUIProtectWinSecurity.logPath = (Button)GUIProtectWinSecurity.ProtectionParentGrid.FindName("LogPath");
-			GUIProtectWinSecurity.log = (ToggleButton)GUIProtectWinSecurity.ProtectionParentGrid.FindName("Log");
-			GUIProtectWinSecurity.EventLogging = (ToggleButton)GUIProtectWinSecurity.ProtectionParentGrid.FindName("EventLogging");
-
-			// For Offline Configurations elements
-			GUIProtectWinSecurity.enableOfflineMode = (ToggleButton)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("EnableOfflineMode");
-			GUIProtectWinSecurity.microsoftSecurityBaselineZipButton = (Button)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("MicrosoftSecurityBaselineZipButton");
-			GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox = (TextBox)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("MicrosoftSecurityBaselineZipTextBox");
-			GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton = (Button)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("Microsoft365AppsSecurityBaselineZipButton");
-			GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox = (TextBox)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("Microsoft365AppsSecurityBaselineZipTextBox");
-			GUIProtectWinSecurity.lgpoZipButton = (Button)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("LGPOZipButton");
-			GUIProtectWinSecurity.lgpoZipTextBox = (TextBox)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("LGPOZipTextBox");
-
 			// Initially set the text area for the selected LogPath to disabled
 			GUIProtectWinSecurity.txtFilePath.IsEnabled = false;
 
@@ -366,7 +337,7 @@ public partial class GUIMain
 				{
 					foreach (ListViewItem item in GUIProtectWinSecurity.categories.Items)
 					{
-						((CheckBox)(item).Content).IsChecked = false;
+						((CheckBox)item.Content).IsChecked = false;
 					}
 				};
 
@@ -388,7 +359,7 @@ public partial class GUIMain
 				{
 					foreach (ListViewItem item in GUIProtectWinSecurity.subCategories.Items)
 					{
-						((CheckBox)(item).Content).IsChecked = false;
+						((CheckBox)item.Content).IsChecked = false;
 					}
 				};
 
@@ -523,7 +494,7 @@ public partial class GUIMain
 
 
 				// Defining a set of commands to run when the GUI window is loaded, async
-				GUIProtectWinSecurity.View.Loaded += async (sender, e) =>
+				View.Loaded += async (sender, e) =>
 				{
 
 					// Only continue if there is no activity in other places
@@ -613,13 +584,13 @@ public partial class GUIMain
 								#endregion
 
 								// Use Dispatcher.Invoke to update the UI thread
-								GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+								View.Dispatcher.Invoke(() =>
 							   {
 								   // Set the execute button to disabled until all the prerequisites are met
-								   GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
+								   executeButton.IsEnabled = false;
 
 								   // Start the execute button's operation to show the files are being downloaded
-								   GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
+								   executeButton.IsChecked = true;
 							   });
 
 								// Only download and process the files when the GUI is loaded and if Offline mode is not used
@@ -644,10 +615,10 @@ public partial class GUIMain
 
 								// Using Dispatcher since the execute button is owned by the GUI thread, and we're in another thread
 								// Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
-								GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+								View.Dispatcher.Invoke(() =>
 								{
-									GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
-									GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
+									executeButton.IsEnabled = true;
+									executeButton.IsChecked = false;
 								});
 							}
 							catch (Exception ex)
@@ -667,7 +638,7 @@ public partial class GUIMain
 
 
 				// When Execute button is pressed
-				GUIProtectWinSecurity.ExecuteButton.Click += async (sender, e) =>
+				executeButton.Click += async (sender, e) =>
 				{
 					// Only continue if there is no activity in other places
 					if (!ActivityTracker.IsActive)
@@ -683,7 +654,7 @@ public partial class GUIMain
 							bool OfflineModeToggleStatus = false;
 
 							// Dispatcher to interact with the GUI elements
-							GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+							View.Dispatcher.Invoke(() =>
 							{
 								// Call the method to get the selected categories and sub-categories
 								GUIProtectWinSecurity.ExecuteButtonPress();
@@ -695,7 +666,7 @@ public partial class GUIMain
 							if (GlobalVars.Offline)
 							{
 
-								GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+								View.Dispatcher.Invoke(() =>
 								{
 
 									// Handle the nullable boolean
@@ -970,10 +941,10 @@ public partial class GUIMain
 								}
 							}
 
-							GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+							View.Dispatcher.Invoke(() =>
 							{
 								// Manually trigger the ToggleButton to be unchecked to trigger the ending animation
-								GUIProtectWinSecurity.ExecuteButton!.IsChecked = false;
+								executeButton.IsChecked = false;
 
 								// Only enable the log file path TextBox if the log toggle button is toggled
 								if (GUIProtectWinSecurity.log!.IsChecked == true)
@@ -1004,7 +975,7 @@ public partial class GUIMain
 			}
 
 			// Register the Execute button to be enabled/disabled based on global activity
-			ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.ExecuteButton);
+			ActivityTracker.RegisterUIElement(executeButton);
 
 			// Register additional elements for automatic enablement/disablement
 			ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.logPath);
@@ -1016,15 +987,13 @@ public partial class GUIMain
 				GUIProtectWinSecurity.enableOfflineMode.IsEnabled = false;
 
 				// Make the text block notice visible if offline mode is not used
-				TextBlock OfflineConfigurationsNoticeTextBlock = (TextBlock)GUIProtectWinSecurity.OfflineConfigurationsGrid.FindName("OfflineConfigurationsNoticeTextBlock");
 				OfflineConfigurationsNoticeTextBlock.Visibility = System.Windows.Visibility.Visible;
 			}
 
 			// Cache the view before setting it as the CurrentView
-			_viewCache["ProtectView"] = GUIProtectWinSecurity.View;
+			_viewCache["ProtectView"] = View;
 
-			// Set the CurrentView to the Protect view
-			CurrentView = GUIProtectWinSecurity.View;
+			CurrentView = View;
 		}
 	}
 }

@@ -12,7 +12,7 @@ internal static partial class VolumeWritabilityCheck
 	/// </summary>
 	/// <param name="Volumes"></param>
 	/// <returns></returns>
-	public static List<BitLocker.BitLockerVolume>? GetWritableVolumes(List<BitLocker.BitLockerVolume>? Volumes)
+	internal static List<BitLocker.BitLockerVolume>? GetWritableVolumes(List<BitLocker.BitLockerVolume>? Volumes)
 	{
 
 		if (Volumes is null)

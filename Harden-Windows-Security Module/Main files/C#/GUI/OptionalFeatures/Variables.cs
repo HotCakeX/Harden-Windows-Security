@@ -7,27 +7,31 @@ using Windows.Management.Deployment;
 
 namespace HardenWindowsSecurity;
 
+#pragma warning disable CA1812
+
+internal sealed class SafeToRemoveApp
+{
+	[JsonInclude]
+	internal required string Name { get; set; }
+
+	[JsonInclude]
+	internal required string Description { get; set; }
+}
+
+// Class used to deserialize the SafeToRemoveAppsList.json file
+internal sealed class SafeToRemoveAppsCol
+{
+	[JsonInclude]
+	internal required IReadOnlyCollection<SafeToRemoveApp> SafeToRemoveAppsList { get; set; }
+}
+
+#pragma warning restore CA1812
+
 internal static class GUIOptionalFeatures
 {
 	internal static UserControl? View;
 
 	internal static Grid? ParentGrid;
-
-	public class SafeToRemoveApp
-	{
-		[JsonPropertyName("Name")]
-		public required string Name { get; set; }
-
-		[JsonPropertyName("Description")]
-		public required string Description { get; set; }
-	}
-
-	// Class used to deserialize the SafeToRemoveAppsList.json file
-	public class SafeToRemoveAppsCol
-	{
-		[JsonPropertyName("SafeToRemoveAppsList")]
-		public required IReadOnlyCollection<SafeToRemoveApp> SafeToRemoveAppsList { get; set; }
-	}
 
 	internal static Dictionary<string, string> nameToDescriptionApps = [];
 	internal static Dictionary<string, string> descriptionToNameApps = [];

@@ -13,7 +13,6 @@ internal partial class BitLocker
 	private const uint FVE_E_VOLUME_BOUND_ALREADY = 2150694943;
 
 
-
 	/// <summary>
 	/// Removes a key protector of an encrypted volume based on the key protector ID
 	/// </summary>

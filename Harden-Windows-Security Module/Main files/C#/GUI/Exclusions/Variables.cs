@@ -1,13 +1,7 @@
-﻿using System.Windows.Controls;
-
-namespace HardenWindowsSecurity;
+﻿namespace HardenWindowsSecurity;
 
 internal static class GUIExclusions
 {
-	internal static UserControl? View;
-
-	internal static Grid? ParentGrid;
-
 	// Stores the file paths selected by the user after using the browse button
 	internal static string[]? selectedFiles;
 

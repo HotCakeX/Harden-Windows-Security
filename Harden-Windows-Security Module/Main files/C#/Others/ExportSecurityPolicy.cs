@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace HardenWindowsSecurity;
 
@@ -8,18 +9,15 @@ public partial class ConfirmSystemComplianceMethods
 	/// <summary>
 	/// Get the security group policies by utilizing the Secedit.exe
 	/// </summary>
-	public static void ExportSecurityPolicy()
+	internal static void ExportSecurityPolicy()
 	{
-		// Assuming securityPolicyInfPath is defined in your environment
-		string securityPolicyInfPath = GlobalVars.securityPolicyInfPath;
-
 		// Create the process start info
 		ProcessStartInfo processStartInfo = new()
 		{
-			FileName = $"{GlobalVars.SystemDrive}\\Windows\\System32\\Secedit.exe",
-			Arguments = $"/export /cfg \"{securityPolicyInfPath}\"",
+			FileName = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "Secedit.exe"),
+			Arguments = $"/export /cfg \"{GlobalVars.securityPolicyInfPath}\"",
 			// RedirectStandardOutput = false,
-			RedirectStandardError = true, // Redirect the StandardError stream
+			RedirectStandardError = true,
 			UseShellExecute = false,
 			CreateNoWindow = true
 		};

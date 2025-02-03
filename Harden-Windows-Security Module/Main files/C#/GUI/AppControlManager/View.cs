@@ -24,13 +24,11 @@ namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 
 		// Method to handle the AppControlManager view, including loading
-		private void AppControlManagerView(object obj)
+		private void AppControlManagerView(object? obj)
 		{
 
 			// Check if the view is already cached
@@ -54,10 +52,8 @@ public partial class GUIMain
 			// Parse the XAML content to create a UserControl
 			GUIAppControlManager.View = (UserControl)XamlReader.Parse(xamlContent);
 
-			// Find the Parent Grid
+			// Find the elements
 			GUIAppControlManager.ParentGrid = (Grid)GUIAppControlManager.View.FindName("ParentGrid");
-
-			// Finding other elements
 			Button InstallAppControlManagerButton = (Button)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButton");
 			Button ViewDemoOnYouTubeButton = (Button)GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButton");
 			Button AccessTheGuideOnGitHubButton = (Button)GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButton");
@@ -369,7 +365,6 @@ public partial class GUIMain
 											"with your on-device keys. Please disable the policy. It can be found in Group Policy Editor -> " +
 											"Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> " +
 											"'User Account Control: Only elevate executable files that are signed and validated'", LogTypeIntel.WarningInteractionRequired);
-
 									}
 								}
 							}
@@ -379,7 +374,6 @@ public partial class GUIMain
 							Logger.LogMessage("Could not verify that 'Only Elevate signed' policy is not active.", LogTypeIntel.Warning);
 						}
 						#endregion
-
 
 					});
 				}
@@ -413,7 +407,6 @@ public partial class GUIMain
 			// Cache the view before setting it as the CurrentView
 			_viewCache["AppControlManagerView"] = GUIAppControlManager.View;
 
-			// Set the CurrentView to the Protect view
 			CurrentView = GUIAppControlManager.View;
 		}
 	}

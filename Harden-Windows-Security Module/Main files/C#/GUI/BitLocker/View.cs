@@ -12,13 +12,11 @@ namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 
-		// Method to handle the Logs view, including loading
-		private void BitLockerView(object obj)
+		// Method to handle the BitLocker view, including loading
+		private void BitLockerView(object? obj)
 		{
 			// Check if the view is already cached
 			if (_viewCache.TryGetValue("BitLockerView", out var cachedView))
@@ -35,24 +33,25 @@ public partial class GUIMain
 				return;
 			}
 
+			if (!Initializer.BitLockerInfrastructureAvailable)
+			{
+				Logger.LogMessage("BitLocker infrastructure is not available or enabled on this system.", LogTypeIntel.ErrorInteractionRequired);
+				return;
+			}
+
 			// Read the XAML content from the file
 			string xamlContent = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "XAML", "BitLocker.xaml"));
 
 			// Parse the XAML content to create a UserControl
 			GUIBitLocker.View = (UserControl)XamlReader.Parse(xamlContent);
 
-			// Find the Parent Grid
+			// Finding the elements
 			GUIBitLocker.ParentGrid = (Grid)GUIBitLocker.View.FindName("ParentGrid");
-
 			GUIBitLocker.TabControl = (TabControl)GUIBitLocker.ParentGrid.FindName("TabControl");
-
-			if (GUIBitLocker.TabControl.FindName("OSDriveGrid") is not Grid OSDriveGrid ||
-				GUIBitLocker.TabControl.FindName("NonOSDrivesGrid") is not Grid NonOSDrivesGrid ||
-				GUIBitLocker.TabControl.FindName("RemovableDrivesGrid") is not Grid RemovableDrivesGrid ||
-				GUIBitLocker.TabControl.FindName("BackupGrid") is not Grid BackupGrid)
-			{
-				throw new InvalidOperationException("BitLocker view grids could not be found");
-			}
+			Grid OSDriveGrid = (Grid)GUIBitLocker.TabControl.FindName("OSDriveGrid");
+			Grid NonOSDrivesGrid = (Grid)GUIBitLocker.TabControl.FindName("NonOSDrivesGrid");
+			Grid RemovableDrivesGrid = (Grid)GUIBitLocker.TabControl.FindName("RemovableDrivesGrid");
+			Grid BackupGrid = (Grid)GUIBitLocker.TabControl.FindName("BackupGrid");
 
 
 			#region OS Drives
@@ -133,7 +132,6 @@ public partial class GUIMain
 
 			#region Non-OS Drives
 			GUIBitLocker.RefreshNonOSDrives = (Button)NonOSDrivesGrid.FindName("RefreshNonOSDrives");
-
 			GUIBitLocker.NonOSDrivesComboBox = (ComboBox)NonOSDrivesGrid.FindName("NonOSDrivesComboBox");
 			Button NonOSDriveEncryptButton = (Button)NonOSDrivesGrid.FindName("NonOSDriveEncryptButton");
 
@@ -159,7 +157,6 @@ public partial class GUIMain
 
 			#region Removable Drives
 			GUIBitLocker.RefreshRemovableDrivesForRemovableDrivesSection = (Button)RemovableDrivesGrid.FindName("RefreshRemovableDrivesForRemovableDrivesSection");
-
 			GUIBitLocker.RemovableDrivesInRemovableDrivesGridComboBox = (ComboBox)RemovableDrivesGrid.FindName("RemovableDrivesInRemovableDrivesGridComboBox");
 			GUIBitLocker.Password1 = (PasswordBox)RemovableDrivesGrid.FindName("Password1");
 			GUIBitLocker.Password2 = (PasswordBox)RemovableDrivesGrid.FindName("Password2");
@@ -217,7 +214,6 @@ public partial class GUIMain
 			};
 
 			#endregion
-
 
 			// Event handler to refresh the recovery key info in the DataGrid
 			GUIBitLocker.RefreshButtonForBackup.Click += async (sender, e) =>
@@ -551,7 +547,6 @@ public partial class GUIMain
 			// Cache the view before setting it as the CurrentView
 			_viewCache["BitLockerView"] = GUIBitLocker.View;
 
-			// Set the CurrentView to the Protect view
 			CurrentView = GUIBitLocker.View;
 		}
 	}

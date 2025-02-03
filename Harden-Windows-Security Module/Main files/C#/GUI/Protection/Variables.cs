@@ -28,12 +28,6 @@ internal static partial class GUIProtectWinSecurity
 	// When the execute button was clicked, so it won't run twice
 	internal static bool StartFileDownloadHasRun;
 
-	// View for the ProtectWindowsSecurity
-	internal static UserControl? View;
-
-	internal static Grid? ProtectionParentGrid;
-	internal static Grid? OfflineConfigurationsGrid;
-
 	// Defining the correlation between Categories and which Sub-Categories they activate
 	internal static Hashtable correlation = new(StringComparer.OrdinalIgnoreCase)
 			{
@@ -69,11 +63,6 @@ internal static partial class GUIProtectWinSecurity
 	internal static Button? lgpoZipButton;
 	internal static TextBox? lgpoZipTextBox;
 
-	// Execute button variables
-	internal static ToggleButton? ExecuteButton;
-	internal static Grid? ExecuteButtonGrid;
-	internal static Image? ExecuteButtonImage;
-
 	// Flag to run the event for view load only once to prevent file download multiple times when switching between views etc.
 	internal static bool LoadEventHasBeenTriggered;
 
@@ -102,7 +91,7 @@ internal static partial class GUIProtectWinSecurity
 	   "preset: complete", new Dictionary<string, List<string>>
 		{
 			{ "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "DeviceGuard", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "CountryIPBlocking", "DownloadsDefenseMeasures", "NonAdminCommands" } },
-			{ "SubCategories", new List<string> { "MSFTDefender_SAC", "UAC_OnlyElevateSigned", "WindowsNetworking_BlockNTLM", "Miscellaneous_WindowsProtectedPrint", "CountryIPBlocking_OFAC", "DangerousScriptHostsBlocking","MiscellaneousConfigurations_StrongKeyProtection", "MiscellaneousConfigurations_LongPathSupport" } }
+			{ "SubCategories", new List<string> { "WindowsNetworking_BlockNTLM", "Miscellaneous_WindowsProtectedPrint", "CountryIPBlocking_OFAC", "DangerousScriptHostsBlocking","MiscellaneousConfigurations_StrongKeyProtection", "MiscellaneousConfigurations_LongPathSupport" } }
 		}
 		}
 		};

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 
 namespace HardenWindowsSecurity;
@@ -8,6 +10,10 @@ namespace HardenWindowsSecurity;
 // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
 public static class Initializer
 {
+
+	private static bool BitLockerInfrastructureAvailabilityCheckOccurred;
+	internal static bool BitLockerInfrastructureAvailable;
+
 	/// <summary>
 	/// This method runs at the beginning of each cmdlet
 	/// </summary>
@@ -114,11 +120,42 @@ public static class Initializer
 		// Clear the collection
 		GlobalVars.SystemSecurityPoliciesIniObject.Clear();
 
-		// Make sure Admin privileges exist before running this method
 		if (Environment.IsPrivilegedProcess)
 		{
 			// Process the MDM related CimInstances and store them in a global variable
 			GlobalVars.MDMResults = MDMClassProcessor.Process();
+
+			if (!BitLockerInfrastructureAvailabilityCheckOccurred)
+			{
+				BitLockerInfrastructureAvailabilityCheckOccurred = true;
+
+				_ = Task.Run(() =>
+				{
+					Logger.LogMessage("Checking for BitLocker infrastructure availability", LogTypeIntel.Information);
+
+					Dictionary<string, string> features = WindowsFeatureChecker.GetOptionalFeatureStates();
+
+					if (features.TryGetValue("BitLocker", out string? BitLockerStatus))
+					{
+						// On Server OS, BitLocker infra, including its CIM namespaces, are not available but they are available as optional features
+						// On Client OS, BitLocker infra is available by default and not available as an optional feature
+						if (string.Equals(BitLockerStatus, "Enabled", StringComparison.OrdinalIgnoreCase))
+						{
+							BitLockerInfrastructureAvailable = true;
+							Logger.LogMessage("BitLocker infrastructure is available.", LogTypeIntel.Information);
+						}
+						else
+						{
+							Logger.LogMessage("BitLocker infrastructure is not available or enabled on this system", LogTypeIntel.Information);
+						}
+					}
+					else
+					{
+						BitLockerInfrastructureAvailable = true;
+						Logger.LogMessage("BitLocker infrastructure is available.", LogTypeIntel.Information);
+					}
+				});
+			}
 		}
 	}
 

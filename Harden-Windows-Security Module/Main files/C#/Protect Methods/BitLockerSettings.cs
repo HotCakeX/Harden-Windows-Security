@@ -13,6 +13,13 @@ public static class BitLockerSettings
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()
 	{
+
+		if (!Initializer.BitLockerInfrastructureAvailable)
+		{
+			Logger.LogMessage("BitLocker infrastructure is not available or enabled on this system. Skipping BitLocker protections category.", LogTypeIntel.Information);
+			return;
+		}
+
 		ChangePSConsoleTitle.Set("🔑 BitLocker");
 
 		Logger.LogMessage("Running the Bitlocker category", LogTypeIntel.Information);
@@ -65,7 +72,15 @@ public static class BitLockerSettings
 				Thread.Sleep(4000);
 
 				Logger.LogMessage("OS Drive is BitLocker encrypted. Setting the Hibernate file size to full.", LogTypeIntel.Information);
-				ProcessStarter.RunCommand("powercfg.exe", "/h /type full");
+
+				try
+				{
+					ProcessStarter.RunCommand("powercfg.exe", "/h /type full");
+				}
+				catch (Exception ex)
+				{
+					Logger.LogMessage($"Could not set Hibernation type to full, highly possible that you're in a VM and its firmware doesn't support Hibernation: {ex.Message}", LogTypeIntel.Error);
+				}
 			}
 		}
 		else

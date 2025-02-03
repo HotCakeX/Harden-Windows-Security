@@ -23,7 +23,6 @@ public static class GUIHandOff
 			}
 			catch (Exception ex)
 			{
-				// Log or handle the exception appropriately
 				Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
 				throw;
 			}
@@ -36,8 +35,6 @@ public static class GUIHandOff
 		});
 
 		thread.SetApartmentState(ApartmentState.STA);
-		// ensures the thread doesn't block the application from closing
-		// thread.IsBackground = true;
 		thread.Start();
 		thread.Join();
 	}

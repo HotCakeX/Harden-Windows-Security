@@ -11,7 +11,6 @@ public static partial class UserAccountControl
 	/// <exception cref="ArgumentNullException"></exception>
 	public static void Invoke()
 	{
-
 		ChangePSConsoleTitle.Set("💎 UAC");
 
 		Logger.LogMessage("Running the User Account Control category", LogTypeIntel.Information);

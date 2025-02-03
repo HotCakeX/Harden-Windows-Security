@@ -15,7 +15,7 @@ public static class UnprotectWindowsSecurity
 	public static void Unprotect()
 	{
 
-		#region
+		#region Group Policies
 		Logger.LogMessage("Removing all of the group policies from the system.", LogTypeIntel.Information);
 
 		string GroupPolicyDirectoryLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "GroupPolicy");
@@ -63,7 +63,7 @@ public static class UnprotectWindowsSecurity
 		#endregion
 
 
-		#region Group Policies
+		#region Security Group Policies
 		Logger.LogMessage("Restoring the default Security group policies", LogTypeIntel.Information);
 
 		// if LGPO doesn't already exist in the working directory, then download it
@@ -87,8 +87,6 @@ public static class UnprotectWindowsSecurity
 
 		#region Xbox scheduled task
 
-		bool XblGameSaveTaskResult;
-
 		var XblGameSaveTaskResultObject = TaskSchedulerHelper.Get(
 			"XblGameSaveTask",
 			@"\Microsoft\XblGameSave\",
@@ -96,7 +94,7 @@ public static class UnprotectWindowsSecurity
 		);
 
 		// Convert to boolean
-		XblGameSaveTaskResult = Convert.ToBoolean(XblGameSaveTaskResultObject, CultureInfo.InvariantCulture);
+		bool XblGameSaveTaskResult = Convert.ToBoolean(XblGameSaveTaskResultObject, CultureInfo.InvariantCulture);
 
 		if (XblGameSaveTaskResult)
 		{
@@ -177,7 +175,6 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 
 		// Refresh the group policies to apply the changes instantly
 		ProcessStarter.RunCommand("GPUpdate.exe", "/force");
-
 	}
 
 
@@ -189,10 +186,8 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 	{
 		Logger.LogMessage("Removing the Process Mitigations / Exploit Protection settings", LogTypeIntel.Information);
 
-		// Disable Mandatory ASLR
-		// Define the PowerShell command to execute
-		string command = "Set-ProcessMitigation -System -Disable ForceRelocateImages";
-		_ = PowerShellExecutor.ExecuteScript(command);
+		// Disabling Mandatory ASLR
+		_ = PowerShellExecutor.ExecuteScript("Set-ProcessMitigation -System -Disable ForceRelocateImages");
 
 
 		// Only remove the mitigations that are allowed to be removed
@@ -211,7 +206,7 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 			.ToList();
 
 		// Loop through each group and remove corresponding registry keys
-		foreach (var group in groupedMitigations)
+		foreach (IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords> group in groupedMitigations)
 		{
 			if (allAvailableMitigations is not null && allAvailableMitigations.Contains(group.Key!))
 			{

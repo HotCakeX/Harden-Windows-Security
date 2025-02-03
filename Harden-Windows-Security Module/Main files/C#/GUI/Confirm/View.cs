@@ -11,18 +11,15 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Markup;
-using System.Windows.Media.Imaging;
 
 namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 		// Method to handle the "Confirm" view, including loading and modifying it
-		private void ConfirmView(object obj)
+		private void ConfirmView(object? obj)
 		{
 			// Check if the Confirm view is already cached
 			if (_viewCache.TryGetValue("ConfirmView", out var cachedView))
@@ -46,7 +43,7 @@ public partial class GUIMain
 			// Parse the XAML content to create a UserControl object
 			UserControl View = (UserControl)XamlReader.Parse(xamlContent);
 
-			// Finding elements
+			// Finding the elements
 			DataGrid SecOpsDataGrid = (DataGrid)View.FindName("SecOpsDataGrid");
 			TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (TextBlock)View.FindName("TotalCurrentlyDisplayedSecOps");
 			ToggleButton CompliantItemsToggleButton = (ToggleButton)View.FindName("CompliantItemsToggleButton");
@@ -55,6 +52,7 @@ public partial class GUIMain
 			TextBox textBoxFilter = (TextBox)View.FindName("textBoxFilter");
 			TextBlock TotalCountTextBlock = (TextBlock)View.FindName("TotalCountTextBlock");
 			ComboBox ComplianceCategoriesSelectionComboBox = (ComboBox)View.FindName("ComplianceCategoriesSelectionComboBox");
+			ToggleButton RefreshButton = (ToggleButton)View.FindName("RefreshButton");
 
 			// Initialize an empty security options collection
 			ObservableCollection<SecOp> SecOpsObservableCollection = [];
@@ -115,32 +113,6 @@ public partial class GUIMain
 
 			NonCompliantItemsToggleButton.Checked += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
 			NonCompliantItemsToggleButton.Unchecked += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
-			#endregion
-
-			#region RefreshButton
-			// Find the Refresh button and attach the Click event handler
-
-			// Access the grid containing the Refresh Button
-			Grid RefreshButtonGrid = (Grid)View.FindName("RefreshButtonGrid");
-
-			// Access the Refresh Button
-			ToggleButton RefreshButton = (ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
-
-			// Apply the template to make sure it's available
-			_ = RefreshButton.ApplyTemplate();
-
-			// Access the image within the Refresh Button's template
-			Image RefreshIconImage = (Image)RefreshButton.Template.FindName("RefreshIconImage", RefreshButton);
-
-			// Update the image source for the Refresh button
-			// Load the Refresh icon image into memory and set it as the source
-			BitmapImage RefreshIconBitmapImage = new();
-			RefreshIconBitmapImage.BeginInit();
-			RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "ExecuteButton.png"));
-			RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
-			RefreshIconBitmapImage.EndInit();
-			RefreshIconImage.Source = RefreshIconBitmapImage;
-
 			#endregion
 
 			#region ComboBox
@@ -326,6 +298,7 @@ public partial class GUIMain
 							catch (Exception ex)
 							{
 								Logger.LogMessage($"Failed to export the results to the file: {ex.Message}", LogTypeIntel.ErrorInteractionRequired);
+								return;
 							}
 
 							Logger.LogMessage($"Compliance check results have been successfully exported.", LogTypeIntel.InformationInteractionRequired);
@@ -380,7 +353,6 @@ public partial class GUIMain
 			// Cache the Confirm view for future use
 			_viewCache["ConfirmView"] = View;
 
-			// Set the CurrentView to the modified Confirm view
 			CurrentView = View;
 		}
 	}

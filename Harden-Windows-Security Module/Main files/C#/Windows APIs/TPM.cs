@@ -80,7 +80,6 @@ public static partial class TpmStatus
 				return result;
 			}
 
-
 			// Get the first instance of the TPM.
 			ManagementObject? tpmObject = tpmObjects.OfType<ManagementObject>().FirstOrDefault();
 
@@ -89,7 +88,6 @@ public static partial class TpmStatus
 				result.ErrorMessage = "TPM instance not found";
 				return result;
 			}
-
 
 			// Call the IsEnabled method
 			ManagementBaseObject isEnabledResult = tpmObject.InvokeMethod("IsEnabled", null, null);
@@ -102,7 +100,6 @@ public static partial class TpmStatus
 
 			result.IsEnabled = Convert.ToBoolean(isEnabledResult["IsEnabled"], CultureInfo.InvariantCulture);
 
-
 			// Call the IsActivated method
 			ManagementBaseObject isActivatedResult = tpmObject.InvokeMethod("IsActivated", null, null);
 
@@ -113,7 +110,6 @@ public static partial class TpmStatus
 			}
 
 			result.IsActivated = Convert.ToBoolean(isActivatedResult["IsActivated"], CultureInfo.InvariantCulture);
-
 
 			// Call the IsSrkAuthCompatible method
 			ManagementBaseObject IsSrkAuthCompatibleResult = tpmObject.InvokeMethod("IsSrkAuthCompatible", null, null);

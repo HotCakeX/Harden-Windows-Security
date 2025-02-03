@@ -16,13 +16,11 @@ namespace HardenWindowsSecurity;
 
 public partial class GUIMain
 {
-
-	// Partial class definition for handling navigation and view models
 	public partial class NavigationVM : ViewModelBase
 	{
 
 		// Method to handle the OptionalFeatures view, including loading
-		private void OptionalFeaturesView(object obj)
+		private void OptionalFeaturesView(object? obj)
 		{
 
 			// Check if the view is already cached
@@ -783,9 +781,9 @@ public partial class GUIMain
 			#region Deserialize the JSON
 
 			string SafeToRemoveAppsListJson = File.ReadAllText(Path.Combine(GlobalVars.path, "Resources", "SafeToRemoveAppsList.json"));
-			GUIOptionalFeatures.SafeToRemoveAppsCol appList = JsonSerializer.Deserialize<GUIOptionalFeatures.SafeToRemoveAppsCol>(SafeToRemoveAppsListJson, GUIOptionalFeatures.JsonSerializerOptions)!;
+			SafeToRemoveAppsCol appList = JsonSerializer.Deserialize<SafeToRemoveAppsCol>(SafeToRemoveAppsListJson, GUIOptionalFeatures.JsonSerializerOptions)!;
 
-			foreach (GUIOptionalFeatures.SafeToRemoveApp app in appList.SafeToRemoveAppsList)
+			foreach (SafeToRemoveApp app in appList.SafeToRemoveAppsList)
 			{
 				GUIOptionalFeatures.nameToDescriptionApps[app.Name] = app.Description;
 				GUIOptionalFeatures.descriptionToNameApps[app.Description] = app.Name;
@@ -867,7 +865,6 @@ public partial class GUIMain
 			// Cache the view before setting it as the CurrentView
 			_viewCache["OptionalFeaturesView"] = GUIOptionalFeatures.View;
 
-			// Set the CurrentView to the Protect view
 			CurrentView = GUIOptionalFeatures.View;
 		}
 	}

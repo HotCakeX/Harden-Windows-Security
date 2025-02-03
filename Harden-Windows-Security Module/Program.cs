@@ -6,9 +6,7 @@ namespace HardenWindowsSecurity;
 public static class Program
 {
 	/// <summary>
-	/// You can use this method when working on the module in Visual Studio
-	/// Simply press F5 and the UI will boot. The same can be done in Visual Studio Code in PowerShell environment.
-	/// The hybrid design allows for both environments to be completely usable.
+	/// The hybrid design of the Harden Windows Security allows for debug/usage in PowerShell in VS Code and natively in Visual Studio.
 	/// </summary>
 	/// <param name="args"></param>
 	public static void Main()
@@ -34,6 +32,5 @@ public static class Program
 
 		// Launch the GUI
 		GUIHandOff.Boot();
-
 	}
 }

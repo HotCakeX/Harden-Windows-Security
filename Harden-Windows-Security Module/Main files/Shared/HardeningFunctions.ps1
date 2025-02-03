@@ -9,7 +9,6 @@ Function Select-Option {
     )
     $Selected = $null
     while ($null -eq $Selected) {
-
         # Use this style if showing main categories only
         if (!$SubCategory) { Write-ColorfulText -Color Fuchsia -I $Message }
         # Use this style if showing sub-categories only that need additional confirmation
@@ -40,24 +39,15 @@ Function Select-Option {
 }
 Function Write-ColorfulText {
     param (
-        [Parameter(Mandatory = $True)][ValidateSet('Fuchsia', 'Orange', 'MintGreen', 'PinkBoldBlink', 'Rainbow' )][System.String]$Color,
+        [Parameter(Mandatory = $True)][ValidateSet('Fuchsia', 'Orange', 'MintGreen', 'PinkBoldBlink', 'Plum')][System.String]$Color,
         [parameter(Mandatory = $True)][System.String]$InputText
     )
     switch ($Color) {
         'Fuchsia' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
         'Orange' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }
         'MintGreen' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
+        'Plum' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(221,160,221))$($PSStyle.Bold)$InputText$($PSStyle.Reset)"; break }
         'PinkBoldBlink' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
-        'Rainbow' {
-            [System.Drawing.Color[]]$RainbowColors = @([System.Drawing.Color]::Pink, [System.Drawing.Color]::HotPink, [System.Drawing.Color]::SkyBlue, [System.Drawing.Color]::HotPink, [System.Drawing.Color]::SkyBlue, [System.Drawing.Color]::LightSkyBlue, [System.Drawing.Color]::LightGreen, [System.Drawing.Color]::Coral, [System.Drawing.Color]::Plum, [System.Drawing.Color]::Gold)
-            $StringBuilder = [System.Text.StringBuilder]::new()
-            for ($I = 0; $I -lt $InputText.Length; $I++) {
-                $CurrentColor = $RainbowColors[$I % $RainbowColors.Length]
-                [System.Void]$StringBuilder.Append("$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)")
-            }
-            Write-Output -InputObject $StringBuilder.ToString()
-            break
-        }
         Default { Throw 'Unspecified Color' }
     }
 }
@@ -362,9 +352,9 @@ Function Invoke-NonAdminCommands {
             if (!$RunUnattended) {
                 if (!$Categories -and [System.Environment]::IsPrivilegedProcess) {
                     Write-Host -Object "`r`n"
-                    Write-ColorfulText -Color Rainbow -I "################################################################################################`r`n"
-                    Write-ColorfulText -Color MintGreen -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
-                    Write-ColorfulText -Color Rainbow -I "################################################################################################`r`n"
+                    Write-ColorfulText -Color Plum -I "################################################################################################`r`n"
+                    Write-ColorfulText -Color Plum -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
+                    Write-ColorfulText -Color Plum -I "################################################################################################`r`n"
                 }
             }
         } 'No' { break NonAdminLabel }

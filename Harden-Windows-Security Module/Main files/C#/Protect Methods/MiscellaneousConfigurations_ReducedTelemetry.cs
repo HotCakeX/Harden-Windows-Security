@@ -12,6 +12,5 @@ public static partial class MiscellaneousConfigurations
 		Logger.LogMessage("Applying the Reduced Telemetry policies", LogTypeIntel.Information);
 
 		LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "Reduced Telemetry", "registry.pol"), LGPORunner.FileType.POL);
-
 	}
 }

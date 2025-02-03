@@ -7,16 +7,16 @@ Function P {
     [string]$PSMSIXDownloadPath = Join-Path -Path $env:TEMP -ChildPath 'PowerShell.msixbundle'
     try {
         if ($PSVersionTable.PSEdition -eq 'Desktop' -and !(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
-            Write-Verbose -Message 'Trying to Install PowerShell Core because it could not be found on the system' -Verbose
-            if ((Get-LocalUser -Name ([System.Environment]::UserName)).PrincipalSource -eq 'MicrosoftAccount' -and (Get-Command -Name 'winget.exe' -ErrorAction Ignore)) {
+            Write-Verbose -Message 'Trying to Install PowerShell (Core) because it could not be found on the system' -Verbose
+            if (Get-Command -Name 'winget.exe' -ErrorAction Ignore) {
                 # https://apps.microsoft.com/detail/9mz1snwt0n5d
-                Write-Verbose -Message 'Microsoft account detected, using Microsoft Store source for PowerShell installation through Winget'
+                Write-Verbose -Message 'Installing PowerShell through Winget'
                 $null = Winget install --id 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements --source msstore
-                if ($LASTEXITCODE -ne 0) { throw "Failed to Install PowerShell Core using Winget: $LASTEXITCODE" }
+                if ($LASTEXITCODE -ne 0) { throw "Failed to Install PowerShell using Winget: $LASTEXITCODE" }
             }
             else {
                 if (Test-Path -Path $PSMSIXDownloadPath -PathType Leaf) { Remove-Item -Path $PSMSIXDownloadPath -Force }
-                Write-Verbose -Message 'Local account detected or winget is not installed, cannot install PowerShell Core from Microsoft Store using Winget and msstore as the source. Downloading and Installing PowerShell directly from the official Microsoft GitHub repository using MSIX file'
+                Write-Verbose -Message 'Winget is not installed. Downloading and Installing PowerShell directly from the official Microsoft GitHub repository using MSIX file'
                 Invoke-WebRequest -Uri $PSDownloadURLMSIX -OutFile $PSMSIXDownloadPath
                 Add-AppxPackage -Path $PSMSIXDownloadPath
             }

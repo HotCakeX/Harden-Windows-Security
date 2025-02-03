@@ -14,13 +14,43 @@ Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Securit
 
 This page offers a data grid that has search functionality, sorting, removal of individual logs and copying entire rows or each cell to the clipboard.
 
+You can also sign into your tenant to automatically retrieve Advanced Hunting logs related to Application Control and view, process, filter, search and convert them into App Control policies, all within the AppControl Manager application.
+
+Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permission](https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery).
+
 <br>
 
 ## Configuration Details
 
+* **Filters logs by date**: Use the calendar to filter the logs based on date they were generated.
+
+* **Search box**: Use this box to search for specific logs based on any available criteria/column.
+
+<br>
+
+### Local Tab
+
 * **Scan Logs**: Initially disabled until you select MDE Advanced Hunting CSV logs.
 
 * **Browse for MDE Advanced Huntings logs**: Use this button to browse for CSV files containing the Microsoft Defender for Endpoint Advanced Hunting exported CSV logs.
+
+<br>
+
+### Cloud Tab
+
+* **Sign In**: Sign into your tenant with Entra ID credentials.
+
+* **Sign Out**: Sign out of your tenant and discard any saved credentials from the app's memory.
+
+* **Cancel Sign In**: Cancel the sign-in process. If there was a problem during sign in process, use this button to cancel it and try again by pressing the `Sign In` button.
+
+* **Device Name**: Use this button to display a text box where you can enter a name of a device to filter the logs by before retrieving them. The device name will be included as part of the query that will be forwarded to the MDE Advanced Hunting API and the filtering will happen on the MDE side.
+
+* **Retrieve The Logs**: Use this button to retrieve the Advanced Hunting logs that are related to Application Control policies. The logs will be displayed in the data grid.
+
+<br>
+
+### Create Tab
 
 * **Create Policy -> Add to policy**: Use this option to select an existing Application Control XML policy file. The events you choose will be added directly to this file, expanding its coverage.
 
@@ -30,8 +60,14 @@ This page offers a data grid that has search functionality, sorting, removal of 
 
 * **Policy Name**: Enter the name of the policy that will be created from the MDE Advanced Hunting logs.
 
-* **Filters logs by date**: Use the calendar to filter the logs based on date they were generated.
-
 * **Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
+
+* **Actions -> Select All**: Use this option to select all the logs in the data grid.
+
+* **Actions -> De-select All**: Use this option to deselect all the logs in the data grid.
+
+* **Actions -> Clear Data**: Use this option to clear all of the processes and detected logs.
+
+* **Actions -> Deploy Policy After Creation**: Use this option to automatically deploy the App Control policy that you create with MDE Advanced Hunting logs to the local system.
 
 <br>

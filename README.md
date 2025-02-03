@@ -100,7 +100,7 @@ Unprotect-WindowsSecurity # CLI Mode
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v4.gif" width="750" alt="Harden Windows Security App Demo">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/83ea20c080abf135f9f805d832679c7cc5e390cb/Pictures/APNGs/HardenWindowsSecurityDemo.apng" width="750" alt="Harden Windows Security App Demo">
 
 </div>
 

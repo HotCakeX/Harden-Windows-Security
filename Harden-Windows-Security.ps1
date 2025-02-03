@@ -3,7 +3,7 @@ Function P {
     param()
     $ErrorActionPreference = 'Stop'
     Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
-    [string]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.5.0/PowerShell-7.5.0-win.msixbundle'
+    [string]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/PowerShell-7.4.6-win.msixbundle'
     [string]$PSMSIXDownloadPath = Join-Path -Path $env:TEMP -ChildPath 'PowerShell.msixbundle'
     try {
         if ($PSVersionTable.PSEdition -eq 'Desktop' -and !(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
@@ -44,8 +44,7 @@ Function AppControl {
     #>
     [CmdletBinding()]
     param ([Parameter(Mandatory = $false)][string]$MSIXPath, [Parameter(Mandatory = $False)][string]$SignTool)
-    if ($ExecutionContext.SessionState.LanguageMode -eq 'ConstrainedLanguage') { Write-Host -Object 'Constrained Language Mode detected. Ensure you have Administrator privileges.' -ForegroundColor Magenta }
-    else {
+    if ($ExecutionContext.SessionState.LanguageMode -ne 'ConstrainedLanguage') {
         # We cannot use .NET methods in ConstrainedLanguage mode
         if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             Write-Warning -Message 'Please run this function as an Administrator'; return

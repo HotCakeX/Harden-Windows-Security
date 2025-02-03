@@ -111,11 +111,15 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * The entire codebase is thoroughly commented, allowing code reviewers to effortlessly examine and verify every aspect of AppControl Manager's source code.
 
+* AppControl Manager leverages [MSAL from Microsoft](https://learn.microsoft.com/en-us/entra/identity-platform/msal-overview) to manage Microsoft 365 authentications. This industry-standard library adheres to best practices for secure authentication token management.
+
 <br>
 
 ### Why Does AppControl Manager Require Administrator Privileges?
 
 * AppControl Manager operates exclusively within the "WDACConfig" directory located in the `Program Files` directory for all read and write operations. No data is accessed or modified outside this directory. This design ensures that non-elevated processes, unauthorized software, or unprivileged malware on the system cannot alter the policies you create, the certificates you generate, or the CIP binary files you deploy.
+
+* AppControl Manager employs MediumIL (Medium Integrity Level) when running as an Administrator, ensuring that non-elevated processes cannot access its memory or attach debuggers. Given that the app handles sensitive information—such as Microsoft 365 authentication tokens stored in private variables—this design decision safeguards these tokens from unauthorized, unelevated access or tampering.
 
 * Administrator privileges are required for scanning Code Integrity and AppLocker logs. These scans are integral to several application functions, providing enhanced insights and enabling the generation of precise supplemental policies tailored to your needs.
 

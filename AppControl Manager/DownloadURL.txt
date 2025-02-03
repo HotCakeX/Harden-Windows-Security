@@ -1,1 +1,1 @@
-https://github.com/HotCakeX/Harden-Windows-Security/releases/download/AppControlManager.v.1.8.7.0/AppControl.Manager_1.8.7.0_x64.msix
+https://github.com/HotCakeX/Harden-Windows-Security/releases/download/AppControlManager.v.1.8.8.0/AppControl.Manager_1.8.8.0_x64.msix

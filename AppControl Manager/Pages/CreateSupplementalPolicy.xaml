@@ -73,7 +73,7 @@
 
 
                         <TextBlock Grid.Column="1"
-                            Grid.Row="0"                                   
+                            Grid.Row="0"
                             Text="{x:Bind DisplayName}"
                             x:Phase="1"
                             Style="{ThemeResource BaseTextBlockStyle}"
@@ -741,7 +741,7 @@
                                 <RefreshContainer x:Name="PFNRefreshContainer" RefreshRequested="PFNRefreshContainer_RefreshRequested">
 
                                     <ListView
-                                        x:Name="PFNPackagedAppsListView"                                 
+                                        x:Name="PFNPackagedAppsListView"
                                         BorderThickness="1"
                                         CornerRadius="5"
                                         ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
@@ -749,7 +749,7 @@
                                         Width="450"
                                         Height="400"
                                         HorizontalAlignment="Left"
-                                        SelectionMode="Multiple"                               
+                                        SelectionMode="Multiple"
                                         PointerEntered="PFNPackagedAppsListView_PointerEntered"
                                         PointerExited="PFNPackagedAppsListView_PointerExited"
                                         SelectionChanged="PFNPackagedAppsListView_SelectionChanged"

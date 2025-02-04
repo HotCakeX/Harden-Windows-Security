@@ -210,7 +210,7 @@ AppControl -MSIXPath "Path To the MSIX" -SignTool "Path to signtool.exe" -Verbos
 
 <br>
 
-# FAQs
+## FAQs
 
 * Q: Why isn't AppControl Manager on Microsoft Store?
 * A: Because Microsoft Store currently does not accept apps that require Administrator privileges to run [(i.e., MediumIL)](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control).
@@ -221,5 +221,57 @@ AppControl -MSIXPath "Path To the MSIX" -SignTool "Path to signtool.exe" -Verbos
 * A: Because I haven't started paying for a code-signing certificate yet. [Read more about signing](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Rethinking-Trust:-Advanced-Security-Measures-for-High%E2%80%90Stakes-Systems).
 
    * To truly trust an application, you should review its code and bless it yourself.
+
+<br>
+
+## How To Build The AppControl Manager Locally?
+
+You can build the AppControl Manager application directly from the source code locally on your device without using any 3rd party tools in a completely automated way.
+
+<details>
+
+<summary>
+Click/Tap here to see the PowerShell code
+</summary>
+
+<br>
+
+```powershell
+[System.String]$RepoUrl = 'https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip'
+[System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, 'HardenWindowsSecurity.zip')
+[System.String]$ExtractPath = $PWD
+Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath
+Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
+[System.String]$PathToNavigateTo = [System.IO.Path]::Combine($ExtractPath, 'Harden-Windows-Security-main', 'AppControl Manager')
+Set-Location -Path $PathToNavigateTo
+
+winget source update
+winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
+# Downloads the online installer and automatically runs it and installs the build tools
+# https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/set-up-your-development-environment
+# https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools
+# https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio
+# https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community
+winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --includeRecommended'
+
+# Downloads the online installer and automatically runs it and installs the full Windows SDK
+winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
+winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+winget install --id Microsoft.VCRedist.2015+.x86 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
+# Refresh the environment variables so the current session detects the new dotnet installation
+$Env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';' + 
+[System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User)
+
+dotnet build 'AppControl Manager.sln' --configuration Release --verbosity normal /p:Platform=x64
+dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:normal
+```
+
+<br>
+
+</details>
 
 <br>

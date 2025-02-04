@@ -184,17 +184,11 @@ In contrast, on conventional computer systems, root/administrator privileges are
 >
 > * [Only a Small Portion of The Windows OS Security Apparatus](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Only-a-Small-Portion-of-The-Windows-OS-Security-Apparatus)
 >
-> * [RuntimeEncryption of Memory
-With Intel® Total Memory
-Encryption - Multi-Key](https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2022-10/intel-total-memory-encryption-multi-key-whitepaper.pdf)
+> * [RuntimeEncryption of Memory With Intel® Total Memory Encryption - Multi-Key](https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2022-10/intel-total-memory-encryption-multi-key-whitepaper.pdf)
 >
-> * [TCG Storage
-Opal Integration Guidelines](https://trustedcomputinggroup.org/wp-content/uploads/TCG_Storage_ReferenceDocument_Opal_Integration_Guidelines_v1.00_r1.00.pdf)
+> * [TCG Storage Opal Integration Guidelines](https://trustedcomputinggroup.org/wp-content/uploads/TCG_Storage_ReferenceDocument_Opal_Integration_Guidelines_v1.00_r1.00.pdf)
 >
-> * [Trusted Computing Group and
-NVM Express Joint White Paper:
-TCG Storage, Opal, and NVMe
-](https://trustedcomputinggroup.org/wp-content/uploads/TCGandNVMe_Joint_White_Paper-TCG_Storage_Opal_and_NVMe_FINAL.pdf)
+> * [Trusted Computing Group and NVM Express Joint White Paper: TCG Storage, Opal, and NVMe](https://trustedcomputinggroup.org/wp-content/uploads/TCGandNVMe_Joint_White_Paper-TCG_Storage_Opal_and_NVMe_FINAL.pdf)
 >
 > * [All other TCG articles related to OPAL](https://trustedcomputinggroup.org/resources/?search=OPAL&)
 >

@@ -6,6 +6,7 @@ This article explores some of the technical details of how to deploy an App Cont
 
 > [!Tip]\
 > Check out these 2 documents from Microsoft for more info and basics:
+>
 > * [PowerShell Constrained Language Mode](https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/)
 >
 > * [Script enforcement with App Control for Business](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/script-enforcement)

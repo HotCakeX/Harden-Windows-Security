@@ -89,6 +89,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AssemblyName>AppControlManager</AssemblyName>
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/optimizing -->
     <PublishAot>False</PublishAot>
     <ErrorReport>send</ErrorReport>
     <FileVersion>1.8.8.0</FileVersion>

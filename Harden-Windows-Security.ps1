@@ -37,33 +37,29 @@ Function AppControl {
     .DESCRIPTION
         Please refer to the provided link for all of the information about this function and detailed overview of the entire process.
         https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
+    .PARAMETER MSIXBundlePath
+        The path to the AppControlManager MSIXBundle file. If not provided, the latest MSIXBundle file will be downloaded from the GitHub.
     .PARAMETER MSIXPath
         The path to the AppControlManager MSIX file. If not provided, the latest MSIX file will be downloaded from the GitHub. It must have the version number and architecture in its file name as provided on GitHub or produced by Visual Studio.
     .PARAMETER SignTool
        The path to the Microsoft's Signtool.exe; If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft website in Nuget and will use it for the signing operations.
     #>
     [CmdletBinding()]
-    param ([Parameter(Mandatory = $false)][string]$MSIXPath, [Parameter(Mandatory = $False)][string]$SignTool)
+    param ([Parameter(Mandatory = $false)][string]$MSIXBundlePath, [Parameter(Mandatory = $false)][string]$MSIXPath, [Parameter(Mandatory = $False)][string]$SignTool)
+    $ErrorActionPreference = 'Stop'
     if ($ExecutionContext.SessionState.LanguageMode -ne 'ConstrainedLanguage') {
         # We cannot use .NET methods in ConstrainedLanguage mode
         if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             Write-Warning -Message 'Please run this function as an Administrator'; return
         }
     }
-    $ErrorActionPreference = 'Stop'
-    Write-Verbose -Message 'Detecting the CPU Arch'
-    switch ($Env:PROCESSOR_ARCHITECTURE) {
-        'AMD64' { [string]$CPUArch = 'x64'; break }
-        'ARM64' { [string]$CPUArch = 'arm64'; break }
-        default { Throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
-    }
     [string]$CommonName = 'SelfSignedCertForAppControlManager'
     [string]$WorkingDir = Join-Path -Path $env:TEMP -ChildPath $CommonName
     [string]$CertificateOutputPath = Join-Path -Path $WorkingDir -ChildPath "$CommonName.cer"
     [string]$HashingAlgorithm = 'Sha512'
-    # Pattern for AppControl Manager version and architecture extraction from file path and download link URL
-    [regex]$RegexPattern = '_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$'
-
+    [string]$_Package # Where the final package path will be stored, whether it's MSIX or MSIXBundle
+    [string]$CPUArch = @{AMD64 = 'x64'; ARM64 = 'arm64' }[$Env:PROCESSOR_ARCHITECTURE]
+    if ([System.String]::IsNullOrWhiteSpace($CPUArch)) { throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
     Write-Verbose -Message 'Creating the working directory in the TEMP directory'
     if (Test-Path -Path $WorkingDir -PathType Container) { Remove-Item -Path $WorkingDir -Recurse -Force }
     $null = New-Item -Path $WorkingDir -ItemType Directory -Force
@@ -104,53 +100,40 @@ Function AppControl {
             Write-Verbose -Message 'Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet and Downloading it'
             [string]$LatestSignToolVersion = (Invoke-RestMethod -Uri 'https://api.nuget.org/v3-flatcontainer/microsoft.windows.sdk.buildtools/index.json').versions | Select-Object -Last 1
             Invoke-WebRequest -Uri "https://api.nuget.org/v3-flatcontainer/microsoft.windows.sdk.buildtools/${LatestSignToolVersion}/microsoft.windows.sdk.buildtools.${LatestSignToolVersion}.nupkg" -OutFile (Join-Path -Path $WorkingDir -ChildPath 'Microsoft.Windows.SDK.BuildTools.zip')
-            Write-Verbose -Message 'Extracting the nupkg'
-            Expand-Archive -Path "$WorkingDir\Microsoft.Windows.SDK.BuildTools.zip" -DestinationPath $WorkingDir -Force # Saving .nupkg as .zip to satisfy Windows PowerShell
-            Write-Verbose -Message 'Finding the Signtool.exe path in the extracted directory'
+            Write-Verbose -Message 'Extracting the nupkg and finding the Signtool.exe path in the extracted directory'
+            Expand-Archive -Path (Join-Path -Path $WorkingDir -ChildPath 'Microsoft.Windows.SDK.BuildTools.zip') -DestinationPath $WorkingDir -Force # Saving .nupkg as .zip to satisfy Windows PowerShell
             [string]$SignTool = (Get-Item -Path "$WorkingDir\bin\*\$CPUArch\signtool.exe").FullName
         }
 
-        # Download the MSIX package if user did not provide the path to it
-        if ([string]::IsNullOrWhiteSpace($MSIXPath)) {
-            [string]$MSIXPath = Join-Path -Path $WorkingDir -ChildPath 'AppControl.Manager.msix'
+        # If user provided a valid path to the MSIXBundle file
+        if (![string]::IsNullOrWhiteSpace($MSIXBundlePath) -and (Test-Path -Path $MSIXBundlePath -PathType Leaf)) {
+            $_Package = $MSIXBundlePath
+        }
+        # If user provided a valid path to the MSIX file
+        elseif (![string]::IsNullOrWhiteSpace($MSIXPath) -and (Test-Path -Path $MSIXPath -PathType Leaf)) {
+            $_Package = $MSIXPath
+        }
+        # Download the MSIXBundle if user didn't provide any paths
+        else {
+            Write-Verbose -Message 'Downloading the latest AppControl Manager MSIXBundle file from GitHub'
+            $_Package = Join-Path -Path $WorkingDir -ChildPath 'AppControlManager.msixbundle'
 
             # Download link for the latest version of AppControl manger is retrieved from this text file
-            [string]$MSIXPackageDownloadURL = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt'
+            [string]$MSIXBundleDownloadURL = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt'
 
-            Write-Verbose -Message 'Downloading the MSIX package from the GitHub releases' -Verbose
-            $null = Invoke-WebRequest -Uri $MSIXPackageDownloadURL -OutFile $MSIXPath
-
-            # Get the version and architecture of the installing MSIX package app from the download URL
-            [System.Text.RegularExpressions.Match]$RegexMatch = $RegexPattern.Match($MSIXPackageDownloadURL)
-            if ($RegexMatch.Success) {
-                [string]$InstallingAppVersion = $RegexMatch.Groups['Version'].Value
-                [string]$InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value
-            }
-            else {
-                throw 'Could not get the version of the installing app from the MSIX download URL.'
-            }
+            Write-Verbose -Message 'Downloading the MSIXBundle from the GitHub releases' -Verbose
+            $null = Invoke-WebRequest -Uri $MSIXBundleDownloadURL -OutFile $MSIXPath
         }
-        else {
-            # Get the version and architecture of the installing MSIX package app from the User provided file path
-            [System.Text.RegularExpressions.Match]$RegexMatch = $RegexPattern.Match($MSIXPath)
-            if ($RegexMatch.Success) {
-                [string]$InstallingAppVersion = $RegexMatch.Groups['Version'].Value
-                [string]$InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value
-            }
-            else {
-                throw 'Could not get the version of the installing app from the -MSIX parameter value that you provided.'
-            }
-        }
-        Write-Verbose -Message 'Signing the App Control Manager MSIX package'
+        Write-Verbose -Message 'Signing the App Control Manager package'
 
         # In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
         if ($VerbosePreference -eq 'Continue') {
             # Displays full debug logs if -Verbose is used or Verbose preference of the session is set to Continue
-            . $SignTool sign /debug /n $CommonName /fd $HashingAlgorithm /s 'My' /sha1 $NewCertificate.Thumbprint $MSIXPath
+            . $SignTool sign /debug /n $CommonName /fd $HashingAlgorithm /s 'My' /sha1 $NewCertificate.Thumbprint $_Package
         }
         else {
             # Displays no output if the command runs successfully, and displays minimal output if the command fails.
-            $null = . $SignTool sign /q /n $CommonName /fd $HashingAlgorithm /s 'My' /sha1 $NewCertificate.Thumbprint $MSIXPath
+            $null = . $SignTool sign /q /n $CommonName /fd $HashingAlgorithm /s 'My' /sha1 $NewCertificate.Thumbprint $_Package
         }
         if ($LASTEXITCODE -ne 0) { throw "SignTool Failed. Exit Code: $LASTEXITCODE" }
 
@@ -164,11 +147,6 @@ Function AppControl {
             [string[]]$PossiblePreviousASRExclusions = (Get-MpPreference).AttackSurfaceReductionOnlyExclusions | Where-Object -FilterScript { $_ -like '*__sadt7br7jpt02\AppControlManager*' }
             if ($null -ne $PossiblePreviousASRExclusions -and $PossiblePreviousASRExclusions.Length -gt 0) { Remove-MpPreference -AttackSurfaceReductionOnlyExclusions $PossiblePreviousASRExclusions }
 
-            [string]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
-            Write-Verbose -Message "Adding the new app install's files To the ASR Rules exclusions."
-            # The cmdlet won't add duplicates
-            Add-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstallingAppLocationToAdd + 'AppControlManager.exe'), ($InstallingAppLocationToAdd + 'AppControlManager.dll')) -ErrorAction Stop
-
             [string]$ValidateAdminCodeSignaturesRegName = 'ValidateAdminCodeSignatures'
             $ValidateAdminCodeSignaturesRegValue = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name $ValidateAdminCodeSignaturesRegName -ErrorAction SilentlyContinue
             # This will cause the "A referral was returned from the server." error to show up when AppControl Manager tries to start.
@@ -178,8 +156,16 @@ Function AppControl {
         }
         catch { Write-Verbose -Message "You can safely ignore this error: $_" } # If this section fails for some reason such as running the script in Windows Sandbox, no error should be thrown
 
-        Write-Verbose -Message "Installing AppControl Manager MSIX Package version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
-        Add-AppPackage -Path $MSIXPath -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse
+        Write-Verbose -Message 'Installing the AppControl Manager'
+        Add-AppPackage -Path $_Package -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse
+
+        try {
+            [string]$InstallingAppLocationToAdd = (Get-AppxPackage -Name AppControlManager).InstallLocation
+            Write-Verbose -Message "Adding the new app's dll and exe (2 files) To the ASR Rules exclusions."
+            # The cmdlet won't add duplicates
+            Add-MpPreference -AttackSurfaceReductionOnlyExclusions (Join-Path -Path $InstallingAppLocationToAdd -ChildPath 'AppControlManager.exe'), (Join-Path -Path $InstallingAppLocationToAdd -ChildPath 'AppControlManager.dll') -ErrorAction Stop
+        }
+        catch { Write-Verbose -Message "You can safely ignore this error: $_" }
     }
     finally { Remove-Item -Path $WorkingDir -Recurse -Force } # Cleaning up the working directory in the TEMP directory
 }

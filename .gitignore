@@ -5,6 +5,8 @@ Harden-Windows-Security Module/Harden Windows Security.csproj.user
 AppControl Manager/.vs/
 AppControl Manager/bin/
 AppControl Manager/obj/
-AppControl Manager/MSIXOutput
+AppControl Manager/MSIXOutputX64
+AppControl Manager/MSIXOutputARM64
+AppControl Manager/MSIXBundleOutput
 AppControl Manager/Generated Files/
 AppControl Manager/AppControl Manager.csproj.user

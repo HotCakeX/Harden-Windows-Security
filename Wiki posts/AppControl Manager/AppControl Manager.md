@@ -241,7 +241,7 @@ It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages. Y
 ```powershell
 # Requires -Version 5.1
 # Requires -RunAsAdministrator
-$ErrorActionPreference = 'Stop'
+$global:ErrorActionPreference = 'Stop'
 # Start the stopwatch
 $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 [System.String]$RepoUrl = 'https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip'
@@ -249,6 +249,7 @@ $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 [System.String]$InitialWorkingDirectory = $PWD
 Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath
 Expand-Archive -Path $ZipPath -DestinationPath $InitialWorkingDirectory -Force
+Remove-Item -Path $ZipPath -Force
 [System.String]$AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, 'Harden-Windows-Security-main', 'AppControl Manager')
 Set-Location -Path $AppControlManagerDirectory
 
@@ -278,7 +279,8 @@ Write-Host -Object "`nListing installed .NET SDKs`n`n" -ForegroundColor Magenta
 dotnet --list-sdks
 
 Function Find-mspdbcmf {
-    [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath
+    # "-products *" is necessary to detect BuildTools too
+    [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
 
     [string]$BasePath = [System.IO.Path]::Combine($VisualStudioPath, 'VC', 'Tools', 'MSVC')
 
@@ -337,10 +339,13 @@ if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsd
 
 # Generate for X64 architecture
 dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=x64
-dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath
+
+dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+
 # Generate for ARM64 architecture
 dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=ARM64
-dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath
+
+dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
 
 Function Get-MSIXFile {
     Param(
@@ -384,14 +389,12 @@ Function Get-MSIXFile {
 [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
 [System.String]$FinalMSIXX64Name = [System.IO.Path]::GetFileName($FinalMSIXX64Path)
 [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msixsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
-[System.String]$FinalMSIXX64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXX64SymbolPath)
 #endregion
 
 #region Finding ARM64 outputs
 [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
 [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
 [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
-[System.String]$FinalMSIXARM64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXARM64SymbolPath)
 #endregion
 
 #region Detect and Validate File Versions
@@ -481,19 +484,23 @@ if ($LASTEXITCODE -ne 0) { Throw [System.InvalidOperationException]::New("MakeAp
 
 #Endregion
 
-Write-Host -Object "ARM64 MSIX File Path: $FinalMSIXARM64Path" -ForegroundColor Cyan
-Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
-
 Write-Host -Object "X64 MSIX File Path: $FinalMSIXX64Path" -ForegroundColor Green
 Write-Host -Object "X64 MSIX File Name: $FinalMSIXX64Name" -ForegroundColor Green
+Write-Host -Object "X64 Symbols: $FinalMSIXX64SymbolPath" -ForegroundColor Green
+
+Write-Host -Object "ARM64 MSIX File Path: $FinalMSIXARM64Path" -ForegroundColor Cyan
+Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
+Write-Host -Object "ARM64 Symbols: $FinalMSIXARM64SymbolPath" -ForegroundColor Cyan
 
 Write-Host -Object "MSIX Bundle File Path: $MSIXBundle" -ForegroundColor Yellow
 Write-Host -Object "MSIX Bundle File Name: $FinalBundleFileName" -ForegroundColor Yellow
 
-$Stopwatch.Stop()
+if ($null -ne $Stopwatch) {
 
-$Elapsed = $Stopwatch.Elapsed
-[string]$Result = @"
+    $Stopwatch.Stop()
+
+    $Elapsed = $Stopwatch.Elapsed
+    [string]$Result = @"
 Execution Time:
 ----------------------------
 Total Time   : $($Elapsed.ToString('g'))
@@ -504,7 +511,8 @@ Milliseconds : $($Elapsed.Milliseconds)
 ----------------------------
 "@
 
-Write-Host -Object $Result -ForegroundColor Cyan
+    Write-Host -Object $Result -ForegroundColor Cyan
+}
 
 ```
 

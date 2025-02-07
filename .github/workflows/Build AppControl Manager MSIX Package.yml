@@ -71,6 +71,7 @@ jobs:
         working-directory: './AppControl Manager'
         # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
         run: |
+          $global:ErrorActionPreference = 'Stop'
           [System.String]$AppControlManagerDirectory = $PWD.Path
 
           Write-Host -Object "`nChecking .NET info`n`n" -ForegroundColor Magenta
@@ -79,7 +80,8 @@ jobs:
           dotnet --list-sdks
 
           Function Find-mspdbcmf {
-              [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath
+              # "-products *" is necessary to detect BuildTools too
+              [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
 
               [string]$BasePath = [System.IO.Path]::Combine($VisualStudioPath, 'VC', 'Tools', 'MSVC')
 

@@ -230,6 +230,8 @@ You can build the AppControl Manager application directly from the source code l
 
 It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages. You can even optionally chain it with the [Bootstrapper script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) to sign and install the application on your system at the end.
 
+The build process will generate complete log files and you can use the [MSBuild Structured Log Viewer](https://learn.microsoft.com/en-us/shows/visual-studio-toolbox/msbuild-structured-log-viewer) to inspect them.
+
 <details>
 
 <summary>

@@ -115,14 +115,16 @@ Function AppControl {
         }
         # Download the MSIXBundle if user didn't provide any paths
         else {
-            Write-Verbose -Message 'Downloading the latest AppControl Manager MSIXBundle file from GitHub'
-            $_Package = Join-Path -Path $WorkingDir -ChildPath 'AppControlManager.msixbundle'
+            # Write-Verbose -Message 'Downloading the latest AppControl Manager MSIXBundle file from GitHub'
+            Write-Verbose -Message 'Downloading the latest AppControl Manager MSIX file from GitHub'
+            # $_Package = Join-Path -Path $WorkingDir -ChildPath 'AppControlManager.msixbundle'
+            $_Package = Join-Path -Path $WorkingDir -ChildPath 'AppControlManager.msix'
 
             # Download link for the latest version of AppControl manger is retrieved from this text file
             [string]$MSIXBundleDownloadURL = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt'
 
             Write-Verbose -Message 'Downloading the MSIXBundle from the GitHub releases' -Verbose
-            $null = Invoke-WebRequest -Uri $MSIXBundleDownloadURL -OutFile $MSIXPath
+            $null = Invoke-WebRequest -Uri $MSIXBundleDownloadURL -OutFile $_Package
         }
         Write-Verbose -Message 'Signing the App Control Manager package'
 

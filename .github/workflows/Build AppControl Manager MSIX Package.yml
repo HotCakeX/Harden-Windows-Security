@@ -475,7 +475,7 @@ jobs:
 
           # Path to the files that will be updated
           [string]$DownloadURLFilePath = '.\AppControl Manager\DownloadURL.txt'
-          [string]$DownloadURLFilePathForMSIXBundle = '.\AppControl Manager\DownloadURLForMSIXBundle.txt'
+          [string]$DownloadURLFilePathForMSIXBundle = '.\AppControl Manager\MSIXBundleDownloadURL.txt'
           [string]$VersionFilePath = '.\AppControl Manager\version.txt'
 
           # Update the file content with the new URL
@@ -483,7 +483,7 @@ jobs:
           Write-Host -Object "Updated DownloadURL.txt with download URL: $DownloadURL"
 
           Set-Content -Path $DownloadURLFilePathForMSIXBundle -Value $DownloadURLForMSIXBundle -Force
-          Write-Host -Object "Updated DownloadURLForMSIXBundle.txt with download URL: $DownloadURLForMSIXBundle"
+          Write-Host -Object "Updated MSIXBundleDownloadURL.txt with download URL: $DownloadURLForMSIXBundle"
 
           Set-Content -Path $VersionFilePath -Value $PACKAGE_VERSION -Force
           Write-Host -Object "Updated version.txt with version: $PACKAGE_VERSION"
@@ -512,7 +512,7 @@ jobs:
           ``````
           $DownloadURL
           ``````
-          And DownloadURLForMSIXBundle.txt to
+          And MSIXBundleDownloadURL.txt to
           ``````
           $DownloadURLForMSIXBundle
           ``````

@@ -244,13 +244,15 @@ It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages. Y
 $global:ErrorActionPreference = 'Stop'
 # Start the stopwatch
 $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-[System.String]$RepoUrl = 'https://github.com/HotCakeX/Harden-Windows-Security/archive/refs/heads/main.zip'
-[System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, 'HardenWindowsSecurity.zip')
+[System.String]$BranchName = "main"
+[System.String]$RepoName = "Harden-Windows-Security"
+[System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
+[System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
 [System.String]$InitialWorkingDirectory = $PWD
 Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath
 Expand-Archive -Path $ZipPath -DestinationPath $InitialWorkingDirectory -Force
 Remove-Item -Path $ZipPath -Force
-[System.String]$AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, 'Harden-Windows-Security-main', 'AppControl Manager')
+[System.String]$AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'AppControl Manager')
 Set-Location -Path $AppControlManagerDirectory
 
 winget source update

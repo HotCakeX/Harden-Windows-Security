@@ -1,81 +1,39 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.Pages;
 
 public sealed partial class Logs : Page
 {
-	// Brush to store the log text color (default set to CornflowerBlue, must be the one set in XAML too for consistency)
-	private SolidColorBrush logTextBrush = new(Colors.CornflowerBlue);
-
-	// Brush to store the highlight text color (default set to Yellow, must be the one set in XAML too for consistency)
-	private SolidColorBrush highlightTextBrush = new(Colors.Yellow);
+	// Holds all lines from the currently loaded log file.
+	private List<string> _allLogLines = [];
 
 	public Logs()
 	{
 		this.InitializeComponent();
 
-		// Load log files when the page is initialized
+		// Load log files when the page is initialized.
 		LoadLogFiles();
-
-		// Handle TextChanged event for real-time search
-		SearchTextBox.TextChanged += SearchTextBox_TextChanged;
-
-		// Subscribe to the Loaded event for initializing color pickers
-		this.Loaded += Logs_Loaded;
 	}
 
-	// Initialize color picker event handlers once the page is loaded
-	private void Logs_Loaded(object sender, RoutedEventArgs e)
-	{
-		// Subscribe to color picker changes for log text color
-		TextColorPicker.ColorPicker.ColorChanged += TextColorPicker_ColorChanged;
-
-		// Subscribe to color picker changes for highlight color
-		HighlightColorPicker.ColorPicker.ColorChanged += HighlightColorPicker_ColorChanged;
-	}
-
-	// Handler for when the log text color picker changes
-	private void TextColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
-	{
-		// Change the log text color based on user selection
-		logTextBrush = new SolidColorBrush(args.NewColor);
-
-		// Apply the new color to the TextBlock displaying the log content
-		LogContentTextBox.Foreground = logTextBrush;
-	}
-
-	// Handler for when the highlight color picker changes
-	private void HighlightColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
-	{
-		// Change the highlight text color based on user selection
-		highlightTextBrush = new SolidColorBrush(args.NewColor);
-
-		// Update the highlight color immediately if there's an active search
-		if (!string.IsNullOrWhiteSpace(SearchTextBox.Text))
-		{
-			// Call the highlight method again with the new color asynchronously
-			_ = HighlightTextAsync(LogContentTextBox.Text, SearchTextBox.Text.Trim());
-		}
-	}
-
+	/// <summary>
+	/// Loads log file names from the logs directory into the ComboBox.
+	/// Only files matching the name pattern are included.
+	/// </summary>
 	private void LoadLogFiles()
 	{
-		// Get all log files matching the syntax and sort them by creation time
+		// Get files matching the pattern;
 		List<FileInfo> logFiles = [.. Directory.GetFiles(Logger.LogsDirectory, "AppControlManager_Logs_*.txt")
 			.Select(f => new FileInfo(f))
-			.Where(f => f.Length <= 409600) // Filter files that are 400KB or smaller to prevent UI from freezing. ItemsRepeater element should be used for virtualized content display.
-                .OrderByDescending(f => f.CreationTime)];
+			.OrderByDescending(f => f.CreationTime)];
 
-		// Clear existing items and add sorted files to the ComboBox
+		// Clear and fill the ComboBox with full file paths.
 		LogFileComboBox.Items.Clear();
 
 		foreach (FileInfo logFile in logFiles)
@@ -83,119 +41,90 @@ public sealed partial class Logs : Page
 			LogFileComboBox.Items.Add(logFile.FullName);
 		}
 
-		// Select the first item if any files were found
-		if (logFiles.Count > 0)
+		// If files were found, select the first one and display its content.
+		if (logFiles.Count is not 0)
 		{
 			LogFileComboBox.SelectedIndex = 0;
 			_ = DisplayLogContentAsync(logFiles[0].FullName);
 		}
 	}
 
-
+	/// <summary>
+	/// Refreshes the list of log files.
+	/// </summary>
 	private void RefreshButton_Click(object sender, RoutedEventArgs e)
 	{
-		// Refresh the list of log files
 		LoadLogFiles();
 	}
 
+	/// <summary>
+	/// Loads the selected log file’s content.
+	/// </summary>
 	private async void LogFileComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (LogFileComboBox.SelectedItem is not null)
 		{
-			// Get the selected file path
 			string? selectedFile = LogFileComboBox.SelectedItem.ToString();
-
-			if (selectedFile is not null)
+			if (!string.IsNullOrWhiteSpace(selectedFile))
 			{
-				// Display the content of the selected log file asynchronously
 				await DisplayLogContentAsync(selectedFile);
 			}
 		}
 	}
 
+	/// <summary>
+	/// Reads the log file content asynchronously and splits it into lines.
+	/// Then it updates the ItemsRepeater to display the log lines.
+	/// </summary>
 	private async Task DisplayLogContentAsync(string filePath)
 	{
 		if (File.Exists(filePath))
 		{
-			// Read and display the log file content asynchronously
-			string fileContent = await Task.Run(() => File.ReadAllText(filePath));
+			// Read all lines from the file in a background task.
+			string[] lines = await File.ReadAllLinesAsync(filePath);
 
-			// Set the text in the UI thread to avoid cross-thread exceptions
-			LogContentTextBox.Text = fileContent;
+			_allLogLines = [.. lines];
 
-			// Apply the current text color when loading new content
-			LogContentTextBox.Foreground = logTextBrush;
+			// Update the displayed log lines (filtered by search text if applicable).
+			UpdateLogDisplay();
 		}
 	}
 
-	// Event handler for real-time search in the SearchTextBox
-	private async void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	/// <summary>
+	/// Called when the search text changes.
+	/// Filters the log lines based on the search term.
+	/// </summary>
+	private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
-		// Get the updated text from the search box
-		string searchText = SearchTextBox.Text.Trim();
-
-		// If the search text is not empty, highlight the text in the log content asynchronously
-		if (!string.IsNullOrWhiteSpace(searchText) && !string.IsNullOrEmpty(LogContentTextBox.Text))
-		{
-			await HighlightTextAsync(LogContentTextBox.Text, searchText);
-		}
-		else
-		{
-			// Reset to the original content if the search box is empty
-			await HighlightTextAsync(LogContentTextBox.Text, string.Empty);
-		}
+		UpdateLogDisplay();
 	}
 
-	private async Task HighlightTextAsync(string content, string searchText)
+	/// <summary>
+	/// Updates the ItemsRepeater with the current log lines.
+	/// If a search term is entered, only lines containing that term (case-insensitive) are displayed.
+	/// </summary>
+	private void UpdateLogDisplay()
 	{
-		// Perform text highlighting asynchronously to avoid UI blocking
-		await Task.Run(() =>
+		string? searchText = SearchTextBox.Text.Trim();
+
+		IEnumerable<string> filteredLines = string.IsNullOrWhiteSpace(searchText)
+			? _allLogLines
+			: _allLogLines.Where(line => line.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+
+		// Create a list of LogLine objects.
+		List<LogLine> logLines = [.. filteredLines.Select(line => new LogLine
 		{
-			// Get index of the first occurrence of the search text
-			int index = content.IndexOf(searchText, System.StringComparison.OrdinalIgnoreCase);
+			Text = line
+		})];
 
-			// Clear the current text and apply a new format with highlighting
-			_ = LogContentTextBox.DispatcherQueue.TryEnqueue(() =>
-			 {
-				 LogContentTextBox.Inlines.Clear();
-
-				 if (index < 0 || string.IsNullOrWhiteSpace(searchText))
-				 {
-					 // Reset to the original content if no match is found or search text is empty
-					 LogContentTextBox.Text = content;
-				 }
-				 else
-				 {
-					 // Loop through the text and highlight all occurrences
-					 int lastIndex = 0;
-					 while (index >= 0)
-					 {
-						 // Add unhighlighted text before the search term
-						 if (index > lastIndex)
-						 {
-							 LogContentTextBox.Inlines.Add(new Run { Text = content[lastIndex..index] });
-						 }
-
-						 // Add highlighted text for the search term
-						 LogContentTextBox.Inlines.Add(new Run
-						 {
-							 Text = content.Substring(index, searchText.Length),
-							 Foreground = highlightTextBrush, // Apply the updated highlight color
-							 FontStyle = Windows.UI.Text.FontStyle.Italic
-						 });
-
-						 // Move past this match and look for the next
-						 lastIndex = index + searchText.Length;
-						 index = content.IndexOf(searchText, lastIndex, System.StringComparison.OrdinalIgnoreCase);
-					 }
-
-					 // Add the remaining text if any
-					 if (lastIndex < content.Length)
-					 {
-						 LogContentTextBox.Inlines.Add(new Run { Text = content[lastIndex..] });
-					 }
-				 }
-			 });
-		});
+		LogItemsRepeater.ItemsSource = logLines;
 	}
+}
+
+/// <summary>
+/// Represents one log line.
+/// </summary>
+public sealed class LogLine
+{
+	public required string Text { get; set; }
 }

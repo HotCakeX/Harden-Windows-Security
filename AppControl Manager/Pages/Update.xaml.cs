@@ -6,8 +6,8 @@ using System.Management;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.AppSettings;
 using AppControlManager.Main;
@@ -15,6 +15,8 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.ApplicationModel;
+using Windows.Foundation;
 using Windows.Management.Deployment;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
@@ -23,29 +25,22 @@ namespace AppControlManager.Pages;
 
 public sealed partial class Update : Page
 {
-	// Pattern for AppControl Manager version and architecture extraction from file path and download link URL
-	[GeneratedRegex(@"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
-	private static partial Regex MyRegex();
-
 	// Pattern for finding ASR rules that belong to the AppControl Manager
 	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
 	private static partial Regex MyRegex1();
 
-	// Common name of the on-device generated certificate used to sign the AppControl Manager MSIX package
+	// Common name of the on-device generated certificate used to sign the AppControl Manager MSIXBundle package
 	private const string commonName = "SelfSignedCertForAppControlManager";
-
-	// Create a Regex object
-	internal readonly Regex regex = MyRegex();
 
 	// Track whether hardened update procedure must be used
 	private bool useHardenedUpdateProcedure;
 
-	// To determine whether to use the user-supplied MSIX path or continue with downloading the MSIX from GitHub
+	// To determine whether to use the user-supplied MSIXBundle path or continue with downloading the MSIXBundle from GitHub
 	// It's changed by the UI toggle
-	internal bool useCustomMSIXPath;
+	internal bool useCustomMSIXBundlePath;
 
-	// The custom MSIX path that the user supplied
-	internal string? customMSIXPath;
+	// The custom MSIXBundle path that the user supplied
+	internal string? customMSIXBundlePath;
 
 	// Could be a URL or file path, will be used by Regex to detect version and architecture
 	private string? sourceForRegex;
@@ -84,22 +79,22 @@ public sealed partial class Update : Page
 			// variable to store the update results
 			UpdateCheckResponse? updateCheckResult = null;
 
-			// If user did not provide custom MSIX path, start checking for update
-			if (!useCustomMSIXPath)
+			// If user did not provide custom MSIXBundle path, start checking for update
+			if (!useCustomMSIXBundlePath)
 			{
 				UpdateStatusInfoBar.Message = "Checking for update";
 				// Check for update asynchronously using the AppUpdate class's singleton instance
 				updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
 			}
 
-			// If a new version is available or user supplied a custom MSIX path to be installed
-			if ((updateCheckResult is { IsNewVersionAvailable: true }) || useCustomMSIXPath)
+			// If a new version is available or user supplied a custom MSIXBundle path to be installed
+			if ((updateCheckResult is { IsNewVersionAvailable: true }) || useCustomMSIXBundlePath)
 			{
 				string msg1;
 
-				if (useCustomMSIXPath)
+				if (useCustomMSIXBundlePath)
 				{
-					msg1 = $"Installing the MSIX path that you selected: {customMSIXPath}";
+					msg1 = $"Installing the MSIXBundle path that you selected: {customMSIXBundlePath}";
 				}
 				else
 				{
@@ -113,17 +108,17 @@ public sealed partial class Update : Page
 
 				string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
 
-				// To store the latest MSIX version download link after retrieving it from GitHub text file
+				// To store the latest MSIXBundle version download link after retrieving it from GitHub text file
 				Uri onlineDownloadURL;
 
-				// Location of the MSIX package where it will be saved after download it from GitHub
+				// Location of the MSIXBundle package where it will be saved after download it from GitHub
 				// Or in case user supplied a custom path, it will be assigned to this
 				string AppControlManagerSavePath;
 
 				DownloadProgressRingForMSIXFile.Visibility = Visibility.Visible;
 
-				// If user did not supply a custom MSIX file path
-				if (!useCustomMSIXPath)
+				// If user did not supply a custom MSIXBundle file path
+				if (!useCustomMSIXBundlePath)
 				{
 
 					using (HttpClient client = new SecHttpClient())
@@ -132,12 +127,12 @@ public sealed partial class Update : Page
 						onlineDownloadURL = new Uri(await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
 					}
 
-					// The Uri will be used to detect the version and architecture of the MSIX package being installed
+					// The Uri will be used to detect the version and architecture of the MSIXBundle package being installed
 					sourceForRegex = onlineDownloadURL.ToString();
 
-					AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msix");
+					AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
-					UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIX package...";
+					UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIXBundle package...";
 
 
 					using (HttpClient client = new SecHttpClient())
@@ -202,17 +197,17 @@ public sealed partial class Update : Page
 					}
 
 
-					Logger.Write($"The AppControl Manager MSIX package has been successfully downloaded to {AppControlManagerSavePath}");
+					Logger.Write($"The AppControl Manager MSIXBundle package has been successfully downloaded to {AppControlManagerSavePath}");
 
 				}
 
 				else
 				{
-					// Use the user-supplied MSIX file path to detect the version and architecture
-					sourceForRegex = customMSIXPath ?? throw new InvalidOperationException("No MSIX path was selected");
+					// Use the user-supplied MSIXBundle file path to detect the version and architecture
+					sourceForRegex = customMSIXBundlePath ?? throw new InvalidOperationException("No MSIXBundle path was selected");
 
-					// Use the user-supplied MSIX file path for installation source
-					AppControlManagerSavePath = customMSIXPath;
+					// Use the user-supplied MSIXBundle file path for installation source
+					AppControlManagerSavePath = customMSIXBundlePath;
 				}
 
 				DownloadProgressRingForMSIXFile.IsIndeterminate = true;
@@ -247,22 +242,6 @@ public sealed partial class Update : Page
 					friendlyName: commonName,
 					UserProtectedPrivateKey: useHardenedUpdateProcedure,
 					ExportablePrivateKey: false);
-
-					// Get the version and architecture of the installing MSIX package app
-					Match RegexMatch = regex.Match(sourceForRegex);
-
-					string InstallingAppVersion;
-					string InstallingAppArchitecture;
-
-					if (RegexMatch.Success)
-					{
-						InstallingAppVersion = RegexMatch.Groups["Version"].Value;
-						InstallingAppArchitecture = RegexMatch.Groups["Architecture"].Value;
-					}
-					else
-					{
-						throw new InvalidOperationException("Could not get the version of the installing app");
-					}
 
 					// Signing the App Control Manager MSIX package
 					// In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
@@ -315,6 +294,62 @@ public sealed partial class Update : Page
 								_ = managementClass.InvokeMethod("Remove", inParams, null);
 							}
 						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Write($"An error occurred while trying to remove the ASR rule exclusions which you can safely ignore: {ex.Message}");
+					}
+
+
+					PackageManager packageManager = new();
+
+					Logger.Write("Installing the AppControl Manager MSIXBundle package");
+
+					// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
+					AddPackageOptions options = new()
+					{
+						DeferRegistrationWhenPackagesAreInUse = true,
+						ForceUpdateFromAnyVersion = true
+					};
+
+					IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
+
+					// This event is signaled when the operation completes
+					ManualResetEvent opCompletedEvent = new(false);
+
+					// Define the delegate using a statement lambda
+					deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };
+
+					// Wait until the operation completes
+					_ = opCompletedEvent.WaitOne();
+
+					// Check the status of the operation
+					if (deploymentOperation.Status == AsyncStatus.Error)
+					{
+						DeploymentResult deploymentResult = deploymentOperation.GetResults();
+						Logger.Write($"Error code: {deploymentOperation.ErrorCode}");
+						Logger.Write($"Error text: {deploymentResult.ErrorText}");
+					}
+					else if (deploymentOperation.Status == AsyncStatus.Canceled)
+					{
+						Logger.Write("Installation canceled");
+					}
+					else if (deploymentOperation.Status == AsyncStatus.Completed)
+					{
+						Logger.Write("Installation succeeded");
+					}
+					else
+					{
+						Logger.Write("Installation status unknown");
+					}
+
+
+					try
+					{
+
+						Package AppControlManagerPackage = packageManager.FindPackages("AppControlManager_sadt7br7jpt02").First();
+
+						string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
 
 						// Connect to the WMI namespace again
 						ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
@@ -324,16 +359,8 @@ public sealed partial class Update : Page
 						using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
 
 						// Construct the paths to the .exe and .dll files of the AppControl Manager
-						StringBuilder InstallingAppLocationToAdd = new();
-						_ = InstallingAppLocationToAdd.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
-						_ = InstallingAppLocationToAdd.Append(InstallingAppVersion);
-						_ = InstallingAppLocationToAdd.Append('_');
-						_ = InstallingAppLocationToAdd.Append(InstallingAppArchitecture);
-						_ = InstallingAppLocationToAdd.Append("__sadt7br7jpt02\\");
-
-						string path1 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.exe");
-						string path2 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.dll");
-
+						string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
+						string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
 
 						// Get the available methods for the class
 						ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
@@ -344,25 +371,11 @@ public sealed partial class Update : Page
 						// Invoke the Add method to add the paths to the ASR rules exclusions
 						_ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
 					}
-
 					catch (Exception ex)
 					{
-						Logger.Write($"An error occurred while trying to add the ASR rule exclusions which you can ignore: {ex.Message}");
+						Logger.Write($"An error occurred while trying to add the ASR rule exclusions which you can safely ignore: {ex.Message}");
+
 					}
-
-
-					PackageManager packageManager = new();
-
-					Logger.Write($"Installing AppControl Manager MSIX package version '{InstallingAppVersion}' with architecture '{InstallingAppArchitecture}'");
-
-					// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
-					AddPackageOptions options = new()
-					{
-						DeferRegistrationWhenPackagesAreInUse = true,
-						ForceUpdateFromAnyVersion = true
-					};
-
-					_ = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
 
 				});
 

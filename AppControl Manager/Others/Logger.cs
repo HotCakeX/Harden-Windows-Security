@@ -16,9 +16,9 @@ internal static class Logger
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
 		_ = Directory.CreateDirectory(LogsDirectory);
 
-		// Check the size of the directory and clear it if it exceeds 100 MB
+		// Check the size of the directory and clear it if it exceeds 1000 MB
 		// To ensure the logs directory doesn't get too big
-		if (GetDirectorySize(LogsDirectory) > 100 * 1024 * 1024) // 100 MB in bytes
+		if (GetDirectorySize(LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
 		{
 			// Empty the directory while retaining the most recent file
 			EmptyDirectory(LogsDirectory);

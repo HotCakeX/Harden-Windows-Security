@@ -14,6 +14,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
@@ -202,6 +203,9 @@ public sealed partial class ViewCurrentPolicies : Page
 			// Disable the button if no proper policy is selected
 			RemovePolicyButton.IsEnabled = false;
 		}
+
+		// Enable the Swap Policy ComboBox only when the selected policy is a base type, unsigned and non-system
+		SwapPolicyComboBox.IsEnabled = string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && !selectedPolicy.IsSignedPolicy && !selectedPolicy.IsSystemPolicy;
 	}
 
 
@@ -728,5 +732,180 @@ public sealed partial class ViewCurrentPolicies : Page
 		return false;
 	}
 
+
+	/// <summary>
+	/// Event handler for when the Swap Policy ComboBox's selection changes
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void SwapPolicyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (selectedPolicy is null)
+		{
+			return;
+		}
+
+		bool reEnableButtonAtTheEnd = true;
+
+		try
+		{
+			SwapPolicyComboBox.IsEnabled = false;
+			RemovePolicyButton.IsEnabled = false;
+			RetrievePoliciesButton.IsEnabled = false;
+			SearchBox.IsEnabled = false;
+			DeployedPolicies.IsEnabled = false;
+
+			string policyID = selectedPolicy.PolicyID!.ToString();
+
+			TextBlock formattedTextBlock = new()
+			{
+				TextWrapping = TextWrapping.WrapWholeWords,
+				IsTextSelectionEnabled = true
+			};
+
+			SolidColorBrush violetBrush = new(Colors.Violet);
+			SolidColorBrush hotPinkBrush = new(Colors.HotPink);
+
+			// Create normal text runs
+			Run normalText1 = new() { Text = "The selected policy with the name " };
+			Run normalText2 = new() { Text = " and ID " };
+			Run normalText3 = new() { Text = " will be changed to the type " };
+			Run normalText4 = new() { Text = "It will be re-deployed on the system with the same Policy ID and Base Policy ID. If it's currently in Audit Mode, it will be in Enforced Mode after this operation is completed." };
+
+			// Create colored runs
+			Run accentPolicyName = new() { Text = selectedPolicy.FriendlyName, Foreground = violetBrush };
+			Run accentPolicyID = new() { Text = policyID, Foreground = violetBrush };
+			Run accentPolicyType = new() { Text = ((ComboBoxItem)SwapPolicyComboBox.SelectedItem).Content.ToString(), Foreground = hotPinkBrush };
+
+			// Create bold text run
+			Bold boldText = new();
+			boldText.Inlines.Add(new Run() { Text = "Any existing Supplemental policy will continue to work." });
+
+			// Add runs to the TextBlock
+			formattedTextBlock.Inlines.Add(normalText1);
+			formattedTextBlock.Inlines.Add(accentPolicyName);
+			formattedTextBlock.Inlines.Add(normalText2);
+			formattedTextBlock.Inlines.Add(accentPolicyID);
+			formattedTextBlock.Inlines.Add(normalText3);
+			formattedTextBlock.Inlines.Add(accentPolicyType);
+			formattedTextBlock.Inlines.Add(new LineBreak());
+			formattedTextBlock.Inlines.Add(new LineBreak());
+			formattedTextBlock.Inlines.Add(normalText4);
+			formattedTextBlock.Inlines.Add(new LineBreak());
+			formattedTextBlock.Inlines.Add(new LineBreak());
+			formattedTextBlock.Inlines.Add(boldText);
+
+			// Create and display a ContentDialog with styled TextBlock
+			ContentDialog dialog = new()
+			{
+				Title = "Swapping Policy",
+				Content = formattedTextBlock,
+				PrimaryButtonText = "OK",
+				BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
+				BorderThickness = new Thickness(1),
+				CloseButtonText = "Cancel",
+				XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
+			};
+
+			// Show the dialog and wait for user response
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			// If the user did not select "OK", return from the method
+			if (result is not ContentDialogResult.Primary)
+			{
+				reEnableButtonAtTheEnd = false;
+				return;
+			}
+
+			int selectedIndex = SwapPolicyComboBox.SelectedIndex;
+
+			await Task.Run(() =>
+			{
+
+				string stagingArea = StagingArea.NewStagingArea("PolicySwapping").FullName;
+
+				switch (selectedIndex)
+				{
+					case 0: // Default Windows
+						{
+							BasePolicyCreator.BuildDefaultWindows(stagingArea,
+								false,
+								null,
+								true,
+								false,
+								false,
+								false,
+								false,
+								policyID
+							);
+
+							break;
+						}
+					case 1: // Allow Microsoft
+						{
+							BasePolicyCreator.BuildAllowMSFT(stagingArea,
+								false,
+								null,
+								true,
+								false,
+								false,
+								false,
+								false,
+								policyID
+							);
+
+							break;
+						}
+					case 2: // Signed and Reputable
+						{
+							BasePolicyCreator.BuildSignedAndReputable(stagingArea,
+								false,
+								null,
+								true,
+								false,
+								false,
+								false,
+								false,
+								policyID
+							);
+
+							break;
+						}
+					case 3: // Strict Kernel-Mode
+						{
+							BasePolicyCreator.BuildStrictKernelMode(stagingArea, false, false, true, policyID);
+
+							break;
+						}
+					case 4: // Strict Kernel-Mode(No Flight Roots)
+						{
+							BasePolicyCreator.BuildStrictKernelMode(stagingArea, false, true, true, policyID);
+
+							break;
+						}
+					default:
+						{
+							break;
+						}
+				}
+			});
+		}
+		finally
+		{
+			// Refresh the DataGrid's policies and their count
+			RetrievePolicies();
+
+			if (reEnableButtonAtTheEnd)
+			{
+				SwapPolicyComboBox.IsEnabled = true;
+			}
+
+			RemovePolicyButton.IsEnabled = true;
+			RetrievePoliciesButton.IsEnabled = true;
+			SearchBox.IsEnabled = true;
+			DeployedPolicies.IsEnabled = true;
+		}
+
+	}
 
 }

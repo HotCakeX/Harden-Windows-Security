@@ -42,9 +42,6 @@ public sealed partial class Update : Page
 	// The custom MSIXBundle path that the user supplied
 	internal string? customMSIXBundlePath;
 
-	// Could be a URL or file path, will be used by Regex to detect version and architecture
-	private string? sourceForRegex;
-
 	// A static instance of the Update class which will hold the single, shared instance of it
 	private static Update? _instance;
 
@@ -127,9 +124,6 @@ public sealed partial class Update : Page
 						onlineDownloadURL = new Uri(await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL));
 					}
 
-					// The Uri will be used to detect the version and architecture of the MSIXBundle package being installed
-					sourceForRegex = onlineDownloadURL.ToString();
-
 					AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
 					UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIXBundle package...";
@@ -203,11 +197,8 @@ public sealed partial class Update : Page
 
 				else
 				{
-					// Use the user-supplied MSIXBundle file path to detect the version and architecture
-					sourceForRegex = customMSIXBundlePath ?? throw new InvalidOperationException("No MSIXBundle path was selected");
-
 					// Use the user-supplied MSIXBundle file path for installation source
-					AppControlManagerSavePath = customMSIXBundlePath;
+					AppControlManagerSavePath = customMSIXBundlePath ?? throw new InvalidOperationException("No MSIXBundle path was selected");
 				}
 
 				DownloadProgressRingForMSIXFile.IsIndeterminate = true;
@@ -327,20 +318,19 @@ public sealed partial class Update : Page
 					if (deploymentOperation.Status == AsyncStatus.Error)
 					{
 						DeploymentResult deploymentResult = deploymentOperation.GetResults();
-						Logger.Write($"Error code: {deploymentOperation.ErrorCode}");
-						Logger.Write($"Error text: {deploymentResult.ErrorText}");
+						throw new InvalidOperationException($"Error installing The AppControl Manager. Error code: {deploymentOperation.ErrorCode} - Error text: {deploymentResult.ErrorText}");
 					}
 					else if (deploymentOperation.Status == AsyncStatus.Canceled)
 					{
-						Logger.Write("Installation canceled");
+						Logger.Write("The AppControl Manager Installation canceled");
 					}
 					else if (deploymentOperation.Status == AsyncStatus.Completed)
 					{
-						Logger.Write("Installation succeeded");
+						Logger.Write("The AppControl Manager Installation succeeded");
 					}
 					else
 					{
-						Logger.Write("Installation status unknown");
+						throw new InvalidOperationException("There was an unknown problem installing the AppControl Manager");
 					}
 
 

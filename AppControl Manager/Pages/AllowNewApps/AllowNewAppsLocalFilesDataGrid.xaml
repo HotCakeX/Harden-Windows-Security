@@ -13,18 +13,6 @@
 
     <Grid>
 
-        <Grid.Resources>
-            <Style x:Key="GridCardStyle" TargetType="Border">
-                <Style.Setters>
-                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                    <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                </Style.Setters>
-            </Style>
-
-        </Grid.Resources>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

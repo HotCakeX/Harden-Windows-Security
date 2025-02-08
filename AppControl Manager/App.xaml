@@ -11,6 +11,31 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+
+
+            <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
+            <!--  Spacing between cards  -->
+            <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+            <!--  Style (inc. the correct spacing) of a section header  -->
+            <Style x:Key="SettingsSectionHeaderTextBlockStyle"
+         BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+         TargetType="TextBlock">
+                <Style.Setters>
+                    <Setter Property="Margin" Value="1,30,0,6" />
+                </Style.Setters>
+            </Style>
+
+
+            <Style x:Key="GridCardStyle" TargetType="Border">
+                <Style.Setters>
+                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                </Style.Setters>
+            </Style>
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -11,20 +11,6 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
-        <!--  Spacing between cards  -->
-        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
-        <!--  Style (inc. the correct spacing) of a section header  -->
-        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-               BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-               TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Margin" Value="1,30,0,6" />
-            </Style.Setters>
-        </Style>
-    </Page.Resources>
-
     <ScrollViewer>
 
         <Grid>
@@ -184,14 +170,12 @@
 
                 </controls:SettingsExpander>
 
-
                 <!--  'Sound' section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
            Text="Sound" />
                 <controls:SettingsCard Description="Hear audio feedback when using different elements of the AppControl Manager" Header="Sound" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
                     <ToggleSwitch x:Name="SoundToggleSwitch" />
                 </controls:SettingsCard>
-
 
                 <!--  'About' section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"

@@ -24,20 +24,10 @@
             </Grid.RowDefinitions>
 
             <Grid.Resources>
-                <Style x:Key="GridCardStyle" TargetType="Border">
-                    <Style.Setters>
-                        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                        <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                        <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                    </Style.Setters>
-                </Style>
-
                 <ThemeShadow x:Name="SharedShadow" />
-
             </Grid.Resources>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,0,6,5">
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,5">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
 

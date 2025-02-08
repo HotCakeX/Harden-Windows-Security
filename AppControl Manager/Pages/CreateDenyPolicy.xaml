@@ -13,20 +13,6 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
-        <!--  Spacing between cards  -->
-        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
-        <!--  Style (inc. the correct spacing) of a section header  -->
-        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-   BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-   TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Margin" Value="1,30,0,6" />
-            </Style.Setters>
-        </Style>
-    </Page.Resources>
-
     <ScrollView x:Name="MainScrollView">
 
         <Grid>
@@ -36,15 +22,6 @@
             </Grid.RowDefinitions>
 
             <Grid.Resources>
-                <Style x:Key="GridCardStyle" TargetType="Border">
-                    <Style.Setters>
-                        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                        <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                        <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                    </Style.Setters>
-                </Style>
-
 
                 <!-- For the Packaged Apps ListView Grouping -->
                 <CollectionViewSource x:Name="PackagedAppsCollectionViewSource" IsSourceGrouped="True"/>

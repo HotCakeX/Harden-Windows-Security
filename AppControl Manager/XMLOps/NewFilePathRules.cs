@@ -10,6 +10,7 @@ internal static class NewFilePathRules
 
 	/// <summary>
 	/// Create a new Allow FilePath rule (including Wildcards) in the XML file
+	/// Rules will only be created for User-Mode files as Kernel-mode drivers do not support FilePath rules
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
 	/// <param name="data"></param>
@@ -45,8 +46,7 @@ internal static class NewFilePathRules
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
 
-
-			// For User-Mode files
+			// For User-Mode files only as FilePath rules are not applicable to Kernel-Mode drivers
 			if (item.SiSigningScenario is 1)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
@@ -54,14 +54,9 @@ internal static class NewFilePathRules
 				NewUMCIFileRuleRefNode.SetAttribute("RuleID", allowRuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
 			}
-
-			// For Kernel-Mode files
-			else if (item.SiSigningScenario is 0)
+			else
 			{
-				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
-				NewKMCIFileRuleRefNode.SetAttribute("RuleID", allowRuleID);
-				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNode);
+				Logger.Write($"The following file is Kernel-Mode driver that doesn't support FilePath rules: {item.FilePath}");
 			}
 		}
 
@@ -106,7 +101,6 @@ internal static class NewFilePathRules
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
 
-
 			// For User-Mode files
 			if (item.SiSigningScenario is 1)
 			{
@@ -115,14 +109,9 @@ internal static class NewFilePathRules
 				NewUMCIFileRuleRefNode.SetAttribute("RuleID", denyRuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
 			}
-
-			// For Kernel-Mode files
-			else if (item.SiSigningScenario is 0)
+			else
 			{
-				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
-				NewKMCIFileRuleRefNode.SetAttribute("RuleID", denyRuleID);
-				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNode);
+				Logger.Write($"The following file is Kernel-Mode driver that doesn't support FilePath rules: {item.FilePath}");
 			}
 		}
 

@@ -16,6 +16,7 @@ using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -48,6 +49,9 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 	#endregion
 
+
+	// Expose the list of queries as a public property for x:Bind
+	internal ObservableCollection<MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage> AdvancedHuntingQueries { get; } = [];
 
 	// To store the FileIdentities displayed on the DataGrid
 	// Binding happens on the XAML but methods related to search update the ItemSource of the DataGrid from code behind otherwise there will not be an expected result
@@ -84,6 +88,32 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 		// Add the DateChanged event handler
 		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
+
+
+		// Instances of MDEAdvancedHuntingQueries
+		AdvancedHuntingQueries.Add(new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query",
+			Query = """
+DeviceEvents
+| where ActionType startswith "AppControlCodeIntegrity"
+   or ActionType startswith "AppControlCIScriptBlocked"
+   or ActionType startswith "AppControlCIScriptAudited"
+"""
+		});
+
+		AdvancedHuntingQueries.Add(new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name filter",
+			Query = """
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName"
+"""
+		});
+
 	}
 
 	#region
@@ -1257,4 +1287,74 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 	}
 
+
+	/// <summary>
+	/// Handles the Copy button click.
+	/// Copies the associated query text to the clipboard and plays an animation
+	/// that changes the button's text from "Copy" to "Copied" and then back.
+	/// </summary>
+	private void CopyButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button copyButton && copyButton.DataContext is MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage queryItem)
+		{
+			// Copy the query text to the clipboard.
+			DataPackage dataPackage = new();
+			dataPackage.SetText(queryItem.Query);
+			Clipboard.SetContent(dataPackage);
+
+			// Retrieve the Grid that is the button's content.
+			if (copyButton.Content is Grid grid)
+			{
+				// Find the two TextBlocks
+				TextBlock normalTextBlock = (TextBlock)grid.FindName("NormalText");
+				TextBlock copiedTextBlock = (TextBlock)grid.FindName("CopiedText");
+
+				// Create a storyboard to hold both keyframe animations.
+				Storyboard sb = new();
+
+				// Create a keyframe animation for the "NormalText" (Copy)
+				// Timeline:
+				// 0ms: Opacity = 1
+				// 200ms: fade out to 0
+				// 1200ms: remain at 0
+				// 1400ms: fade back in to 1
+				DoubleAnimationUsingKeyFrames normalAnimation = new();
+				normalAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(0), Value = 1 });
+				normalAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(200), Value = 0 });
+				normalAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1200), Value = 0 });
+				normalAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1400), Value = 1 });
+				Storyboard.SetTarget(normalAnimation, normalTextBlock);
+				Storyboard.SetTargetProperty(normalAnimation, "Opacity");
+
+				// Create a keyframe animation for the "CopiedText" (Copied)
+				// Timeline:
+				// 0ms: Opacity = 0
+				// 200ms: fade in to 1
+				// 1200ms: remain at 1
+				// 1400ms: fade out to 0
+				DoubleAnimationUsingKeyFrames copiedAnimation = new();
+				copiedAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(0), Value = 0 });
+				copiedAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(200), Value = 1 });
+				copiedAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1200), Value = 1 });
+				copiedAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1400), Value = 0 });
+				Storyboard.SetTarget(copiedAnimation, copiedTextBlock);
+				Storyboard.SetTargetProperty(copiedAnimation, "Opacity");
+
+				// Add animations to the storyboard.
+				sb.Children.Add(normalAnimation);
+				sb.Children.Add(copiedAnimation);
+
+				// Start the storyboard.
+				sb.Begin();
+
+			}
+		}
+	}
+}
+
+
+internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+{
+	internal string? QueryTitle { get; set; }
+	internal string? Query { get; set; }
 }

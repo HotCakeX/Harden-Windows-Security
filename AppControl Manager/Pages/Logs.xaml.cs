@@ -124,7 +124,7 @@ public sealed partial class Logs : Page
 /// <summary>
 /// Represents one log line.
 /// </summary>
-public sealed class LogLine
+internal sealed class LogLine
 {
-	public required string Text { get; set; }
+	internal required string Text { get; set; }
 }

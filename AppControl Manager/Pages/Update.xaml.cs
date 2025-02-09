@@ -108,7 +108,7 @@ public sealed partial class Update : Page
 				// To store the latest MSIXBundle version download link after retrieving it from GitHub text file
 				Uri onlineDownloadURL;
 
-				// Location of the MSIXBundle package where it will be saved after download it from GitHub
+				// Location of the MSIXBundle package where it will be saved after downloading it from GitHub
 				// Or in case user supplied a custom path, it will be assigned to this
 				string AppControlManagerSavePath;
 
@@ -192,7 +192,6 @@ public sealed partial class Update : Page
 
 
 					Logger.Write($"The AppControl Manager MSIXBundle package has been successfully downloaded to {AppControlManagerSavePath}");
-
 				}
 
 				else
@@ -210,7 +209,6 @@ public sealed partial class Update : Page
 
 				UpdateStatusInfoBar.Message = "All Downloads finished, installing the new AppControl Manager version";
 
-				// Run the update check in a separate thread and asynchronously wait for its completion
 				await Task.Run(() =>
 				{
 					// Random password to temporarily encrypt the private key of the newly generated certificate
@@ -219,7 +217,7 @@ public sealed partial class Update : Page
 					// Path where the .cer file will be saved
 					string CertificateOutputPath = Path.Combine(stagingArea, $"{commonName}.cer");
 
-					// Remove any certificates with the specified common name that may already exist on the system form previos attempts
+					// Remove any certificates with the specified common name that may already exist on the system form previous attempts
 					CertificateGenerator.DeleteCertificateByCN(commonName);
 
 					// Generate a new certificate
@@ -234,7 +232,7 @@ public sealed partial class Update : Page
 					UserProtectedPrivateKey: useHardenedUpdateProcedure,
 					ExportablePrivateKey: false);
 
-					// Signing the App Control Manager MSIX package
+					// Signing the App Control Manager package
 					// In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
 					ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{commonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
 

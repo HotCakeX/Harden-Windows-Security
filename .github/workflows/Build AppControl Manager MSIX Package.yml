@@ -332,89 +332,30 @@ jobs:
           Write-Host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
           Write-Host -Object "GitHub Draft Tag: $DRAFT_RELEASE_TAG"
 
-      - name: Uploading the MSIX Package to the Draft Release
+      - name: Uploading Assets to the Draft Release
         shell: pwsh
         run: |
+          $Assets = @(
+              @{ Path = "${{ env.MSIX_PATH }}"; Name = "${{ env.MSIX_NAME }}" }
+              @{ Path = "${{ env.MSIXBundle_PATH }}"; Name = "${{ env.MSIXBundle_NAME }}" }
+              @{ Path = "${{ env.X64MSBuildLog_PATH }}"; Name = 'X64MSBuildLog.binlog' }
+              @{ Path = "${{ env.ARM64MSBuildLog_PATH }}"; Name = 'ARM64MSBuildLog.binlog' }
+              @{ Path = "${{ env.X64Symbol_PATH }}"; Name = "${{ env.X64Symbol_NAME }}" }
+              @{ Path = "${{ env.ARM64Symbol_PATH }}"; Name = "${{ env.ARM64Symbol_NAME }}" }
+          )
           [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "${{ env.MSIX_PATH }}"
-          [string]$FileName = "${{ env.MSIX_NAME }}"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-          # Upload the package to the draft release
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
+          [string]$Repo = "${{ github.repository }}"
+          [string]$AuthHeader = "token ${{ secrets.GITHUB_TOKEN }}"
+          foreach ($Asset in $Assets) {
+              if (-Not [string]::IsNullOrEmpty($Asset.Path)) {
+                  [string]$UploadUrl = "https://uploads.github.com/repos/$Repo/releases/$DraftReleaseId/assets?name=$($Asset.Name)"
+                  Write-Host -Object "Uploading $($Asset.Name) to draft release..."
+                  $null = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $Asset.Path -Headers @{
+                      'Authorization' = $AuthHeader
+                      'Content-Type'  = 'application/octet-stream'
+                  }
+              }
           }
-          Write-Host -Object "Uploaded package to draft release: $Response.name"
-
-      - name: Uploading the MSIXBundle to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "${{ env.MSIXBundle_PATH }}"
-          [string]$FileName = "${{ env.MSIXBundle_NAME }}"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-          # Upload the package to the draft release
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded package to draft release: $Response.name"
-
-      - name: Uploading the Logs to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "${{ env.X64MSBuildLog_PATH }}"
-          [string]$FileName = "X64MSBuildLog.binlog"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-          # Upload the log to the draft release
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded log to draft release: $Response.name"
-
-      - name: Uploading the Logs to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "${{ env.ARM64MSBuildLog_PATH }}"
-          [string]$FileName = "ARM64MSBuildLog.binlog"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-          # Upload the log to the draft release
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded log to draft release: $Response.name"
-
-      - name: Uploading the X64 Symbol to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "${{ env.X64Symbol_PATH }}"
-          [string]$FileName = "${{ env.X64Symbol_NAME }}"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-          # Upload the X64 Symbol to the draft release
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded X64 Symbol to draft release: $Response.name"
-
-      - name: Uploading the ARM64 Symbol to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "${{ env.ARM64Symbol_PATH }}"
-          [string]$FileName = "${{ env.ARM64Symbol_NAME }}"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-          # Upload the ARM64 Symbol to the draft release
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded ARM64 Symbol to draft release: $Response.name"
 
       - name: Generating Artifact Attestation
         uses: actions/attest-build-provenance@v2
@@ -450,7 +391,7 @@ jobs:
             "Content-Type" = "application/octet-stream"
           }
           Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
- 
+
 #      - name: Updating The MSIX/MSIXBundle Download Links and Version via Pull Request
 #        shell: pwsh
 #        env:

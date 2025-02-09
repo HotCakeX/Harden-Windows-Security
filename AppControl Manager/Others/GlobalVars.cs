@@ -37,7 +37,7 @@ internal static class GlobalVars
 	internal static readonly string StagingArea = Path.Combine(UserConfigDir, "StagingArea");
 
 	// The link to the file that contains the download link for the latest version of the AppControl Manager
-	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt");
+	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt");
 
 	// The link to the file that contains the version number of the latest available version of the AppControl Manager
 	internal static readonly Uri AppVersionLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt");

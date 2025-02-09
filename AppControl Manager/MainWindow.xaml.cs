@@ -111,12 +111,12 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.Update)] = new PageTitleMap
 		{
-			Titles = [GlobalVars.GetString("Update"), "Custom MSIX Path"],
+			Titles = [GlobalVars.GetString("Update"), "Custom MSIXBundle Path"],
 			Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
 		{
-			Titles = [GlobalVars.GetString("Update"), "Custom MSIX Path"],
+			Titles = [GlobalVars.GetString("Update"), "Custom MSIXBundle Path"],
 			Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.Deployment)] = new PageTitleMap

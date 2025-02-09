@@ -98,3 +98,9 @@ Following this step, the policy will be re-signed and redeployed on the system w
 > You can view the XML source of the `AppControlManagerSupplementalPolicy` supplemental policy [here](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/AppControl%20Manager/Resources/AppControlManagerSupplementalPolicy.xml).
 
 <br>
+
+## Swapping Policies
+
+You can seamlessly swap any deployed policy on the System Information page. For example, if the "Allow Microsoft" policy is active and you want to switch to "Default Windows," simply select "Default Windows" from the dropdown menu and confirm your choice. All supplemental policies associated with the base policy will continue to function. Currently, this feature supports only unsigned policies; support for signed policies will be added in a future release.
+
+<br>

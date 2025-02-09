@@ -48,6 +48,8 @@ Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permissio
 
 * **Retrieve The Logs**: Use this button to retrieve the Advanced Hunting logs that are related to Application Control policies. The logs will be displayed in the data grid.
 
+* **Query Examples**: Use this button to view example queries that generate standard logs compatible with the AppControl Manager. If you ever want to submit the Advanced Hunting queries directly in the Defender XDR, you can use the copy button next to each query and paste it in the portal.
+
 <br>
 
 ### Create Tab

@@ -12,45 +12,6 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <Style x:Key="PanelStyle"
-               TargetType="StackPanel">
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,8,0,8" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-            <Setter Property="Orientation" Value="Horizontal" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Spacing" Value="8" />
-            <Setter Property="animations:Implicit.HideAnimations" Value="{StaticResource ShowTransitions}" />
-        </Style>
-
-
-        <animations:ImplicitAnimationSet x:Name="ShowTransitions">
-            <animations:OffsetAnimation EasingMode="EaseOut"
-                                        From="0,24,0"
-                                        To="0"
-                                        Duration="0:0:0.4" />
-            <animations:OpacityAnimation EasingMode="EaseOut"
-                                         From="0"
-                                         To="1"
-                                         Duration="0:0:0.2" />
-        </animations:ImplicitAnimationSet>
-        <animations:ImplicitAnimationSet x:Name="HideTransitions">
-            <animations:OffsetAnimation EasingMode="EaseOut"
-                                        From="0"
-                                        To="0,24,0"
-                                        Duration="0:0:0.2" />
-            <animations:OpacityAnimation EasingMode="EaseOut"
-                                         From="1"
-                                         To="0"
-                                         Duration="0:0:0.1" />
-        </animations:ImplicitAnimationSet>
-
-    </Page.Resources>
-
-
     <!--
     Never use a ScrollViewer in a page that's gonna have a DataGrid
     It would:
@@ -60,7 +21,6 @@
     4. Prevent the horizontal scrollbar from working and appearing properly.
     -->
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -69,14 +29,6 @@
         </Grid.RowDefinitions>
 
         <Grid.Resources>
-            <Style x:Key="GridCardStyle" TargetType="Border">
-                <Style.Setters>
-                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                    <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                </Style.Setters>
-            </Style>
 
             <Flyout x:Name="SelectedCodeIntegrityEVTXFilesFlyout">
 
@@ -179,10 +131,7 @@ MinWidth="400" IsReadOnly="True" />
                             </Flyout.FlyoutPresenterStyle>
 
 
-                            <StackPanel
-  VerticalAlignment="Top"
-  Orientation="Vertical"
-  Spacing="8">
+                            <StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
                                 <controls:Segmented x:Name="segmentedControl"
               HorizontalAlignment="Stretch"
               SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">

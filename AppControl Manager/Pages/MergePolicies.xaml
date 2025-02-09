@@ -11,22 +11,6 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
-
-        <!--  Spacing between cards  -->
-        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
-
-        <!--  Style (inc. the correct spacing) of a section header  -->
-        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-       BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-       TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Margin" Value="1,30,0,6" />
-            </Style.Setters>
-        </Style>
-    </Page.Resources>
-
     <ScrollViewer>
 
         <Grid>
@@ -34,7 +18,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
@@ -50,8 +33,6 @@
                 <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies" />
 
             </controls:WrapPanel>
-
-
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
@@ -90,7 +71,6 @@
                         <ProgressRing IsIndeterminate="True" Visibility="Collapsed" x:Name="MergeProgressRing" />
 
                         <TeachingTip x:Name="MergeButtonTeachingTip" Target="{x:Bind MergeButton}" />
-
 
                     </controls:WrapPanel>
 

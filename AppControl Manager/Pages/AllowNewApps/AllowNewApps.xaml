@@ -14,7 +14,7 @@
         <NavigationView x:Name="AllowNewAppsNavigation"
                  PaneDisplayMode="Top"
                  IsTabStop="True"
-                        Grid.Row="1"
+                 Grid.Row="1"
                  SelectionChanged="NavigationView_SelectionChanged"
                  IsSettingsVisible="False"
                  IsBackButtonVisible="Collapsed">

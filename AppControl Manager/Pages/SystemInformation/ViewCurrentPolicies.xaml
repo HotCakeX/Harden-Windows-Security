@@ -20,17 +20,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid.Resources>
-            <Style x:Key="GridCardStyle" TargetType="Border">
-                <Style.Setters>
-                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                    <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                </Style.Setters>
-            </Style>
-        </Grid.Resources>
-
         <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
@@ -98,6 +87,14 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
+
+                <ComboBox PlaceholderText="Swap Policy" x:Name="SwapPolicyComboBox" IsEnabled="False" SelectionChanged="SwapPolicyComboBox_SelectionChanged">
+                    <ComboBoxItem>Default Windows</ComboBoxItem>
+                    <ComboBoxItem>Allow Microsoft</ComboBoxItem>
+                    <ComboBoxItem>Signed and Reputable</ComboBoxItem>
+                    <ComboBoxItem>Strict Kernel-Mode</ComboBoxItem>
+                    <ComboBoxItem>Strict Kernel-Mode (No Flight Roots)</ComboBoxItem>
+                </ComboBox>
 
                 <!-- Search Box for filtering policies -->
                 <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search policies..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" />

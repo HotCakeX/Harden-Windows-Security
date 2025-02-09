@@ -22,14 +22,13 @@ public sealed partial class UpdatePageCustomMSIXPath : Page
 	private void BrowseForCustomMSIXPathButton_Click(object sender, RoutedEventArgs e)
 	{
 		// Offer file picker to select MSIX file path
-		string? MSIXPath = FileDialogHelper.ShowFilePickerDialog("MSIX file|*.msix");
-
+		string? MSIXPath = FileDialogHelper.ShowFilePickerDialog("MSIXBundle file|*.msixbundle");
 
 		// If user has selected a path and the file name is valid
-		if (!string.IsNullOrEmpty(MSIXPath) && Update.Instance.regex.Match(MSIXPath).Success)
+		if (!string.IsNullOrWhiteSpace(MSIXPath))
 		{
 			// Update the path variable on the main update page
-			Update.Instance.customMSIXPath = MSIXPath;
+			Update.Instance.customMSIXBundlePath = MSIXPath;
 
 			// Enable the confirmation settings card
 			ConfirmUseOfCustomMSIXPathSettingsCard.IsEnabled = true;
@@ -49,7 +48,7 @@ public sealed partial class UpdatePageCustomMSIXPath : Page
 	{
 		ConfirmUseOfCustomMSIXPath.IsOn = !ConfirmUseOfCustomMSIXPath.IsOn;
 
-		Update.Instance.useCustomMSIXPath = ConfirmUseOfCustomMSIXPath.IsOn;
+		Update.Instance.useCustomMSIXBundlePath = ConfirmUseOfCustomMSIXPath.IsOn;
 
 		SetConfirmToggleSwitchState();
 	}
@@ -61,14 +60,14 @@ public sealed partial class UpdatePageCustomMSIXPath : Page
 	private void SetConfirmToggleSwitchState()
 	{
 
-		if (!string.IsNullOrEmpty(Update.Instance.customMSIXPath))
+		if (!string.IsNullOrEmpty(Update.Instance.customMSIXBundlePath))
 		{
 			ConfirmUseOfCustomMSIXPathSettingsCard.IsEnabled = true;
 
 			if (ConfirmUseOfCustomMSIXPath.IsOn)
 			{
 				// Update the Update button's text content to reflect the selected MSIX file name
-				GlobalVars.updateButtonTextOnTheUpdatePage = $"Install {Path.GetFileName(Update.Instance.customMSIXPath)}";
+				GlobalVars.updateButtonTextOnTheUpdatePage = $"Install {Path.GetFileName(Update.Instance.customMSIXBundlePath)}";
 			}
 			else
 			{

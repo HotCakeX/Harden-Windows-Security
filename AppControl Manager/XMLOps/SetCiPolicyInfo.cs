@@ -241,13 +241,15 @@ internal static class SetCiPolicyInfo
 	}
 
 
+
 	/// <summary>
-	/// An overload of the Set method, responsible for setting the version number in the policy
+	/// An overload of the Set method, responsible for setting the version number, policyID and BasePolicyID in the policy
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <param name="version"></param>
+	/// <param name="ID">This will be used as the BasePolicyID and PolicyID of the policy</param>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static void Set(string filePath, Version version)
+	internal static void Set(string filePath, Version version, string? ID = null)
 	{
 
 		// Instantiate the policy
@@ -258,6 +260,26 @@ internal static class SetCiPolicyInfo
 
 		// Set the user provided version to the policy
 		codeIntegrityPolicy.VersionExNode.InnerText = version.ToString();
+
+		// If the ID parameter was provided
+		if (ID is not null)
+		{
+			string AdjustedID = ID.Trim('{', '}');
+
+			// Make sure the input parameter is a valid GUID, doesn't need to have curly brackets, just a GUID string with correct length and format
+			if (!Guid.TryParse(AdjustedID, out _))
+			{
+				throw new ArgumentException($"The provided string '{AdjustedID}' is not a valid GUID format.");
+			}
+
+			string tempVar = $"{{{AdjustedID.ToUpperInvariant()}}}";
+
+			// Set the BasePolicyID of the policy file to the user provided one
+			codeIntegrityPolicy.BasePolicyIDNode.InnerText = tempVar;
+
+			// Set the PolicyID of the policy file to the user provided one
+			codeIntegrityPolicy.PolicyIDNode.InnerText = tempVar;
+		}
 
 		// Save the changes to the XML file
 		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
@@ -271,4 +293,7 @@ internal static class SetCiPolicyInfo
 		Logger.Write($"Successfully set the version of the policy file at '{filePath}' from '{OriginalXMLPolicyVersion}' to '{version}'.");
 
 	}
+
+
+
 }

@@ -364,10 +364,8 @@ internal static class SignerAndHashBuilder
 
 		foreach (FileIdentity item in filePathData)
 		{
-
 			if (!string.IsNullOrWhiteSpace(item.FilePath))
 			{
-
 				filePaths.Add(new FilePathCreator(
 					item.FilePath,
 					"0.0.0.0", // Minimum version of all files allowed by path
@@ -383,20 +381,12 @@ internal static class SignerAndHashBuilder
 			// Create wildcard path
 			string wildcardPath = item + @"\" + "*";
 
-			// Since we can't know if a folder contains user mode files or kernel mode files
-			// We should create rules for both signing scenarios
-
+			// FilePath rules can only be used for User-Mode files only
+			// Plus we wouldn't know if the folder contains user-mode or kernel-mode files
 			filePaths.Add(new FilePathCreator(
 				wildcardPath,
 				"0.0.0.0", // Minimum version of all files allowed by path
 				1 // for User Mode
-				));
-
-
-			filePaths.Add(new FilePathCreator(
-				wildcardPath,
-				"0.0.0.0", // Minimum version of all files allowed by path
-				0 // for Kernel Mode
 				));
 		}
 
@@ -404,13 +394,11 @@ internal static class SignerAndHashBuilder
 
 		foreach (string item in PFNs)
 		{
-
 			pfnRules.Add(new PFNRuleCreator(
 				item,
 				"0.0.0.0", // Minimum version of the app allowed by PFN
 				1 // for User Mode
 				));
-
 		}
 
 		Logger.Write("BuildSignerAndHashObjects: Completed the process.");

@@ -240,7 +240,7 @@ internal static partial class BasePolicyCreator
 		}
 		catch (Exception ex)
 		{
-			Logger.Write($"An error occurred: {ex.Message}");
+			Logger.Write($"An error occurred while retrieving additional information related to the Microsoft recommended driver block rules: {ex.Message}");
 
 			// Return null in case of an error
 			return null;
@@ -380,7 +380,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null)
 	{
 
 		string policyName;
@@ -403,8 +403,9 @@ internal static partial class BasePolicyCreator
 		// Final Policy Path
 		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-		// Get/Deploy the block rules
-		GetBlockRules(StagingArea, deploy);
+		// Get/Deploy the block rules if this base policy is not being swapped
+		if (PolicyIDToUse is null)
+			GetBlockRules(StagingArea, deploy);
 
 		Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
 
@@ -415,13 +416,19 @@ internal static partial class BasePolicyCreator
 		// Get the policy ID of the policy being created
 		string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
 
+		if (PolicyIDToUse is not null)
+		{
+			policyID = PolicyIDToUse;
+		}
+
+
 		if (deployAppControlSupplementalPolicy == true)
 		{
 			// Supply the policy ID of the policy being deployed to this method
 			SupplementalForSelf.Deploy(StagingArea, policyID);
 		}
 
-		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
+		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"), PolicyIDToUse);
 
 		CiRuleOptions.Set(
 			tempPolicyPath,
@@ -460,7 +467,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null)
 	{
 
 		string policyName;
@@ -483,8 +490,9 @@ internal static partial class BasePolicyCreator
 		// Final Policy Path
 		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-		// Get/Deploy the block rules
-		GetBlockRules(StagingArea, deploy);
+		// Get/Deploy the block rules if this base policy is not being swapped
+		if (PolicyIDToUse is null)
+			GetBlockRules(StagingArea, deploy);
 
 		Logger.Write("Copying the DefaultWindows.xml from Windows directory to the Staging Area");
 
@@ -495,13 +503,20 @@ internal static partial class BasePolicyCreator
 		// Get the policy ID of the policy being created
 		string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
 
+
+		if (PolicyIDToUse is not null)
+		{
+			policyID = PolicyIDToUse;
+		}
+
+
 		if (deployAppControlSupplementalPolicy == true)
 		{
 			// Supply the policy ID of the policy being deployed to this method
 			SupplementalForSelf.Deploy(StagingArea, policyID);
 		}
 
-		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
+		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"), PolicyIDToUse);
 
 		CiRuleOptions.Set(
 			tempPolicyPath,
@@ -638,7 +653,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
+	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null)
 	{
 
 		string policyName;
@@ -661,8 +676,9 @@ internal static partial class BasePolicyCreator
 		// Final policy XML path
 		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-		// Get/Deploy the block rules
-		GetBlockRules(StagingArea, deploy);
+		// Get/Deploy the block rules if this base policy is not being swapped
+		if (PolicyIDToUse is null)
+			GetBlockRules(StagingArea, deploy);
 
 		Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
 
@@ -683,12 +699,19 @@ internal static partial class BasePolicyCreator
 		// Get the policyID of the policy being created
 		string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
 
+
+		if (PolicyIDToUse is not null)
+		{
+			policyID = PolicyIDToUse;
+		}
+
+
 		if (deployAppControlSupplementalPolicy == true)
 		{
 			SupplementalForSelf.Deploy(StagingArea, policyID);
 		}
 
-		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
+		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"), PolicyIDToUse);
 
 
 		if (deploy)
@@ -708,6 +731,70 @@ internal static partial class BasePolicyCreator
 		// Assign the created policy path to the Sidebar if condition is met
 		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
 	}
+
+
+	/// <summary>
+	/// Creates and deploys the Strict Kernel-mode base policy
+	/// Since this is only Kernel-mode, we don't need to deploy the special AppControl Manager supplemental policy
+	/// </summary>
+	/// <param name="StagingArea"></param>
+	/// <param name="IsAudit"></param>
+	/// <param name="deploy"></param>
+	/// <param name="deployAppControlSupplementalPolicy"></param>
+	internal static void BuildStrictKernelMode(string StagingArea, bool IsAudit, bool NoFlightRoots, bool deploy, string? PolicyIDToUse = null)
+	{
+
+		string fileName = NoFlightRoots ? "StrictKernelMode_NoFlightRoots" : "StrictKernelMode";
+
+		// Path of the policy file in the staging area
+		string policyPath = Path.Combine(StagingArea, $"{fileName}.xml");
+
+		// path of the policy in the app's resources directory
+		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+
+		// path of the policy in user configurations directory
+		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
+
+		// Copy the policy from app's directory to the staging area
+		File.Copy(policyPathInResourcesDir, policyPath, true);
+
+		if (IsAudit)
+		{
+			// Add the audit mode rule option to the policy
+			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+		}
+
+		string policyID;
+
+		if (PolicyIDToUse is not null)
+		{
+			SetCiPolicyInfo.Set(policyPath, new Version("1.0.0.0"), PolicyIDToUse);
+			policyID = PolicyIDToUse;
+		}
+		else
+		{
+			// Reset the policy ID
+			policyID = SetCiPolicyInfo.Set(policyPath, true, null, null, null);
+		}
+
+		// Copy the policy to the user configurations directory
+		File.Copy(policyPath, finalPolicyPath, true);
+
+		// If it is to be deployed
+		if (deploy)
+		{
+			Logger.Write($"Deploying the Strict Kernel-mode policy with the ID {policyID}");
+
+			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
+
+			// Convert the XML to CiP
+			PolicyToCIPConverter.Convert(policyPath, cipPath);
+
+			// Deploy the CiP file
+			CiToolHelper.UpdatePolicy(cipPath);
+		}
+	}
+
 
 	[GeneratedRegex(@"<VersionEx>(.*?)<\/VersionEx>", RegexOptions.Compiled)]
 	private static partial Regex MyRegex();

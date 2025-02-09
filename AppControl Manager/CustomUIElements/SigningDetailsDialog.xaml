@@ -20,20 +20,6 @@
     BorderBrush="{ThemeResource AccentFillColorDefaultBrush}">
 
     <ContentDialog.Resources>
-        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
-
-        <!--  Spacing between cards  -->
-        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
-
-        <!--  Style (inc. the correct spacing) of a section header  -->
-        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-     BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-     TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Margin" Value="1,30,0,6" />
-            </Style.Setters>
-        </Style>
-
         <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->
         <x:Double x:Key="ContentDialogMaxWidth">2000</x:Double>
     </ContentDialog.Resources>

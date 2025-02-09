@@ -12,45 +12,6 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <Style x:Key="PanelStyle"
-             TargetType="StackPanel">
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,8,0,8" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-            <Setter Property="Orientation" Value="Horizontal" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Spacing" Value="8" />
-            <Setter Property="animations:Implicit.HideAnimations" Value="{StaticResource ShowTransitions}" />
-        </Style>
-
-
-        <animations:ImplicitAnimationSet x:Name="ShowTransitions">
-            <animations:OffsetAnimation EasingMode="EaseOut"
-                                      From="0,24,0"
-                                      To="0"
-                                      Duration="0:0:0.4" />
-            <animations:OpacityAnimation EasingMode="EaseOut"
-                                       From="0"
-                                       To="1"
-                                       Duration="0:0:0.2" />
-        </animations:ImplicitAnimationSet>
-        <animations:ImplicitAnimationSet x:Name="HideTransitions">
-            <animations:OffsetAnimation EasingMode="EaseOut"
-                                      From="0"
-                                      To="0,24,0"
-                                      Duration="0:0:0.2" />
-            <animations:OpacityAnimation EasingMode="EaseOut"
-                                       From="1"
-                                       To="0"
-                                       Duration="0:0:0.1" />
-        </animations:ImplicitAnimationSet>
-
-    </Page.Resources>
-
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -59,18 +20,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <Grid.Resources>
-            <Style x:Key="GridCardStyle" TargetType="Border">
-                <Style.Setters>
-                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
-                    <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
-                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
-                </Style.Setters>
-            </Style>
-
-        </Grid.Resources>
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,0">
 
@@ -176,13 +125,13 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <Button Content="Sign In" x:Name="MSGraphSignInButton" Click="MSGraphSignInButton_Click"/>
+                <Button Content="Sign In" x:Name="MSGraphSignInButton" Click="MSGraphSignInButton_Click" ToolTipService.ToolTip="Sign into your tenant"/>
 
-                <Button Content="Sign Out" IsEnabled="False" x:Name="MSGraphSignOutButton" Click="MSGraphSignOutButton_Click"/>
+                <Button Content="Sign Out" IsEnabled="False" x:Name="MSGraphSignOutButton" Click="MSGraphSignOutButton_Click" ToolTipService.ToolTip="Sign out of your tenant and discard any saved authentication tokens"/>
 
-                <Button Content="Cancel Sign In" x:Name="MSGraphCancelSignInButton" IsEnabled="False" Click="MSGraphCancelSignInButton_Click"/>
+                <Button Content="Cancel Sign In" x:Name="MSGraphCancelSignInButton" IsEnabled="False" Click="MSGraphCancelSignInButton_Click" ToolTipService.ToolTip="Cancel the sign in process"/>
 
-                <Button Content="Device Name" x:Name="MSGraphDeviceNameButton">
+                <Button Content="Device Name" x:Name="MSGraphDeviceNameButton" ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
                     <Button.Flyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>
@@ -200,7 +149,54 @@
                 </Button>
 
 
-                <Button Content="Retrieve The Logs" x:Name="RetrieveTheLogsButton" IsEnabled="False" Click="RetrieveTheLogsButton_Click"/>
+                <Button Content="Retrieve The Logs" x:Name="RetrieveTheLogsButton" IsEnabled="False" Click="RetrieveTheLogsButton_Click" ToolTipService.ToolTip="Retrieve the logs by submitting an Advanced Hunting query to MDE"/>
+
+                <Button Content="Query Examples" ToolTipService.ToolTip="You can copy the following queries and use them in the MDE Advanced Hunting portal to generate standard logs that are compatible with the AppControl Manager, or you can use the built-in functionality of the application to automatically retrieve the logs and process them">
+                    <Button.Flyout>
+                        <Flyout>
+
+                            <ListView ItemsSource="{x:Bind AdvancedHuntingQueries, Mode=OneWay}"
+                  SelectionMode="None">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" Width="300"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage">
+                                        <StackPanel Margin="0,0,0,12" HorizontalAlignment="Center">
+                                            <!-- Title -->
+                                            <TextBlock 
+                                                Text="{x:Bind QueryTitle}" 
+                                                TextWrapping="WrapWholeWords"
+                                                FontWeight="Bold" 
+                                                HorizontalAlignment="Center"
+                                                FontSize="16" 
+                                                Margin="0,5,0,5"/>
+
+                                            <!-- Copy Button -->
+                                            <!-- The button's content is a Grid containing two TextBlocks: one for the normal text and one for the copied state -->
+                                            <Button x:Name="CopyButton" Click="CopyButton_Click" HorizontalAlignment="Center" Margin="0,0,0,5">
+                                                <Grid>
+                                                    <TextBlock x:Name="NormalText" Text="Copy" Opacity="1"/>
+                                                    <TextBlock x:Name="CopiedText" Text="Copied" Opacity="0"/>
+                                                </Grid>
+                                            </Button>
+
+                                            <!-- Query Text -->
+                                            <TextBox Text="{x:Bind Query}" IsReadOnly="True" TextWrapping="Wrap"
+                                            HorizontalAlignment="Center"
+                                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
 
             </controls:WrapPanel>
 

@@ -10,21 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
-
-    <Page.Resources>
-        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
-        <!--  Spacing between cards  -->
-        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
-        <!--  Style (inc. the correct spacing) of a section header  -->
-        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-            BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-            TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Margin" Value="1,30,0,6" />
-            </Style.Setters>
-        </Style>
-    </Page.Resources>
-
+   
     <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>
@@ -41,18 +27,18 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsCard
-                           Description="Browse for the AppControl Manager MSIX file path on your device and then go back to the update page to install it. Its file name must match the following patterns: (FileName_x.x.x.x_x64.msix) or (FileName_x.x.x.x_arm64.msix)"
-                           Header="Optional: select MSIX file path"
+                           Description="Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it."
+                           Header="Optional: select MSIXBundle file path"
                            HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" IsActionIconVisible="False" Click="BrowseForCustomMSIXPathButton_Click">
 
                     <controls:WrapPanel Orientation="Horizontal">
-                        <Button x:Name="BrowseForCustomMSIXPathButton" Click="BrowseForCustomMSIXPathButton_Click" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Content="Browse for MSIX path"/>
+                        <Button x:Name="BrowseForCustomMSIXPathButton" Click="BrowseForCustomMSIXPathButton_Click" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Content="Browse for MSIXBundle path"/>
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Name="ConfirmUseOfCustomMSIXPathSettingsCard" Description="Confirm that you want to use the selected custom MSIX file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIX file from GitHub."
-Header="Confirm" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="ConfirmUseOfCustomMSIXPath_Click" IsActionIconVisible="False">
+                <controls:SettingsCard x:Name="ConfirmUseOfCustomMSIXPathSettingsCard" Description="Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub."
+                    Header="Confirm" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="ConfirmUseOfCustomMSIXPath_Click" IsActionIconVisible="False">
                     <ToggleSwitch x:Name="ConfirmUseOfCustomMSIXPath" />
                 </controls:SettingsCard>
 

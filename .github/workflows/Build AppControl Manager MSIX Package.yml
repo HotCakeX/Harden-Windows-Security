@@ -392,76 +392,75 @@ jobs:
           }
           Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
 
-#      - name: Updating The MSIX/MSIXBundle Download Links and Version via Pull Request
-#        shell: pwsh
-#        env:
-#          GH_TOKEN: ${{ github.token }}
-#        run: |
-#          [string]$MSIXName = "${{ env.MSIX_NAME }}"
-#          [string]$MSIXBundleName = "${{ env.MSIXBundle_NAME }}"
-#
-#          # Spaces in files added to the GitHub assets will be replaced with dots, so we need to do the same when constructing the download link
-#          [string]$AdjustedMSIXName = $MSIXName.Replace('AppControl Manager', 'AppControl.Manager')
-#          [string]$AdjustedMSIXBundleName = $MSIXBundleName.Replace('AppControl Manager', 'AppControl.Manager')
-#
-#          [string]$DRAFT_RELEASE_TAG = "${{ env.DRAFT_RELEASE_TAG }}"
-#          [string]$GitHubRepository = "${{ github.repository }}"
-#          [string]$PACKAGE_VERSION = "${{ env.PACKAGE_VERSION }}"
-#
-#          # Construct the download URL using the draft release tag and MSIX file name
-#          [string]$DownloadURL = "https://github.com/$GitHubRepository/releases/download/$DRAFT_RELEASE_TAG/$AdjustedMSIXName"
-#          [string]$DownloadURLForMSIXBundle = "https://github.com/$GitHubRepository/releases/download/$DRAFT_RELEASE_TAG/$AdjustedMSIXBundleName"
-#
-#          # Path to the files that will be updated
-#          [string]$DownloadURLFilePath = '.\AppControl Manager\DownloadURL.txt'
-#          [string]$DownloadURLFilePathForMSIXBundle = '.\AppControl Manager\MSIXBundleDownloadURL.txt'
-#          [string]$VersionFilePath = '.\AppControl Manager\version.txt'
-#
-#          # Update the file content with the new URL
-#          Set-Content -Path $DownloadURLFilePath -Value $DownloadURL -Force
-#          Write-Host -Object "Updated DownloadURL.txt with download URL: $DownloadURL"
-#
-#          Set-Content -Path $DownloadURLFilePathForMSIXBundle -Value $DownloadURLForMSIXBundle -Force
-#          Write-Host -Object "Updated MSIXBundleDownloadURL.txt with download URL: $DownloadURLForMSIXBundle"
-#
-#          Set-Content -Path $VersionFilePath -Value $PACKAGE_VERSION -Force
-#          Write-Host -Object "Updated version.txt with version: $PACKAGE_VERSION"
-#
-#          # Configure Git for committing changes
-#          git config --global user.email 'spynetgirl@outlook.com'
-#          git config --global user.name 'HotCakeX'
-#
-#          # Create a new branch for the pull request, making sure branch name has valid characters
-#          [string]$NewBranchName = 'AppControl-Manager-DownloadLink-Version-Update'
-#          git checkout -b $NewBranchName
-#
-#          [string]$CommitMessageAndPRTitle = "AppControl-Manager-DownloadLink-Version-Update-Version-$PACKAGE_VERSION"
-#
-#          # Stage and commit the change
-#          git add $DownloadURLFilePath
-#          git add $DownloadURLFilePathForMSIXBundle
-#          git add $VersionFilePath
-#          git commit -m $CommitMessageAndPRTitle
-#
-#          # Push the new branch to the remote repository
-#          git push -u origin $NewBranchName
-#
-#          [string]$PRBody = @"
-#          This PR updates DownloadURL.txt to
-#          ``````
-#          $DownloadURL
-#          ``````
-#          And MSIXBundleDownloadURL.txt to
-#          ``````
-#          $DownloadURLForMSIXBundle
-#          ``````
-#          And version.txt to
-#          ``````
-#          $PACKAGE_VERSION
-#          ``````
-#
-#          "@
-#
-#          # Create the pull request
-#          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
-#
+      - name: Updating The MSIX/MSIXBundle Download Links and Version via Pull Request
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [string]$MSIXName = "${{ env.MSIX_NAME }}"
+          [string]$MSIXBundleName = "${{ env.MSIXBundle_NAME }}"
+
+          # Spaces in files added to the GitHub assets will be replaced with dots, so we need to do the same when constructing the download link
+          [string]$AdjustedMSIXName = $MSIXName.Replace('AppControl Manager', 'AppControl.Manager')
+          [string]$AdjustedMSIXBundleName = $MSIXBundleName.Replace('AppControl Manager', 'AppControl.Manager')
+
+          [string]$DRAFT_RELEASE_TAG = "${{ env.DRAFT_RELEASE_TAG }}"
+          [string]$GitHubRepository = "${{ github.repository }}"
+          [string]$PACKAGE_VERSION = "${{ env.PACKAGE_VERSION }}"
+
+          # Construct the download URL using the draft release tag and MSIX file name
+          [string]$DownloadURL = "https://github.com/$GitHubRepository/releases/download/$DRAFT_RELEASE_TAG/$AdjustedMSIXName"
+          [string]$DownloadURLForMSIXBundle = "https://github.com/$GitHubRepository/releases/download/$DRAFT_RELEASE_TAG/$AdjustedMSIXBundleName"
+
+          # Path to the files that will be updated
+          [string]$DownloadURLFilePath = '.\AppControl Manager\DownloadURL.txt'
+          [string]$DownloadURLFilePathForMSIXBundle = '.\AppControl Manager\MSIXBundleDownloadURL.txt'
+          [string]$VersionFilePath = '.\AppControl Manager\version.txt'
+
+          # Update the file content with the new URL
+          Set-Content -Path $DownloadURLFilePath -Value $DownloadURL -Force
+          Write-Host -Object "Updated DownloadURL.txt with download URL: $DownloadURL"
+
+          Set-Content -Path $DownloadURLFilePathForMSIXBundle -Value $DownloadURLForMSIXBundle -Force
+          Write-Host -Object "Updated MSIXBundleDownloadURL.txt with download URL: $DownloadURLForMSIXBundle"
+
+          Set-Content -Path $VersionFilePath -Value $PACKAGE_VERSION -Force
+          Write-Host -Object "Updated version.txt with version: $PACKAGE_VERSION"
+
+          # Configure Git for committing changes
+          git config --global user.email 'spynetgirl@outlook.com'
+          git config --global user.name 'HotCakeX'
+
+          # Create a new branch for the pull request, making sure branch name has valid characters
+          [string]$NewBranchName = 'AppControl-Manager-DownloadLink-Version-Update'
+          git checkout -b $NewBranchName
+
+          [string]$CommitMessageAndPRTitle = "AppControl-Manager-DownloadLink-Version-Update-Version-$PACKAGE_VERSION"
+
+          # Stage and commit the change
+          git add $DownloadURLFilePath
+          git add $DownloadURLFilePathForMSIXBundle
+          git add $VersionFilePath
+          git commit -m $CommitMessageAndPRTitle
+
+          # Push the new branch to the remote repository
+          git push -u origin $NewBranchName
+
+          [string]$PRBody = @"
+          This PR updates DownloadURL.txt to
+          ``````
+          $DownloadURL
+          ``````
+          And MSIXBundleDownloadURL.txt to
+          ``````
+          $DownloadURLForMSIXBundle
+          ``````
+          And version.txt to
+          ``````
+          $PACKAGE_VERSION
+          ``````
+
+          "@
+
+          # Create the pull request
+          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX

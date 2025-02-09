@@ -298,8 +298,8 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "MSIXBundle_NAME=$FinalBundleFileName"
 
           # Saving the details of the log files
-          Add-Content -Path $env:GITHUB_ENV -Value "X64MSBuildLog_PATH=$((Resolve-Path -Path .\X64MSBuildLog.binlog -Force).Path)"
-          Add-Content -Path $env:GITHUB_ENV -Value "ARM64MSBuildLog_PATH=$((Resolve-Path -Path .\ARM64MSBuildLog.binlog -Force).Path)"
+          Add-Content -Path $env:GITHUB_ENV -Value "X64MSBuildLog_PATH=$((Resolve-Path -Path .\X64MSBuildLog.binlog).Path)"
+          Add-Content -Path $env:GITHUB_ENV -Value "ARM64MSBuildLog_PATH=$((Resolve-Path -Path .\ARM64MSBuildLog.binlog).Path)"
 
           # Saving the details of the X64 symbol file
           Add-Content -Path $env:GITHUB_ENV -Value "X64Symbol_PATH=$FinalMSIXX64SymbolPath"

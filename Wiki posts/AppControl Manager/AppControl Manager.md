@@ -7,7 +7,7 @@ AppControl Manager is a modern secure app that provides easy to use graphical us
 <br>
 
 > [!IMPORTANT]\
-> The AppControl Manager application is built publicly using a [GitHub action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
+> The AppControl Manager application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/.github/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
 
 <br>
 
@@ -193,7 +193,19 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 
 <br>
 
-## How To Install AppControl Manager Completely Offline?
+## How To Install AppControl Manager Completely Offline? (Method 1)
+
+1. Download the latest MSIXBundle package of the AppControl Manager from the [GitHub releases](https://github.com/HotCakeX/Harden-Windows-Security/releases) or build it from [the source code](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager) yourself.
+
+2. Use the following PowerShell syntax to Install the AppControl Manager. ***No Admin privilege required***
+
+```powershell
+Add-AppxPackage -Path "Path To the MSIXBundle" -AllowUnsigned
+```
+
+<br>
+
+## How To Install AppControl Manager Completely Offline? (Method 2)
 
 1. Download [this PowerShell script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1).
 
@@ -267,7 +279,7 @@ if (!(Get-Command -Name 'winget.exe' -ErrorAction Ignore)) {
     $Downloads.GetEnumerator() | ForEach-Object -Parallel {
         Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
     }
-    
+
     Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
     # Get the paths to all of the dependencies
     [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName

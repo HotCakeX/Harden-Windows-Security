@@ -1,56 +1,39 @@
 name: Build AppControl Manager MSIX Package
 
-permissions:
-  id-token: write
-  actions: read
-  contents: write
-  pull-requests: write
-  attestations: write
-
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Only the repository's owner can initiate this workflow
+
+# Prevent the workflow from running more than once per change
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2025
+
+    # Create outputs for this job where only other job that use "needs" keyword can use them. This job itself cannot access them.
+    outputs:
+      DRAFT_RELEASE_ID: ${{ steps.find_draft_release.outputs.DRAFT_RELEASE_ID }}
+      DRAFT_RELEASE_TAG: ${{ steps.find_draft_release.outputs.DRAFT_RELEASE_TAG }}
+      MSIX_PATH: ${{ steps.main_buildOp.outputs.MSIX_PATH }}
+      MSIX_NAME: ${{ steps.main_buildOp.outputs.MSIX_NAME }}
+      PACKAGE_VERSION: ${{ steps.main_buildOp.outputs.PACKAGE_VERSION }}
+      MSIXBundle_PATH: ${{ steps.main_buildOp.outputs.MSIXBundle_PATH }}
+      MSIXBundle_NAME: ${{ steps.main_buildOp.outputs.MSIXBundle_NAME }}
+      X64MSBuildLog_PATH: ${{ steps.main_buildOp.outputs.X64MSBuildLog_PATH }}
+      ARM64MSBuildLog_PATH: ${{ steps.main_buildOp.outputs.ARM64MSBuildLog_PATH }}
+      X64Symbol_PATH: ${{ steps.main_buildOp.outputs.X64Symbol_PATH }}
+      X64Symbol_NAME: ${{ steps.main_buildOp.outputs.X64Symbol_NAME }}
+      ARM64Symbol_PATH: ${{ steps.main_buildOp.outputs.ARM64Symbol_PATH }}
+      ARM64Symbol_NAME: ${{ steps.main_buildOp.outputs.ARM64Symbol_NAME }}
+
+    permissions:
+      contents: write # Required for adding files to the GitHub draft release
+
     steps:
-      - name: Check out the repository code
-        uses: actions/checkout@v4
 
-      - name: Setting up and downloading Winget
-        shell: pwsh
-        run: |
-          # Retrieve the latest Winget release information
-          $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
-          $LatestRelease = $WingetReleases | Select-Object -First 1
-          # Direct links to the latest Winget release assets
-          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
-          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
-          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
-          [hashtable]$Downloads = @{
-              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
-              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
-              'Winget.msixbundle'                    = $WingetURL
-              'License1.xml'                         = $WingetLicense
-          }
-          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
-              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
-          }
-          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
-          # Get the paths to all of the dependencies
-          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
-          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
-
-          # Add the dependency paths to the GitHub environment to be used in the next step
-          Add-Content -Path $env:GITHUB_ENV -Value "WINGET_DEPENDENCY1=$($DependencyPaths[0])"
-          Add-Content -Path $env:GITHUB_ENV -Value "WINGET_DEPENDENCY2=$($DependencyPaths[1])"
-
-      - name: Finishing setting up Winget
-        shell: powershell
-        run: |
-          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath  "${{ env.WINGET_DEPENDENCY1 }}", "${{ env.WINGET_DEPENDENCY2 }}" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
-          # Add-AppPackage on Windows Server throws error so we use Windows PowerShell for this section.
-
+      # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
       - name: Installing the necessary programs
         run: |
           winget source update
@@ -66,10 +49,13 @@ jobs:
           Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
           $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
+      - name: Check out the repository code
+        uses: actions/checkout@v4
+
       - name: Building And Packaging the AppControl Manager
+        id: main_buildOp
         shell: pwsh
-        working-directory: './AppControl Manager'
-        # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
+        working-directory: './AppControl Manager' # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
         run: |
           $global:ErrorActionPreference = 'Stop'
           [System.String]$AppControlManagerDirectory = $PWD.Path
@@ -130,7 +116,6 @@ jobs:
               & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | ForEach-Object -Process {
                   $name, $value = $_ -split '=', 2
                   Set-Content -Path env:\"$name" -Value $value -Force
-                  Write-Host -Object "Setting environment variable: $name=$value"
               }
           }
 
@@ -288,26 +273,27 @@ jobs:
           [string]$MSIXVersion = $CSProjXMLContent.Project.PropertyGroup.FileVersion
           [string]$MSIXVersion = $MSIXVersion.Trim() # It would have trailing whitespaces
           if ([string]::IsNullOrWhiteSpace($FinalMSIXX64Path) -or [string]::IsNullOrWhiteSpace($FinalMSIXX64Name) -or [string]::IsNullOrWhiteSpace($MSIXVersion)) { throw "Necessary info could not be found" }
+
           # Write the MSIXPath, MSIXName and MSIXVersion to GITHUB_ENV to set it as an environment variable for the entire workflow
-          Add-Content -Path $env:GITHUB_ENV -Value "MSIX_PATH=$FinalMSIXX64Path"
-          Add-Content -Path $env:GITHUB_ENV -Value "MSIX_NAME=$FinalMSIXX64Name"
-          Add-Content -Path $env:GITHUB_ENV -Value "PACKAGE_VERSION=$MSIXVersion"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIX_PATH=$FinalMSIXX64Path"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIX_NAME=$FinalMSIXX64Name"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "PACKAGE_VERSION=$MSIXVersion"
 
           # Saving the details for the MSIX Bundle file
-          Add-Content -Path $env:GITHUB_ENV -Value "MSIXBundle_PATH=$MSIXBundle"
-          Add-Content -Path $env:GITHUB_ENV -Value "MSIXBundle_NAME=$FinalBundleFileName"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIXBundle_PATH=$MSIXBundle"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIXBundle_NAME=$FinalBundleFileName"
 
           # Saving the details of the log files
-          Add-Content -Path $env:GITHUB_ENV -Value "X64MSBuildLog_PATH=$((Resolve-Path -Path .\X64MSBuildLog.binlog).Path)"
-          Add-Content -Path $env:GITHUB_ENV -Value "ARM64MSBuildLog_PATH=$((Resolve-Path -Path .\ARM64MSBuildLog.binlog).Path)"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64MSBuildLog_PATH=$((Resolve-Path -Path .\X64MSBuildLog.binlog).Path)"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64MSBuildLog_PATH=$((Resolve-Path -Path .\ARM64MSBuildLog.binlog).Path)"
 
           # Saving the details of the X64 symbol file
-          Add-Content -Path $env:GITHUB_ENV -Value "X64Symbol_PATH=$FinalMSIXX64SymbolPath"
-          Add-Content -Path $env:GITHUB_ENV -Value "X64Symbol_NAME=$FinalMSIXX64SymbolName"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64Symbol_PATH=$FinalMSIXX64SymbolPath"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64Symbol_NAME=$FinalMSIXX64SymbolName"
 
           # Saving the details of the ARM64 symbol file
-          Add-Content -Path $env:GITHUB_ENV -Value "ARM64Symbol_PATH=$FinalMSIXARM64SymbolPath"
-          Add-Content -Path $env:GITHUB_ENV -Value "ARM64Symbol_NAME=$FinalMSIXARM64SymbolName"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_PATH=$FinalMSIXARM64SymbolPath"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_NAME=$FinalMSIXARM64SymbolName"
 
       - name: Finding the Latest Draft Release
         id: find_draft_release
@@ -326,8 +312,8 @@ jobs:
           $DRAFT_RELEASE_TAG = $DraftRelease.tag_name
 
           # Save both the release ID and tag to environment variables for later steps
-          Add-Content -Path $env:GITHUB_ENV -Value "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID"
-          Add-Content -Path $env:GITHUB_ENV -Value "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG"
 
           Write-Host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
           Write-Host -Object "GitHub Draft Tag: $DRAFT_RELEASE_TAG"
@@ -357,32 +343,160 @@ jobs:
               }
           }
 
+      - name: Uploading Artifact 1
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: ${{ env.MSIX_NAME }}
+          path: ${{ env.MSIX_PATH }}
+
+      - name: Uploading Artifact 2
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: ${{ env.MSIXBundle_NAME }}
+          path: ${{ env.MSIXBundle_PATH }}
+
+      - name: Uploading Artifact 3
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: X64MSBuildLog.binlog
+          path: ${{ env.X64MSBuildLog_PATH }}
+
+      - name: Uploading Artifact 4
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: ARM64MSBuildLog.binlog
+          path: ${{ env.ARM64MSBuildLog_PATH }}
+
+      - name: Uploading Artifact 5
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: ${{ env.X64Symbol_NAME }}
+          path: ${{ env.X64Symbol_PATH }}
+
+      - name: Uploading Artifact 6
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: ${{ env.ARM64Symbol_NAME }}
+          path: ${{ env.ARM64Symbol_PATH }}
+
+  attest:
+    needs: build
+    runs-on: windows-2025
+    permissions:
+      attestations: write
+      id-token: write
+
+    steps:
+
+      - name: Downloading all Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: Downloaded-Artifacts # Download all artifacts in this folder
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls -R Downloaded-Artifacts
+
       - name: Generating Artifact Attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: "${{ env.MSIX_PATH }}, ${{ env.MSIXBundle_PATH }}, ${{ env.X64MSBuildLog_PATH }}, ${{ env.ARM64MSBuildLog_PATH }}, ${{ env.X64Symbol_PATH }}, ${{ env.ARM64Symbol_PATH }}"
+        # subject-path: "${{ needs.build.outputs.MSIX_PATH }}, ${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
+          subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
+
+  sbom:
+    needs: build
+    runs-on: windows-2025
+    permissions:
+      contents: read
+
+    steps:
+
+      - name: Check out the repository code
+        uses: actions/checkout@v4
 
       - name: Generating SBOM
         uses: anchore/sbom-action@v0
         with:
-          dependency-snapshot: true
-          upload-release-assets: true
-          upload-artifact: true
+          dependency-snapshot: false # This would require more permissions than "contents: read". This action is not to be trusted with more permissions.
+          upload-release-assets: false # Done manually in next steps
+          upload-artifact: false # Done manually in next steps
           output-file: ./HardenWindowsSecurityRepoSBOM.spdx
-          artifact-name: HardenWindowsSecurityRepoSBOM.spdx
+        # artifact-name: HardenWindowsSecurityRepoSBOM.spdx
+
+      - name: Uploading Artifact 7
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: HardenWindowsSecurityRepoSBOM.spdx
+          path: ./HardenWindowsSecurityRepoSBOM.spdx
+
+  SbomAttest:
+    needs: [build, sbom]
+    runs-on: windows-2025
+    permissions:
+      contents: read
+      attestations: write
+      id-token: write
+
+    steps:
+
+      - name: Downloading all Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: Downloaded-Artifacts # Download all artifacts in this folder
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls -R Downloaded-Artifacts
 
       - name: Generating SBOM attestation
         uses: actions/attest-sbom@v2
         with:
-          subject-path: "${{ env.MSIX_PATH }}, ${{ env.MSIXBundle_PATH }}, ${{ env.X64MSBuildLog_PATH }}, ${{ env.ARM64MSBuildLog_PATH }}, ${{ env.X64Symbol_PATH }}, ${{ env.ARM64Symbol_PATH }}"
-          sbom-path: ./HardenWindowsSecurityRepoSBOM.spdx
+        # subject-path: "${{ needs.build.outputs.MSIX_PATH }}, ${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
+          subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
+          sbom-path: ./Downloaded-Artifacts/HardenWindowsSecurityRepoSBOM.spdx
           show-summary: true
+
+  final:
+    needs: [build, attest, sbom, SbomAttest]
+    runs-on: windows-2025
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+
+      - name: Check out the repository code
+        uses: actions/checkout@v4
+
+      - name: Downloading an Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: HardenWindowsSecurityRepoSBOM.spdx
+          path: Downloaded-Artifacts
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls -R Downloaded-Artifacts
 
       - name: Uploading the SBOM file to the Draft Release
         shell: pwsh
         run: |
-          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
-          [string]$FilePath = "HardenWindowsSecurityRepoSBOM.spdx"
+          [string]$DraftReleaseId = ${{ needs.build.outputs.DRAFT_RELEASE_ID }}
+          [string]$FilePath = ".\Downloaded-Artifacts\HardenWindowsSecurityRepoSBOM.spdx"
           [string]$FileName = "HardenWindowsSecurityRepoSBOM.spdx"
           [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
 
@@ -397,16 +511,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          [string]$MSIXName = "${{ env.MSIX_NAME }}"
-          [string]$MSIXBundleName = "${{ env.MSIXBundle_NAME }}"
+          [string]$MSIXName = "${{ needs.build.outputs.MSIX_NAME }}"
+          [string]$MSIXBundleName = "${{ needs.build.outputs.MSIXBundle_NAME }}"
 
           # Spaces in files added to the GitHub assets will be replaced with dots, so we need to do the same when constructing the download link
           [string]$AdjustedMSIXName = $MSIXName.Replace('AppControl Manager', 'AppControl.Manager')
           [string]$AdjustedMSIXBundleName = $MSIXBundleName.Replace('AppControl Manager', 'AppControl.Manager')
 
-          [string]$DRAFT_RELEASE_TAG = "${{ env.DRAFT_RELEASE_TAG }}"
+          [string]$DRAFT_RELEASE_TAG = "${{ needs.build.outputs.DRAFT_RELEASE_TAG }}"
           [string]$GitHubRepository = "${{ github.repository }}"
-          [string]$PACKAGE_VERSION = "${{ env.PACKAGE_VERSION }}"
+          [string]$PACKAGE_VERSION = "${{ needs.build.outputs.PACKAGE_VERSION }}"
 
           # Construct the download URL using the draft release tag and MSIX file name
           [string]$DownloadURL = "https://github.com/$GitHubRepository/releases/download/$DRAFT_RELEASE_TAG/$AdjustedMSIXName"

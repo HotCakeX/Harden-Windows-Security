@@ -88,12 +88,20 @@ internal static class Management
 
 
 	/// <summary>
-	/// Saves the SiPolicy object to a XML file
+	/// Saves the SiPolicy object to a XML file.
+	/// Uses custom hand made serialization logic that is compatible with Native AOT compilation
 	/// </summary>
 	/// <param name="policy"></param>
 	/// <param name="filePath"></param>
 	internal static void SavePolicyToFile(SiPolicy policy, string filePath)
 	{
+
+		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
+
+		xmlObj.Save(filePath);
+
+		/*
+
 		XmlSerializer serializer = new(typeof(SiPolicy));
 
 		// Create XmlSerializerNamespaces to include only the desired namespace
@@ -111,6 +119,9 @@ internal static class Management
 
 		using XmlWriter writer = XmlWriter.Create(filePath, settings);
 		serializer.Serialize(writer, policy, namespaces);
+
+		*/
+
 	}
 
 

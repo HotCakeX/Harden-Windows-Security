@@ -193,19 +193,7 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 
 <br>
 
-## How To Install AppControl Manager Completely Offline? (Method 1)
-
-1. Download the latest MSIXBundle package of the AppControl Manager from the [GitHub releases](https://github.com/HotCakeX/Harden-Windows-Security/releases) or build it from [the source code](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager) yourself.
-
-2. Use the following PowerShell syntax to Install the AppControl Manager. ***No Admin privilege required***
-
-```powershell
-Add-AppxPackage -Path "Path To the MSIXBundle" -AllowUnsigned
-```
-
-<br>
-
-## How To Install AppControl Manager Completely Offline? (Method 2)
+## How To Install AppControl Manager Completely Offline?
 
 1. Download [this PowerShell script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1).
 

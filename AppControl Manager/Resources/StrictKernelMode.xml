@@ -21,7 +21,7 @@
   <EKUs>
     <EKU ID="ID_EKU_WINDOWS" Value="010A2B0601040182370A0306" FriendlyName=""/>
     <EKU ID="ID_EKU_ELAM" Value="010A2B0601040182373D0401" FriendlyName=""/>
-    <EKU ID="ID_EKU_HAL_EXT" Value="010a2b0601040182373d0501" FriendlyName=""/>
+    <EKU ID="ID_EKU_HAL_EXT" Value="010A2B0601040182373D0501" FriendlyName=""/>
   </EKUs>
   <FileRules/>
   <Signers>

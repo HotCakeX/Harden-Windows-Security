@@ -151,12 +151,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <!-- ARM64 doesn't support source generated XML de(serialization) -->
-    <PackageReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.1" Condition="'$(RuntimeIdentifier)' != 'win-arm64'" />
-    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.1" />
-    <PackageReference Include="System.Management" Version="9.0.1" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.1" />
+    <PackageReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.2" Condition="'$(RuntimeIdentifier)' != 'win-arm64'" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.2" />
+    <PackageReference Include="System.Management" Version="9.0.2" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>

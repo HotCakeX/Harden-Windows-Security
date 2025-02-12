@@ -195,7 +195,7 @@ internal static class CustomSerialization
 				{
 					XmlElement appIDTagsElement = xmlDoc.CreateElement("AppIDTags", GlobalVars.SiPolicyNamespace);
 					if (scenario.AppIDTags.EnforceDLLSpecified)
-						appIDTagsElement.SetAttribute("EnforceDLL", scenario.AppIDTags.EnforceDLL.ToString());
+						appIDTagsElement.SetAttribute("EnforceDLL", scenario.AppIDTags.EnforceDLL.ToString().ToLowerInvariant()); // Only lowercase "true" is considered valid by the schema
 					if (scenario.AppIDTags.AppIDTag is not null)
 					{
 						foreach (AppIDTag tag in scenario.AppIDTags.AppIDTag)

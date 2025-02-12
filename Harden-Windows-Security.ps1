@@ -3,26 +3,18 @@ Function P {
     param()
     $ErrorActionPreference = 'Stop'
     Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
-    [string]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/PowerShell-7.4.6-win.msixbundle'
-    [string]$PSMSIXDownloadPath = Join-Path -Path $env:TEMP -ChildPath 'PowerShell.msixbundle'
-    try {
-        if ($PSVersionTable.PSEdition -eq 'Desktop' -and !(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
-            Write-Verbose -Message 'Trying to Install PowerShell (Core) because it could not be found on the system' -Verbose
-            if (Get-Command -Name 'winget.exe' -ErrorAction Ignore) {
-                # https://apps.microsoft.com/detail/9mz1snwt0n5d
-                Write-Verbose -Message 'Installing PowerShell through Winget'
-                $null = Winget install --id 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements --source msstore
-                if ($LASTEXITCODE -ne 0) { throw "Failed to Install PowerShell using Winget: $LASTEXITCODE" }
-            }
-            else {
-                if (Test-Path -Path $PSMSIXDownloadPath -PathType Leaf) { Remove-Item -Path $PSMSIXDownloadPath -Force }
-                Write-Verbose -Message 'Winget is not installed. Downloading and Installing PowerShell directly from the official Microsoft GitHub repository using MSIX file'
-                Invoke-WebRequest -Uri $PSDownloadURLMSIX -OutFile $PSMSIXDownloadPath
-                Add-AppxPackage -Path $PSMSIXDownloadPath
-            }
+    if ($PSVersionTable.PSEdition -eq 'Desktop' -and !(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
+        Write-Verbose -Message 'Trying to Install PowerShell (Core) because it could not be found on the system' -Verbose
+        if (Get-Command -Name 'winget.exe' -ErrorAction Ignore) {
+            # https://apps.microsoft.com/detail/9mz1snwt0n5d
+            Write-Verbose -Message 'Installing PowerShell through Winget'
+            $null = Winget install --id 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements --source msstore
+            if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to Install PowerShell using Winget: $LASTEXITCODE") }
+        }
+        else {
+            throw [System.InvalidOperationException]::New('PowerShell (Core) is not installed on the system and Winget is not available to install it. Please install PowerShell (Core) manually.')
         }
     }
-    finally { if (Test-Path -Path $PSMSIXDownloadPath -PathType Leaf) { Remove-Item -Path $PSMSIXDownloadPath -Force } }
     pwsh.exe -NoProfile -NoLogo -NoExit -Command {
         Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
         if (!(Get-Module -ListAvailable -Name 'Harden-Windows-Security-Module' -ErrorAction Ignore)) {
@@ -39,13 +31,11 @@ Function AppControl {
         https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
     .PARAMETER MSIXBundlePath
         The path to the AppControlManager MSIXBundle file. If not provided, the latest MSIXBundle file will be downloaded from the GitHub.
-    .PARAMETER MSIXPath
-        The path to the AppControlManager MSIX file. If not provided, the latest MSIX file will be downloaded from the GitHub. It must have the version number and architecture in its file name as provided on GitHub or produced by Visual Studio.
     .PARAMETER SignTool
-       The path to the Microsoft's Signtool.exe; If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft website in Nuget and will use it for the signing operations.
+       The path to the Microsoft's Signtool.exe; If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft's Nuget repository and will use it for the signing operation.
     #>
     [CmdletBinding()]
-    param ([Parameter(Mandatory = $false)][string]$MSIXBundlePath, [Parameter(Mandatory = $false)][string]$MSIXPath, [Parameter(Mandatory = $False)][string]$SignTool)
+    param ([Parameter(Mandatory = $false)][string]$MSIXBundlePath, [Parameter(Mandatory = $False)][string]$SignTool)
     $ErrorActionPreference = 'Stop'
     if ($ExecutionContext.SessionState.LanguageMode -ne 'ConstrainedLanguage') {
         # We cannot use .NET methods in ConstrainedLanguage mode
@@ -109,11 +99,7 @@ Function AppControl {
         if (![string]::IsNullOrWhiteSpace($MSIXBundlePath) -and (Test-Path -Path $MSIXBundlePath -PathType Leaf)) {
             $_Package = $MSIXBundlePath
         }
-        # If user provided a valid path to the MSIX file
-        elseif (![string]::IsNullOrWhiteSpace($MSIXPath) -and (Test-Path -Path $MSIXPath -PathType Leaf)) {
-            $_Package = $MSIXPath
-        }
-        # Download the MSIXBundle if user didn't provide any paths
+        # Download the MSIXBundle if user didn't provide the MSIXBundle path
         else {
             Write-Verbose -Message 'Downloading the latest AppControl Manager MSIXBundle file from GitHub'
             $_Package = Join-Path -Path $WorkingDir -ChildPath 'AppControlManager.msixbundle'

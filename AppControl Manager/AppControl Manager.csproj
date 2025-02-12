@@ -139,6 +139,8 @@
   All transitive/nested packages under the main packages are added 
   so they can be updated separately and receive bug/security vulnerability fixes faster
   The only package whose transitive/nested packages are not added separately is "Microsoft.Windows.CsWin32"
+
+  https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
   -->
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />

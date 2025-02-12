@@ -22,7 +22,7 @@ internal static partial class GetFileRuleOutput
 
 		// Get the namespace manager
 		XmlNamespaceManager nsmgr = new(xml.NameTable);
-		nsmgr.AddNamespace("si", "urn:schemas-microsoft-com:sipolicy");
+		nsmgr.AddNamespace("si", GlobalVars.SiPolicyNamespace);
 
 		// Loop through each file rule in the XML file
 		XmlNodeList? fileRules = xml.SelectNodes("//si:FileRules/si:Allow", nsmgr);

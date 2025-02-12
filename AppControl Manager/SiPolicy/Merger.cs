@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 
@@ -271,7 +272,7 @@ internal static partial class Merger
 	{
 		// Load the XML document
 		XDocument doc = XDocument.Load(xmlFilePath);
-		XNamespace ns = "urn:schemas-microsoft-com:sipolicy";
+		XNamespace ns = GlobalVars.SiPolicyNamespace;
 
 		// Get all EKU elements
 		List<XElement> ekuElements = [.. doc.Descendants(ns + "EKU")];

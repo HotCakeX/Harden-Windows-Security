@@ -79,7 +79,7 @@ internal static class CiPolicyHandler
 		if (signersNode is not null && !signersNode.HasChildNodes)
 		{
 			// Create a new self-closing element with the same name and attributes as the old one
-			XmlElement newSignersNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signers", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newSignersNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signers", GlobalVars.SiPolicyNamespace);
 
 			if (signersNode.Attributes is not null)
 			{

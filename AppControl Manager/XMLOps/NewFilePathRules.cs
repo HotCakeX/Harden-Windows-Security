@@ -38,7 +38,7 @@ internal static class NewFilePathRules
 			string allowRuleID = $"ID_ALLOW_A_{guid}";
 
 			// Create a new Allow FilePath rule
-			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newFileRule.SetAttribute("ID", allowRuleID);
 			newFileRule.SetAttribute("FriendlyName", "File Path Rule");
 			newFileRule.SetAttribute("MinimumFileVersion", item.MinimumFileVersion);
@@ -50,7 +50,7 @@ internal static class NewFilePathRules
 			if (item.SiSigningScenario is 1)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewUMCIFileRuleRefNode.SetAttribute("RuleID", allowRuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
 			}
@@ -94,7 +94,7 @@ internal static class NewFilePathRules
 			string denyRuleID = $"ID_DENY_A_{guid}";
 
 			// Create a new Deny FilePath rule
-			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newFileRule.SetAttribute("ID", denyRuleID);
 			newFileRule.SetAttribute("FriendlyName", "File Path Rule");
 			newFileRule.SetAttribute("FilePath", item.FilePath);
@@ -105,7 +105,7 @@ internal static class NewFilePathRules
 			if (item.SiSigningScenario is 1)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewUMCIFileRuleRefNode.SetAttribute("RuleID", denyRuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNode);
 			}

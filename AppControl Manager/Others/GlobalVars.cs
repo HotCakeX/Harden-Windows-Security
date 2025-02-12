@@ -74,6 +74,8 @@ internal static class GlobalVars
 	// Determine whether the current OS is older than 24H2
 	internal static bool IsOlderThan24H2 => CurrentOSVersion < VersionFor24H2;
 
+	internal const string SiPolicyNamespace = "urn:schemas-microsoft-com:sipolicy";
+
 	static GlobalVars()
 	{
 		// Ensure the directory exists

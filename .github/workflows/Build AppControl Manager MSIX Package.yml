@@ -52,6 +52,14 @@ jobs:
       - name: Check out the repository code
         uses: actions/checkout@v4
 
+      # Runs certain Harden Windows Security application's categories in order to provide security for the build process that starts in the next step
+      - name: Securing the environment
+        id: securing
+        shell: pwsh
+        run: |
+          Install-Module -Name 'Harden-Windows-Security-Module' -Force
+          Protect-WindowsSecurity -Categories MicrosoftSecurityBaselines,MicrosoftDefender,AttackSurfaceReductionRules,MiscellaneousConfigurations -Verbose
+
       - name: Building And Packaging the AppControl Manager
         id: main_buildOp
         shell: pwsh
@@ -578,3 +586,53 @@ jobs:
 
           # Create the pull request
           gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
+
+      - name: Add Body Text to the Draft Release
+        shell: pwsh
+        run: |
+          $ReleaseId = "${{ needs.build.outputs.DRAFT_RELEASE_ID }}"
+          $Repo = "${{ github.repository }}"
+
+          [string]$Note = @"
+
+          # What's New
+
+          <br>
+
+          > [!IMPORTANT]\
+          > **How To Install: Copy and Paste this command in a PowerShell window as Admin. ([Technical explanation available here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#how-to-install-or-update-the-app))**
+          > ``````powershell
+          > (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
+          > ``````
+
+          <br>
+
+          <br>
+
+          How to [verify](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds#verifying-artifact-attestations-with-the-github-cli) the MSIXBundle's authenticity:
+
+          ``````
+          gh attestation verify "Path To MSIXBundle" --repo HotCakeX/Harden-Windows-Security --format json
+          ``````
+
+          You can [install the GitHub CLI](https://github.com/cli/cli?tab=readme-ov-file#windows) from Winget:
+
+          ``````
+          winget install --id GitHub.cli
+          ``````
+
+          <br>
+
+          > [!NOTE]\
+          > As mentioned at the top, please **[refer to this page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#how-to-install-or-update-the-app)** for installation instructions.
+
+          <br>
+
+          "@
+
+          $Payload = @{ body = $Note } | ConvertTo-Json
+          $Url = "https://api.github.com/repos/$Repo/releases/$ReleaseId"
+          Invoke-RestMethod -Uri $Url -Method Patch -Headers @{
+            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
+            "Content-Type"  = "application/json"
+          } -Body $Payload

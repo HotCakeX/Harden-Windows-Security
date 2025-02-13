@@ -193,19 +193,7 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 
 <br>
 
-## How To Install AppControl Manager Completely Offline? (Method 1)
-
-1. Download the latest MSIXBundle package of the AppControl Manager from the [GitHub releases](https://github.com/HotCakeX/Harden-Windows-Security/releases) or build it from [the source code](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager) yourself.
-
-2. Use the following PowerShell syntax to Install the AppControl Manager. ***No Admin privilege required***
-
-```powershell
-Add-AppxPackage -Path "Path To the MSIXBundle" -AllowUnsigned
-```
-
-<br>
-
-## How To Install AppControl Manager Completely Offline? (Method 2)
+## How To Install AppControl Manager Completely Offline?
 
 1. Download [this PowerShell script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1).
 
@@ -309,7 +297,7 @@ if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed
 # https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools
 # https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio
 # https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community
-winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended'
+winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended'
 
 if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
 

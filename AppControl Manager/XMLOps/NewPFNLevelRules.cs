@@ -32,7 +32,7 @@ internal static class NewPFNLevelRules
 			string ID = $"ID_ALLOW_A_{guid}";
 
 			// Create new PackageFamilyName rule
-			XmlElement newPFNRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newPFNRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 
 			// Fill it with the required attributes
 			newPFNRule.SetAttribute("ID", ID);
@@ -44,7 +44,7 @@ internal static class NewPFNLevelRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newPFNRule);
 
 			// Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 			newUMCIFileRuleRefNode.SetAttribute("RuleID", ID);
 			_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(newUMCIFileRuleRefNode);
 		}
@@ -79,7 +79,7 @@ internal static class NewPFNLevelRules
 			string ID = $"ID_DENY_A_{guid}";
 
 			// Create new PackageFamilyName rule
-			XmlElement newPFNRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newPFNRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 
 			// Fill it with the required attributes
 			newPFNRule.SetAttribute("ID", ID);
@@ -91,7 +91,7 @@ internal static class NewPFNLevelRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newPFNRule);
 
 			// Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 			newUMCIFileRuleRefNode.SetAttribute("RuleID", ID);
 			_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(newUMCIFileRuleRefNode);
 		}

@@ -587,6 +587,16 @@ It doesn't matter how long or short the IDs are in the policy XML file, such as 
 
 <br>
 
+## The Effect of Disabled:Flight Signing Policy Rule Option on Windows Insider Builds
+
+If you deploy an App Control policy that has the `Disabled:Flight Signing` rule option, the Windows Insider page in Windows Settings will not let you choose insider channels whose builds are signed with flight root certificates. For example, if you are on the Release Preview channel, you won't have the option to switch to any other channel and the channel selection can be unavailable in Windows Insider section. To make it appear again, you can re-deploy the policy with `Disabled:Flight Signing` rule option removed from it and then reboot the system. This is to ensure that the user won't accidentally/intentionally get himself/herself into a boot failure situation.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using App Control for Business"> [Continue reading about BYOVD protection with App Control for Business](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [App Control policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection

@@ -34,7 +34,7 @@ internal static class UpdateHvciOptions
 		else
 		{
 			// Create the HvciOptions node if it doesn't exist
-			hvciOptionsNode = codeIntegrityPolicy.XmlDocument.CreateElement("HvciOptions", codeIntegrityPolicy.NameSpaceURI);
+			hvciOptionsNode = codeIntegrityPolicy.XmlDocument.CreateElement("HvciOptions", GlobalVars.SiPolicyNamespace);
 			hvciOptionsNode.InnerText = "2";
 
 			// Insert it after CiSigners node

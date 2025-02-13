@@ -53,7 +53,7 @@ internal static class SetCiPolicyInfo
 		// Check if Settings node exists, if not, create it
 		if (SettingsNode is null)
 		{
-			SettingsNode = codeIntegrityPolicy.XmlDocument.CreateElement("Settings", codeIntegrityPolicy.NameSpaceURI);
+			SettingsNode = codeIntegrityPolicy.XmlDocument.CreateElement("Settings", GlobalVars.SiPolicyNamespace);
 			_ = codeIntegrityPolicy.SiPolicyNode.AppendChild(SettingsNode);
 		}
 
@@ -81,7 +81,7 @@ internal static class SetCiPolicyInfo
 		// If the Setting node with ValueName="Name" does not exist, create it
 		if (nameSettingNode is null)
 		{
-			nameSettingNode = codeIntegrityPolicy.XmlDocument.CreateElement("Setting", codeIntegrityPolicy.NameSpaceURI);
+			nameSettingNode = codeIntegrityPolicy.XmlDocument.CreateElement("Setting", GlobalVars.SiPolicyNamespace);
 
 			XmlAttribute providerAttr = codeIntegrityPolicy.XmlDocument.CreateAttribute("Provider");
 			providerAttr.Value = "PolicyInfo";
@@ -105,8 +105,8 @@ internal static class SetCiPolicyInfo
 		if (valueNode is null)
 		{
 			// Create Value node
-			XmlNode newValueNode = codeIntegrityPolicy.XmlDocument.CreateElement("Value", codeIntegrityPolicy.NameSpaceURI);
-			XmlNode newStringNode = codeIntegrityPolicy.XmlDocument.CreateElement("String", codeIntegrityPolicy.NameSpaceURI);
+			XmlNode newValueNode = codeIntegrityPolicy.XmlDocument.CreateElement("Value", GlobalVars.SiPolicyNamespace);
+			XmlNode newStringNode = codeIntegrityPolicy.XmlDocument.CreateElement("String", GlobalVars.SiPolicyNamespace);
 
 			_ = newValueNode.AppendChild(newStringNode);
 			_ = nameSettingNode.AppendChild(newValueNode);
@@ -179,7 +179,7 @@ internal static class SetCiPolicyInfo
 
 			// Create namespace manager and add the default namespace with a prefix
 			XmlNamespaceManager namespaceManager2 = new(xmlDocument2.NameTable);
-			namespaceManager2.AddNamespace("ns", codeIntegrityPolicy.NameSpaceURI);
+			namespaceManager2.AddNamespace("ns", GlobalVars.SiPolicyNamespace);
 
 			// Get SiPolicy node
 			XmlNode siPolicyNode2 = xmlDocument2.SelectSingleNode("ns:SiPolicy", namespaceManager2)

@@ -77,7 +77,6 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-
         <!-- Titlebar -->
         <!-- https://learn.microsoft.com/en-us/windows/apps/develop/title-bar#full-customization-example -->
         <Grid x:Name="AppTitleBar" Height="48" Grid.Row="0">
@@ -121,7 +120,6 @@
                             SuggestionChosen="SearchBox_SuggestionChosen"
                             PlaceholderText="Search menu items..." Margin="0"/>
 
-
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8"
                     Height="32" Margin="5,0,30,0">
@@ -142,7 +140,6 @@
 
         </Grid>
 
-
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
@@ -154,7 +151,6 @@
                     IsTitleBarAutoPaddingEnabled="False"
                     IsPaneToggleButtonVisible="False">
 
-
             <!--
              Being controlled from MainWindow.xaml.cs
 
@@ -163,7 +159,6 @@
             </NavigationView.Resources>
 
             -->
-
 
             <!--
             Used in the Titlebar
@@ -286,21 +281,35 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-
-                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
-
+                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
 
                                         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"
                                         x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"
                                         Width="150" />
 
-                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyBrowseButton" Click="SidebarBasePolicyBrowseButton_Click" Content="Browse" Style="{ThemeResource AccentButtonStyle}" />
+                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Browse for an XML policy file" x:Name="SidebarBasePolicyBrowseButton" Click="SidebarBasePolicyBrowseButton_Click" Style="{ThemeResource AccentButtonStyle}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <FontIcon Glyph="&#xE8E5;" Margin="0,0,8,0" />
+                                                        <TextBlock Text="Browse"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
 
-                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" x:Name="SidebarBasePolicyClearButton" Click="SidebarBasePolicyClearButton_Click" Content="Clear" Style="{ThemeResource AccentButtonStyle}" />
+                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Clear the selected XML file path text box" x:Name="SidebarBasePolicyClearButton" Click="SidebarBasePolicyClearButton_Click" Style="{ThemeResource AccentButtonStyle}">
+                                            <Button.Content>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <FontIcon Glyph="&#xE8E6;" Margin="0,0,8,0" />
+                                                        <TextBlock Text="Clear"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Button.Content>
+                                        </Button>
 
-                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" x:Name="SidebarBasePolicySelectButton" HorizontalAlignment="Center">
-
-
+                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" ToolTipService.ToolTip="Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page" x:Name="SidebarBasePolicySelectButton" HorizontalAlignment="Center">
                                             <Button.Content>
                                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -338,7 +347,18 @@
                                     <ToggleSwitch Toggled="AutomaticAssignmentSidebarToggleSwitch_Toggled" x:Name="AutomaticAssignmentSidebarToggleSwitch"/>
                                 </controls:SettingsCard>
 
-                                <HyperlinkButton HorizontalAlignment="Center" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
+                                <HyperlinkButton HorizontalAlignment="Center" ToolTipService.ToolTip="Sidebar usage guide on GitHub wiki" Content="Sidebar Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
+
+                                <Button HorizontalAlignment="Center" x:Name="OpenConfigDirectoryButton" ToolTipService.ToolTip="Open the directory where user configurations and user generated files are stored" Click="OpenConfigDirectoryButton_Click">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <FontIcon Glyph="&#xE8A7;" Margin="0,0,8,0" />
+                                                <TextBlock Text="Open User Config Directory"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
 
                             </controls:WrapPanel>
 

@@ -39,7 +39,7 @@ internal static class NewHashLevelRules
 			string HashSHA1RuleID = $"ID_ALLOW_B_{guid}";
 
 			// Create new Allow Hash rule for Authenticode SHA256
-			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
 			newAuth256HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha256");
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
@@ -47,7 +47,7 @@ internal static class NewHashLevelRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
 
 			// Create new Allow Hash rule for Authenticode SHA1
-			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
 			newAuth1HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha1");
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
@@ -58,12 +58,12 @@ internal static class NewHashLevelRules
 			if (hash.SiSigningScenario is 1)
 			{
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewUMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor256);
 
 				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewUMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewUMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor1);
 			}
@@ -80,12 +80,12 @@ internal static class NewHashLevelRules
 				}
 
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewKMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewKMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
 				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor256);
 
 				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewKMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewKMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
 				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor1);
 			}
@@ -128,7 +128,7 @@ internal static class NewHashLevelRules
 			string HashSHA1RuleID = $"ID_DENY_B_{guid}";
 
 			// Create new Deny Hash rule for Authenticode SHA256
-			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
 			newAuth256HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha256");
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
@@ -136,7 +136,7 @@ internal static class NewHashLevelRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
 
 			// Create new Deny Hash rule for Authenticode SHA1
-			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", codeIntegrityPolicy.NameSpaceURI);
+			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
 			newAuth1HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha1");
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
@@ -147,12 +147,12 @@ internal static class NewHashLevelRules
 			if (hash.SiSigningScenario == 1)
 			{
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewUMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor256);
 
 				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
-				XmlElement NewUMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewUMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewUMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
 				_ = codeIntegrityPolicy.UMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewUMCIFileRuleRefNodeFor1);
 			}
@@ -169,12 +169,12 @@ internal static class NewHashLevelRules
 				}
 
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewKMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewKMCIFileRuleRefNodeFor256.SetAttribute("RuleID", HashSHA256RuleID);
 				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor256);
 
 				// Create FileRuleRef for Authenticode SHA1 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
-				XmlElement NewKMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement NewKMCIFileRuleRefNodeFor1 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 				NewKMCIFileRuleRefNodeFor1.SetAttribute("RuleID", HashSHA1RuleID);
 				_ = codeIntegrityPolicy.KMCI_ProductSigners_FileRulesRef_Node.AppendChild(NewKMCIFileRuleRefNodeFor1);
 			}

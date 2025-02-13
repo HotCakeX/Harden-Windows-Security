@@ -125,6 +125,9 @@ internal static class CertificateGenerator
 			);
 
 		// Add custom extension for "Application Policies"
+		// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-crtd/44012f2d-5ef3-440d-a61b-b30d3d978130
+		// https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc776986(v=ws.10)?redirectedfrom=MSDN
+		// https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc754305(v=ws.10)
 		// Application Policies OID
 		Oid appPoliciesOid = new("1.3.6.1.4.1.311.21.10");
 		// this must be set as specified and not randomly generated

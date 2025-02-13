@@ -12,8 +12,6 @@ namespace AppControlManager.Others;
 
 internal sealed class CodeIntegrityPolicy
 {
-	// NameSpace URI
-	internal readonly string NameSpaceURI = "urn:schemas-microsoft-com:sipolicy";
 
 	internal XmlDocument XmlDocument { get; }
 	internal XmlNamespaceManager NamespaceManager { get; }
@@ -75,7 +73,7 @@ internal sealed class CodeIntegrityPolicy
 
 		// Create namespace manager and add the default namespace with a prefix
 		NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);
-		NamespaceManager.AddNamespace("ns", NameSpaceURI);
+		NamespaceManager.AddNamespace("ns", GlobalVars.SiPolicyNamespace);
 
 		// Get SiPolicy node
 		SiPolicyNode = XmlDocument.SelectSingleNode("ns:SiPolicy", NamespaceManager)
@@ -118,7 +116,7 @@ internal sealed class CodeIntegrityPolicy
 
 		if (ciSignersNode is null)
 		{
-			XmlElement newCiSignersNode = XmlDocument.CreateElement("CiSigners", NameSpaceURI);
+			XmlElement newCiSignersNode = XmlDocument.CreateElement("CiSigners", GlobalVars.SiPolicyNamespace);
 			_ = SiPolicyNode.AppendChild(newCiSignersNode);
 
 			CiSignersNode = newCiSignersNode;
@@ -137,7 +135,7 @@ internal sealed class CodeIntegrityPolicy
 
 		if (fileRulesNode is null)
 		{
-			XmlElement newFileRulesNode = XmlDocument.CreateElement("FileRules", NameSpaceURI);
+			XmlElement newFileRulesNode = XmlDocument.CreateElement("FileRules", GlobalVars.SiPolicyNamespace);
 			_ = SiPolicyNode.AppendChild(newFileRulesNode);
 
 			FileRulesNode = newFileRulesNode;
@@ -184,7 +182,7 @@ internal sealed class CodeIntegrityPolicy
 		if (basePolicyIDNode is null)
 		{
 			// Create the node
-			XmlElement newBasePolicyIDNode = XmlDocument.CreateElement("BasePolicyID", NameSpaceURI);
+			XmlElement newBasePolicyIDNode = XmlDocument.CreateElement("BasePolicyID", GlobalVars.SiPolicyNamespace);
 
 			// Set its value to match PolicyID because we are making it a Base policy when the node doesn't exist
 			newBasePolicyIDNode.InnerText = newRandomGUIDString;
@@ -212,7 +210,7 @@ internal sealed class CodeIntegrityPolicy
 		if (policyIDNode is null)
 		{
 			// Create the node
-			XmlElement newPolicyIDNode = XmlDocument.CreateElement("PolicyID", NameSpaceURI);
+			XmlElement newPolicyIDNode = XmlDocument.CreateElement("PolicyID", GlobalVars.SiPolicyNamespace);
 
 			// Set its value to match PolicyID because this is a Base policy
 			newPolicyIDNode.InnerText = newRandomGUIDString;
@@ -294,7 +292,7 @@ internal sealed class CodeIntegrityPolicy
 		// If it doesn't exist, create it
 		if (fileRulesRefNode is null)
 		{
-			XmlElement newFileRulesRefNode = XmlDocument.CreateElement("FileRulesRef", NameSpaceURI);
+			XmlElement newFileRulesRefNode = XmlDocument.CreateElement("FileRulesRef", GlobalVars.SiPolicyNamespace);
 			_ = parentNode.AppendChild(newFileRulesRefNode);
 
 			fileRulesRefNode = parentNode.SelectSingleNode("ns:FileRulesRef", NamespaceManager);
@@ -316,7 +314,7 @@ internal sealed class CodeIntegrityPolicy
 		// If it doesn't exist, create it
 		if (allowedSignersNode is null)
 		{
-			XmlElement newAllowedSignersNode = XmlDocument.CreateElement("AllowedSigners", NameSpaceURI);
+			XmlElement newAllowedSignersNode = XmlDocument.CreateElement("AllowedSigners", GlobalVars.SiPolicyNamespace);
 			_ = parentNode.AppendChild(newAllowedSignersNode);
 
 			allowedSignersNode = parentNode.SelectSingleNode("ns:AllowedSigners", NamespaceManager);
@@ -338,7 +336,7 @@ internal sealed class CodeIntegrityPolicy
 		// If it doesn't exist, create it
 		if (deniedSignersNode is null)
 		{
-			XmlElement newDeniedSignersNode = XmlDocument.CreateElement("DeniedSigners", NameSpaceURI);
+			XmlElement newDeniedSignersNode = XmlDocument.CreateElement("DeniedSigners", GlobalVars.SiPolicyNamespace);
 			_ = parentNode.AppendChild(newDeniedSignersNode);
 
 			deniedSignersNode = parentNode.SelectSingleNode("ns:DeniedSigners", NamespaceManager);
@@ -366,7 +364,7 @@ internal sealed class CodeIntegrityPolicy
 
 		if (signingScenariosNode is null)
 		{
-			XmlElement newSigningScenariosNode = XmlDocument.CreateElement("SigningScenarios", NameSpaceURI);
+			XmlElement newSigningScenariosNode = XmlDocument.CreateElement("SigningScenarios", GlobalVars.SiPolicyNamespace);
 			signingScenariosNode = SiPolicyNode.AppendChild(newSigningScenariosNode);
 		}
 
@@ -376,7 +374,7 @@ internal sealed class CodeIntegrityPolicy
 		if (signingScenarioNode is null)
 		{
 			// Create the SigningScenario node
-			XmlElement newSigningScenarioNode = XmlDocument.CreateElement("SigningScenario", NameSpaceURI);
+			XmlElement newSigningScenarioNode = XmlDocument.CreateElement("SigningScenario", GlobalVars.SiPolicyNamespace);
 			newSigningScenarioNode.SetAttribute("Value", scenarioValue.ToString(CultureInfo.InvariantCulture));
 			newSigningScenarioNode.SetAttribute("ID", scenarioId);
 			newSigningScenarioNode.SetAttribute("FriendlyName", scenarioValue is 12 ? "User Mode Signing Scenario" : "Kernel Mode Signing Scenario");
@@ -385,7 +383,7 @@ internal sealed class CodeIntegrityPolicy
 			signingScenarioNode = signingScenariosNode.AppendChild(newSigningScenarioNode);
 
 			// Create and append the ProductSigners node
-			XmlElement newProductSignersNode = XmlDocument.CreateElement("ProductSigners", NameSpaceURI);
+			XmlElement newProductSignersNode = XmlDocument.CreateElement("ProductSigners", GlobalVars.SiPolicyNamespace);
 			_ = signingScenarioNode!.AppendChild(newProductSignersNode);
 		}
 

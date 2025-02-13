@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -17,6 +18,11 @@ namespace AppControlManager.Others;
 /// </summary>
 internal static class FileDialogHelper
 {
+	// Location where File/Folder picker dialog will be opened
+	// It is only the directory where the first dialog will be opened in, it will then be replaced by the directory
+	// That user browses to to pick a single file/directory
+	private static string DirectoryToOpen = GlobalVars.UserConfigDir;
+
 	/// <summary>
 	/// Opens a file picker dialog to select a single file.
 	/// </summary>
@@ -64,7 +70,7 @@ internal static class FileDialogHelper
 
 		// Set the default folder to "My Documents".
 		hr = PInvoke.SHCreateItemFromParsingName(
-			GlobalVars.UserConfigDir,
+			DirectoryToOpen,
 			null,
 			typeof(IShellItem).GUID,
 			out void* pDirectoryShellItem
@@ -118,6 +124,11 @@ internal static class FileDialogHelper
 
 			// Release COM objects
 			_ = ppsi->Release();
+
+			// Assign the directory where user last browsed for a file to the directory where file picker will be opened from next time
+			string? _selectedFilePath = Path.GetDirectoryName(selectedFilePath);
+			if (!string.IsNullOrEmpty(_selectedFilePath))
+				DirectoryToOpen = _selectedFilePath;
 
 			return selectedFilePath;
 		}
@@ -194,7 +205,7 @@ internal static class FileDialogHelper
 
 		// Set default folder to My Documents
 		hr = PInvoke.SHCreateItemFromParsingName(
-			GlobalVars.UserConfigDir,
+			DirectoryToOpen,
 			null,
 			typeof(IShellItem).GUID,
 			out void* directoryShellItem
@@ -320,7 +331,7 @@ internal static class FileDialogHelper
 
 		// Set default folder to "My Documents"
 		hr = PInvoke.SHCreateItemFromParsingName(
-			GlobalVars.UserConfigDir,
+			DirectoryToOpen,
 			null,
 			typeof(IShellItem).GUID,
 			out void* directoryShellItem
@@ -367,6 +378,11 @@ internal static class FileDialogHelper
 			// Free unmanaged memory for the folder path
 			Marshal.FreeCoTaskMem((IntPtr)folderPath.Value);
 
+
+			// Assign the directory where user last browsed for to the directory where folder picker will be opened from next time
+			if (!string.IsNullOrEmpty(selectedFolderPath))
+				DirectoryToOpen = selectedFolderPath;
+
 			return selectedFolderPath;
 
 		}
@@ -411,7 +427,7 @@ internal static class FileDialogHelper
 
 		// Set default folder to "My Documents"
 		hr = PInvoke.SHCreateItemFromParsingName(
-			GlobalVars.UserConfigDir,
+			DirectoryToOpen,
 			null,
 			typeof(IShellItem).GUID,
 			out void* directoryShellItem

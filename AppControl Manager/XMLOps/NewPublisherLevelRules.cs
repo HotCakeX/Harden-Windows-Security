@@ -44,19 +44,19 @@ internal static class NewPublisherLevelRules
 				// Create the new Signer element
 
 				// Create a new Signer node
-				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
 				// Set the attributes for the new Signer node
 				newSignerNode.SetAttribute("ID", SignerID);
 				newSignerNode.SetAttribute("Name", signerData.IntermediateCertName);
 
 				// Create the CertRoot element and add it to the Signer element
-				XmlElement certRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement certRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
 				certRootNode.SetAttribute("Type", "TBS");
 				certRootNode.SetAttribute("Value", signerData.IntermediateCertTBS);
 				_ = newSignerNode.AppendChild(certRootNode);
 
 				// Create the CertPublisher element and add it to the Signer element
-				XmlElement certPublisherNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertPublisher", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement certPublisherNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertPublisher", GlobalVars.SiPolicyNamespace);
 				certPublisherNode.SetAttribute("Value", signerData.LeafCertName);
 				_ = newSignerNode.AppendChild(certPublisherNode);
 
@@ -70,13 +70,13 @@ internal static class NewPublisherLevelRules
 				if (publisherData.SiSigningScenario is 1)
 				{
 					// Create AllowedSigner nodes inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
-					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", codeIntegrityPolicy.NameSpaceURI);
+					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					newUMCIAllowedSignerNode.SetAttribute("SignerId", SignerID);
 					_ = codeIntegrityPolicy.UMCI_ProductSigners_AllowedSigners_Node.AppendChild(newUMCIAllowedSignerNode);
 
 
 					// Create a CI Signer for the User Mode Signer
-					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", codeIntegrityPolicy.NameSpaceURI);
+					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
 					newCiSignerNode.SetAttribute("SignerId", SignerID);
 					_ = codeIntegrityPolicy.CiSignersNode.AppendChild(newCiSignerNode);
 				}
@@ -85,7 +85,7 @@ internal static class NewPublisherLevelRules
 				else if (publisherData.SiSigningScenario is 0)
 				{
 					// Create AllowedSigner nodes inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
-					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", codeIntegrityPolicy.NameSpaceURI);
+					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					newKMCIAllowedSignerNode.SetAttribute("SignerId", SignerID);
 					_ = codeIntegrityPolicy.KMCI_ProductSigners_AllowedSigners_Node.AppendChild(newKMCIAllowedSignerNode);
 
@@ -137,19 +137,19 @@ internal static class NewPublisherLevelRules
 				// Create the new Signer element
 
 				// Create a new Signer node
-				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
 				// Set the attributes for the new Signer node
 				newSignerNode.SetAttribute("ID", SignerID);
 				newSignerNode.SetAttribute("Name", signerData.IntermediateCertName);
 
 				// Create the CertRoot element and add it to the Signer element
-				XmlElement certRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement certRootNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
 				certRootNode.SetAttribute("Type", "TBS");
 				certRootNode.SetAttribute("Value", signerData.IntermediateCertTBS);
 				_ = newSignerNode.AppendChild(certRootNode);
 
 				// Create the CertPublisher element and add it to the Signer element
-				XmlElement certPublisherNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertPublisher", codeIntegrityPolicy.NameSpaceURI);
+				XmlElement certPublisherNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertPublisher", GlobalVars.SiPolicyNamespace);
 				certPublisherNode.SetAttribute("Value", signerData.LeafCertName);
 				_ = newSignerNode.AppendChild(certPublisherNode);
 
@@ -163,13 +163,13 @@ internal static class NewPublisherLevelRules
 				if (publisherData.SiSigningScenario is 1)
 				{
 					// Create DeniedSigner nodes inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
-					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", codeIntegrityPolicy.NameSpaceURI);
+					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					newUMCIDeniedSignerNode.SetAttribute("SignerId", SignerID);
 					_ = codeIntegrityPolicy.UMCI_ProductSigners_DeniedSigners_Node.AppendChild(newUMCIDeniedSignerNode);
 
 
 					// Create a CI Signer for the User Mode Signer
-					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", codeIntegrityPolicy.NameSpaceURI);
+					XmlElement newCiSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
 					newCiSignerNode.SetAttribute("SignerId", SignerID);
 					_ = codeIntegrityPolicy.CiSignersNode.AppendChild(newCiSignerNode);
 				}
@@ -178,7 +178,7 @@ internal static class NewPublisherLevelRules
 				else if (publisherData.SiSigningScenario is 0)
 				{
 					// Create DeniedSigner nodes inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
-					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", codeIntegrityPolicy.NameSpaceURI);
+					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					newKMCIDeniedSignerNode.SetAttribute("SignerId", SignerID);
 					_ = codeIntegrityPolicy.KMCI_ProductSigners_DeniedSigners_Node.AppendChild(newKMCIDeniedSignerNode);
 

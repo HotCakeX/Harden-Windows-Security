@@ -8,7 +8,7 @@
 version: 2
 updates:
   - package-ecosystem: "dotnet-sdk"
-    directory: "/AppControl Manager"
+    directory: "/AppControl Manager/"
     schedule:
       interval: "weekly"
       day: "thursday"
@@ -18,8 +18,8 @@ updates:
       - ".NET SDK"
   - package-ecosystem: "nuget"
     directories:
-      - "/AppControl Manager"
-      - "/Harden-Windows-Security Module"
+      - "/AppControl Manager/"
+      - "/Harden-Windows-Security Module/"
     schedule:
       interval: "daily"
       time: "07:30"

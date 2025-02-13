@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -1735,4 +1736,17 @@ public sealed partial class MainWindow : Window
 	}
 
 
+	/// <summary>
+	/// Event handler for the Sidebar button to open the user config directory
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void OpenConfigDirectoryButton_Click(object sender, RoutedEventArgs e)
+	{
+		_ = Process.Start(new ProcessStartInfo
+		{
+			FileName = GlobalVars.UserConfigDir,
+			UseShellExecute = true
+		});
+	}
 }

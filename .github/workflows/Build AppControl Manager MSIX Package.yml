@@ -52,14 +52,6 @@ jobs:
       - name: Check out the repository code
         uses: actions/checkout@v4
 
-      # Runs certain Harden Windows Security application's categories in order to provide security for the build process that starts in the next step
-      - name: Securing the environment
-        id: securing
-        shell: pwsh
-        run: |
-          Install-Module -Name 'Harden-Windows-Security-Module' -Force
-          Protect-WindowsSecurity -Categories MicrosoftSecurityBaselines,MicrosoftDefender,AttackSurfaceReductionRules,MiscellaneousConfigurations -Verbose
-
       - name: Building And Packaging the AppControl Manager
         id: main_buildOp
         shell: pwsh

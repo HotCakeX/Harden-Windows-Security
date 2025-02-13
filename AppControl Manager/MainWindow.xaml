@@ -77,7 +77,6 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-
         <!-- Titlebar -->
         <!-- https://learn.microsoft.com/en-us/windows/apps/develop/title-bar#full-customization-example -->
         <Grid x:Name="AppTitleBar" Height="48" Grid.Row="0">
@@ -121,7 +120,6 @@
                             SuggestionChosen="SearchBox_SuggestionChosen"
                             PlaceholderText="Search menu items..." Margin="0"/>
 
-
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8"
                     Height="32" Margin="5,0,30,0">
@@ -142,7 +140,6 @@
 
         </Grid>
 
-
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
@@ -154,7 +151,6 @@
                     IsTitleBarAutoPaddingEnabled="False"
                     IsPaneToggleButtonVisible="False">
 
-
             <!--
              Being controlled from MainWindow.xaml.cs
 
@@ -163,7 +159,6 @@
             </NavigationView.Resources>
 
             -->
-
 
             <!--
             Used in the Titlebar
@@ -286,9 +281,7 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-
                                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
-
 
                                         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"
                                         x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"
@@ -317,8 +310,6 @@
                                         </Button>
 
                                         <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" ToolTipService.ToolTip="Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page" x:Name="SidebarBasePolicySelectButton" HorizontalAlignment="Center">
-
-
                                             <Button.Content>
                                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -368,7 +359,6 @@
                                         </StackPanel>
                                     </Button.Content>
                                 </Button>
-
 
                             </controls:WrapPanel>
 

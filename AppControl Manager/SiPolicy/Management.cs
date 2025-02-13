@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using AppControlManager.Main;
+using AppControlManager.XMLOps;
 
 namespace AppControlManager.SiPolicy;
 
@@ -25,7 +26,6 @@ internal static class Management
 			throw new InvalidOperationException($"The XML file '{xmlFilePath}' is not compliant with the CI policy schema");
 		}
 
-
 		/*
 
 		XmlSerializer serializer = new(typeof(SiPolicy));
@@ -49,10 +49,8 @@ internal static class Management
 
 		*/
 
-
 		return CustomDeserialization.DeserializeSiPolicy(xmlFilePath);
 	}
-
 
 
 	/// <summary>
@@ -67,6 +65,8 @@ internal static class Management
 		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
 
 		xmlObj.Save(filePath);
+
+		CloseEmptyXmlNodesSemantic.Close(filePath);
 
 		/*
 
@@ -89,7 +89,6 @@ internal static class Management
 		serializer.Serialize(writer, policy, namespaces);
 
 		*/
-
 
 		if (!CiPolicyTest.TestCiPolicy(filePath))
 		{

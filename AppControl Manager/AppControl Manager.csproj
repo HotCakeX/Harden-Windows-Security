@@ -138,7 +138,6 @@
   <!-- Nuget packages
   All transitive/nested packages under the main packages are added 
   so they can be updated separately and receive bug/security vulnerability fixes faster
-  The only package whose transitive/nested packages are not added separately is "Microsoft.Windows.CsWin32"
 
   https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
   -->
@@ -165,6 +164,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+    <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
+    <PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="63.0.31-preview" />
+    <PackageReference Include="Microsoft.Windows.WDK.Win32Metadata" Version="0.13.25-experimental" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <PackageReference Include="System.CodeDom" Version="9.0.2" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />

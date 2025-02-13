@@ -9,7 +9,7 @@ namespace AppControlManager.SiPolicy;
 
 
 /// <summary>
-/// !!!! EXTRA information regarding the overall merge operation and what needs to happen !!!!
+/// --- EXTRA information regarding the overall merge operation and what needs to happen ---
 ///
 /// The FilePublisher and Publisher Signers in an XML file must be based on their TBS, Name, and/or CertPublisher values.
 /// For each FilePublisher signer, if two signers are found with the same TBS, Name, and CertPublisher, only one of them shall be kept, and their FileAttribRefs shall be merged.
@@ -68,21 +68,21 @@ internal static partial class Merger
 		SignerCollection signerCollection = Factory.CollectSignerRules(allPolicies);
 
 		// Get all of the EKUs from rule types that generate it
-		IEnumerable<EKU> ekusToUse = signerCollection.WHQLFilePublishers.SelectMany(x => x.Ekus).Concat(signerCollection.WHQLPublishers.SelectMany(x => x.Ekus));
+		IEnumerable<EKU> ekusToUse = signerCollection.WHQLFilePublishers.SelectMany(x => x.Ekus).Concat(signerCollection.WHQLPublishers.SelectMany(x => x.Ekus)).Where(x => x is not null);
 
 		// Get all FileRules that go to <FileRules>
 		IEnumerable<object> fileRules = allowRules.Select(x => x.AllowElement).Cast<object>().
 			Concat(denyRules.Select(x => x.DenyElement)).
 			Concat(signerCollection.FilePublisherSigners.SelectMany(x => x.FileAttribElements)).
-			Concat(signerCollection.WHQLFilePublishers.SelectMany(x => x.FileAttribElements));
+			Concat(signerCollection.WHQLFilePublishers.SelectMany(x => x.FileAttribElements)).Where(x => x is not null);
 
 		// Get all FileRuleRefs - User Mode - that go to <FileRulesRef> in ProductSigners
 		IEnumerable<FileRuleRef> userModeFileRulesRefs = allowRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement).
-			Concat(denyRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement));
+			Concat(denyRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement)).Where(x => x is not null);
 
 		// Get all FileRuleRefs - Kernel Mode - that go to <FileRulesRef> in ProductSigners
 		IEnumerable<FileRuleRef> kernelModeFileRulesRefs = allowRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement).
-			Concat(denyRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement));
+			Concat(denyRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement)).Where(x => x is not null);
 
 		// Get all Signers
 		IEnumerable<Signer> signers = signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
@@ -90,13 +90,13 @@ internal static partial class Merger
 			Concat(signerCollection.WHQLPublishers.Select(x => x.SignerElement)).
 			Concat(signerCollection.SignerRules.Select(x => x.SignerElement)).
 			Concat(signerCollection.SupplementalPolicySigners.Select(x => x.SignerElement)).
-			Concat(signerCollection.UpdatePolicySigners.Select(x => x.SignerElement));
+			Concat(signerCollection.UpdatePolicySigners.Select(x => x.SignerElement)).Where(x => x is not null);
 
 		// Get all CiSigners
-		IEnumerable<CiSigner> ciSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
-			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
-			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!))).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!));
+		IEnumerable<CiSigner> ciSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement).
+			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement).
+			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement))).
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement)).Where(x => x is not null)!;
 
 
 		// Get any possible SigningScenario from XML1 (main)
@@ -112,30 +112,30 @@ internal static partial class Merger
 		IEnumerable<AllowedSigner> userModeAllowedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement).
 			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
 			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement))!;
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).Where(x => x is not null)!;
 
 		// Get all of the DeniedSigners - User Mode
 		IEnumerable<DeniedSigner> userModeDeniedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement).
 			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
 			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement))!;
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).Where(x => x is not null)!;
 
 		// Get all of the AllowedSigners - Kernel Mode
 		IEnumerable<AllowedSigner> kernelModeAllowedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement).
 		  Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
 		  Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
-		  Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement))!;
+		  Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).Where(x => x is not null)!;
 
 		// Get all of the DeniedSigners - Kernel Mode
 		IEnumerable<DeniedSigner> kernelModeDeniedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement).
 			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
 			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement))!;
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).Where(x => x is not null)!;
 
 
-		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol = signerCollection.SupplementalPolicySigners.Where(x => x is not null).Select(x => x.SupplementalPolicySigner);
+		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol = signerCollection.SupplementalPolicySigners.Where(x => x is not null).Select(x => x.SupplementalPolicySigner).Where(x => x is not null);
 
-		IEnumerable<UpdatePolicySigner> updatePolicySignersCol = signerCollection.UpdatePolicySigners.Where(x => x is not null).Select(x => x.UpdatePolicySigner);
+		IEnumerable<UpdatePolicySigner> updatePolicySignersCol = signerCollection.UpdatePolicySigners.Where(x => x is not null).Select(x => x.UpdatePolicySigner).Where(x => x is not null);
 
 
 		// Construct the User Mode Signing Scenario
@@ -169,8 +169,18 @@ internal static partial class Merger
 			UMCISigningScenario.MinimumHashAlgorithm = mainXMLUserModeSigningScenario.MinimumHashAlgorithm;
 		}
 
-		UMCISigningScenario.InheritedScenarios = mainXMLUserModeSigningScenario?.InheritedScenarios;
-		UMCISigningScenario.AppIDTags = mainXMLUserModeSigningScenario?.AppIDTags;
+
+		if (mainXMLUserModeSigningScenario is { InheritedScenarios: not null })
+			UMCISigningScenario.InheritedScenarios = mainXMLUserModeSigningScenario.InheritedScenarios;
+
+		if (mainXMLUserModeSigningScenario is { AppIDTags: not null })
+			UMCISigningScenario.AppIDTags = mainXMLUserModeSigningScenario.AppIDTags;
+
+		if (mainXMLUserModeSigningScenario is { TestSigners: not null })
+			UMCISigningScenario.TestSigners = mainXMLUserModeSigningScenario.TestSigners;
+
+		if (mainXMLUserModeSigningScenario is { TestSigningSigners: not null })
+			UMCISigningScenario.TestSigningSigners = mainXMLUserModeSigningScenario.TestSigningSigners;
 
 
 		// Construct the Kernel Mode Signing Scenario
@@ -205,9 +215,17 @@ internal static partial class Merger
 			KMCISigningScenario.MinimumHashAlgorithm = mainXMLKernelModeSigningScenario.MinimumHashAlgorithm;
 		}
 
-		KMCISigningScenario.InheritedScenarios = mainXMLKernelModeSigningScenario?.InheritedScenarios;
-		KMCISigningScenario.AppIDTags = mainXMLKernelModeSigningScenario?.AppIDTags;
+		if (mainXMLKernelModeSigningScenario is { InheritedScenarios: not null })
+			KMCISigningScenario.InheritedScenarios = mainXMLKernelModeSigningScenario.InheritedScenarios;
 
+		if (mainXMLKernelModeSigningScenario is { AppIDTags: not null })
+			KMCISigningScenario.AppIDTags = mainXMLKernelModeSigningScenario.AppIDTags;
+
+		if (mainXMLKernelModeSigningScenario is { TestSigners: not null })
+			KMCISigningScenario.TestSigners = mainXMLKernelModeSigningScenario.TestSigners;
+
+		if (mainXMLKernelModeSigningScenario is { TestSigningSigners: not null })
+			KMCISigningScenario.TestSigningSigners = mainXMLKernelModeSigningScenario.TestSigningSigners;
 
 
 		// Create the final policy data, it will replace the content in the main XML file

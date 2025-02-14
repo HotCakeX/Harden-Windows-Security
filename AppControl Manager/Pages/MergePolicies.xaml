@@ -30,7 +30,7 @@
 </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies" />
+                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies" />
 
             </controls:WrapPanel>
 
@@ -87,7 +87,7 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button Content="Clear" Click="MainPolicy_Flyout_ClearButton" />
+                                            <Button x:Uid="ClearButton" Click="MainPolicy_Flyout_ClearButton" />
 
                                             <TextBlock Text="View the Main policy you selected." TextWrapping="WrapWholeWords" />
 
@@ -115,7 +115,7 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button Content="Clear" Click="OtherPolicies_Flyout_ClearButton" />
+                                            <Button x:Uid="ClearButton" Click="OtherPolicies_Flyout_ClearButton" />
 
                                             <TextBlock Text="View the other policies you selected." TextWrapping="WrapWholeWords" />
 

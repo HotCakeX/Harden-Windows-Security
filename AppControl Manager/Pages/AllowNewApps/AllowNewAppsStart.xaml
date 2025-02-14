@@ -30,14 +30,13 @@
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,5">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
                     <Span>
                         Use this page to <Run Foreground="{ThemeResource SystemAccentColor}">Allow</Run>
                         new or already installed apps or files to run on the system.
                     </Span>
                 </TextBlock>
 
-                <HyperlinkButton Margin="0,-8,0,8" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
+                <HyperlinkButton Margin="0,-8,0,8" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 
                 <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
 
@@ -79,9 +78,9 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button Content="Clear" Click="BrowseForXMLPolicyButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="BrowseForXMLPolicyButton_Flyout_Clear_Click" />
 
-                                        <TextBlock Text="View the Base policy path you selected." TextWrapping="WrapWholeWords" />
+                                        <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
                                         <TextBox x:Name="BrowseForXMLPolicyButton_SelectedBasePolicyTextBox"
                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -154,9 +153,9 @@ LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_Va
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button Content="Clear" Click="ClearSelectedDirectoriesButton_Click" />
+                                        <Button x:Uid="ClearButton" Click="ClearSelectedDirectoriesButton_Click" />
 
-                                        <TextBlock Text="View the directories you selected."  TextWrapping="WrapWholeWords" Width="400" />
+                                        <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" Width="400" />
 
                                         <TextBox x:Name="SelectedDirectoriesTextBox"
                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"

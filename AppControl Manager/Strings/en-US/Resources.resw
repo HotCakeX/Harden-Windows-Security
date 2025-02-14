@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<root><!-- 
-    Microsoft ResX Schema 
-    
+<root><!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -25,36 +25,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -237,5 +237,275 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="BrowseForFilesSettingsCard.Description" xml:space="preserve">
+    <value>Browse for a file to see all of its available certificates</value>
+  </data>
+  <data name="BrowseForFilesSettingsCard.Header" xml:space="preserve">
+    <value>Select File</value>
+  </data>
+  <data name="GuideButtonAtTop.Content" xml:space="preserve">
+    <value>Guide</value>
+  </data>
+  <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click/Tap to visit the full Guide for this page on GitHub</value>
+  </data>
+  <data name="DeployAfterCreationButton.Content" xml:space="preserve">
+    <value>Deploy after Creation</value>
+  </data>
+  <data name="DeployAfterCreationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+  </data>
+  <data name="CreateSupplementalPolicyButton.Content" xml:space="preserve">
+    <value>Create Supplemental Policy</value>
+  </data>
+  <data name="CreateSupplementalPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Supplemental policy based on the configurations you selected</value>
+  </data>
+  <data name="CreateDenyPolicyButton.Content" xml:space="preserve">
+    <value>Create Deny Policy</value>
+  </data>
+  <data name="CreateDenyPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Deny policy based on the configurations you selected</value>
+  </data>
+  <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.Description" xml:space="preserve">
+    <value>Create Deny policy by scanning files and folders</value>
+  </data>
+  <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.Header" xml:space="preserve">
+    <value>Files and Folders</value>
+  </data>
+  <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create Deny policy by scanning files and folders</value>
+  </data>
+  <data name="CreateDenyPolicyPFNSettingsExpander.Description" xml:space="preserve">
+    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+  </data>
+  <data name="CreateDenyPolicyPFNSettingsExpander.Header" xml:space="preserve">
+    <value>Package Family Name</value>
+  </data>
+  <data name="CreateDenyPolicyPFNSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+  </data>
+  <data name="AuditRuleOptionSettingsCard.Description" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files.</value>
+  </data>
+  <data name="AuditRuleOptionSettingsCard.Header" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="AuditRuleOptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files.</value>
+  </data>
+  <data name="RequireEVSignersRuleOption.Description" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run.</value>
+  </data>
+  <data name="RequireEVSignersRuleOption.Header" xml:space="preserve">
+    <value>Require EVSigners</value>
+  </data>
+  <data name="RequireEVSignersRuleOption.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run.</value>
+  </data>
+  <data name="EnableScriptEnforcementRuleOption.Description" xml:space="preserve">
+    <value>Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run.</value>
+  </data>
+  <data name="EnableScriptEnforcementRuleOption.Header" xml:space="preserve">
+    <value>Enable Script Enforcement</value>
+  </data>
+  <data name="EnableScriptEnforcementRuleOption.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run.</value>
+  </data>
+  <data name="TestModeRuleOption.Description" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons.</value>
+  </data>
+  <data name="TestModeRuleOption.Header" xml:space="preserve">
+    <value>Test Mode</value>
+  </data>
+  <data name="TestModeRuleOption.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons.</value>
+  </data>
+  <data name="FileBrowseButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the File picker dialog allowing you select file(s)</value>
+  </data>
+  <data name="FolderBrowseButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="FolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the Folder picker dialog allowing you select folder(s)</value>
+  </data>
+  <data name="SupplementalPolicyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Supplemental Policy Name</value>
+  </data>
+  <data name="SupplementalPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter a name for the Supplemental policy that will be created.</value>
+  </data>
+  <data name="SupplementalPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>The name of the Supplemental policy that is going to be created.</value>
+  </data>
+  <data name="SupplementalPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The name of the Supplemental policy that is going to be created.</value>
+  </data>
+  <data name="SupplementalPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Policy Name</value>
+  </data>
+  <data name="SupplementalFilesAndFoldersSettingsCard.Header" xml:space="preserve">
+    <value>Files and Folders</value>
+  </data>
+  <data name="SupplementalFilesAndFoldersSettingsCard.Description" xml:space="preserve">
+    <value>Create Supplemental policy by scanning files and folders</value>
+  </data>
+  <data name="SupplementalFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create Supplemental policy by scanning files and folders</value>
+  </data>
+  <data name="ClearButton.Content" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ReviewEventLogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Review the Event Logs that were collected during the Audit mode phase</value>
+  </data>
+  <data name="ReviewEventLogsNavItem.Content" xml:space="preserve">
+    <value>Review the Event Logs</value>
+  </data>
+  <data name="ReviewLocalFilesNavItem.Content" xml:space="preserve">
+    <value>Review the Local Files</value>
+  </data>
+  <data name="ReviewLocalFilesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Review the Local Files. These are the files that were found in the directories you browsed for.</value>
+  </data>
+  <data name="AllowNewAppsInternalMainNavItem.Content" xml:space="preserve">
+    <value>Start allowing apps or files</value>
+  </data>
+  <data name="AllowNewAppsInternalMainNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start allowing apps or files by either running them or browsing for their directories during the Audit mode phase.</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.Content" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Offers multiple different actions to take on the displayed data</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Clear Data</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear all of the displayed data</value>
+  </data>
+  <data name="DeployAfterCreationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Deploy after Creation</value>
+  </data>
+  <data name="DeployAfterCreationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+  </data>
+  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>Search the data...</value>
+  </data>
+  <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Search among the displayed data</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>De-Select All</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>De-select any selected data</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select all of the displayed data</value>
+  </data>
+  <data name="SelectAllButton.Content" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RemoveSelectionsButton.Content" xml:space="preserve">
+    <value>Remove Selections</value>
+  </data>
+  <data name="RemoveSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove Selections</value>
+  </data>
+  <data name="SelectedAppsTextBlock.Text" xml:space="preserve">
+    <value>Selected Apps: 0</value>
+  </data>
+  <data name="SelectedAppsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The total number of the selected Apps</value>
+  </data>
+  <data name="BrowseForFoldersDenyPolicySettingsCard.Description" xml:space="preserve">
+    <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
+  </data>
+  <data name="BrowseForFoldersDenyPolicySettingsCard.Header" xml:space="preserve">
+    <value>Browse For Folders</value>
+  </data>
+  <data name="BrowseForFoldersDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
+  </data>
+  <data name="BrowseForFilesDenyPolicySettingsCard.Description" xml:space="preserve">
+    <value>Browse for file paths to scan and include in the Deny policy.</value>
+  </data>
+  <data name="BrowseForFilesDenyPolicySettingsCard.Header" xml:space="preserve">
+    <value>Browse For Files</value>
+  </data>
+  <data name="BrowseForFilesDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for file paths to scan and include in the Deny policy.</value>
+  </data>
+  <data name="DenyPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>The name of the Deny policy that is going to be created.</value>
+  </data>
+  <data name="DenyPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Policy Name</value>
+  </data>
+  <data name="DenyPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The name of the Deny policy that is going to be created.</value>
+  </data>
+  <data name="ViewSelectedBasePolicyTextBlock.Text" xml:space="preserve">
+    <value>View the Base policy path you selected.</value>
+  </data>
+  <data name="ViewSelectedFilesTextBlock.Text" xml:space="preserve">
+    <value>View the files you selected.</value>
+  </data>
+  <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
+    <value>View the folders you selected.</value>
+  </data>
+  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Total logs: 0</value>
+  </data>
+  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The total number of the logs</value>
+  </data>
+  <data name="RefreshLogFilesButton.Content" xml:space="preserve">
+    <value>Refresh The Logs</value>
+  </data>
+  <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the latest logs for the current session by reading them from the log file in the user configurations directory</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>Search menu items...</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter menu item names to find them quickly</value>
+  </data>
+  <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="UpdateNavItem.Content" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="OpenConfigDirectoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the directory where user configurations and user generated files are stored</value>
+  </data>
+  <data name="OpenConfigDirectoryButtonText.Text" xml:space="preserve">
+    <value>Open User Config Directory</value>
   </data>
 </root>

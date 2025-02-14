@@ -36,13 +36,11 @@
     </Span>
             </TextBlock>
 
-            <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
 
         </controls:WrapPanel>
 
-
         <InfoBar x:Name="MainInfoBar" Grid.Row="1" Visibility="Collapsed" />
-
 
         <controls:WrapPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -54,14 +52,14 @@
                 <SelectorBarItem x:Name="SelectorBarItemCreate" Text="Create"/>
             </SelectorBar>
 
-            <TextBox PlaceholderText="Total logs: 0"
+            <TextBox x:Uid="TotalLogsTextBlock"
                 x:Name="TotalCountOfTheFilesTextBox"
                 IsReadOnly="True"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the logs"/>
+                VerticalContentAlignment="Center"/>
 
-            <TextBox x:Name="SearchBox" PlaceholderText="Search the data..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data" />
+            <TextBox x:Name="SearchBox" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
             <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date"/>
 
@@ -94,7 +92,7 @@
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button Content="Clear" Click="BrowseForLogs_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="BrowseForLogs_Flyout_Clear_Click" />
 
                                 <TextBlock Text="View the log files you selected." TextWrapping="WrapWholeWords" />
 
@@ -259,9 +257,7 @@ Spacing="8">
             Style="{StaticResource PanelStyle}">
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords">
-
-                                     <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
-
+                                                <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
                                             </TextBlock>
 
                                             <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="AddToPolicyButton_Click" />
@@ -275,10 +271,8 @@ Spacing="8">
 
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="290" >
-
                                                <Span>Browse for a <Bold>base</Bold>
-     policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
-
+                                                    policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
                                             </TextBlock>
 
                                             <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="BasePolicyFileButton_Click" />
@@ -306,24 +300,24 @@ Spacing="8">
 
                 </SplitButton>
 
-                <DropDownButton Content="Actions" ToolTipService.ToolTip="Multiple actions to take on the logs">
+                <DropDownButton x:Uid="ExtraActionsDropDownButton">
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem Text="Select All" Click="SelectAll_Click">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="SelectAll_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="De-Select All" Click="DeSelectAll_Click">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="DeSelectAll_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="Clear Data" Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
+                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -331,14 +325,11 @@ Spacing="8">
 
                             <MenuFlyoutSeparator/>
 
-                            <ToggleMenuFlyoutItem x:Name="DeployPolicyToggle" Text="Deploy Policy After Creation" IsChecked="False">
+                            <ToggleMenuFlyoutItem x:Name="DeployPolicyToggle" x:Uid="DeployAfterCreationMenuFlyoutItem" IsChecked="False">
                                 <ToggleMenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE896;"/>
                                 </ToggleMenuFlyoutItem.Icon>
-
-
                             </ToggleMenuFlyoutItem>
-
 
                         </MenuFlyout>
 
@@ -368,11 +359,9 @@ Spacing="8">
                     <ComboBoxItem>Hash</ComboBoxItem>
                 </ComboBox>
 
-
             </controls:WrapPanel>
 
         </Border>
-
 
         <!-- DataGrid for FileIdentity Outputs -->
         <Border Grid.Row="4" Style="{StaticResource GridCardStyle}" Margin="0,0,0,10" Padding="5">

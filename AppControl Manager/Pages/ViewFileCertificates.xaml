@@ -23,14 +23,13 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="5,0,5,5">
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
                   <Span>
                       View <Run Foreground="{ThemeResource SystemAccentColor}">Comprehensive</Run> information about the certificates used to sign files.
                         Details that are typically unavailable in File Explorer properties or PowerShell cmdlets are presented here in full.
                   </Span>
             </TextBlock>
 
-            <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates" />
 
         </controls:WrapPanel>
 
@@ -43,11 +42,10 @@
                 <win:RepositionThemeTransition IsStaggeringEnabled="False" />
             </win:StackPanel.ChildrenTransitions>
 
-            <controls:SettingsCard Description="Browse for a file to see all of its available certificates"
-                                     x:Name="BrowseForFilesSettingsCard"
-                  Header="Select File" Click="BrowseForFilesSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+            <controls:SettingsCard x:Uid="BrowseForFilesSettingsCard" x:Name="BrowseForFilesSettingsCard"
+            Click="BrowseForFilesSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
 
-                <Button Content="Browse" x:Name="BrowseForFilesButton" Click="BrowseForFilesButton_Click"  />
+                <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="BrowseForFilesButton_Click"  />
 
             </controls:SettingsCard>
 

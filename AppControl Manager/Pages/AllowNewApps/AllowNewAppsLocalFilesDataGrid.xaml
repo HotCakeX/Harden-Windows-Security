@@ -24,24 +24,24 @@
 
                 <ProgressRing x:Name="SelectLogsProgressRing" Visibility="Collapsed" IsActive="False" />
 
-                <DropDownButton Content="Actions" ToolTipService.ToolTip="Multiple actions to take on the logs">
+                <DropDownButton x:Uid="ExtraActionsDropDownButton">
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem Text="Select All" Click="SelectAll_Click">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="SelectAll_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="De-Select All" Click="DeSelectAll_Click">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="DeSelectAll_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="Clear Data" Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
+                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -58,7 +58,7 @@
                VerticalAlignment="Center"
                VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files"/>
 
-                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search data..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data" />
+                <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
             </controls:WrapPanel>
         </Border>

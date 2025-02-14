@@ -22,15 +22,14 @@
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,5,6,5">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-                <Span>
-                    Configure <Italic>App Control for Business</Italic>
+                    <Span>
+                        Configure <Italic>App Control for Business</Italic>
                         <Run Foreground="{ThemeResource SystemAccentColor}">policies'</Run>
                     <Bold>rule options</Bold>.
                   </Span>
                 </TextBlock>
 
-                <HyperlinkButton Margin="0,-6,0,0" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
+                <HyperlinkButton Margin="0,-6,0,0" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
 
             </controls:WrapPanel>
 
@@ -44,7 +43,7 @@
 
                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                            <Button Content="Clear" Click="PickPolicyFileButton_FlyOut_Clear_Click" />
+                            <Button x:Uid="ClearButton" Click="PickPolicyFileButton_FlyOut_Clear_Click" />
 
                             <TextBlock Text="View the policy path you selected." TextWrapping="WrapWholeWords" />
 

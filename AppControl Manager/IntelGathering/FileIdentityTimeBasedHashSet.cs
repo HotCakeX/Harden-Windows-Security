@@ -49,7 +49,7 @@ public sealed class FileIdentityTimeBasedHashSet
 			if (existingItem.TimeCreated.HasValue && item.TimeCreated.HasValue &&
 				existingItem.TimeCreated < item.TimeCreated)
 			{
-				Logger.Write($"Replacing an older FileIdentity item with a newer one in MDE Advanced Hunting Logs " +
+				Logger.Write($"Replacing an older FileIdentity item with a newer one in the Logs " +
 							 $"for the file with name {existingItem.FileName} and SHA256 hash {existingItem.SHA256Hash}.");
 
 				// Remove the existing older item and add the newer one

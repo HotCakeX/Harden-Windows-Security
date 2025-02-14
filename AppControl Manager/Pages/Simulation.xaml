@@ -23,17 +23,16 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-<Span>
-    Perform <Italic>App Control for Business</Italic>
-        <Run Foreground="{ThemeResource SystemAccentColor}">Simulation</Run>
-    by selecting files or folders, and a XML policy file, then use the
-    <Underline><Bold>Begin Simulation</Bold></Underline> button to populate the data grid.
-     The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were run.
-</Span>
+                <Span>
+                    Perform <Italic>App Control for Business</Italic>
+                        <Run Foreground="{ThemeResource SystemAccentColor}">Simulation</Run>
+                    by selecting files or folders, and a XML policy file, then use the
+                    <Underline><Bold>Begin Simulation</Bold></Underline> button to populate the data grid.
+                     The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were run.
+                </Span>
             </TextBlock>
 
-            <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation" />
 
         </controls:WrapPanel>
 
@@ -60,7 +59,7 @@
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button Content="Clear" Click="SelectXmlFileButton_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="SelectXmlFileButton_Flyout_Clear_Click" />
 
                                 <TextBlock Text="View the XML file you selected." TextWrapping="WrapWholeWords" />
 
@@ -89,9 +88,9 @@
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button Content="Clear" Click="SelectFilesButton_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="SelectFilesButton_Flyout_Clear_Click" />
 
-                                <TextBlock Text="View the files you selected." TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox x:Name="SelectFilesButton_SelectedFilesTextBox"
                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -120,9 +119,9 @@
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button Content="Clear" Click="SelectFoldersButton_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="SelectFoldersButton_Flyout_Clear_Click" />
 
-                                <TextBlock Text="View the folders you selected." TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox x:Name="SelectFoldersButton_SelectedFilesTextBox"
                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -177,7 +176,7 @@
                             <MenuFlyoutSeparator/>
 
                             <!-- Clear Data Button -->
-                            <MenuFlyoutItem Text="Clear Data" Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
+                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>

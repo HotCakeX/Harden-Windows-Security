@@ -29,7 +29,7 @@
                     </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy" />
+                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy" />
 
             </controls:WrapPanel>
 
@@ -126,7 +126,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button Content="Clear" Click="BrowseForXMLPolicyFilesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="BrowseForXMLPolicyFilesButton_Flyout_Clear_Click" />
 
                                         <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
 
@@ -194,7 +194,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button Content="Clear" Click="BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click" />
 
                                         <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
 
@@ -240,7 +240,7 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForCIPBinaryFilesButton" Content="Browse" Click="BrowseForCIPBinaryFilesButton_Click"
+                        <Button x:Name="BrowseForCIPBinaryFilesButton" x:Uid="FileBrowseButton" Click="BrowseForCIPBinaryFilesButton_Click"
                                 Holding="BrowseForCIPBinaryFilesButton_Holding" RightTapped="BrowseForCIPBinaryFilesButton_RightTapped">
 
                             <Button.Flyout>
@@ -248,7 +248,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button Content="Clear" Click="BrowseForCIPBinaryFilesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="BrowseForCIPBinaryFilesButton_Flyout_Clear_Click" />
 
                                         <TextBlock Text="View the CIP files you selected." TextWrapping="WrapWholeWords" />
 

@@ -20,16 +20,15 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="5,0,0,5">
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-<Span>
-    View detailed information about
-        <Run Foreground="{ThemeResource SystemAccentColor}">the Deployed policies</Run>
-   and <Bold>Code Integrity</Bold> on the system.
-
-</Span>
+                <Span>
+                    View detailed information about
+                        <Run Foreground="{ThemeResource SystemAccentColor}">the Deployed policies</Run>
+                   and <Bold>Code Integrity</Bold> on the system.
+                
+                </Span>
             </TextBlock>
 
-            <HyperlinkButton Margin="0,-6,0,0" Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information" />
+            <HyperlinkButton Margin="0,-6,0,0" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information" />
 
         </controls:WrapPanel>
 

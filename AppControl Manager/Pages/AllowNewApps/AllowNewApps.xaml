@@ -26,13 +26,13 @@
 
             <NavigationView.MenuItems>
 
-                <NavigationViewItem Content="Start allowing apps or files" ToolTipService.ToolTip="Start" Tag="Start" >
+                <NavigationViewItem x:Uid="AllowNewAppsInternalMainNavItem" Tag="Start" >
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE83D;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem Content="Review the Local Files" ToolTipService.ToolTip="Local Files" Tag="LocalFiles" >
+                <NavigationViewItem x:Uid="ReviewLocalFilesNavItem" Tag="LocalFiles" >
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE83D;" />
                     </NavigationViewItem.Icon>
@@ -49,15 +49,15 @@
 
                 </NavigationViewItem>
 
-                <NavigationViewItem Content="Review the Event Logs" ToolTipService.ToolTip="Event Logs" Tag="EventLogs" >
+                <NavigationViewItem x:Uid="ReviewEventLogsNavItem" Tag="EventLogs" >
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE964;" />
                     </NavigationViewItem.Icon>
 
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge x:Name="EventLogsCountInfoBadge"
-                Value="0" Opacity="0"
-                Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                            Value="0" Opacity="0"
+                            Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>
                             </InfoBadge.IconSource>

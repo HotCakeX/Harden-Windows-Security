@@ -34,7 +34,7 @@
 
                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                    <Button Content="Clear" Click="SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click" />
+                    <Button x:Uid="ClearButton" Click="SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click" />
 
                     <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
 
@@ -50,7 +50,7 @@ MinWidth="400" IsReadOnly="True" />
 
                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                    <Button Content="Clear" Click="SelectedAppLockerEVTXFilesFlyout_Clear_Click" />
+                    <Button x:Uid="ClearButton" Click="SelectedAppLockerEVTXFilesFlyout_Clear_Click" />
 
                     <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
 
@@ -79,7 +79,7 @@ MinWidth="400" IsReadOnly="True" />
             </Span>
             </TextBlock>
 
-            <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs" />
 
         </controls:WrapPanel>
 
@@ -150,9 +150,7 @@ MinWidth="400" IsReadOnly="True" />
               Style="{StaticResource PanelStyle}">
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords">
-
-                                       <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
-
+                                                <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
                                             </TextBlock>
 
                                             <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="AddToPolicyButton_Click" />
@@ -222,24 +220,24 @@ MinWidth="400" IsReadOnly="True" />
                 </DropDownButton>
 
 
-                <DropDownButton Content="Actions" ToolTipService.ToolTip="Multiple actions to take on the logs">
+                <DropDownButton x:Uid="ExtraActionsDropDownButton">
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem Text="Select All" Click="SelectAll_Click">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="SelectAll_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="De-Select All" Click="DeSelectAll_Click">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="DeSelectAll_Click">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Text="Clear Data" Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
+                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -247,7 +245,7 @@ MinWidth="400" IsReadOnly="True" />
 
                             <MenuFlyoutSeparator/>
 
-                            <ToggleMenuFlyoutItem x:Name="DeployPolicyToggle" Text="Deploy Policy After Creation" IsChecked="False">
+                            <ToggleMenuFlyoutItem x:Name="DeployPolicyToggle" x:Uid="DeployAfterCreationMenuFlyoutItem" IsChecked="False">
                                 <ToggleMenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE896;"/>
                                 </ToggleMenuFlyoutItem.Icon>
@@ -262,13 +260,13 @@ MinWidth="400" IsReadOnly="True" />
                 </DropDownButton>
 
 
-                <TextBox PlaceholderText="Total logs: 0"
+                <TextBox x:Uid="TotalLogsTextBlock"
                  x:Name="TotalCountOfTheFilesTextBox"
                  IsReadOnly="True"
                  VerticalAlignment="Center"
-                 VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the logs"/>
+                 VerticalContentAlignment="Center"/>
 
-                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search data..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data" />
+                <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
                 <Button Content="Policy Name">
                     <Button.Flyout>

@@ -102,8 +102,8 @@
 
             <!-- App icon -->
             <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
-           Width="16" Height="16"
-           Margin="8,0,4,0"/>
+                Width="16" Height="16"
+                Margin="8,0,4,0"/>
 
             <!-- App title bar -->
             <TextBlock x:Name="TitleBarTextBlock"
@@ -118,7 +118,7 @@
                             VerticalAlignment="Center"
                             MaxWidth="600" TextChanged="SearchBox_TextChanged"
                             SuggestionChosen="SearchBox_SuggestionChosen"
-                            PlaceholderText="Search menu items..." Margin="0"/>
+                            x:Uid="MainSearchAutoSuggestBox" Margin="0"/>
 
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8"
@@ -228,7 +228,7 @@
 
             <NavigationView.FooterMenuItems>
 
-                <NavigationViewItem x:Name="UpdateNavItem" Content="Update" ToolTipService.ToolTip="Check for updates">
+                <NavigationViewItem x:Name="UpdateNavItem" x:Uid="UpdateNavItem">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge x:Name="AvailableUpdateInfoBadge"
                                    Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
@@ -349,12 +349,12 @@
 
                                 <HyperlinkButton HorizontalAlignment="Center" ToolTipService.ToolTip="Sidebar usage guide on GitHub wiki" Content="Sidebar Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
 
-                                <Button HorizontalAlignment="Center" x:Name="OpenConfigDirectoryButton" ToolTipService.ToolTip="Open the directory where user configurations and user generated files are stored" Click="OpenConfigDirectoryButton_Click">
+                                <Button HorizontalAlignment="Center" x:Name="OpenConfigDirectoryButton" x:Uid="OpenConfigDirectoryButton" Click="OpenConfigDirectoryButton_Click">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                                 <FontIcon Glyph="&#xE8A7;" Margin="0,0,8,0" />
-                                                <TextBlock Text="Open User Config Directory"/>
+                                                <TextBlock x:Uid="OpenConfigDirectoryButtonText"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </Button.Content>
@@ -392,10 +392,10 @@
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <controls:PropertySizer HorizontalAlignment="Left" Grid.Row="1"
-                 Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
-                 Maximum="640"
-                 Minimum="60"
-                 Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
+                        Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
+                        Maximum="640"
+                        Minimum="60"
+                        Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
 
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame" Margin="15,15,15,10" Grid.Row="1" />

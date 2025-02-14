@@ -68,7 +68,7 @@
 
                     <controls:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
-                        <Button x:Name="CertFileBrowseButton" HorizontalAlignment="Center" Click="CertFileBrowseButton_Click" Content="Browse"/>
+                        <Button x:Name="CertFileBrowseButton" HorizontalAlignment="Center" Click="CertFileBrowseButton_Click" x:Uid="FileBrowseButton"/>
                         <TextBox MaxWidth="700" x:Name="CertFilePathTextBox" TextWrapping="Wrap" PlaceholderText=".cer file path" />
 
                     </controls:WrapPanel>
@@ -105,7 +105,7 @@
                             <TextBlock Text="Auto Acquire" Margin="0,8.7,0,0" />
                         </StackPanel>
 
-                        <Button x:Name="SignToolBrowseButton" Click="SignToolBrowseButton_Click" HorizontalAlignment="Center" Content="Browse"/>
+                        <Button x:Name="SignToolBrowseButton" Click="SignToolBrowseButton_Click" HorizontalAlignment="Center" x:Uid="FileBrowseButton"/>
                         <TextBox MaxWidth="700" x:Name="SignToolPathTextBox" PlaceholderText="SignTool.exe Path" TextWrapping="Wrap"/>
 
                     </controls:WrapPanel>
@@ -121,7 +121,7 @@
 
                     <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 
-                        <Button x:Name="XMLPolicyFileBrowseButton" Click="XMLPolicyFileBrowseButton_Click" HorizontalAlignment="Center" Content="Browse"/>
+                        <Button x:Name="XMLPolicyFileBrowseButton" Click="XMLPolicyFileBrowseButton_Click" HorizontalAlignment="Center" x:Uid="FileBrowseButton"/>
 
                         <TextBox MaxWidth="700" x:Name="XMLPolicyFileTextBox" PlaceholderText="XML file path" TextWrapping="Wrap"/>
 

@@ -21,7 +21,6 @@
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
                 <Span>
                     Create <Italic>App Control for Business</Italic>
                         <Run Foreground="{ThemeResource SystemAccentColor}">policies</Run>
@@ -31,7 +30,7 @@
                 </Span>
                 </TextBlock>
 
-                <HyperlinkButton Content="Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy" />
+                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy" />
 
             </controls:WrapPanel>
 
@@ -55,16 +54,14 @@
                         <Button x:Name="AllowMicrosoftCreate" Content="Create" ToolTipService.ToolTip="Create the Allow Microsoft base policy"
                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="AllowMicrosoftCreate_Click" />
 
-                        <ToggleButton x:Name="AllowMicrosoftCreateAndDeploy" Content="Deploy after Creation" ToolTipService.ToolTip="Deploy the Allow Microsoft policy after creating it" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="AllowMicrosoftCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
-                               Header="Audit">
+                        <controls:SettingsCard x:Uid="AuditRuleOptionSettingsCard">
                             <ToggleSwitch x:Name="AllowMicrosoftAudit" Toggled="AllowMicrosoftAudit_Toggled" />
-
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events." Header="Log Size">
@@ -86,21 +83,17 @@
                         </controls:SettingsCard>
 
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run."
-                            Header="Require EVSigners">
+                        <controls:SettingsCard x:Uid="RequireEVSignersRuleOption">
                             <ToggleSwitch x:Name="AllowMicrosoftRequireEVSigners" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run."
-                            Header="Enable Script Enforcement">
+                        <controls:SettingsCard x:Uid="EnableScriptEnforcementRuleOption">
                             <ToggleSwitch x:Name="AllowMicrosoftEnableScriptEnforcement" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons."
-                            Header="Test Mode">
+                        <controls:SettingsCard x:Uid="TestModeRuleOption">
                             <ToggleSwitch x:Name="AllowMicrosoftTestMode" />
                         </controls:SettingsCard>
-
 
                     </controls:SettingsExpander.Items>
 
@@ -120,17 +113,14 @@
                         <Button x:Name="DefaultWindowsCreate" Content="Create" ToolTipService.ToolTip="Create the Default Windows base policy"
                                 Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="DefaultWindowsCreate_Click" />
 
-                        <ToggleButton x:Name="DefaultWindowsCreateAndDeploy" Content="Deploy after Creation" ToolTipService.ToolTip="Deploy the Default Windows policy after creating it" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="DefaultWindowsCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
-                               Header="Audit">
-
+                        <controls:SettingsCard x:Uid="AuditRuleOptionSettingsCard">
                             <ToggleSwitch x:Name="DefaultWindowsAudit" Toggled="DefaultWindowsAudit_Toggled" />
-
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events." Header="Log Size">
@@ -152,18 +142,15 @@
                         </controls:SettingsCard>
 
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run."
-                            Header="Require EVSigners">
+                        <controls:SettingsCard x:Uid="RequireEVSignersRuleOption">
                             <ToggleSwitch x:Name="DefaultWindowsRequireEVSigners" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run."
-                            Header="Enable Script Enforcement">
+                        <controls:SettingsCard x:Uid="EnableScriptEnforcementRuleOption">
                             <ToggleSwitch x:Name="DefaultWindowsEnableScriptEnforcement" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons."
-                                 Header="Test Mode">
+                        <controls:SettingsCard x:Uid="TestModeRuleOption">
                             <ToggleSwitch x:Name="DefaultWindowsTestMode" />
                         </controls:SettingsCard>
 
@@ -185,19 +172,16 @@
                         <Button x:Name="SignedAndReputableCreate" Content="Create" ToolTipService.ToolTip="Create the Signed and Reputable base policy"
                                 Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="SignedAndReputableCreate_Click" />
 
-                        <ToggleButton x:Name="SignedAndReputableCreateAndDeploy" Content="Deploy after Creation" ToolTipService.ToolTip="Deploy the Signed and Reputable policy after creating it" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="SignedAndReputableCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files." Header="Audit">
-
+                        <controls:SettingsCard x:Uid="AuditRuleOptionSettingsCard">
                             <ToggleSwitch x:Name="SignedAndReputableAudit" Toggled="SignedAndReputableAudit_Toggled" />
-
                         </controls:SettingsCard>
-
 
                         <controls:SettingsCard Description="Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events." Header="Log Size">
 
@@ -217,23 +201,17 @@
 
                         </controls:SettingsCard>
 
-
-
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run."
-                            Header="Require EVSigners">
+                        <controls:SettingsCard x:Uid="RequireEVSignersRuleOption">
                             <ToggleSwitch x:Name="SignedAndReputableRequireEVSigners" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run."
-                            Header="Enable Script Enforcement">
+                        <controls:SettingsCard x:Uid="EnableScriptEnforcementRuleOption">
                             <ToggleSwitch x:Name="SignedAndReputableEnableScriptEnforcement" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons."
-                            Header="Test Mode">
+                        <controls:SettingsCard x:Uid="TestModeRuleOption">
                             <ToggleSwitch x:Name="SignedAndReputableTestMode" />
                         </controls:SettingsCard>
-
 
                     </controls:SettingsExpander.Items>
 
@@ -263,7 +241,7 @@
                         <Button x:Name="RecommendedDriverBlockRulesCreate" Content="Create" ToolTipService.ToolTip="Create the Microsoft Recommended Drivers Block List policy"
                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedDriverBlockRulesCreate_Click" />
 
-                        <ToggleButton x:Name="RecommendedDriverBlockRulesCreateAndDeploy" Content="Deploy after Creation" ToolTipService.ToolTip="Deploy the Microsoft Recommended Drivers Block List policy after creating it" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="RecommendedDriverBlockRulesCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                         <Button x:Name="RecommendedDriverBlockRulesScheduledAutoUpdate" Content="Auto Update" ToolTipService.ToolTip="Configures the Microsoft Recommended Drivers Block List to be automatically updated using a scheduled task"
                             Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesScheduledAutoUpdate_Click" Margin="0,0,15,0" />
@@ -294,7 +272,7 @@
                         <Button x:Name="RecommendedUserModeBlockRulesCreate" Content="Create" ToolTipService.ToolTip="Create the Microsoft recommended user-mode block rules policy"
                               Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedUserModeBlockRulesCreate_Click" />
 
-                        <ToggleButton x:Name="RecommendedUserModeBlockRulesCreateAndDeploy" Content="Deploy after Creation" ToolTipService.ToolTip="Deploy the Microsoft recommended user-mode block rules policy after creating it" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="RecommendedUserModeBlockRulesCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
@@ -325,7 +303,7 @@
                         <Button x:Name="StrictKernelModePolicyCreateButton" Content="Create" Click="StrictKernelModePolicyCreateButton_Click"
                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" ToolTipService.ToolTip="Create the Strict Kernel-mode base policy"  />
 
-                        <ToggleButton x:Name="StrictKernelModePolicyToggleButtonForDeploy" Content="Deploy after Creation" ToolTipService.ToolTip="Deploy the Strict Kernel-mode base policy after creating it" Margin="0,0,15,0" />
+                        <ToggleButton x:Name="StrictKernelModePolicyToggleButtonForDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 

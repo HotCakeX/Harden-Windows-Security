@@ -31,19 +31,18 @@
 
         <controls:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
             <!-- ComboBox for selecting log files -->
-            <ComboBox x:Name="LogFileComboBox" SelectionChanged="LogFileComboBox_SelectionChanged" FontSize="16" />
+            <ComboBox x:Name="LogFileComboBox" SelectionChanged="LogFileComboBox_SelectionChanged" />
 
             <!-- Button to refresh the logs -->
             <Button x:Name="RefreshButton"
-            Content="Refresh Logs"
+            x:Uid="RefreshLogFilesButton"
             Click="RefreshButton_Click"
-            FontSize="16"
             Style="{StaticResource AccentButtonStyle}" />
 
             <!-- Search TextBox -->
             <TextBox x:Name="SearchTextBox"
-             PlaceholderText="Search in the logs..."
-             FontSize="16" MinWidth="300" TextChanged="SearchTextBox_TextChanged"/>
+            PlaceholderText="Search in the logs..."
+            MinWidth="300" TextChanged="SearchTextBox_TextChanged"/>
 
         </controls:WrapPanel>
 
@@ -53,8 +52,8 @@
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="local:LogLine">
 
-                            <TextBlock
-                      Text="{x:Bind Text}" TextWrapping="Wrap" IsTextSelectionEnabled="True" FontSize="18"/>
+                            <TextBlock Text="{x:Bind Text}"
+                            TextWrapping="Wrap" IsTextSelectionEnabled="True" FontSize="18"/>
 
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>

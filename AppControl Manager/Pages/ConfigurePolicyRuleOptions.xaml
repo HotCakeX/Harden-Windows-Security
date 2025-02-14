@@ -87,7 +87,7 @@
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
-                        <Button x:Name="ApplyTheChangesButton" Content="Appy the Changes" Click="ApplyTheChangesButton_Click"
+                        <Button x:Name="ApplyTheChangesButton" Content="Apply the Changes" Click="ApplyTheChangesButton_Click"
             Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected" />
 
                         <Button x:Name="RefreshRuleOptionsState" Content="Retrieve Rules States" Click="RefreshRuleOptionsState_Click"

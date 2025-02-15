@@ -219,7 +219,6 @@ public sealed partial class EventLogsPolicyCreation : Page
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
 
-
 			// Enable the Policy creator button again
 			CreatePolicyButton.IsEnabled = true;
 		}

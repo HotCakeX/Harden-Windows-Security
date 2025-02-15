@@ -353,7 +353,7 @@ Spacing="8">
                     </Button.Flyout>
                 </Button>
 
-                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" ToolTipService.ToolTip="Pick a level based on which the selected logs will be scanned" PlaceholderText="Scan level">
+                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" PlaceholderText="Scan level">
                     <ComboBoxItem>FilePublisher</ComboBoxItem>
                     <ComboBoxItem>Publisher</ComboBoxItem>
                     <ComboBoxItem>Hash</ComboBoxItem>

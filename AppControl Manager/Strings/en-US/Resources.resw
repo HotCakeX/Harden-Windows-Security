@@ -508,4 +508,181 @@
   <data name="OpenConfigDirectoryButtonText.Text" xml:space="preserve">
     <value>Open User Config Directory</value>
   </data>
+  <data name="ResetStepsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode.</value>
+  </data>
+  <data name="ResetStepsButton.Content" xml:space="preserve">
+    <value>Reset Steps</value>
+  </data>
+  <data name="AllowNewAppsStep1Text.Text" xml:space="preserve">
+    <value>Select the required info such as a deployed policy XML file and a name for the Supplemental policy that will be created</value>
+  </data>
+  <data name="AllowNewAppsStep2Text.Text" xml:space="preserve">
+    <value>Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you&apos;re done, use the button below to go to Step 3.</value>
+  </data>
+  <data name="AllowNewAppsStep3Text.Text" xml:space="preserve">
+    <value>Use the Event logs and local files tab to confirm or select the detected files in order to include them in the final Supplemental policy.</value>
+  </data>
+  <data name="AllowNewAppsCreatePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start creating the policy with the logs and files you selected</value>
+  </data>
+  <data name="AllowNewAppsCreatePolicyButton.Content" xml:space="preserve">
+    <value>Create Policy</value>
+  </data>
+  <data name="LogSizeNumberBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This is the Maximum Capacity of the Code Integrity Operational Log Size</value>
+  </data>
+  <data name="LogSizeNumberBox.Header" xml:space="preserve">
+    <value>Enter a number for Log Size in MB</value>
+  </data>
+  <data name="BrowseTextBlock.Text" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
+    <value>Browse for a Base policy file</value>
+  </data>
+  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
+    <value>Browse for a policy XML file</value>
+  </data>
+  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click/Tap to choose a XML policy file from your device</value>
+  </data>
+  <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a level based on which the Files/Logs will be scanned</value>
+  </data>
+  <data name="WebViewBackButton.Text" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="WebViewForwardButton.Text" xml:space="preserve">
+    <value>Forward</value>
+  </data>
+  <data name="WebViewReloadButton.Text" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="WebViewHomeButton.Text" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="UserConfigsSettingsExpander.Description" xml:space="preserve">
+    <value>The following are the contents of the User Configurations JSON file</value>
+  </data>
+  <data name="UserConfigsSettingsExpander.Header" xml:space="preserve">
+    <value>User Configs</value>
+  </data>
+  <data name="SaveAppBarButton.Label" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SaveAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="BrowseAppBarButton.Label" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="BrowseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="ClearAppBarButton.Label" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ClearAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="RefreshAppBarButton.Label" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fetches the latest certificate common names from the User&apos;s personal certificate store</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
+    <value>Customize the App Background Style</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.Header" xml:space="preserve">
+    <value>Background Style</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This is the backdrop of the AppControl Manager. The changes will be visible in the background.</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
+    <value>Choose a style for the main navigation icons</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.Header" xml:space="preserve">
+    <value>Icons Style</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a style for the main navigation&apos;s icons.</value>
+  </data>
+  <data name="AppThemeSettingsCard.Description" xml:space="preserve">
+    <value>Customize the Theme</value>
+  </data>
+  <data name="AppThemeSettingsCard.Header" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a theme for the AppControl Manager</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
+    <value>Customize the Navigation Menu location</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.Header" xml:space="preserve">
+    <value>Navigation Menu</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a location for the navigation menu</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
+    <value>Hear audio feedback when using different elements of the AppControl Manager</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.Header" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hear audio feedback when using different elements of the AppControl Manager</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
+    <value>Mostly suitable when using MicaAlt as the background.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.Header" xml:space="preserve">
+    <value>Darker Background</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager&apos;s appearance.</value>
+  </data>
+  <data name="UserConfigurations.Text" xml:space="preserve">
+    <value>User Configurations</value>
+  </data>
+  <data name="Appearance.Text" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Sound.Text" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="About.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ValidateAppControlPolicySettingsCard.Description" xml:space="preserve">
+    <value>Browse for an App Control policy XML file to validate</value>
+  </data>
+  <data name="ValidateAppControlPolicySettingsCard.Header" xml:space="preserve">
+    <value>Select Policy</value>
+  </data>
+  <data name="BrowseButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
+    <value>View the XML file(s) you selected.</value>
+  </data>
+  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
+    <value>Select XML File</value>
+  </data>
+  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
+    <value>Select Files</value>
+  </data>
+  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
+    <value>Select Folders</value>
+  </data>
+  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
+    <value>Scan Logs</value>
+  </data>
+  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scan the system or the selected EVTX files for Code Integrity/AppLocker logs</value>
+  </data>
 </root>

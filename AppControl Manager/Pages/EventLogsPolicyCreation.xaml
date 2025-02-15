@@ -39,8 +39,8 @@
                     <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
 
                     <TextBox x:Name="SelectedCodeIntegrityEVTXFilesFlyout_TextBox"
-TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-MinWidth="400" IsReadOnly="True" />
+                        TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                        MinWidth="400" IsReadOnly="True" />
 
                 </controls:WrapPanel>
 
@@ -55,8 +55,8 @@ MinWidth="400" IsReadOnly="True" />
                     <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
 
                     <TextBox x:Name="SelectedAppLockerEVTXFilesFlyout_TextBox"
-TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-MinWidth="400" IsReadOnly="True" />
+                        TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                        MinWidth="400" IsReadOnly="True" />
 
                 </controls:WrapPanel>
 
@@ -83,22 +83,19 @@ MinWidth="400" IsReadOnly="True" />
 
         </controls:WrapPanel>
 
-        <Border
-    Grid.Row="1"
-    Margin="0,10,0,10"
-    Style="{StaticResource GridCardStyle}" Padding="8">
+        <Border Grid.Row="1" Margin="0,10,0,10"
+            Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                 <ProgressRing x:Name="ScanLogsProgressRing" Visibility="Collapsed" IsActive="False" />
 
                 <!-- Scan button -->
-                <Button x:Name="ScanLogs" ToolTipService.ToolTip="Scan the system or the selected EVTX files for Code Integrity/AppLocker logs" Style="{StaticResource AccentButtonStyle}" Click="ScanLogs_Click" >
+                <Button x:Name="ScanLogs" x:Uid="ScanLogsButton" Style="{StaticResource AccentButtonStyle}" Click="ScanLogs_Click" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEE6F;" />
-                            <TextBlock Text="Scan Logs" Margin="5,0,0,0" />
-
+                            <TextBlock x:Uid="ScanLogsTextBlock" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -287,7 +284,7 @@ MinWidth="400" IsReadOnly="True" />
 
                 <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
 
-                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" ToolTipService.ToolTip="Pick a level based on which the selected logs will be scanned" PlaceholderText="Scan level" >
+                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" PlaceholderText="Scan level" >
                     <ComboBoxItem>FilePublisher</ComboBoxItem>
                     <ComboBoxItem>Publisher</ComboBoxItem>
                     <ComboBoxItem>Hash</ComboBoxItem>

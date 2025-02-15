@@ -8,7 +8,6 @@
     xmlns:AppControlManager="using:AppControlManager"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
@@ -61,7 +60,7 @@
 
                                 <Button x:Uid="ClearButton" Click="SelectXmlFileButton_Flyout_Clear_Click" />
 
-                                <TextBlock Text="View the XML file you selected." TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox x:Name="SelectXmlFileButton_SelectedFilesTextBox"
                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -75,7 +74,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
-                            <TextBlock Text="Select XML File" Margin="5,0,0,0"/>
+                            <TextBlock x:Uid="SelectXMLFileTextBlock" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -105,7 +104,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
-                            <TextBlock Text="Select Files" Margin="5,0,0,0"/>
+                            <TextBlock x:Uid="SelectFilesTextBlock" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -136,7 +135,7 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xED25;" />
-                            <TextBlock Text="Select Folders" Margin="5,0,0,0"/>
+                            <TextBlock x:Uid="SelectFoldersTextBlock" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>

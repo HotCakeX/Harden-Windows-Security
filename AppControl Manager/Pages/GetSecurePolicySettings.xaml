@@ -61,7 +61,5 @@
             <InfoBar x:Name="InfoBar" IsOpen="False" Margin="0,20,0,0" Grid.Row="3"/>
 
         </Grid>
-
     </ScrollViewer>
-
 </Page>

@@ -22,16 +22,14 @@
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,0,6,10">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-<Span>
-    Customize your app settings here. Your preferences will be
-        <Run Foreground="{ThemeResource SystemAccentColor}">saved</Run>
-    so they're ready for you every time you start the AppControl Manager.
-</Span>
+                    <Span>
+                        Customize your app settings here. Your preferences will be
+                            <Run Foreground="{ThemeResource SystemAccentColor}">saved</Run>
+                        so they're ready for you every time you start the AppControl Manager.
+                    </Span>
                 </TextBlock>
 
             </controls:WrapPanel>
-
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1">
@@ -39,12 +37,13 @@
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
-                           Text="User Configurations" />
-                <controls:SettingsExpander Description="The following are the contents of the User Configurations JSON file"
-                                           Header="User Configs" x:Name="MainUserConfigurationsSettingsExpander"
+
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="UserConfigurations" />
+
+                <controls:SettingsExpander x:Uid="UserConfigsSettingsExpander"
+                                           x:Name="MainUserConfigurationsSettingsExpander"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
-                    <Button Content="Get Configuration"  Click="GetConfigurationButton_Click"
+                    <Button Content="Get Configuration" Click="GetConfigurationButton_Click"
                             Style="{StaticResource AccentButtonStyle}" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
@@ -53,27 +52,27 @@
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <TextBox Header="Signed Policy Path:" x:Name="SignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="SignedPolicyPath"/>
-                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="SignedPolicyPath"/>
-                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="SignedPolicyPath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="SignedPolicyPath"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="SignedPolicyPath"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="SignedPolicyPath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Unsigned Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <TextBox Header="Unsigned Policy Path:" x:Name="UnsignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="UnsignedPolicyPath"/>
-                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="UnsignedPolicyPath"/>
-                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="UnsignedPolicyPath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="UnsignedPolicyPath"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="UnsignedPolicyPath"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="UnsignedPolicyPath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Sign Tool Custom Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <TextBox Header="Sign Tool Custom Path:" x:Name="SignToolCustomPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="SignToolCustomPath"/>
-                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="SignToolCustomPath"/>
-                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="SignToolCustomPath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="SignToolCustomPath"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="SignToolCustomPath"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="SignToolCustomPath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Certificate Common Name -->
@@ -88,18 +87,18 @@
                                         MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
 
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificateCommonName"/>
-                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificateCommonName"/>
-                                        <AppBarButton Icon="Refresh" Label="Refresh" Click="CertificateCommonNameSuggestionsRefresh_Click" Tag="CertificateCommonName" ToolTipService.ToolTip="Fetches the latest certificate common names from the User's personal certificate store"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Refresh" x:Uid="RefreshAppBarButton" Click="CertificateCommonNameSuggestionsRefresh_Click" Tag="CertificateCommonName"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Certificate Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
                                     <TextBox Header="Certificate Path:" x:Name="CertificatePathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificatePath"/>
-                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificatePath"/>
-                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="CertificatePath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="CertificatePath"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="CertificatePath"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="CertificatePath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                             </StackPanel>
@@ -107,8 +106,8 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <!--  'Appearance' section  -->
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Appearance" />
+                <!-- Appearance section -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
                 <controls:SettingsExpander IsExpanded="True" Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
 
                     <controls:SettingsExpander.ItemsHeader>
@@ -130,12 +129,12 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Description="Mostly suitable when using MicaAlt as the background." Header="Darker Background" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
-                            <ToggleSwitch x:Name="NavigationViewBackgroundToggle" ToolTipService.ToolTip="It will remove the extra light shadow from the background, giving an overal darker look to the AppControl Manager's appearance."/>
+                        <controls:SettingsCard x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
+                            <ToggleSwitch x:Name="NavigationViewBackgroundToggle"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Customize the App Background Style" Header="Background Style" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
-                            <ComboBox x:Name="BackgroundComboBox" ToolTipService.ToolTip="This is the backdrop of the AppControl Manager. The changes you notice will be visible in the background.">
+                        <controls:SettingsCard x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
+                            <ComboBox x:Name="BackgroundComboBox">
                                 <ComboBoxItem>MicaAlt</ComboBoxItem>
                                 <ComboBoxItem>Mica</ComboBoxItem>
                                 <ComboBoxItem>Acrylic</ComboBoxItem>
@@ -143,24 +142,24 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Customize the Theme" Header="Theme" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
-                            <ComboBox x:Name="ThemeComboBox" ToolTipService.ToolTip="Select a theme for the AppControl Manager">
+                        <controls:SettingsCard x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
+                            <ComboBox x:Name="ThemeComboBox">
                                 <ComboBoxItem>Use System Setting</ComboBoxItem>
                                 <ComboBoxItem>Dark</ComboBoxItem>
                                 <ComboBoxItem>Light</ComboBoxItem>
                             </ComboBox>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Choose a style for the main navigation icons" Header="Icons Style" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
-                            <ComboBox x:Name="IconsStyleComboBox" ToolTipService.ToolTip="Pick a style for the main navigation's icons.">
+                        <controls:SettingsCard x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
+                            <ComboBox x:Name="IconsStyleComboBox">
                                 <ComboBoxItem>Animated</ComboBoxItem>
                                 <ComboBoxItem>Windows Accent</ComboBoxItem>
                                 <ComboBoxItem>Monochromatic</ComboBoxItem>
                             </ComboBox>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Customize the Navigation Menu location" Header="Navigation Menu" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
-                            <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation" ToolTipService.ToolTip="Select a location for the navigation menu">
+                        <controls:SettingsCard x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
+                            <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
                                 <ComboBoxItem>Left</ComboBoxItem>
                                 <ComboBoxItem>Top</ComboBoxItem>
                             </ComboBox>
@@ -170,16 +169,15 @@
 
                 </controls:SettingsExpander>
 
-                <!--  'Sound' section  -->
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
-           Text="Sound" />
-                <controls:SettingsCard Description="Hear audio feedback when using different elements of the AppControl Manager" Header="Sound" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
+                <!-- Sound section -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
+                <controls:SettingsCard x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
                     <ToggleSwitch x:Name="SoundToggleSwitch" />
                 </controls:SettingsCard>
 
-                <!--  'About' section  -->
+                <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
-                           Text="About" />
+                           x:Uid="About" />
                 <controls:SettingsExpander x:Name="CopyRightSettingsExpander"
                                            Header="AppControl Manager"
                                            IsExpanded="True"
@@ -221,7 +219,5 @@
             </StackPanel>
 
         </Grid>
-
     </ScrollViewer>
-
 </Page>

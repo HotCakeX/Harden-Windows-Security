@@ -6,7 +6,6 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
@@ -22,7 +21,7 @@
             <Button Click="BackButton_Click" IsEnabled="False" x:Name="BackButton">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Back"/>
-                    <TextBlock Text="Back" Margin="5,0,0,0"/>
+                    <TextBlock x:Uid="WebViewBackButton" Margin="5,0,0,0"/>
                 </StackPanel>
             </Button>
 
@@ -30,7 +29,7 @@
             <Button Click="ForwardButton_Click" IsEnabled="False" x:Name="ForwardButton">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Forward"/>
-                    <TextBlock Text="Forward" Margin="5,0,0,0"/>
+                    <TextBlock x:Uid="WebViewForwardButton" Margin="5,0,0,0"/>
                 </StackPanel>
             </Button>
 
@@ -38,7 +37,7 @@
             <Button Click="ReloadButton_Click">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Refresh"/>
-                    <TextBlock Text="Reload" Margin="5,0,0,0"/>
+                    <TextBlock x:Uid="WebViewReloadButton" Margin="5,0,0,0"/>
                 </StackPanel>
             </Button>
 
@@ -47,7 +46,7 @@
                 <StackPanel Orientation="Horizontal">
                     <!-- Using FontIcon to show a "Home" symbol from Segoe MDL2 Assets -->
                     <FontIcon Glyph="" FontFamily="Segoe MDL2 Assets"/>
-                    <TextBlock Text="Home" Margin="5,0,0,0"/>
+                    <TextBlock x:Uid="WebViewHomeButton" Margin="5,0,0,0"/>
                 </StackPanel>
             </Button>
         </controls:WrapPanel>

@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
@@ -116,7 +115,7 @@
                                         </AnimatedIcon.Source>
                                     </AnimatedIcon>
 
-                                    <TextBlock Text="Browse" />
+                                    <TextBlock x:Uid="BrowseTextBlock" />
 
                                 </controls:WrapPanel>
                             </Button.Content>
@@ -128,7 +127,7 @@
 
                                         <Button x:Uid="ClearButton" Click="BrowseForXMLPolicyFilesButton_Flyout_Clear_Click" />
 
-                                        <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
+                                        <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
                                         <TextBox x:Name="BrowseForXMLPolicyFilesButton_SelectedFilesTextBox"
                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -184,7 +183,7 @@
                                         </AnimatedIcon.Source>
                                     </AnimatedIcon>
 
-                                    <TextBlock Text="Browse" />
+                                    <TextBlock x:Uid="BrowseTextBlock" />
 
                                 </controls:WrapPanel>
                             </Button.Content>
@@ -196,7 +195,7 @@
 
                                         <Button x:Uid="ClearButton" Click="BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click" />
 
-                                        <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
+                                        <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
                                         <TextBox x:Name="BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox"
                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"

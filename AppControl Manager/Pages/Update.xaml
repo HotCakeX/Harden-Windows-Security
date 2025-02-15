@@ -99,7 +99,5 @@ Header="Hardened Update Procedure" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" IsC
             </StackPanel>
 
         </Grid>
-
     </ScrollViewer>
-
 </Page>

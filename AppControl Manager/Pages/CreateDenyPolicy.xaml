@@ -9,7 +9,6 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:others="using:AppControlManager.Others"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
 
@@ -185,7 +184,7 @@
                         <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
                         Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" ToolTipService.ToolTip="Pick a level based on which the selected files will be scanned"
+                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
                                   SelectedIndex="0">
                                 <ComboBoxItem>File Publisher</ComboBoxItem>
                                 <ComboBoxItem>Publisher</ComboBoxItem>

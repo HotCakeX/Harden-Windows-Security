@@ -33,9 +33,9 @@
             <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="1">
 
                 <!-- Button to trigger file picker -->
-                <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
+                <Button x:Name="PickFileButton" Click="PickFile_Click"
             HorizontalAlignment="Center"
-            ToolTipService.ToolTip="Click/Tap to choose a file from your device."
+            x:Uid="FileBrowseButton"
             Style="{StaticResource AccentButtonStyle}"/>
 
                 <!-- Grid for SHA1 Page -->
@@ -109,7 +109,5 @@
             </controls:WrapPanel>
 
         </Grid>
-
     </ScrollViewer>
-
 </Page>

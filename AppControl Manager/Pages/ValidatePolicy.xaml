@@ -6,7 +6,6 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
@@ -49,17 +48,16 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard Description="Browse for an App Control policy XML file to validate"
-                                       x:Name="BrowseForXMLSettingsCard"
-                    Header="Select Policy" IsClickEnabled="True" Click="BrowseForXMLSettingsCard_Click" IsActionIconVisible="False">
+                <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"
+                   x:Name="BrowseForXMLSettingsCard"
+                   IsClickEnabled="True" Click="BrowseForXMLSettingsCard_Click" IsActionIconVisible="False">
 
-                    <Button Content="Browse" x:Name="BrowseForXMLButton" Click="BrowseForXMLButton_Click" />
+                    <Button x:Uid="BrowseButton" x:Name="BrowseForXMLButton" Click="BrowseForXMLButton_Click" />
 
                 </controls:SettingsCard>
 
             </StackPanel>
 
         </Grid>
-
     </ScrollViewer>
 </Page>

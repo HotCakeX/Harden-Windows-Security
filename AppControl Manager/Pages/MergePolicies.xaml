@@ -22,12 +22,11 @@
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
                 <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-<Span>
-    Merge <Italic>App Control for Business</Italic>
-        <Run Foreground="{ThemeResource SystemAccentColor}">policies</Run>
-    and deduplicate them. You can select <Bold>the same policy twice</Bold> in order to deduplicate its rules.
-</Span>
+                    <Span>
+                        Merge <Italic>App Control for Business</Italic>
+                            <Run Foreground="{ThemeResource SystemAccentColor}">policies</Run>
+                        and deduplicate them. You can select <Bold>the same policy twice</Bold> in order to deduplicate its rules.
+                    </Span>
                 </TextBlock>
 
                 <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies" />
@@ -138,7 +137,5 @@
 
             </StackPanel>
         </Grid>
-
     </ScrollViewer>
-
 </Page>

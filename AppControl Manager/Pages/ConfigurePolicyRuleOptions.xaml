@@ -35,8 +35,8 @@
 
 
             <Button Grid.Row="1" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="PickPolicyFileButton_Click"
-     HorizontalAlignment="Center" RightTapped="PickPolicyFileButton_RightTapped" Holding="PickPolicyFileButton_Holding"
-    ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device.">
+                     HorizontalAlignment="Center" RightTapped="PickPolicyFileButton_RightTapped" Holding="PickPolicyFileButton_Holding"
+                     x:Uid="PickPolicyFileButton">
 
                 <Button.Flyout>
                     <Flyout x:Name="PickPolicyFileButton_FlyOut">
@@ -65,7 +65,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock Text="Browse for a policy XML file" />
+                        <TextBlock x:Uid="BrowseForPolicyTextBlock" />
 
                     </controls:WrapPanel>
                 </Button.Content>

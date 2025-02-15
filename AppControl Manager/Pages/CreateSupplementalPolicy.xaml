@@ -185,7 +185,8 @@
                             Header="Base Policy File" IsClickEnabled="True" Click="FilesAndFoldersBrowseForBasePolicySettingsCard_Click"
                             x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" Holding="FilesAndFoldersBrowseForBasePolicySettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForBasePolicySettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" RightTapped="FilesAndFoldersBrowseForBasePolicyButton_RightTapped" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" RightTapped="FilesAndFoldersBrowseForBasePolicyButton_RightTapped"
+                                    x:Uid="PickPolicyFileButton" Click="FilesAndFoldersBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
@@ -214,7 +215,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock Text="Browse" />
+                                        <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </controls:WrapPanel>
                                 </Button.Content>
@@ -226,7 +227,7 @@
                         <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
                             Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" ToolTipService.ToolTip="Pick a level based on which the selected files will be scanned"
+                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
                                  SelectedIndex="0">
                                 <ComboBoxItem>File Publisher</ComboBoxItem>
                                 <ComboBoxItem>Publisher</ComboBoxItem>
@@ -337,7 +338,8 @@
                                 Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="CertificatesBrowseForBasePolicySettingsCard_Click"
                                                RightTapped="CertificatesBrowseForBasePolicySettingsCard_RightTapped" Holding="CertificatesBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="CertificatesBrowseForBasePolicyButton" RightTapped="CertificatesBrowseForBasePolicyButton_RightTapped" Click="CertificatesBrowseForBasePolicyButton_Click">
+                            <Button x:Name="CertificatesBrowseForBasePolicyButton" RightTapped="CertificatesBrowseForBasePolicyButton_RightTapped"
+                                    x:Uid="PickPolicyFileButton" Click="CertificatesBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
@@ -366,7 +368,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock Text="Browse" />
+                                        <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </controls:WrapPanel>
                                 </Button.Content>
@@ -429,7 +431,8 @@
                             Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="ISGBrowseForBasePolicySettingsCard_Click"
                                                Holding="ISGBrowseForBasePolicySettingsCard_Holding" RightTapped="ISGBrowseForBasePolicySettingsCard_RightTapped">
 
-                            <Button x:Name="ISGBrowseForBasePolicyButton" Click="ISGBrowseForBasePolicyButton_Click" RightTapped="ISGBrowseForBasePolicyButton_RightTapped">
+                            <Button x:Name="ISGBrowseForBasePolicyButton" Click="ISGBrowseForBasePolicyButton_Click"
+                                    x:Uid="PickPolicyFileButton" RightTapped="ISGBrowseForBasePolicyButton_RightTapped">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="ISGBrowseForBasePolicyButton_FlyOut">
@@ -458,7 +461,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock Text="Browse" />
+                                        <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </controls:WrapPanel>
                                 </Button.Content>
@@ -532,7 +535,8 @@
                             Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModeBrowseForBasePolicySettingsCard_Click"
                                                RightTapped="StrictKernelModeBrowseForBasePolicySettingsCard_RightTapped" Holding="StrictKernelModeBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" RightTapped="StrictKernelModeBrowseForBasePolicyButton_RightTapped" Click="StrictKernelModeBrowseForBasePolicyButton_Click">
+                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" RightTapped="StrictKernelModeBrowseForBasePolicyButton_RightTapped"
+                                    x:Uid="PickPolicyFileButton" Click="StrictKernelModeBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="StrictKernelModeBrowseForBasePolicyButton_FlyOut">
@@ -561,7 +565,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock Text="Browse" />
+                                        <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </controls:WrapPanel>
                                 </Button.Content>
@@ -630,7 +634,8 @@
                             Header="Base Policy File" IsClickEnabled="True" Click="PFNBrowseForBasePolicySettingsCard_Click" IsActionIconVisible="False"
                                                RightTapped="PFNBrowseForBasePolicySettingsCard_RightTapped" Holding="PFNBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="PFNBrowseForBasePolicyButton" RightTapped="PFNBrowseForBasePolicyButton_RightTapped" Click="PFNBrowseForBasePolicyButton_Click">
+                            <Button x:Name="PFNBrowseForBasePolicyButton" RightTapped="PFNBrowseForBasePolicyButton_RightTapped"
+                                    x:Uid="PickPolicyFileButton" Click="PFNBrowseForBasePolicyButton_Click">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="PFNBrowseForBasePolicyButton_FlyOut">
@@ -659,7 +664,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock Text="Browse" />
+                                        <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </controls:WrapPanel>
                                 </Button.Content>

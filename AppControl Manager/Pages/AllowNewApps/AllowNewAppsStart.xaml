@@ -6,10 +6,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
 
@@ -39,11 +36,8 @@
                 <HyperlinkButton Margin="0,-8,0,8" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 
                 <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
-
-                    <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
-
+                    <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" x:Uid="ResetStepsButton" />
                     <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
-
                 </StackPanel>
 
             </controls:WrapPanel>
@@ -64,14 +58,14 @@
                             <ProgressRing x:Name="Step1ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
                         </controls:WrapPanel>
 
-                        <TextBlock Text="Select the required info such as a deployed policy XML file and a name for the Supplemental policy that will be created" TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="AllowNewAppsStep1Text" TextWrapping="WrapWholeWords" />
                     </controls:WrapPanel>
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="15" HorizontalSpacing="15">
 
                         <TextBox x:Name="SupplementalPolicyNameTextBox" Header="Supplemental Policy Name" PlaceholderText="Enter a name for the Supplemental Policy" />
                         <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0"
-                               RightTapped="BrowseForXMLPolicyButton_RightTapped" Holding="BrowseForXMLPolicyButton_Holding" ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device.">
+                               RightTapped="BrowseForXMLPolicyButton_RightTapped" Holding="BrowseForXMLPolicyButton_Holding" ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
 
                             <Button.Flyout>
                                 <Flyout x:Name="BrowseForXMLPolicyButton_FlyOut">
@@ -100,20 +94,18 @@
                                         </AnimatedIcon.Source>
                                     </AnimatedIcon>
 
-                                    <TextBlock Text="Browse for a policy XML file" />
+                                    <TextBlock x:Uid="BrowseForBasePolicyTextBlock" />
 
                                 </controls:WrapPanel>
                             </Button.Content>
 
                         </Button>
 
-
                         <NumberBox x:Name="LogSizeNumberBox"
-    Header="Enter a number for Log Size in MB"
-SpinButtonPlacementMode="Inline"
-SmallChange="1"
-LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_ValueChanged" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
-
+                            x:Uid="LogSizeNumberBox"
+                            SpinButtonPlacementMode="Inline"
+                            SmallChange="1"
+                            LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_ValueChanged" />
 
                         <Button x:Name="GoToStep2Button" Click="GoToStep2Button_Click" Margin="0,27,0,0" Content="Go to step 2" ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2" Style="{StaticResource AccentButtonStyle}"/>
 
@@ -140,7 +132,7 @@ LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_Va
                             <ProgressRing x:Name="Step2ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
                         </controls:WrapPanel>
 
-                        <TextBlock Text="Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you're done, use the button below to go to Step 3." TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="AllowNewAppsStep2Text" TextWrapping="WrapWholeWords" />
                     </controls:WrapPanel>
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
@@ -193,25 +185,22 @@ LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_Va
                             <ProgressRing x:Name="Step3ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
                         </controls:WrapPanel>
 
-                        <TextBlock Text="Use the Event logs and local files tab to confirm or select the detected files in order to include them in the final Supplemental policy." TextWrapping="WrapWholeWords" />
+                        <TextBlock x:Uid="AllowNewAppsStep3Text" TextWrapping="WrapWholeWords" />
                     </controls:WrapPanel>
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
 
-                        <ToggleButton x:Name="DeployToggleButton" Checked="DeployToggleButton_Checked" Unchecked="DeployToggleButton_Unchecked" ToolTipService.ToolTip="The Supplemental policy will be automatically deployed on the system after creation." IsChecked="True" Content="Deploy" />
+                        <ToggleButton x:Name="DeployToggleButton" Checked="DeployToggleButton_Checked" Unchecked="DeployToggleButton_Unchecked" IsChecked="True" x:Uid="DeployAfterCreationButton" />
 
-                        <ComboBox SelectedIndex="0" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" ToolTipService.ToolTip="Pick a level based on which the selected logs and files will be scanned" Header="Scan level" Margin="0,0,0,27">
+                        <ComboBox SelectedIndex="0" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" Header="Scan level" Margin="0,0,0,27">
                             <ComboBoxItem>FilePublisher</ComboBoxItem>
                             <ComboBoxItem>Publisher</ComboBoxItem>
                             <ComboBoxItem>Hash</ComboBoxItem>
                         </ComboBox>
 
-                        <Button x:Name="CreatePolicyButton" Click="CreatePolicyButton_Click" ToolTipService.ToolTip="Start creating the policy with the logs and files you selected" Content="Create Policy" Style="{StaticResource AccentButtonStyle}"/>
-
+                        <Button x:Name="CreatePolicyButton" Click="CreatePolicyButton_Click" x:Uid="AllowNewAppsCreatePolicyButton" Style="{StaticResource AccentButtonStyle}"/>
                     </controls:WrapPanel>
-
                     <InfoBar x:Name="Step3InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
-
                 </Grid>
             </Border>
 

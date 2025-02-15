@@ -75,7 +75,5 @@
             </controls:WrapPanel>
 
         </Grid>
-
     </ScrollViewer>
-
 </Page>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 
@@ -6,6 +7,11 @@ namespace AppControlManager.XMLOps;
 
 internal static class SignerAndHashBuilder
 {
+	// Get all of the drive letters on the system
+	private static readonly List<DriveLetterMapper.DriveMapping> Drives = DriveLetterMapper.GetGlobalRootDrives();
+	private static readonly IEnumerable<string?> DriveLetters = Drives.Select(x => x.DriveLetter);
+
+
 	/// <summary>
 	/// Creates Signer and Hash objects from the input data
 	///
@@ -378,8 +384,9 @@ internal static class SignerAndHashBuilder
 
 		foreach (string item in wildCardFilePathData)
 		{
-			// Create wildcard path
-			string wildcardPath = item + @"\" + "*";
+
+			// Create wildcard path - If user selected a root of a drive then do not add the extra backward slash otherwise we'd create an invalid path such as "D:\\*" in the policy
+			string wildcardPath = DriveLetters.Any(x => string.Equals(x, item[..^1], System.StringComparison.OrdinalIgnoreCase)) ? item + "*" : item + @"\" + "*";
 
 			// FilePath rules can only be used for User-Mode files only
 			// Plus we wouldn't know if the folder contains user-mode or kernel-mode files

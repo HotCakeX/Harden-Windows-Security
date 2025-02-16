@@ -1,5 +1,4 @@
-using System.IO;
-using AppControlManager.Others;
+using System;
 
 namespace AppControlManager.XMLOps;
 
@@ -7,21 +6,25 @@ internal static class PolicyEditor
 {
 	/// <summary>
 	/// Swaps the PolicyID and BasePolicyID GUIDs in an App Control for Business policy XML file for Base policies.
-	/// Shouldn't be used for supplemental policies.
 	/// </summary>
 	/// <param name="policyIdInput"></param>
 	/// <param name="policyFilePathInput"></param>
-	internal static void EditGuids(string policyIdInput, FileInfo policyFilePathInput)
+	internal static void EditGuids(string policyIdInput, string policyFilePathInput)
 
 	{
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(policyFilePathInput.FullName, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyFilePathInput, null);
+
+		if (policyObj.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
+		{
+			throw new InvalidOperationException("Don't use this method for Supplemental policies");
+		}
 
 		string policyId = "{" + policyIdInput + "}";
 
-		codeIntegrityPolicy.PolicyIDNode.InnerText = policyId;
-		codeIntegrityPolicy.BasePolicyIDNode.InnerText = policyId;
+		policyObj.BasePolicyID = policyId;
+		policyObj.PolicyID = policyId;
 
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, policyFilePathInput.FullName);
+		SiPolicy.Management.SavePolicyToFile(policyObj, policyFilePathInput);
 	}
 }

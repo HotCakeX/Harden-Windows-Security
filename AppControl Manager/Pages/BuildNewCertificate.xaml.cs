@@ -84,8 +84,8 @@ public sealed partial class BuildNewCertificate : Page
 			BuildCertificateButton.IsEnabled = false;
 			KeySizeSettingsCard.IsEnabled = false;
 
-			StatusInfoBar.Title = "Processing";
-			StatusInfoBar.Message = "Building the certificate...";
+			StatusInfoBar.Title = GlobalVars.Rizz.GetString("ProcessingTitle");
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("BuildingCertificate");
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
 			StatusInfoBar.IsClosable = false;
@@ -106,8 +106,8 @@ public sealed partial class BuildNewCertificate : Page
 
 		catch
 		{
-			StatusInfoBar.Title = "Error";
-			StatusInfoBar.Message = "Errors occurred while building the certificate";
+			StatusInfoBar.Title = GlobalVars.Rizz.GetString("ErrorTitle");
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("CertificateBuildError");
 			StatusInfoBar.Severity = InfoBarSeverity.Error;
 
 			ErrorsOccurred = true;
@@ -129,8 +129,8 @@ public sealed partial class BuildNewCertificate : Page
 
 			if (!ErrorsOccurred)
 			{
-				StatusInfoBar.Title = "Success";
-				StatusInfoBar.Message = $"Successfully generated the certificate with the selected details. The certificate's thumbprint is: '{generatedCertThumbPrint}'";
+				StatusInfoBar.Title = GlobalVars.Rizz.GetString("SuccessTitle");
+				StatusInfoBar.Message = GlobalVars.Rizz.GetString("CertificateBuildSuccess") + generatedCertThumbPrint + "'";
 
 				StatusInfoBar.Severity = InfoBarSeverity.Success;
 

@@ -300,7 +300,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			await Task.Run(() =>
 			{
 				// Instantiate the selected policy file
-				_BasePolicyObject = Management.Initialize(selectedXMLFilePath);
+				_BasePolicyObject = Management.Initialize(selectedXMLFilePath, null);
 
 				if (_BasePolicyObject.PolicyType is not PolicyType.BasePolicy)
 				{
@@ -384,11 +384,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				if (!_IsSignedPolicy)
 				{
 					// Create audit mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
 					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
 
 					// Create Enforced mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode]);
 					PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
 				}
 
@@ -397,7 +397,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				{
 
 					// Create audit mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode], rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					string CIPp7SignedFilePathAudit = Path.Combine(stagingArea.FullName, "BaseAudit.cip.p7");
 
@@ -413,7 +413,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 					// Create Enforced mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode, CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode, SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					string CIPp7SignedFilePathEnforced = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip.p7");
 
@@ -954,7 +954,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				}
 				else
 				{
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 				}
 
 				// Set policy version

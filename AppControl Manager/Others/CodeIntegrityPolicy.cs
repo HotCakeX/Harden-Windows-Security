@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using AppControlManager.XMLOps;
@@ -7,36 +6,16 @@ using AppControlManager.XMLOps;
 namespace AppControlManager.Others;
 
 // This class represents a single Code Integrity XML policy.
-// It operates as a custom XML serializer/deserializer.
-// It Makes sure PolicyType attribute, BasePolicyID node and PolicyID nodes exist and remove PolicyTypeID node if it exists
-
+// It operates as a 2nd custom XML serializer/deserializer used only by the methods that add rules to the policy.
+// Its main purpose is to identify import nodes in the XML, expose them to the calling method and ensure they exist.
 internal sealed class CodeIntegrityPolicy
 {
-
 	internal XmlDocument XmlDocument { get; }
 	internal XmlNamespaceManager NamespaceManager { get; }
-
 	internal XmlNode SiPolicyNode { get; }
-
-	// These items must only be read and not assigned
-	// Their assignments in other methods must happen through their respective nodes exposed by the instantiated class
-	internal string PolicyType { get; }
-
-	internal string PolicyID { get; }
-	internal string BasePolicyID { get; }
-
-	internal XmlNode PolicyIDNode { get; }
-	internal XmlNode BasePolicyIDNode { get; }
-
-	internal List<string>? Rules { get; }
-
 	internal XmlNode FileRulesNode { get; }
-
 	internal XmlNode SignersNode { get; }
-
 	internal XmlNode CiSignersNode { get; }
-
-	internal XmlNode VersionExNode { get; }
 
 	internal XmlNode UMCI_SigningScenarioNode { get; }
 	internal XmlNode KMCI_SigningScenarioNode { get; }
@@ -55,21 +34,10 @@ internal sealed class CodeIntegrityPolicy
 	internal XmlNode UMCI_ProductSigners_DeniedSigners_Node { get; }
 	internal XmlNode KMCI_ProductSigners_DeniedSigners_Node { get; }
 
-	internal CodeIntegrityPolicy(string? xmlFilePath, XmlDocument? xmlDocument)
+	internal CodeIntegrityPolicy(string xmlFilePath)
 	{
-		if (xmlFilePath is not null)
-		{
-			XmlDocument = new XmlDocument();
-			XmlDocument.Load(xmlFilePath);
-		}
-		else if (xmlDocument is not null)
-		{
-			XmlDocument = xmlDocument;
-		}
-		else
-		{
-			throw new InvalidOperationException("Either xmlFilePath or xmlDocument must be provided");
-		}
+		XmlDocument = new XmlDocument();
+		XmlDocument.Load(xmlFilePath);
 
 		// Create namespace manager and add the default namespace with a prefix
 		NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);
@@ -89,11 +57,11 @@ internal sealed class CodeIntegrityPolicy
 		// Find or ensure SigningScenario Node for Kernel Mode
 		KMCI_SigningScenarioNode = EnsureKMCISigningScenario();
 
-		// Find or ensure ProductSigners Node for User Mode
+		// Find ProductSigners Node for User Mode
 		UMCI_ProductSignersNode = UMCI_SigningScenarioNode.SelectSingleNode("ns:ProductSigners", NamespaceManager)
 			?? throw new InvalidOperationException("Failed to create or retrieve UMCI_ProductSignersNode");
 
-		// Find or ensure ProductSigners Node for Kernel Mode
+		// Find ProductSigners Node for Kernel Mode
 		KMCI_ProductSignersNode = KMCI_SigningScenarioNode.SelectSingleNode("ns:ProductSigners", NamespaceManager)
 			?? throw new InvalidOperationException("Failed to create or retrieve KMCI_ProductSignersNode");
 
@@ -113,7 +81,6 @@ internal sealed class CodeIntegrityPolicy
 
 		// Find the CiSigners Node
 		XmlNode? ciSignersNode = SiPolicyNode.SelectSingleNode("ns:CiSigners", NamespaceManager);
-
 		if (ciSignersNode is null)
 		{
 			XmlElement newCiSignersNode = XmlDocument.CreateElement("CiSigners", GlobalVars.SiPolicyNamespace);
@@ -128,11 +95,9 @@ internal sealed class CodeIntegrityPolicy
 
 		#endregion
 
-
 		#region FileRules node
 
 		XmlNode? fileRulesNode = SiPolicyNode.SelectSingleNode("ns:FileRules", NamespaceManager);
-
 		if (fileRulesNode is null)
 		{
 			XmlElement newFileRulesNode = XmlDocument.CreateElement("FileRules", GlobalVars.SiPolicyNamespace);
@@ -146,143 +111,7 @@ internal sealed class CodeIntegrityPolicy
 		}
 
 		#endregion
-
-
-		#region PolicyType Attribute
-
-		// If PolicyType attribute does not exist in the SiPolicyNode then add it and set it to Base policy
-		string? policyType = SiPolicyNode.Attributes?["PolicyType"]?.Value;
-
-		if (policyType is null)
-		{
-			// Create PolicyType attribute and set it to "Base Policy"
-			XmlAttribute newPolicyTypeAttribute = XmlDocument.CreateAttribute("PolicyType");
-			newPolicyTypeAttribute.Value = "Base Policy";
-			_ = SiPolicyNode.Attributes!.Append(newPolicyTypeAttribute);
-
-			PolicyType = newPolicyTypeAttribute.Value;
-		}
-		else
-		{
-			PolicyType = policyType;
-		}
-
-		#endregion
-
-		// Generate a new GUID
-		Guid newRandomGUID = Guid.CreateVersion7();
-
-		// Convert it to string
-		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
-
-		#region BasePolicyID
-
-		XmlNode? basePolicyIDNode = SiPolicyNode.SelectSingleNode("ns:BasePolicyID", NamespaceManager);
-
-		if (basePolicyIDNode is null)
-		{
-			// Create the node
-			XmlElement newBasePolicyIDNode = XmlDocument.CreateElement("BasePolicyID", GlobalVars.SiPolicyNamespace);
-
-			// Set its value to match PolicyID because we are making it a Base policy when the node doesn't exist
-			newBasePolicyIDNode.InnerText = newRandomGUIDString;
-
-			// Append the new BasePolicyID node to the SiPolicy node
-			_ = SiPolicyNode.AppendChild(newBasePolicyIDNode);
-
-			BasePolicyIDNode = newBasePolicyIDNode;
-
-			BasePolicyID = newRandomGUIDString;
-		}
-		else
-		{
-			BasePolicyIDNode = basePolicyIDNode;
-
-			BasePolicyID = basePolicyIDNode.InnerText;
-		}
-
-		#endregion
-
-		#region PolicyID
-
-		XmlNode? policyIDNode = SiPolicyNode.SelectSingleNode("ns:PolicyID", NamespaceManager);
-
-		if (policyIDNode is null)
-		{
-			// Create the node
-			XmlElement newPolicyIDNode = XmlDocument.CreateElement("PolicyID", GlobalVars.SiPolicyNamespace);
-
-			// Set its value to match PolicyID because this is a Base policy
-			newPolicyIDNode.InnerText = newRandomGUIDString;
-
-			// Append the new BasePolicyID node to the SiPolicy node
-			_ = SiPolicyNode.AppendChild(newPolicyIDNode);
-
-			PolicyIDNode = newPolicyIDNode;
-
-			PolicyID = newRandomGUIDString;
-		}
-		else
-		{
-			PolicyIDNode = policyIDNode;
-
-			PolicyID = policyIDNode.InnerText;
-		}
-
-		#endregion
-
-		#region PolicyTypeID
-
-		XmlNode? policyTypeIDNode = SiPolicyNode.SelectSingleNode("ns:PolicyTypeID", NamespaceManager);
-
-		// Don't need this if it exists, usually exists in Microsoft Recommended block rules
-		if (policyTypeIDNode is not null)
-		{
-			// Remove the policyTypeIDNode from its parent (siPolicyNode)
-			_ = SiPolicyNode.RemoveChild(policyTypeIDNode);
-		}
-
-		#endregion
-
-		#region VersionEx
-
-		VersionExNode = SiPolicyNode.SelectSingleNode("ns:VersionEx", NamespaceManager) ?? throw new InvalidOperationException($"VersionEx was not found.");
-
-		#endregion
-
-		#region Rules
-		Rules = LoadRules();
-		#endregion
 	}
-
-
-	private List<string>? LoadRules()
-	{
-		XmlNode? rulesNode = SiPolicyNode.SelectSingleNode("ns:Rules", NamespaceManager);
-
-		if (rulesNode is null)
-		{
-			return null;
-		}
-
-		List<string> rulesList = [];
-
-		XmlNodeList? ruleOptions = rulesNode.SelectNodes("ns:Rule/ns:Option", NamespaceManager);
-
-		if (ruleOptions is not null)
-		{
-			foreach (XmlNode ruleNode in ruleOptions)
-			{
-				if (!string.IsNullOrWhiteSpace(ruleNode.InnerText))
-				{
-					rulesList.Add(ruleNode.InnerText);
-				}
-			}
-		}
-
-		return rulesList.Count > 0 ? rulesList : null;
-	}
-
 
 	private XmlNode EnsureFileRulesRefNode(XmlNode parentNode, string mode)
 	{
@@ -350,7 +179,6 @@ internal sealed class CodeIntegrityPolicy
 		return deniedSignersNode;
 	}
 
-
 	/// <summary>
 	/// Creates the Signing Scenarios node or each Signing Scenario and their respective Product Signers
 	/// </summary>
@@ -402,7 +230,6 @@ internal sealed class CodeIntegrityPolicy
 		return EnsureSigningScenario(131, "ID_SIGNINGSCENARIO_KMCI");
 	}
 
-
 	/// <summary>
 	/// Saves the XML object to a file and removes any unused nodes that would cause errors if left without members
 	/// </summary>
@@ -413,6 +240,4 @@ internal sealed class CodeIntegrityPolicy
 		XMLObject.Save(XMLFilePath);
 		CloseEmptyXmlNodesSemantic.Close(XMLFilePath);
 	}
-
-
 }

@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using static AppControlManager.Main.CiRuleOptions;
 
 namespace AppControlManager.Pages;
 
 public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimatedIconsManager
 {
-	// Property to hold the keys of the PolicyRuleOptionsActual dictionary
-	private List<string> PolicyRuleOptionsKeys { get; set; }
-
 	// To store the selected policy path
 	private string? SelectedFilePath;
 
@@ -25,9 +24,6 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 		this.InitializeComponent();
 
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
-
-		// Initialize the keys property with dictionary keys
-		PolicyRuleOptionsKeys = [.. PolicyRuleOptionsActual.Keys];
 
 		// Call the method to generate SettingsCards dynamically
 		GenerateSettingsCards();
@@ -59,7 +55,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 		if (visibility is Visibility.Visible)
 		{
 			// Assign sidebar buttons' content texts
-			button1.Content = "Configure Policy Rule Options";
+			button1.Content = GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent");
 
 			// Assign a local event handler to the sidebar button
 			button1.Click += LightUp1;
@@ -85,25 +81,66 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	#endregion
 
 
+	private static readonly Dictionary<string, string> RuleOptions = new()
+	{
+		{ "Enabled:UMCI", GlobalVars.Rizz.GetString("RuleOption_EnabledUMCI") },
+		{ "Enabled:Boot Menu Protection", GlobalVars.Rizz.GetString("RuleOption_EnabledBootMenuProtection") },
+		{ "Required:WHQL", GlobalVars.Rizz.GetString("RuleOption_RequiredWHQL") },
+		{ "Enabled:Audit Mode", GlobalVars.Rizz.GetString("RuleOption_EnabledAuditMode") },
+		{ "Disabled:Flight Signing", GlobalVars.Rizz.GetString("RuleOption_DisabledFlightSigning") },
+		{ "Enabled:Inherit Default Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledInheritDefaultPolicy") },
+		{ "Enabled:Unsigned System Integrity Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
+		{ "Required:EV Signers", GlobalVars.Rizz.GetString("RuleOption_RequiredEVSigners") },
+		{ "Enabled:Advanced Boot Options Menu", GlobalVars.Rizz.GetString("RuleOption_EnabledAdvancedBootOptionsMenu") },
+		{ "Enabled:Boot Audit On Failure", GlobalVars.Rizz.GetString("RuleOption_EnabledBootAuditOnFailure") },
+		{ "Disabled:Script Enforcement", GlobalVars.Rizz.GetString("RuleOption_DisabledScriptEnforcement") },
+		{ "Required:Enforce Store Applications", GlobalVars.Rizz.GetString("RuleOption_RequiredEnforceStoreApplications") },
+		{ "Enabled:Managed Installer", GlobalVars.Rizz.GetString("RuleOption_EnabledManagedInstaller") },
+		{ "Enabled:Intelligent Security Graph Authorization", GlobalVars.Rizz.GetString("RuleOption_EnabledIntelligentSecurityGraphAuthorization") },
+		{ "Enabled:Invalidate EAs on Reboot", GlobalVars.Rizz.GetString("RuleOption_EnabledInvalidateEAsOnReboot") },
+		{ "Enabled:Update Policy No Reboot", GlobalVars.Rizz.GetString("RuleOption_EnabledUpdatePolicyNoReboot") },
+		{ "Enabled:Allow Supplemental Policies", GlobalVars.Rizz.GetString("RuleOption_EnabledAllowSupplementalPolicies") },
+		{ "Disabled:Runtime FilePath Rule Protection", GlobalVars.Rizz.GetString("RuleOption_DisabledRuntimeFilePathRuleProtection") },
+		{ "Enabled:Dynamic Code Security",GlobalVars.Rizz.GetString("RuleOption_EnabledDynamicCodeSecurity") },
+		{ "Enabled:Revoked Expired As Unsigned", GlobalVars.Rizz.GetString("RuleOption_EnabledRevokedExpiredAsUnsigned") },
+		{ "Enabled:Developer Mode Dynamic Code Trust", GlobalVars.Rizz.GetString("RuleOption_EnabledDeveloperModeDynamicCodeTrust") },
+		{ "Enabled:Secure Setting Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledSecureSettingPolicy") },
+		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
+	};
+
+
+
 	/// <summary>
 	/// Method to dynamically create SettingsCards based on the dictionary keys
 	/// </summary>
 	private void GenerateSettingsCards()
 	{
-		foreach (string key in PolicyRuleOptionsKeys)
+		foreach (KeyValuePair<string, string> key in RuleOptions)
 		{
 			// Create a new SettingsCard
 			SettingsCard settingsCard = new()
 			{
-				ContentAlignment = ContentAlignment.Left,
 				IsClickEnabled = true,
-				IsActionIconVisible = false
+				IsActionIconVisible = false,
+				Header = key.Key,
+				Description = key.Value
 			};
+
+			ToolTip toolTip = new()
+			{
+				Content = key.Value,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center
+			};
+
+			// Attach the tooltip to the settings card
+			ToolTipService.SetToolTip(settingsCard, toolTip);
 
 			// Create a new CheckBox
 			CheckBox checkBox = new()
 			{
-				Content = key
+				Tag = key.Key,
+				HorizontalAlignment = HorizontalAlignment.Right
 			};
 
 			// Add the CheckBox to the SettingsCard
@@ -152,21 +189,25 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	private async Task LoadPolicyOptionsFromXML(string filePath)
 	{
 
-		CodeIntegrityPolicy codeIntegrityPolicy = null!;
+		SiPolicy.SiPolicy policyObj = null!;
 
 		await Task.Run(() =>
 		{
-			codeIntegrityPolicy = new(filePath, null);
+			policyObj = Management.Initialize(filePath, null);
 		});
+
+		// All the Policy OptionTypes in the selected XML file
+		IEnumerable<OptionType> policyRules = policyObj.Rules.Select(x => x.Item);
 
 		// Iterate through UI checkboxes and update their state
 		foreach (var item in PolicyRuleExpander.Items)
 		{
 			if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox)
 			{
-				string key = checkBox.Content?.ToString()!;
+				// Get the tag of the checkbox
+				string key = checkBox.Tag.ToString()!;
 
-				if (codeIntegrityPolicy.Rules is not null && codeIntegrityPolicy.Rules.Contains(key))
+				if (policyRules.Contains(CustomDeserialization.ConvertStringToOptionType(key)))
 				{
 					checkBox.IsChecked = true;
 				}
@@ -195,16 +236,16 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			if (string.IsNullOrWhiteSpace(SelectedFilePath))
 			{
 				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = "Please select a policy file before adding options.";
+				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyFileBeforeAddingOptions");
 				return;
 			}
 
 			// Gather selected rules to add
-			PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
+			OptionType[] selectedOptions = [.. GetSelectedPolicyRuleOptions()];
 
 			await Task.Run(() =>
 			{
-				Set(SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
+				CiRuleOptions.Set(SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
 			});
 
 		}
@@ -231,24 +272,23 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			if (string.IsNullOrWhiteSpace(SelectedFilePath))
 			{
 				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = "Please select a policy file before setting a template.";
+				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyFileBeforeSettingTemplate");
 				return;
 			}
 
 			// Retrieve the selected item from the ComboBox
 			if (PolicyTemplatesComboBox.SelectedItem is not ComboBoxItem selectedComboBoxItem)
 			{
-
 				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = "Please select a policy template from the dropdown.";
+				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyTemplateFromDropdown");
 				return;
 			}
 
 			// Convert the ComboBoxItem content to the corresponding PolicyTemplate enum value
-			if (!Enum.TryParse(selectedComboBoxItem.Content.ToString(), out PolicyTemplate template))
+			if (!Enum.TryParse(selectedComboBoxItem.Content.ToString(), out CiRuleOptions.PolicyTemplate template))
 			{
 				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = "Invalid policy template selected. Please choose a valid option.";
+				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("InvalidPolicyTemplateSelected");
 				return;
 			}
 
@@ -256,7 +296,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			// Call the Set method with only the filePath and template parameters
 			await Task.Run(() =>
 			{
-				Set(SelectedFilePath, template: template);
+				CiRuleOptions.Set(SelectedFilePath, template: template);
 			});
 
 			// Refresh the UI check boxes
@@ -284,27 +324,25 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// Helper method to get selected policy rule options from the UI checkboxes
 	/// </summary>
 	/// <returns></returns>
-	private PolicyRuleOptions[] GetSelectedPolicyRuleOptions()
+	private List<OptionType> GetSelectedPolicyRuleOptions()
 	{
-		List<PolicyRuleOptions> selectedRules = [];
+		List<OptionType> selectedRules = [];
 
 		// Iterate through each SettingsCard in the PolicyRuleExpander
 		foreach (var item in PolicyRuleExpander.Items)
 		{
 			if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox && checkBox.IsChecked == true)
 			{
-				// Get the content of the checkbox, which is the dictionary key
-				string? key = checkBox.Content?.ToString();
+				// Get the tag of the checkbox
+				string? key = checkBox.Tag?.ToString();
 
-				if (!string.IsNullOrEmpty(key) && PolicyRuleOptionsActual.TryGetValue(key, out int value))
+				if (!string.IsNullOrEmpty(key))
 				{
-					// Convert to PolicyRuleOptions enum and add to the list
-					selectedRules.Add((PolicyRuleOptions)value);
+					selectedRules.Add(CustomDeserialization.ConvertStringToOptionType(key));
 				}
 			}
 		}
-
-		return [.. selectedRules];
+		return selectedRules;
 	}
 
 
@@ -368,7 +406,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			else
 			{
 				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = "Please select a policy file before retrieving its rule options status.";
+				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyFileBeforeRetrievingOptions");
 				return;
 			}
 		}

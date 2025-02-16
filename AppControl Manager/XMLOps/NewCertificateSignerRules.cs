@@ -23,7 +23,7 @@ internal static class NewCertificateSignerRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		foreach (CertificateSignerCreator signer in signerData)
 		{

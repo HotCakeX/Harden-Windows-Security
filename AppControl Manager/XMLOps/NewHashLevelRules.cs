@@ -25,7 +25,7 @@ internal static class NewHashLevelRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write($"NewHashLevelRules: There are {hashes.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
 
@@ -114,7 +114,7 @@ internal static class NewHashLevelRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write($"NewHashLevelRules: There are {hashes.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
 

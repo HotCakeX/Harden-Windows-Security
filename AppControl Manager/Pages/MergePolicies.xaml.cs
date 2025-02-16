@@ -43,16 +43,16 @@ public sealed partial class MergePolicies : Page
 		if (string.IsNullOrWhiteSpace(mainPolicy))
 		{
 			MergeButtonTeachingTip.IsOpen = true;
-			MergeButtonTeachingTip.Title = "Select main policy XML";
-			MergeButtonTeachingTip.Subtitle = "You need to select an XML file as the main policy";
+			MergeButtonTeachingTip.Title = GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicyXML");
+			MergeButtonTeachingTip.Subtitle = GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicySubtitle");
 			return;
 		}
 
 		if (otherPolicies.Count is 0)
 		{
 			MergeButtonTeachingTip.IsOpen = true;
-			MergeButtonTeachingTip.Title = "Select other policies";
-			MergeButtonTeachingTip.Subtitle = "You need to select at least one more policy to merge with the main policy";
+			MergeButtonTeachingTip.Title = GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPolicies");
+			MergeButtonTeachingTip.Subtitle = GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPoliciesSubtitle");
 			return;
 		}
 
@@ -66,7 +66,7 @@ public sealed partial class MergePolicies : Page
 
 			PolicyMergerInfoBar.IsOpen = true;
 
-			PolicyMergerInfoBar.Message = "Merging the policies";
+			PolicyMergerInfoBar.Message = GlobalVars.Rizz.GetString("MergePolicies_MergingMessage");
 
 			MergeProgressRing.Visibility = Visibility.Visible;
 
@@ -84,12 +84,12 @@ public sealed partial class MergePolicies : Page
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						PolicyMergerInfoBar.Message = "Deploying the main policy after merge.";
+						PolicyMergerInfoBar.Message = GlobalVars.Rizz.GetString("MergePolicies_DeployingMessage");
 					});
 
-					string stagingArea = StagingArea.NewStagingArea("PolicyMerger").FullName;
+					string stagingArea = StagingArea.NewStagingArea(GlobalVars.Rizz.GetString("MergePolicies_StagingAreaName")).FullName;
 
-					string CIPPath = Path.Combine(stagingArea, "MergedPolicy.cip");
+					string CIPPath = Path.Combine(stagingArea, GlobalVars.Rizz.GetString("MergePolicies_MergedPolicyFileName"));
 
 					PolicyToCIPConverter.Convert(mainPolicy, CIPPath);
 
@@ -109,12 +109,12 @@ public sealed partial class MergePolicies : Page
 			if (errorsOccurred)
 			{
 				PolicyMergerInfoBar.Severity = InfoBarSeverity.Error;
-				PolicyMergerInfoBar.Message = "An error occurred during the merge process";
+				PolicyMergerInfoBar.Message = GlobalVars.Rizz.GetString("MergePolicies_ErrorMessage");
 			}
 			else
 			{
 				PolicyMergerInfoBar.Severity = InfoBarSeverity.Success;
-				PolicyMergerInfoBar.Message = "Policies have been merged successfully";
+				PolicyMergerInfoBar.Message = GlobalVars.Rizz.GetString("MergePolicies_SuccessMessage");
 			}
 
 			PolicyMergerInfoBar.IsClosable = true;

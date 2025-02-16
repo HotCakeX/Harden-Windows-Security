@@ -50,11 +50,11 @@ internal static partial class Merger
 		{
 			CloseEmptyXmlNodesSemantic.Close(item);
 
-			allPolicies.Add(Management.Initialize(item));
+			allPolicies.Add(Management.Initialize(item, null));
 		}
 
 		// Instantiate the main policy
-		SiPolicy mainXML = Management.Initialize(mainXmlFilePath);
+		SiPolicy mainXML = Management.Initialize(mainXmlFilePath, null);
 
 		// Add the main policy to the mix
 		allPolicies.Add(mainXML);

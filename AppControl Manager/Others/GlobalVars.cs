@@ -8,13 +8,7 @@ namespace AppControlManager.Others;
 internal static class GlobalVars
 {
 	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
-	private static readonly ResourceLoader _resourceLoader = new();
-
-	// Get the string from the Resource.resw file using the key
-	internal static string GetString(string resourceKey)
-	{
-		return _resourceLoader.GetString(resourceKey);
-	}
+	internal static readonly ResourceLoader Rizz = new();
 
 	// User Mode block rules
 	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
@@ -64,6 +58,9 @@ internal static class GlobalVars
 
 	// Path to the ISGBasedSupplementalPolicy.xml file
 	internal static readonly string ISGOnlySupplementalPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "ISGBasedSupplementalPolicy.xml");
+
+	// Path to the empty policy file in app resources
+	internal static readonly string EmptyPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "EmptyPolicy.xml");
 
 	// Get the current OS version
 	private static readonly Version CurrentOSVersion = Environment.OSVersion.Version;

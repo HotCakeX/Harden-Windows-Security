@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace AppControlManager.Others;
 
@@ -12,12 +13,24 @@ internal static class RemoveUserModeSS
 	internal static void Remove(string filePath)
 	{
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(filePath, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
 
-		// Remove SigningScenario with Value 12 completely
-		_ = (codeIntegrityPolicy.UMCI_SigningScenarioNode?.ParentNode?.RemoveChild(codeIntegrityPolicy.UMCI_SigningScenarioNode));
+		// Convert the array to a list for easy manipulation
+		List<SiPolicy.SigningScenario> signingScenarios = [.. policyObj.SigningScenarios];
 
-		// Save the modified XML document back to the file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
+		// Remove any signing scenario with the ID 12 representing User-Mode
+		foreach (SiPolicy.SigningScenario scenario in signingScenarios)
+		{
+			if (string.Equals(scenario.ID, "12", StringComparison.OrdinalIgnoreCase))
+			{
+				_ = signingScenarios.Remove(scenario);
+			}
+		}
+
+		// Convert the list back to array in order to save it in the policyObj
+		policyObj.SigningScenarios = [.. signingScenarios];
+
+		// Save the changes back to the file
+		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 	}
 }

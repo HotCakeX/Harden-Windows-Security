@@ -410,7 +410,7 @@ public sealed partial class ViewCurrentPolicies : Page
 								#endregion
 
 								// Add the unsigned policy rule option to the policy
-								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 								// Making sure SupplementalPolicySigners do not exist in the XML policy
 								CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
@@ -434,7 +434,7 @@ public sealed partial class ViewCurrentPolicies : Page
 								// Deploy the signed CIP file
 								CiToolHelper.UpdatePolicy(CIPFilePath);
 
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLPolicyPath);
+								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLPolicyPath, null);
 
 								// The time of first stage of the signed policy removal
 								// Since policy object has the full ID, in upper case with curly brackets,

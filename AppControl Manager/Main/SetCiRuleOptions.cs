@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 
 namespace AppControlManager.Main;
@@ -18,178 +18,66 @@ internal static class CiRuleOptions
 		Supplemental
 	}
 
-	internal enum PolicyRuleOptions
-	{
-		EnabledUMCI = 0,
-		EnabledBootMenuProtection = 1,
-		RequiredWHQL = 2,
-		EnabledAuditMode = 3,
-		DisabledFlightSigning = 4,
-		EnabledInheritDefaultPolicy = 5,
-		EnabledUnsignedSystemIntegrityPolicy = 6,
-		RequiredEVSigners = 8,
-		EnabledAdvancedBootOptionsMenu = 9,
-		EnabledBootAuditOnFailure = 10,
-		DisabledScriptEnforcement = 11,
-		RequiredEnforceStoreApplications = 12,
-		EnabledManagedInstaller = 13,
-		EnabledIntelligentSecurityGraphAuthorization = 14,
-		EnabledInvalidateEAsOnReboot = 15,
-		EnabledUpdatePolicyNoReboot = 16,
-		EnabledAllowSupplementalPolicies = 17,
-		DisabledRuntimeFilePathRuleProtection = 18,
-		EnabledDynamicCodeSecurity = 19,
-		EnabledRevokedExpiredAsUnsigned = 20,
-		EnabledDeveloperModeDynamicCodeTrust = 100,
-		EnabledSecureSettingPolicy = 102,
-		EnabledConditionalWindowsLockdownPolicy = 103
-	}
+	#region Defining the rule options for each policy type and scenario
 
-
-	// Mapping enum values to custom string representations that match rule options in the policy XML file
-	// Since they include colons and spaces, cannot be included in the enum
-	internal static readonly Dictionary<string, int> PolicyRuleOptionsActual = new()
-	{
-		{ "Enabled:UMCI", (int)PolicyRuleOptions.EnabledUMCI },
-		{ "Enabled:Boot Menu Protection", (int)PolicyRuleOptions.EnabledBootMenuProtection },
-		{ "Required:WHQL", (int)PolicyRuleOptions.RequiredWHQL },
-		{ "Enabled:Audit Mode", (int)PolicyRuleOptions.EnabledAuditMode },
-		{ "Disabled:Flight Signing", (int)PolicyRuleOptions.DisabledFlightSigning },
-		{ "Enabled:Inherit Default Policy", (int)PolicyRuleOptions.EnabledInheritDefaultPolicy },
-		{ "Enabled:Unsigned System Integrity Policy", (int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy },
-		{ "Required:EV Signers", (int)PolicyRuleOptions.RequiredEVSigners },
-		{ "Enabled:Advanced Boot Options Menu", (int)PolicyRuleOptions.EnabledAdvancedBootOptionsMenu },
-		{ "Enabled:Boot Audit On Failure", (int)PolicyRuleOptions.EnabledBootAuditOnFailure },
-		{ "Disabled:Script Enforcement", (int)PolicyRuleOptions.DisabledScriptEnforcement },
-		{ "Required:Enforce Store Applications", (int)PolicyRuleOptions.RequiredEnforceStoreApplications },
-		{ "Enabled:Managed Installer", (int)PolicyRuleOptions.EnabledManagedInstaller },
-		{ "Enabled:Intelligent Security Graph Authorization", (int)PolicyRuleOptions.EnabledIntelligentSecurityGraphAuthorization },
-		{ "Enabled:Invalidate EAs on Reboot", (int)PolicyRuleOptions.EnabledInvalidateEAsOnReboot },
-		{ "Enabled:Update Policy No Reboot", (int)PolicyRuleOptions.EnabledUpdatePolicyNoReboot },
-		{ "Enabled:Allow Supplemental Policies", (int)PolicyRuleOptions.EnabledAllowSupplementalPolicies },
-		{ "Disabled:Runtime FilePath Rule Protection", (int)PolicyRuleOptions.DisabledRuntimeFilePathRuleProtection },
-		{ "Enabled:Dynamic Code Security", (int)PolicyRuleOptions.EnabledDynamicCodeSecurity },
-		{ "Enabled:Revoked Expired As Unsigned", (int)PolicyRuleOptions.EnabledRevokedExpiredAsUnsigned },
-		{ "Enabled:Developer Mode Dynamic Code Trust", (int)PolicyRuleOptions.EnabledDeveloperModeDynamicCodeTrust },
-		{ "Enabled:Secure Setting Policy", (int)PolicyRuleOptions.EnabledSecureSettingPolicy },
-		{ "Enabled:Conditional Windows Lockdown Policy", (int)PolicyRuleOptions.EnabledConditionalWindowsLockdownPolicy }
-	};
-
-
-	private static readonly Dictionary<int, string> PolicyRuleOptionsActualInverted = new()
-	{
-		{ (int)PolicyRuleOptions.EnabledUMCI, "Enabled:UMCI" },
-		{ (int)PolicyRuleOptions.EnabledBootMenuProtection, "Enabled:Boot Menu Protection" },
-		{ (int)PolicyRuleOptions.RequiredWHQL, "Required:WHQL" },
-		{ (int)PolicyRuleOptions.EnabledAuditMode, "Enabled:Audit Mode" },
-		{ (int)PolicyRuleOptions.DisabledFlightSigning, "Disabled:Flight Signing" },
-		{ (int)PolicyRuleOptions.EnabledInheritDefaultPolicy, "Enabled:Inherit Default Policy" },
-		{ (int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy, "Enabled:Unsigned System Integrity Policy" },
-		{ (int)PolicyRuleOptions.RequiredEVSigners, "Required:EV Signers" },
-		{ (int)PolicyRuleOptions.EnabledAdvancedBootOptionsMenu, "Enabled:Advanced Boot Options Menu" },
-		{ (int)PolicyRuleOptions.EnabledBootAuditOnFailure, "Enabled:Boot Audit On Failure" },
-		{ (int)PolicyRuleOptions.DisabledScriptEnforcement, "Disabled:Script Enforcement" },
-		{ (int)PolicyRuleOptions.RequiredEnforceStoreApplications, "Required:Enforce Store Applications" },
-		{ (int)PolicyRuleOptions.EnabledManagedInstaller, "Enabled:Managed Installer" },
-		{ (int)PolicyRuleOptions.EnabledIntelligentSecurityGraphAuthorization, "Enabled:Intelligent Security Graph Authorization" },
-		{ (int)PolicyRuleOptions.EnabledInvalidateEAsOnReboot, "Enabled:Invalidate EAs on Reboot" },
-		{ (int)PolicyRuleOptions.EnabledUpdatePolicyNoReboot, "Enabled:Update Policy No Reboot" },
-		{ (int)PolicyRuleOptions.EnabledAllowSupplementalPolicies, "Enabled:Allow Supplemental Policies" },
-		{ (int)PolicyRuleOptions.DisabledRuntimeFilePathRuleProtection, "Disabled:Runtime FilePath Rule Protection" },
-		{ (int)PolicyRuleOptions.EnabledDynamicCodeSecurity, "Enabled:Dynamic Code Security" },
-		{ (int)PolicyRuleOptions.EnabledRevokedExpiredAsUnsigned, "Enabled:Revoked Expired As Unsigned" },
-		{ (int)PolicyRuleOptions.EnabledDeveloperModeDynamicCodeTrust, "Enabled:Developer Mode Dynamic Code Trust" },
-		{ (int)PolicyRuleOptions.EnabledSecureSettingPolicy, "Enabled:Secure Setting Policy" },
-		{ (int)PolicyRuleOptions.EnabledConditionalWindowsLockdownPolicy, "Enabled:Conditional Windows Lockdown Policy" }
-	};
-
-
-	#region
-	// Defining the rule options for each policy type and scenario
-
-	private static readonly HashSet<int> BaseRules = [
-		(int)PolicyRuleOptions.EnabledUMCI,
-		(int)PolicyRuleOptions.RequiredWHQL,
-		(int)PolicyRuleOptions.EnabledInheritDefaultPolicy,
-		(int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy,
-		(int)PolicyRuleOptions.DisabledScriptEnforcement,
-		(int)PolicyRuleOptions.RequiredEnforceStoreApplications,
-		(int)PolicyRuleOptions.EnabledUpdatePolicyNoReboot,
-		(int)PolicyRuleOptions.EnabledAllowSupplementalPolicies,
-		(int)PolicyRuleOptions.EnabledDynamicCodeSecurity,
-		(int)PolicyRuleOptions.EnabledRevokedExpiredAsUnsigned
+	private static readonly HashSet<OptionType> BaseRules = [
+		OptionType.EnabledUMCI,
+		OptionType.RequiredWHQL,
+		OptionType.EnabledInheritDefaultPolicy,
+		OptionType.EnabledUnsignedSystemIntegrityPolicy,
+		OptionType.DisabledScriptEnforcement,
+		OptionType.RequiredEnforceStoreApplications,
+		OptionType.EnabledUpdatePolicyNoReboot,
+		OptionType.EnabledAllowSupplementalPolicies,
+		OptionType.EnabledDynamicCodeSecurity,
+		OptionType.EnabledRevokedExpiredAsUnsigned
 	];
 
-	private static readonly HashSet<int> BaseISGRules = [
-		(int)PolicyRuleOptions.EnabledUMCI,
-		(int)PolicyRuleOptions.RequiredWHQL,
-		(int)PolicyRuleOptions.EnabledInheritDefaultPolicy,
-		(int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy,
-		(int)PolicyRuleOptions.DisabledScriptEnforcement,
-		(int)PolicyRuleOptions.RequiredEnforceStoreApplications,
-		(int)PolicyRuleOptions.EnabledIntelligentSecurityGraphAuthorization,
-		(int)PolicyRuleOptions.EnabledInvalidateEAsOnReboot,
-		(int)PolicyRuleOptions.EnabledUpdatePolicyNoReboot,
-		(int)PolicyRuleOptions.EnabledAllowSupplementalPolicies,
-		(int)PolicyRuleOptions.EnabledDynamicCodeSecurity,
-		(int)PolicyRuleOptions.EnabledRevokedExpiredAsUnsigned
+	private static readonly HashSet<OptionType> BaseISGRules = [
+		OptionType.EnabledUMCI,
+		OptionType.RequiredWHQL,
+		OptionType.EnabledInheritDefaultPolicy,
+		OptionType.EnabledUnsignedSystemIntegrityPolicy,
+		OptionType.DisabledScriptEnforcement,
+		OptionType.RequiredEnforceStoreApplications,
+		OptionType.EnabledIntelligentSecurityGraphAuthorization,
+		OptionType.EnabledInvalidateEAsonReboot,
+		OptionType.EnabledUpdatePolicyNoReboot,
+		OptionType.EnabledAllowSupplementalPolicies,
+		OptionType.EnabledDynamicCodeSecurity,
+		OptionType.EnabledRevokedExpiredAsUnsigned
 	];
 
-	private static readonly HashSet<int> BaseKernelModeRules = [
-		(int)PolicyRuleOptions.RequiredWHQL,
-		(int)PolicyRuleOptions.EnabledInheritDefaultPolicy,
-		(int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy,
-		(int)PolicyRuleOptions.EnabledUpdatePolicyNoReboot,
-		(int)PolicyRuleOptions.EnabledAllowSupplementalPolicies,
-		(int)PolicyRuleOptions.EnabledRevokedExpiredAsUnsigned
+	private static readonly HashSet<OptionType> BaseKernelModeRules = [
+		OptionType.RequiredWHQL,
+		OptionType.EnabledInheritDefaultPolicy,
+		OptionType.EnabledUnsignedSystemIntegrityPolicy,
+		OptionType.EnabledUpdatePolicyNoReboot,
+		OptionType.EnabledAllowSupplementalPolicies,
+		OptionType.EnabledRevokedExpiredAsUnsigned
 	];
 
-	private static readonly HashSet<int> SupplementalRules = [
-		(int)PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy
-          // (int)PolicyRuleOptions.DisabledRuntimeFilePathRuleProtection - Only add this if the Supplemental policy will have FilePath rules and user explicitly asks for allowing user-writable file paths
+	private static readonly HashSet<OptionType> SupplementalRules = [
+		OptionType.EnabledUnsignedSystemIntegrityPolicy
+          // OptionType.DisabledRuntimeFilePathRuleProtection - Only add this if the Supplemental policy will have FilePath rules and user explicitly asks for allowing user-writable file paths
         ];
 
-	private static readonly HashSet<int> RequireWHQLRules = [(int)PolicyRuleOptions.RequiredWHQL];
-	private static readonly HashSet<int> EnableAuditModeRules = [(int)PolicyRuleOptions.EnabledAuditMode];
-	private static readonly HashSet<int> DisableFlightSigningRules = [(int)PolicyRuleOptions.DisabledFlightSigning];
-	private static readonly HashSet<int> RequireEVSignersRules = [(int)PolicyRuleOptions.RequiredEVSigners];
-	private static readonly HashSet<int> ScriptEnforcementRules = [(int)PolicyRuleOptions.DisabledScriptEnforcement];
-	private static readonly HashSet<int> TestModeRules = [(int)PolicyRuleOptions.EnabledAdvancedBootOptionsMenu, (int)PolicyRuleOptions.EnabledBootAuditOnFailure];
+	private static readonly HashSet<OptionType> RequireWHQLRules = [OptionType.RequiredWHQL];
+	private static readonly HashSet<OptionType> EnableAuditModeRules = [OptionType.EnabledAuditMode];
+	private static readonly HashSet<OptionType> DisableFlightSigningRules = [OptionType.DisabledFlightSigning];
+	private static readonly HashSet<OptionType> RequireEVSignersRules = [OptionType.RequiredEVSigners];
+	private static readonly HashSet<OptionType> ScriptEnforcementRules = [OptionType.DisabledScriptEnforcement];
+	private static readonly HashSet<OptionType> TestModeRules = [OptionType.EnabledAdvancedBootOptionsMenu, OptionType.EnabledBootAuditOnFailure];
 	#endregion
 
 
-
-	/*
-           #region Policy Rule Options
-           // Fetches the latest policy rule options from the Schema file that exists on the system
-
-           // Load the CI Schema content
-           XmlDocument schemaData = new();
-           schemaData.Load(Path.Combine(AppControlManager.GlobalVars.CISchemaPath));
-
-           // Create a namespace manager to handle namespaces
-           XmlNamespaceManager nsManager = new(schemaData.NameTable);
-           nsManager.AddNamespace("xs", "http://www.w3.org/2001/XMLSchema");
-
-           // Define the XPath query to fetch enumeration values
-           string xpathQuery = "//xs:simpleType[@name='OptionType']/xs:restriction/xs:enumeration/@value";
-
-           // Create a new HashSet to store the valid policy rule options
-           HashSet<string> validOptions = new(StringComparer.OrdinalIgnoreCase);
-
-           // Fetch enumeration values from the schema
-           XmlNodeList? optionNodes = schemaData.SelectNodes(xpathQuery, nsManager) ?? throw new InvalidOperationException("No valid options found in the Code Integrity Schema.");
-
-           foreach (XmlNode node in optionNodes)
-           {
-               if (node.Value is not null)
-               {
-                   _ = validOptions.Add(node.Value);
-               }
-           }
-           #endregion
-           */
-
+	private static readonly HashSet<OptionType> SupplementalPolicyAllowedRuleOptions = [
+		OptionType.DisabledRuntimeFilePathRuleProtection,
+		OptionType.EnabledIntelligentSecurityGraphAuthorization ,
+		OptionType.EnabledManagedInstaller ,
+		OptionType.EnabledInheritDefaultPolicy,
+		OptionType.EnabledUnsignedSystemIntegrityPolicy
+		];
 
 	/// <summary>
 	/// Configures the Policy rule options in a given XML file and sets the HVCI to Strict in the output XML file.
@@ -212,8 +100,8 @@ internal static class CiRuleOptions
 	internal static void Set(
 		string filePath,
 		PolicyTemplate? template = null,
-		PolicyRuleOptions[]? rulesToAdd = null,
-		PolicyRuleOptions[]? rulesToRemove = null,
+		OptionType[]? rulesToAdd = null,
+		OptionType[]? rulesToRemove = null,
 		bool? RequireWHQL = null,
 		bool? EnableAuditMode = null,
 		bool? DisableFlightSigning = null,
@@ -227,19 +115,13 @@ internal static class CiRuleOptions
 		Logger.Write($"Configuring the policy rule options for: {filePath}");
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(filePath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(filePath, null);
 
-		// Store the type of the policy in a variable
-		string PolicyType = codeIntegrityPolicy.SiPolicyNode.Attributes?["PolicyType"]?.Value ?? throw new InvalidOperationException("Policy type attribute does not exist in the selected policy");
-
-		// Find the Rules Node
-		XmlNode? RulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:Rules", codeIntegrityPolicy.NamespaceManager);
-
-		// An empty dictionary to store the existing rule options in the XML policy file
-		Dictionary<int, string> ExistingRuleOptions = [];
+		// To store the existing rule options in the XML policy file
+		HashSet<OptionType> ExistingRuleOptions = [];
 
 		// The final rule options to implement which contains only unique values
-		HashSet<int> RuleOptionsToImplement = [];
+		HashSet<OptionType> RuleOptionsToImplement = [];
 
 		// A flag to determine whether to clear all the existing rules based on the input parameters
 		bool ClearAllRules = false;
@@ -249,46 +131,22 @@ internal static class CiRuleOptions
 			ClearAllRules = true;
 		}
 
-		// To store the current policy rules nodes
-		XmlNodeList? currentPolicyRules = null;
-
-		if (RulesNode is not null)
+		// Store the current policy rules
+		if (policyObj.Rules.Length > 0)
 		{
-			// Get all of the current policy <Rule> nodes in the <Rules> node
-			currentPolicyRules = RulesNode.SelectNodes("ns:Rule", codeIntegrityPolicy.NamespaceManager);
-		}
-
-		if (currentPolicyRules is not null)
-		{
-
 			// Iterating through each <Rule> node in the supplied XML file
-			foreach (XmlNode rule in currentPolicyRules)
+			foreach (RuleType rule in policyObj.Rules)
 			{
-				// Get the option text from the <Option> node
-				XmlNode? optionNode = rule.SelectSingleNode("ns:Option", codeIntegrityPolicy.NamespaceManager);
-				string OptionText = optionNode!.InnerText;
-
-
-				// Check if the option text exists in the PolicyRuleOptionsActual dictionary
-				if (PolicyRuleOptionsActual.TryGetValue(OptionText, out int parsedValue))
-				{
-					// Add the option text and its corresponding int value to the dictionary
-					_ = ExistingRuleOptions.TryAdd(parsedValue, OptionText);
-				}
+				// Add the option text and its corresponding int value to the dictionary
+				_ = ExistingRuleOptions.Add(rule.Item);
 			}
-
 		}
 
-		if (!ClearAllRules && ExistingRuleOptions.Keys.Count > 0)
+		if (!ClearAllRules && ExistingRuleOptions.Count > 0)
 		{
 			// Add the existing rule options to the final rule options to implement
-			RuleOptionsToImplement.UnionWith(ExistingRuleOptions.Keys);
+			RuleOptionsToImplement.UnionWith(ExistingRuleOptions);
 		}
-		else
-		{
-			RuleOptionsToImplement.Clear();
-		}
-
 
 		// Process selected templates
 		switch (template)
@@ -308,7 +166,6 @@ internal static class CiRuleOptions
 			default:
 				break;
 		}
-
 
 
 		#region Process individual boolean parameters
@@ -371,32 +228,28 @@ internal static class CiRuleOptions
 		}
 		#endregion
 
-
 		// Process individual rules to add
 		if (rulesToAdd is not null)
 		{
-			foreach (PolicyRuleOptions rule in rulesToAdd)
+			foreach (OptionType rule in rulesToAdd)
 			{
-				_ = RuleOptionsToImplement.Add((int)rule);
+				_ = RuleOptionsToImplement.Add(rule);
 			}
 		}
 
 		// Process individual rules to remove
 		if (rulesToRemove is not null)
 		{
-			foreach (PolicyRuleOptions rule in rulesToRemove)
+			foreach (OptionType rule in rulesToRemove)
 			{
-				_ = RuleOptionsToImplement.Remove((int)rule);
+				_ = RuleOptionsToImplement.Remove(rule);
 			}
 		}
 
-
 		// Make sure Supplemental policies only contain rule options that are applicable to them
-		if (template is not null && template is PolicyTemplate.Supplemental || string.Equals(PolicyType, "Supplemental Policy", StringComparison.OrdinalIgnoreCase))
+		if (template is PolicyTemplate.Supplemental || policyObj.PolicyType is PolicyType.SupplementalPolicy)
 		{
-			List<int> SupplementalPolicyAllowedRuleOptions = [18, 14, 13, 7, 5, 6];
-
-			foreach (int rule in RuleOptionsToImplement)
+			foreach (OptionType rule in RuleOptionsToImplement)
 			{
 				if (!SupplementalPolicyAllowedRuleOptions.Contains(rule))
 				{
@@ -405,83 +258,39 @@ internal static class CiRuleOptions
 			}
 		}
 
-
 		#region Compare the existing rule options in the policy XML file with the rule options to implement
 
-		// Get keys from the ExistingRuleOptions dictionary
-		int[] existingRuleKeys = [.. ExistingRuleOptions.Keys];
+		// Find elements in RuleOptionsToImplement that are not in ExistingRuleOptions
+		IEnumerable<OptionType> toAdd = RuleOptionsToImplement.Except(ExistingRuleOptions);
 
-		// Find elements in RuleOptionsToImplement that are not in ExistingRuleOptions.Keys
-		IEnumerable<int> toAdd = RuleOptionsToImplement.Except(existingRuleKeys);
+		// Find elements in ExistingRuleOptions that are not in RuleOptionsToImplement
+		IEnumerable<OptionType> toRemove = ExistingRuleOptions.Except(RuleOptionsToImplement);
 
-		// Find elements in ExistingRuleOptions.Keys that are not in RuleOptionsToImplement
-		IEnumerable<int> toRemove = existingRuleKeys.Except(RuleOptionsToImplement);
-
-		foreach (int option in toAdd)
+		foreach (OptionType option in toAdd)
 		{
-			_ = PolicyRuleOptionsActualInverted.TryGetValue(option, out string? parsed);
-
-			Logger.Write($"Adding Rule Option: {parsed}");
+			Logger.Write($"Adding Rule Option: {option}");
 		}
-
-		foreach (int option in toRemove)
+		foreach (OptionType option in toRemove)
 		{
-			_ = PolicyRuleOptionsActualInverted.TryGetValue(option, out string? parsed);
-
-			Logger.Write($"Removing Rule Option: {parsed}");
+			Logger.Write($"Removing Rule Option: {option}");
 		}
 		#endregion
 
+		List<RuleType> finalRuleToImplement = [];
 
-		// Always remove any existing rule options initially. The calculations determining which
-		// Rules must be included in the policy are all made in this method.
-		RulesNode?.RemoveAll();
-
-
-		// Convert the HashSet to a List and sort it
-		List<int> RuleOptionsToImplementSorted = [.. RuleOptionsToImplement];
-		RuleOptionsToImplementSorted.Sort();
-
-
-		if (RulesNode is null)
+		// Create new Rules
+		foreach (OptionType rule in RuleOptionsToImplement)
 		{
-			throw new InvalidOperationException("Rules node is null!");
+			finalRuleToImplement.Add(new RuleType() { Item = rule });
 		}
 
-		// Create new Rule elements
-		foreach (int num in RuleOptionsToImplementSorted)
-		{
-			// Create a new rule element
-			XmlElement NewRuleNode = codeIntegrityPolicy.XmlDocument.CreateElement("Rule", RulesNode.NamespaceURI);
-
-			// Create the Option element inside of the rule element
-			XmlElement OptionNode = codeIntegrityPolicy.XmlDocument.CreateElement("Option", RulesNode.NamespaceURI);
-
-			_ = PolicyRuleOptionsActualInverted.TryGetValue(num, out string? innerText);
-
-			// Set the value of the Option element
-			OptionNode.InnerText = innerText!;
-
-			// Append the Option element to the Rule element
-			_ = NewRuleNode.AppendChild(OptionNode);
-
-			// Add the new Rule element to the Rules node
-			_ = RulesNode.AppendChild(NewRuleNode);
-		}
+		// Assign the new rules to implement on the policy object, replacing any existing rules
+		policyObj.Rules = [.. finalRuleToImplement];
 
 		// Save the XML
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
-
-		// Close the empty XML nodes
-		CloseEmptyXmlNodesSemantic.Close(filePath);
+		Management.SavePolicyToFile(policyObj, filePath);
 
 		// Set the HVCI to Strict
 		UpdateHvciOptions.Update(filePath);
-
-		// Validate the XML file at the end
-		if (!CiPolicyTest.TestCiPolicy(filePath))
-		{
-			throw new InvalidOperationException("The XML file created at the end is not compliant with the CI policy schema");
-		}
 	}
 }

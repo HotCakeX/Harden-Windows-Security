@@ -349,15 +349,15 @@ internal static partial class BasePolicyCreator
 		driverBlockRulesXML.LoadXml(xmlContent);
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(null, driverBlockRulesXML);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(null, driverBlockRulesXML);
 
 		// Generate the path for the XML file
 		string xmlPath = Path.Combine(StagingArea, $"{name}.xml");
 
 		// Save the XML content to a file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlPath);
+		SiPolicy.Management.SavePolicyToFile(policyObj, xmlPath);
 
-		CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+		CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode]);
 
 		// The final path where the XML policy file will be located
 		string savePathLocation = Path.Combine(GlobalVars.UserConfigDir, $"{name}.xml");
@@ -580,22 +580,21 @@ internal static partial class BasePolicyCreator
 			throw new InvalidOperationException("No XML content found on the Microsoft GitHub source for Microsoft Recommended User Mode Block Rules.");
 		}
 
-
 		// Load the XML content into an XmlDocument
 		XmlDocument userModeBlockRulesXML = new();
 		userModeBlockRulesXML.LoadXml(xmlContent);
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(null, userModeBlockRulesXML);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(null, userModeBlockRulesXML);
 
 		// Paths only used during staging area processing
 		string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
 		string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
 
 		// Save the XML content to a file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, tempPolicyPath);
+		SiPolicy.Management.SavePolicyToFile(policyObj, tempPolicyPath);
 
-		CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot, CiRuleOptions.PolicyRuleOptions.DisabledScriptEnforcement], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode, CiRuleOptions.PolicyRuleOptions.EnabledAdvancedBootOptionsMenu]);
+		CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledUpdatePolicyNoReboot, SiPolicy.OptionType.DisabledScriptEnforcement], rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode, SiPolicy.OptionType.EnabledAdvancedBootOptionsMenu]);
 
 		Logger.Write("Assigning policy name and resetting policy ID");
 
@@ -621,7 +620,7 @@ internal static partial class BasePolicyCreator
 				Logger.Write($"{policyName} policy is already deployed, updating it using the same GUID which is {CurrentlyDeployedBlockRulesGUID}.");
 
 				// Swap the policyID in the current policy XML file with the one from the deployed policy
-				PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, new FileInfo(tempPolicyPath));
+				PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, tempPolicyPath);
 			}
 			else
 			{
@@ -761,7 +760,7 @@ internal static partial class BasePolicyCreator
 		if (IsAudit)
 		{
 			// Add the audit mode rule option to the policy
-			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
 		}
 
 		string policyID;

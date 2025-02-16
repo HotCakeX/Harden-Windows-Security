@@ -37,7 +37,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		if (GlobalVars.IsOlderThan24H2)
 		{
 			DeploySignedXMLButton.IsEnabled = false;
-			DeploySignedXMLButtonContentTextBlock.Text = "Requires Windows 11 24H2 or later";
+			DeploySignedXMLButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("RequiresWindows1124H2");
 		}
 	}
 
@@ -63,8 +63,8 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		if (visibility is Visibility.Visible)
 		{
 			// Assign sidebar buttons' content texts
-			button1.Content = "Deploy Unsigned Policy";
-			button2.Content = "Deploy Signed Policy";
+			button1.Content = GlobalVars.Rizz.GetString("DeployUnsignedPolicy");
+			button2.Content = GlobalVars.Rizz.GetString("DeploySignedPolicy");
 
 			// Assign a local event handler to the sidebar button
 			button1.Click += LightUp1;
@@ -141,7 +141,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = $"Deploying {XMLFiles.Count} unsigned XML files.";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.Rizz.GetString("UnsignedXMLFiles");
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
@@ -158,11 +158,11 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 				{
 
 					// Instantiate the policy
-					SiPolicy.SiPolicy policyObject = Management.Initialize(file);
+					SiPolicy.SiPolicy policyObject = Management.Initialize(file, null);
 
 					if (policyObject.Rules is null || !policyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
-						throw new InvalidOperationException($"The XML file '{file}' is a signed policy, use the signed policy deployment section instead!");
+						throw new InvalidOperationException(GlobalVars.Rizz.GetString("SignedPolicyError") + file + "'");
 					}
 
 					string randomString = GUIDGenerator.GenerateUniqueGUID();
@@ -173,7 +173,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = $"Currently Deploying XML file: '{file}'";
+						StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'";
 					});
 
 					// Convert the XML file to CIP
@@ -221,7 +221,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			errorsOccurred = true;
 
 			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = "There was an error deploying the selected XML files";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentError");
 
 			throw;
 		}
@@ -230,7 +230,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			if (!errorsOccurred)
 			{
 				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = "Successfully deployed all of the selected XML files";
+				StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentSuccess");
 
 				// Clear the lists at the end if no errors occurred
 				XMLFiles.Clear();
@@ -305,7 +305,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = $"Deploying {SignedXMLFiles.Count} Signed XML files.";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingSignedXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
@@ -323,7 +323,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = $"Currently Deploying XML file: '{file}'";
+						StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'";
 					});
 
 
@@ -331,7 +331,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 					SiPolicy.SiPolicy policyObject = AddSigningDetails.Add(file, CertPath);
 
 					// Remove the unsigned policy rule option from the policy
-					CiRuleOptions.Set(filePath: file, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: file, rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					// Define the path for the CIP file
 					string randomString = GUIDGenerator.GenerateUniqueGUID();
@@ -365,7 +365,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 						if (possibleAlreadyDeployedUnsignedVersion is not null)
 						{
-							Logger.Write($"A policy with the same PolicyID {possibleAlreadyDeployedUnsignedVersion.PolicyID} is already deployed on the system in Unsigned version. Removing it before deployed the signed version to prevent boot failures.");
+							Logger.Write(GlobalVars.Rizz.GetString("PolicyConflictMessage") + possibleAlreadyDeployedUnsignedVersion.PolicyID + GlobalVars.Rizz.GetString("RemovingPolicy"));
 
 							CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
 						}
@@ -400,7 +400,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			errorsOccurred = true;
 
 			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = "There was an error deploying the selected XML files";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentError");
 
 			throw;
 		}
@@ -409,7 +409,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			if (!errorsOccurred)
 			{
 				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = "Successfully deployed all of the selected XML files as Signed policies";
+				StatusInfoBar.Message = GlobalVars.Rizz.GetString("SignedDeploymentSuccess");
 
 				// Clear the lists at the end if no errors occurred
 				SignedXMLFiles.Clear();
@@ -454,7 +454,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = $"Deploying {CIPFiles.Count} CIP binary files.";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingCIPFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
@@ -467,7 +467,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 				{
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = $"Currently Deploying CIP file: '{file}'";
+						StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingCIPFile") + file + "'";
 					});
 
 					string randomPolicyID = Guid.CreateVersion7().ToString().ToUpperInvariant();
@@ -491,7 +491,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			errorsOccurred = true;
 
 			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = "There was an error deploying the selected CIP files";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentError");
 
 			throw;
 		}
@@ -500,7 +500,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			if (!errorsOccurred)
 			{
 				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = "Successfully deployed all of the selected CIP files";
+				StatusInfoBar.Message = GlobalVars.Rizz.GetString("CIPDeploymentSuccess");
 
 				// Clear the list at the end if no errors occurred
 				CIPFiles.Clear();
@@ -642,7 +642,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		{
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = "Signing into Intune";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("SigningIntoIntune");
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
@@ -652,12 +652,12 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			await MicrosoftGraph.SignIn(MicrosoftGraph.AuthenticationContext.Intune);
 
-			StatusInfoBar.Message = "Successfully signed into Intune";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInSuccess");
 			StatusInfoBar.Severity = InfoBarSeverity.Success;
 
 			deployToIntune = true;
 
-			LocalIntuneStatusTextBox.Text = "Cloud Deployment is Currently Active";
+			LocalIntuneStatusTextBox.Text = GlobalVars.Rizz.GetString("CloudDeploymentActive");
 
 			// Enable the sign out button
 			IntuneSignOutButton.IsEnabled = true;
@@ -671,14 +671,14 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		catch (OperationCanceledException)
 		{
 			signInSuccessful = false;
-			Logger.Write("Sign in to Intune was cancelled by the user");
-			StatusInfoBar.Message = "Sign in to Intune was cancelled by the user";
+			Logger.Write(GlobalVars.Rizz.GetString("IntuneSignInCancelled"));
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInCancelledMessage");
 			StatusInfoBar.Severity = InfoBarSeverity.Warning;
 		}
 
 		catch (Exception ex)
 		{
-			StatusInfoBar.Message = $"There was an error signing into Intune: {ex.Message}";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInError") + ex.Message;
 			StatusInfoBar.Severity = InfoBarSeverity.Error;
 
 			throw;
@@ -709,7 +709,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		{
 			StatusInfoBar.Visibility = Visibility.Visible;
 			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = "Signing out of Intune";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("SigningOutOfIntune");
 			StatusInfoBar.Severity = InfoBarSeverity.Informational;
 			StatusInfoBar.IsClosable = false;
 
@@ -722,18 +722,18 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			// Enable the Sign in button
 			IntuneSignInButton.IsEnabled = true;
 
-			StatusInfoBar.Message = "Successfully signed out of Intune";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignOutSuccess");
 			StatusInfoBar.Severity = InfoBarSeverity.Success;
 
 			deployToIntune = false;
 			IntuneGroupsComboBox.IsEnabled = false;
 			RefreshIntuneGroupsButton.IsEnabled = false;
 
-			LocalIntuneStatusTextBox.Text = "Local Deployment is Currently Active";
+			LocalIntuneStatusTextBox.Text = GlobalVars.Rizz.GetString("LocalDeploymentActive");
 		}
 		catch (Exception ex)
 		{
-			StatusInfoBar.Message = $"There was an error signing out of Intune: {ex.Message}";
+			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignOutError") + ex.Message;
 			StatusInfoBar.Severity = InfoBarSeverity.Error;
 
 			throw;
@@ -781,7 +781,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			if (xmlFile is not null)
 			{
 
-				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile);
+				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
 
 				// Finding the policy name in the settings
 				Setting? nameSetting = policyObj.Settings.FirstOrDefault(x =>

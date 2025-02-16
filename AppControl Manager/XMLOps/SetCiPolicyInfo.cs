@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Xml;
-using AppControlManager.Main;
+using System.Collections.Generic;
 using AppControlManager.Others;
 
 namespace AppControlManager.XMLOps;
@@ -40,94 +39,46 @@ internal static class SetCiPolicyInfo
 	{
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(filePath, null);
-
-		XmlNode? SettingsNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:Settings", codeIntegrityPolicy.NamespaceManager);
-		XmlNodeList? SettingNodes;
-		string? CurrentPolicyName;
-
-		string PolicyType = codeIntegrityPolicy.SiPolicyNode.Attributes?["PolicyType"]?.Value!;
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
 
 		#region PolicyName Processing
 
-		// Check if Settings node exists, if not, create it
-		if (SettingsNode is null)
+		if (!string.IsNullOrEmpty(policyName))
 		{
-			SettingsNode = codeIntegrityPolicy.XmlDocument.CreateElement("Settings", GlobalVars.SiPolicyNamespace);
-			_ = codeIntegrityPolicy.SiPolicyNode.AppendChild(SettingsNode);
-		}
 
-		// Get the list of Setting nodes
-		SettingNodes = SettingsNode.SelectNodes("ns:Setting", codeIntegrityPolicy.NamespaceManager);
+			bool nameSettingFound = false;
 
-		// Find the specific Setting node with ValueName="Name" and extract its string value or create it if not found
-
-		// nameSettingNode that will be used to assign the policy name
-		XmlNode? nameSettingNode = null;
-
-		if (SettingNodes is not null)
-		{
-			foreach (XmlNode setting in SettingNodes)
+			foreach (SiPolicy.Setting item in policyObj.Settings)
 			{
-				// Check if the "ValueName" attribute is present and equals "Name"
-				if (string.Equals(setting.Attributes?["ValueName"]?.Value, "Name", StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase))
 				{
-					nameSettingNode = setting;
-					break;
+					item.Value.Item = policyName;
+
+					nameSettingFound = true;
 				}
+			}
+
+			// If the Setting node with ValueName="Name" does not exist, create it
+			if (!nameSettingFound)
+			{
+				SiPolicy.Setting newNameSetting = new()
+				{
+					Provider = "PolicyInfo",
+					Key = "Information",
+					ValueName = "Name",
+					Value = new SiPolicy.SettingValueType()
+					{
+						Item = policyName
+					}
+				};
+
+				List<SiPolicy.Setting> settings = [.. policyObj.Settings];
+				settings.Add(newNameSetting);
+				policyObj.Settings = [.. settings];
 			}
 		}
 
-		// If the Setting node with ValueName="Name" does not exist, create it
-		if (nameSettingNode is null)
-		{
-			nameSettingNode = codeIntegrityPolicy.XmlDocument.CreateElement("Setting", GlobalVars.SiPolicyNamespace);
-
-			XmlAttribute providerAttr = codeIntegrityPolicy.XmlDocument.CreateAttribute("Provider");
-			providerAttr.Value = "PolicyInfo";
-			_ = nameSettingNode.Attributes!.Append(providerAttr);
-
-			XmlAttribute keyAttr = codeIntegrityPolicy.XmlDocument.CreateAttribute("Key");
-			keyAttr.Value = "Information";
-			_ = nameSettingNode.Attributes.Append(keyAttr);
-
-			XmlAttribute valueNameAttr = codeIntegrityPolicy.XmlDocument.CreateAttribute("ValueName");
-			valueNameAttr.Value = "Name";
-			_ = nameSettingNode.Attributes.Append(valueNameAttr);
-
-			// Append the new Setting node to Settings
-			_ = SettingsNode.AppendChild(nameSettingNode);
-		}
-
-		// Now check if the Value node with the inner String node exists, and create if not
-		XmlNode? valueNode = nameSettingNode.SelectSingleNode("ns:Value/ns:String", codeIntegrityPolicy.NamespaceManager);
-
-		if (valueNode is null)
-		{
-			// Create Value node
-			XmlNode newValueNode = codeIntegrityPolicy.XmlDocument.CreateElement("Value", GlobalVars.SiPolicyNamespace);
-			XmlNode newStringNode = codeIntegrityPolicy.XmlDocument.CreateElement("String", GlobalVars.SiPolicyNamespace);
-
-			_ = newValueNode.AppendChild(newStringNode);
-			_ = nameSettingNode.AppendChild(newValueNode);
-
-			valueNode = newStringNode;
-		}
-
-		// Update the policy name or assign default value if not provided
-		if (!string.IsNullOrWhiteSpace(policyName))
-		{
-			valueNode.InnerText = policyName;
-			CurrentPolicyName = policyName;
-		}
-		else
-		{
-			// If policyName was not provided, retain the current name
-			CurrentPolicyName = valueNode.InnerText;
-		}
-
 		#endregion
-
 
 		#region resetPolicyID processing
 
@@ -140,12 +91,11 @@ internal static class SetCiPolicyInfo
 			// Convert it to string
 			string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
 
-			codeIntegrityPolicy.PolicyIDNode.InnerText = newRandomGUIDString;
-			codeIntegrityPolicy.BasePolicyIDNode.InnerText = newRandomGUIDString;
+			policyObj.BasePolicyID = newRandomGUIDString;
+			policyObj.PolicyID = newRandomGUIDString;
 		}
 
 		#endregion
-
 
 		#region basePolicyID processing
 
@@ -163,81 +113,52 @@ internal static class SetCiPolicyInfo
 			string tempVar = $"{{{basePolicyID.ToUpperInvariant()}}}";
 
 			// Set the BasePolicyID of the policy file to the user provided one
-			codeIntegrityPolicy.BasePolicyIDNode.InnerText = tempVar;
+			policyObj.BasePolicyID = tempVar;
 		}
 
 		#endregion
-
 
 		#region basePolicyToSupplementPath processing
 
 		if (!string.IsNullOrWhiteSpace(basePolicyToSupplementPath))
 		{
-
-			XmlDocument xmlDocument2 = new();
-			xmlDocument2.Load(basePolicyToSupplementPath);
-
-			// Create namespace manager and add the default namespace with a prefix
-			XmlNamespaceManager namespaceManager2 = new(xmlDocument2.NameTable);
-			namespaceManager2.AddNamespace("ns", GlobalVars.SiPolicyNamespace);
-
-			// Get SiPolicy node
-			XmlNode siPolicyNode2 = xmlDocument2.SelectSingleNode("ns:SiPolicy", namespaceManager2)
-				?? throw new InvalidOperationException("Invalid XML structure, SiPolicy node not found");
-
-			// Get the PolicyID node which is an immediate node under SiPolicy node
-			XmlNode CurrentPolicyIDNode2 = siPolicyNode2.SelectSingleNode("ns:PolicyID", namespaceManager2) ?? throw new InvalidOperationException($"PolicyID was not found in {basePolicyToSupplementPath}");
-
-			// Set the BasePolicyID of the policy file to the PolicyID of the method's 1st parameter XML file
-			codeIntegrityPolicy.BasePolicyIDNode.InnerText = CurrentPolicyIDNode2.InnerText;
+			SiPolicy.SiPolicy policyObj2 = SiPolicy.Management.Initialize(basePolicyToSupplementPath, null);
+			policyObj.BasePolicyID = policyObj2.PolicyID;
 		}
 
 		#endregion
 
-
 		#region Checking Policy Type
 
-		if (string.Equals(PolicyType, "Supplemental Policy", StringComparison.OrdinalIgnoreCase))
+		if (policyObj.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
 		{
-			if (string.Equals(codeIntegrityPolicy.BasePolicyIDNode.InnerText, codeIntegrityPolicy.PolicyIDNode.InnerText, StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			{
 				Logger.Write("The selected XML policy file is a Supplemental policy but its BasePolicyID and PolicyID are the same, indicating it is a Base policy, changing the type.");
 
-
-				codeIntegrityPolicy.SiPolicyNode.Attributes!["PolicyType"]!.Value = "Base Policy";
-				// Set this variable to the updated type for the type check that happens later
-				PolicyType = "Base Policy";
+				policyObj.PolicyType = SiPolicy.PolicyType.BasePolicy;
 			}
 		}
 
-		if (string.Equals(PolicyType, "Base Policy", StringComparison.OrdinalIgnoreCase))
+		if (policyObj.PolicyType is SiPolicy.PolicyType.BasePolicy)
 		{
-			if (!string.Equals(codeIntegrityPolicy.BasePolicyIDNode.InnerText, codeIntegrityPolicy.PolicyIDNode.InnerText, StringComparison.OrdinalIgnoreCase))
+			if (!string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			{
 				Logger.Write("The selected XML policy file is a Base policy but its BasePolicyID and PolicyID are not the same, indicating it is a Supplemental policy, changing the type.");
 
 
-				codeIntegrityPolicy.SiPolicyNode.Attributes!["PolicyType"]!.Value = "Supplemental Policy";
-				// Set this variable to the updated type for the type check that happens later
-				PolicyType = "Supplemental Policy";
+				policyObj.PolicyType = SiPolicy.PolicyType.SupplementalPolicy;
 			}
 		}
 
 		#endregion
 
-
 		// Save the changes to the XML file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
+		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 
-		// Validate the XML file at the end
-		if (!CiPolicyTest.TestCiPolicy(filePath))
-		{
-			throw new InvalidOperationException("SetCiPolicyInfo.Set: The XML file created at the end is not compliant with the CI policy schema");
-		}
+		Logger.Write($"Successfully configured the policy at '{filePath}'. Now it has the Type '{policyObj.PolicyType}', BasePolicyID '{policyObj.BasePolicyID}' and PolicyID '{policyObj.PolicyID}'.");
 
-		Logger.Write($"Successfully configured the policy at '{filePath}'. Now it has the Name '{CurrentPolicyName}', Type '{PolicyType}', BasePolicyID '{codeIntegrityPolicy.BasePolicyIDNode.InnerText}' and PolicyID '{codeIntegrityPolicy.PolicyIDNode.InnerText}'.");
-
-		return codeIntegrityPolicy.PolicyIDNode.InnerText;
+		return policyObj.PolicyID;
 	}
 
 
@@ -253,13 +174,13 @@ internal static class SetCiPolicyInfo
 	{
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(filePath, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(filePath, null);
 
 		// save the current XML policy version to a variable prior to modifying it
-		string OriginalXMLPolicyVersion = codeIntegrityPolicy.VersionExNode.InnerText;
+		string OriginalXMLPolicyVersion = policyObj.VersionEx;
 
 		// Set the user provided version to the policy
-		codeIntegrityPolicy.VersionExNode.InnerText = version.ToString();
+		policyObj.VersionEx = version.ToString();
 
 		// If the ID parameter was provided
 		if (ID is not null)
@@ -275,25 +196,16 @@ internal static class SetCiPolicyInfo
 			string tempVar = $"{{{AdjustedID.ToUpperInvariant()}}}";
 
 			// Set the BasePolicyID of the policy file to the user provided one
-			codeIntegrityPolicy.BasePolicyIDNode.InnerText = tempVar;
+			policyObj.BasePolicyID = tempVar;
 
 			// Set the PolicyID of the policy file to the user provided one
-			codeIntegrityPolicy.PolicyIDNode.InnerText = tempVar;
+			policyObj.PolicyID = tempVar;
 		}
 
 		// Save the changes to the XML file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, filePath);
-
-		// Validate the XML file at the end
-		if (!CiPolicyTest.TestCiPolicy(filePath))
-		{
-			throw new InvalidOperationException("SetCiPolicyInfo.Set: The XML file created at the end is not compliant with the CI policy schema");
-		}
+		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 
 		Logger.Write($"Successfully set the version of the policy file at '{filePath}' from '{OriginalXMLPolicyVersion}' to '{version}'.");
-
 	}
-
-
 
 }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
-using AppControlManager.Main;
 
 namespace AppControlManager.Others;
 
@@ -16,37 +14,27 @@ internal static class PolicyFileSigningStatusDetection
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static IntelGathering.SignatureStatus Check(string policyXMLPath)
 	{
-
-		// Make sure the policy file is valid first
-		_ = CiPolicyTest.TestCiPolicy(policyXMLPath);
-
 		HashSet<string> supplementalSignerIDs = [];
 		HashSet<string> updatePolicySignerIDs = [];
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(policyXMLPath, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyXMLPath, null);
 
-		// Check if SupplementalPolicySigners exists and has child nodes
-		XmlNodeList? supplementalPolicySignersNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:SupplementalPolicySigners/ns:SupplementalPolicySigner", codeIntegrityPolicy.NamespaceManager);
-
-		if (supplementalPolicySignersNodes is { Count: > 0 })
+		// Check if SupplementalPolicySigners exists and get their IDs	
+		if (policyObj.SupplementalPolicySigners.Length > 0)
 		{
-			// Get unique SignerIds from SupplementalPolicySigners
-			foreach (XmlElement node in supplementalPolicySignersNodes)
+			foreach (SiPolicy.SupplementalPolicySigner item in policyObj.SupplementalPolicySigners)
 			{
-				_ = supplementalSignerIDs.Add(node.GetAttribute("SignerId"));
+				_ = supplementalSignerIDs.Add(item.SignerId);
 			}
 		}
 
-		// Check if UpdatePolicySigners exists and has child nodes
-		XmlNodeList? updatePolicySignersNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:UpdatePolicySigners/ns:UpdatePolicySigner", codeIntegrityPolicy.NamespaceManager);
-
-		if (updatePolicySignersNodes is { Count: > 0 })
+		// Check if UpdatePolicySigners exists and get their IDs
+		if (policyObj.UpdatePolicySigners.Length > 0)
 		{
-			// Get unique SignerIds from UpdatePolicySigners
-			foreach (XmlElement node in updatePolicySignersNodes)
+			foreach (SiPolicy.UpdatePolicySigner item in policyObj.UpdatePolicySigners)
 			{
-				_ = updatePolicySignerIDs.Add(node.GetAttribute("SignerId"));
+				_ = updatePolicySignerIDs.Add(item.SignerId);
 			}
 		}
 

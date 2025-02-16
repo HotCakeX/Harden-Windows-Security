@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.Linq;
+using AppControlManager.SiPolicy;
 
 namespace AppControlManager.Others;
 
@@ -12,25 +13,22 @@ internal static class XmlFilePathExtractor
 		HashSet<string> filePaths = new(StringComparer.OrdinalIgnoreCase);
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFilePath, null);
 
-		// Select all nodes with the "Allow" tag
-		XmlNodeList? allowNodes = codeIntegrityPolicy.XmlDocument.SelectNodes("//ns:Allow", codeIntegrityPolicy.NamespaceManager);
+		// Select all Allow FileRules
+		IEnumerable<Allow>? allowRules = policyObj.FileRules?.OfType<Allow>();
 
-		if (allowNodes is not null)
+		if (allowRules is not null)
 		{
-
-			foreach (XmlNode node in allowNodes)
+			foreach (Allow item in allowRules)
 			{
-				// Ensure node.Attributes is not null
-				if (node.Attributes is not null && node.Attributes["FilePath"] is not null)
+				if (!string.IsNullOrEmpty(item.FilePath))
 				{
 					// Add the file path to the HashSet
-					_ = filePaths.Add(node.Attributes["FilePath"]!.Value);
+					_ = filePaths.Add(item.FilePath);
 				}
 			}
 		}
-
 		return filePaths;
 	}
 }

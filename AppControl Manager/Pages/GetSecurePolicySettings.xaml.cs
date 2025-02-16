@@ -1,5 +1,6 @@
 using System.Globalization;
 using AppControlManager.Main;
+using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -27,9 +28,9 @@ public sealed partial class GetSecurePolicySettings : Page
 		// Check if all fields are filled
 		if (string.IsNullOrWhiteSpace(provider) || string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(valueName))
 		{
-			InfoBar.Message = "Please fill in all three fields.";
+			InfoBar.Message = GlobalVars.Rizz.GetString("GetSecurePolicySettings_FillAllFields");
 			InfoBar.Severity = InfoBarSeverity.Warning;
-			InfoBar.Title = "Input Required";
+			InfoBar.Title = GlobalVars.Rizz.GetString("GetSecurePolicySettings_InputRequired");
 			InfoBar.IsOpen = true;
 			return;
 		}
@@ -39,16 +40,16 @@ public sealed partial class GetSecurePolicySettings : Page
 
 		if (result.StatusCode is not 0)
 		{
-			InfoBar.Message = "There is no policy deployed on the system that contains the selected secure setting.";
+			InfoBar.Message = GlobalVars.Rizz.GetString("GetSecurePolicySettings_NoPolicyMessage");
 			InfoBar.Severity = InfoBarSeverity.Informational;
-			InfoBar.Title = "Policy not found";
+			InfoBar.Title = GlobalVars.Rizz.GetString("GetSecurePolicySettings_PolicyNotFound");
 			InfoBar.IsOpen = true;
 		}
 		else
 		{
-			InfoBar.Message = "A policy with the selected secure setting details is currently deployed on the system.";
+			InfoBar.Message = GlobalVars.Rizz.GetString("GetSecurePolicySettings_PolicyFoundMessage");
 			InfoBar.Severity = InfoBarSeverity.Success;
-			InfoBar.Title = "Policy found";
+			InfoBar.Title = GlobalVars.Rizz.GetString("GetSecurePolicySettings_PolicyFound");
 			InfoBar.IsOpen = true;
 		}
 

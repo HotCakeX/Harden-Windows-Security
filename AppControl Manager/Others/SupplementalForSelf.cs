@@ -17,11 +17,11 @@ internal static class SupplementalForSelf
 	internal static void Deploy(string StagingArea, string basePolicyID)
 	{
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(GlobalVars.AppControlManagerSpecialPolicyPath, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
 
 		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
 
-		codeIntegrityPolicy.BasePolicyIDNode.InnerText = basePolicyID;
+		policyObj.BasePolicyID = basePolicyID;
 
 		// Generate a new GUID
 		Guid newRandomGUID = Guid.CreateVersion7();
@@ -29,7 +29,7 @@ internal static class SupplementalForSelf
 		// Convert it to string
 		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
 
-		codeIntegrityPolicy.PolicyIDNode.InnerText = newRandomGUIDString;
+		policyObj.PolicyID = newRandomGUIDString;
 
 		#endregion
 
@@ -38,7 +38,7 @@ internal static class SupplementalForSelf
 		string cipPath = Path.Combine(StagingArea, $"{GlobalVars.AppControlManagerSpecialPolicyName}.cip");
 
 		// Save the XML to the path as XML file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, savePath);
+		SiPolicy.Management.SavePolicyToFile(policyObj, savePath);
 
 		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
 
@@ -79,11 +79,11 @@ internal static class SupplementalForSelf
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("SignedSupplementalPolicySpecialDeployment");
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(GlobalVars.AppControlManagerSpecialPolicyPath, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
 
 		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
 
-		codeIntegrityPolicy.BasePolicyIDNode.InnerText = basePolicyID;
+		policyObj.BasePolicyID = basePolicyID;
 
 		// Generate a new GUID
 		Guid newRandomGUID = Guid.CreateVersion7();
@@ -91,14 +91,14 @@ internal static class SupplementalForSelf
 		// Convert it to string
 		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
 
-		codeIntegrityPolicy.PolicyIDNode.InnerText = newRandomGUIDString;
+		policyObj.PolicyID = newRandomGUIDString;
 
 		#endregion
 
 		string savePath = Path.Combine(stagingArea.FullName, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
 
 		// Save the XML to the path as XML file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, savePath);
+		SiPolicy.Management.SavePolicyToFile(policyObj, savePath);
 
 		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
 
@@ -129,7 +129,7 @@ internal static class SupplementalForSelf
 		_ = AddSigningDetails.Add(savePath, CertPath);
 
 		// Remove the unsigned policy rule option from the policy
-		CiRuleOptions.Set(filePath: savePath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledUnsignedSystemIntegrityPolicy]);
+		CiRuleOptions.Set(filePath: savePath, rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 		// Define the path for the CIP file
 		string randomString = GUIDGenerator.GenerateUniqueGUID();
@@ -149,8 +149,5 @@ internal static class SupplementalForSelf
 
 		// Deploy the signed CIP file
 		CiToolHelper.UpdatePolicy(CIPFilePath);
-
-
 	}
-
 }

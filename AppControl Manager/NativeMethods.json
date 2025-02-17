@@ -1,4 +1,6 @@
+// https://microsoft.github.io/CsWin32/docs/getting-started.html
 {
   "$schema": "https://aka.ms/CsWin32.schema.json",
-  "allowMarshaling": false
+  "allowMarshaling": false,
+  "emitSingleFile": true
 }

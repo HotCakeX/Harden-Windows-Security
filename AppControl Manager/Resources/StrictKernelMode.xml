@@ -73,5 +73,10 @@
         <String>StrictKernelMode</String>
       </Value>
     </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Id">
+      <Value>
+        <String>129657</String>
+      </Value>
+    </Setting>
   </Settings>
 </SiPolicy>

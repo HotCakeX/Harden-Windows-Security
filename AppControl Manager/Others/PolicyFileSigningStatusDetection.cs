@@ -20,7 +20,7 @@ internal static class PolicyFileSigningStatusDetection
 		// Instantiate the policy
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(policyXMLPath, null);
 
-		// Check if SupplementalPolicySigners exists and get their IDs	
+		// Check if SupplementalPolicySigners exists and get their IDs
 		if (policyObj.SupplementalPolicySigners.Length > 0)
 		{
 			foreach (SiPolicy.SupplementalPolicySigner item in policyObj.SupplementalPolicySigners)

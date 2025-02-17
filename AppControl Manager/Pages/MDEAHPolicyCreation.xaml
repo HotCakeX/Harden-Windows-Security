@@ -165,12 +165,12 @@
                                     <DataTemplate x:DataType="local:MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage">
                                         <StackPanel Margin="0,0,0,12" HorizontalAlignment="Center">
                                             <!-- Title -->
-                                            <TextBlock 
-                                                Text="{x:Bind QueryTitle}" 
+                                            <TextBlock
+                                                Text="{x:Bind QueryTitle}"
                                                 TextWrapping="WrapWholeWords"
-                                                FontWeight="Bold" 
+                                                FontWeight="Bold"
                                                 HorizontalAlignment="Center"
-                                                FontSize="16" 
+                                                FontSize="16"
                                                 Margin="0,5,0,5"/>
 
                                             <!-- Copy Button -->

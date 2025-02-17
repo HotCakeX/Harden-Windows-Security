@@ -121,7 +121,7 @@ public sealed partial class ViewCurrentPolicies : Page
 			}
 
 			// Update the UI once the task completes
-			PoliciesCountTextBlock.Text = $"Number of Policies: {policies.Count}";
+			PoliciesCountTextBlock.Text = GlobalVars.Rizz.GetString("NumberOfPolicies") + policies.Count;
 
 			DeployedPolicies.ItemsSource = AllPolicies;
 		}
@@ -165,7 +165,7 @@ public sealed partial class ViewCurrentPolicies : Page
 		}
 
 		// Update the policies count text
-		PoliciesCountTextBlock.Text = $"Number of Policies: {filteredResults.Count}";
+		PoliciesCountTextBlock.Text = GlobalVars.Rizz.GetString("NumberOfPolicies") + filteredResults.Count;
 	}
 
 
@@ -269,12 +269,12 @@ public sealed partial class ViewCurrentPolicies : Page
 						// Create and display a ContentDialog with Yes and No options
 						ContentDialog dialog = new()
 						{
-							Title = "WARNING",
-							Content = $"The policy '{GlobalVars.AppControlManagerSpecialPolicyName}' must not be manually removed because you WILL NOT BE ABLE TO USE APPCONTROL MANAGER AGAIN. It is automatically removed when its corresponding base policy is removed from the system. Are you sure you still want to remove it manually?",
-							PrimaryButtonText = "Yes",
+							Title = GlobalVars.Rizz.GetString("WarningTitle"),
+							Content = GlobalVars.Rizz.GetString("ManualRemovalWarning") + GlobalVars.AppControlManagerSpecialPolicyName + "' " + GlobalVars.Rizz.GetString("ManualRemovalWarningEnd"),
+							PrimaryButtonText = GlobalVars.Rizz.GetString("Yes"),
 							BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 							BorderThickness = new Thickness(1),
-							CloseButtonText = "No",
+							CloseButtonText = GlobalVars.Rizz.GetString("No"),
 							XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
 						};
 
@@ -356,9 +356,9 @@ public sealed partial class ViewCurrentPolicies : Page
 									// Create and display a ContentDialog
 									ContentDialog dialog = new()
 									{
-										Title = "Warning",
-										Content = $"Before you can safely remove the signed policy named '{policy.FriendlyName}' with the ID '{policy.PolicyID}', you must restart your system.",
-										PrimaryButtonText = "I Understand",
+										Title = GlobalVars.Rizz.GetString("WarningTitle"),
+										Content = GlobalVars.Rizz.GetString("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.Rizz.GetString("RestartRequiredEnd") + policy.PolicyID + "')",
+										PrimaryButtonText = GlobalVars.Rizz.GetString("Understand"),
 										BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 										BorderThickness = new Thickness(1),
 										XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
@@ -566,16 +566,16 @@ public sealed partial class ViewCurrentPolicies : Page
 		// Create a dictionary to map headers to their specific click event methods
 		Dictionary<string, RoutedEventHandler> copyActions = new()
 		{
-			{ "Policy ID", CopyPolicyID_Click },
-			{ "Base Policy ID", CopyBasePolicyID_Click },
-			{ "Friendly Name", CopyFriendlyName_Click },
-			{ "Version", CopyVersion_Click },
-			{ "Is Authorized", CopyIsAuthorized_Click },
-			{ "Is Enforced", CopyIsEnforced_Click },
-			{ "Is On Disk", CopyIsOnDisk_Click },
-			{ "Is Signed Policy", CopyIsSignedPolicy_Click },
-			{ "Is System Policy", CopyIsSystemPolicy_Click },
-			{ "Policy Options", CopyPolicyOptionsDisplay_Click }
+			{ GlobalVars.Rizz.GetString("PolicyIDHeader"), CopyPolicyID_Click },
+			{ GlobalVars.Rizz.GetString("BasePolicyIDHeader"), CopyBasePolicyID_Click },
+			{ GlobalVars.Rizz.GetString("FriendlyNameHeader"), CopyFriendlyName_Click },
+			{ GlobalVars.Rizz.GetString("VersionHeader"), CopyVersion_Click },
+			{ GlobalVars.Rizz.GetString("IsAuthorizedHeader"), CopyIsAuthorized_Click },
+			{ GlobalVars.Rizz.GetString("IsEnforcedHeader"), CopyIsEnforced_Click },
+			{ GlobalVars.Rizz.GetString("IsOnDiskHeader"), CopyIsOnDisk_Click },
+			{ GlobalVars.Rizz.GetString("IsSignedPolicyHeader"), CopyIsSignedPolicy_Click },
+			{ GlobalVars.Rizz.GetString("IsSystemPolicyHeader"), CopyIsSystemPolicy_Click },
+			{ GlobalVars.Rizz.GetString("PolicyOptionsHeader"), CopyPolicyOptionsDisplay_Click }
 		};
 
 		// Add menu items with specific click events for each column
@@ -586,7 +586,7 @@ public sealed partial class ViewCurrentPolicies : Page
 			if (copyActions.TryGetValue(headerText, out RoutedEventHandler? value))
 			{
 				// Create a new MenuFlyout Item
-				MenuFlyoutItem menuItem = new() { Text = $"Copy {headerText}" };
+				MenuFlyoutItem menuItem = new() { Text = GlobalVars.Rizz.GetString("Copy") + headerText };
 
 				// Set the click event for the menu item
 				menuItem.Click += value;
@@ -670,16 +670,16 @@ public sealed partial class ViewCurrentPolicies : Page
 	{
 		// Use StringBuilder to format each property with its label for easy reading
 		return new StringBuilder()
-			.AppendLine($"Policy ID: {row.PolicyID}")
-			.AppendLine($"Base Policy ID: {row.BasePolicyID}")
-			.AppendLine($"Friendly Name: {row.FriendlyName}")
-			.AppendLine($"Version: {row.Version}")
-			.AppendLine($"Is Authorized: {row.IsAuthorized}")
-			.AppendLine($"Is Enforced: {row.IsEnforced}")
-			.AppendLine($"Is On Disk: {row.IsOnDisk}")
-			.AppendLine($"Is Signed Policy: {row.IsSignedPolicy}")
-			.AppendLine($"Is System Policy: {row.IsSystemPolicy}")
-			.AppendLine($"Policy Options: {row.PolicyOptionsDisplay}")
+			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
+			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
+			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
+			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel") + row.Version)
+			.AppendLine(GlobalVars.Rizz.GetString("IsAuthorizedLabel") + row.IsAuthorized)
+			.AppendLine(GlobalVars.Rizz.GetString("IsEnforcedLabel") + row.IsEnforced)
+			.AppendLine(GlobalVars.Rizz.GetString("IsOnDiskLabel") + row.IsOnDisk)
+			.AppendLine(GlobalVars.Rizz.GetString("IsSignedPolicyLabel") + row.IsSignedPolicy)
+			.AppendLine(GlobalVars.Rizz.GetString("IsSystemPolicyLabel") + row.IsSystemPolicy)
+			.AppendLine(GlobalVars.Rizz.GetString("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
 			.ToString();
 	}
 
@@ -712,18 +712,18 @@ public sealed partial class ViewCurrentPolicies : Page
 		// When system was last reboot
 		DateTime lastRebootTimeUtc = DateTime.UtcNow - TimeSpan.FromMilliseconds(Environment.TickCount64);
 
-		Logger.Write($"System's last reboot was {lastRebootTimeUtc} (UTC)");
+		Logger.Write(GlobalVars.Rizz.GetString("LastRebootTime") + lastRebootTimeUtc + " (UTC)");
 
 		// When the policy's 1st stage was completed
 		DateTime? stage1RemovalTime = UserConfiguration.QuerySignedPolicyStage1RemovalTime(policyID);
 
 		if (stage1RemovalTime is not null)
 		{
-			Logger.Write($"Signed policy with the ID '{policyID}' completed its 1st stage at {stage1RemovalTime} (UTC)");
+			Logger.Write(GlobalVars.Rizz.GetString("PolicyStage1Completed") + policyID + "' " + GlobalVars.Rizz.GetString("CompletedAt") + stage1RemovalTime + " (UTC)");
 
 			if (stage1RemovalTime < lastRebootTimeUtc)
 			{
-				Logger.Write("Signed policy is safe to be removed because system was restarted after 1st stage");
+				Logger.Write(GlobalVars.Rizz.GetString("PolicySafeToRemove"));
 
 				return true;
 			}
@@ -767,10 +767,10 @@ public sealed partial class ViewCurrentPolicies : Page
 			SolidColorBrush hotPinkBrush = new(Colors.HotPink);
 
 			// Create normal text runs
-			Run normalText1 = new() { Text = "The selected policy with the name " };
-			Run normalText2 = new() { Text = " and ID " };
-			Run normalText3 = new() { Text = " will be changed to the type " };
-			Run normalText4 = new() { Text = "It will be re-deployed on the system with the same Policy ID and Base Policy ID. If it's currently in Audit Mode, it will be in Enforced Mode after this operation is completed." };
+			Run normalText1 = new() { Text = GlobalVars.Rizz.GetString("SelectedPolicyName") };
+			Run normalText2 = new() { Text = GlobalVars.Rizz.GetString("AndID") };
+			Run normalText3 = new() { Text = GlobalVars.Rizz.GetString("WillBeChangedTo") };
+			Run normalText4 = new() { Text = GlobalVars.Rizz.GetString("PolicyRedeployInfo") };
 
 			// Create colored runs
 			Run accentPolicyName = new() { Text = selectedPolicy.FriendlyName, Foreground = violetBrush };
@@ -779,7 +779,7 @@ public sealed partial class ViewCurrentPolicies : Page
 
 			// Create bold text run
 			Bold boldText = new();
-			boldText.Inlines.Add(new Run() { Text = "Any existing Supplemental policy will continue to work." });
+			boldText.Inlines.Add(new Run() { Text = GlobalVars.Rizz.GetString("SupplementalPolicyContinues") });
 
 			// Add runs to the TextBlock
 			formattedTextBlock.Inlines.Add(normalText1);
@@ -798,12 +798,12 @@ public sealed partial class ViewCurrentPolicies : Page
 			// Create and display a ContentDialog with styled TextBlock
 			ContentDialog dialog = new()
 			{
-				Title = "Swapping Policy",
+				Title = GlobalVars.Rizz.GetString("SwappingPolicyTitle"),
 				Content = formattedTextBlock,
-				PrimaryButtonText = "OK",
+				PrimaryButtonText = GlobalVars.Rizz.GetString("OK"),
 				BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 				BorderThickness = new Thickness(1),
-				CloseButtonText = "Cancel",
+				CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
 				XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
 			};
 

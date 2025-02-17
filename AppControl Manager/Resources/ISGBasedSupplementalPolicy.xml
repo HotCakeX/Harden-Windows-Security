@@ -35,5 +35,10 @@
         <String>ISG Based Supplemental Policy</String>
       </Value>
     </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Id">
+      <Value>
+        <String>129659</String>
+      </Value>
+    </Setting>
   </Settings>
 </SiPolicy>

@@ -128,7 +128,7 @@ internal static class GetSignerInfo
 			// Replacing Wellknown root IDs with their corresponding TBS values and Names (Common Names)
 			// These are all root certificates, they have no leaf or intermediate certificates in their chains, that's why they're called Trusted Roots
 
-			// Get the CertRoot node of the current Signer			
+			// Get the CertRoot node of the current Signer
 			string? certRootValue = CustomSerialization.ConvertByteArrayToHex(signer.CertRoot.Value);
 
 			if (certRootValue is not null && wellKnownIDs.Contains(certRootValue))

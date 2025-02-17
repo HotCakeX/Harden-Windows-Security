@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<root><!--
+<root>
+  <!--
     Microsoft ResX Schema
 
     Version 2.0
@@ -59,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -254,7 +255,7 @@
     <value>Deploy after Creation</value>
   </data>
   <data name="DeployAfterCreationButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+    <value>Toggling this button means the policy will be deployed on the system after it's been created</value>
   </data>
   <data name="CreateSupplementalPolicyButton.Content" xml:space="preserve">
     <value>Create Supplemental Policy</value>
@@ -278,13 +279,13 @@
     <value>Create Deny policy by scanning files and folders</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Description" xml:space="preserve">
-    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+    <value>Create a Deny policy based on an app's Package Family Name (PFN)</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Header" xml:space="preserve">
     <value>Package Family Name</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+    <value>Create a Deny policy based on an app's Package Family Name (PFN)</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.Description" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files.</value>
@@ -398,7 +399,7 @@
     <value>Deploy after Creation</value>
   </data>
   <data name="DeployAfterCreationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+    <value>Toggling this button means the policy will be deployed on the system after it's been created</value>
   </data>
   <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Search the data...</value>
@@ -518,7 +519,7 @@
     <value>Select the required info such as a deployed policy XML file and a name for the Supplemental policy that will be created</value>
   </data>
   <data name="AllowNewAppsStep2Text.Text" xml:space="preserve">
-    <value>Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you&apos;re done, use the button below to go to Step 3.</value>
+    <value>Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you're done, use the button below to go to Step 3.</value>
   </data>
   <data name="AllowNewAppsStep3Text.Text" xml:space="preserve">
     <value>Use the Event logs and local files tab to confirm or select the detected files in order to include them in the final Supplemental policy.</value>
@@ -590,7 +591,7 @@
     <value>Refresh</value>
   </data>
   <data name="RefreshAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Fetches the latest certificate common names from the User&apos;s personal certificate store</value>
+    <value>Fetches the latest certificate common names from the User's personal certificate store</value>
   </data>
   <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
     <value>Customize the App Background Style</value>
@@ -608,7 +609,7 @@
     <value>Icons Style</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pick a style for the main navigation&apos;s icons.</value>
+    <value>Pick a style for the main navigation's icons.</value>
   </data>
   <data name="AppThemeSettingsCard.Description" xml:space="preserve">
     <value>Customize the Theme</value>
@@ -644,7 +645,7 @@
     <value>Darker Background</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager&apos;s appearance.</value>
+    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager's appearance.</value>
   </data>
   <data name="UserConfigurations.Text" xml:space="preserve">
     <value>User Configurations</value>
@@ -689,16 +690,16 @@
     <value>App Control policies restrict both kernel-mode and user-mode binaries. By default, only kernel-mode binaries are restricted. Enabling this rule option validates user mode executables and scripts.</value>
   </data>
   <data name="RuleOption_EnabledBootMenuProtection" xml:space="preserve">
-    <value>This option isn&apos;t currently supported.</value>
+    <value>This option isn't currently supported.</value>
   </data>
   <data name="RuleOption_RequiredWHQL" xml:space="preserve">
-    <value>By default, kernel drivers that aren&apos;t Windows Hardware Quality Labs (WHQL) signed are allowed to run. Enabling this rule requires that every driver is WHQL signed and removes legacy driver support. Kernel drivers built for Windows 10 should be WHQL certified.</value>
+    <value>By default, kernel drivers that aren't Windows Hardware Quality Labs (WHQL) signed are allowed to run. Enabling this rule requires that every driver is WHQL signed and removes legacy driver support. Kernel drivers built for Windows 10 should be WHQL certified.</value>
   </data>
   <data name="RuleOption_EnabledAuditMode" xml:space="preserve">
     <value>Instructs App Control to log information about applications, binaries, and scripts that would have been blocked, if the policy was enforced. You can use this option to identify the potential impact of your App Control policy, and use the audit events to refine the policy before enforcement. To enforce an App Control policy, delete this option.</value>
   </data>
   <data name="RuleOption_DisabledFlightSigning" xml:space="preserve">
-    <value>If enabled, binaries from Windows Insider builds aren&apos;t trusted. This option is useful for organizations that only want to run released binaries, not prerelease Windows builds.</value>
+    <value>If enabled, binaries from Windows Insider builds aren't trusted. This option is useful for organizations that only want to run released binaries, not prerelease Windows builds.</value>
   </data>
   <data name="RuleOption_EnabledInheritDefaultPolicy" xml:space="preserve">
     <value>This option is reserved for future use and currently has no effect.</value>
@@ -707,7 +708,7 @@
     <value>Allows the policy to remain unsigned. When this option is removed, the policy must be signed and any supplemental policies must also be signed. The certificates that are trusted for future policy updates must be identified in the UpdatePolicySigners section. Certificates that are trusted for supplemental policies must be identified in the SupplementalPolicySigners section.</value>
   </data>
   <data name="RuleOption_RequiredEVSigners" xml:space="preserve">
-    <value>This option isn&apos;t currently supported.</value>
+    <value>This option isn't currently supported.</value>
   </data>
   <data name="RuleOption_EnabledAdvancedBootOptionsMenu" xml:space="preserve">
     <value>The F8 preboot menu is disabled by default for all App Control policies. Setting this rule option allows the F8 menu to appear to physically present users.</value>
@@ -717,7 +718,7 @@
   </data>
   <data name="RuleOption_DisabledScriptEnforcement" xml:space="preserve">
     <value>This option disables script enforcement options, covering PowerShell, Windows Based Script Host (wscript.exe), Windows Console Based Script Host (cscript.exe), HTA files run in Microsoft HTML Application Host (mshta.exe), and MSXML. Some script hosts may behave differently even when your policy is in audit mode. For more information on script enforcement, see Script enforcement with App Control.
-NOTE: This option isn&apos;t supported on Windows Server 2016 or Windows 10 1607 LTSB and shouldn&apos;t be used on those operating systems.</value>
+NOTE: This option isn't supported on Windows Server 2016 or Windows 10 1607 LTSB and shouldn't be used on those operating systems.</value>
   </data>
   <data name="RuleOption_RequiredEnforceStoreApplications" xml:space="preserve">
     <value>If this rule option is enabled, App Control policies also apply to Universal Windows applications.</value>
@@ -726,7 +727,7 @@ NOTE: This option isn&apos;t supported on Windows Server 2016 or Windows 10 1607
     <value>Use this option to automatically allow applications installed by a managed installer. For more information, see Authorize apps deployed with an App Control managed installer.</value>
   </data>
   <data name="RuleOption_EnabledIntelligentSecurityGraphAuthorization" xml:space="preserve">
-    <value>Use this option to automatically allow applications with &quot;known good&quot; reputation as defined by Microsoft&apos;s Intelligent Security Graph (ISG).</value>
+    <value>Use this option to automatically allow applications with "known good" reputation as defined by Microsoft's Intelligent Security Graph (ISG).</value>
   </data>
   <data name="RuleOption_EnabledInvalidateEAsOnReboot" xml:space="preserve">
     <value>When the Intelligent Security Graph option is used, App Control sets an extended file attribute that indicates that the file was authorized to run. This option causes App Control to periodically revalidate the reputation for files previously authorized by the ISG.</value>
@@ -746,19 +747,19 @@ NOTE: This option is only supported on Windows 10, version 1903 and later, or Wi
   <data name="RuleOption_EnabledDynamicCodeSecurity" xml:space="preserve">
     <value>Enables policy enforcement for .NET applications and dynamically loaded libraries.
 NOTE: This option is only supported on Windows 10, version 1803 and later, or Windows Server 2019 and later.
-NOTE: This option is always enforced if any App Control UMCI policy enables it. There&apos;s no audit mode for .NET dynamic code security hardening.</value>
+NOTE: This option is always enforced if any App Control UMCI policy enables it. There's no audit mode for .NET dynamic code security hardening.</value>
   </data>
   <data name="RuleOption_EnabledRevokedExpiredAsUnsigned" xml:space="preserve">
-    <value>Use this option to treat binaries signed with revoked certificates, or expired certificates with the Lifetime Signing EKU on the signature, as &quot;Unsigned binaries&quot; for user-mode process/components, under enterprise signing scenarios.</value>
+    <value>Use this option to treat binaries signed with revoked certificates, or expired certificates with the Lifetime Signing EKU on the signature, as "Unsigned binaries" for user-mode process/components, under enterprise signing scenarios.</value>
   </data>
   <data name="RuleOption_EnabledDeveloperModeDynamicCodeTrust" xml:space="preserve">
     <value>Use this option to trust UWP apps that are debugged in Visual Studio or deployed through device portal when Developer Mode is enabled on the system.</value>
   </data>
   <data name="RuleOption_EnabledSecureSettingPolicy" xml:space="preserve">
-    <value>Description for Secure Setting Policy is not provided.</value>
+    <value>It is currently undocumented.</value>
   </data>
   <data name="RuleOption_EnabledConditionalWindowsLockdownPolicy" xml:space="preserve">
-    <value>Description for Conditional Windows Lockdown Policy is not provided.</value>
+    <value>It's used by the Smart App Control policy only.</value>
   </data>
   <data name="ConfigurePolicyRuleOptions_ButtonContent" xml:space="preserve">
     <value>Configure Policy Rule Options</value>
@@ -911,10 +912,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value> unsigned XML files.</value>
   </data>
   <data name="DeployingXMLFile" xml:space="preserve">
-    <value>Currently Deploying XML file: &apos;</value>
+    <value>Currently Deploying XML file: '</value>
   </data>
   <data name="SignedPolicyError" xml:space="preserve">
-    <value>The XML file &apos;</value>
+    <value>The XML file '</value>
   </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>There was an error deploying the selected XML files</value>
@@ -944,7 +945,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value> CIP binary files.</value>
   </data>
   <data name="DeployingCIPFile" xml:space="preserve">
-    <value>Currently Deploying CIP file: &apos;</value>
+    <value>Currently Deploying CIP file: '</value>
   </data>
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>Successfully deployed all of the selected CIP files</value>
@@ -995,7 +996,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Success</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
-    <value>Successfully generated the certificate with the selected details. The certificate&apos;s thumbprint is: &apos;</value>
+    <value>Successfully generated the certificate with the selected details. The certificate's thumbprint is: '</value>
   </data>
   <data name="CreateDenyPolicyNotInitialized" xml:space="preserve">
     <value>CreateDenyPolicy is not initialized.</value>
@@ -1043,7 +1044,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>An error occurred while creating the Deny policy</value>
   </data>
   <data name="DenyPolicyCreatedSuccessfully" xml:space="preserve">
-    <value>Successfully created a Deny policy named &apos;</value>
+    <value>Successfully created a Deny policy named '</value>
   </data>
   <data name="Scalability" xml:space="preserve">
     <value>Scalability: </value>
@@ -1071,5 +1072,155 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Successfully created the Deny policy</value>
+  </data>
+  <data name="NumberOfPolicies" xml:space="preserve">
+    <value>Number of Policies: </value>
+  </data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>WARNING</value>
+  </data>
+  <data name="ManualRemovalWarning" xml:space="preserve">
+    <value>The policy '</value>
+  </data>
+  <data name="ManualRemovalWarningEnd" xml:space="preserve">
+    <value> must not be manually removed because you WILL NOT BE ABLE TO USE APPCONTROL MANAGER AGAIN. It is automatically removed when its corresponding base policy is removed from the system. Are you sure you still want to remove it manually?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="RestartRequired" xml:space="preserve">
+    <value>Before you can safely remove the signed policy named '</value>
+  </data>
+  <data name="RestartRequiredEnd" xml:space="preserve">
+    <value> with the ID '</value>
+  </data>
+  <data name="Understand" xml:space="preserve">
+    <value>I Understand</value>
+  </data>
+  <data name="PolicyIDHeader" xml:space="preserve">
+    <value>Policy ID</value>
+  </data>
+  <data name="BasePolicyIDHeader" xml:space="preserve">
+    <value>Base Policy ID</value>
+  </data>
+  <data name="FriendlyNameHeader" xml:space="preserve">
+    <value>Friendly Name</value>
+  </data>
+  <data name="VersionHeader" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="IsAuthorizedHeader" xml:space="preserve">
+    <value>Is Authorized</value>
+  </data>
+  <data name="IsEnforcedHeader" xml:space="preserve">
+    <value>Is Enforced</value>
+  </data>
+  <data name="IsOnDiskHeader" xml:space="preserve">
+    <value>Is On Disk</value>
+  </data>
+  <data name="IsSignedPolicyHeader" xml:space="preserve">
+    <value>Is Signed Policy</value>
+  </data>
+  <data name="IsSystemPolicyHeader" xml:space="preserve">
+    <value>Is System Policy</value>
+  </data>
+  <data name="PolicyOptionsHeader" xml:space="preserve">
+    <value>Policy Options</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy </value>
+  </data>
+  <data name="PolicyIDLabel" xml:space="preserve">
+    <value>Policy ID: </value>
+  </data>
+  <data name="BasePolicyIDLabel" xml:space="preserve">
+    <value>Base Policy ID: </value>
+  </data>
+  <data name="FriendlyNameLabel" xml:space="preserve">
+    <value>Friendly Name: </value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>Version: </value>
+  </data>
+  <data name="IsAuthorizedLabel" xml:space="preserve">
+    <value>Is Authorized: </value>
+  </data>
+  <data name="IsEnforcedLabel" xml:space="preserve">
+    <value>Is Enforced: </value>
+  </data>
+  <data name="IsOnDiskLabel" xml:space="preserve">
+    <value>Is On Disk: </value>
+  </data>
+  <data name="IsSignedPolicyLabel" xml:space="preserve">
+    <value>Is Signed Policy: </value>
+  </data>
+  <data name="IsSystemPolicyLabel" xml:space="preserve">
+    <value>Is System Policy: </value>
+  </data>
+  <data name="PolicyOptionsLabel" xml:space="preserve">
+    <value>Policy Options: </value>
+  </data>
+  <data name="LastRebootTime" xml:space="preserve">
+    <value>System's last reboot was </value>
+  </data>
+  <data name="PolicyStage1Completed" xml:space="preserve">
+    <value>Signed policy with the ID '</value>
+  </data>
+  <data name="CompletedAt" xml:space="preserve">
+    <value> completed its 1st stage at </value>
+  </data>
+  <data name="PolicySafeToRemove" xml:space="preserve">
+    <value>Signed policy is safe to be removed because system was restarted after 1st stage</value>
+  </data>
+  <data name="SelectedPolicyName" xml:space="preserve">
+    <value>The selected policy with the name </value>
+  </data>
+  <data name="AndID" xml:space="preserve">
+    <value> and ID </value>
+  </data>
+  <data name="WillBeChangedTo" xml:space="preserve">
+    <value> will be changed to the type </value>
+  </data>
+  <data name="PolicyRedeployInfo" xml:space="preserve">
+    <value>It will be re-deployed on the system with the same Policy ID and Base Policy ID. If it's currently in Audit Mode, it will be in Enforced Mode after this operation is completed.</value>
+  </data>
+  <data name="SupplementalPolicyContinues" xml:space="preserve">
+    <value>Any existing Supplemental policy will continue to work.</value>
+  </data>
+  <data name="SwappingPolicyTitle" xml:space="preserve">
+    <value>Swapping Policy</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LastUpdatedLabel" xml:space="preserve">
+    <value>Last Updated: </value>
+  </data>
+  <data name="DriverBlockListError" xml:space="preserve">
+    <value>Error retrieving driver block list information.</value>
+  </data>
+  <data name="ConfiguringAutoUpdate" xml:space="preserve">
+    <value>Configuring Scheduled task for auto update</value>
+  </data>
+  <data name="AutoUpdateError" xml:space="preserve">
+    <value>An error occurred.</value>
+  </data>
+  <data name="AutoUpdateConfigured" xml:space="preserve">
+    <value>Successfully configured scheduled task to keep the Microsoft Drivers Block Rules up to date</value>
+  </data>
+  <data name="CreatingPolicy" xml:space="preserve">
+    <value>Creating the Strict Kernel-mode policy</value>
+  </data>
+  <data name="PolicyCreationError" xml:space="preserve">
+    <value>There was an error creating Strict Kernel-mode policy: </value>
+  </data>
+  <data name="PolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Successfully created the Strict Kernel-mode policy</value>
   </data>
 </root>

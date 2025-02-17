@@ -18,7 +18,7 @@
     CornerRadius="8"
     Style="{ThemeResource DefaultContentDialogStyle}"
     BorderBrush="{ThemeResource AccentFillColorDefaultBrush}">
-    
+
     <ContentDialog.Resources>
         <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->
         <x:Double x:Key="ContentDialogMaxWidth">2000</x:Double>

@@ -9,37 +9,42 @@
       <Option>Enabled:Unsigned System Integrity Policy</Option>
     </Rule>
   </Rules>
-  <EKUs />
+  <EKUs/>
   <FileRules>
-    <Allow ID="ID_ALLOW_A_1" FriendlyName="AppControlManager_sadt7br7jpt02 FileRule" PackageFamilyName="AppControlManager_sadt7br7jpt02" MinimumFileVersion="0.0.0.0" />
-    <FileAttrib ID="ID_FILEATTRIB_A_1" FriendlyName="SignTool.exe" FileName="SIGNTOOL.EXE" MinimumFileVersion="10.0.26100.1" />
+    <Allow ID="ID_ALLOW_A_1" FriendlyName="AppControlManager_sadt7br7jpt02 FileRule" PackageFamilyName="AppControlManager_sadt7br7jpt02" MinimumFileVersion="0.0.0.0"/>
+    <FileAttrib ID="ID_FILEATTRIB_A_1" FriendlyName="SignTool.exe" FileName="SIGNTOOL.EXE" MinimumFileVersion="10.0.26100.1"/>
   </FileRules>
   <Signers>
     <Signer Name="Microsoft Code Signing PCA 2011" ID="ID_SIGNER_A_1">
-      <CertRoot Type="TBS" Value="F6F717A43AD9ABDDC8CEFDDE1C505462535E7D1307E630F9544A2D14FE8BF26E" />
-      <CertPublisher Value="Microsoft Corporation" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_A_1" />
+      <CertRoot Type="TBS" Value="F6F717A43AD9ABDDC8CEFDDE1C505462535E7D1307E630F9544A2D14FE8BF26E"/>
+      <CertPublisher Value="Microsoft Corporation"/>
+      <FileAttribRef RuleID="ID_FILEATTRIB_A_1"/>
     </Signer>
   </Signers>
   <SigningScenarios>
     <SigningScenario ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity" Value="12">
       <ProductSigners>
         <AllowedSigners>
-          <AllowedSigner SignerId="ID_SIGNER_A_1" />
+          <AllowedSigner SignerId="ID_SIGNER_A_1"/>
         </AllowedSigners>
         <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_1" />
+          <FileRuleRef RuleID="ID_ALLOW_A_1"/>
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners />
-  <CiSigners />
+  <UpdatePolicySigners/>
+  <CiSigners/>
   <HvciOptions>2</HvciOptions>
   <Settings>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>
         <String>AppControlManagerSupplementalPolicy</String>
+      </Value>
+    </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Id">
+      <Value>
+        <String>129660</String>
       </Value>
     </Setting>
   </Settings>

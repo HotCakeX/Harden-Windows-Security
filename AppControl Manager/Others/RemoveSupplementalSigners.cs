@@ -8,7 +8,7 @@ internal static class CiPolicyHandler
 	/// <summary>
 	/// Removes the entire SupplementalPolicySigners block
 	/// and any Signer in Signers node that have the same ID as the SignerIds of the SupplementalPolicySigner(s) in <SupplementalPolicySigners>...</SupplementalPolicySigners> node
-	/// from a CI policy XML file	
+	/// from a CI policy XML file
 	/// </summary>
 	/// <param name="path">The path to the CI policy XML file</param>
 	/// <exception cref="InvalidOperationException"></exception>

@@ -10,7 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d">
-   
+
     <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>

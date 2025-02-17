@@ -19,13 +19,7 @@ internal static class RemoveUserModeSS
 		List<SiPolicy.SigningScenario> signingScenarios = [.. policyObj.SigningScenarios];
 
 		// Remove any signing scenario with the ID 12 representing User-Mode
-		foreach (SiPolicy.SigningScenario scenario in signingScenarios)
-		{
-			if (string.Equals(scenario.ID, "12", StringComparison.OrdinalIgnoreCase))
-			{
-				_ = signingScenarios.Remove(scenario);
-			}
-		}
+		_ = signingScenarios.RemoveAll(scenario => string.Equals(scenario.ID, "12", StringComparison.OrdinalIgnoreCase));
 
 		// Convert the list back to array in order to save it in the policyObj
 		policyObj.SigningScenarios = [.. signingScenarios];

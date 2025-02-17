@@ -655,11 +655,11 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{filesAndFoldersSupplementalPolicyName}.xml");
 
-				// Instantiate the user selected Base policy - To get its BasePolicyID
-				CodeIntegrityPolicy codeIntegrityPolicy = new(filesAndFoldersBasePolicyPath, null);
+				// Instantiate the user selected Base policy
+				SiPolicy.SiPolicy policyObj = Management.Initialize(filesAndFoldersBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersSupplementalPolicyName, codeIntegrityPolicy.BasePolicyID, null);
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersSupplementalPolicyName, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -991,11 +991,11 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CertificatesBasedSupplementalPolicyName}.xml");
 
-				// Instantiate the user selected Base policy - To get its BasePolicyID
-				CodeIntegrityPolicy codeIntegrityPolicy = new(CertificatesBasedBasePolicyPath, null);
+				// Instantiate the user selected Base policy
+				SiPolicy.SiPolicy policyObj = Management.Initialize(CertificatesBasedBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CertificatesBasedSupplementalPolicyName, codeIntegrityPolicy.BasePolicyID, null);
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CertificatesBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -1152,10 +1152,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				string cipPath = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.cip");
 
 				// Instantiate the user-selected base policy
-				CodeIntegrityPolicy basePolicyObj = new(ISGBasedBasePolicyPath, null);
+				SiPolicy.SiPolicy basePolicyObj = Management.Initialize(ISGBasedBasePolicyPath, null);
 
 				// Instantiate the supplemental policy
-				SiPolicy.SiPolicy supplementalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath);
+				SiPolicy.SiPolicy supplementalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath, null);
 
 				// If policy name was provided by user
 				if (!string.IsNullOrWhiteSpace(ISGBasedSupplementalPolicyName))
@@ -1564,10 +1564,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyNameChosenByUser}.xml");
 
 				// Instantiate the user selected Base policy - To get its BasePolicyID
-				CodeIntegrityPolicy codeIntegrityPolicy = new(StrictKernelModeBasePolicyPath, null);
+				SiPolicy.SiPolicy policyObj = Management.Initialize(StrictKernelModeBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyNameChosenByUser, codeIntegrityPolicy.BasePolicyID, null);
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyNameChosenByUser, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -2177,11 +2177,11 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedSupplementalPolicyName}.xml");
 
-				// Instantiate the user selected Base policy - To get its BasePolicyID
-				CodeIntegrityPolicy codeIntegrityPolicy = new(PFNBasePolicyPath, null);
+				// Instantiate the user selected Base policy
+				SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(PFNBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, codeIntegrityPolicy.BasePolicyID, null);
+				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);

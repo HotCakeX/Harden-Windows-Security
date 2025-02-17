@@ -321,7 +321,7 @@ public sealed partial class CreatePolicy : Page
 			{
 				Inlines =
 		{
-			new Run { Text = "Version: ", FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.Violet) },
+			new Run { Text = GlobalVars.Rizz.GetString("VersionLabel"), FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.Violet) },
 			new Run { Text = $"{driverBlockListInfo.Version}\n", Foreground = new SolidColorBrush(Colors.Violet) }
 		}
 			};
@@ -330,7 +330,7 @@ public sealed partial class CreatePolicy : Page
 			{
 				Inlines =
 		{
-			new Run { Text = "Last Updated: ", FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.HotPink) },
+			new Run { Text = GlobalVars.Rizz.GetString("LastUpdatedLabel"), FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.HotPink) },
 			new Run { Text = $"{driverBlockListInfo.LastUpdated:MMMM dd, yyyy}\n", Foreground = new SolidColorBrush(Colors.HotPink) }
 		}
 			};
@@ -345,7 +345,7 @@ public sealed partial class CreatePolicy : Page
 			// Handle the case when driver block list info is null
 			Run errorRun = new()
 			{
-				Text = "Error retrieving driver block list information.",
+				Text = GlobalVars.Rizz.GetString("DriverBlockListError"),
 				Foreground = new SolidColorBrush(Colors.Yellow)
 			};
 			formattedTextBlock.Inlines.Add(errorRun);
@@ -423,7 +423,7 @@ public sealed partial class CreatePolicy : Page
 			RecommendedDriverBlockRulesInfoBar.IsClosable = false;
 			RecommendedDriverBlockRulesInfoBar.IsOpen = true;
 			RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Informational;
-			RecommendedDriverBlockRulesInfoBar.Message = "Configuring Scheduled task for auto update";
+			RecommendedDriverBlockRulesInfoBar.Message = GlobalVars.Rizz.GetString("ConfiguringAutoUpdate");
 
 			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
 		}
@@ -443,12 +443,12 @@ public sealed partial class CreatePolicy : Page
 			if (errorsOccurred)
 			{
 				RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Error;
-				RecommendedDriverBlockRulesInfoBar.Message = $"An error occurred.";
+				RecommendedDriverBlockRulesInfoBar.Message = GlobalVars.Rizz.GetString("AutoUpdateError");
 			}
 			else
 			{
 				RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Success;
-				RecommendedDriverBlockRulesInfoBar.Message = "Successfully configured scheduled task to keep the Microsoft Drivers Block Rules up to date";
+				RecommendedDriverBlockRulesInfoBar.Message = GlobalVars.Rizz.GetString("AutoUpdateConfigured");
 			}
 
 		}
@@ -520,8 +520,8 @@ public sealed partial class CreatePolicy : Page
 
 		try
 		{
-			StrictKernelModePolicyInfoBar.Message = "Creating the Strict Kernel-mode policy";
-			Logger.Write("Creating the Strict Kernel-mode policy");
+			StrictKernelModePolicyInfoBar.Message = GlobalVars.Rizz.GetString("CreatingPolicy");
+			Logger.Write(GlobalVars.Rizz.GetString("CreatingPolicy"));
 			StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Informational;
 
 			await Task.Run(() =>
@@ -535,7 +535,7 @@ public sealed partial class CreatePolicy : Page
 		{
 			StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Error;
 
-			StrictKernelModePolicyInfoBar.Message = $"There was an error creating Strict Kernel-mode policy: {ex.Message}";
+			StrictKernelModePolicyInfoBar.Message = GlobalVars.Rizz.GetString("PolicyCreationError") + ex.Message;
 
 			errorsOccurred = true;
 
@@ -546,8 +546,8 @@ public sealed partial class CreatePolicy : Page
 			if (!errorsOccurred)
 			{
 				StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Success;
-				StrictKernelModePolicyInfoBar.Message = "Successfully created the Strict Kernel-mode policy";
-				Logger.Write("Successfully created the Strict Kernel-mode policy");
+				StrictKernelModePolicyInfoBar.Message = GlobalVars.Rizz.GetString("PolicyCreatedSuccessfully");
+				Logger.Write(GlobalVars.Rizz.GetString("PolicyCreatedSuccessfully"));
 			}
 
 			StrictKernelModePolicyInfoBar.IsClosable = true;

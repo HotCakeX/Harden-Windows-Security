@@ -19,9 +19,9 @@ internal static class Management
 	/// <param name="xmlFilePath"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static SiPolicy Initialize(string xmlFilePath)
+	internal static SiPolicy Initialize(string? xmlFilePath, XmlDocument? XmlObj)
 	{
-		if (!CiPolicyTest.TestCiPolicy(xmlFilePath))
+		if (!string.IsNullOrEmpty(xmlFilePath) && !CiPolicyTest.TestCiPolicy(xmlFilePath))
 		{
 			throw new InvalidOperationException($"The XML file '{xmlFilePath}' is not compliant with the CI policy schema");
 		}
@@ -49,7 +49,7 @@ internal static class Management
 
 		*/
 
-		return CustomDeserialization.DeserializeSiPolicy(xmlFilePath);
+		return CustomDeserialization.DeserializeSiPolicy(xmlFilePath, XmlObj);
 	}
 
 

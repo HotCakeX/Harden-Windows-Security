@@ -25,6 +25,7 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
 
+
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
 
@@ -57,8 +58,8 @@
 
 
     <PublishTrimmed>false</PublishTrimmed>
-    <!--   
-    
+    <!--
+
     <TrimMode>partial</TrimMode>
     <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
@@ -110,13 +111,13 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <!-- 
+  <!--
   This section is no longer necessary since this generator is not Native AOT compatible and serialization/deserialization logic has been manually implemented with static code
-  
-  ARM64 doesn't support source generated XML de(serialization) 
+
+  ARM64 doesn't support source generated XML de(serialization)
   <ItemGroup Condition="'$(RuntimeIdentifier)' != 'win-arm64'">
     <DotNetCliToolReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.1" />
-  </ItemGroup>  
+  </ItemGroup>
   -->
 
   <!--
@@ -136,7 +137,7 @@
   </ItemGroup>
 
   <!-- Nuget packages
-  All transitive/nested packages under the main packages are added 
+  All transitive/nested packages under the main packages are added
   so they can be updated separately and receive bug/security vulnerability fixes faster
 
   https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
@@ -156,11 +157,11 @@
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.68.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.4.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.5.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
@@ -174,8 +175,8 @@
 
     <!--
     No longer needed - manual static code has been implemented
-    
-    ARM64 doesn't support source generated XML de(serialization) 
+
+    ARM64 doesn't support source generated XML de(serialization)
     <PackageReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.2" Condition="'$(RuntimeIdentifier)' != 'win-arm64'" />
    -->
 
@@ -243,6 +244,7 @@
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
     <None Remove="Pages\ViewFileCertificates.xaml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
+    <None Remove="Resources\EmptyPolicy.xml" />
     <None Remove="Resources\ISGBasedSupplementalPolicy.xml" />
     <None Remove="Resources\StrictKernelMode.xml" />
     <None Remove="Resources\StrictKernelMode_NoFlightRoots.xml" />
@@ -255,6 +257,9 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\EmptyPolicy.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ISGBasedSupplementalPolicy.xml">

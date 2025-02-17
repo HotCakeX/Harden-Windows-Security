@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
-using AppControlManager.Main;
 
 namespace AppControlManager.Others;
 
@@ -11,89 +9,45 @@ internal static class CiPolicyHandler
 	/// Removes the entire SupplementalPolicySigners block
 	/// and any Signer in Signers node that have the same ID as the SignerIds of the SupplementalPolicySigner(s) in <SupplementalPolicySigners>...</SupplementalPolicySigners> node
 	/// from a CI policy XML file
-	///
-	/// It doesn't do anything if the input policy file has no SupplementalPolicySigners block.
-	/// It will also always check if the Signers node is not empty, like
-	/// <Signers>
-	/// </Signers>
-	/// if it is then it will close it: <Signers />
-	/// The function can run infinite number of times on the same file.
 	/// </summary>
 	/// <param name="path">The path to the CI policy XML file</param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void RemoveSupplementalSigners(string path)
 	{
 
-		// Validate input XML file compliance with CI policy schema
-		if (!CiPolicyTest.TestCiPolicy(path))
-		{
-			throw new InvalidOperationException("The input XML file is not compliant with the CI policy schema");
-		}
-
-		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(path, null);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(path, null);
 
 		// Check if SupplementalPolicySigners exists and has child nodes
-		XmlNodeList? supplementalPolicySignersNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:SupplementalPolicySigners", codeIntegrityPolicy.NamespaceManager);
-
-		if (supplementalPolicySignersNodes is { Count: > 0 })
+		if (policyObj.SupplementalPolicySigners.Length > 0)
 		{
 			Logger.Write("Removing the SupplementalPolicySigners blocks and corresponding Signers");
 
 			// Store SignerIds to remove
-			HashSet<string> signerIds = [];
+			HashSet<string> signerIdsToRemove = [];
 
-			// Loop through each SupplementalPolicySigners node
-			foreach (XmlNode supplementalPolicySignersNode in supplementalPolicySignersNodes)
+			// Loop through each SupplementalPolicySigner
+			foreach (SiPolicy.SupplementalPolicySigner supplementalPolicySigner in policyObj.SupplementalPolicySigners)
 			{
-				XmlNodeList? supplementalPolicySigners = supplementalPolicySignersNode.SelectNodes("ns:SupplementalPolicySigner", codeIntegrityPolicy.NamespaceManager);
-
-				// Get unique SignerIds
-				foreach (XmlElement node in supplementalPolicySigners!)
-				{
-					_ = signerIds.Add(node.GetAttribute("SignerId"));
-				}
-
-				// Remove the entire SupplementalPolicySigners node
-				_ = codeIntegrityPolicy.SiPolicyNode.RemoveChild(supplementalPolicySignersNode);
+				_ = signerIdsToRemove.Add(supplementalPolicySigner.SignerId);
 			}
 
-			// Remove corresponding Signers
-			foreach (string signerId in signerIds)
+			// Remove the corresponding signers for the SupplementalPolicySigners
+			if (policyObj.Signers.Length < 0)
 			{
-				XmlNodeList? signersToRemove = codeIntegrityPolicy.SiPolicyNode.SelectNodes($"ns:Signers/ns:Signer[@ID='{signerId}']", codeIntegrityPolicy.NamespaceManager);
-				if (signersToRemove is not null)
+				List<SiPolicy.Signer> signers = [.. policyObj.Signers];
+
+				foreach (SiPolicy.Signer signer in signers)
 				{
-					foreach (XmlNode signerNode in signersToRemove)
+					if (signerIdsToRemove.Contains(signer.ID))
 					{
-						_ = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:Signers", codeIntegrityPolicy.NamespaceManager)?.RemoveChild(signerNode);
+						_ = signers.Remove(signer);
 					}
 				}
+				policyObj.Signers = [.. signers];
 			}
 		}
 
-
-		// Check if the Signers node is empty, if so, close it properly
-		XmlNode? signersNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:Signers", codeIntegrityPolicy.NamespaceManager);
-
-		if (signersNode is not null && !signersNode.HasChildNodes)
-		{
-			// Create a new self-closing element with the same name and attributes as the old one
-			XmlElement newSignersNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signers", GlobalVars.SiPolicyNamespace);
-
-			if (signersNode.Attributes is not null)
-			{
-
-				foreach (XmlAttribute attribute in signersNode.Attributes)
-				{
-					newSignersNode.SetAttribute(attribute.Name, attribute.Value);
-				}
-
-				_ = codeIntegrityPolicy.SiPolicyNode.ReplaceChild(newSignersNode, signersNode);
-			}
-		}
-
-		// Save the updated XML content back to the file
-		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, path);
+		// Save the updated policy
+		SiPolicy.Management.SavePolicyToFile(policyObj, path);
 	}
 }

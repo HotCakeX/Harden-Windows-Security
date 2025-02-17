@@ -25,7 +25,7 @@ internal static class NewFilePathRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
 
@@ -81,7 +81,7 @@ internal static class NewFilePathRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
 

@@ -23,7 +23,7 @@ internal static class NewPFNLevelRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
@@ -70,7 +70,7 @@ internal static class NewPFNLevelRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{

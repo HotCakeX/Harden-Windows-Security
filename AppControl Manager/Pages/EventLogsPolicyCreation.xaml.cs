@@ -868,11 +868,11 @@ public sealed partial class EventLogsPolicyCreation : Page
 							{
 								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-								// Instantiate the user selected Base policy - To get its BasePolicyID
-								CodeIntegrityPolicy codeIntegrityPolicy = new(BasePolicyXMLFile, null);
+								// Instantiate the user selected Base policy
+								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(BasePolicyXMLFile, null);
 
 								// Set the BasePolicyID of our new policy to the one from user selected policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, codeIntegrityPolicy.BasePolicyID, null);
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, policyObj.BasePolicyID, null);
 
 								// Configure policy rule options
 								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);

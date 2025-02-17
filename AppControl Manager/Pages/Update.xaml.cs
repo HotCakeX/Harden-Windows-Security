@@ -58,7 +58,7 @@ public sealed partial class Update : Page
 
 
 	// Public property to access the singleton instance from other classes
-	public static Update Instance => _instance ?? throw new InvalidOperationException("Update is not initialized.");
+	public static Update Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("UpdateNotInitialized"));
 
 
 	// Event handler for check for update button
@@ -79,7 +79,7 @@ public sealed partial class Update : Page
 			// If user did not provide custom MSIXBundle path, start checking for update
 			if (!useCustomMSIXBundlePath)
 			{
-				UpdateStatusInfoBar.Message = "Checking for update";
+				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("CheckingForUpdate");
 				// Check for update asynchronously using the AppUpdate class's singleton instance
 				updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
 			}
@@ -91,11 +91,11 @@ public sealed partial class Update : Page
 
 				if (useCustomMSIXBundlePath)
 				{
-					msg1 = $"Installing the MSIXBundle path that you selected: {customMSIXBundlePath}";
+					msg1 = GlobalVars.Rizz.GetString("InstallingCustomPath") + customMSIXBundlePath;
 				}
 				else
 				{
-					msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult?.OnlineVersion}, updating the application...";
+					msg1 = GlobalVars.Rizz.GetString("VersionComparison") + App.currentAppVersion + GlobalVars.Rizz.GetString("WhileOnlineVersion") + updateCheckResult?.OnlineVersion + GlobalVars.Rizz.GetString("UpdatingApplication");
 				}
 
 				Logger.Write(msg1);
@@ -126,7 +126,7 @@ public sealed partial class Update : Page
 
 					AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
-					UpdateStatusInfoBar.Message = "Downloading the AppControl Manager MSIXBundle package...";
+					UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("DownloadingPackage");
 
 
 					using (HttpClient client = new SecHttpClient())
@@ -191,23 +191,23 @@ public sealed partial class Update : Page
 					}
 
 
-					Logger.Write($"The AppControl Manager MSIXBundle package has been successfully downloaded to {AppControlManagerSavePath}");
+					Logger.Write(GlobalVars.Rizz.GetString("DownloadSuccess") + AppControlManagerSavePath);
 				}
 
 				else
 				{
 					// Use the user-supplied MSIXBundle file path for installation source
-					AppControlManagerSavePath = customMSIXBundlePath ?? throw new InvalidOperationException("No MSIXBundle path was selected");
+					AppControlManagerSavePath = customMSIXBundlePath ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("NoMSIXBundlePath"));
 				}
 
 				DownloadProgressRingForMSIXFile.IsIndeterminate = true;
 
-				UpdateStatusInfoBar.Message = "Detecting/Downloading the SignTool.exe from the Microsoft servers";
+				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("DetectingSignTool");
 
 				// First check if SignTool path is registered in the user configurations, else attempt to detect or download it
 				string signToolPath = UserConfiguration.Get().SignToolCustomPath ?? await Task.Run(() => SignToolHelper.GetSignToolPath());
 
-				UpdateStatusInfoBar.Message = "All Downloads finished, installing the new AppControl Manager version";
+				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("DownloadsFinished");
 
 				await Task.Run(() =>
 				{
@@ -286,13 +286,13 @@ public sealed partial class Update : Page
 					}
 					catch (Exception ex)
 					{
-						Logger.Write($"An error occurred while trying to remove the ASR rule exclusions which you can safely ignore: {ex.Message}");
+						Logger.Write(GlobalVars.Rizz.GetString("ASRError") + ex.Message);
 					}
 
 
 					PackageManager packageManager = new();
 
-					Logger.Write("Installing the AppControl Manager MSIXBundle package");
+					Logger.Write(GlobalVars.Rizz.GetString("InstallingPackage"));
 
 					// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
 					AddPackageOptions options = new()
@@ -316,19 +316,19 @@ public sealed partial class Update : Page
 					if (deploymentOperation.Status == AsyncStatus.Error)
 					{
 						DeploymentResult deploymentResult = deploymentOperation.GetResults();
-						throw new InvalidOperationException($"Error installing The AppControl Manager. Error code: {deploymentOperation.ErrorCode} - Error text: {deploymentResult.ErrorText}");
+						throw new InvalidOperationException(GlobalVars.Rizz.GetString("InstallationError") + deploymentOperation.ErrorCode + GlobalVars.Rizz.GetString("InstallationErrorText") + deploymentResult.ErrorText);
 					}
 					else if (deploymentOperation.Status == AsyncStatus.Canceled)
 					{
-						Logger.Write("The AppControl Manager Installation canceled");
+						Logger.Write(GlobalVars.Rizz.GetString("InstallationCanceled"));
 					}
 					else if (deploymentOperation.Status == AsyncStatus.Completed)
 					{
-						Logger.Write("The AppControl Manager Installation succeeded");
+						Logger.Write(GlobalVars.Rizz.GetString("InstallationSucceeded"));
 					}
 					else
 					{
-						throw new InvalidOperationException("There was an unknown problem installing the AppControl Manager");
+						throw new InvalidOperationException(GlobalVars.Rizz.GetString("UnknownInstallationIssue"));
 					}
 
 
@@ -361,16 +361,16 @@ public sealed partial class Update : Page
 					}
 					catch (Exception ex)
 					{
-						Logger.Write($"An error occurred while trying to add the ASR rule exclusions which you can safely ignore: {ex.Message}");
+						Logger.Write(GlobalVars.Rizz.GetString("ASRAddError") + ex.Message);
 
 					}
 
 				});
 
-				UpdateStatusInfoBar.Message = "Update has been successful. When you close and reopen the AppControl Manager, you will be automatically using the new version.";
+				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("UpdateSuccess");
 				UpdateStatusInfoBar.Severity = InfoBarSeverity.Success;
 
-				GlobalVars.updateButtonTextOnTheUpdatePage = "Updates installed";
+				GlobalVars.updateButtonTextOnTheUpdatePage = GlobalVars.Rizz.GetString("UpdatesInstalled");
 
 				// Keep the CheckForUpdate button disabled since the update has been installed at this point
 				// And all that's required is for the app to be restarted by the user
@@ -378,7 +378,7 @@ public sealed partial class Update : Page
 
 			else
 			{
-				UpdateStatusInfoBar.Message = "The current version is already up to date.";
+				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("AlreadyUpdated");
 				UpdateStatusInfoBar.Severity = InfoBarSeverity.Success;
 				CheckForUpdateButton.IsEnabled = true;
 			}
@@ -387,7 +387,7 @@ public sealed partial class Update : Page
 		catch
 		{
 			UpdateStatusInfoBar.Severity = InfoBarSeverity.Error;
-			UpdateStatusInfoBar.Message = "An error occurred while checking for update.";
+			UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("UpdateCheckError");
 
 			DownloadProgressRingForMSIXFile.Value = 0;
 
@@ -485,5 +485,4 @@ public sealed partial class Update : Page
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(UpdatePageCustomMSIXPath), null);
 	}
-
 }

@@ -27,7 +27,7 @@ internal static class AddSigningDetails
 		// Get the Common Name of the certificate
 		string CertCommonName = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false);
 
-		SiPolicy.SiPolicy policyObject = Management.Initialize(xmlPolicyFile);
+		SiPolicy.SiPolicy policyObject = Management.Initialize(xmlPolicyFile, null);
 
 		// Create a Cert root object that will be used by signers
 		CertRoot certRoot = new()

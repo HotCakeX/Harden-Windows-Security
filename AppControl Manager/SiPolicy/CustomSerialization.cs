@@ -706,7 +706,7 @@ internal static class CustomSerialization
 		}
 	}
 
-	private static string ConvertByteArrayToHex(byte[]? data)
+	internal static string ConvertByteArrayToHex(byte[]? data)
 	{
 		return data is not null ? string.Concat(data.Select(x => x.ToString("X2"))) : string.Empty;
 	}

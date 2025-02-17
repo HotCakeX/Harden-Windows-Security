@@ -17,6 +17,13 @@ internal static class KernelModeDrivers
 	private static readonly Guid CRYPT_SUBJTYPE_CATALOG_IMAGE = new("DE351A43-8E59-11d0-8C47-00C04FC295EE");
 	private static readonly Guid CRYPT_SUBJTYPE_CTL_IMAGE = new("9BA61D3F-E73A-11d0-8CD2-00C04FC295EE");
 
+	// If any of these DLLs are found in the imports list, the file is (likely) a user-mode PE.
+	// When a binary (such as a .exe or .dll) imports any of these user-mode libraries, it indicates that the binary relies on user-space functions, which are designed for normal applications.
+	// E.g., functions like CreateFile, MessageBox, or CreateWindow etc. are provided by kernel32.dll and user32.dll for user-mode applications, not for code running in kernel mode.
+	// Kernel-mode components do not interact with these user-mode DLLs. Instead, they access the kernel directly through SysCalls and low-level APIs.
+
+	private static readonly HashSet<string> UserModeDlls = ["kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"];
+
 	public struct IMAGE_IMPORT_DESCRIPTOR
 	{
 		public uint CharacteristicsOrOriginalFirstThunk;
@@ -328,14 +335,7 @@ internal static class KernelModeDrivers
 			}
 
 
-
-			// If any of these DLLs are found in the imports list, the file is (likely) a user-mode PE.
-			// When a binary (such as a .exe or .dll) imports any of these user-mode libraries, it indicates that the binary relies on user-space functions, which are designed for normal applications.
-			// E.g., functions like CreateFile, MessageBox, or CreateWindow etc. are provided by kernel32.dll and user32.dll for user-mode applications, not for code running in kernel mode.
-			// Kernel-mode components do not interact with these user-mode DLLs. Instead, they access the kernel directly through SysCalls and low-level APIs.
-			List<string> userModeDlls = ["kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"];
-
-			Verdict = importNames.Any(import => userModeDlls.Any(dll => string.Equals(import, dll, StringComparison.OrdinalIgnoreCase))) ? SSType.UserMode : SSType.KernelMode;
+			Verdict = importNames.Any(import => UserModeDlls.Any(dll => string.Equals(import, dll, StringComparison.OrdinalIgnoreCase))) ? SSType.UserMode : SSType.KernelMode;
 
 			// Return the actual output which happens when no errors occurred before
 			return new KernelUserVerdict

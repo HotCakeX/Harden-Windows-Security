@@ -306,7 +306,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 			await Task.Run(() =>
 			{
 				// Instantiate the selected XML policy file
-				policyObject = SiPolicy.Management.Initialize(policyPathFromUI);
+				policyObject = SiPolicy.Management.Initialize(policyPathFromUI, null);
 
 				// See if the deployed base policy IDs contain the ID of the policy being removed
 				// Only checking among base policies because supplemental policies can be removed normally whether they're signed or not

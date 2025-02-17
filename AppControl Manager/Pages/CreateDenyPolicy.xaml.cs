@@ -37,7 +37,7 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 	// Public property to access the singleton instance from other classes
-	public static CreateDenyPolicy Instance => _instance ?? throw new InvalidOperationException("CreateDenyPolicy is not initialized.");
+	public static CreateDenyPolicy Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("CreateDenyPolicyNotInitialized"));
 
 
 
@@ -125,8 +125,8 @@ public sealed partial class CreateDenyPolicy : Page
 		if (filesAndFoldersFilePaths.Count == 0 && filesAndFoldersFolderPaths.Count == 0)
 		{
 			CreateDenyPolicyTeachingTip.IsOpen = true;
-			CreateDenyPolicyTeachingTip.Title = "Select files or folders";
-			CreateDenyPolicyTeachingTip.Subtitle = "No files or folders were selected for Deny policy creation";
+			CreateDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectFilesOrFoldersTitle");
+			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoFilesOrFoldersSelected");
 			return;
 		}
 
@@ -135,8 +135,8 @@ public sealed partial class CreateDenyPolicy : Page
 		if (string.IsNullOrWhiteSpace(filesAndFoldersDenyPolicyName))
 		{
 			CreateDenyPolicyTeachingTip.IsOpen = true;
-			CreateDenyPolicyTeachingTip.Title = "Choose Deny Policy Name";
-			CreateDenyPolicyTeachingTip.Subtitle = "You need to provide a name for the Deny policy.";
+			CreateDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChooseDenyPolicyNameTitle");
+			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ProvidePolicyName");
 			return;
 		}
 
@@ -159,7 +159,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			FilesAndFoldersInfoBar.IsOpen = true;
 			FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
-			string msg1 = $"You selected {filesAndFoldersFilePaths.Count} files and {filesAndFoldersFolderPaths.Count} folders.";
+			string msg1 = GlobalVars.Rizz.GetString("SelectedFilesAndFolders") + filesAndFoldersFilePaths.Count + GlobalVars.Rizz.GetString("FilesAnd") + filesAndFoldersFolderPaths.Count + GlobalVars.Rizz.GetString("Folders");
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
@@ -201,8 +201,8 @@ public sealed partial class CreateDenyPolicy : Page
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
 							CreateDenyPolicyTeachingTip.IsOpen = true;
-							CreateDenyPolicyTeachingTip.Title = "No compatible files detected";
-							CreateDenyPolicyTeachingTip.Subtitle = "No AppControl compatible files have been detected in any of the files and folder paths you selected";
+							CreateDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("NoCompatibleFilesTitle");
+							CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoCompatibleFilesDetected");
 							errorsOccurred = true;
 							FilesAndFoldersInfoBar.IsOpen = false;
 							FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
@@ -213,7 +213,7 @@ public sealed partial class CreateDenyPolicy : Page
 					}
 
 
-					string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Count} AppControl compatible files...";
+					string msg2 = GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Count + GlobalVars.Rizz.GetString("AppControlCompatibleFiles");
 					Logger.Write(msg2);
 
 					_ = DispatcherQueue.TryEnqueue(() =>
@@ -237,7 +237,7 @@ public sealed partial class CreateDenyPolicy : Page
 					}
 
 
-					string msg3 = "Scan completed, creating the Deny policy";
+					string msg3 = GlobalVars.Rizz.GetString("ScanCompleted");
 
 					Logger.Write(msg3);
 
@@ -279,7 +279,7 @@ public sealed partial class CreateDenyPolicy : Page
 				if (filesAndFoldersDeployButton)
 				{
 
-					string msg4 = "Deploying the Deny policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
 
 					Logger.Write(msg4);
 
@@ -303,7 +303,7 @@ public sealed partial class CreateDenyPolicy : Page
 		catch
 		{
 			FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Error;
-			FilesAndFoldersInfoBar.Message = "An error occurred while creating the Deny policy";
+			FilesAndFoldersInfoBar.Message = GlobalVars.Rizz.GetString("ErrorCreatingDenyPolicy");
 
 			errorsOccurred = true;
 
@@ -314,7 +314,7 @@ public sealed partial class CreateDenyPolicy : Page
 			if (!errorsOccurred)
 			{
 				FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Success;
-				FilesAndFoldersInfoBar.Message = $"Successfully created a Deny policy named '{filesAndFoldersDenyPolicyName}'";
+				FilesAndFoldersInfoBar.Message = GlobalVars.Rizz.GetString("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'";
 			}
 
 			FilesAndFoldersInfoBar.IsClosable = true;
@@ -452,7 +452,8 @@ public sealed partial class CreateDenyPolicy : Page
 		if (sender is RadialGauge gauge)
 		{
 			// Update the button content with the current value of the gauge
-			ScalabilityButton.Content = $"Scalability: {gauge.Value:N0}";
+			ScalabilityButton.Content = GlobalVars.Rizz.GetString("Scalability") + gauge.Value;
+
 		}
 	}
 
@@ -476,7 +477,7 @@ public sealed partial class CreateDenyPolicy : Page
 			// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
 			if (!Enum.TryParse(selectedText.Replace(" ", ""), out filesAndFoldersScanLevel))
 			{
-				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidScanLevel") + selectedText);
 			}
 
 
@@ -712,7 +713,7 @@ public sealed partial class CreateDenyPolicy : Page
 	private void PFNPackagedAppsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
-		PFNSelectedItemsCount.Text = $"Selected Apps: {selectedCount}";
+		PFNSelectedItemsCount.Text = GlobalVars.Rizz.GetString("SelectedApps") + selectedCount;
 	}
 
 
@@ -748,7 +749,7 @@ public sealed partial class CreateDenyPolicy : Page
 				app.DisplayName.Contains(filterText, StringComparison.OrdinalIgnoreCase)))
 			{
 				Key = group.Key // Preserve the group key
-			})
+            })
 			.Where(group => group.Any())];
 
 		// Update the ListView source with the filtered data
@@ -804,16 +805,16 @@ public sealed partial class CreateDenyPolicy : Page
 		if (PFNPackagedAppsListView.SelectedItems.Count is 0)
 		{
 			CreatePFNDenyPolicyTeachingTip.IsOpen = true;
-			CreatePFNDenyPolicyTeachingTip.Title = "PFN based Deny policy";
-			CreatePFNDenyPolicyTeachingTip.Subtitle = "No app was selected to create a deny policy for";
+			CreatePFNDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("PFNBasedDenyPolicyTitle");
+			CreatePFNDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoAppSelectedForDenyPolicy");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(PFNBasedDenyPolicyName))
 		{
 			CreatePFNDenyPolicyTeachingTip.IsOpen = true;
-			CreatePFNDenyPolicyTeachingTip.Title = "PFN based Deny policy";
-			CreatePFNDenyPolicyTeachingTip.Subtitle = "No policy name was selected for the deny policy";
+			CreatePFNDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("PFNBasedDenyPolicyTitle");
+			CreatePFNDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoPolicyNameSelected");
 			return;
 		}
 
@@ -831,7 +832,7 @@ public sealed partial class CreateDenyPolicy : Page
 			PFNInfoBar.IsClosable = false;
 			PFNInfoBar.IsOpen = true;
 			PFNInfoBar.Severity = InfoBarSeverity.Informational;
-			PFNInfoBar.Message = "Creating the deny policy based on Package Family Names";
+			PFNInfoBar.Message = GlobalVars.Rizz.GetString("CreatingPFNBasedDenyPolicy");
 			PFNSettingsCard.IsExpanded = true;
 
 
@@ -885,7 +886,7 @@ public sealed partial class CreateDenyPolicy : Page
 				if (shouldDeploy)
 				{
 
-					string msg4 = "Deploying the Deny policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
 
 					Logger.Write(msg4);
 
@@ -914,7 +915,7 @@ public sealed partial class CreateDenyPolicy : Page
 			ErrorsOccurred = true;
 
 			PFNInfoBar.Severity = InfoBarSeverity.Error;
-			PFNInfoBar.Message = $"There was an error: {ex.Message}";
+			PFNInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurred") + ex.Message;
 
 			throw;
 		}
@@ -924,7 +925,7 @@ public sealed partial class CreateDenyPolicy : Page
 			if (!ErrorsOccurred)
 			{
 				PFNInfoBar.Severity = InfoBarSeverity.Success;
-				PFNInfoBar.Message = "Successfully created the Deny policy";
+				PFNInfoBar.Message = GlobalVars.Rizz.GetString("DenyPolicyCreated");
 			}
 
 			CreatePFNDenyPolicyButton.IsEnabled = true;

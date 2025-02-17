@@ -25,7 +25,7 @@ internal static class NewPublisherLevelRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write($"NewPublisherLevelRules: There are {publisherSigners.Count} Publisher Signers to be added to the XML file '{xmlFilePath}'");
 
@@ -118,7 +118,7 @@ internal static class NewPublisherLevelRules
 		}
 
 		// Instantiate the policy
-		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
 		Logger.Write($"NewPublisherLevelRules: There are {publisherSigners.Count} Publisher Signers to be added to the XML file '{xmlFilePath}'");
 

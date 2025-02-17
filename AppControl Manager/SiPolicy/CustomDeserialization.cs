@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
+using AppControlManager.Main;
 using AppControlManager.Others;
 
 namespace AppControlManager.SiPolicy;
@@ -10,27 +11,56 @@ namespace AppControlManager.SiPolicy;
 internal static class CustomDeserialization
 {
 
-	internal static SiPolicy DeserializeSiPolicy(string filePath)
+	internal static SiPolicy DeserializeSiPolicy(string? filePath, XmlDocument? Xml)
 	{
-		XmlDocument xmlDoc = new();
-		xmlDoc.Load(filePath);
-		XmlElement? root = xmlDoc.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
-		SiPolicy policy = new();
 
-		// Read root attributes
-		if (root.HasAttribute("FriendlyName"))
-			policy.FriendlyName = root.GetAttribute("FriendlyName");
-		if (root.HasAttribute("PolicyType"))
+		XmlElement? root;
+
+		if (!string.IsNullOrEmpty(filePath))
 		{
-			policy.PolicyType = ConvertStringToPolicyType(root.GetAttribute("PolicyType"));
-			policy.PolicyTypeSpecified = true;
+			XmlDocument xmlDoc = new();
+			xmlDoc.Load(filePath);
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
+
+			// Make sure the policy file is valid
+			_ = CiPolicyTest.TestCiPolicy(filePath);
+		}
+		else if (Xml is not null)
+		{
+			root = Xml.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
+		}
+		else
+		{
+			throw new InvalidOperationException("file path or XML document must be provided for deserialization");
 		}
 
+		SiPolicy policy = new();
+
+		// Friendly Name
+		if (root.HasAttribute("FriendlyName"))
+			policy.FriendlyName = root.GetAttribute("FriendlyName");
+
+		// Policy Type - if missing, Base policy type is assigned
+		policy.PolicyTypeSpecified = true;
+		policy.PolicyType = root.HasAttribute("PolicyType") ? ConvertStringToPolicyType(root.GetAttribute("PolicyType")) : PolicyType.BasePolicy;
+
+		// Generate a new GUID
+		Guid newRandomGUID = Guid.CreateVersion7();
+		// Convert it to string
+		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
+
 		// Read basic text elements
-		policy.VersionEx = GetElementText(root, "VersionEx");
-		policy.PolicyID = GetElementText(root, "PolicyID");
-		policy.BasePolicyID = GetElementText(root, "BasePolicyID");
-		policy.PlatformID = GetElementText(root, "PlatformID");
+		string version = GetElementText(root, "VersionEx");
+		policy.VersionEx = string.IsNullOrEmpty(version) ? "1.0.0.0" : version;
+
+		string policyID = GetElementText(root, "PolicyID");
+		policy.PolicyID = string.IsNullOrEmpty(policyID) ? newRandomGUIDString : policyID;
+
+		string basePolicyID = GetElementText(root, "BasePolicyID");
+		policy.BasePolicyID = string.IsNullOrEmpty(basePolicyID) ? newRandomGUIDString : basePolicyID;
+
+		string platformID = GetElementText(root, "PlatformID");
+		policy.PlatformID = string.IsNullOrEmpty(platformID) ? "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}" : platformID;
 
 		// Deserialize Rules
 		XmlElement? rulesElement = root["Rules", GlobalVars.SiPolicyNamespace];
@@ -236,36 +266,38 @@ internal static class CustomDeserialization
 		return bytes;
 	}
 
-	// Conversion methods for enums.
-	private static OptionType ConvertStringToOptionType(string s)
+
+	private static readonly Dictionary<string, OptionType> PolicyRuleOptionsActual = new()
 	{
-		return s switch
-		{
-			"Enabled:UMCI" => OptionType.EnabledUMCI,
-			"Enabled:Boot Menu Protection" => OptionType.EnabledBootMenuProtection,
-			"Enabled:Intelligent Security Graph Authorization" => OptionType.EnabledIntelligentSecurityGraphAuthorization,
-			"Enabled:Invalidate EAs on Reboot" => OptionType.EnabledInvalidateEAsonReboot,
-			"Required:WHQL" => OptionType.RequiredWHQL,
-			"Enabled:Developer Mode Dynamic Code Trust" => OptionType.EnabledDeveloperModeDynamicCodeTrust,
-			"Enabled:Allow Supplemental Policies" => OptionType.EnabledAllowSupplementalPolicies,
-			"Disabled:Runtime FilePath Rule Protection" => OptionType.DisabledRuntimeFilePathRuleProtection,
-			"Enabled:Revoked Expired As Unsigned" => OptionType.EnabledRevokedExpiredAsUnsigned,
-			"Enabled:Audit Mode" => OptionType.EnabledAuditMode,
-			"Disabled:Flight Signing" => OptionType.DisabledFlightSigning,
-			"Enabled:Inherit Default Policy" => OptionType.EnabledInheritDefaultPolicy,
-			"Enabled:Unsigned System Integrity Policy" => OptionType.EnabledUnsignedSystemIntegrityPolicy,
-			"Enabled:Dynamic Code Security" => OptionType.EnabledDynamicCodeSecurity,
-			"Required:EV Signers" => OptionType.RequiredEVSigners,
-			"Enabled:Boot Audit On Failure" => OptionType.EnabledBootAuditOnFailure,
-			"Enabled:Advanced Boot Options Menu" => OptionType.EnabledAdvancedBootOptionsMenu,
-			"Disabled:Script Enforcement" => OptionType.DisabledScriptEnforcement,
-			"Required:Enforce Store Applications" => OptionType.RequiredEnforceStoreApplications,
-			"Enabled:Secure Setting Policy" => OptionType.EnabledSecureSettingPolicy,
-			"Enabled:Managed Installer" => OptionType.EnabledManagedInstaller,
-			"Enabled:Update Policy No Reboot" => OptionType.EnabledUpdatePolicyNoReboot,
-			"Enabled:Conditional Windows Lockdown Policy" => OptionType.EnabledConditionalWindowsLockdownPolicy,
-			_ => throw new InvalidOperationException("Unknown OptionType: " + s)
-		};
+		{ "Enabled:UMCI", OptionType.EnabledUMCI },
+		{ "Enabled:Boot Menu Protection", OptionType.EnabledBootMenuProtection },
+		{ "Required:WHQL", OptionType.RequiredWHQL },
+		{ "Enabled:Audit Mode", OptionType.EnabledAuditMode },
+		{ "Disabled:Flight Signing", OptionType.DisabledFlightSigning },
+		{ "Enabled:Inherit Default Policy", OptionType.EnabledInheritDefaultPolicy },
+		{ "Enabled:Unsigned System Integrity Policy", OptionType.EnabledUnsignedSystemIntegrityPolicy },
+		{ "Required:EV Signers", OptionType.RequiredEVSigners },
+		{ "Enabled:Advanced Boot Options Menu", OptionType.EnabledAdvancedBootOptionsMenu },
+		{ "Enabled:Boot Audit On Failure", OptionType.EnabledBootAuditOnFailure },
+		{ "Disabled:Script Enforcement", OptionType.DisabledScriptEnforcement },
+		{ "Required:Enforce Store Applications", OptionType.RequiredEnforceStoreApplications },
+		{ "Enabled:Managed Installer", OptionType.EnabledManagedInstaller },
+		{ "Enabled:Intelligent Security Graph Authorization", OptionType.EnabledIntelligentSecurityGraphAuthorization },
+		{ "Enabled:Invalidate EAs on Reboot", OptionType.EnabledInvalidateEAsonReboot },
+		{ "Enabled:Update Policy No Reboot", OptionType.EnabledUpdatePolicyNoReboot },
+		{ "Enabled:Allow Supplemental Policies", OptionType.EnabledAllowSupplementalPolicies },
+		{ "Disabled:Runtime FilePath Rule Protection", OptionType.DisabledRuntimeFilePathRuleProtection },
+		{ "Enabled:Dynamic Code Security", OptionType.EnabledDynamicCodeSecurity },
+		{ "Enabled:Revoked Expired As Unsigned", OptionType.EnabledRevokedExpiredAsUnsigned },
+		{ "Enabled:Developer Mode Dynamic Code Trust", OptionType.EnabledDeveloperModeDynamicCodeTrust },
+		{ "Enabled:Secure Setting Policy", OptionType.EnabledSecureSettingPolicy },
+		{ "Enabled:Conditional Windows Lockdown Policy", OptionType.EnabledConditionalWindowsLockdownPolicy }
+	};
+
+	// Conversion methods for enums.
+	internal static OptionType ConvertStringToOptionType(string s)
+	{
+		return PolicyRuleOptionsActual[s];
 	}
 
 	private static PolicyType ConvertStringToPolicyType(string s)

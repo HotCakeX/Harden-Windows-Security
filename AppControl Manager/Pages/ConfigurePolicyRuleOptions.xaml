@@ -33,7 +33,6 @@
 
             </controls:WrapPanel>
 
-
             <Button Grid.Row="1" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="PickPolicyFileButton_Click"
                      HorizontalAlignment="Center" RightTapped="PickPolicyFileButton_RightTapped" Holding="PickPolicyFileButton_Holding"
                      x:Uid="PickPolicyFileButton">
@@ -71,7 +70,6 @@
                 </Button.Content>
 
             </Button>
-
 
             <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,20,0,0">
 

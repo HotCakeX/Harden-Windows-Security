@@ -2,14 +2,15 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -17,11 +18,415 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
-public sealed partial class Simulation : Page
+// Since the columns for data in the ItemTemplate use "Binding" instead of "x:Bind", we need to use [GeneratedBindableCustomProperty] for them to work properly
+[GeneratedBindableCustomProperty]
+public sealed partial class Simulation : Page, INotifyPropertyChanged
 {
+
+	#region LISTVIEW IMPLEMENTATIONS
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string propertyName) =>
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+	// Properties to hold each columns' width.
+	private GridLength _columnWidth1;
+	public GridLength ColumnWidth1
+	{
+		get => _columnWidth1;
+		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+	}
+
+	private GridLength _columnWidth2;
+	public GridLength ColumnWidth2
+	{
+		get => _columnWidth2;
+		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+	}
+
+	private GridLength _columnWidth3;
+	public GridLength ColumnWidth3
+	{
+		get => _columnWidth3;
+		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+	}
+
+	private GridLength _columnWidth4;
+	public GridLength ColumnWidth4
+	{
+		get => _columnWidth4;
+		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+	}
+
+	private GridLength _columnWidth5;
+	public GridLength ColumnWidth5
+	{
+		get => _columnWidth5;
+		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+	}
+
+	private GridLength _columnWidth6;
+	public GridLength ColumnWidth6
+	{
+		get => _columnWidth6;
+		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+	}
+
+	private GridLength _columnWidth7;
+	public GridLength ColumnWidth7
+	{
+		get => _columnWidth7;
+		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+	}
+
+	private GridLength _columnWidth8;
+	public GridLength ColumnWidth8
+	{
+		get => _columnWidth8;
+		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+	}
+
+	private GridLength _columnWidth9;
+	public GridLength ColumnWidth9
+	{
+		get => _columnWidth9;
+		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+	}
+
+	private GridLength _columnWidth10;
+	public GridLength ColumnWidth10
+	{
+		get => _columnWidth10;
+		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+	}
+
+	private GridLength _columnWidth11;
+	public GridLength ColumnWidth11
+	{
+		get => _columnWidth11;
+		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
+	}
+
+	private GridLength _columnWidth12;
+	public GridLength ColumnWidth12
+	{
+		get => _columnWidth12;
+		set { _columnWidth12 = value; OnPropertyChanged(nameof(ColumnWidth12)); }
+	}
+
+	private GridLength _columnWidth13;
+	public GridLength ColumnWidth13
+	{
+		get => _columnWidth13;
+		set { _columnWidth13 = value; OnPropertyChanged(nameof(ColumnWidth13)); }
+	}
+
+	private GridLength _columnWidth14;
+	public GridLength ColumnWidth14
+	{
+		get => _columnWidth14;
+		set { _columnWidth14 = value; OnPropertyChanged(nameof(ColumnWidth14)); }
+	}
+
+	private GridLength _columnWidth15;
+	public GridLength ColumnWidth15
+	{
+		get => _columnWidth15;
+		set { _columnWidth15 = value; OnPropertyChanged(nameof(ColumnWidth15)); }
+	}
+
+
+	/// <summary>
+	/// Calculates the maximum required width for each column (including header text)
+	/// and assigns the value (with a little extra padding) to the corresponding property.
+	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
+	/// And only after this method, the ItemsSource must be assigned to the ListView.
+	/// </summary>
+	internal void CalculateColumnWidths()
+	{
+
+		// Measure header text widths first.
+		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PathHeader/Text"));
+		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SourceHeader/Text"));
+		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
+		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("MatchCriteriaHeader/Text"));
+		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SpecificFileNameLevelMatchCriteriaHeader/Text"));
+		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerIDHeader/Text"));
+		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNameHeader/Text"));
+		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerCertRootHeader/Text"));
+		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerCertPublisherHeader/Text"));
+		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerScopeHeader/Text"));
+		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("CertSubjectCNHeader/Text"));
+		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("CertIssuerCNHeader/Text"));
+		double maxWidth13 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("CertNotAfterHeader/Text"));
+		double maxWidth14 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("CertTBSValueHeader/Text"));
+		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
+
+		// Iterate over all items to determine the widest string for each column.
+		foreach (SimulationOutput item in SimulationOutputs)
+		{
+			double w1 = ListViewUIHelpers.MeasureTextWidth(item.Path);
+			if (w1 > maxWidth1) maxWidth1 = w1;
+
+			double w2 = ListViewUIHelpers.MeasureTextWidth(item.Source);
+			if (w2 > maxWidth2) maxWidth2 = w2;
+
+			double w3 = ListViewUIHelpers.MeasureTextWidth(item.IsAuthorized.ToString());
+			if (w3 > maxWidth3) maxWidth3 = w3;
+
+			double w4 = ListViewUIHelpers.MeasureTextWidth(item.MatchCriteria?.ToString());
+			if (w4 > maxWidth4) maxWidth4 = w4;
+
+			double w5 = ListViewUIHelpers.MeasureTextWidth(item.SpecificFileNameLevelMatchCriteria);
+			if (w5 > maxWidth5) maxWidth5 = w5;
+
+			double w6 = ListViewUIHelpers.MeasureTextWidth(item.SignerID);
+			if (w6 > maxWidth6) maxWidth6 = w6;
+
+			double w7 = ListViewUIHelpers.MeasureTextWidth(item.SignerName);
+			if (w7 > maxWidth7) maxWidth7 = w7;
+
+			double w8 = ListViewUIHelpers.MeasureTextWidth(item.SignerCertRoot);
+			if (w8 > maxWidth8) maxWidth8 = w8;
+
+			double w9 = ListViewUIHelpers.MeasureTextWidth(item.SignerCertPublisher);
+			if (w9 > maxWidth9) maxWidth9 = w9;
+
+			double w10 = ListViewUIHelpers.MeasureTextWidth(item.SignerScope);
+			if (w10 > maxWidth10) maxWidth10 = w10;
+
+			double w11 = ListViewUIHelpers.MeasureTextWidth(item.CertSubjectCN);
+			if (w11 > maxWidth11) maxWidth11 = w11;
+
+			double w12 = ListViewUIHelpers.MeasureTextWidth(item.CertIssuerCN);
+			if (w12 > maxWidth12) maxWidth12 = w12;
+
+			double w13 = ListViewUIHelpers.MeasureTextWidth(item.CertNotAfter);
+			if (w13 > maxWidth13) maxWidth13 = w13;
+
+			double w14 = ListViewUIHelpers.MeasureTextWidth(item.CertTBSValue);
+			if (w14 > maxWidth14) maxWidth14 = w14;
+
+			double w15 = ListViewUIHelpers.MeasureTextWidth(item.FilePath);
+			if (w15 > maxWidth15) maxWidth15 = w15;
+		}
+
+		// Set the column width properties.
+		ColumnWidth1 = new GridLength(maxWidth1);
+		ColumnWidth2 = new GridLength(maxWidth2);
+		ColumnWidth3 = new GridLength(maxWidth3);
+		ColumnWidth4 = new GridLength(maxWidth4);
+		ColumnWidth5 = new GridLength(maxWidth5);
+		ColumnWidth6 = new GridLength(maxWidth6);
+		ColumnWidth7 = new GridLength(maxWidth7);
+		ColumnWidth8 = new GridLength(maxWidth8);
+		ColumnWidth9 = new GridLength(maxWidth9);
+		ColumnWidth10 = new GridLength(maxWidth10);
+		ColumnWidth11 = new GridLength(maxWidth11);
+		ColumnWidth12 = new GridLength(maxWidth12);
+		ColumnWidth13 = new GridLength(maxWidth13);
+		ColumnWidth14 = new GridLength(maxWidth14);
+		ColumnWidth15 = new GridLength(maxWidth15);
+	}
+
+
+	/// <summary>
+	/// Converts the properties of a SimulationOutput row into a labeled, formatted string for copying to clipboard.
+	/// </summary>
+	/// <param name="row">The selected SimulationOutput row from the ListView.</param>
+	/// <returns>A formatted string of the row's properties with labels.</returns>
+	internal static string ConvertRowToText(SimulationOutput row)
+	{
+		// Use StringBuilder to format each property with its label for easy reading
+		return new StringBuilder()
+			.AppendLine($"Path: {row.Path}")
+			.AppendLine($"Source: {row.Source}")
+			.AppendLine($"Is Authorized: {row.IsAuthorized}")
+			.AppendLine($"Match Criteria: {row.MatchCriteria}")
+			.AppendLine($"Specific File Name Criteria: {row.SpecificFileNameLevelMatchCriteria}")
+			.AppendLine($"Signer ID: {row.SignerID}")
+			.AppendLine($"Signer Name: {row.SignerName}")
+			.AppendLine($"Signer Cert Root: {row.SignerCertRoot}")
+			.AppendLine($"Signer Cert Publisher: {row.SignerCertPublisher}")
+			.AppendLine($"Signer Scope: {row.SignerScope}")
+			.AppendLine($"Cert Subject CN: {row.CertSubjectCN}")
+			.AppendLine($"Cert Issuer CN: {row.CertIssuerCN}")
+			.AppendLine($"Cert Not After: {row.CertNotAfter}")
+			.AppendLine($"Cert TBS Value: {row.CertTBSValue}")
+			.AppendLine($"File Path: {row.FilePath}")
+			.ToString();
+	}
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	/// <param name="sender">The event sender.</param>
+	/// <param name="e">The event arguments.</param>
+	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
+	{
+		// Check if there are selected items in the ListView
+		if (SimOutputListView.SelectedItems.Count > 0)
+		{
+			// Initialize StringBuilder to store all selected rows' data with labels
+			StringBuilder dataBuilder = new();
+
+			// Loop through each selected item in the ListView
+			foreach (var selectedItem in SimOutputListView.SelectedItems)
+			{
+				if (selectedItem is SimulationOutput obj)
+
+					// Append each row's formatted data to the StringBuilder
+					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
+
+				// Add a separator between rows for readability in multi-row copies
+				_ = dataBuilder.AppendLine(new string('-', 50));
+			}
+
+			// Create a DataPackage to hold the text data
+			DataPackage dataPackage = new();
+
+			// Set the formatted text as the content of the DataPackage
+			dataPackage.SetText(dataBuilder.ToString());
+
+			// Copy the DataPackage content to the clipboard
+			Clipboard.SetContent(dataPackage);
+		}
+	}
+
+	// Click event handlers for each property
+	private void CopyPath_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Path);
+	private void CopySource_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Source);
+	private void CopyIsAuthorized_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsAuthorized.ToString());
+	private void CopyMatchCriteria_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.MatchCriteria);
+	private void CopySpecificFileNameLevelMatch_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SpecificFileNameLevelMatchCriteria);
+	private void CopySignerID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignerID);
+	private void CopySignerName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignerName);
+	private void CopySignerCertRoot_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignerCertRoot);
+	private void CopySignerCertPublisher_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignerCertPublisher);
+	private void CopySignerScope_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignerScope);
+	private void CopyCertSubjectCN_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.CertSubjectCN);
+	private void CopyCertIssuerCN_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.CertIssuerCN);
+	private void CopyCertNotAfter_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.CertNotAfter);
+	private void CopyCertTBSValue_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.CertTBSValue);
+	private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePath);
+
+	/// <summary>
+	/// Helper method to copy a specified property to clipboard without reflection
+	/// </summary>
+	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
+	private void CopyToClipboard(Func<SimulationOutput, string?> getProperty)
+	{
+		if (SimOutputListView.SelectedItem is SimulationOutput selectedItem)
+		{
+			string? propertyValue = getProperty(selectedItem);
+			if (propertyValue is not null)
+			{
+				DataPackage dataPackage = new();
+				dataPackage.SetText(propertyValue);
+				Clipboard.SetContent(dataPackage);
+			}
+		}
+	}
+
+	// Event handlers for each sort button
+	private void ColumnSortingButton_Path_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.Path);
+	}
+	private void ColumnSortingButton_Source_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.Source);
+	}
+	private void ColumnSortingButton_IsAuthorized_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.IsAuthorized);
+	}
+	private void ColumnSortingButton_MatchCriteria_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.MatchCriteria);
+	}
+	private void ColumnSortingButton_SpecificFileNameLevelMatchCriteria_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.SpecificFileNameLevelMatchCriteria);
+	}
+	private void ColumnSortingButton_SignerID_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.SignerID);
+	}
+	private void ColumnSortingButton_SignerName_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.SignerName);
+	}
+	private void ColumnSortingButton_SignerCertRoot_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.SignerCertRoot);
+	}
+	private void ColumnSortingButton_SignerCertPublisher_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.SignerCertPublisher);
+	}
+	private void ColumnSortingButton_SignerScope_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.SignerScope);
+	}
+	private void ColumnSortingButton_CertSubjectCN_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.CertSubjectCN);
+	}
+	private void ColumnSortingButton_CertIssuerCN_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.CertIssuerCN);
+	}
+	private void ColumnSortingButton_CertNotAfter_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.CertNotAfter);
+	}
+	private void ColumnSortingButton_CertTBSValue_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.CertTBSValue);
+	}
+	private void ColumnSortingButton_FilePath_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(SimOutput => SimOutput.FilePath);
+	}
+
+	/// <summary>
+	/// Performs data sorting
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="keySelector"></param>
+	private void SortColumn<T>(Func<SimulationOutput, T> keySelector)
+	{
+		// Determine if a search filter is active.
+		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
+		// Use either the full list (AllSimulationOutputs) or the current display list.
+		var collectionToSort = isSearchEmpty ? AllSimulationOutputs : [.. SimulationOutputs];
+
+		if (SortingDirectionToggle.IsChecked)
+		{
+			// Sort in descending order.
+			SimulationOutputs = [.. collectionToSort.OrderByDescending(keySelector)];
+		}
+		else
+		{
+			// Sort in ascending order.
+			SimulationOutputs = [.. collectionToSort.OrderBy(keySelector)];
+		}
+
+		// Refresh the ItemsSource so the UI updates.
+		SimOutputListView.ItemsSource = SimulationOutputs;
+	}
+
+
+
+	#endregion
+
+
+
 	public ObservableCollection<SimulationOutput> SimulationOutputs { get; set; }
 	private readonly List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching
 	private List<string> filePaths; // For selected file paths
@@ -39,32 +444,7 @@ public sealed partial class Simulation : Page
 		filePaths = [];
 		folderPaths = [];
 		catRootPaths = [];
-
 	}
-
-
-	#region
-
-	// Without the following steps, when the user begins data fetching process and then navigates away from this page
-	// Upon arrival at this page again, the DataGrid loses its virtualization, causing the UI to hang for extended periods of time
-	// But after nullifying DataGrid's ItemsSource when page is navigated from and reassigning it when page is navigated to,
-	// We tackle that problem. Data will sill be stored in the ObservableCollection when page is not in focus,
-	// But DataGrid's source will pick them up only when page is navigated to.
-	protected override void OnNavigatedTo(NavigationEventArgs e)
-	{
-		base.OnNavigatedTo(e);
-		SimulationDataGrid.ItemsSource = SimulationOutputs;
-	}
-
-	protected override void OnNavigatedFrom(NavigationEventArgs e)
-	{
-		base.OnNavigatedFrom(e);
-		SimulationDataGrid.ItemsSource = null;
-	}
-
-	#endregion
-
-
 
 	// Event handler for the Begin Simulation button
 	private async void BeginSimulationButton_Click(object sender, RoutedEventArgs e)
@@ -104,39 +484,21 @@ public sealed partial class Simulation : Page
 			// Update the TextBox with the total count of files
 			TotalCountOfTheFilesTextBox.Text = result.Count.ToString(CultureInfo.InvariantCulture);
 
-			// Update the ObservableCollection on the UI thread
-			foreach (KeyValuePair<string, SimulationOutput> entry in result)
+			// Add to the ObservableCollection bound to the UI
+			await DispatcherQueue.EnqueueAsync(() =>
 			{
-				SimulationOutput simOutput = entry.Value;
-
-				SimulationOutput simulationOutput = new(
-					simOutput.Path,
-					simOutput.Source,
-					simOutput.IsAuthorized,
-					simOutput.SignerID,
-					simOutput.SignerName,
-					simOutput.SignerCertRoot,
-					simOutput.SignerCertPublisher,
-					simOutput.SignerScope,
-					simOutput.SignerFileAttributeIDs,
-					simOutput.MatchCriteria,
-					simOutput.SpecificFileNameLevelMatchCriteria,
-					simOutput.CertSubjectCN,
-					simOutput.CertIssuerCN,
-					simOutput.CertNotAfter,
-					simOutput.CertTBSValue,
-					simOutput.FilePath
-				);
-
-				// Add to the full list and observable collection
-				AllSimulationOutputs.Add(simulationOutput);
-
-				// Add to the ObservableCollection bound to the UI
-				_ = DispatcherQueue.TryEnqueue(() =>
+				// Update the ObservableCollection on the UI thread
+				foreach (KeyValuePair<string, SimulationOutput> entry in result)
 				{
-					SimulationOutputs.Add(simulationOutput);
-				});
-			}
+					// Add to the full list and observable collection
+					SimulationOutputs.Add(entry.Value);
+
+					AllSimulationOutputs.Add(entry.Value);
+				}
+
+				CalculateColumnWidths();
+				SimOutputListView.ItemsSource = SimulationOutputs;
+			});
 		}
 		finally
 		{
@@ -254,186 +616,6 @@ public sealed partial class Simulation : Page
 		}
 	}
 
-
-	// https://learn.microsoft.com/en-us/windows/communitytoolkit/controls/datagrid_guidance/group_sort_filter
-
-	// Column sorting logic for the entire DataGrid
-	private void SimulationDataGrid_Sorting(object sender, DataGridColumnEventArgs e)
-	{
-		// Check if the column being sorted is the "IsAuthorized" column
-		if (string.Equals(e.Column.Tag?.ToString(), "IsAuthorized", StringComparison.OrdinalIgnoreCase))
-		{
-			// Perform the sorting based on the current SortDirection (ascending or descending)
-			// At first it is null since no direction has been chosen for the column
-			if (e.Column.SortDirection is null || e.Column.SortDirection is DataGridSortDirection.Ascending)
-			{
-				// Descending: First True, then False
-				SimulationOutputs = [.. AllSimulationOutputs.OrderBy(output => !output.IsAuthorized)];
-
-				// Set the column direction to Descending
-				e.Column.SortDirection = DataGridSortDirection.Descending;
-			}
-			else
-			{
-				// Ascending: First False, then True
-				SimulationOutputs = [.. AllSimulationOutputs.OrderBy(output => output.IsAuthorized)];
-				e.Column.SortDirection = DataGridSortDirection.Ascending;
-			}
-
-			// Update the ItemsSource of the DataGrid
-			SimulationDataGrid.ItemsSource = SimulationOutputs;
-
-			// Clear SortDirection for other columns
-			foreach (DataGridColumn column in SimulationDataGrid.Columns)
-			{
-				if (column != e.Column)
-				{
-					column.SortDirection = null;
-				}
-			}
-		}
-	}
-
-
-
-	/// <summary>
-	/// Populates the "Copy Individual Items" submenu in the flyout when the DataGrid is loaded.
-	/// </summary>
-	private void SimulationDataGrid_Loaded(object sender, RoutedEventArgs e)
-	{
-		if (CopyIndividualItemsSubMenu is null)
-		{
-			return;
-		}
-
-		// Clear any existing items to avoid duplicates if reloaded
-		CopyIndividualItemsSubMenu.Items.Clear();
-
-		// Define headers and their associated click events for individual copy actions
-		Dictionary<string, RoutedEventHandler> copyActions = new()
-		{
-			{ "Path", CopyPath_Click },
-			{ "Source", CopySource_Click },
-			{ "Is Authorized", CopyIsAuthorized_Click },
-			{ "Match Criteria", CopyMatchCriteria_Click },
-			{ "Specific File Name Criteria", CopySpecificFileNameCriteria_Click },
-			{ "Signer ID", CopySignerID_Click },
-			{ "Signer Name", CopySignerName_Click },
-			{ "Signer Cert Root", CopySignerCertRoot_Click },
-			{ "Signer Cert Publisher", CopySignerCertPublisher_Click },
-			{ "Signer Scope", CopySignerScope_Click },
-			{ "Cert Subject CN", CopyCertSubjectCN_Click },
-			{ "Cert Issuer CN", CopyCertIssuerCN_Click },
-			{ "Cert Not After", CopyCertNotAfter_Click },
-			{ "Cert TBS Value", CopyCertTBSValue_Click },
-			{ "File Path", CopyFilePath_Click }
-		};
-
-		// Add each column header as an individual copy option in the flyout submenu
-		foreach (KeyValuePair<string, RoutedEventHandler> action in copyActions)
-		{
-			// Create a new menu item for each column header
-			MenuFlyoutItem menuItem = new() { Text = $"Copy {action.Key}" };
-
-			// Set the click event for the menu item
-			menuItem.Click += action.Value;
-
-			// Add the menu item to the submenu
-			CopyIndividualItemsSubMenu.Items.Add(menuItem);
-		}
-	}
-
-	// Event handlers for each column copy action
-	private void CopyPath_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.Path));
-	private void CopySource_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.Source));
-	private void CopyIsAuthorized_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.IsAuthorized));
-	private void CopyMatchCriteria_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.MatchCriteria));
-	private void CopySpecificFileNameCriteria_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SpecificFileNameLevelMatchCriteria));
-	private void CopySignerID_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerID));
-	private void CopySignerName_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerName));
-	private void CopySignerCertRoot_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerCertRoot));
-	private void CopySignerCertPublisher_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerCertPublisher));
-	private void CopySignerScope_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerScope));
-	private void CopyCertSubjectCN_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertSubjectCN));
-	private void CopyCertIssuerCN_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertIssuerCN));
-	private void CopyCertNotAfter_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertNotAfter));
-	private void CopyCertTBSValue_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertTBSValue));
-	private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.FilePath));
-
-	/// <summary>
-	/// Copies the specified property of the selected row to the clipboard.
-	/// </summary>
-	/// <param name="propertyName">Name of the property to copy</param>
-	private void CopyPropertyToClipboard(string propertyName)
-	{
-		// Get the currently selected item in the DataGrid
-		if (SimulationDataGrid.SelectedItem is not SimulationOutput selectedItem)
-		{
-			return;
-		}
-
-		// Retrieve the property value directly based on the property name
-		string? propertyValue = propertyName switch
-		{
-			nameof(SimulationOutput.Path) => selectedItem.Path,
-			nameof(SimulationOutput.Source) => selectedItem.Source,
-			nameof(SimulationOutput.IsAuthorized) => selectedItem.IsAuthorized.ToString(),
-			nameof(SimulationOutput.MatchCriteria) => selectedItem.MatchCriteria,
-			nameof(SimulationOutput.SpecificFileNameLevelMatchCriteria) => selectedItem.SpecificFileNameLevelMatchCriteria,
-			nameof(SimulationOutput.SignerID) => selectedItem.SignerID,
-			nameof(SimulationOutput.SignerName) => selectedItem.SignerName,
-			nameof(SimulationOutput.SignerCertRoot) => selectedItem.SignerCertRoot,
-			nameof(SimulationOutput.SignerCertPublisher) => selectedItem.SignerCertPublisher,
-			nameof(SimulationOutput.SignerScope) => selectedItem.SignerScope,
-			nameof(SimulationOutput.CertSubjectCN) => selectedItem.CertSubjectCN,
-			nameof(SimulationOutput.CertIssuerCN) => selectedItem.CertIssuerCN,
-			nameof(SimulationOutput.CertNotAfter) => selectedItem.CertNotAfter,
-			nameof(SimulationOutput.CertTBSValue) => selectedItem.CertTBSValue,
-			nameof(SimulationOutput.FilePath) => selectedItem.FilePath,
-			_ => null
-		};
-
-		if (!string.IsNullOrEmpty(propertyValue))
-		{
-			DataPackage dataPackage = new();
-			dataPackage.SetText(propertyValue);
-			Clipboard.SetContent(dataPackage);
-		}
-	}
-
-
-	/// <summary>
-	/// Copies all column values of the selected row to the clipboard.
-	/// </summary>
-	private void SimulationDataGrid_CopyRow_Click(object sender, RoutedEventArgs e)
-	{
-		if (SimulationDataGrid.SelectedItem is not SimulationOutput selectedItem)
-		{
-			return;
-		}
-
-		string rowData = new StringBuilder()
-			.AppendLine($"Path: {selectedItem.Path}")
-			.AppendLine($"Source: {selectedItem.Source}")
-			.AppendLine($"Is Authorized: {selectedItem.IsAuthorized}")
-			.AppendLine($"Match Criteria: {selectedItem.MatchCriteria}")
-			.AppendLine($"Specific File Name Criteria: {selectedItem.SpecificFileNameLevelMatchCriteria}")
-			.AppendLine($"Signer ID: {selectedItem.SignerID}")
-			.AppendLine($"Signer Name: {selectedItem.SignerName}")
-			.AppendLine($"Signer Cert Root: {selectedItem.SignerCertRoot}")
-			.AppendLine($"Signer Cert Publisher: {selectedItem.SignerCertPublisher}")
-			.AppendLine($"Signer Scope: {selectedItem.SignerScope}")
-			.AppendLine($"Cert Subject CN: {selectedItem.CertSubjectCN}")
-			.AppendLine($"Cert Issuer CN: {selectedItem.CertIssuerCN}")
-			.AppendLine($"Cert Not After: {selectedItem.CertNotAfter}")
-			.AppendLine($"Cert TBS Value: {selectedItem.CertTBSValue}")
-			.AppendLine($"File Path: {selectedItem.FilePath}")
-			.ToString();
-
-		DataPackage dataPackage = new();
-		dataPackage.SetText(rowData);
-		Clipboard.SetContent(dataPackage);
-	}
 
 	private void SelectXmlFileButton_Holding(object sender, HoldingRoutedEventArgs e)
 	{

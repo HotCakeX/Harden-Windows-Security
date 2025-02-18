@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -56,10 +55,8 @@ public sealed partial class Update : Page
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
-
 	// Public property to access the singleton instance from other classes
 	public static Update Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("UpdateNotInitialized"));
-
 
 	// Event handler for check for update button
 	private async void CheckForUpdateButton_Click(object sender, RoutedEventArgs e)
@@ -190,7 +187,6 @@ public sealed partial class Update : Page
 						}
 					}
 
-
 					Logger.Write(GlobalVars.Rizz.GetString("DownloadSuccess") + AppControlManagerSavePath);
 				}
 
@@ -246,6 +242,7 @@ public sealed partial class Update : Page
 
 					try
 					{
+						/*
 
 						// Execute the query to get the MpPreferences
 						using ManagementObjectSearcher searcher = new("ROOT\\Microsoft\\Windows\\Defender", $"SELECT AttackSurfaceReductionOnlyExclusions FROM MSFT_MpPreference");
@@ -255,15 +252,31 @@ public sealed partial class Update : Page
 						ManagementBaseObject? result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 						string[]? currentAttackSurfaceReductionExclusions = result?["AttackSurfaceReductionOnlyExclusions"] as string[];
 
+						*/
+
+						// TODO: Create a Native AOT compatible source generated COM code that won't rely on System.Management or PowerShell
+
+						string ASRscript = "(Get-CimInstance -Namespace 'ROOT\\Microsoft\\Windows\\Defender' -Query 'SELECT AttackSurfaceReductionOnlyExclusions FROM MSFT_MpPreference').AttackSurfaceReductionOnlyExclusions -join ','";
+						string ASRoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{ASRscript}\"");
+
 						// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
 						// Before adding new ones for the new version
-						if (currentAttackSurfaceReductionExclusions is not null)
+						if (!string.IsNullOrWhiteSpace(ASRoutput))
 						{
+
+							string[] ASRoutputArray = ASRoutput.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+
+							List<string> ASRoutputArrayCleaned = [];
+
+							foreach (string item in ASRoutputArray)
+							{
+								ASRoutputArrayCleaned.Add(item.TrimStart().TrimEnd().TrimEnd('\r', '\n'));
+							}
 
 							List<string> asrRulesToRemove = [];
 
 							// Find all the rules that belong to the AppControl Manager
-							foreach (string item in currentAttackSurfaceReductionExclusions)
+							foreach (string item in ASRoutputArrayCleaned)
 							{
 								if (MyRegex1().Match(item).Success)
 								{
@@ -274,13 +287,24 @@ public sealed partial class Update : Page
 							// If any of the rules belong to the AppControl Manager
 							if (asrRulesToRemove.Count > 0)
 							{
-								string[] stringArrayRepo = [.. asrRulesToRemove];
 
 								// Remove ASR rule exclusions that belong to all previous app versions
+
+								/*
+
 								using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
 								ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
 								inParams["AttackSurfaceReductionOnlyExclusions"] = stringArrayRepo;
 								_ = managementClass.InvokeMethod("Remove", inParams, null);
+
+								*/
+
+								foreach (string item in asrRulesToRemove)
+								{
+
+									string script = $"Remove-MpPreference -AttackSurfaceReductionOnlyExclusions '{item}'";
+									ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script}\"");
+								}
 							}
 						}
 					}
@@ -331,13 +355,18 @@ public sealed partial class Update : Page
 						throw new InvalidOperationException(GlobalVars.Rizz.GetString("UnknownInstallationIssue"));
 					}
 
-
 					try
 					{
 
 						Package AppControlManagerPackage = packageManager.FindPackages("AppControlManager_sadt7br7jpt02").First();
 
 						string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
+
+						// Construct the paths to the .exe and .dll files of the AppControl Manager
+						string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
+						string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
+
+						/*
 
 						// Connect to the WMI namespace again
 						ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
@@ -346,9 +375,6 @@ public sealed partial class Update : Page
 						// Create an instance of the MSFT_MpPreference class for Add method
 						using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
 
-						// Construct the paths to the .exe and .dll files of the AppControl Manager
-						string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
-						string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
 
 						// Get the available methods for the class
 						ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
@@ -358,13 +384,21 @@ public sealed partial class Update : Page
 
 						// Invoke the Add method to add the paths to the ASR rules exclusions
 						_ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
+
+						*/
+
+						string script1 = $"Add-MpPreference -AttackSurfaceReductionOnlyExclusions '{path1}'";
+						ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script1}\"");
+
+						string script2 = $"Add-MpPreference -AttackSurfaceReductionOnlyExclusions '{path2}'";
+						ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script2}\"");
+
 					}
 					catch (Exception ex)
 					{
 						Logger.Write(GlobalVars.Rizz.GetString("ASRAddError") + ex.Message);
 
 					}
-
 				});
 
 				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("UpdateSuccess");
@@ -383,7 +417,6 @@ public sealed partial class Update : Page
 				CheckForUpdateButton.IsEnabled = true;
 			}
 		}
-
 		catch
 		{
 			UpdateStatusInfoBar.Severity = InfoBarSeverity.Error;
@@ -397,7 +430,6 @@ public sealed partial class Update : Page
 
 			throw;
 		}
-
 		finally
 		{
 			UpdateStatusInfoBar.IsClosable = true;
@@ -408,6 +440,7 @@ public sealed partial class Update : Page
 		}
 	}
 
+	private static readonly char[] separator = [','];
 
 	/// <summary>
 	/// Event handler for the Auto Update Check Toggle Button to modify the app settings
@@ -418,7 +451,6 @@ public sealed partial class Update : Page
 	{
 		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
 	}
-
 
 	/// <summary>
 	/// Override OnNavigatedTo to update the toggle button when the page is navigated to.
@@ -438,7 +470,6 @@ public sealed partial class Update : Page
 		CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
 	}
 
-
 	/// <summary>
 	/// Event handler for the Hardened Update Procedure Toggle Button
 	/// </summary>
@@ -448,7 +479,6 @@ public sealed partial class Update : Page
 	{
 		useHardenedUpdateProcedure = ((ToggleSwitch)sender).IsOn;
 	}
-
 
 	/// <summary>
 	/// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
@@ -462,7 +492,6 @@ public sealed partial class Update : Page
 		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
 	}
 
-
 	/// <summary>
 	/// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
 	/// </summary>
@@ -474,7 +503,6 @@ public sealed partial class Update : Page
 
 		HardenedUpdateProcedureToggle.IsOn = !HardenedUpdateProcedureToggle.IsOn;
 	}
-
 
 	/// <summary>
 	/// Navigate to the extra sub-page

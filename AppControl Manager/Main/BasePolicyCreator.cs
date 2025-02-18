@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Management;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -23,6 +22,8 @@ internal static partial class BasePolicyCreator
 	internal static void SetAutoUpdateDriverBlockRules()
 	{
 		Logger.Write("Creating scheduled task for fast weekly Microsoft recommended driver block list update");
+
+		/*
 
 		// Initialize ManagementScope to interact with Task Scheduler's WMI namespace
 		ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
@@ -163,6 +164,14 @@ internal static partial class BasePolicyCreator
 		#endregion
 
 		Logger.Write("Successfully created the Microsoft Recommended Driver Block Rules auto updater scheduled task.");
+
+		*/
+
+		// TODO: use a Native AOT compatible way that doesn't rely on System.Management
+
+
+		// Execute the script using PowerShell
+		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.DriversBlockListAutoUpdaterScheduledTaskScriptFilePath}\"");
 
 	}
 

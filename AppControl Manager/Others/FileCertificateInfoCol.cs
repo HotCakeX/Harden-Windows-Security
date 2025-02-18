@@ -3,7 +3,7 @@
 namespace AppControlManager.Others;
 
 // a class that represents each certificate in a chain
-// Used by the DataGrid in the View File Certificates page
+// Used by the ListView in the View File Certificates page
 public sealed class FileCertificateInfoCol
 {
 	public int SignerNumber { get; set; }

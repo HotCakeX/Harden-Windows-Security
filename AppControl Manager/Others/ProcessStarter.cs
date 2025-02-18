@@ -50,10 +50,43 @@ internal static class ProcessStarter
 
 		process.WaitForExit();
 
-		if (process.ExitCode != 0)
+		if (process.ExitCode is not 0)
+		{
+			throw new InvalidOperationException($"Command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
+		}
+	}
+
+	/// <summary>
+	/// Executes an executable with arguments and returns the output
+	/// </summary>
+	/// <param name="command"></param>
+	/// <param name="arguments"></param>
+	/// <returns>Standard output of the executed command</returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static string RunCommandWithOutput(string command, string? arguments = null)
+	{
+		ProcessStartInfo processInfo = new()
+		{
+			FileName = command,
+			Arguments = arguments ?? string.Empty,
+			RedirectStandardOutput = true,
+			RedirectStandardError = true,
+			UseShellExecute = false,
+			CreateNoWindow = true
+		};
+
+		using Process process = new() { StartInfo = processInfo };
+		_ = process.Start();
+
+		string output = process.StandardOutput.ReadToEnd();
+		string error = process.StandardError.ReadToEnd();
+		process.WaitForExit();
+
+		if (process.ExitCode is not 0)
 		{
 			throw new InvalidOperationException($"Command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
 		}
 
+		return output;
 	}
 }

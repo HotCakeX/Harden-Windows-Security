@@ -8,6 +8,7 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -59,10 +60,11 @@ public sealed partial class CreateDenyPolicy : Page
 
 	private bool usingWildCardFilePathRules;
 
-	// Used to store the scan results and as the source for the results DataGrids
+	// Used to store the scan results and as the source for the results ListViews
 	internal ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
 	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
 
+	internal bool filesAndFoldersDataProcessed;
 
 	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
 	{
@@ -163,7 +165,7 @@ public sealed partial class CreateDenyPolicy : Page
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
-			// Clear variables responsible for the DataGrid
+			// Clear variables responsible for the ListView
 			filesAndFoldersScanResultsList.Clear();
 			filesAndFoldersScanResults.Clear();
 
@@ -171,7 +173,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			ScalabilityRadialGauge.IsEnabled = false;
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				DirectoryInfo[] selectedDirectories = [];
@@ -225,7 +227,7 @@ public sealed partial class CreateDenyPolicy : Page
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
 
-					// Add the results of the directories scans to the DataGrid
+					// Add the results of the directories scans to the ListView
 					foreach (FileIdentity item in LocalFilesResults)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
@@ -237,6 +239,23 @@ public sealed partial class CreateDenyPolicy : Page
 					}
 
 
+					await DispatcherQueue.EnqueueAsync(() =>
+					{
+						// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+						if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(CreateDenyPolicyFilesAndFoldersScanResults)))
+						{
+							filesAndFoldersDataProcessed = false;
+
+							CreateDenyPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
+							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
+						}
+						else
+						{
+							// Set it to true so ListView will be updated once user navigated to the page
+							filesAndFoldersDataProcessed = true;
+						}
+					});
+
 					string msg3 = GlobalVars.Rizz.GetString("ScanCompleted");
 
 					Logger.Write(msg3);
@@ -245,8 +264,6 @@ public sealed partial class CreateDenyPolicy : Page
 					{
 						FilesAndFoldersInfoBar.Message = msg3;
 					});
-
-
 				}
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersDenyPolicy");
@@ -295,8 +312,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
-
-
 			});
 
 		}
@@ -333,7 +348,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 	}
 
-
 	/// <summary>
 	/// Deploy policy Toggle Button
 	/// </summary>
@@ -343,7 +357,6 @@ public sealed partial class CreateDenyPolicy : Page
 	{
 		filesAndFoldersDeployButton = ((ToggleButton)sender).IsChecked ?? false;
 	}
-
 
 	/// <summary>
 	/// Browse for Files - Settings Card Click
@@ -481,7 +494,6 @@ public sealed partial class CreateDenyPolicy : Page
 			}
 
 
-
 			// For Wildcard file path rules, only folder paths should be used
 			if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 			{
@@ -573,9 +585,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			return apps;
 		});
-
 	}
-
 
 
 	/// <summary>
@@ -597,7 +607,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the touch-initiated refresh action
 	/// </summary>
@@ -616,7 +625,6 @@ public sealed partial class CreateDenyPolicy : Page
 			PFNRefreshAppsListButton.IsEnabled = true;
 		}
 	}
-
 
 	// Since we have a ScrollView around the page, it captures the mouse Scroll Wheel events.
 	// We have to disable its scrolling ability while pointer is inside of the ListView.
@@ -647,7 +655,6 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 
-
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
@@ -671,7 +678,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 		return [.. query];
 	}
-
 
 
 	/// <summary>
@@ -704,7 +710,6 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 
-
 	/// <summary>
 	/// Event handler to display the selected apps count on the UI TextBlock
 	/// </summary>
@@ -715,7 +720,6 @@ public sealed partial class CreateDenyPolicy : Page
 		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
 		PFNSelectedItemsCount.Text = GlobalVars.Rizz.GetString("SelectedApps") + selectedCount;
 	}
-
 
 
 	// Used to store the original Apps collection so when we filter the results and then remove the filters,
@@ -785,7 +789,6 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 
-
 	/// <summary>
 	/// Main button's event handler - Create Deny policy based on PFNs
 	/// </summary>
@@ -818,8 +821,6 @@ public sealed partial class CreateDenyPolicy : Page
 			return;
 		}
 
-
-
 		bool ErrorsOccurred = false;
 
 		try
@@ -839,8 +840,6 @@ public sealed partial class CreateDenyPolicy : Page
 			// A list to store the selected PackagedAppView items
 			List<string> selectedAppsPFNs = [];
 
-
-
 			// Loop through the selected items
 			foreach (var selectedItem in PFNPackagedAppsListView.SelectedItems)
 			{
@@ -850,8 +849,6 @@ public sealed partial class CreateDenyPolicy : Page
 					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
 				}
 			}
-
-
 
 			await Task.Run(() =>
 			{
@@ -903,11 +900,7 @@ public sealed partial class CreateDenyPolicy : Page
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
 
-
-
 			});
-
-
 		}
 
 		catch (Exception ex)
@@ -921,7 +914,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 		finally
 		{
-
 			if (!ErrorsOccurred)
 			{
 				PFNInfoBar.Severity = InfoBarSeverity.Success;
@@ -934,10 +926,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			PFNInfoBar.IsClosable = true;
 		}
-
-
 	}
 
 	#endregion
-
 }

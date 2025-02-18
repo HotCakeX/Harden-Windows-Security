@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Management;
+﻿namespace AppControlManager.Others;
 
-namespace AppControlManager.Others;
+// TODO: Incompatible with Native AOT
+
+/*
 
 internal static class TaskSchedulerHelper
 {
@@ -71,3 +71,5 @@ internal static class TaskSchedulerHelper
 		}
 	}
 }
+
+*/

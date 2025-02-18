@@ -12,6 +12,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -24,6 +25,9 @@ namespace AppControlManager.Pages;
 
 public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
 {
+
+	internal bool EventLogsDataProcessed;
+	internal bool LocalFilesDataProcessed;
 
 	// The user selected XML base policy path
 	internal string? selectedXMLFilePath;
@@ -60,7 +64,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	#region
 
-	// To store the FileIdentities displayed on the Local Files DataGrid
+	// To store the FileIdentities displayed on the Local Files ListView
 	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities { get; set; }
 
 	// Store all outputs for searching, used as a temporary storage for filtering
@@ -69,7 +73,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	internal List<FileIdentity> LocalFilesAllFileIdentities;
 
 
-	// To store the FileIdentities displayed on the Event Logs DataGrid
+	// To store the FileIdentities displayed on the Event Logs ListView
 	internal ObservableCollection<FileIdentity> EventLogsFileIdentities { get; set; }
 
 	// Store all outputs for searching, used as a temporary storage for filtering
@@ -126,7 +130,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		LogSizeNumberBox.Value = currentLogSize;
 		LogSize = Convert.ToUInt64(currentLogSize);
 	}
-
 
 	// Public property to access the singleton instance from other classes
 	public static AllowNewAppsStart Instance => _instance ?? throw new InvalidOperationException("AllowNewAppsStart is not initialized.");
@@ -384,11 +387,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				if (!_IsSignedPolicy)
 				{
 					// Create audit mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode]);
 					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
 
 					// Create Enforced mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode]);
 					PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
 				}
 
@@ -397,7 +400,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				{
 
 					// Create audit mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode], rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode], rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					string CIPp7SignedFilePathAudit = Path.Combine(stagingArea.FullName, "BaseAudit.cip.p7");
 
@@ -410,10 +413,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePathAudit, AuditModeCIP, true);
 
-
-
 					// Create Enforced mode CIP
-					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode, SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					string CIPp7SignedFilePathEnforced = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip.p7");
 
@@ -430,7 +431,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 				}
 
-
 				Logger.Write("Creating Enforced Mode SnapBack guarantee");
 				SnapBackGuarantee.Create(EnforcedModeCIP);
 
@@ -442,7 +442,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				EventLogUtility.SetLogSize(LogSize);
 
 			});
-
 
 			DisableStep1();
 			EnableStep2();
@@ -497,13 +496,13 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			// While the base policy is being deployed is audit mode, set the progress ring as indeterminate
 			Step2ProgressRing.IsIndeterminate = true;
 
-			// Enable the DataGrid pages so user can select the logs
+			// Enable the ListView pages so user can select the logs
 			AllowNewApps.Instance.EnableAllowNewAppsNavigationItem("LocalFiles");
 			AllowNewApps.Instance.EnableAllowNewAppsNavigationItem("EventLogs");
 
 			Step2InfoBar.IsOpen = true;
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				// Deploy the base policy in enforced mode before proceeding with scans
@@ -511,7 +510,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				{
 					throw new InvalidOperationException("Enforced mode CIP file could not be found");
 				}
-
 
 				_ = DispatcherQueue.TryEnqueue(() =>
 				{
@@ -540,7 +538,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						Step2ProgressRing.IsIndeterminate = false;
 					});
 
-
 					DirectoryInfo[] selectedDirectories = [];
 
 					// Convert user selected folder paths that are strings to DirectoryInfo objects
@@ -564,7 +561,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						// Scan all of the detected files from the user selected directories
 						HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, null, Step2ProgressRing);
 
-						// Add the results of the directories scans to the DataGrid
+						// Add the results of the directories scans to the ListView
 						foreach (FileIdentity item in LocalFilesResults)
 						{
 							_ = DispatcherQueue.TryEnqueue(() =>
@@ -574,6 +571,24 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 							});
 						}
+
+						await DispatcherQueue.EnqueueAsync(() =>
+						{
+							// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+							if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(AllowNewAppsLocalFilesDataGrid)))
+							{
+								LocalFilesDataProcessed = false;
+
+								AllowNewAppsLocalFilesDataGrid.Instance.CalculateColumnWidths();
+								AllowNewAppsLocalFilesDataGrid.Instance.UIListView.ItemsSource = LocalFilesFileIdentities;
+							}
+							else
+							{
+								// Set it to true so ListView will be updated once user navigated to the page
+								LocalFilesDataProcessed = true;
+							}
+						});
+
 					}
 				}
 			});
@@ -610,12 +625,29 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			if (Output.Count > 0)
 			{
 
-				// Add the event logs to the DataGrid
+				// Add the event logs to the ListView
 				foreach (FileIdentity item in Output)
 				{
 					EventLogsFileIdentities.Add(item);
 					EventLogsAllFileIdentities.Add(item);
 				}
+
+				await DispatcherQueue.EnqueueAsync(() =>
+				{
+					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+					if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(AllowNewAppsEventLogsDataGrid)))
+					{
+						EventLogsDataProcessed = false;
+
+						AllowNewAppsEventLogsDataGrid.Instance.CalculateColumnWidths();
+						AllowNewAppsEventLogsDataGrid.Instance.UIListView.ItemsSource = EventLogsFileIdentities;
+					}
+					else
+					{
+						// Set it to true so ListView will be updated once user navigated to the page
+						EventLogsDataProcessed = true;
+					}
+				});
 			}
 
 			// Update the total logs on that page once we add data to it from here
@@ -625,7 +657,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 			// Update the InfoBadge for the top menu
 			AllowNewApps.Instance.UpdateEventLogsInfoBadge(EventLogsFileIdentities.Count, 1);
-
 
 			DisableStep1();
 			DisableStep2();
@@ -674,7 +705,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			DisableStep2();
 			DisableStep3();
 
-			// Clear the DataGrids and their respective search/filter-related lists
+			// Clear the ListViews and their respective search/filter-related lists
 			LocalFilesFileIdentities.Clear();
 			LocalFilesAllFileIdentities.Clear();
 			EventLogsFileIdentities.Clear();
@@ -728,7 +759,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				SnapBackGuarantee.Remove();
 			});
 
-
 		}
 		finally
 		{
@@ -738,7 +768,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			ResetStepsButton.IsEnabled = true;
 		}
 	}
-
 
 
 	private void ClearSelectedDirectoriesButton_Click(object sender, RoutedEventArgs e)
@@ -757,12 +786,10 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	}
 
-
 	private void DeployToggleButton_Unchecked(object sender, RoutedEventArgs e)
 	{
 		deployPolicy = false;
 	}
-
 
 
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -781,7 +808,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	private void BrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
 		if (selectedFolders is { Count: > 0 })
@@ -802,7 +828,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	private void BrowseForXMLPolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrWhiteSpace(selectedFile))
@@ -821,7 +846,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				throw new InvalidOperationException($"Selected item '{selectedFile}' is not a valid XML file path");
 			}
 		}
-
 	}
 
 
@@ -895,7 +919,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			Step3InfoBar.Message = "Creating the policy using any available event logs or file scan results in other tabs.";
 
 
-			// Check if there are items for the local file scans DataGrid
+			// Check if there are items for the local file scans ListView
 			if (LocalFilesFileIdentities.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
@@ -905,7 +929,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				}
 			}
 
-			// Check if there are selected items for the Event Logs scan DataGrid
+			// Check if there are selected items for the Event Logs scan ListView
 			if (EventLogsFileIdentities.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
@@ -915,7 +939,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				}
 			}
 
-
 			// If there are no logs to create a Supplemental policy with
 			if (fileIdentities.Count is 0)
 			{
@@ -923,7 +946,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				Step3InfoBar.Message = "There are no logs or files in any data grids to create a Supplemental policy for.";
 				return;
 			}
-
 
 			await Task.Run(() =>
 			{
@@ -954,7 +976,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				}
 				else
 				{
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 				}
 
 				// Set policy version
@@ -998,7 +1020,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 			});
 
-
 			Step3InfoBar.Severity = InfoBarSeverity.Success;
 			Step3InfoBar.IsClosable = true;
 			Step3InfoBar.Message = deployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.";
@@ -1013,7 +1034,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			fileIdentities.FileIdentitiesInternal.Clear();
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the LogSize number box

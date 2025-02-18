@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.Pkcs;
@@ -14,11 +15,337 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
-public sealed partial class ViewFileCertificates : Page
+// Since the columns for data in the ItemTemplate use "Binding" instead of "x:Bind", we need to use [GeneratedBindableCustomProperty] for them to work properly
+[GeneratedBindableCustomProperty]
+public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 {
+
+	#region LISTVIEW IMPLEMENTATIONS
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string propertyName) =>
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+	// Properties to hold each columns' width.
+	private GridLength _columnWidth1;
+	public GridLength ColumnWidth1
+	{
+		get => _columnWidth1;
+		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+	}
+
+	private GridLength _columnWidth2;
+	public GridLength ColumnWidth2
+	{
+		get => _columnWidth2;
+		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+	}
+
+	private GridLength _columnWidth3;
+	public GridLength ColumnWidth3
+	{
+		get => _columnWidth3;
+		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+	}
+
+	private GridLength _columnWidth4;
+	public GridLength ColumnWidth4
+	{
+		get => _columnWidth4;
+		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+	}
+
+	private GridLength _columnWidth5;
+	public GridLength ColumnWidth5
+	{
+		get => _columnWidth5;
+		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+	}
+
+	private GridLength _columnWidth6;
+	public GridLength ColumnWidth6
+	{
+		get => _columnWidth6;
+		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+	}
+
+	private GridLength _columnWidth7;
+	public GridLength ColumnWidth7
+	{
+		get => _columnWidth7;
+		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+	}
+
+	private GridLength _columnWidth8;
+	public GridLength ColumnWidth8
+	{
+		get => _columnWidth8;
+		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+	}
+
+	private GridLength _columnWidth9;
+	public GridLength ColumnWidth9
+	{
+		get => _columnWidth9;
+		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+	}
+
+	private GridLength _columnWidth10;
+	public GridLength ColumnWidth10
+	{
+		get => _columnWidth10;
+		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+	}
+
+	private GridLength _columnWidth11;
+	public GridLength ColumnWidth11
+	{
+		get => _columnWidth11;
+		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
+	}
+
+	/// <summary>
+	/// Calculates the maximum required width for each column (including header text)
+	/// and assigns the value (with a little extra padding) to the corresponding property.
+	/// </summary>
+	private void CalculateColumnWidths()
+	{
+		// Measure header text widths first.
+		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNumberHeader/Text"));
+		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("TypeHeader/Text"));
+		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text"));
+		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text"));
+		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("NotBeforeHeader/Text"));
+		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("NotAfterHeader/Text"));
+		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text"));
+		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SerialNumberHeader/Text"));
+		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ThumbprintHeader/Text"));
+		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("TBSHashHeader/Text"));
+		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text"));
+
+		// Iterate over all items to determine the widest string for each column.
+		foreach (FileCertificateInfoCol item in FileCertificates)
+		{
+			double w1 = ListViewUIHelpers.MeasureTextWidth(item.SignerNumber.ToString());
+			if (w1 > maxWidth1) maxWidth1 = w1;
+
+			double w2 = ListViewUIHelpers.MeasureTextWidth(item.Type.ToString());
+			if (w2 > maxWidth2) maxWidth2 = w2;
+
+			double w3 = ListViewUIHelpers.MeasureTextWidth(item.SubjectCN);
+			if (w3 > maxWidth3) maxWidth3 = w3;
+
+			double w4 = ListViewUIHelpers.MeasureTextWidth(item.IssuerCN);
+			if (w4 > maxWidth4) maxWidth4 = w4;
+
+			double w5 = ListViewUIHelpers.MeasureTextWidth(item.NotBefore.ToString());
+			if (w5 > maxWidth5) maxWidth5 = w5;
+
+			double w6 = ListViewUIHelpers.MeasureTextWidth(item.NotAfter.ToString());
+			if (w6 > maxWidth6) maxWidth6 = w6;
+
+			double w7 = ListViewUIHelpers.MeasureTextWidth(item.HashingAlgorithm);
+			if (w7 > maxWidth7) maxWidth7 = w7;
+
+			double w8 = ListViewUIHelpers.MeasureTextWidth(item.SerialNumber);
+			if (w8 > maxWidth8) maxWidth8 = w8;
+
+			double w9 = ListViewUIHelpers.MeasureTextWidth(item.Thumbprint);
+			if (w9 > maxWidth9) maxWidth9 = w9;
+
+			double w10 = ListViewUIHelpers.MeasureTextWidth(item.TBSHash);
+			if (w10 > maxWidth10) maxWidth10 = w10;
+
+			double w11 = ListViewUIHelpers.MeasureTextWidth(item.OIDs);
+			if (w11 > maxWidth11) maxWidth11 = w11;
+		}
+
+		// Set the column width properties.
+		ColumnWidth1 = new GridLength(maxWidth1);
+		ColumnWidth2 = new GridLength(maxWidth2);
+		ColumnWidth3 = new GridLength(maxWidth3);
+		ColumnWidth4 = new GridLength(maxWidth4);
+		ColumnWidth5 = new GridLength(maxWidth5);
+		ColumnWidth6 = new GridLength(maxWidth6);
+		ColumnWidth7 = new GridLength(maxWidth7);
+		ColumnWidth8 = new GridLength(maxWidth8);
+		ColumnWidth9 = new GridLength(maxWidth9);
+		ColumnWidth10 = new GridLength(maxWidth10);
+		ColumnWidth11 = new GridLength(maxWidth11);
+	}
+
+	/// <summary>
+	/// Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
+	/// </summary>
+	/// <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
+	/// <returns>A formatted string of the row's properties with labels.</returns>
+	private static string ConvertRowToText(FileCertificateInfoCol row)
+	{
+		// Use StringBuilder to format each property with its label for easy reading
+		return new StringBuilder()
+			.AppendLine(GlobalVars.Rizz.GetString("SignerNumberHeader/Text") + row.SignerNumber)
+			.AppendLine(GlobalVars.Rizz.GetString("TypeHeader/Text") + row.Type)
+			.AppendLine(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text") + row.SubjectCN)
+			.AppendLine(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text") + row.IssuerCN)
+			.AppendLine(GlobalVars.Rizz.GetString("NotBeforeHeader/Text") + row.NotBefore)
+			.AppendLine(GlobalVars.Rizz.GetString("NotAfterHeader/Text") + row.NotAfter)
+			.AppendLine(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text") + row.HashingAlgorithm)
+			.AppendLine(GlobalVars.Rizz.GetString("SerialNumberHeader/Text") + row.SerialNumber)
+			.AppendLine(GlobalVars.Rizz.GetString("ThumbprintHeader/Text") + row.Thumbprint)
+			.AppendLine(GlobalVars.Rizz.GetString("TBSHashHeader/Text") + row.TBSHash)
+			.AppendLine(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text") + row.OIDs)
+			.ToString();
+	}
+
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	/// <param name="sender">The event sender.</param>
+	/// <param name="e">The event arguments.</param>
+	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
+	{
+		// Check if there are selected items in the ListView
+		if (FileCertificatesListView.SelectedItems.Count > 0)
+		{
+			// Initialize StringBuilder to store all selected rows' data with labels
+			StringBuilder dataBuilder = new();
+
+			// Loop through each selected item in the ListView
+			foreach (var selectedItem in FileCertificatesListView.SelectedItems)
+			{
+
+				if (selectedItem is FileCertificateInfoCol obj)
+
+					// Append each row's formatted data to the StringBuilder
+					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
+
+				// Add a separator between rows for readability in multi-row copies
+				_ = dataBuilder.AppendLine(new string('-', 50));
+			}
+
+			// Create a DataPackage to hold the text data
+			DataPackage dataPackage = new();
+
+			// Set the formatted text as the content of the DataPackage
+			dataPackage.SetText(dataBuilder.ToString());
+
+			// Copy the DataPackage content to the clipboard
+			Clipboard.SetContent(dataPackage);
+		}
+	}
+
+	// Click event handlers for each property
+	private void CopySignerNumber_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignerNumber.ToString());
+	private void CopyType_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Type.ToString());
+	private void CopySubjectCommonName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SubjectCN);
+	private void CopyIssuerCommonName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IssuerCN);
+	private void CopyNotBefore_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.NotBefore.ToString());
+	private void CopyNotAfter_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.NotAfter.ToString());
+	private void CopyHashingAlgorithm_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.HashingAlgorithm);
+	private void CopySerialNumber_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SerialNumber);
+	private void CopyThumbprint_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Thumbprint);
+	private void CopyTBSHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.TBSHash);
+	private void CopyExtensionOIDs_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.OIDs);
+
+	/// <summary>
+	/// Helper method to copy a specified property to clipboard without reflection
+	/// </summary>
+	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
+	private void CopyToClipboard(Func<FileCertificateInfoCol, string?> getProperty)
+	{
+		if (FileCertificatesListView.SelectedItem is FileCertificateInfoCol selectedItem)
+		{
+			string? propertyValue = getProperty(selectedItem);
+			if (propertyValue is not null)
+			{
+				DataPackage dataPackage = new();
+				dataPackage.SetText(propertyValue);
+				Clipboard.SetContent(dataPackage);
+			}
+		}
+	}
+
+	// Event handlers for each sort button
+	private void ColumnSortingButton_SignerNumber_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.SignerNumber);
+	}
+	private void ColumnSortingButton_Type_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.Type);
+	}
+	private void ColumnSortingButton_SubjectCommonName_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.SubjectCN);
+	}
+	private void ColumnSortingButton_IssuerCommonName_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.IssuerCN);
+	}
+	private void ColumnSortingButton_NotBefore_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.NotBefore);
+	}
+	private void ColumnSortingButton_NotAfter_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.NotAfter);
+	}
+	private void ColumnSortingButton_HashingAlgorithm_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.HashingAlgorithm);
+	}
+	private void ColumnSortingButton_SerialNumber_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.SerialNumber);
+	}
+	private void ColumnSortingButton_Thumbprint_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.Thumbprint);
+	}
+	private void ColumnSortingButton_TBSHash_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.TBSHash);
+	}
+	private void ColumnSortingButton_ExtensionOIDs_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.OIDs);
+	}
+
+	/// <summary>
+	/// Performs data sorting
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="keySelector"></param>
+	private void SortColumn<T>(Func<FileCertificateInfoCol, T> keySelector)
+	{
+		// Determine if a search filter is active.
+		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
+		// Use either the full list (FilteredCertificates) or the current display list.
+		var collectionToSort = isSearchEmpty ? FilteredCertificates : [.. FileCertificates];
+
+		if (SortingDirectionToggle.IsChecked)
+		{
+			// Sort in descending order.
+			FileCertificates = [.. collectionToSort.OrderByDescending(keySelector)];
+		}
+		else
+		{
+			// Sort in ascending order.
+			FileCertificates = [.. collectionToSort.OrderBy(keySelector)];
+		}
+
+		// Refresh the ItemsSource so the UI updates.
+		FileCertificatesListView.ItemsSource = FileCertificates;
+	}
+
+	#endregion
+
+
 	public ViewFileCertificates()
 	{
 		this.InitializeComponent();
@@ -27,8 +354,8 @@ public sealed partial class ViewFileCertificates : Page
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
-	// Main collection assigned to the DataGrid
-	private readonly ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
+	// Main collection assigned to the ListView
+	private ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
 
 	// Collection used during search
 	private ObservableCollection<FileCertificateInfoCol> FilteredCertificates = [];
@@ -62,8 +389,6 @@ public sealed partial class ViewFileCertificates : Page
 		}
 	}
 
-
-
 	/// <summary>
 	/// Event handler for the Browse button
 	/// </summary>
@@ -96,9 +421,11 @@ public sealed partial class ViewFileCertificates : Page
 
 				// Initialize filtered collection with all certificates
 				FilteredCertificates = [.. FileCertificates];
-				FileCertificatesDataGrid.ItemsSource = FilteredCertificates;
-			}
 
+				CalculateColumnWidths();
+
+				FileCertificatesListView.ItemsSource = FilteredCertificates;
+			}
 		}
 		finally
 		{
@@ -106,7 +433,6 @@ public sealed partial class ViewFileCertificates : Page
 			BrowseForFilesButton.IsEnabled = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the Settings Card click
@@ -162,7 +488,10 @@ public sealed partial class ViewFileCertificates : Page
 
 				// Initialize filtered collection with all certificates
 				FilteredCertificates = [.. FileCertificates];
-				FileCertificatesDataGrid.ItemsSource = FilteredCertificates;
+
+				CalculateColumnWidths();
+
+				FileCertificatesListView.ItemsSource = FilteredCertificates;
 			}
 
 		}
@@ -172,8 +501,6 @@ public sealed partial class ViewFileCertificates : Page
 			BrowseForFilesButton.IsEnabled = true;
 		}
 	}
-
-
 
 	/// <summary>
 	/// Get the certificates of the .CIP files
@@ -232,7 +559,6 @@ public sealed partial class ViewFileCertificates : Page
 	}
 
 
-
 	/// <summary>
 	/// Fetch for the .cer files
 	/// </summary>
@@ -270,7 +596,6 @@ public sealed partial class ViewFileCertificates : Page
 
 		return output;
 	}
-
 
 
 	/// <summary>
@@ -329,8 +654,6 @@ public sealed partial class ViewFileCertificates : Page
 				}
 
 			}
-
-
 
 			// Get full chains of all of the file's certificates
 			List<ChainPackage> result = GetCertificateDetails.Get([.. signerDetails]);
@@ -415,142 +738,7 @@ public sealed partial class ViewFileCertificates : Page
 		});
 
 		return output;
-
 	}
-
-
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard, formatting each property with its value.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void DataGridFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		if (FileCertificatesDataGrid.SelectedItems.Count > 0)
-		{
-			StringBuilder dataBuilder = new();
-
-			foreach (FileCertificateInfoCol selectedItem in FileCertificatesDataGrid.SelectedItems)
-			{
-				_ = dataBuilder.AppendLine(ConvertRowToText(selectedItem));
-				_ = dataBuilder.AppendLine(new string('-', 50));
-			}
-
-			DataPackage dataPackage = new();
-			dataPackage.SetText(dataBuilder.ToString());
-			Clipboard.SetContent(dataPackage);
-		}
-	}
-
-	/// <summary>
-	/// Converts a row's properties and values into a formatted string for clipboard copy.
-	/// </summary>
-	/// <param name="row">The selected row from the DataGrid.</param>
-	/// <returns>A formatted string of the row's properties and values.</returns>
-	private static string ConvertRowToText(FileCertificateInfoCol row)
-	{
-		return new StringBuilder()
-			.AppendLine($"Signer Number: {row.SignerNumber}")
-			.AppendLine($"Type: {row.Type}")
-			.AppendLine($"Subject Common Name: {row.SubjectCN}")
-			.AppendLine($"Issuer Common Name: {row.IssuerCN}")
-			.AppendLine($"Not Before: {row.NotBefore}")
-			.AppendLine($"Not After: {row.NotAfter}")
-			.AppendLine($"Hashing Algorithm: {row.HashingAlgorithm}")
-			.AppendLine($"Serial Number: {row.SerialNumber}")
-			.AppendLine($"Thumbprint: {row.Thumbprint}")
-			.AppendLine($"TBS Hash: {row.TBSHash}")
-			.AppendLine($"Extension OIDs: {row.OIDs}")
-			.ToString();
-	}
-
-	/// <summary>
-	/// Event handler for the Copy Individual Items SubMenu. Populates items in the flyout of the data grid.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FileCertificatesDataGrid_Loaded(object sender, RoutedEventArgs e)
-	{
-		if (CopyIndividualItemsSubMenu is null)
-		{
-			return;
-		}
-
-		CopyIndividualItemsSubMenu.Items.Clear();
-
-		Dictionary<string, RoutedEventHandler> copyActions = new()
-		{
-			{ "Signer Number", CopySignerNumber_Click },
-			{ "Type", CopyType_Click },
-			{ "Subject Common Name", CopySubjectCN_Click },
-			{ "Issuer Common Name", CopyIssuerCN_Click },
-			{ "Not Before", CopyNotBefore_Click },
-			{ "Not After", CopyNotAfter_Click },
-			{ "Hashing Algorithm", CopyHashingAlgorithm_Click },
-			{ "Serial Number", CopySerialNumber_Click },
-			{ "Thumbprint", CopyThumbprint_Click },
-			{ "TBS Hash", CopyTBSHash_Click },
-			{ "Extension OIDs", CopyOIDs_Click }
-		};
-
-		foreach (KeyValuePair<string, RoutedEventHandler> action in copyActions)
-		{
-			MenuFlyoutItem menuItem = new() { Text = $"Copy {action.Key}" };
-			menuItem.Click += action.Value;
-			CopyIndividualItemsSubMenu.Items.Add(menuItem);
-		}
-	}
-
-	// Click event handlers for each property
-	private void CopySignerNumber_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("CertificateNumber");
-	private void CopyType_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("Type");
-	private void CopySubjectCN_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("SubjectCN");
-	private void CopyIssuerCN_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("IssuerCN");
-	private void CopyNotBefore_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("NotBefore");
-	private void CopyNotAfter_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("NotAfter");
-	private void CopyHashingAlgorithm_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("HashingAlgorithm");
-	private void CopySerialNumber_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("SerialNumber");
-	private void CopyThumbprint_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("Thumbprint");
-	private void CopyTBSHash_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("TBSValue");
-	private void CopyOIDs_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("OIDs");
-
-	/// <summary>
-	/// Helper method to copy a specified property value to the clipboard.
-	/// </summary>
-	/// <param name="propertyName"></param>
-	private void CopyPropertyToClipboard(string propertyName)
-	{
-		if (FileCertificatesDataGrid.SelectedItem is not FileCertificateInfoCol selectedItem)
-		{
-			return;
-		}
-
-		string? propertyValue = propertyName switch
-		{
-			"CertificateNumber" => selectedItem.SignerNumber.ToString(),
-			"Type" => selectedItem.Type.ToString(),
-			"SubjectCN" => selectedItem.SubjectCN,
-			"IssuerCN" => selectedItem.IssuerCN,
-			"NotBefore" => selectedItem.NotBefore.ToString(),
-			"NotAfter" => selectedItem.NotAfter.ToString(),
-			"HashingAlgorithm" => selectedItem.HashingAlgorithm,
-			"SerialNumber" => selectedItem.SerialNumber,
-			"Thumbprint" => selectedItem.Thumbprint,
-			"TBSValue" => selectedItem.TBSHash,
-			"OIDs" => selectedItem.OIDs,
-			_ => null
-		};
-
-		if (!string.IsNullOrEmpty(propertyValue))
-		{
-			DataPackage dataPackage = new();
-			dataPackage.SetText(propertyValue);
-			Clipboard.SetContent(dataPackage);
-		}
-	}
-
-
 
 	/// <summary>
 	/// Event handler for the search box
@@ -583,7 +771,7 @@ public sealed partial class ViewFileCertificates : Page
 				)];
 		}
 
-		FileCertificatesDataGrid.ItemsSource = FilteredCertificates;
+		FileCertificatesListView.ItemsSource = FilteredCertificates;
 	}
 
 

@@ -62,6 +62,12 @@ internal static class GlobalVars
 	// Path to the empty policy file in app resources
 	internal static readonly string EmptyPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "EmptyPolicy.xml");
 
+	// Path to the PS Script that creates a scheduled task
+	internal static readonly string DriversBlockListAutoUpdaterScheduledTaskScriptFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "DriversBlockListAutoUpdaterScheduledTask.ps1");
+
+	// Path to the PS Script that creates a scheduled task for SnapBack guarantee in Allow New Apps page
+	internal static readonly string SnapBackGuaranteeScheduledTaskScriptFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "SnapBackGuaranteeScheduledTask.ps1");
+
 	// Get the current OS version
 	private static readonly Version CurrentOSVersion = Environment.OSVersion.Version;
 

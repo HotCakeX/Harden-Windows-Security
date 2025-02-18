@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Management;
-
 namespace AppControlManager.Others;
 
 internal sealed class DeviceGuardStatus
@@ -13,10 +10,10 @@ internal static class DeviceGuardInfo
 {
 
 	// Define the WMI query to get the Win32_DeviceGuard class information
-	private const string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
+	// private const string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
 
 	// Define the scope (namespace) for the query
-	private const string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
+	// private const string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
 
 
 	/// <summary>
@@ -25,6 +22,9 @@ internal static class DeviceGuardInfo
 	/// <returns></returns>
 	internal static DeviceGuardStatus? GetDeviceGuardStatus()
 	{
+
+		/*
+
 		// Create a ManagementScope object for the WMI namespace
 		ManagementScope managementScope = new(scope);
 
@@ -49,6 +49,22 @@ internal static class DeviceGuardInfo
 			}
 		}
 
-		return new DeviceGuardStatus();
+		*/
+
+
+		// TODO: Create a Native AOT compatible source generated COM code that won't rely on System.Management or PowerShell
+
+		string UMscript = "(Get-CimInstance -Namespace \\\"root\\Microsoft\\Windows\\DeviceGuard\\\" -Query \\\"SELECT UsermodeCodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard\\\").UsermodeCodeIntegrityPolicyEnforcementStatus";
+		string UMoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{UMscript}\"");
+
+
+		string KMscript = "(Get-CimInstance -Namespace \\\"root\\Microsoft\\Windows\\DeviceGuard\\\" -Query \\\"SELECT CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard\\\").CodeIntegrityPolicyEnforcementStatus";
+		string KMoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{KMscript}\"");
+
+		return new DeviceGuardStatus()
+		{
+			UsermodeCodeIntegrityPolicyEnforcementStatus = uint.Parse(UMoutput),
+			CodeIntegrityPolicyEnforcementStatus = uint.Parse(KMoutput)
+		};
 	}
 }

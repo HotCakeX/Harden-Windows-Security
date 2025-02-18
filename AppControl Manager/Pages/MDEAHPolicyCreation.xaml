@@ -8,7 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"   
+    x:Name="MDEAHPolicyCreationXAML"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
 
@@ -336,6 +339,45 @@ Spacing="8">
                     </DropDownButton.Flyout>
                 </DropDownButton>
 
+
+                <Button>
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE8CB;" />
+                            <TextBlock Text="Sort" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <MenuFlyout>
+
+                            <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" Text="Descending Sorting" IsChecked="True"/>
+
+                            <MenuFlyoutSeparator/>
+
+                            <MenuFlyoutItem x:Uid="FileNameHeader" Click="ColumnSortingButton_FileName_Click"/>
+                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
+                            <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="ColumnSortingButton_OriginalFileName_Click"/>
+                            <MenuFlyoutItem x:Uid="InternalNameHeader" Click="ColumnSortingButton_InternalName_Click"/>
+                            <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="ColumnSortingButton_FileDescription_Click"/>
+                            <MenuFlyoutItem x:Uid="ProductNameHeader" Click="ColumnSortingButton_ProductName_Click"/>
+                            <MenuFlyoutItem x:Uid="FileVersionHeader" Click="ColumnSortingButton_FileVersion_Click"/>
+                            <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="ColumnSortingButton_PackageFamilyName_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="ColumnSortingButton_SHA256Hash_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="ColumnSortingButton_SHA1Hash_Click"/>
+                            <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="ColumnSortingButton_SigningScenario_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="ColumnSortingButton_SHA1PageHash_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="ColumnSortingButton_SHA256PageHash_Click"/>
+                            <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="ColumnSortingButton_HasWHQLSigner_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
+                            <MenuFlyoutItem x:Uid="IsECCSignedHeader" Click="ColumnSortingButton_IsECCSigned_Click"/>
+                            <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
+
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+
                 <Button Content="Policy Name">
                     <Button.Flyout>
                         <Flyout>
@@ -363,75 +405,258 @@ Spacing="8">
 
         </Border>
 
-        <!-- DataGrid for FileIdentity Outputs -->
-        <Border Grid.Row="4" Style="{StaticResource GridCardStyle}" Margin="0,0,0,10" Padding="5">
-            <tk7controls:DataGrid
-      ItemsSource="{x:Bind FileIdentities, Mode=OneWay}"
-      x:Name="FileIdentitiesDataGrid"
-      AllowDrop="False"
-      AreRowDetailsFrozen="True"
-      AutoGenerateColumns="False"
-      CanDrag="False"
-      HeadersVisibility="Column"
-      IsReadOnly="True"
-      IsTabStop="True"
-      RowDetailsVisibilityMode="Collapsed"
-      SelectionMode="Extended"
-      TabIndex="2"
-      ScrollViewer.HorizontalScrollBarVisibility="Auto"
-      ScrollViewer.VerticalScrollBarVisibility="Auto"
-      ScrollViewer.VerticalScrollMode="Auto"
-      ScrollViewer.HorizontalScrollMode="Auto"
-      Sorting="FileIdentitiesDataGrid_Sorting"
-      CanUserSortColumns="True"
-      Loaded="FileIdentitiesDataGrid_Loaded">
-                <tk7controls:DataGrid.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="Delete Row" Click="DataGridFlyoutMenuDelete_Click">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE74D;" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
+        <ListView x:Name="FileIdentitiesListView"
+             Grid.Row="4"
+             SelectionMode="Extended"
+             ScrollViewer.HorizontalScrollMode="Enabled"
+             ScrollViewer.IsHorizontalRailEnabled="True"
+             ScrollViewer.HorizontalScrollBarVisibility="Visible"
+             ShowsScrollingPlaceholders="True"
+             ScrollViewer.VerticalScrollBarVisibility="Visible">
 
-                        <MenuFlyoutItem Text="Copy Row" Click="DataGridFlyoutMenuCopy_Click">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE8C8;" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
+            <ListView.Header>
 
-                        <MenuFlyoutSubItem x:Name="CopyIndividualItemsSubMenu" Text="Copy Individual Items">
-                            <MenuFlyoutSubItem.Icon>
-                                <FontIcon Glyph="&#xE8C8;" />
-                            </MenuFlyoutSubItem.Icon>
-                            <!-- Dynamic items will be added here in the Loaded event handler -->
-                        </MenuFlyoutSubItem>
+                <Border CornerRadius="5" Background="Black">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:StickyHeaderBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <Grid>
 
-                    </MenuFlyout>
-                </tk7controls:DataGrid.ContextFlyout>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth18, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth19, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth20, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth21, Mode=OneWay}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="TimeCreatedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SignatureStatusHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="ActionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="OriginalFileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="InternalNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FileDescriptionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="ProductNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PackageFamilyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA256HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA1HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SigningScenarioHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA1PageHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA256PageHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="HasWHQLSignerHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FilePublishersHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="17" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="OpusDataHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="18" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PolicyGUIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="19" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PolicyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="20" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                    </Grid>
+                </Border>
+            </ListView.Header>
 
-                <tk7controls:DataGrid.Columns>
-                    <tk7controls:DataGridTextColumn Header="File Name" Binding="{Binding FileName}" Width="Auto" Tag="FileName"/>
-                    <tk7controls:DataGridTextColumn Header="Time Created" Binding="{Binding TimeCreated}" Width="Auto" Tag="TimeCreated"/>
-                    <tk7controls:DataGridTextColumn Header="Signature Status" Binding="{Binding SignatureStatus}" Tag="SignatureStatus" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="Auto" Tag="Action"/>
-                    <tk7controls:DataGridTextColumn Header="Original File Name" Binding="{Binding OriginalFileName}" Width="Auto" Tag="OriginalFileName"/>
-                    <tk7controls:DataGridTextColumn Header="InternalName" Binding="{Binding InternalName}" Width="Auto" Tag="InternalName"/>
-                    <tk7controls:DataGridTextColumn Header="File Description" Binding="{Binding FileDescription}" Width="Auto" Tag="FileDescription"/>
-                    <tk7controls:DataGridTextColumn Header="File Version" Binding="{Binding FileVersion}" Width="Auto" Tag="FileVersion"/>
-                    <tk7controls:DataGridTextColumn Header="SHA256 Hash" Binding="{Binding SHA256Hash}" Width="Auto" Tag="SHA256Hash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA1 Hash" Binding="{Binding SHA1Hash}" Width="Auto" Tag="SHA1Hash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA256 Flat Hash" Binding="{Binding SHA256FlatHash}" Width="Auto" Tag="SHA256FlatHash"/>
-                    <tk7controls:DataGridTextColumn Header="SHA1 Flat Hash" Binding="{Binding SHA1FlatHash}" Width="Auto" Tag="SHA1FlatHash"/>
-                    <tk7controls:DataGridTextColumn Header="Signing Scenario" Binding="{Binding SISigningScenario}" Width="Auto" Tag="SISigningScenario"/>
-                    <tk7controls:DataGridTextColumn Header="File Path" Binding="{Binding FilePath}" Width="Auto" Tag="FilePath"/>
-                    <tk7controls:DataGridTextColumn Header="Computer Name" Binding="{Binding ComputerName}" Width="Auto" Tag="ComputerName"/>
-                    <tk7controls:DataGridTextColumn Header="Policy GUID" Binding="{Binding PolicyGUID}" Width="Auto" Tag="PolicyGUID"/>
-                    <tk7controls:DataGridTextColumn Header="Policy Name" Binding="{Binding PolicyName}" Width="Auto" Tag="PolicyName"/>
-                    <tk7controls:DataGridTextColumn Header="File Publishers" Binding="{Binding FilePublishersToDisplay}" Width="Auto" Tag="FilePublishersToDisplay"/>
+            <!-- DataTemplate for ListView items -->
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="intelgathering:FileIdentity">
+                    <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
+                    <Grid Background="Transparent">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
 
-                </tk7controls:DataGrid.Columns>
-            </tk7controls:DataGrid>
-        </Border>
+                                <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutSubItem.Icon>
+
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="FileNameHeader" Click="CopyFileName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="CopySignatureStatus_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="CopyOriginalFileName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="InternalNameHeader" Click="CopyInternalName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="CopyFileDescription_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="ProductNameHeader" Click="CopyProductName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="FileVersionHeader" Click="CopyFileVersion_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="CopyPackageFamilyName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="CopySHA256Hash_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="CopySHA1Hash_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="CopySigningScenario_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="CopyFilePath_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="CopySHA1PageHash_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="CopySHA256PageHash_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="CopyHasWHQLSigner_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="CopyFilePublishers_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="IsECCSignedHeader" Click="CopyIsECCSigned_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="OpusDataHeader" Click="CopyOpusData_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyoutSubItem.Items>
+
+                                </MenuFlyoutSubItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
+                        <Grid.ColumnDefinitions>
+                            <!-- Use standard Binding with ElementName to refer back to the page's properties
+                                because in here the Data Context is set to FileIdentity so we cannot use x.Bind
+                                since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
+                                And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
+                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth12, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth13, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth14, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth15, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth16, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth17, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth18, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth19, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth20, ElementName=MDEAHPolicyCreationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth21, ElementName=MDEAHPolicyCreationXAML}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind FileName}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind TimeCreated}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SignatureStatus}" HorizontalAlignment="Left" Grid.Column="2" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind Action}" HorizontalAlignment="Left" Grid.Column="3" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind OriginalFileName}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind InternalName}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FileDescription}" HorizontalAlignment="Left" Grid.Column="6" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind ProductName}" HorizontalAlignment="Left" Grid.Column="7" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FileVersion}" HorizontalAlignment="Left" Grid.Column="8" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PackageFamilyName}" HorizontalAlignment="Left" Grid.Column="9" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA256Hash}" HorizontalAlignment="Left" Grid.Column="10" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA1Hash}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SISigningScenario}" HorizontalAlignment="Left" Grid.Column="12" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FilePath}" HorizontalAlignment="Left" Grid.Column="13" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA1PageHash}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA256PageHash}" HorizontalAlignment="Left" Grid.Column="15" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind HasWHQLSigner}" HorizontalAlignment="Left" Grid.Column="16" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FilePublishersToDisplay}" HorizontalAlignment="Left" Grid.Column="17" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind Opus}" HorizontalAlignment="Left" Grid.Column="18" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyGUID}" HorizontalAlignment="Left" Grid.Column="19" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyName}" HorizontalAlignment="Left" Grid.Column="20" Margin="0,2,2,2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
     </Grid>
 </Page>

@@ -10,7 +10,6 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.UI.ViewManagement;
 using static AppControlManager.AppSettings.AppSettingsCls;
 
 namespace AppControlManager.Pages;
@@ -19,9 +18,6 @@ public sealed partial class Settings : Page
 {
 	// To store the selectable Certificate common names
 	private HashSet<string> CertCommonNames = [];
-
-	// To store an instance of UISettings
-	private readonly UISettings uiSettings;
 
 	public Settings()
 	{
@@ -83,71 +79,7 @@ public sealed partial class Settings : Page
 		NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
 		SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
 		IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
-
-
-		#region
-
-		// Create an instance of UISettings
-		uiSettings = new UISettings();
-
-		// Event handler for when Animations are turned on/off in Windows Settings
-		uiSettings.AnimationsEnabledChanged += AnimationsInfoBarStateManagement;
-
-		// Event handler for when Always Show Scrollbars changes in Windows Settings
-		uiSettings.AutoHideScrollBarsChanged += AnimationsInfoBarStateManagement;
-
-		AnimationsInfoBarStateManagementMainMethod();
-
-		#endregion
-
 	}
-
-
-	#region
-
-	private void AnimationsInfoBarStateManagement(UISettings sender, UISettingsAutoHideScrollBarsChangedEventArgs e)
-	{
-		AnimationsInfoBarStateManagementMainMethod();
-	}
-
-	private void AnimationsInfoBarStateManagement(UISettings sender, UISettingsAnimationsEnabledChangedEventArgs e)
-	{
-		AnimationsInfoBarStateManagementMainMethod();
-	}
-
-	private void AnimationsInfoBarStateManagementMainMethod()
-	{
-		_ = DispatcherQueue.TryEnqueue(() =>
-		{
-
-			// If animations are enabled then don't show the InfoBars
-			if (uiSettings.AnimationsEnabled)
-			{
-				LackOfAnimationsNoticeInfoBar.IsOpen = false;
-				LackOfAnimationsNoticeInfoBar.Visibility = Visibility.Collapsed;
-			}
-
-			// If animations are disabled
-			else
-			{
-				// If Always show scrollbars is enabled in Windows Settings (i.e. AutoHideScrollBars is false)
-				if (!uiSettings.AutoHideScrollBars)
-				{
-					LackOfAnimationsNoticeInfoBar.IsOpen = false;
-					LackOfAnimationsNoticeInfoBar.Visibility = Visibility.Collapsed;
-				}
-				// If Always show scrollbars is disabled in Windows Settings (i.e. AutoHideScrollBars is true)
-				else
-				{
-					LackOfAnimationsNoticeInfoBar.IsOpen = true;
-					LackOfAnimationsNoticeInfoBar.Visibility = Visibility.Visible;
-				}
-			}
-		});
-	}
-
-	#endregion
-
 
 
 	/// <summary>

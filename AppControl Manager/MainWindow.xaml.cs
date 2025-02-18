@@ -41,6 +41,8 @@ public sealed partial class MainWindow : Window
 
 	private readonly AppWindow m_AppWindow;
 
+	internal readonly Frame AppFrame;
+
 	// Used for the BreadCrumBar's data to define valid navigational paths in the app
 	internal sealed class PageTitleMap
 	{
@@ -245,6 +247,8 @@ public sealed partial class MainWindow : Window
 
 		// Assign this instance to the static field
 		_instance = this;
+
+		AppFrame = ContentFrame;
 
 		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
 		GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);

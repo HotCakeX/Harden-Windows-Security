@@ -31,7 +31,6 @@ public sealed partial class CreatePolicy : Page
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
-
 	}
 
 	#region For Allow Microsoft Policy
@@ -123,7 +122,6 @@ public sealed partial class CreatePolicy : Page
 	#endregion
 
 
-
 	#region For Default Windows Policy
 
 	/// <summary>
@@ -211,7 +209,6 @@ public sealed partial class CreatePolicy : Page
 	#endregion
 
 
-
 	#region For Signed and Reputable Policy
 
 
@@ -297,9 +294,7 @@ public sealed partial class CreatePolicy : Page
 	#endregion
 
 
-
 	#region For Microsoft Recommended Drivers Block Rules
-
 
 	/// <summary>
 	/// Method to dynamically add a TextBlock with formatted content
@@ -407,7 +402,6 @@ public sealed partial class CreatePolicy : Page
 	}
 
 
-
 	/// <summary>
 	/// Event handler for Auto Update button
 	/// </summary>
@@ -420,6 +414,8 @@ public sealed partial class CreatePolicy : Page
 
 		try
 		{
+			RecommendedDriverBlockRulesScheduledAutoUpdate.IsEnabled = false;
+
 			RecommendedDriverBlockRulesInfoBar.IsClosable = false;
 			RecommendedDriverBlockRulesInfoBar.IsOpen = true;
 			RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Informational;
@@ -434,7 +430,6 @@ public sealed partial class CreatePolicy : Page
 		}
 		finally
 		{
-
 			RecommendedDriverBlockRulesInfoBar.IsClosable = true;
 
 			// Expand the settings card to make the InfoBar visible
@@ -451,16 +446,14 @@ public sealed partial class CreatePolicy : Page
 				RecommendedDriverBlockRulesInfoBar.Message = GlobalVars.Rizz.GetString("AutoUpdateConfigured");
 			}
 
+			RecommendedDriverBlockRulesScheduledAutoUpdate.IsEnabled = true;
 		}
-
 	}
-
 
 	#endregion
 
 
 	#region For Microsoft Recommended User Mode Block Rules
-
 
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
@@ -492,13 +485,10 @@ public sealed partial class CreatePolicy : Page
 		}
 	}
 
-
 	#endregion
 
 
-
 	#region For Strict Kernel-mode policy
-
 
 	/// <summary>
 	/// Event handler to prepare the system for Strict Kernel-mode policy
@@ -560,7 +550,6 @@ public sealed partial class CreatePolicy : Page
 	{
 		StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn = !StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
 	}
-
 
 
 	private void StrictKernelModePolicyAuditSettingsCard_Click(object sender, RoutedEventArgs e)

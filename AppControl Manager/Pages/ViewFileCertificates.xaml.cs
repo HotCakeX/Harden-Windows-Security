@@ -326,7 +326,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (FilteredCertificates) or the current display list.
-		var collectionToSort = isSearchEmpty ? FilteredCertificates : [.. FileCertificates];
+		ObservableCollection<FileCertificateInfoCol> collectionToSort = isSearchEmpty ? FilteredCertificates : [.. FileCertificates];
 
 		if (SortingDirectionToggle.IsChecked)
 		{

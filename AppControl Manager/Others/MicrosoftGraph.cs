@@ -306,7 +306,6 @@ DeviceEvents
 	}
 
 
-
 	/// <summary>
 	/// Grabs the path to a CIP file and upload it to Intune.
 	/// </summary>
@@ -347,7 +346,6 @@ DeviceEvents
 
 		// await GetPoliciesAndAssignments(result.AccessToken);
 	}
-
 
 
 	/// <summary>
@@ -401,7 +399,6 @@ DeviceEvents
 			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
-
 
 
 	/// <summary>
@@ -478,7 +475,6 @@ DeviceEvents
 			throw new InvalidOperationException($"Error details: {errorContent}");
 		}
 	}
-
 
 
 	/*

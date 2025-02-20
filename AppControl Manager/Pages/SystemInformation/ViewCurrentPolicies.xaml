@@ -12,7 +12,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"   
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     mc:Ignorable="d">
 
@@ -119,11 +119,11 @@
                 </Button>
 
                 <ComboBox PlaceholderText="Swap Policy" x:Name="SwapPolicyComboBox" IsEnabled="False" SelectionChanged="SwapPolicyComboBox_SelectionChanged">
-                    <ComboBoxItem>Default Windows</ComboBoxItem>
-                    <ComboBoxItem>Allow Microsoft</ComboBoxItem>
-                    <ComboBoxItem>Signed and Reputable</ComboBoxItem>
-                    <ComboBoxItem>Strict Kernel-Mode</ComboBoxItem>
-                    <ComboBoxItem>Strict Kernel-Mode (No Flight Roots)</ComboBoxItem>
+                    <x:String>Default Windows</x:String>
+                    <x:String>Allow Microsoft</x:String>
+                    <x:String>Signed and Reputable</x:String>
+                    <x:String>Strict Kernel-Mode</x:String>
+                    <x:String>Strict Kernel-Mode (No Flight Roots)</x:String>
                 </ComboBox>
 
                 <!-- Search Box for filtering policies -->

@@ -160,9 +160,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				// Add the entire event package to the output list
 				_ = fileIdentities.Add(eventData);
 
-
 			}
-
 
 
 			// If the current group has Code Integrity Blocked log
@@ -486,7 +484,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 		// Return the internal data which is the right return type
 		return fileIdentities.FileIdentitiesInternal;
 	}
-
 
 
 	#region Helper methods to extract values

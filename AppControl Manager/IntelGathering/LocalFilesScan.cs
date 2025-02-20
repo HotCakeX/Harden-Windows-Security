@@ -49,7 +49,6 @@ internal static class LocalFilesScan
 		}
 
 
-
 		// Store the output of all of the parallel tasks in this
 		ConcurrentDictionary<FileInfo, FileIdentity> temporaryOutput = [];
 
@@ -101,7 +100,6 @@ internal static class LocalFilesScan
 							UIProgressRing.Value = Math.Min(progressPercentage, 100);
 						});
 					}
-
 
 
 					// To track whether ECC Signed signature has been detected or not
@@ -245,7 +243,6 @@ internal static class LocalFilesScan
 								{
 									Logger.Write($"Failed to get the Opus data of the current chain package");
 								}
-
 
 
 								// If the Leaf Certificate exists in the current package

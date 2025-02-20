@@ -50,7 +50,6 @@ internal static class KernelModeDrivers
 	}
 
 
-
 	internal static KernelUserVerdict CheckKernelUserModeStatus(string filePath)
 	{
 

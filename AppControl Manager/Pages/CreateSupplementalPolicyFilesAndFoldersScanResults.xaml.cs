@@ -265,7 +265,6 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	}
 
 
-
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
 	/// </summary>
@@ -383,49 +382,38 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	{
 		SortColumn(fileIden => fileIden.SHA1Hash);
 	}
-
-
 	private void ColumnSortingButton_SigningScenario_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SISigningScenario);
 	}
-
 	private void ColumnSortingButton_FilePath_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePath);
 	}
-
 	private void ColumnSortingButton_SHA1PageHash_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SHA1PageHash);
 	}
-
 	private void ColumnSortingButton_SHA256PageHash_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SHA256PageHash);
 	}
-
 	private void ColumnSortingButton_HasWHQLSigner_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.HasWHQLSigner);
 	}
-
 	private void ColumnSortingButton_FilePublishers_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePublishersToDisplay);
 	}
-
 	private void ColumnSortingButton_IsECCSigned_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.IsECCSigned);
 	}
-
 	private void ColumnSortingButton_OpusData_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.Opus);
 	}
-
-
 
 
 	/// <summary>
@@ -438,7 +426,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (CreateSupplementalPolicy.Instance.filesAndFoldersScanResultsList) or the current display list.
-		var collectionToSort = isSearchEmpty ? CreateSupplementalPolicy.Instance.filesAndFoldersScanResultsList : [.. CreateSupplementalPolicy.Instance.filesAndFoldersScanResults];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? CreateSupplementalPolicy.Instance.filesAndFoldersScanResultsList : [.. CreateSupplementalPolicy.Instance.filesAndFoldersScanResults];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -456,13 +444,6 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	}
 
 	#endregion
-
-
-
-
-
-
-
 
 
 	public CreateSupplementalPolicyFilesAndFoldersScanResults()

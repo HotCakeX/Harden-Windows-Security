@@ -107,7 +107,6 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 	}
 
 
-
 	// Merge FileAttribElements of the ignored rule into the existing one
 	// To determine whether the fileAttrib we're adding to the <FileRules> node already exists there or not
 	private static void MergeFileAttribElements(FilePublisherSignerRule existing, FilePublisherSignerRule newRule)

@@ -100,7 +100,6 @@ internal static class NewPublisherLevelRules
 	}
 
 
-
 	/// <summary>
 	/// Creates new Deny Publisher level rules in an XML file
 	/// Each rules includes the Signers, DeniedSigners, and CiSigners(depending on kernel/user mode)

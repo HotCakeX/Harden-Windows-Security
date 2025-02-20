@@ -769,12 +769,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SelectPolicyFileBeforeSettingTemplate" xml:space="preserve">
     <value>Please select a policy file before setting a template.</value>
   </data>
-  <data name="SelectPolicyTemplateFromDropdown" xml:space="preserve">
-    <value>Please select a policy template from the dropdown.</value>
-  </data>
-  <data name="InvalidPolicyTemplateSelected" xml:space="preserve">
-    <value>Invalid policy template selected. Please choose a valid option.</value>
-  </data>
   <data name="SelectPolicyFileBeforeRetrievingOptions" xml:space="preserve">
     <value>Please select a policy file before retrieving its rule options status.</value>
   </data>
@@ -1047,9 +1041,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="Scalability" xml:space="preserve">
     <value>Scalability: </value>
-  </data>
-  <data name="InvalidScanLevel" xml:space="preserve">
-    <value> is not a valid Scan Level</value>
   </data>
   <data name="PFNBasedDenyPolicyTitle" xml:space="preserve">
     <value>PFN based Deny policy</value>

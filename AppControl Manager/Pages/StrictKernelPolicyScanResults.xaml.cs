@@ -380,50 +380,38 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	{
 		SortColumn(fileIden => fileIden.SHA1Hash);
 	}
-
-
 	private void ColumnSortingButton_SigningScenario_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SISigningScenario);
 	}
-
 	private void ColumnSortingButton_FilePath_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePath);
 	}
-
 	private void ColumnSortingButton_SHA1PageHash_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SHA1PageHash);
 	}
-
 	private void ColumnSortingButton_SHA256PageHash_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SHA256PageHash);
 	}
-
 	private void ColumnSortingButton_HasWHQLSigner_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.HasWHQLSigner);
 	}
-
 	private void ColumnSortingButton_FilePublishers_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePublishersToDisplay);
 	}
-
 	private void ColumnSortingButton_IsECCSigned_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.IsECCSigned);
 	}
-
 	private void ColumnSortingButton_OpusData_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.Opus);
 	}
-
-
-
 
 	/// <summary>
 	/// Performs data sorting
@@ -435,7 +423,7 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (CreateSupplementalPolicy.Instance.ScanResultsList) or the current display list.
-		var collectionToSort = isSearchEmpty ? CreateSupplementalPolicy.Instance.ScanResultsList : [.. CreateSupplementalPolicy.Instance.ScanResults];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? CreateSupplementalPolicy.Instance.ScanResultsList : [.. CreateSupplementalPolicy.Instance.ScanResults];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -453,10 +441,6 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	}
 
 	#endregion
-
-
-
-
 
 	public StrictKernelPolicyScanResults()
 	{
@@ -585,7 +569,6 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 			{
 				FileIdentitiesListView.SelectedItems.Add(fileIdentity); // Select each item
 			}
-
 		});
 	}
 

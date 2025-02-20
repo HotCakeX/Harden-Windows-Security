@@ -109,7 +109,7 @@
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
                 <controls:SettingsExpander IsExpanded="True" Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
-                   
+
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
@@ -118,33 +118,33 @@
 
                         <controls:SettingsCard x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
                             <ComboBox x:Name="BackgroundComboBox">
-                                <ComboBoxItem>MicaAlt</ComboBoxItem>
-                                <ComboBoxItem>Mica</ComboBoxItem>
-                                <ComboBoxItem>Acrylic</ComboBoxItem>
+                                <x:String>MicaAlt</x:String>
+                                <x:String>Mica</x:String>
+                                <x:String>Acrylic</x:String>
                             </ComboBox>
 
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
                             <ComboBox x:Name="ThemeComboBox">
-                                <ComboBoxItem>Use System Setting</ComboBoxItem>
-                                <ComboBoxItem>Dark</ComboBoxItem>
-                                <ComboBoxItem>Light</ComboBoxItem>
+                                <x:String>Use System Setting</x:String>
+                                <x:String>Dark</x:String>
+                                <x:String>Light</x:String>
                             </ComboBox>
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
                             <ComboBox x:Name="IconsStyleComboBox">
-                                <ComboBoxItem>Animated</ComboBoxItem>
-                                <ComboBoxItem>Windows Accent</ComboBoxItem>
-                                <ComboBoxItem>Monochromatic</ComboBoxItem>
+                                <x:String>Animated</x:String>
+                                <x:String>Windows Accent</x:String>
+                                <x:String>Monochromatic</x:String>
                             </ComboBox>
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
                             <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
-                                <ComboBoxItem>Left</ComboBoxItem>
-                                <ComboBoxItem>Top</ComboBoxItem>
+                                <x:String>Left</x:String>
+                                <x:String>Top</x:String>
                             </ComboBox>
                         </controls:SettingsCard>
 

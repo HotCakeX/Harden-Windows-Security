@@ -16,7 +16,6 @@ namespace AppControlManager.SiPolicy
 	using System.Xml.Serialization;
 
 
-
 	public partial class Macros
 	{
 

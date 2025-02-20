@@ -281,7 +281,6 @@ internal static partial class Merger
 	}
 
 
-
 	/// <summary>
 	/// Helper method to de-duplicate EKUs
 	/// </summary>

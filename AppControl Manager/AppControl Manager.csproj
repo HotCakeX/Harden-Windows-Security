@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <!-- The following are the details for AppControlManager, a Self-Contained MSIX Packaged App -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
@@ -25,7 +24,6 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
 
-
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
 
@@ -48,8 +46,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <!-- Publish Properties -->
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+    <PublishReadyToRun>True</PublishReadyToRun>
 
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
@@ -102,11 +99,12 @@
     <PublishTrimmed>True</PublishTrimmed>
     <TrimMode>full</TrimMode>
     <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+    <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
-    <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
-    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-    <MetricsSupport>false</MetricsSupport>
+    <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
     <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+    <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
   </PropertyGroup>
 
   <!--
@@ -124,7 +122,6 @@
   </ItemGroup>
 -->
 
-
   <!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
     package has not yet been restored. -->
@@ -133,9 +130,8 @@
   </ItemGroup>
 
   <!-- Nuget packages
-  All transitive/nested packages under the main packages are added
+  All transitive/nested packages under the main packages are added as well
   so they can be updated separately and receive bug/security vulnerability fixes faster
-
   https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
   -->
   <ItemGroup>

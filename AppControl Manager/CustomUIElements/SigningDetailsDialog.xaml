@@ -93,7 +93,6 @@
                 </controls:SettingsCard>
 
 
-
                 <controls:SettingsCard Header="SignTool Path"
                 Description="Used to sign the policy CIP file"
                 HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
@@ -142,7 +141,6 @@
         </Grid>
 
     </ScrollView>
-
 
 
 </ContentDialog>

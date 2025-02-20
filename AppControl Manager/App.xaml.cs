@@ -79,7 +79,6 @@ public partial class App : Application
 	}
 
 
-
 	/// <summary>
 	/// Event handler for when the sound setting is changed.
 	/// </summary>
@@ -99,7 +98,6 @@ public partial class App : Application
 			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
 		}
 	}
-
 
 
 	/// <summary>
@@ -135,14 +133,11 @@ public partial class App : Application
 	/// </summary>
 	private async void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 	{
-		Logger.Write($"Unhandled exception: {e.Exception.Message}");
+		Logger.Write(ErrorWriter.FormatException(e.Exception));
 
 		// Prevent the app from crashing
 		// With this set to false, the same error would keep writing to the log file forever. The exception keeps bubbling up since it's unhandled.
 		e.Handled = true;
-
-		// Log the error to a file
-		Logger.Write(e.Exception.ToString());
 
 		// Show error dialog to the user
 		await ShowErrorDialogAsync(e.Exception);

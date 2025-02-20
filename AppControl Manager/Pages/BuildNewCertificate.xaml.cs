@@ -23,7 +23,6 @@ public sealed partial class BuildNewCertificate : Page
 		CheckFieldContents();
 	}
 
-
 	/// <summary>
 	/// Handle the open/close style of the ComboBox via SettingsCard touch/click event
 	/// </summary>
@@ -33,7 +32,6 @@ public sealed partial class BuildNewCertificate : Page
 	{
 		KeySizeComboBox.IsDropDownOpen = !KeySizeComboBox.IsDropDownOpen;
 	}
-
 
 	/// <summary>
 	/// Method to ensure all the required fields are filled with content before the build button will be enabled
@@ -49,8 +47,6 @@ public sealed partial class BuildNewCertificate : Page
 			BuildCertificateButton.IsEnabled = true;
 		}
 	}
-
-
 
 	/// <summary>
 	/// Event handler for the main build button
@@ -72,7 +68,7 @@ public sealed partial class BuildNewCertificate : Page
 
 			generatedCertThumbPrint = null;
 
-			string keySize = ((ComboBoxItem)KeySizeComboBox.SelectedValue).Content.ToString()!;
+			string keySize = (string)KeySizeComboBox.SelectedItem;
 			string commonName = CommonNameTextBox.Text;
 			double validity = ValidityNumberBox.Value;
 			string password = PFXEncryptionPasswordBox.Password;
@@ -101,9 +97,7 @@ public sealed partial class BuildNewCertificate : Page
 
 				generatedCertThumbPrint = generatedCert.Thumbprint;
 			});
-
 		}
-
 		catch
 		{
 			StatusInfoBar.Title = GlobalVars.Rizz.GetString("ErrorTitle");
@@ -139,8 +133,6 @@ public sealed partial class BuildNewCertificate : Page
 		}
 	}
 
-
-
 	private void CommonNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
 		CheckFieldContents();
@@ -150,7 +142,6 @@ public sealed partial class BuildNewCertificate : Page
 	{
 		CheckFieldContents();
 	}
-
 
 	private void CopyInfoBarToClipboardButton_Click(object sender, RoutedEventArgs e)
 	{

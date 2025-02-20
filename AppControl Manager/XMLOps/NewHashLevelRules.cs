@@ -95,7 +95,6 @@ internal static class NewHashLevelRules
 	}
 
 
-
 	/// <summary>
 	/// Creates new Deny Hash level rules in an XML file
 	/// For each hash data, it creates 2 Hash rules, one for Authenticode SHA2-256 and one for SHA1 hash

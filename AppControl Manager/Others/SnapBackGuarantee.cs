@@ -188,7 +188,7 @@ del ""%~f0""
 	/// </summary>
 	internal static void Remove()
 	{
-		string script = "schtasks.exe /Delete /TN EnforcedModeSnapBack /F";
+		string script = "Get-ScheduledTask | Where-Object { $_.TaskName -eq 'EnforcedModeSnapBack' } | ForEach-Object { Unregister-ScheduledTask -TaskName $_.TaskName -Confirm:$false }";
 
 		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"");
 

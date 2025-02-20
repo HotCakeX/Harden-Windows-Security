@@ -33,7 +33,6 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
-
 	#region Augmentation Interface
 
 
@@ -98,7 +97,6 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 
 
 	#endregion
-
 
 
 	// Public property to access the singleton instance from other classes
@@ -167,7 +165,6 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
-
 	/// <summary>
 	/// Updates the value and opacity of the LocalFiles InfoBadge.
 	/// </summary>
@@ -189,6 +186,5 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 		EventLogsCountInfoBadge.Value = value ?? 0; // Default to 0 if value is null
 		EventLogsCountInfoBadge.Opacity = opacity;
 	}
-
 
 }

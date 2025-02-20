@@ -210,7 +210,7 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 		double maxWidth21 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in AllowNewAppsStart.Instance.LocalFilesFileIdentities)
+		foreach (FileIdentity item in AllowNewAppsStart.Instance.EventLogsFileIdentities)
 		{
 			double w1 = ListViewUIHelpers.MeasureTextWidth(item.FileName);
 			if (w1 > maxWidth1) maxWidth1 = w1;
@@ -381,9 +381,17 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 	{
 		SortColumn(fileIden => fileIden.FileName);
 	}
+	private void ColumnSortingButton_TimeCreated_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.TimeCreated);
+	}
 	private void ColumnSortingButton_SignatureStatus_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SignatureStatus);
+	}
+	private void ColumnSortingButton_Action_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.Action);
 	}
 	private void ColumnSortingButton_OriginalFileName_Click(object sender, RoutedEventArgs e)
 	{
@@ -441,15 +449,18 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 	{
 		SortColumn(fileIden => fileIden.FilePublishersToDisplay);
 	}
-	private void ColumnSortingButton_IsECCSigned_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.IsECCSigned);
-	}
 	private void ColumnSortingButton_OpusData_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.Opus);
 	}
-
+	private void ColumnSortingButton_PolicyGUID_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.PolicyGUID);
+	}
+	private void ColumnSortingButton_PolicyName_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.PolicyName);
+	}
 
 	/// <summary>
 	/// Performs data sorting
@@ -461,7 +472,7 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (AllowNewAppsStart.Instance.EventLogsAllFileIdentities) or the current display list.
-		var collectionToSort = isSearchEmpty ? AllowNewAppsStart.Instance.EventLogsAllFileIdentities : [.. AllowNewAppsStart.Instance.EventLogsFileIdentities];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? AllowNewAppsStart.Instance.EventLogsAllFileIdentities : [.. AllowNewAppsStart.Instance.EventLogsFileIdentities];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -529,13 +540,12 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 
 	// Public property to access the singleton instance from other classes
 	// It's okay it's nullable, null check will happen before accessing it
-	public static AllowNewAppsEventLogsDataGrid Instance => _instance ?? throw new InvalidOperationException("AllowNewAppsEventLogsDataGrid is not initialized");
+	public static AllowNewAppsEventLogsDataGrid? Instance => _instance;
 
 	#region
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);
-		FileIdentitiesListView.ItemsSource = AllowNewAppsStart.Instance.EventLogsFileIdentities;
 
 		// Update the logs when user switches to this page
 		UpdateTotalLogs();

@@ -162,7 +162,6 @@ internal static class SetCiPolicyInfo
 	}
 
 
-
 	/// <summary>
 	/// An overload of the Set method, responsible for setting the version number, policyID and BasePolicyID in the policy
 	/// </summary>

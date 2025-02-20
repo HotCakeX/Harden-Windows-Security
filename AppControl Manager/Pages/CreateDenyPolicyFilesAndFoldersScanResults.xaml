@@ -10,7 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"   
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     x:Name="CreateDenyPolicyFilesAndFoldersScanResultsXAML">
 
     <Grid>
@@ -309,9 +309,9 @@
 
                         <Grid.ColumnDefinitions>
                             <!-- Use standard Binding with ElementName to refer back to the page's properties
-                      because in here the Data Context is set to FileIdentity so we cannot use x.Bind
-                      since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
-                      And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
+                                because in here the Data Context is set to FileIdentity so we cannot use x.Bind
+                                since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
+                                And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
                             <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=CreateDenyPolicyFilesAndFoldersScanResultsXAML}" />
                             <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=CreateDenyPolicyFilesAndFoldersScanResultsXAML}" />
                             <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=CreateDenyPolicyFilesAndFoldersScanResultsXAML}" />

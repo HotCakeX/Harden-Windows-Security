@@ -465,7 +465,7 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list AllFileIdentities or the current display list.
-		var collectionToSort = isSearchEmpty ? AllFileIdentities : [.. FileIdentities];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? AllFileIdentities : [.. FileIdentities];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -515,10 +515,6 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 			.ToString();
 	}
 	#endregion
-
-
-
-
 
 
 	#region For the toolbar menu's Selector Bar
@@ -687,7 +683,6 @@ DeviceEvents
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the ScanLogs click
 	/// </summary>
@@ -771,7 +766,6 @@ DeviceEvents
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
 	/// </summary>
@@ -795,7 +789,6 @@ DeviceEvents
 			BrowseForLogs_SelectedFilesTextBox.Text += selectedFile + Environment.NewLine;
 		}
 	}
-
 
 
 	/// <summary>
@@ -1038,7 +1031,6 @@ DeviceEvents
 
 								UpdateHvciOptions.Update(PolicyToAddLogsTo);
 
-
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
@@ -1077,7 +1069,6 @@ DeviceEvents
 								// Copying the policy file to the User Config directory - outside of the temporary staging area
 								File.Copy(EmptyPolicyPath, OutputPath, true);
 
-
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
@@ -1115,7 +1106,6 @@ DeviceEvents
 
 								// Copying the policy file to the User Config directory - outside of the temporary staging area
 								File.Copy(EmptyPolicyPath, OutputPath, true);
-
 
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
@@ -1165,15 +1155,13 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
-		{
-			string selectedText = selectedItem.Content.ToString()!;
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
 
-			if (!Enum.TryParse(selectedText, out scanLevel))
-			{
-				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
-			}
-		}
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		scanLevel = Enum.Parse<ScanLevels>(selectedText);
 	}
 
 	private void BrowseForLogs_Holding(object sender, HoldingRoutedEventArgs e)
@@ -1194,7 +1182,6 @@ DeviceEvents
 		BrowseForLogs_SelectedFilesTextBox.Text = null;
 		MDEAdvancedHuntingLogs = null;
 	}
-
 
 
 	/// <summary>

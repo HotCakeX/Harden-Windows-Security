@@ -183,7 +183,6 @@ public sealed partial class MergePolicies : Page
 	}
 
 
-
 	private void OtherPoliciesSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 

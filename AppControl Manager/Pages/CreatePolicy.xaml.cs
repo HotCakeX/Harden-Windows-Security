@@ -112,7 +112,6 @@ public sealed partial class CreatePolicy : Page
 	}
 
 
-
 	private void AllowMicrosoftAudit_Toggled(object sender, RoutedEventArgs e)
 	{
 		AllowMicrosoftLogSizeInput.IsEnabled = ((ToggleSwitch)sender).IsOn;
@@ -356,7 +355,6 @@ public sealed partial class CreatePolicy : Page
 			}
 		}
 	}
-
 
 
 	/// <summary>

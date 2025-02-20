@@ -41,7 +41,6 @@ public sealed partial class CreateDenyPolicy : Page
 	public static CreateDenyPolicy Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("CreateDenyPolicyNotInitialized"));
 
 
-
 	#region Files and Folders scan
 
 	// Selected File Paths
@@ -84,7 +83,6 @@ public sealed partial class CreateDenyPolicy : Page
 		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
 			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
 	}
-
 
 
 	private void FilesAndFoldersBrowseForFoldersSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
@@ -133,7 +131,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 
 
-
 		if (string.IsNullOrWhiteSpace(filesAndFoldersDenyPolicyName))
 		{
 			CreateDenyPolicyTeachingTip.IsOpen = true;
@@ -141,7 +138,6 @@ public sealed partial class CreateDenyPolicy : Page
 			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ProvidePolicyName");
 			return;
 		}
-
 
 		bool errorsOccurred = false;
 
@@ -192,7 +188,6 @@ public sealed partial class CreateDenyPolicy : Page
 				if (!usingWildCardFilePathRules)
 				{
 
-
 					// Collect all of the AppControl compatible files from user selected directories and files
 					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
 
@@ -214,7 +209,6 @@ public sealed partial class CreateDenyPolicy : Page
 						return;
 					}
 
-
 					string msg2 = GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Count + GlobalVars.Rizz.GetString("AppControlCompatibleFiles");
 					Logger.Write(msg2);
 
@@ -222,7 +216,6 @@ public sealed partial class CreateDenyPolicy : Page
 					{
 						FilesAndFoldersInfoBar.Message = msg2;
 					});
-
 
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
@@ -237,7 +230,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 						});
 					}
-
 
 					await DispatcherQueue.EnqueueAsync(() =>
 					{
@@ -291,11 +283,9 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
-
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
-
 					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
 
 					Logger.Write(msg4);
@@ -304,7 +294,6 @@ public sealed partial class CreateDenyPolicy : Page
 					{
 						FilesAndFoldersInfoBar.Message = msg4;
 					});
-
 
 					string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
 
@@ -483,33 +472,31 @@ public sealed partial class CreateDenyPolicy : Page
 	/// <exception cref="InvalidOperationException"></exception>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
+
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
+		filesAndFoldersScanLevel = Enum.Parse<ScanLevels>(selectedText.Replace(" ", ""));
+
+		// For Wildcard file path rules, only folder paths should be used
+		if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 		{
-			string selectedText = selectedItem.Content.ToString()!;
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
 
-			// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
-			if (!Enum.TryParse(selectedText.Replace(" ", ""), out filesAndFoldersScanLevel))
-			{
-				throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidScanLevel") + selectedText);
-			}
-
-
-			// For Wildcard file path rules, only folder paths should be used
-			if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
-
-				usingWildCardFilePathRules = true;
-			}
-			else
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
-
-				usingWildCardFilePathRules = false;
-			}
+			usingWildCardFilePathRules = true;
 		}
+		else
+		{
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
+
+			usingWildCardFilePathRules = false;
+		}
+
 	}
 
 	/// <summary>
@@ -546,9 +533,7 @@ public sealed partial class CreateDenyPolicy : Page
 		FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text = null;
 	}
 
-
 	#endregion
-
 
 
 	#region Package Family Names
@@ -759,7 +744,6 @@ public sealed partial class CreateDenyPolicy : Page
 		// Update the ListView source with the filtered data
 		PackagedAppsCollectionViewSource.Source = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
 	}
-
 
 
 	private bool packagesLoadedOnExpand;

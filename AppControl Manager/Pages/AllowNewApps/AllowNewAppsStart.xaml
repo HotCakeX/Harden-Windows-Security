@@ -193,9 +193,9 @@
                         <ToggleButton x:Name="DeployToggleButton" Checked="DeployToggleButton_Checked" Unchecked="DeployToggleButton_Unchecked" IsChecked="True" x:Uid="DeployAfterCreationButton" />
 
                         <ComboBox SelectedIndex="0" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" Header="Scan level" Margin="0,0,0,27">
-                            <ComboBoxItem>FilePublisher</ComboBoxItem>
-                            <ComboBoxItem>Publisher</ComboBoxItem>
-                            <ComboBoxItem>Hash</ComboBoxItem>
+                            <x:String>FilePublisher</x:String>
+                            <x:String>Publisher</x:String>
+                            <x:String>Hash</x:String>
                         </ComboBox>
 
                         <Button x:Name="CreatePolicyButton" Click="CreatePolicyButton_Click" x:Uid="AllowNewAppsCreatePolicyButton" Style="{StaticResource AccentButtonStyle}"/>
@@ -205,7 +205,5 @@
             </Border>
 
         </Grid>
-
     </ScrollView>
-
 </Page>

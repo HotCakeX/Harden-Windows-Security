@@ -378,7 +378,6 @@ internal static partial class BasePolicyCreator
 	}
 
 
-
 	/// <summary>
 	/// Creates a base policy based on the AllowMicrosoft template
 	/// </summary>
@@ -463,7 +462,6 @@ internal static partial class BasePolicyCreator
 		// Assign the created policy path to the Sidebar if condition is met
 		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
 	}
-
 
 
 	/// <summary>
@@ -553,7 +551,6 @@ internal static partial class BasePolicyCreator
 	}
 
 
-
 	/// <summary>
 	/// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
 	/// It generates a XML file compliant with CI Policies Schema.
@@ -641,13 +638,11 @@ internal static partial class BasePolicyCreator
 
 			// Deploy the CIP file
 			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
-
 		}
 
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 	}
-
 
 
 	/// <summary>

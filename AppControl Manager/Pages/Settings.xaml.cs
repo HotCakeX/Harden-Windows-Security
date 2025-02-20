@@ -90,20 +90,16 @@ public sealed partial class Settings : Page
 	private void IconsStyleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Get the ComboBox that triggered the event
-		ComboBox? comboBox = sender as ComboBox;
+		ComboBox comboBox = (ComboBox)sender;
 
 		// Get the selected item from the ComboBox
-		string? selectedIconsStyle = (comboBox?.SelectedItem as ComboBoxItem)?.Content.ToString();
+		string selectedIconsStyle = (string)comboBox.SelectedItem;
 
-		if (selectedIconsStyle is not null)
-		{
-			// Raise the global BackgroundChanged event
-			IconsStyleManager.OnIconsStylesChanged(selectedIconsStyle);
-		}
+		// Raise the global BackgroundChanged event
+		IconsStyleManager.OnIconsStylesChanged(selectedIconsStyle);
 
 		SaveSetting(SettingKeys.IconsStyle, selectedIconsStyle);
 	}
-
 
 
 	/// <summary>
@@ -114,21 +110,16 @@ public sealed partial class Settings : Page
 	private void BackgroundComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Get the ComboBox that triggered the event
-		ComboBox? comboBox = sender as ComboBox;
+		ComboBox comboBox = (ComboBox)sender;
 
-		// Get the selected item from the ComboBox
-		string? selectedBackdrop = (comboBox?.SelectedItem as ComboBoxItem)?.Content.ToString();
+		// Get the selected item from the ComboBox (x:String)
+		string selectedBackdrop = (string)comboBox.SelectedItem;
 
-		if (selectedBackdrop is not null)
-		{
-			// Raise the global BackgroundChanged event
-			ThemeManager.OnBackgroundChanged(selectedBackdrop);
-		}
+		// Raise the global BackgroundChanged event
+		ThemeManager.OnBackgroundChanged(selectedBackdrop);
 
 		SaveSetting(SettingKeys.BackDropBackground, selectedBackdrop);
 	}
-
-
 
 	/// <summary>
 	/// Event handler for the NavigationViewLocation ComboBox selection change event.
@@ -137,20 +128,20 @@ public sealed partial class Settings : Page
 	/// <param name="e"></param>
 	private void NavigationViewLocationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		// Get the ComboBox that triggered the event
-		ComboBox? comboBox = sender as ComboBox;
+		ComboBox comboBox = (ComboBox)sender;
 
-		// Get the selected item from the ComboBox
-		string? selectedLocation = (comboBox?.SelectedItem as ComboBoxItem)?.Content?.ToString();
+		// This won't work with Native AOT mode
+		// string? selectedLocation = (comboBox?.SelectedItem as ComboBoxItem)?.Content?.ToString();
 
-		if (selectedLocation is not null)
-		{
-			// Raise the global OnNavigationViewLocationChanged event
-			NavigationViewLocationManager.OnNavigationViewLocationChanged(selectedLocation);
-		}
+		// This however works and uses WinRT method
+		// string? selectedLocation = (comboBox?.SelectedItem.As<ComboBoxItem>())?.Content?.ToString();
+
+		// This method works too but it needs <x:String> and not <ComboBoxItem>
+		string selectedLocation = (string)comboBox.SelectedItem;
+
+		// Raise the global OnNavigationViewLocationChanged event
+		NavigationViewLocationManager.OnNavigationViewLocationChanged(selectedLocation);
 	}
-
-
 
 	/// <summary>
 	/// Event handler for the Theme ComboBox selection change event.
@@ -160,16 +151,13 @@ public sealed partial class Settings : Page
 	private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Get the ComboBox that triggered the event
-		ComboBox? comboBox = sender as ComboBox;
+		ComboBox comboBox = (ComboBox)sender;
 
 		// Get the selected item from the ComboBox
-		string? selectedTheme = (comboBox?.SelectedItem as ComboBoxItem)?.Content?.ToString();
+		string selectedTheme = (string)comboBox.SelectedItem;
 
-		if (selectedTheme is not null)
-		{
-			// Raise the global BackgroundChanged event
-			AppThemeManager.OnAppThemeChanged(selectedTheme);
-		}
+		// Raise the global BackgroundChanged event
+		AppThemeManager.OnAppThemeChanged(selectedTheme);
 
 		SaveSetting(SettingKeys.AppTheme, selectedTheme);
 	}
@@ -183,18 +171,16 @@ public sealed partial class Settings : Page
 	private void NavigationViewBackground_Toggled(object sender, RoutedEventArgs e)
 	{
 		// Get the ToggleSwitch that triggered the event
-		ToggleSwitch? toggleSwitch = sender as ToggleSwitch;
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
 
 		// Get the state of the ToggleSwitch
-		// Use false as a fallback if toggleSwitch is null
-		bool isBackgroundOn = toggleSwitch?.IsOn ?? false;
+		bool isBackgroundOn = toggleSwitch.IsOn;
 
 		// Notify NavigationBackgroundManager when the toggle switch is changed
 		NavigationBackgroundManager.OnNavigationBackgroundChanged(isBackgroundOn);
 
 		SaveSetting(SettingKeys.NavViewBackground, isBackgroundOn);
 	}
-
 
 
 	/// <summary>
@@ -204,9 +190,11 @@ public sealed partial class Settings : Page
 	/// <param name="e"></param>
 	private void SoundToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 	{
+		// Get the ToggleSwitch that triggered the event
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
+
 		// Get the state of the toggle switch (on or off)
-		ToggleSwitch? toggleSwitch = sender as ToggleSwitch;
-		bool isSoundOn = toggleSwitch?.IsOn ?? false;
+		bool isSoundOn = toggleSwitch.IsOn;
 
 		// Raise the event to notify the app of the sound setting change
 		SoundManager.OnSoundSettingChanged(isSoundOn);
@@ -352,9 +340,7 @@ public sealed partial class Settings : Page
 			default:
 				break;
 		}
-
 	}
-
 
 
 	/// <summary>

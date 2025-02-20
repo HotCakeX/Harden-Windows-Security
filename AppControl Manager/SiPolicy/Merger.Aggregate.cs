@@ -132,7 +132,6 @@ internal static class Factory
 	}
 
 
-
 	/// <summary>
 	/// This is a context-aware method that collects all <Signer> elements or Signer rules in the policy from Signers node/section.
 	/// Each signer is complete and has all of the elements that can be used in the policy file independently.
@@ -490,7 +489,6 @@ internal static class Factory
 		{
 
 
-
 			#region ID Replacement
 			string guid = GUIDGenerator.GenerateUniqueGUIDToUpper();
 			string rand = $"ID_SIGNER_A_{guid}";
@@ -588,7 +586,6 @@ internal static class Factory
 	}
 
 
-
 	/// <summary>
 	/// Processes SupplementalPolicySigners
 	/// </summary>
@@ -629,7 +626,6 @@ internal static class Factory
 			}
 		}
 	}
-
 
 
 	/// <summary>

@@ -85,7 +85,7 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
                         <Button x:Name="ApplyTheChangesButton" Content="Apply the Changes" Click="ApplyTheChangesButton_Click"
-            Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected" />
+                            Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected" />
 
                         <Button x:Name="RefreshRuleOptionsState" Content="Retrieve Rules States" Click="RefreshRuleOptionsState_Click"
                                 ToolTipService.ToolTip="Retrieve the latest state of policy rule options from the policy file you selected"/>
@@ -100,10 +100,10 @@
                     <controls:WrapPanel Orientation="Horizontal">
                         <Button x:Name="SetPolicyTemplate" Content="Set" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
                         <ComboBox x:Name="PolicyTemplatesComboBox" SelectedIndex="0">
-                            <ComboBoxItem>Base</ComboBoxItem>
-                            <ComboBoxItem>BaseISG</ComboBoxItem>
-                            <ComboBoxItem>BaseKernel</ComboBoxItem>
-                            <ComboBoxItem>Supplemental</ComboBoxItem>
+                            <x:String>Base</x:String>
+                            <x:String>BaseISG</x:String>
+                            <x:String>BaseKernel</x:String>
+                            <x:String>Supplemental</x:String>
                         </ComboBox>
                     </controls:WrapPanel>
                 </controls:SettingsCard>

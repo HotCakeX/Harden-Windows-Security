@@ -17,7 +17,6 @@ public sealed partial class ValidatePolicy : Page
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
-
 	private async void BrowseForXMLSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		await ValidateXML();
@@ -28,13 +27,11 @@ public sealed partial class ValidatePolicy : Page
 		await ValidateXML();
 	}
 
-
 	private async Task ValidateXML()
 	{
 
 		try
 		{
-
 			MainInfoBar.Message = "Browse for an App Control XML policy file";
 			MainInfoBar.Severity = InfoBarSeverity.Informational;
 			MainInfoBar.IsOpen = true;
@@ -60,7 +57,6 @@ public sealed partial class ValidatePolicy : Page
 				MainInfoBar.IsOpen = false;
 				return;
 			}
-
 
 			if (isValid)
 			{

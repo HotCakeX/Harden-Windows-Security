@@ -431,32 +431,27 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <exception cref="InvalidOperationException"></exception>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
+
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
+		filesAndFoldersScanLevel = Enum.Parse<ScanLevels>(selectedText.Replace(" ", ""));
+
+		// For Wildcard file path rules, only folder paths should be used
+		if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 		{
-			string selectedText = selectedItem.Content.ToString()!;
-
-			// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
-			if (!Enum.TryParse(selectedText.Replace(" ", ""), out filesAndFoldersScanLevel))
-			{
-				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
-			}
-
-			// For Wildcard file path rules, only folder paths should be used
-			if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
-
-				usingWildCardFilePathRules = true;
-			}
-			else
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
-
-				usingWildCardFilePathRules = false;
-			}
-
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
+			usingWildCardFilePathRules = true;
+		}
+		else
+		{
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
+			usingWildCardFilePathRules = false;
 		}
 	}
 
@@ -763,7 +758,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -776,7 +770,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 	#endregion
-
 
 
 	#region Certificates scan
@@ -890,7 +883,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void UserModeRadioButton_Checked(object sender, RoutedEventArgs e)
 	{
 		signingScenario = true;
@@ -900,7 +892,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		signingScenario = false;
 	}
-
 
 
 	/// <summary>
@@ -1079,7 +1070,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -1093,7 +1083,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 	#endregion
-
 
 
 	#region ISG
@@ -1255,7 +1244,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void ISGBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -1294,7 +1282,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 	#endregion
-
 
 
 	#region Strict Kernel-Mode Supplemental Policy
@@ -1337,7 +1324,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(StrictKernelPolicyScanResults), null);
 	}
-
 
 
 	/// <summary>
@@ -1385,7 +1371,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -1398,12 +1383,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void StrictKernelModeScanSinceLastRebootButton_Click(object sender, RoutedEventArgs e)
 	{
 		StrictKernelModePerformScans(true);
 	}
-
 
 
 	private async void StrictKernelModePerformScans(bool OnlyAfterReboot)
@@ -1446,7 +1429,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					Output = [.. Output.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
 				}
 			});
-
 
 
 			// If any logs were generated since audit mode policy was deployed
@@ -1515,7 +1497,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
-
 
 
 	/// <summary>
@@ -1672,7 +1653,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the button that auto detects system drivers
 	/// </summary>
@@ -1810,7 +1790,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 	#endregion
-
 
 
 	#region Package Family Names
@@ -1971,7 +1950,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler to select all apps in the ListView
 	/// </summary>
@@ -2000,7 +1978,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		PFNPackagedAppsListView.SelectedItems.Clear(); // Clear all selected items
 	}
-
 
 
 	/// <summary>
@@ -2052,7 +2029,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		// Update the ListView source with the filtered data
 		PackagedAppsCollectionViewSource.Source = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
 	}
-
 
 
 	/// <summary>

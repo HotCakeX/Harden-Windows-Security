@@ -10,7 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"   
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     x:Name="EventLogsPolicyCreationXAML"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     mc:Ignorable="d">
@@ -277,9 +277,9 @@
                 <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
 
                 <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" PlaceholderText="Scan level" >
-                    <ComboBoxItem>FilePublisher</ComboBoxItem>
-                    <ComboBoxItem>Publisher</ComboBoxItem>
-                    <ComboBoxItem>Hash</ComboBoxItem>
+                    <x:String>FilePublisher</x:String>
+                    <x:String>Publisher</x:String>
+                    <x:String>Hash</x:String>
                 </ComboBox>
 
                 <Button>
@@ -297,7 +297,7 @@
                             <MenuFlyoutSeparator/>
 
                             <MenuFlyoutItem x:Uid="FileNameHeader" Click="ColumnSortingButton_FileName_Click"/>
-                             <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="ColumnSortingButton_TimeCreated_Click"/>                            
+                             <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="ColumnSortingButton_TimeCreated_Click"/>
                              <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
                              <MenuFlyoutItem x:Uid="ActionHeader" Click="ColumnSortingButton_Action_Click"/>
                             <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="ColumnSortingButton_OriginalFileName_Click"/>
@@ -313,7 +313,7 @@
                             <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="ColumnSortingButton_SHA1PageHash_Click"/>
                             <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="ColumnSortingButton_SHA256PageHash_Click"/>
                             <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="ColumnSortingButton_HasWHQLSigner_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>                                           
+                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
                             <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
                             <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="ColumnSortingButton_PolicyID_Click"/>
                             <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="ColumnSortingButton_PolicyName_Click"/>

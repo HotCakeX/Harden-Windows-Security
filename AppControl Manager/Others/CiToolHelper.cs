@@ -208,7 +208,6 @@ internal static class CiToolHelper
 	}
 
 
-
 	/// <summary>
 	/// Removes multiple deployed App Control policy from the system
 	/// </summary>
@@ -258,7 +257,6 @@ internal static class CiToolHelper
 			}
 		}
 	}
-
 
 
 	/// <summary>
@@ -346,7 +344,6 @@ internal static class CiToolHelper
 	}
 
 }
-
 
 
 // Extension methods for JsonElement to simplify retrieving properties with default values

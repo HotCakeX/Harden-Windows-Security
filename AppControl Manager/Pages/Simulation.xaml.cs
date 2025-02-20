@@ -404,7 +404,7 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (AllSimulationOutputs) or the current display list.
-		var collectionToSort = isSearchEmpty ? AllSimulationOutputs : [.. SimulationOutputs];
+		List<SimulationOutput> collectionToSort = isSearchEmpty ? AllSimulationOutputs : [.. SimulationOutputs];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -421,11 +421,7 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 		SimOutputListView.ItemsSource = SimulationOutputs;
 	}
 
-
-
 	#endregion
-
-
 
 	public ObservableCollection<SimulationOutput> SimulationOutputs { get; set; }
 	private readonly List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching

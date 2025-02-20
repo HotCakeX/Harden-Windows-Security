@@ -38,8 +38,8 @@
 
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge x:Name="LocalFilesCountInfoBadge"
-                Value="0" Opacity="0"
-                Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                            Value="0" Opacity="0"
+                            Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>
                             </InfoBadge.IconSource>

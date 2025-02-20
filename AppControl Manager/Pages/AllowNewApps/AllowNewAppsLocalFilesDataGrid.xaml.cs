@@ -156,13 +156,6 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 		set { _columnWidth18 = value; OnPropertyChanged(nameof(ColumnWidth18)); }
 	}
 
-	private GridLength _columnWidth19;
-	public GridLength ColumnWidth19
-	{
-		get => _columnWidth19;
-		set { _columnWidth19 = value; OnPropertyChanged(nameof(ColumnWidth19)); }
-	}
-
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
 	/// and assigns the value (with a little extra padding) to the corresponding property.
@@ -174,24 +167,23 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 
 		// Measure header text widths first.
 		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("TimeCreatedHeader/Text"));
-		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth13 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth14 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
-		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
-		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
-		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth18 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsECCSignedHeader/Text"));
-		double maxWidth19 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
+		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
+		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
+		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
+		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
+		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
+		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
+		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
+		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
+		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
+		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
+		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
+		double maxWidth13 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
+		double maxWidth14 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
+		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
+		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
+		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsECCSignedHeader/Text"));
+		double maxWidth18 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in AllowNewAppsStart.Instance.LocalFilesFileIdentities)
@@ -199,59 +191,56 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 			double w1 = ListViewUIHelpers.MeasureTextWidth(item.FileName);
 			if (w1 > maxWidth1) maxWidth1 = w1;
 
-			double w2 = ListViewUIHelpers.MeasureTextWidth(item.TimeCreated.ToString());
+			double w2 = ListViewUIHelpers.MeasureTextWidth(item.SignatureStatus.ToString());
 			if (w2 > maxWidth2) maxWidth2 = w2;
 
-			double w3 = ListViewUIHelpers.MeasureTextWidth(item.SignatureStatus.ToString());
+			double w3 = ListViewUIHelpers.MeasureTextWidth(item.OriginalFileName);
 			if (w3 > maxWidth3) maxWidth3 = w3;
 
-			double w4 = ListViewUIHelpers.MeasureTextWidth(item.OriginalFileName);
+			double w4 = ListViewUIHelpers.MeasureTextWidth(item.InternalName);
 			if (w4 > maxWidth4) maxWidth4 = w4;
 
-			double w5 = ListViewUIHelpers.MeasureTextWidth(item.InternalName);
+			double w5 = ListViewUIHelpers.MeasureTextWidth(item.FileDescription);
 			if (w5 > maxWidth5) maxWidth5 = w5;
 
-			double w6 = ListViewUIHelpers.MeasureTextWidth(item.FileDescription);
+			double w6 = ListViewUIHelpers.MeasureTextWidth(item.ProductName);
 			if (w6 > maxWidth6) maxWidth6 = w6;
 
-			double w7 = ListViewUIHelpers.MeasureTextWidth(item.ProductName);
+			double w7 = ListViewUIHelpers.MeasureTextWidth(item.FileVersion?.ToString());
 			if (w7 > maxWidth7) maxWidth7 = w7;
 
-			double w8 = ListViewUIHelpers.MeasureTextWidth(item.FileVersion?.ToString());
+			double w8 = ListViewUIHelpers.MeasureTextWidth(item.PackageFamilyName);
 			if (w8 > maxWidth8) maxWidth8 = w8;
 
-			double w9 = ListViewUIHelpers.MeasureTextWidth(item.PackageFamilyName);
+			double w9 = ListViewUIHelpers.MeasureTextWidth(item.SHA256Hash);
 			if (w9 > maxWidth9) maxWidth9 = w9;
 
-			double w10 = ListViewUIHelpers.MeasureTextWidth(item.SHA256Hash);
+			double w10 = ListViewUIHelpers.MeasureTextWidth(item.SHA1Hash);
 			if (w10 > maxWidth10) maxWidth10 = w10;
 
-			double w11 = ListViewUIHelpers.MeasureTextWidth(item.SHA1Hash);
+			double w11 = ListViewUIHelpers.MeasureTextWidth(item.SISigningScenario.ToString());
 			if (w11 > maxWidth11) maxWidth11 = w11;
 
-			double w12 = ListViewUIHelpers.MeasureTextWidth(item.SISigningScenario.ToString());
+			double w12 = ListViewUIHelpers.MeasureTextWidth(item.FilePath);
 			if (w12 > maxWidth12) maxWidth12 = w12;
 
-			double w13 = ListViewUIHelpers.MeasureTextWidth(item.FilePath);
+			double w13 = ListViewUIHelpers.MeasureTextWidth(item.SHA1PageHash);
 			if (w13 > maxWidth13) maxWidth13 = w13;
 
-			double w14 = ListViewUIHelpers.MeasureTextWidth(item.SHA1PageHash);
+			double w14 = ListViewUIHelpers.MeasureTextWidth(item.SHA256PageHash);
 			if (w14 > maxWidth14) maxWidth14 = w14;
 
-			double w15 = ListViewUIHelpers.MeasureTextWidth(item.SHA256PageHash);
+			double w15 = ListViewUIHelpers.MeasureTextWidth(item.HasWHQLSigner.ToString());
 			if (w15 > maxWidth15) maxWidth15 = w15;
 
-			double w16 = ListViewUIHelpers.MeasureTextWidth(item.HasWHQLSigner.ToString());
+			double w16 = ListViewUIHelpers.MeasureTextWidth(item.FilePublishersToDisplay);
 			if (w16 > maxWidth16) maxWidth16 = w16;
 
-			double w17 = ListViewUIHelpers.MeasureTextWidth(item.FilePublishersToDisplay);
+			double w17 = ListViewUIHelpers.MeasureTextWidth(item.IsECCSigned.ToString());
 			if (w17 > maxWidth17) maxWidth17 = w17;
 
-			double w18 = ListViewUIHelpers.MeasureTextWidth(item.IsECCSigned.ToString());
+			double w18 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
 			if (w18 > maxWidth18) maxWidth18 = w18;
-
-			double w19 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
-			if (w19 > maxWidth19) maxWidth19 = w19;
 		}
 
 		// Set the column width properties.
@@ -273,9 +262,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 		ColumnWidth16 = new GridLength(maxWidth16);
 		ColumnWidth17 = new GridLength(maxWidth17);
 		ColumnWidth18 = new GridLength(maxWidth18);
-		ColumnWidth19 = new GridLength(maxWidth19);
 	}
-
 
 
 	/// <summary>
@@ -294,7 +281,6 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 			// Loop through each selected item in the ListView
 			foreach (var selectedItem in FileIdentitiesListView.SelectedItems)
 			{
-
 				if (selectedItem is FileIdentity obj)
 
 					// Append each row's formatted data to the StringBuilder
@@ -314,7 +300,6 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 			Clipboard.SetContent(dataPackage);
 		}
 	}
-
 
 	// Click event handlers for each property
 	private void CopyFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileName);
@@ -438,7 +423,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (AllowNewAppsStart.Instance.LocalFilesAllFileIdentities) or the current display list.
-		var collectionToSort = isSearchEmpty ? AllowNewAppsStart.Instance.LocalFilesAllFileIdentities : [.. AllowNewAppsStart.Instance.LocalFilesFileIdentities];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? AllowNewAppsStart.Instance.LocalFilesAllFileIdentities : [.. AllowNewAppsStart.Instance.LocalFilesFileIdentities];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -466,9 +451,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 		// Use StringBuilder to format each property with its label for easy reading
 		return new StringBuilder()
 			.AppendLine($"File Name: {row.FileName}")
-			.AppendLine($"Time Created: {row.TimeCreated}")
 			.AppendLine($"Signature Status: {row.SignatureStatus}")
-			.AppendLine($"Action: {row.Action}")
 			.AppendLine($"Original File Name: {row.OriginalFileName}")
 			.AppendLine($"Internal Name: {row.InternalName}")
 			.AppendLine($"File Description: {row.FileDescription}")
@@ -477,14 +460,14 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 			.AppendLine($"Package Family Name: {row.PackageFamilyName}")
 			.AppendLine($"SHA256 Hash: {row.SHA256Hash}")
 			.AppendLine($"SHA1 Hash: {row.SHA1Hash}")
-			.AppendLine($"SHA256 Flat Hash: {row.SHA256FlatHash}")
-			.AppendLine($"SHA1 Flat Hash: {row.SHA1FlatHash}")
 			.AppendLine($"Signing Scenario: {row.SISigningScenario}")
 			.AppendLine($"File Path: {row.FilePath}")
-			.AppendLine($"Computer Name: {row.ComputerName}")
-			.AppendLine($"Policy GUID: {row.PolicyGUID}")
-			.AppendLine($"Policy Name: {row.PolicyName}")
+			.AppendLine($"SHA1 Page Hash: {row.SHA1PageHash}")
+			.AppendLine($"SHA256 Page Hash: {row.SHA256PageHash}")
+			.AppendLine($"Has WHQL Signer: {row.HasWHQLSigner}")
 			.AppendLine($"File Publishers: {row.FilePublishersToDisplay}")
+			.AppendLine($"Is ECC Signed: {row.IsECCSigned}")
+			.AppendLine($"Opus: {row.Opus}")
 			.ToString();
 	}
 
@@ -505,26 +488,25 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 
 	// Public property to access the singleton instance from other classes
 	// It's okay it's nullable, null check will happen before accessing it
-	public static AllowNewAppsLocalFilesDataGrid Instance => _instance ?? throw new InvalidOperationException("AllowNewAppsLocalFilesDataGrid is not initialized");
+	public static AllowNewAppsLocalFilesDataGrid? Instance => _instance;
 
 	#region
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);
-		FileIdentitiesListView.ItemsSource = AllowNewAppsStart.Instance.LocalFilesFileIdentities;
 
 		// Update the logs when user switches to this page
 		UpdateTotalLogs();
 
 		// Assign the ItemsSource of the ListView only once
 		// We cannot do it after column width calculation because initialization is not guaranteed at that moment
-		if (AllowNewAppsStart.Instance.EventLogsDataProcessed)
+		if (AllowNewAppsStart.Instance.LocalFilesDataProcessed)
 		{
 			CalculateColumnWidths();
 
 			FileIdentitiesListView.ItemsSource = AllowNewAppsStart.Instance.LocalFilesFileIdentities;
 
-			AllowNewAppsStart.Instance.EventLogsDataProcessed = false;
+			AllowNewAppsStart.Instance.LocalFilesDataProcessed = false;
 		}
 	}
 	#endregion

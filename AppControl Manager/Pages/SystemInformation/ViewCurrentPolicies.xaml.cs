@@ -191,7 +191,6 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			.ToString();
 	}
 
-
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
 	/// </summary>
@@ -300,7 +299,6 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 		SortColumn(policy => policy.PolicyOptionsDisplay);
 	}
 
-
 	/// <summary>
 	/// Performs data sorting
 	/// </summary>
@@ -311,7 +309,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (AllPoliciesOutput) or the current display list.
-		var collectionToSort = isSearchEmpty ? AllPoliciesOutput : [.. AllPolicies];
+		List<CiPolicyInfo> collectionToSort = isSearchEmpty ? AllPoliciesOutput : [.. AllPolicies];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -355,7 +353,6 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 		AllPoliciesOutput = [];
 	}
 
-
 	/// <summary>
 	/// Event handler for the RetrievePoliciesButton click
 	/// </summary>
@@ -366,16 +363,13 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 		RetrievePolicies();
 	}
 
-
 	/// <summary>
 	/// Helper method to retrieve the policies from the system
 	/// </summary>
 	private async void RetrievePolicies()
 	{
-
 		try
 		{
-
 			// Disable the button to prevent multiple clicks while retrieving
 			RetrievePoliciesButton.IsEnabled = false;
 
@@ -432,7 +426,6 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			// Update the UI once the task completes
 			PoliciesCountTextBlock.Text = GlobalVars.Rizz.GetString("NumberOfPolicies") + policies.Count;
 
-
 			CalculateColumnWidths();
 
 			DeployedPolicies.ItemsSource = AllPolicies;
@@ -443,7 +436,6 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			RetrievePoliciesButton.IsEnabled = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the search box text change
@@ -858,7 +850,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			// Create colored runs
 			Run accentPolicyName = new() { Text = selectedPolicy.FriendlyName, Foreground = violetBrush };
 			Run accentPolicyID = new() { Text = policyID, Foreground = violetBrush };
-			Run accentPolicyType = new() { Text = ((ComboBoxItem)SwapPolicyComboBox.SelectedItem).Content.ToString(), Foreground = hotPinkBrush };
+			Run accentPolicyType = new() { Text = (string)SwapPolicyComboBox.SelectedItem, Foreground = hotPinkBrush };
 
 			// Create bold text run
 			Bold boldText = new();

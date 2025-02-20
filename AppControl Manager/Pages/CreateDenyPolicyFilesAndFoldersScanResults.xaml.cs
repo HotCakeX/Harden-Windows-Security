@@ -383,49 +383,38 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, I
 	{
 		SortColumn(fileIden => fileIden.SHA1Hash);
 	}
-
-
 	private void ColumnSortingButton_SigningScenario_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SISigningScenario);
 	}
-
 	private void ColumnSortingButton_FilePath_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePath);
 	}
-
 	private void ColumnSortingButton_SHA1PageHash_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SHA1PageHash);
 	}
-
 	private void ColumnSortingButton_SHA256PageHash_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SHA256PageHash);
 	}
-
 	private void ColumnSortingButton_HasWHQLSigner_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.HasWHQLSigner);
 	}
-
 	private void ColumnSortingButton_FilePublishers_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePublishersToDisplay);
 	}
-
 	private void ColumnSortingButton_IsECCSigned_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.IsECCSigned);
 	}
-
 	private void ColumnSortingButton_OpusData_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.Opus);
 	}
-
-
 
 
 	/// <summary>
@@ -438,7 +427,7 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, I
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (CreateDenyPolicy.Instance.filesAndFoldersScanResultsList) or the current display list.
-		var collectionToSort = isSearchEmpty ? CreateDenyPolicy.Instance.filesAndFoldersScanResultsList : [.. CreateDenyPolicy.Instance.filesAndFoldersScanResults];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? CreateDenyPolicy.Instance.filesAndFoldersScanResultsList : [.. CreateDenyPolicy.Instance.filesAndFoldersScanResults];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -458,9 +447,6 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, I
 	#endregion
 
 
-
-
-
 	public CreateDenyPolicyFilesAndFoldersScanResults()
 	{
 		this.InitializeComponent();
@@ -474,10 +460,8 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, I
 		UIListView = FileIdentitiesListView;
 	}
 
-
 	// Public property to access the singleton instance from other classes
 	public static CreateDenyPolicyFilesAndFoldersScanResults Instance => _instance ?? throw new InvalidOperationException("CreateDenyPolicyFilesAndFoldersScanResults page is not initialized");
-
 
 
 	#region

@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.ApplicationModel;
 using Windows.Graphics;
+using WinRT;
 using Rect = Windows.Foundation.Rect;
 
 namespace AppControlManager;
@@ -207,7 +208,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	// Dictionary of all the main pages in the app, used by the search bar
 	// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized
 	private static readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
@@ -234,7 +234,6 @@ public sealed partial class MainWindow : Window
 		{ "Validate Policies", typeof(Pages.ValidatePolicy) },
 		{ "View File Certificates", typeof(Pages.ViewFileCertificates) }
 	};
-
 
 
 	// A static instance of the MainWindow class which will hold the single, shared instance of it
@@ -369,7 +368,6 @@ public sealed partial class MainWindow : Window
 		this.Closed += MainWindow_Closed;
 
 
-
 		// Subscribing to the event that is fired when User Configuration changes for Unsigned policy path to that the Sidebar can be updated accordingly
 		Events.UnsignedPolicyManager.UnsignedPolicyInUserConfigChanged += SidebarOnUnsignedPolicyChanged;
 	}
@@ -464,7 +462,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	/*
 
 	 This will make keep the title bar text white even on light theme, making it unreadable
@@ -501,11 +498,8 @@ public sealed partial class MainWindow : Window
 	/// <param name="args"></param>
 	private void MainWindow_Closed(object sender, WindowEventArgs args)
 	{
-		// Get the AppWindow from the current Window
-		AppWindow appWindow = GetAppWindowForCurrentWindow();
-
 		// Get the current size of the window
-		SizeInt32 size = appWindow.Size;
+		SizeInt32 size = m_AppWindow.Size;
 
 		// Save to window width and height to the app settings
 		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowWidth, size.Width);
@@ -531,16 +525,20 @@ public sealed partial class MainWindow : Window
 	/// <summary>
 	/// Event handler to run at Window launch to restore its size to the one before closing
 	/// </summary>
-	private static void RestoreWindowSize()
+	private void RestoreWindowSize()
 	{
-
-		AppWindow appWindow = GetAppWindowForCurrentWindow();
 
 		// If the window was last maximized then restore it to maximized
 		if (AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.MainWindowIsMaximized))
 		{
+
+			Logger.Write("Window was maximized when the app closed last time, setting it to maximized now");
+
+			// Using .As<>() instead of direct cast because in NAOT mode direct cast would throw error for invalid cast operation. This is a bug in CsWinRT
+			OverlappedPresenter presenter = m_AppWindow.Presenter.As<OverlappedPresenter>();
+
 			// Set the presenter to maximized
-			((OverlappedPresenter)appWindow.Presenter).Maximize();
+			presenter.Maximize();
 		}
 
 		// Else set its size to its previous size before closing
@@ -550,23 +548,25 @@ public sealed partial class MainWindow : Window
 			int width = AppSettingsCls.GetSetting<int>(AppSettingsCls.SettingKeys.MainWindowWidth);
 			int height = AppSettingsCls.GetSetting<int>(AppSettingsCls.SettingKeys.MainWindowHeight);
 
+			Logger.Write($"Setting the window size back to what it was when the app was closed. Height: {height} - Width: {width}");
+
 			// If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
 			if (width > 200 && height > 200)
 			{
 				// Apply to the current AppWindow
-				appWindow?.Resize(new SizeInt32(width, height));
+				m_AppWindow?.Resize(new SizeInt32(width, height));
 			}
 		}
 	}
 
-
+	/*
+	//This is already retrieved by m_AppWindow in the class, keeping it just in case
 	private static AppWindow GetAppWindowForCurrentWindow()
 	{
 		WindowId windowId = Win32Interop.GetWindowIdFromWindow(GlobalVars.hWnd);
 		return AppWindow.GetFromWindowId(windowId);
 	}
-
-
+	*/
 
 	/// <summary>
 	/// Event handler for the global Icons Style change event
@@ -578,7 +578,6 @@ public sealed partial class MainWindow : Window
 
 		// Get the current theme
 		ElementTheme currentTheme = RootGrid.ActualTheme;
-
 
 		// Set the Icons Style
 		switch (e.NewIconsStyle)
@@ -1029,7 +1028,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the global NavigationView location change event
 	/// </summary>
@@ -1076,9 +1074,7 @@ public sealed partial class MainWindow : Window
 					break;
 				}
 		}
-
 	}
-
 
 
 	/// <summary>
@@ -1114,7 +1110,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the global BackgroundChanged event. When user selects a different background for the app, this will be triggered.
 	/// </summary>
@@ -1140,7 +1135,6 @@ public sealed partial class MainWindow : Window
 				break;
 		}
 	}
-
 
 
 	/// <summary>
@@ -1321,7 +1315,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	/// <summary>
 	/// Main navigation event of the Nav View
 	/// ItemInvoked event is much better than SelectionChanged because it allows click/tap on the same selected menu on main navigation
@@ -1432,9 +1425,7 @@ public sealed partial class MainWindow : Window
 				MainNavigation.SelectedItem = allNavigationItems.First(x => string.Equals(x.Content.ToString(), info.Titles[0], StringComparison.OrdinalIgnoreCase));
 			}
 		}
-
 	}
-
 
 
 	/// <summary>
@@ -1563,7 +1554,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	/// <summary>
 	/// Event handler to change visibility of the AnimatedIcons on the currently visible page in the frame
 	/// It is called by the Sidebar's Browse/Clear buttons' event handlers
@@ -1584,7 +1574,6 @@ public sealed partial class MainWindow : Window
 		}
 
 	}
-
 
 
 	/// <summary>
@@ -1649,7 +1638,6 @@ public sealed partial class MainWindow : Window
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button in the sidebar for unsigned policy path
 	/// </summary>
@@ -1663,7 +1651,6 @@ public sealed partial class MainWindow : Window
 		// Hide the animated icons on the currently visible page
 		AffectPagesAnimatedIconsVisibilities(false);
 	}
-
 
 
 	/// <summary>
@@ -1682,7 +1669,6 @@ public sealed partial class MainWindow : Window
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
 		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar) ?? true;
 	}
-
 
 
 	/// <summary>
@@ -1711,7 +1697,6 @@ public sealed partial class MainWindow : Window
 				}
 			});
 	}
-
 
 
 	/// <summary>

@@ -35,9 +35,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 	#region Augmentation Interface
 
-
 	private string? unsignedBasePolicyPathFromSidebar;
-
 
 	// Implement the SetVisibility method required by IAnimatedIconsManager
 	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
@@ -61,7 +59,6 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			button1.Click += LightUp1;
 			// Save a reference to the event handler we just set for tracking
 			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp1;
-
 		}
 
 	}
@@ -107,7 +104,6 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 		{ "Enabled:Secure Setting Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledSecureSettingPolicy") },
 		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
 	};
-
 
 
 	/// <summary>
@@ -277,21 +273,10 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 			}
 
 			// Retrieve the selected item from the ComboBox
-			if (PolicyTemplatesComboBox.SelectedItem is not ComboBoxItem selectedComboBoxItem)
-			{
-				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyTemplateFromDropdown");
-				return;
-			}
+			string selectedItem = (string)PolicyTemplatesComboBox.SelectedItem;
 
 			// Convert the ComboBoxItem content to the corresponding PolicyTemplate enum value
-			if (!Enum.TryParse(selectedComboBoxItem.Content.ToString(), out CiRuleOptions.PolicyTemplate template))
-			{
-				MainTeachingTip.IsOpen = true;
-				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("InvalidPolicyTemplateSelected");
-				return;
-			}
-
+			CiRuleOptions.PolicyTemplate template = Enum.Parse<CiRuleOptions.PolicyTemplate>(selectedItem);
 
 			// Call the Set method with only the filePath and template parameters
 			await Task.Run(() =>

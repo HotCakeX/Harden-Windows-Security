@@ -10,7 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"   
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     x:Name="AllowNewAppsLocalFilesDataGridXAML">
 
     <Grid>
@@ -101,7 +101,6 @@
 
             </controls:WrapPanel>
         </Border>
-
 
         <ListView x:Name="FileIdentitiesListView"
          Grid.Row="1"

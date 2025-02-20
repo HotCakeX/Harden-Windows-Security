@@ -386,22 +386,18 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	{
 		SortColumn(fileIden => fileIden.FileName);
 	}
-
 	private void ColumnSortingButton_TimeCreated_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.TimeCreated);
 	}
-
 	private void ColumnSortingButton_SignatureStatus_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SignatureStatus);
 	}
-
 	private void ColumnSortingButton_Action_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.Action);
 	}
-
 	private void ColumnSortingButton_OriginalFileName_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.OriginalFileName);
@@ -481,7 +477,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list AllFileIdentities or the current display list.
-		var collectionToSort = isSearchEmpty ? AllFileIdentities : [.. FileIdentities];
+		List<FileIdentity> collectionToSort = isSearchEmpty ? AllFileIdentities : [.. FileIdentities];
 
 		if (SortingDirectionToggle.IsChecked)
 		{
@@ -531,7 +527,6 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			.ToString();
 	}
 	#endregion
-
 
 
 	// To store the FileIdentities displayed on the ListView
@@ -1148,15 +1143,13 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// <exception cref="InvalidOperationException"></exception>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
-		{
-			string selectedText = selectedItem.Content.ToString()!;
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
 
-			if (!Enum.TryParse(selectedText, out scanLevel))
-			{
-				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
-			}
-		}
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		scanLevel = Enum.Parse<ScanLevels>(selectedText);
 	}
 
 

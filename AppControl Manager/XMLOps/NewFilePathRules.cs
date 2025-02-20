@@ -64,7 +64,6 @@ internal static class NewFilePathRules
 	}
 
 
-
 	/// <summary>
 	/// Creates a new Deny FilePath rule (including Wildcards) in the XML file
 	/// </summary>

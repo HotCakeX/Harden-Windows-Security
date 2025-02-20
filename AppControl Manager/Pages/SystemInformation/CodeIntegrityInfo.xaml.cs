@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,7 +15,6 @@ public sealed partial class CodeIntegrityInfo : Page
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
-
 	/// <summary>
 	/// Local method to convert numbers to their actual string values
 	/// </summary>
@@ -28,25 +28,23 @@ public sealed partial class CodeIntegrityInfo : Page
 		_ => null
 	};
 
-
 	/// <summary>
 	/// Event handler for the retrieve code integrity information button
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void RetrieveCodeIntegrityInfo_Click(object sender, RoutedEventArgs e)
+	private async void RetrieveCodeIntegrityInfo_Click(object sender, RoutedEventArgs e)
 	{
 		// Get the system code integrity information
-		CodeIntegrity.SystemCodeIntegrityInfo codeIntegrityInfoResult = CodeIntegrity.DetailsRetrieval.Get();
+		CodeIntegrity.SystemCodeIntegrityInfo codeIntegrityInfoResult = await Task.Run(CodeIntegrity.DetailsRetrieval.Get);
 
 		// Bind the CodeIntegrityDetails (List<CodeIntegrityOption>) to the ListView
 		CodeIntegrityInfoListView.ItemsSource = codeIntegrityInfoResult.CodeIntegrityDetails;
 
 		// Get the Application Control Status
-		DeviceGuardStatus? DGStatus = DeviceGuardInfo.GetDeviceGuardStatus();
+		DeviceGuardStatus? DGStatus = await Task.Run(DeviceGuardInfo.GetDeviceGuardStatus);
 
 		UMCI.Text = GetPolicyStatus(DGStatus?.UsermodeCodeIntegrityPolicyEnforcementStatus);
 		KMCI.Text = GetPolicyStatus(DGStatus?.CodeIntegrityPolicyEnforcementStatus);
-
 	}
 }

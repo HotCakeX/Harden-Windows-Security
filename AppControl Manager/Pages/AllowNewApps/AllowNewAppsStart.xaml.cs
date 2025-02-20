@@ -147,7 +147,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	internal TextBox BrowseForXMLPolicyButton_SelectedBasePolicyTextBoxPub => BrowseForXMLPolicyButton_SelectedBasePolicyTextBox;
 
 
-
 	private string? unsignedBasePolicyPathFromSidebar;
 
 
@@ -189,7 +188,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
 		selectedXMLFilePath = unsignedBasePolicyPathFromSidebar;
 	}
-
 
 
 	#endregion
@@ -268,7 +266,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	/// <exception cref="InvalidOperationException"></exception>
 	private async void GoToStep2Button_Click(object sender, RoutedEventArgs e)
 	{
-
 		bool errorOccurred = false;
 
 		try
@@ -330,7 +327,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				_IsSignedPolicy = (_BasePolicyObject.Rules is null || !_BasePolicyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy));
 			});
 
-
 			if (_IsSignedPolicy)
 			{
 
@@ -360,7 +356,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 				#endregion
 			}
-
 
 			// Execute the main tasks of step 1
 			await Task.Run(() =>
@@ -476,7 +471,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		}
 	}
 
-
 	/// <summary>
 	/// Step 2 validation
 	/// </summary>
@@ -515,7 +509,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				{
 					Step2InfoBar.Message = "Deploying the Enforced mode policy.";
 				});
-
 
 				Logger.Write("Deploying the Enforced mode policy.");
 				CiToolHelper.UpdatePolicy(EnforcedModeCIP);
@@ -579,8 +572,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 							{
 								LocalFilesDataProcessed = false;
 
-								AllowNewAppsLocalFilesDataGrid.Instance.CalculateColumnWidths();
-								AllowNewAppsLocalFilesDataGrid.Instance.UIListView.ItemsSource = LocalFilesFileIdentities;
+								if (AllowNewAppsLocalFilesDataGrid.Instance is not null)
+								{
+									AllowNewAppsLocalFilesDataGrid.Instance.CalculateColumnWidths();
+									AllowNewAppsLocalFilesDataGrid.Instance.UIListView.ItemsSource = LocalFilesFileIdentities;
+								}
 							}
 							else
 							{
@@ -639,8 +635,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					{
 						EventLogsDataProcessed = false;
 
-						AllowNewAppsEventLogsDataGrid.Instance.CalculateColumnWidths();
-						AllowNewAppsEventLogsDataGrid.Instance.UIListView.ItemsSource = EventLogsFileIdentities;
+						if (AllowNewAppsEventLogsDataGrid.Instance is not null)
+						{
+							AllowNewAppsEventLogsDataGrid.Instance.CalculateColumnWidths();
+							AllowNewAppsEventLogsDataGrid.Instance.UIListView.ItemsSource = EventLogsFileIdentities;
+						}
 					}
 					else
 					{
@@ -695,7 +694,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	{
 		try
 		{
-
 			ResetStepsButton.IsEnabled = false;
 
 			ResetProgressRing.IsActive = true;
@@ -794,14 +792,15 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
-		{
-			string selectedText = selectedItem.Content.ToString()!;
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
 
-			if (!Enum.TryParse(selectedText, out scanLevel))
-			{
-				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
-			}
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		if (!Enum.TryParse(selectedText, out scanLevel))
+		{
+			throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
 		}
 	}
 

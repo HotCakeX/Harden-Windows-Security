@@ -558,12 +558,22 @@ public sealed partial class CreateDenyPolicy : Page
 			// Loop over each package
 			foreach (Package item in allApps)
 			{
+				// Get the logo string (or an empty string if null)
+				string logoStr = item.Logo?.ToString() ?? string.Empty;
+
+				// Validate that the logo string is a valid absolute URI
+				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
+				{
+					// If invalid, assign a fallback logo
+					logoStr = "ms-appx:///Assets/StoreLogo.backup.png";
+				}
+
 				// Create a new instance of the class that displays each app in the ListView
 				apps.Add(new PackagedAppView(
 					displayName: item.DisplayName,
 					version: $"Version: {item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
 					packageFamilyName: $"PFN: {item.Id.FamilyName}",
-					logo: item.Logo.ToString(),
+					logo: logoStr,
 					packageFamilyNameActual: item.Id.FamilyName
 					));
 			}

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Management;
 
 namespace AppControlManager.Others;
 
 internal static class SnapBackGuarantee
 {
-
 	private static readonly string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
 
 	/// <summary>
@@ -24,6 +22,8 @@ internal static class SnapBackGuarantee
 		}
 
 		Logger.Write("Creating the scheduled task for Snap Back Guarantee");
+
+		/*
 
 		// Initialize ManagementScope to interact with Task Scheduler's WMI namespace
 		ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
@@ -151,14 +151,20 @@ internal static class SnapBackGuarantee
 		}
 		#endregion
 
+
 		Logger.Write("Successfully created the Microsoft Recommended Driver Block Rules auto updater scheduled task.");
 
+		*/
+
+
+		// TODO: use a Native AOT compatible way that doesn't rely on System.Management
+
+		// Execute the script using PowerShell
+		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.SnapBackGuaranteeScheduledTaskScriptFilePath}\"");
 
 
 		// Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
 		// It contains the instructions to revert the base policy to enforced mode
-
-
 
 		string contentToBeSaved = $@"
 REM Deploying the Enforced Mode SnapBack CI Policy
@@ -171,22 +177,20 @@ REM Deleting this CMD file itself
 del ""%~f0""
 ";
 
-
 		// Write to file (overwrite if exists)
 		File.WriteAllText(savePath, contentToBeSaved);
 
-
 		// An alternative way to do this which is less reliable because RunOnce key can be deleted by 3rd party programs during installation etc.
-
 	}
-
 
 	/// <summary>
 	/// Removes the SnapBack guarantee scheduled task and the related .bat file
 	/// </summary>
 	internal static void Remove()
 	{
-		TaskSchedulerHelper.Delete("EnforcedModeSnapBack", @"\");
+		string script = "Get-ScheduledTask | Where-Object { $_.TaskName -eq 'EnforcedModeSnapBack' } | ForEach-Object { Unregister-ScheduledTask -TaskName $_.TaskName -Confirm:$false }";
+
+		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"");
 
 		if (Path.Exists(savePath))
 		{

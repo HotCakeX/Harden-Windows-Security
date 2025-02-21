@@ -9,7 +9,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:others="using:AppControlManager.Others"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    x:Name="SimulationXAML"
     mc:Ignorable="d">
 
     <Grid TabFocusNavigation="Cycle">
@@ -186,6 +189,39 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
 
+                <Button>
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE8CB;" />
+                            <TextBlock Text="Sort" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <MenuFlyout>
+
+                            <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" Text="Descending Sorting" IsChecked="True"/>
+
+                            <MenuFlyoutSeparator/>
+
+                            <MenuFlyoutItem x:Uid="PathHeader" Click="ColumnSortingButton_Path_Click"/>
+                            <MenuFlyoutItem x:Uid="SourceHeader" Click="ColumnSortingButton_Source_Click"/>
+                            <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="ColumnSortingButton_IsAuthorized_Click"/>
+                            <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Click="ColumnSortingButton_MatchCriteria_Click"/>
+                            <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Click="ColumnSortingButton_SpecificFileNameLevelMatchCriteria_Click"/>
+                            <MenuFlyoutItem x:Uid="SignerIDHeader" Click="ColumnSortingButton_SignerID_Click"/>
+                            <MenuFlyoutItem x:Uid="SignerNameHeader" Click="ColumnSortingButton_SignerName_Click"/>
+                            <MenuFlyoutItem x:Uid="SignerCertRootHeader" Click="ColumnSortingButton_SignerCertRoot_Click"/>
+                            <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Click="ColumnSortingButton_SignerCertPublisher_Click"/>
+                            <MenuFlyoutItem x:Uid="SignerScopeHeader" Click="ColumnSortingButton_SignerScope_Click"/>
+                            <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Click="ColumnSortingButton_CertSubjectCN_Click"/>
+                            <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Click="ColumnSortingButton_CertIssuerCN_Click"/>
+                            <MenuFlyoutItem x:Uid="CertNotAfterHeader" Click="ColumnSortingButton_CertNotAfter_Click"/>
+                            <MenuFlyoutItem x:Uid="CertTBSValueHeader" Click="ColumnSortingButton_CertTBSValue_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
 
                 <!-- Scalability Button with RadialGauge Flyout -->
                 <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when performing App Control Simulation. By default it uses 2 parallel tasks.">
@@ -225,68 +261,217 @@
             </controls:WrapPanel>
         </Border>
 
-        <!-- DataGrid for Simulation Outputs -->
-        <Border Grid.Row="2" Style="{StaticResource GridCardStyle}" Margin="0,0,0,10" Padding="5">
-            <tk7controls:DataGrid
-                x:Name="SimulationDataGrid"
-                ItemsSource="{x:Bind SimulationOutputs, Mode=OneWay}"
-                AllowDrop="False"
-                AreRowDetailsFrozen="True"
-                AutoGenerateColumns="False"
-                CanDrag="False"
-                HeadersVisibility="Column"
-                IsReadOnly="True"
-                IsTabStop="True"
-                RowDetailsVisibilityMode="Collapsed"
-                SelectionMode="Single"
-                TabIndex="2"
-                ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                ScrollViewer.VerticalScrollMode="Auto"
-                ScrollViewer.HorizontalScrollMode="Auto"
-                Sorting="SimulationDataGrid_Sorting"
-                CanUserSortColumns="True"
-                Loaded="SimulationDataGrid_Loaded">
 
-                <!-- Context Menu for Copy/Delete Options -->
-                <tk7controls:DataGrid.ContextFlyout>
-                    <MenuFlyout>
+        <ListView x:Name="SimOutputListView"
+                Grid.Row="2"
+                SelectionMode="Extended"
+                ScrollViewer.HorizontalScrollMode="Enabled"
+                ScrollViewer.IsHorizontalRailEnabled="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                ShowsScrollingPlaceholders="True"
+                ScrollViewer.VerticalScrollBarVisibility="Visible">
 
-                        <MenuFlyoutItem Text="Copy Row" Click="SimulationDataGrid_CopyRow_Click">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE8C8;" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
+            <ListView.Header>
 
-                        <MenuFlyoutSubItem x:Name="CopyIndividualItemsSubMenu" Text="Copy Individual Items">
-                            <MenuFlyoutSubItem.Icon>
-                                <FontIcon Glyph="&#xE8C8;" />
-                            </MenuFlyoutSubItem.Icon>
-                            <!-- Dynamic items will be added here in the Loaded event handler -->
-                        </MenuFlyoutSubItem>
+                <Border CornerRadius="5" Background="Black">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:StickyHeaderBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <Grid>
 
-                    </MenuFlyout>
-                </tk7controls:DataGrid.ContextFlyout>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ColumnWidth15, Mode=OneWay}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Uid="PathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SourceHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="IsAuthorizedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="MatchCriteriaHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SignerIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SignerNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SignerCertRootHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SignerCertPublisherHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SignerScopeHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="CertSubjectCNHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="CertIssuerCNHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="CertNotAfterHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="CertTBSValueHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                    </Grid>
+                </Border>
+            </ListView.Header>
 
-                <!-- DataGrid Columns -->
-                <tk7controls:DataGrid.Columns>
-                    <tk7controls:DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Is Authorized" Binding="{Binding IsAuthorized}" Tag="IsAuthorized" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Match Criteria" Binding="{Binding MatchCriteria}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Specific File Name Criteria" Binding="{Binding SpecificFileNameLevelMatchCriteria}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Signer ID" Binding="{Binding SignerID}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Signer Name" Binding="{Binding SignerName}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Signer Cert Root" Binding="{Binding SignerCertRoot}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Signer Cert Publisher" Binding="{Binding SignerCertPublisher}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Signer Scope" Binding="{Binding SignerScope}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Cert Subject CN" Binding="{Binding CertSubjectCN}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Cert Issuer CN" Binding="{Binding CertIssuerCN}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Cert Not After" Binding="{Binding CertNotAfter}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="Cert TBS Value" Binding="{Binding CertTBSValue}" Width="Auto"/>
-                    <tk7controls:DataGridTextColumn Header="File Path" Binding="{Binding FilePath}" Width="Auto"/>
-                </tk7controls:DataGrid.Columns>
-            </tk7controls:DataGrid>
-        </Border>
+            <!-- DataTemplate for ListView items -->
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="others:SimulationOutput">
+                    <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
+                    <Grid Background="Transparent">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+
+                                <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutSubItem.Icon>
+
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="PathHeader" Click="CopyPath_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SourceHeader" Click="CopySource_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="CopyIsAuthorized_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Click="CopyMatchCriteria_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Click="CopySpecificFileNameLevelMatch_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SignerIDHeader" Click="CopySignerID_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SignerNameHeader" Click="CopySignerName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SignerCertRootHeader" Click="CopySignerCertRoot_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Click="CopySignerCertPublisher_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SignerScopeHeader" Click="CopySignerScope_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Click="CopyCertSubjectCN_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Click="CopyCertIssuerCN_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="CertNotAfterHeader" Click="CopyCertNotAfter_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="CertTBSValueHeader" Click="CopyCertTBSValue_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="CopyFilePath_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyoutSubItem.Items>
+
+                                </MenuFlyoutSubItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
+                        <Grid.ColumnDefinitions>
+                            <!-- Use standard Binding with ElementName to refer back to the page's properties
+                                because in here the Data Context is set to FileIdentity so we cannot use x.Bind
+                                since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
+                                And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
+                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth12, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth13, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth14, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{Binding ColumnWidth15, ElementName=SimulationXAML}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind Path}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind Source}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind IsAuthorized}" HorizontalAlignment="Left" Grid.Column="2" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind MatchCriteria}" HorizontalAlignment="Left" Grid.Column="3" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SpecificFileNameLevelMatchCriteria}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SignerID}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SignerName}" HorizontalAlignment="Left" Grid.Column="6" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SignerCertRoot}" HorizontalAlignment="Left" Grid.Column="7" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SignerCertPublisher}" HorizontalAlignment="Left" Grid.Column="8" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SignerScope}" HorizontalAlignment="Left" Grid.Column="9" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind CertSubjectCN}" HorizontalAlignment="Left" Grid.Column="10" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind CertIssuerCN}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind CertNotAfter}" HorizontalAlignment="Left" Grid.Column="12" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind CertTBSValue}" HorizontalAlignment="Left" Grid.Column="13" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FilePath}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
     </Grid>
 </Page>

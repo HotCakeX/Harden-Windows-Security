@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Management;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -23,6 +22,8 @@ internal static partial class BasePolicyCreator
 	internal static void SetAutoUpdateDriverBlockRules()
 	{
 		Logger.Write("Creating scheduled task for fast weekly Microsoft recommended driver block list update");
+
+		/*
 
 		// Initialize ManagementScope to interact with Task Scheduler's WMI namespace
 		ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
@@ -163,6 +164,14 @@ internal static partial class BasePolicyCreator
 		#endregion
 
 		Logger.Write("Successfully created the Microsoft Recommended Driver Block Rules auto updater scheduled task.");
+
+		*/
+
+		// TODO: use a Native AOT compatible way that doesn't rely on System.Management
+
+
+		// Execute the script using PowerShell
+		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.DriversBlockListAutoUpdaterScheduledTaskScriptFilePath}\"");
 
 	}
 
@@ -369,7 +378,6 @@ internal static partial class BasePolicyCreator
 	}
 
 
-
 	/// <summary>
 	/// Creates a base policy based on the AllowMicrosoft template
 	/// </summary>
@@ -454,7 +462,6 @@ internal static partial class BasePolicyCreator
 		// Assign the created policy path to the Sidebar if condition is met
 		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
 	}
-
 
 
 	/// <summary>
@@ -544,7 +551,6 @@ internal static partial class BasePolicyCreator
 	}
 
 
-
 	/// <summary>
 	/// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
 	/// It generates a XML file compliant with CI Policies Schema.
@@ -632,13 +638,11 @@ internal static partial class BasePolicyCreator
 
 			// Deploy the CIP file
 			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
-
 		}
 
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 	}
-
 
 
 	/// <summary>

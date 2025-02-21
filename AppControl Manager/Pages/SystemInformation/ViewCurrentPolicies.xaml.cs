@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
-using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -18,16 +18,321 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
-public sealed partial class ViewCurrentPolicies : Page
+// Since the columns for data in the ItemTemplate use "Binding" instead of "x:Bind", we need to use [GeneratedBindableCustomProperty] for them to work properly
+[GeneratedBindableCustomProperty]
+public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 {
-	// To store the policies displayed on the DataGrid
+
+	#region LISTVIEW IMPLEMENTATIONS
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+	private void OnPropertyChanged(string propertyName) =>
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+	// Properties to hold each columns' width.
+	private GridLength _columnWidth1;
+	public GridLength ColumnWidth1
+	{
+		get => _columnWidth1;
+		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+	}
+
+	private GridLength _columnWidth2;
+	public GridLength ColumnWidth2
+	{
+		get => _columnWidth2;
+		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+	}
+
+	private GridLength _columnWidth3;
+	public GridLength ColumnWidth3
+	{
+		get => _columnWidth3;
+		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+	}
+
+	private GridLength _columnWidth4;
+	public GridLength ColumnWidth4
+	{
+		get => _columnWidth4;
+		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+	}
+
+	private GridLength _columnWidth5;
+	public GridLength ColumnWidth5
+	{
+		get => _columnWidth5;
+		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+	}
+
+	private GridLength _columnWidth6;
+	public GridLength ColumnWidth6
+	{
+		get => _columnWidth6;
+		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+	}
+
+	private GridLength _columnWidth7;
+	public GridLength ColumnWidth7
+	{
+		get => _columnWidth7;
+		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+	}
+
+	private GridLength _columnWidth8;
+	public GridLength ColumnWidth8
+	{
+		get => _columnWidth8;
+		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+	}
+
+	private GridLength _columnWidth9;
+	public GridLength ColumnWidth9
+	{
+		get => _columnWidth9;
+		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+	}
+
+	private GridLength _columnWidth10;
+	public GridLength ColumnWidth10
+	{
+		get => _columnWidth10;
+		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+	}
+
+	/// <summary>
+	/// Calculates the maximum required width for each column (including header text)
+	/// and assigns the value (with a little extra padding) to the corresponding property.
+	/// </summary>
+	private void CalculateColumnWidths()
+	{
+		// Measure header text widths first.
+		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
+		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
+		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
+		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("VersionHeader/Text"));
+		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
+		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsEnforcedHeader/Text"));
+		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsOnDiskHeader/Text"));
+		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
+		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSystemPolicyHeader/Text"));
+		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
+
+		// Iterate over all items to determine the widest string for each column.
+		foreach (CiPolicyInfo item in AllPolicies)
+		{
+			double w1 = ListViewUIHelpers.MeasureTextWidth(item.PolicyID);
+			if (w1 > maxWidth1) maxWidth1 = w1;
+
+			double w2 = ListViewUIHelpers.MeasureTextWidth(item.BasePolicyID);
+			if (w2 > maxWidth2) maxWidth2 = w2;
+
+			double w3 = ListViewUIHelpers.MeasureTextWidth(item.FriendlyName);
+			if (w3 > maxWidth3) maxWidth3 = w3;
+
+			double w4 = ListViewUIHelpers.MeasureTextWidth(item.Version!.ToString());
+			if (w4 > maxWidth4) maxWidth4 = w4;
+
+			double w5 = ListViewUIHelpers.MeasureTextWidth(item.IsAuthorized.ToString());
+			if (w5 > maxWidth5) maxWidth5 = w5;
+
+			double w6 = ListViewUIHelpers.MeasureTextWidth(item.IsEnforced.ToString());
+			if (w6 > maxWidth6) maxWidth6 = w6;
+
+			double w7 = ListViewUIHelpers.MeasureTextWidth(item.IsOnDisk.ToString());
+			if (w7 > maxWidth7) maxWidth7 = w7;
+
+			double w8 = ListViewUIHelpers.MeasureTextWidth(item.IsSignedPolicy.ToString());
+			if (w8 > maxWidth8) maxWidth8 = w8;
+
+			double w9 = ListViewUIHelpers.MeasureTextWidth(item.IsSystemPolicy.ToString());
+			if (w9 > maxWidth9) maxWidth9 = w9;
+
+			double w10 = ListViewUIHelpers.MeasureTextWidth(item.PolicyOptionsDisplay);
+			if (w10 > maxWidth10) maxWidth10 = w10;
+		}
+
+		// Set the column width properties.
+		ColumnWidth1 = new GridLength(maxWidth1);
+		ColumnWidth2 = new GridLength(maxWidth2);
+		ColumnWidth3 = new GridLength(maxWidth3);
+		ColumnWidth4 = new GridLength(maxWidth4);
+		ColumnWidth5 = new GridLength(maxWidth5);
+		ColumnWidth6 = new GridLength(maxWidth6);
+		ColumnWidth7 = new GridLength(maxWidth7);
+		ColumnWidth8 = new GridLength(maxWidth8);
+		ColumnWidth9 = new GridLength(maxWidth9);
+		ColumnWidth10 = new GridLength(maxWidth10);
+	}
+
+	/// <summary>
+	/// Converts the properties of a CiPolicyInfo row into a labeled, formatted string for copying to clipboard.
+	/// </summary>
+	/// <param name="row">The selected CiPolicyInfo row from the ListView.</param>
+	/// <returns>A formatted string of the row's properties with labels.</returns>
+	private static string ConvertRowToText(CiPolicyInfo row)
+	{
+		// Use StringBuilder to format each property with its label for easy reading
+		return new StringBuilder()
+			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
+			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
+			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
+			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel") + row.Version)
+			.AppendLine(GlobalVars.Rizz.GetString("IsAuthorizedLabel") + row.IsAuthorized)
+			.AppendLine(GlobalVars.Rizz.GetString("IsEnforcedLabel") + row.IsEnforced)
+			.AppendLine(GlobalVars.Rizz.GetString("IsOnDiskLabel") + row.IsOnDisk)
+			.AppendLine(GlobalVars.Rizz.GetString("IsSignedPolicyLabel") + row.IsSignedPolicy)
+			.AppendLine(GlobalVars.Rizz.GetString("IsSystemPolicyLabel") + row.IsSystemPolicy)
+			.AppendLine(GlobalVars.Rizz.GetString("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
+			.ToString();
+	}
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	/// <param name="sender">The event sender.</param>
+	/// <param name="e">The event arguments.</param>
+	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
+	{
+		// Check if there are selected items in the ListView
+		if (DeployedPolicies.SelectedItems.Count > 0)
+		{
+			// Initialize StringBuilder to store all selected rows' data with labels
+			StringBuilder dataBuilder = new();
+
+			// Loop through each selected item in the ListView
+			foreach (var selectedItem in DeployedPolicies.SelectedItems)
+			{
+				if (selectedItem is CiPolicyInfo obj)
+
+					// Append each row's formatted data to the StringBuilder
+					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
+
+				// Add a separator between rows for readability in multi-row copies
+				_ = dataBuilder.AppendLine(new string('-', 50));
+			}
+
+			// Create a DataPackage to hold the text data
+			DataPackage dataPackage = new();
+
+			// Set the formatted text as the content of the DataPackage
+			dataPackage.SetText(dataBuilder.ToString());
+
+			// Copy the DataPackage content to the clipboard
+			Clipboard.SetContent(dataPackage);
+		}
+	}
+
+	// Click event handlers for each property
+	private void CopyPolicyID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyID?.ToString());
+	private void CopyBasePolicyID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.BasePolicyID?.ToString());
+	private void CopyFriendlyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FriendlyName);
+	private void CopyVersion_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Version?.ToString());
+	private void CopyIsAuthorized_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsAuthorized.ToString());
+	private void CopyIsEnforced_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsEnforced.ToString());
+	private void CopyIsOnDisk_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsOnDisk.ToString());
+	private void CopyIsSignedPolicy_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsSignedPolicy.ToString());
+	private void CopyIsSystemPolicy_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsSystemPolicy.ToString());
+	private void CopyPolicyOptionsDisplay_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyOptionsDisplay);
+
+	/// <summary>
+	/// Helper method to copy a specified property to clipboard without reflection
+	/// </summary>
+	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
+	private void CopyToClipboard(Func<CiPolicyInfo, string?> getProperty)
+	{
+		if (DeployedPolicies.SelectedItem is CiPolicyInfo selectedItem)
+		{
+			string? propertyValue = getProperty(selectedItem);
+			if (propertyValue is not null)
+			{
+				DataPackage dataPackage = new();
+				dataPackage.SetText(propertyValue);
+				Clipboard.SetContent(dataPackage);
+			}
+		}
+	}
+
+	// Event handlers for each sort button
+	private void ColumnSortingButton_PolicyID_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.PolicyID);
+	}
+	private void ColumnSortingButton_BasePolicyID_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.BasePolicyID);
+	}
+	private void ColumnSortingButton_FriendlyName_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.FriendlyName);
+	}
+	private void ColumnSortingButton_Version_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.Version);
+	}
+	private void ColumnSortingButton_IsAuthorized_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.IsAuthorized);
+	}
+	private void ColumnSortingButton_IsEnforced_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.IsEnforced);
+	}
+	private void ColumnSortingButton_IsOnDisk_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.IsOnDisk);
+	}
+	private void ColumnSortingButton_IsSignedPolicy_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.IsSignedPolicy);
+	}
+	private void ColumnSortingButton_IsSystemPolicy_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.IsSystemPolicy);
+	}
+	private void ColumnSortingButton_PolicyRuleOptions_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(policy => policy.PolicyOptionsDisplay);
+	}
+
+	/// <summary>
+	/// Performs data sorting
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="keySelector"></param>
+	private void SortColumn<T>(Func<CiPolicyInfo, T> keySelector)
+	{
+		// Determine if a search filter is active.
+		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
+		// Use either the full list (AllPoliciesOutput) or the current display list.
+		List<CiPolicyInfo> collectionToSort = isSearchEmpty ? AllPoliciesOutput : [.. AllPolicies];
+
+		if (SortingDirectionToggle.IsChecked)
+		{
+			// Sort in descending order.
+			AllPolicies = [.. collectionToSort.OrderByDescending(keySelector)];
+		}
+		else
+		{
+			// Sort in ascending order.
+			AllPolicies = [.. collectionToSort.OrderBy(keySelector)];
+		}
+
+		// Refresh the ItemsSource so the UI updates.
+		DeployedPolicies.ItemsSource = AllPolicies;
+	}
+
+	// To store the policies displayed on the ListView
 	internal ObservableCollection<CiPolicyInfo> AllPolicies { get; set; }
 
 	// Store all outputs for searching
 	private readonly List<CiPolicyInfo> AllPoliciesOutput;
+
+	#endregion
 
 	// Keep track of the currently selected policy
 	private CiPolicyInfo? selectedPolicy;
@@ -35,6 +340,8 @@ public sealed partial class ViewCurrentPolicies : Page
 	public ViewCurrentPolicies()
 	{
 		this.InitializeComponent();
+
+		DataContext = this; // Set the DataContext for x:Bind references in the header in XAML
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
@@ -46,7 +353,6 @@ public sealed partial class ViewCurrentPolicies : Page
 		AllPoliciesOutput = [];
 	}
 
-
 	/// <summary>
 	/// Event handler for the RetrievePoliciesButton click
 	/// </summary>
@@ -57,21 +363,18 @@ public sealed partial class ViewCurrentPolicies : Page
 		RetrievePolicies();
 	}
 
-
 	/// <summary>
 	/// Helper method to retrieve the policies from the system
 	/// </summary>
 	private async void RetrievePolicies()
 	{
-
 		try
 		{
-
 			// Disable the button to prevent multiple clicks while retrieving
 			RetrievePoliciesButton.IsEnabled = false;
 
 			// Clear the policies before getting and showing the new ones
-			// They also set the "SelectedItem" property of the DataGrid to null
+			// They also set the "SelectedItem" property of the ListView to null
 			AllPolicies.Clear();
 			AllPoliciesOutput.Clear();
 
@@ -123,17 +426,16 @@ public sealed partial class ViewCurrentPolicies : Page
 			// Update the UI once the task completes
 			PoliciesCountTextBlock.Text = GlobalVars.Rizz.GetString("NumberOfPolicies") + policies.Count;
 
+			CalculateColumnWidths();
+
 			DeployedPolicies.ItemsSource = AllPolicies;
 		}
-
 		finally
 		{
 			// Re-enable the button
 			RetrievePoliciesButton.IsEnabled = true;
 		}
 	}
-
-
 
 	/// <summary>
 	/// Event handler for the search box text change
@@ -170,15 +472,15 @@ public sealed partial class ViewCurrentPolicies : Page
 
 
 	/// <summary>
-	/// Event handler for when a policy is selected from the DataGrid. It will contain the selected policy.
-	/// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, DataGrid's SelectedItem property will be null,
+	/// Event handler for when a policy is selected from the ListView. It will contain the selected policy.
+	/// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, ListView's SelectedItem property will be null,
 	/// so we detect it here and return from the method without assigning null to the selectedPolicy class instance.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
 	private void DeployedPolicies_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		// Get the selected policy from the DataGrid
+		// Get the selected policy from the ListView
 		CiPolicyInfo? temp = (CiPolicyInfo)DeployedPolicies.SelectedItem;
 
 		if (temp is null)
@@ -209,7 +511,6 @@ public sealed partial class ViewCurrentPolicies : Page
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the RemovePolicyButton click
 	/// </summary>
@@ -226,7 +527,7 @@ public sealed partial class ViewCurrentPolicies : Page
 			// It will stay disabled until user selects another removable policy
 			RemovePolicyButton.IsEnabled = false;
 
-			// Disable interactions with the DataGrid while policies are being removed
+			// Disable interactions with the ListView while policies are being removed
 			DeployedPolicies.IsHitTestVisible = false;
 
 			// Disable the refresh policies button while policies are being removed
@@ -446,241 +747,15 @@ public sealed partial class ViewCurrentPolicies : Page
 				}
 			}
 		}
-
 		finally
 		{
-			// Refresh the DataGrid's policies and their count
+			// Refresh the ListView's policies and their count
 			RetrievePolicies();
 
 			DeployedPolicies.IsHitTestVisible = true;
 			RetrievePoliciesButton.IsEnabled = true;
 			SearchBox.IsEnabled = true;
 		}
-	}
-
-
-	// https://learn.microsoft.com/en-us/windows/communitytoolkit/controls/datagrid_guidance/group_sort_filter
-	// Column sorting logic for the entire DataGrid
-	private void DeployedPoliciesDataGrid_Sorting(object sender, DataGridColumnEventArgs e)
-	{
-		// Sort the column based on its tag and current sort direction
-		if (string.Equals(e.Column.Tag?.ToString(), "IsAuthorized", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.IsAuthorized);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "IsEnforced", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.IsEnforced);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "IsOnDisk", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.IsOnDisk);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "IsSignedPolicy", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.IsSignedPolicy);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "IsSystemPolicy", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.IsSystemPolicy);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "Version", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.Version);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "FriendlyName", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.FriendlyName);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "PolicyID", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.PolicyID);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "BasePolicyID", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.BasePolicyID);
-		}
-		else if (string.Equals(e.Column.Tag?.ToString(), "PolicyOptionsDisplay", StringComparison.OrdinalIgnoreCase))
-		{
-			SortColumn(e, output => output.PolicyOptionsDisplay);
-		}
-
-		// Clear SortDirection for other columns
-		foreach (DataGridColumn column in DeployedPolicies.Columns)
-		{
-			if (column != e.Column)
-			{
-				column.SortDirection = null;
-			}
-		}
-	}
-
-	// Helper method for sorting any column
-	private void SortColumn<T>(DataGridColumnEventArgs e, Func<CiPolicyInfo, T> keySelector)
-	{
-		// Check if the search box is empty or not
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
-
-		// Get the collection to sort based on the search box status
-		// Allowing us to sort only the items in the search results
-		List<CiPolicyInfo> collectionToSort = isSearchEmpty ? AllPoliciesOutput : [.. AllPolicies];
-
-		// Perform the sorting based on the current SortDirection (ascending or descending)
-		if (e.Column.SortDirection is null || e.Column.SortDirection == DataGridSortDirection.Ascending)
-		{
-			// Descending: custom order depending on column type
-			AllPolicies = [.. collectionToSort.OrderByDescending(keySelector)];
-
-			// Set the column direction to Descending
-			e.Column.SortDirection = DataGridSortDirection.Descending;
-		}
-		else
-		{
-			// Ascending: custom order depending on column type
-			AllPolicies = [.. collectionToSort.OrderBy(keySelector)];
-			e.Column.SortDirection = DataGridSortDirection.Ascending;
-		}
-
-		// Update the ItemsSource of the DataGrid
-		DeployedPolicies.ItemsSource = AllPolicies;
-	}
-
-
-
-	/// <summary>
-	/// Event handler for the Copy Individual Items SubMenu. It will populate the submenu items in the flyout of the data grid.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeployedPoliciesDataGrid_Loaded(object sender, RoutedEventArgs e)
-	{
-		// Ensure the CopyIndividualItemsSubMenu is available
-		if (CopyIndividualItemsSubMenu is null)
-		{
-			return;
-		}
-
-		// Clear any existing items to avoid duplication if reloaded
-		CopyIndividualItemsSubMenu.Items.Clear();
-
-		// Create a dictionary to map headers to their specific click event methods
-		Dictionary<string, RoutedEventHandler> copyActions = new()
-		{
-			{ GlobalVars.Rizz.GetString("PolicyIDHeader"), CopyPolicyID_Click },
-			{ GlobalVars.Rizz.GetString("BasePolicyIDHeader"), CopyBasePolicyID_Click },
-			{ GlobalVars.Rizz.GetString("FriendlyNameHeader"), CopyFriendlyName_Click },
-			{ GlobalVars.Rizz.GetString("VersionHeader"), CopyVersion_Click },
-			{ GlobalVars.Rizz.GetString("IsAuthorizedHeader"), CopyIsAuthorized_Click },
-			{ GlobalVars.Rizz.GetString("IsEnforcedHeader"), CopyIsEnforced_Click },
-			{ GlobalVars.Rizz.GetString("IsOnDiskHeader"), CopyIsOnDisk_Click },
-			{ GlobalVars.Rizz.GetString("IsSignedPolicyHeader"), CopyIsSignedPolicy_Click },
-			{ GlobalVars.Rizz.GetString("IsSystemPolicyHeader"), CopyIsSystemPolicy_Click },
-			{ GlobalVars.Rizz.GetString("PolicyOptionsHeader"), CopyPolicyOptionsDisplay_Click }
-		};
-
-		// Add menu items with specific click events for each column
-		foreach (DataGridColumn column in DeployedPolicies.Columns)
-		{
-			string headerText = column.Header.ToString()!;
-
-			if (copyActions.TryGetValue(headerText, out RoutedEventHandler? value))
-			{
-				// Create a new MenuFlyout Item
-				MenuFlyoutItem menuItem = new() { Text = GlobalVars.Rizz.GetString("Copy") + headerText };
-
-				// Set the click event for the menu item
-				menuItem.Click += value;
-
-				// Add the menu item to the submenu
-				CopyIndividualItemsSubMenu.Items.Add(menuItem);
-			}
-		}
-	}
-
-	// Click event handlers for each property
-	private void CopyPolicyID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyID?.ToString());
-	private void CopyBasePolicyID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.BasePolicyID?.ToString());
-	private void CopyFriendlyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FriendlyName);
-	private void CopyVersion_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Version?.ToString());
-	private void CopyIsAuthorized_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsAuthorized.ToString());
-	private void CopyIsEnforced_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsEnforced.ToString());
-	private void CopyIsOnDisk_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsOnDisk.ToString());
-	private void CopyIsSignedPolicy_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsSignedPolicy.ToString());
-	private void CopyIsSystemPolicy_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsSystemPolicy.ToString());
-	private void CopyPolicyOptionsDisplay_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyOptionsDisplay);
-
-	/// <summary>
-	/// Helper method to copy a specified property to clipboard without reflection
-	/// </summary>
-	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
-	private void CopyToClipboard(Func<CiPolicyInfo, string?> getProperty)
-	{
-		if (DeployedPolicies.SelectedItem is CiPolicyInfo selectedItem)
-		{
-			string? propertyValue = getProperty(selectedItem);
-			if (propertyValue is not null)
-			{
-				DataPackage dataPackage = new();
-				dataPackage.SetText(propertyValue);
-				Clipboard.SetContent(dataPackage);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void DataGridFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the DataGrid
-		if (DeployedPolicies.SelectedItems.Count > 0)
-		{
-			// Initialize StringBuilder to store all selected rows' data with labels
-			StringBuilder dataBuilder = new();
-
-			// Loop through each selected item in the DataGrid
-			foreach (CiPolicyInfo selectedItem in DeployedPolicies.SelectedItems)
-			{
-				// Append each row's formatted data to the StringBuilder
-				_ = dataBuilder.AppendLine(ConvertRowToText(selectedItem));
-
-				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(new string('-', 50));
-			}
-
-			// Create a DataPackage to hold the text data
-			DataPackage dataPackage = new();
-
-			// Set the formatted text as the content of the DataPackage
-			dataPackage.SetText(dataBuilder.ToString());
-
-			// Copy the DataPackage content to the clipboard
-			Clipboard.SetContent(dataPackage);
-		}
-	}
-
-	/// <summary>
-	/// Converts the properties of a CiPolicyInfo row into a labeled, formatted string for copying to clipboard.
-	/// </summary>
-	/// <param name="row">The selected CiPolicyInfo row from the DataGrid.</param>
-	/// <returns>A formatted string of the row's properties with labels.</returns>
-	private static string ConvertRowToText(CiPolicyInfo row)
-	{
-		// Use StringBuilder to format each property with its label for easy reading
-		return new StringBuilder()
-			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
-			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
-			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
-			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel") + row.Version)
-			.AppendLine(GlobalVars.Rizz.GetString("IsAuthorizedLabel") + row.IsAuthorized)
-			.AppendLine(GlobalVars.Rizz.GetString("IsEnforcedLabel") + row.IsEnforced)
-			.AppendLine(GlobalVars.Rizz.GetString("IsOnDiskLabel") + row.IsOnDisk)
-			.AppendLine(GlobalVars.Rizz.GetString("IsSignedPolicyLabel") + row.IsSignedPolicy)
-			.AppendLine(GlobalVars.Rizz.GetString("IsSystemPolicyLabel") + row.IsSystemPolicy)
-			.AppendLine(GlobalVars.Rizz.GetString("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
-			.ToString();
 	}
 
 
@@ -775,7 +850,7 @@ public sealed partial class ViewCurrentPolicies : Page
 			// Create colored runs
 			Run accentPolicyName = new() { Text = selectedPolicy.FriendlyName, Foreground = violetBrush };
 			Run accentPolicyID = new() { Text = policyID, Foreground = violetBrush };
-			Run accentPolicyType = new() { Text = ((ComboBoxItem)SwapPolicyComboBox.SelectedItem).Content.ToString(), Foreground = hotPinkBrush };
+			Run accentPolicyType = new() { Text = (string)SwapPolicyComboBox.SelectedItem, Foreground = hotPinkBrush };
 
 			// Create bold text run
 			Bold boldText = new();
@@ -892,7 +967,7 @@ public sealed partial class ViewCurrentPolicies : Page
 		}
 		finally
 		{
-			// Refresh the DataGrid's policies and their count
+			// Refresh the ListView's policies and their count
 			RetrievePolicies();
 
 			if (reEnableButtonAtTheEnd)
@@ -905,7 +980,5 @@ public sealed partial class ViewCurrentPolicies : Page
 			SearchBox.IsEnabled = true;
 			DeployedPolicies.IsEnabled = true;
 		}
-
 	}
-
 }

@@ -491,7 +491,6 @@ internal static class GetEventLogsData
 	}
 
 
-
 	/// <summary>
 	/// Retrieves the AppLocker events from the local and EVTX files
 	/// </summary>
@@ -897,7 +896,6 @@ internal static class GetEventLogsData
 	}
 
 
-
 	#region Helper methods to extract values
 
 	/// <summary>
@@ -926,7 +924,6 @@ internal static class GetEventLogsData
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
 		return node is not null && int.TryParse(node.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 	}
-
 
 
 	/// <summary>
@@ -1047,7 +1044,6 @@ internal static class GetEventLogsData
 	}
 
 	#endregion
-
 
 
 	#region Async processing

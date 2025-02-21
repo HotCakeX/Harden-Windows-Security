@@ -156,7 +156,6 @@ internal static class FileDialogHelper
 	}
 
 
-
 	/// <summary>
 	/// Opens a file picker dialog to select multiple files.
 	/// </summary>
@@ -305,7 +304,6 @@ internal static class FileDialogHelper
 	}
 
 
-
 	/// <summary>
 	/// Opens a folder picker dialog to select a single folder.
 	/// </summary>
@@ -399,7 +397,6 @@ internal static class FileDialogHelper
 			}
 		}
 	}
-
 
 
 	/// <summary>

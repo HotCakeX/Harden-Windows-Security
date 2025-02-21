@@ -96,7 +96,6 @@
 
                 </controls:SettingsExpander>
 
-
                 <!-- Default Windows -->
                 <controls:SettingsExpander x:Name="DefaultWindowsSettings"
                            Description="This policy will allow files that come by default with Windows OS to run (including Office products) and everything else will be blocked."
@@ -151,7 +150,6 @@
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
-
 
                 <!-- Signed and Reputable -->
                 <controls:SettingsExpander x:Name="SignedAndReputableSettings"
@@ -208,7 +206,6 @@
 
                 </controls:SettingsExpander>
 
-
                 <!-- Microsoft Recommended Driver Block Rules -->
                 <controls:SettingsExpander x:Name="RecommendedDriverBlockRulesSettings"
                            Description="This policy will create the Microsoft Recommended Driver Block Rules."
@@ -248,7 +245,6 @@
 
                 </controls:SettingsExpander>
 
-
                 <!-- Microsoft Recommended User Mode Block Rules -->
                 <controls:SettingsCard x:Name="RecommendedUserModeBlockRulesSettings"
                            Description="This policy will create the Microsoft Recommended User Mode Block Rules."
@@ -265,7 +261,6 @@
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
-
 
                 <!-- Strict Kernel-mode policy -->
                 <controls:SettingsExpander x:Name="StrictKernelModePolicySection"

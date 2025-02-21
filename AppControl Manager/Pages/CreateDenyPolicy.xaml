@@ -56,7 +56,6 @@
                         Style="{ThemeResource BodyTextBlockStyle}"
                         Margin="12,6,0,0"/>
 
-
                         <TextBlock  Grid.Column="1"
                         Grid.Row="2"
                         Text="{x:Bind PackageFamilyName}"
@@ -186,11 +185,11 @@
 
                             <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
                                   SelectedIndex="0">
-                                <ComboBoxItem>File Publisher</ComboBoxItem>
-                                <ComboBoxItem>Publisher</ComboBoxItem>
-                                <ComboBoxItem>Hash</ComboBoxItem>
-                                <ComboBoxItem>File Path</ComboBoxItem>
-                                <ComboBoxItem>WildCard Folder Path</ComboBoxItem>
+                                <x:String>File Publisher</x:String>
+                                <x:String>Publisher</x:String>
+                                <x:String>Hash</x:String>
+                                <x:String>File Path</x:String>
+                                <x:String>WildCard Folder Path</x:String>
                             </ComboBox>
 
                         </controls:SettingsCard>
@@ -266,7 +265,7 @@
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="CreatePFNDenyPolicyButton" Click="CreatePFNDenyPolicyButton_Click" x:Uid="CreateDenyPolicyButton"
-Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"/>
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"/>
 
                         <ToggleButton x:Name="PFNPolicyDeployToggleButton" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
@@ -283,7 +282,6 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"/>
                         <controls:SettingsCard Description="Select one or more installed packages to create a Deny policy for"
                             Header="Package Family Names" x:Name="PFNSelectPackagedAppsSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
 
-
                             <controls:WrapPanel Orientation="Horizontal">
 
                                 <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
@@ -296,7 +294,6 @@ Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"/>
                                     <Button x:Uid="RemoveSelectionsButton" HorizontalAlignment="Center" x:Name="PFNRemoveSelectionAppsListButton" Click="PFNRemoveSelectionAppsListButton_Click" />
 
                                 </controls:WrapPanel>
-
 
                                 <RefreshContainer x:Name="PFNRefreshContainer" RefreshRequested="PFNRefreshContainer_RefreshRequested">
 

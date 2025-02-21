@@ -48,7 +48,6 @@ internal static partial class WinTrust
 	#endregion
 
 
-
 	#region This section is related to the MeowParser class operations
 
 	// P/Invoke declaration to import the 'CryptCATOpen' function from WinTrust.dll
@@ -79,7 +78,6 @@ internal static partial class WinTrust
 	#endregion
 
 
-
 	#region This section is related to the PageHashCalculator class
 
 	// a method to compute the hash of the first page of a file using a native function from Wintrust.dll
@@ -93,7 +91,6 @@ internal static partial class WinTrust
 	);
 
 	#endregion
-
 
 
 	#region This section is related to the AllCertificatesGrabber class and its operations

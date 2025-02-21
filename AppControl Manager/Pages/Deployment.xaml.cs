@@ -114,7 +114,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	#endregion
 
 
-
 	/// <summary>
 	/// Deploy unsigned XML files button
 	/// </summary>
@@ -247,7 +246,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.IsClosable = true;
 		}
 	}
-
 
 
 	/// <summary>
@@ -387,7 +385,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 							}
 						}
 
-
 						// Deploy the CIP file locally
 						CiToolHelper.UpdatePolicy(CIPFilePath);
 					}
@@ -426,7 +423,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.IsClosable = true;
 		}
 	}
-
 
 
 	/// <summary>
@@ -516,7 +512,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			StatusInfoBar.IsClosable = true;
 		}
 	}
-
 
 
 	/// <summary>
@@ -748,7 +743,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 
 			StatusInfoBar.IsClosable = true;
 		}
-
 	}
 
 
@@ -761,7 +755,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 		IntuneGroupsComboBox.ItemsSource = groups.Keys;
 		IntuneGroupsComboBox.SelectedIndex = 0;
 	}
-
 
 
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
@@ -796,7 +789,6 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 			}
 
 		});
-
 
 		await MicrosoftGraph.UploadPolicyToIntune(file, groupID, policyName, policyID);
 	}

@@ -24,7 +24,6 @@
                     View detailed information about
                         <Run Foreground="{ThemeResource SystemAccentColor}">the Deployed policies</Run>
                    and <Bold>Code Integrity</Bold> on the system.
-                
                 </Span>
             </TextBlock>
 
@@ -39,7 +38,6 @@
                         IsSettingsVisible="False"
                         IsBackButtonVisible="Collapsed">
 
-
             <!-- Prevent the NavigationView from setting a default background for the content in the frame -->
             <NavigationView.Resources>
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
@@ -52,11 +50,10 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-
                 <NavigationViewItem Content="Code Integrity Information" ToolTipService.ToolTip="View Code Integrity Informaton of the syste," Tag="CodeIntegrityInfo" >
-                <NavigationViewItem.Icon>
+                    <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE964;" />
-                </NavigationViewItem.Icon>
+                    </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
             </NavigationView.MenuItems>

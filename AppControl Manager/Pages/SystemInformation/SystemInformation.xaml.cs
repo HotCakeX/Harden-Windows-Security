@@ -14,7 +14,6 @@ public sealed partial class SystemInformation : Page
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
-
 		// Navigate to the CreatePolicy page when the window is loaded
 		_ = ContentFrame.Navigate(typeof(ViewCurrentPolicies));
 
@@ -22,7 +21,6 @@ public sealed partial class SystemInformation : Page
 		SystemInformationNavigation.SelectedItem = SystemInformationNavigation.MenuItems.OfType<NavigationViewItem>()
 			.First(item => string.Equals(item.Tag.ToString(), "ViewCurrentPolicies", StringComparison.OrdinalIgnoreCase));
 	}
-
 
 	// Event handler for the navigation menu
 	private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -46,5 +44,4 @@ public sealed partial class SystemInformation : Page
 			}
 		}
 	}
-
 }

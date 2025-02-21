@@ -164,7 +164,6 @@ internal static class SignToolHelper
 	}
 
 
-
 	/// <summary>
 	/// Returns the architecture of the current OS
 	/// </summary>
@@ -185,7 +184,6 @@ internal static class SignToolHelper
 			throw new InvalidOperationException("Only X64 and ARM64 platforms are supported.");
 		}
 	}
-
 
 
 	/// <summary>

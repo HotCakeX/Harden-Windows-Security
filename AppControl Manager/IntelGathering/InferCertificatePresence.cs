@@ -79,7 +79,6 @@ internal static class CertificatePresence
 	}
 
 
-
 	/// <summary>
 	/// Gets the path to a .cer certificate file and a certificate common name
 	/// Makes sure the common name belongs to the certificate file

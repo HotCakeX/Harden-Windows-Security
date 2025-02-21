@@ -498,6 +498,4 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 		}
 	}
 
-
-
 }

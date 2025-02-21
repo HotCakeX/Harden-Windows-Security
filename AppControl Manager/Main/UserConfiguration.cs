@@ -20,7 +20,6 @@ public partial class UserConfigurationContext : JsonSerializerContext
 }
 
 
-
 // Represents an instance of the User configurations JSON settings file
 // Maintains the order of the properties when writing to the JSON file
 // Includes the methods for interacting with user configurations JSON file
@@ -62,7 +61,6 @@ public sealed partial class UserConfiguration(
 
 	[JsonPropertyOrder(9)]
 	public Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
-
 
 
 	/// <summary>
@@ -128,7 +126,6 @@ public sealed partial class UserConfiguration(
 
 		// Modify the properties based on the input
 		if (!string.IsNullOrWhiteSpace(SignedPolicyPath)) UserConfiguration.SignedPolicyPath = SignedPolicyPath;
-
 
 
 		if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath))
@@ -353,7 +350,6 @@ public sealed partial class UserConfiguration(
 	}
 
 
-
 	/// <summary>
 	/// Adds a new key-value pair to the SignedPolicyStage1RemovalTimes dictionary.
 	/// </summary>
@@ -377,7 +373,6 @@ public sealed partial class UserConfiguration(
 	}
 
 
-
 	/// <summary>
 	/// Queries the SignedPolicyStage1RemovalTimes dictionary by key and returns the corresponding value.
 	/// </summary>
@@ -397,7 +392,6 @@ public sealed partial class UserConfiguration(
 		// Return null if the key doesn't exist
 		return null;
 	}
-
 
 
 	/// <summary>

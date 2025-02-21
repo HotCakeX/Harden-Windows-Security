@@ -60,10 +60,8 @@ internal static class CertificateGenerator
 			CertificateCommonName: CommonName
 			);
 
-
 		return generatedCertificate;
 	}
-
 
 
 	// Enum representing the applicable certificate stores
@@ -103,7 +101,6 @@ internal static class CertificateGenerator
 				true));
 
 
-
 		// Add subject key identifier
 		// Its raw data which is a byte array will always start with 4, 20
 		// 4: This indicates the ASN.1 type is an OCTET STRING.
@@ -113,7 +110,6 @@ internal static class CertificateGenerator
 		// adds "[1]Application Certificate Policy:Policy Identifier=Code Signing" as the value for Application Policies extension. The certificate made in CA role in Windows Server (using Code Signing template) also adds this extension.
 		request.CertificateExtensions.Add(
 			new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
-
 
 
 		// Add enhanced key usage
@@ -193,7 +189,6 @@ internal static class CertificateGenerator
 	}
 
 
-
 	/// <summary>
 	/// Stores the certificate in one of the pre-defined certificate stores
 	/// </summary>
@@ -216,13 +211,11 @@ internal static class CertificateGenerator
 			cert = X509CertificateLoader.LoadCertificate(publicKeyData);
 		}
 
-
 		using X509Store store = new(storeName, location);
 		store.Open(OpenFlags.ReadWrite);
 		store.Add(cert);
 		store.Close();
 	}
-
 
 
 	/// <summary>
@@ -303,7 +296,5 @@ internal static class CertificateGenerator
 
 		return matchingCertificates;
 	}
-
-
 
 }

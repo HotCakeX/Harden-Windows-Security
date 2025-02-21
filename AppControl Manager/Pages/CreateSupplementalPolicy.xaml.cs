@@ -166,6 +166,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	#region Files and Folders scan
 
+	internal bool filesAndFoldersDataProcessed;
+
 	// Selected File Paths
 	private readonly HashSet<string> filesAndFoldersFilePaths = [];
 
@@ -185,7 +187,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private bool usingWildCardFilePathRules;
 
-	// Used to store the scan results and as the source for the results DataGrids
+	// Used to store the scan results and as the source for the results ListViews
 	internal ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
 	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
 
@@ -429,32 +431,27 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <exception cref="InvalidOperationException"></exception>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
+
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
+		filesAndFoldersScanLevel = Enum.Parse<ScanLevels>(selectedText.Replace(" ", ""));
+
+		// For Wildcard file path rules, only folder paths should be used
+		if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 		{
-			string selectedText = selectedItem.Content.ToString()!;
-
-			// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
-			if (!Enum.TryParse(selectedText.Replace(" ", ""), out filesAndFoldersScanLevel))
-			{
-				throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
-			}
-
-			// For Wildcard file path rules, only folder paths should be used
-			if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
-
-				usingWildCardFilePathRules = true;
-			}
-			else
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
-
-				usingWildCardFilePathRules = false;
-			}
-
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
+			usingWildCardFilePathRules = true;
+		}
+		else
+		{
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
+			usingWildCardFilePathRules = false;
 		}
 	}
 
@@ -559,7 +556,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
-			// Clear variables responsible for the DataGrid
+			// Clear variables responsible for the ListView
 			filesAndFoldersScanResultsList.Clear();
 			filesAndFoldersScanResults.Clear();
 
@@ -567,7 +564,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			ScalabilityRadialGauge.IsEnabled = false;
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				DirectoryInfo[] selectedDirectories = [];
@@ -577,10 +574,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				FileInfo[] selectedFiles = [];
 
+				HashSet<FileIdentity> LocalFilesResults = [];
+
 				// Convert user selected file paths that are strings to FileInfo objects
 				selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
-
-				HashSet<FileIdentity> LocalFilesResults = [];
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (!usingWildCardFilePathRules)
@@ -619,17 +616,15 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
 
-					// Add the results of the directories scans to the DataGrid
+					// Add the results of the directories scans to the ListView
 					foreach (FileIdentity item in LocalFilesResults)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
 							filesAndFoldersScanResults.Add(item);
 							filesAndFoldersScanResultsList.Add(item);
-
 						});
 					}
-
 
 					string msg3 = "Scan completed, creating the Supplemental policy";
 
@@ -641,6 +636,23 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					});
 
 				}
+
+				await DispatcherQueue.EnqueueAsync(() =>
+				{
+					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+					if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(CreateSupplementalPolicyFilesAndFoldersScanResults)))
+					{
+						filesAndFoldersDataProcessed = false;
+
+						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
+						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
+					}
+					else
+					{
+						// Set it to true so ListView will be updated once user navigated to the page
+						filesAndFoldersDataProcessed = true;
+					}
+				});
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersSupplementalPolicy");
 
@@ -670,7 +682,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
-
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
@@ -684,15 +695,12 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						FilesAndFoldersInfoBar.Message = msg4;
 					});
 
-
 					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
 					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
-
-
 			});
 
 		}
@@ -750,7 +758,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -763,7 +770,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 	#endregion
-
 
 
 	#region Certificates scan
@@ -877,7 +883,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void UserModeRadioButton_Checked(object sender, RoutedEventArgs e)
 	{
 		signingScenario = true;
@@ -887,7 +892,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		signingScenario = false;
 	}
-
 
 
 	/// <summary>
@@ -1066,7 +1070,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -1080,7 +1083,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 	#endregion
-
 
 
 	#region ISG
@@ -1242,7 +1244,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void ISGBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -1283,13 +1284,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	#endregion
 
 
-
 	#region Strict Kernel-Mode Supplemental Policy
+
+	internal bool StrictKernelModeDataProcessed;
 
 	// Path to the base policy for the Strict kernel-mode supplemental policy
 	private string? StrictKernelModeBasePolicyPath;
 
-	// Used to store the scan results and as the source for the results DataGrids
+	// Used to store the scan results and as the source for the results ListViews
 	internal ObservableCollection<FileIdentity> ScanResults = [];
 	internal List<FileIdentity> ScanResultsList = [];
 
@@ -1322,7 +1324,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(StrictKernelPolicyScanResults), null);
 	}
-
 
 
 	/// <summary>
@@ -1370,7 +1371,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
@@ -1383,12 +1383,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	private void StrictKernelModeScanSinceLastRebootButton_Click(object sender, RoutedEventArgs e)
 	{
 		StrictKernelModePerformScans(true);
 	}
-
 
 
 	private async void StrictKernelModePerformScans(bool OnlyAfterReboot)
@@ -1406,7 +1404,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.Message = "Scanning the system for events";
 			StrictKernelModeSection.IsExpanded = true;
 
-			// Clear variables responsible for the DataGrid
+			// Clear variables responsible for the ListView
 			ScanResults.Clear();
 			ScanResultsList.Clear();
 
@@ -1433,13 +1431,12 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			});
 
 
-
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count > 0)
 			{
 				StrictKernelModeInfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
 
-				// Add the event logs to the DataGrid
+				// Add the event logs to the ListView
 				foreach (FileIdentity item in Output)
 				{
 					ScanResults.Add(item);
@@ -1447,6 +1444,26 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				}
 
 				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
+
+
+				await DispatcherQueue.EnqueueAsync(() =>
+				{
+					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+					if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(StrictKernelPolicyScanResults)))
+					{
+						StrictKernelModeDataProcessed = false;
+
+						StrictKernelPolicyScanResults.Instance.CalculateColumnWidths();
+						StrictKernelPolicyScanResults.Instance.UIListView.ItemsSource = ScanResults;
+					}
+					else
+					{
+						// Set it to true so ListView will be updated once user navigated to the page
+						StrictKernelModeDataProcessed = true;
+					}
+				});
+
+
 			}
 			else
 			{
@@ -1480,7 +1497,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
-
 
 
 	/// <summary>
@@ -1637,7 +1653,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the button that auto detects system drivers
 	/// </summary>
@@ -1724,7 +1739,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Scan all of the detected files from the user selected directories
 				HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 2, null, null);
 
-				// Add the results to the DataGrid
+				// Add the results to the ListView
 				// Only signed kernel-mode files
 				foreach (FileIdentity item in LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned))
 				{
@@ -1775,7 +1790,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 	#endregion
-
 
 
 	#region Package Family Names
@@ -1936,7 +1950,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	}
 
 
-
 	/// <summary>
 	/// Event handler to select all apps in the ListView
 	/// </summary>
@@ -1965,7 +1978,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	{
 		PFNPackagedAppsListView.SelectedItems.Clear(); // Clear all selected items
 	}
-
 
 
 	/// <summary>
@@ -2017,7 +2029,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		// Update the ListView source with the filtered data
 		PackagedAppsCollectionViewSource.Source = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
 	}
-
 
 
 	/// <summary>
@@ -2178,7 +2189,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedSupplementalPolicyName}.xml");
 
 				// Instantiate the user selected Base policy
-				SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(PFNBasePolicyPath, null);
+				SiPolicy.SiPolicy policyObj = Management.Initialize(PFNBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
 				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, policyObj.BasePolicyID, null);

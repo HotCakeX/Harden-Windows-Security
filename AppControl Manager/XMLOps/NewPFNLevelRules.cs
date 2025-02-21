@@ -53,7 +53,6 @@ internal static class NewPFNLevelRules
 	}
 
 
-
 	/// <summary>
 	/// Creates PFN rules and adds them to an App Control policy XML file
 	/// </summary>

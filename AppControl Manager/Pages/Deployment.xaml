@@ -164,7 +164,6 @@
                 </controls:SettingsCard>
 
 
-
                 <controls:SettingsCard
             Description="Browse for XML policy file(s) to Sign and deploy on the system"
             Header="Select signed XML policy file(s)"

@@ -40,7 +40,6 @@ internal static class AppControlSimulation
 	}
 
 
-
 	internal static void ExportToCsv(ConcurrentDictionary<string, SimulationOutput> finalResults, string filePath)
 	{
 		// Create a list for CSV lines

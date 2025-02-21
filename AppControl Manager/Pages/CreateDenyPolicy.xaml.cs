@@ -8,6 +8,7 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -40,7 +41,6 @@ public sealed partial class CreateDenyPolicy : Page
 	public static CreateDenyPolicy Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("CreateDenyPolicyNotInitialized"));
 
 
-
 	#region Files and Folders scan
 
 	// Selected File Paths
@@ -59,10 +59,11 @@ public sealed partial class CreateDenyPolicy : Page
 
 	private bool usingWildCardFilePathRules;
 
-	// Used to store the scan results and as the source for the results DataGrids
+	// Used to store the scan results and as the source for the results ListViews
 	internal ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
 	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
 
+	internal bool filesAndFoldersDataProcessed;
 
 	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
 	{
@@ -82,7 +83,6 @@ public sealed partial class CreateDenyPolicy : Page
 		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
 			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
 	}
-
 
 
 	private void FilesAndFoldersBrowseForFoldersSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
@@ -131,7 +131,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 
 
-
 		if (string.IsNullOrWhiteSpace(filesAndFoldersDenyPolicyName))
 		{
 			CreateDenyPolicyTeachingTip.IsOpen = true;
@@ -139,7 +138,6 @@ public sealed partial class CreateDenyPolicy : Page
 			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ProvidePolicyName");
 			return;
 		}
-
 
 		bool errorsOccurred = false;
 
@@ -163,7 +161,7 @@ public sealed partial class CreateDenyPolicy : Page
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
-			// Clear variables responsible for the DataGrid
+			// Clear variables responsible for the ListView
 			filesAndFoldersScanResultsList.Clear();
 			filesAndFoldersScanResults.Clear();
 
@@ -171,7 +169,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			ScalabilityRadialGauge.IsEnabled = false;
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				DirectoryInfo[] selectedDirectories = [];
@@ -189,7 +187,6 @@ public sealed partial class CreateDenyPolicy : Page
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (!usingWildCardFilePathRules)
 				{
-
 
 					// Collect all of the AppControl compatible files from user selected directories and files
 					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
@@ -212,7 +209,6 @@ public sealed partial class CreateDenyPolicy : Page
 						return;
 					}
 
-
 					string msg2 = GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Count + GlobalVars.Rizz.GetString("AppControlCompatibleFiles");
 					Logger.Write(msg2);
 
@@ -221,11 +217,10 @@ public sealed partial class CreateDenyPolicy : Page
 						FilesAndFoldersInfoBar.Message = msg2;
 					});
 
-
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
 
-					// Add the results of the directories scans to the DataGrid
+					// Add the results of the directories scans to the ListView
 					foreach (FileIdentity item in LocalFilesResults)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
@@ -236,6 +231,22 @@ public sealed partial class CreateDenyPolicy : Page
 						});
 					}
 
+					await DispatcherQueue.EnqueueAsync(() =>
+					{
+						// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+						if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(CreateDenyPolicyFilesAndFoldersScanResults)))
+						{
+							filesAndFoldersDataProcessed = false;
+
+							CreateDenyPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
+							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
+						}
+						else
+						{
+							// Set it to true so ListView will be updated once user navigated to the page
+							filesAndFoldersDataProcessed = true;
+						}
+					});
 
 					string msg3 = GlobalVars.Rizz.GetString("ScanCompleted");
 
@@ -245,8 +256,6 @@ public sealed partial class CreateDenyPolicy : Page
 					{
 						FilesAndFoldersInfoBar.Message = msg3;
 					});
-
-
 				}
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersDenyPolicy");
@@ -274,11 +283,9 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
-
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
-
 					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
 
 					Logger.Write(msg4);
@@ -288,15 +295,12 @@ public sealed partial class CreateDenyPolicy : Page
 						FilesAndFoldersInfoBar.Message = msg4;
 					});
 
-
 					string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
 
 					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
-
-
 			});
 
 		}
@@ -333,7 +337,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 	}
 
-
 	/// <summary>
 	/// Deploy policy Toggle Button
 	/// </summary>
@@ -343,7 +346,6 @@ public sealed partial class CreateDenyPolicy : Page
 	{
 		filesAndFoldersDeployButton = ((ToggleButton)sender).IsChecked ?? false;
 	}
-
 
 	/// <summary>
 	/// Browse for Files - Settings Card Click
@@ -470,34 +472,31 @@ public sealed partial class CreateDenyPolicy : Page
 	/// <exception cref="InvalidOperationException"></exception>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
+
+		// Get the selected item from the ComboBox
+		string selectedText = (string)comboBox.SelectedItem;
+
+		// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
+		filesAndFoldersScanLevel = Enum.Parse<ScanLevels>(selectedText.Replace(" ", ""));
+
+		// For Wildcard file path rules, only folder paths should be used
+		if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 		{
-			string selectedText = selectedItem.Content.ToString()!;
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
 
-			// Since the texts in the ComboBox have spaces in them for user friendliness, we remove the spaces here before parsing them as enum
-			if (!Enum.TryParse(selectedText.Replace(" ", ""), out filesAndFoldersScanLevel))
-			{
-				throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidScanLevel") + selectedText);
-			}
-
-
-
-			// For Wildcard file path rules, only folder paths should be used
-			if (filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = false;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = false;
-
-				usingWildCardFilePathRules = true;
-			}
-			else
-			{
-				FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
-				FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
-
-				usingWildCardFilePathRules = false;
-			}
+			usingWildCardFilePathRules = true;
 		}
+		else
+		{
+			FilesAndFoldersBrowseForFilesButton.IsEnabled = true;
+			FilesAndFoldersBrowseForFilesSettingsCard.IsEnabled = true;
+
+			usingWildCardFilePathRules = false;
+		}
+
 	}
 
 	/// <summary>
@@ -534,9 +533,7 @@ public sealed partial class CreateDenyPolicy : Page
 		FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text = null;
 	}
 
-
 	#endregion
-
 
 
 	#region Package Family Names
@@ -573,9 +570,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			return apps;
 		});
-
 	}
-
 
 
 	/// <summary>
@@ -597,7 +592,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the touch-initiated refresh action
 	/// </summary>
@@ -616,7 +610,6 @@ public sealed partial class CreateDenyPolicy : Page
 			PFNRefreshAppsListButton.IsEnabled = true;
 		}
 	}
-
 
 	// Since we have a ScrollView around the page, it captures the mouse Scroll Wheel events.
 	// We have to disable its scrolling ability while pointer is inside of the ListView.
@@ -647,7 +640,6 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 
-
 	// To create a collection of grouped items, create a query that groups
 	// an existing list, or returns a grouped collection from a database.
 	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
@@ -671,7 +663,6 @@ public sealed partial class CreateDenyPolicy : Page
 
 		return [.. query];
 	}
-
 
 
 	/// <summary>
@@ -704,7 +695,6 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 
-
 	/// <summary>
 	/// Event handler to display the selected apps count on the UI TextBlock
 	/// </summary>
@@ -715,7 +705,6 @@ public sealed partial class CreateDenyPolicy : Page
 		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
 		PFNSelectedItemsCount.Text = GlobalVars.Rizz.GetString("SelectedApps") + selectedCount;
 	}
-
 
 
 	// Used to store the original Apps collection so when we filter the results and then remove the filters,
@@ -757,7 +746,6 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 
-
 	private bool packagesLoadedOnExpand;
 
 	/// <summary>
@@ -783,7 +771,6 @@ public sealed partial class CreateDenyPolicy : Page
 			}
 		}
 	}
-
 
 
 	/// <summary>
@@ -818,8 +805,6 @@ public sealed partial class CreateDenyPolicy : Page
 			return;
 		}
 
-
-
 		bool ErrorsOccurred = false;
 
 		try
@@ -839,8 +824,6 @@ public sealed partial class CreateDenyPolicy : Page
 			// A list to store the selected PackagedAppView items
 			List<string> selectedAppsPFNs = [];
 
-
-
 			// Loop through the selected items
 			foreach (var selectedItem in PFNPackagedAppsListView.SelectedItems)
 			{
@@ -850,8 +833,6 @@ public sealed partial class CreateDenyPolicy : Page
 					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
 				}
 			}
-
-
 
 			await Task.Run(() =>
 			{
@@ -903,11 +884,7 @@ public sealed partial class CreateDenyPolicy : Page
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
 
-
-
 			});
-
-
 		}
 
 		catch (Exception ex)
@@ -921,7 +898,6 @@ public sealed partial class CreateDenyPolicy : Page
 		}
 		finally
 		{
-
 			if (!ErrorsOccurred)
 			{
 				PFNInfoBar.Severity = InfoBarSeverity.Success;
@@ -934,10 +910,7 @@ public sealed partial class CreateDenyPolicy : Page
 
 			PFNInfoBar.IsClosable = true;
 		}
-
-
 	}
 
 	#endregion
-
 }

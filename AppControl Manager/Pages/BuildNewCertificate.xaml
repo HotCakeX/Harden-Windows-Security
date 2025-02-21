@@ -60,7 +60,6 @@
 
             </InfoBar>
 
-
             <StackPanel HorizontalAlignment="Stretch"
              Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
 
@@ -74,9 +73,7 @@
                 Header="Key Size" HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
 
                     <ComboBox SelectedIndex="0" x:Name="KeySizeComboBox">
-                        <ComboBoxItem Content="4096"/>
-                        <ComboBoxItem Content="8192" IsEnabled="False"/>
-                        <ComboBoxItem Content="16384" IsEnabled="False"/>
+                        <x:String>4096</x:String>
                     </ComboBox>
 
                 </controls:SettingsCard>
@@ -90,7 +87,6 @@
 
                 </controls:SettingsCard>
 
-
                 <controls:SettingsCard x:Name="ValiditySettingsCard"
                 Description="The time period (in years) during which a certificate is considered valid and trusted."
                 Header="Validity"
@@ -100,7 +96,6 @@
                         SmallChange="10" LargeChange="100" Minimum="1" MaxHeight="3000"/>
 
                 </controls:SettingsCard>
-
 
                 <controls:SettingsCard x:Name="PFXPasswordSettingsCard"
                 Description="A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file."

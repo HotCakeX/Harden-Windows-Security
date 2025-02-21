@@ -798,10 +798,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		// Get the selected item from the ComboBox
 		string selectedText = (string)comboBox.SelectedItem;
 
-		if (!Enum.TryParse(selectedText, out scanLevel))
-		{
-			throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
-		}
+		scanLevel = Enum.Parse<ScanLevels>(selectedText);
 	}
 
 

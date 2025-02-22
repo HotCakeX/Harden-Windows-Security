@@ -203,13 +203,13 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
 		double maxWidth13 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
 		double maxWidth14 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
-		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
-		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
-		double maxWidth18 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth19 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
-		double maxWidth20 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
-		double maxWidth21 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
+		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1FlatHashHeader/Text"));
+		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256FlatHashHeader/Text"));
+		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
+		double maxWidth18 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
+		double maxWidth19 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
+		double maxWidth20 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
+		double maxWidth21 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ComputerNameHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in FileIdentities)
@@ -256,25 +256,25 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			double w14 = ListViewUIHelpers.MeasureTextWidth(item.FilePath);
 			if (w14 > maxWidth14) maxWidth14 = w14;
 
-			double w15 = ListViewUIHelpers.MeasureTextWidth(item.SHA1PageHash);
+			double w15 = ListViewUIHelpers.MeasureTextWidth(item.SHA1FlatHash);
 			if (w15 > maxWidth15) maxWidth15 = w15;
 
-			double w16 = ListViewUIHelpers.MeasureTextWidth(item.SHA256PageHash);
+			double w16 = ListViewUIHelpers.MeasureTextWidth(item.SHA256FlatHash);
 			if (w16 > maxWidth16) maxWidth16 = w16;
 
-			double w17 = ListViewUIHelpers.MeasureTextWidth(item.HasWHQLSigner.ToString());
+			double w17 = ListViewUIHelpers.MeasureTextWidth(item.FilePublishersToDisplay);
 			if (w17 > maxWidth17) maxWidth17 = w17;
 
-			double w18 = ListViewUIHelpers.MeasureTextWidth(item.FilePublishersToDisplay);
+			double w18 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
 			if (w18 > maxWidth18) maxWidth18 = w18;
 
-			double w19 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
+			double w19 = ListViewUIHelpers.MeasureTextWidth(item.PolicyGUID.ToString());
 			if (w19 > maxWidth19) maxWidth19 = w19;
 
-			double w20 = ListViewUIHelpers.MeasureTextWidth(item.PolicyGUID.ToString());
+			double w20 = ListViewUIHelpers.MeasureTextWidth(item.PolicyName);
 			if (w20 > maxWidth20) maxWidth20 = w20;
 
-			double w21 = ListViewUIHelpers.MeasureTextWidth(item.PolicyName);
+			double w21 = ListViewUIHelpers.MeasureTextWidth(item.ComputerName);
 			if (w21 > maxWidth21) maxWidth21 = w21;
 		}
 
@@ -355,13 +355,14 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	private void CopySHA1Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1Hash);
 	private void CopySigningScenario_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SISigningScenario.ToString());
 	private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePath);
-	private void CopySHA1PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1PageHash);
-	private void CopySHA256PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256PageHash);
-	private void CopyHasWHQLSigner_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.HasWHQLSigner.ToString());
+	private void CopySHA1FlatHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1FlatHash);
+	private void CopySHA256FlatHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256FlatHash);
 	private void CopyFilePublishers_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePublishersToDisplay);
 	private void CopyOpusData_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Opus);
 	private void CopyPolicyGUID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyGUID.ToString());
 	private void CopyPolicyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyName);
+	private void CopyComputerName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.ComputerName);
+
 
 	/// <summary>
 	/// Helper method to copy a specified property to clipboard without reflection
@@ -438,17 +439,13 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	{
 		SortColumn(fileIden => fileIden.FilePath);
 	}
-	private void ColumnSortingButton_SHA1PageHash_Click(object sender, RoutedEventArgs e)
+	private void ColumnSortingButton_SHA1FlatHash_Click(object sender, RoutedEventArgs e)
 	{
-		SortColumn(fileIden => fileIden.SHA1PageHash);
+		SortColumn(fileIden => fileIden.SHA1FlatHash);
 	}
-	private void ColumnSortingButton_SHA256PageHash_Click(object sender, RoutedEventArgs e)
+	private void ColumnSortingButton_SHA256FlatHash_Click(object sender, RoutedEventArgs e)
 	{
-		SortColumn(fileIden => fileIden.SHA256PageHash);
-	}
-	private void ColumnSortingButton_HasWHQLSigner_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.HasWHQLSigner);
+		SortColumn(fileIden => fileIden.SHA256FlatHash);
 	}
 	private void ColumnSortingButton_FilePublishers_Click(object sender, RoutedEventArgs e)
 	{
@@ -465,6 +462,10 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	private void ColumnSortingButton_PolicyName_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.PolicyName);
+	}
+	private void ColumnSortingButton_ComputerName_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.ComputerName);
 	}
 
 	/// <summary>

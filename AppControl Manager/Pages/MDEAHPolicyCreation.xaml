@@ -27,16 +27,15 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,0">
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-    <Span>
-        Leverage <Italic>Microsoft Defender for Endpoint</Italic>
-            <Run Foreground="{ThemeResource SystemAccentColor}">Advanced Hunting</Run>
-        exported logs to build Application Control Policies.
-        Begin by browsing for the MDE AH CSV logs, then click the
-        <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
-        Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
-        to define output configuration and generate the XML policy file.
-    </Span>
+                <Span>
+                    Leverage <Italic>Microsoft Defender for Endpoint</Italic>
+                        <Run Foreground="{ThemeResource SystemAccentColor}">Advanced Hunting</Run>
+                    exported logs to build Application Control Policies.
+                    Begin by browsing for the MDE AH CSV logs, then click the
+                    <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
+                    Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
+                    to define output configuration and generate the XML policy file.
+                </Span>
             </TextBlock>
 
             <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
@@ -69,10 +68,9 @@
 
         </controls:WrapPanel>
 
-        <Border
-  Grid.Row="3" Visibility="{x:Bind IsLocalSelected, Mode=OneWay}"
-  Margin="0,10,0,10"
-  Style="{StaticResource GridCardStyle}" Padding="8">
+        <Border Grid.Row="3" Visibility="{x:Bind IsLocalSelected, Mode=OneWay}"
+            Margin="0,10,0,10"
+            Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -157,7 +155,7 @@
                         <Flyout>
 
                             <ListView ItemsSource="{x:Bind AdvancedHuntingQueries, Mode=OneWay}"
-                  SelectionMode="None">
+                                    SelectionMode="None">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Vertical" Width="300"/>
@@ -205,7 +203,7 @@
 
 
         <Border Grid.Row="3" Visibility="{x:Bind IsCreateSelected, Mode=OneWay}"
-       Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+            Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -239,25 +237,25 @@
 
 
                             <StackPanel
-VerticalAlignment="Top"
-Orientation="Vertical"
-Spacing="8">
+                                VerticalAlignment="Top"
+                                Orientation="Vertical"
+                                Spacing="8">
                                 <controls:Segmented x:Name="segmentedControl"
-            HorizontalAlignment="Stretch"
-            SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">
+                                    HorizontalAlignment="Stretch"
+                                    SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">
                                     <controls:SegmentedItem Content="Add To Policy"
-                    Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
+                                            Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
                                     <controls:SegmentedItem Content="Base Policy File"
-                    Tag="BasePolicyFile" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                            Tag="BasePolicyFile" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                     <controls:SegmentedItem Content="Base GUID"
-                    Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                            Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                 </controls:Segmented>
                                 <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl}" HorizontalAlignment="Center">
 
                                     <controls:Case Value="AddToPolicy">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-            Style="{StaticResource PanelStyle}">
+                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                            Style="{StaticResource PanelStyle}">
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords">
                                                 <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
@@ -269,8 +267,8 @@ Spacing="8">
                                     </controls:Case>
                                     <controls:Case Value="BasePolicyFile">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-            Style="{StaticResource PanelStyle}">
+                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                            Style="{StaticResource PanelStyle}">
 
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="290" >
@@ -286,8 +284,8 @@ Spacing="8">
 
                                     <controls:Case Value="BaseGUID">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-            Style="{StaticResource PanelStyle}">
+                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                            Style="{StaticResource PanelStyle}">
 
                                             <TextBox x:Name="BaseGUIDTextBox" PlaceholderText="Enter a Base policy GUID" Width="300" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
 
@@ -355,28 +353,26 @@ Spacing="8">
                             <MenuFlyoutSeparator/>
 
                             <MenuFlyoutItem x:Uid="FileNameHeader" Click="ColumnSortingButton_FileName_Click"/>
+                            <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="ColumnSortingButton_TimeCreated_Click"/>
                             <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
+                            <MenuFlyoutItem x:Uid="ActionHeader" Click="ColumnSortingButton_Action_Click"/>
                             <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="ColumnSortingButton_OriginalFileName_Click"/>
                             <MenuFlyoutItem x:Uid="InternalNameHeader" Click="ColumnSortingButton_InternalName_Click"/>
                             <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="ColumnSortingButton_FileDescription_Click"/>
-                            <MenuFlyoutItem x:Uid="ProductNameHeader" Click="ColumnSortingButton_ProductName_Click"/>
                             <MenuFlyoutItem x:Uid="FileVersionHeader" Click="ColumnSortingButton_FileVersion_Click"/>
-                            <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="ColumnSortingButton_PackageFamilyName_Click"/>
                             <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="ColumnSortingButton_SHA256Hash_Click"/>
                             <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="ColumnSortingButton_SHA1Hash_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="ColumnSortingButton_SHA256FlatHash_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Click="ColumnSortingButton_SHA1FlatHash_Click"/>
                             <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="ColumnSortingButton_SigningScenario_Click"/>
                             <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="ColumnSortingButton_SHA1PageHash_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="ColumnSortingButton_SHA256PageHash_Click"/>
-                            <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="ColumnSortingButton_HasWHQLSigner_Click"/>
+                            <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="ColumnSortingButton_ComputerName_Click"/>
+                            <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="ColumnSortingButton_PolicyGUID_Click"/>
+                            <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="ColumnSortingButton_PolicyName_Click"/>
                             <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
-                            <MenuFlyoutItem x:Uid="IsECCSignedHeader" Click="ColumnSortingButton_IsECCSigned_Click"/>
-                            <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
-
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>
-
 
                 <Button Content="Policy Name">
                     <Button.Flyout>
@@ -441,9 +437,6 @@ Spacing="8">
                             <ColumnDefinition Width="{x:Bind ColumnWidth16, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ColumnWidth17, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ColumnWidth18, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth19, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth20, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth21, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="TimeCreatedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -452,20 +445,17 @@ Spacing="8">
                         <TextBlock x:Uid="OriginalFileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="InternalNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="FileDescriptionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="ProductNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PackageFamilyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA256HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA1HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA256HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA1HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA256FlatHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA1FlatHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="SigningScenarioHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA1PageHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA256PageHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="HasWHQLSignerHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="ComputerNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PolicyGUIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PolicyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="FilePublishersHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="17" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="OpusDataHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="18" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyGUIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="19" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="20" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                     </Grid>
                 </Border>
             </ListView.Header>
@@ -497,7 +487,19 @@ Spacing="8">
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
+                                        <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="CopyTimeCreated_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
                                         <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="CopySignatureStatus_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="ActionHeader" Click="CopyAction_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -521,19 +523,7 @@ Spacing="8">
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ProductNameHeader" Click="CopyProductName_Click">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;" />
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-
                                         <MenuFlyoutItem x:Uid="FileVersionHeader" Click="CopyFileVersion_Click">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;" />
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-
-                                        <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="CopyPackageFamilyName_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -551,6 +541,18 @@ Spacing="8">
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
+                                        <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="CopySHA256FlatHash_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Click="CopySHA1FlatHash_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
                                         <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="CopySigningScenario_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
@@ -563,37 +565,25 @@ Spacing="8">
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="CopySHA1PageHash_Click">
+                                        <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="CopyComputerName_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="CopySHA256PageHash_Click">
+                                        <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="CopyPolicyGUiD_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="CopyHasWHQLSigner_Click">
+                                        <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="CopyPolicyName_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
                                         <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="CopyFilePublishers_Click">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;" />
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-
-                                        <MenuFlyoutItem x:Uid="IsECCSignedHeader" Click="CopyIsECCSigned_Click">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;" />
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-
-                                        <MenuFlyoutItem x:Uid="OpusDataHeader" Click="CopyOpusData_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -628,9 +618,6 @@ Spacing="8">
                             <ColumnDefinition Width="{Binding ColumnWidth16, ElementName=MDEAHPolicyCreationXAML}" />
                             <ColumnDefinition Width="{Binding ColumnWidth17, ElementName=MDEAHPolicyCreationXAML}" />
                             <ColumnDefinition Width="{Binding ColumnWidth18, ElementName=MDEAHPolicyCreationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth19, ElementName=MDEAHPolicyCreationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth20, ElementName=MDEAHPolicyCreationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth21, ElementName=MDEAHPolicyCreationXAML}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind TimeCreated}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
@@ -639,20 +626,17 @@ Spacing="8">
                         <TextBlock Text="{x:Bind OriginalFileName}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind InternalName}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind FileDescription}" HorizontalAlignment="Left" Grid.Column="6" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind ProductName}" HorizontalAlignment="Left" Grid.Column="7" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind FileVersion}" HorizontalAlignment="Left" Grid.Column="8" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind PackageFamilyName}" HorizontalAlignment="Left" Grid.Column="9" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SHA256Hash}" HorizontalAlignment="Left" Grid.Column="10" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SHA1Hash}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FileVersion}" HorizontalAlignment="Left" Grid.Column="7" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA256Hash}" HorizontalAlignment="Left" Grid.Column="8" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA1Hash}" HorizontalAlignment="Left" Grid.Column="9" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA256FlatHash}" HorizontalAlignment="Left" Grid.Column="10" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA1FlatHash}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind SISigningScenario}" HorizontalAlignment="Left" Grid.Column="12" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind FilePath}" HorizontalAlignment="Left" Grid.Column="13" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SHA1PageHash}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SHA256PageHash}" HorizontalAlignment="Left" Grid.Column="15" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind HasWHQLSigner}" HorizontalAlignment="Left" Grid.Column="16" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind ComputerName}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyGUID}" HorizontalAlignment="Left" Grid.Column="15" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyName}" HorizontalAlignment="Left" Grid.Column="16" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind FilePublishersToDisplay}" HorizontalAlignment="Left" Grid.Column="17" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind Opus}" HorizontalAlignment="Left" Grid.Column="18" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind PolicyGUID}" HorizontalAlignment="Left" Grid.Column="19" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind PolicyName}" HorizontalAlignment="Left" Grid.Column="20" Margin="0,2,2,2"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

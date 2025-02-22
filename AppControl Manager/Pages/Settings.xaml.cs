@@ -222,8 +222,7 @@ public sealed partial class Settings : Page
 	// When the edit button of any field is pressed
 	private void EditButton_Click(object sender, RoutedEventArgs e)
 	{
-		Button? button = sender as Button;
-		string? fieldName = button!.Tag.ToString();
+		string fieldName = ((Button)sender).Tag.ToString()!;
 		string? newValue = null;
 
 		// Determine the new value based on the associated TextBox
@@ -262,8 +261,7 @@ public sealed partial class Settings : Page
 	// When the clear button of any field is pressed
 	private void ClearButton_Click(object sender, RoutedEventArgs e)
 	{
-		Button? button = sender as Button;
-		string? fieldName = button!.Tag.ToString();
+		string fieldName = ((Button)sender).Tag.ToString()!;
 
 		UserConfiguration.Remove(
 			SignedPolicyPath: string.Equals(fieldName, "SignedPolicyPath", StringComparison.OrdinalIgnoreCase),
@@ -320,8 +318,7 @@ public sealed partial class Settings : Page
 	// When the browse button of any field is pressed
 	private void BrowseButton_Click(object sender, RoutedEventArgs e)
 	{
-		Button? button = sender as Button;
-		string? fieldName = button!.Tag.ToString();
+		string fieldName = ((Button)sender).Tag.ToString()!;
 
 		switch (fieldName)
 		{

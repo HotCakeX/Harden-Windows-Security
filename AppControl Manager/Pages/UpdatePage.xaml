@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="AppControlManager.Pages.Update"
+    x:Class="AppControlManager.Pages.UpdatePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
@@ -83,7 +83,6 @@
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
-
 
                 <controls:SettingsCard Description="Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it."
                     Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="AutoUpdateCheckToggleSettingsCard_Click" IsActionIconVisible="False">

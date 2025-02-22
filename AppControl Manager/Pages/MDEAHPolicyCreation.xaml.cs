@@ -160,27 +160,6 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		set { _columnWidth18 = value; OnPropertyChanged(nameof(ColumnWidth18)); }
 	}
 
-	private GridLength _columnWidth19;
-	public GridLength ColumnWidth19
-	{
-		get => _columnWidth19;
-		set { _columnWidth19 = value; OnPropertyChanged(nameof(ColumnWidth19)); }
-	}
-
-	private GridLength _columnWidth20;
-	public GridLength ColumnWidth20
-	{
-		get => _columnWidth20;
-		set { _columnWidth20 = value; OnPropertyChanged(nameof(ColumnWidth20)); }
-	}
-
-	private GridLength _columnWidth21;
-	public GridLength ColumnWidth21
-	{
-		get => _columnWidth21;
-		set { _columnWidth21 = value; OnPropertyChanged(nameof(ColumnWidth21)); }
-	}
-
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
 	/// and assigns the value (with a little extra padding) to the corresponding property.
@@ -198,20 +177,17 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
 		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
 		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
+		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
+		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
+		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
+		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256FlatHashHeader/Text"));
+		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1FlatHashHeader/Text"));
 		double maxWidth13 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
 		double maxWidth14 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
-		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
-		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
+		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ComputerNameHeader/Text"));
+		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
+		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
 		double maxWidth18 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth19 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
-		double maxWidth20 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
-		double maxWidth21 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in FileIdentities)
@@ -237,19 +213,19 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 			double w7 = ListViewUIHelpers.MeasureTextWidth(item.FileDescription);
 			if (w7 > maxWidth7) maxWidth7 = w7;
 
-			double w8 = ListViewUIHelpers.MeasureTextWidth(item.ProductName);
+			double w8 = ListViewUIHelpers.MeasureTextWidth(item.FileVersion?.ToString());
 			if (w8 > maxWidth8) maxWidth8 = w8;
 
-			double w9 = ListViewUIHelpers.MeasureTextWidth(item.FileVersion?.ToString());
+			double w9 = ListViewUIHelpers.MeasureTextWidth(item.SHA256Hash);
 			if (w9 > maxWidth9) maxWidth9 = w9;
 
-			double w10 = ListViewUIHelpers.MeasureTextWidth(item.PackageFamilyName);
+			double w10 = ListViewUIHelpers.MeasureTextWidth(item.SHA1Hash);
 			if (w10 > maxWidth10) maxWidth10 = w10;
 
-			double w11 = ListViewUIHelpers.MeasureTextWidth(item.SHA256Hash);
+			double w11 = ListViewUIHelpers.MeasureTextWidth(item.SHA256FlatHash);
 			if (w11 > maxWidth11) maxWidth11 = w11;
 
-			double w12 = ListViewUIHelpers.MeasureTextWidth(item.SHA1Hash);
+			double w12 = ListViewUIHelpers.MeasureTextWidth(item.SHA1FlatHash);
 			if (w12 > maxWidth12) maxWidth12 = w12;
 
 			double w13 = ListViewUIHelpers.MeasureTextWidth(item.SISigningScenario.ToString());
@@ -258,26 +234,17 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 			double w14 = ListViewUIHelpers.MeasureTextWidth(item.FilePath);
 			if (w14 > maxWidth14) maxWidth14 = w14;
 
-			double w15 = ListViewUIHelpers.MeasureTextWidth(item.SHA1PageHash);
+			double w15 = ListViewUIHelpers.MeasureTextWidth(item.ComputerName);
 			if (w15 > maxWidth15) maxWidth15 = w15;
 
-			double w16 = ListViewUIHelpers.MeasureTextWidth(item.SHA256PageHash);
+			double w16 = ListViewUIHelpers.MeasureTextWidth(item.PolicyGUID.ToString());
 			if (w16 > maxWidth16) maxWidth16 = w16;
 
-			double w17 = ListViewUIHelpers.MeasureTextWidth(item.HasWHQLSigner.ToString());
+			double w17 = ListViewUIHelpers.MeasureTextWidth(item.PolicyName);
 			if (w17 > maxWidth17) maxWidth17 = w17;
 
 			double w18 = ListViewUIHelpers.MeasureTextWidth(item.FilePublishersToDisplay);
 			if (w18 > maxWidth18) maxWidth18 = w18;
-
-			double w19 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
-			if (w19 > maxWidth19) maxWidth19 = w19;
-
-			double w20 = ListViewUIHelpers.MeasureTextWidth(item.PolicyGUID.ToString());
-			if (w20 > maxWidth20) maxWidth20 = w20;
-
-			double w21 = ListViewUIHelpers.MeasureTextWidth(item.PolicyName);
-			if (w21 > maxWidth21) maxWidth21 = w21;
 		}
 
 		// Set the column width properties.
@@ -299,9 +266,6 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		ColumnWidth16 = new GridLength(maxWidth16);
 		ColumnWidth17 = new GridLength(maxWidth17);
 		ColumnWidth18 = new GridLength(maxWidth18);
-		ColumnWidth19 = new GridLength(maxWidth19);
-		ColumnWidth20 = new GridLength(maxWidth20);
-		ColumnWidth21 = new GridLength(maxWidth21);
 	}
 
 
@@ -344,23 +308,24 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 	// Click event handlers for each property
 	private void CopyFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileName);
+	private void CopyTimeCreated_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.TimeCreated.ToString());
 	private void CopySignatureStatus_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignatureStatus.ToString());
+	private void CopyAction_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Action.ToString());
 	private void CopyOriginalFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.OriginalFileName);
 	private void CopyInternalName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.InternalName);
 	private void CopyFileDescription_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileDescription);
-	private void CopyProductName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.ProductName);
 	private void CopyFileVersion_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileVersion?.ToString());
-	private void CopyPackageFamilyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PackageFamilyName);
 	private void CopySHA256Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256Hash);
 	private void CopySHA1Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1Hash);
+	private void CopySHA256FlatHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256FlatHash);
+	private void CopySHA1FlatHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1FlatHash);
 	private void CopySigningScenario_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SISigningScenario.ToString());
 	private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePath);
-	private void CopySHA1PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1PageHash);
-	private void CopySHA256PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256PageHash);
-	private void CopyHasWHQLSigner_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.HasWHQLSigner.ToString());
+	private void CopyComputerName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.ComputerName);
+	private void CopyPolicyGUiD_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyGUID.ToString());
+	private void CopyPolicyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyName);
 	private void CopyFilePublishers_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePublishersToDisplay);
-	private void CopyIsECCSigned_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsECCSigned.ToString());
-	private void CopyOpusData_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Opus);
+
 
 	/// <summary>
 	/// Helper method to copy a specified property to clipboard without reflection
@@ -385,9 +350,17 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	{
 		SortColumn(fileIden => fileIden.FileName);
 	}
+	private void ColumnSortingButton_TimeCreated_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.TimeCreated);
+	}
 	private void ColumnSortingButton_SignatureStatus_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SignatureStatus);
+	}
+	private void ColumnSortingButton_Action_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.Action);
 	}
 	private void ColumnSortingButton_OriginalFileName_Click(object sender, RoutedEventArgs e)
 	{
@@ -401,17 +374,9 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	{
 		SortColumn(fileIden => fileIden.FileDescription);
 	}
-	private void ColumnSortingButton_ProductName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.ProductName);
-	}
 	private void ColumnSortingButton_FileVersion_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FileVersion);
-	}
-	private void ColumnSortingButton_PackageFamilyName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.PackageFamilyName);
 	}
 	private void ColumnSortingButton_SHA256Hash_Click(object sender, RoutedEventArgs e)
 	{
@@ -421,6 +386,14 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	{
 		SortColumn(fileIden => fileIden.SHA1Hash);
 	}
+	private void ColumnSortingButton_SHA256FlatHash_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.SHA256FlatHash);
+	}
+	private void ColumnSortingButton_SHA1FlatHash_Click(object sender, RoutedEventArgs e)
+	{
+		SortColumn(fileIden => fileIden.SHA1FlatHash);
+	}
 	private void ColumnSortingButton_SigningScenario_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.SISigningScenario);
@@ -429,31 +402,22 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	{
 		SortColumn(fileIden => fileIden.FilePath);
 	}
-	private void ColumnSortingButton_SHA1PageHash_Click(object sender, RoutedEventArgs e)
+	private void ColumnSortingButton_ComputerName_Click(object sender, RoutedEventArgs e)
 	{
-		SortColumn(fileIden => fileIden.SHA1PageHash);
+		SortColumn(fileIden => fileIden.ComputerName);
 	}
-	private void ColumnSortingButton_SHA256PageHash_Click(object sender, RoutedEventArgs e)
+	private void ColumnSortingButton_PolicyGUID_Click(object sender, RoutedEventArgs e)
 	{
-		SortColumn(fileIden => fileIden.SHA256PageHash);
+		SortColumn(fileIden => fileIden.PolicyGUID);
 	}
-	private void ColumnSortingButton_HasWHQLSigner_Click(object sender, RoutedEventArgs e)
+	private void ColumnSortingButton_PolicyName_Click(object sender, RoutedEventArgs e)
 	{
-		SortColumn(fileIden => fileIden.HasWHQLSigner);
+		SortColumn(fileIden => fileIden.PolicyName);
 	}
 	private void ColumnSortingButton_FilePublishers_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.FilePublishersToDisplay);
 	}
-	private void ColumnSortingButton_IsECCSigned_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.IsECCSigned);
-	}
-	private void ColumnSortingButton_OpusData_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.Opus);
-	}
-
 
 	/// <summary>
 	/// Performs data sorting
@@ -1383,6 +1347,10 @@ DeviceEvents
 				}
 
 				UpdateTotalLogs();
+
+				CalculateColumnWidths();
+
+				FileIdentitiesListView.ItemsSource = FileIdentities;
 			}
 		}
 		catch (Exception ex)
@@ -1433,60 +1401,61 @@ DeviceEvents
 	/// </summary>
 	private void CopyButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button copyButton && copyButton.DataContext is MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage queryItem)
+		Button copyButton = (Button)sender;
+		MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage queryItem = (MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage)copyButton.DataContext;
+
+		// Copy the query text to the clipboard.
+		DataPackage dataPackage = new();
+		dataPackage.SetText(queryItem.Query);
+		Clipboard.SetContent(dataPackage);
+
+		// Retrieve the Grid that is the button's content.
+		if (copyButton.Content is Grid grid)
 		{
-			// Copy the query text to the clipboard.
-			DataPackage dataPackage = new();
-			dataPackage.SetText(queryItem.Query);
-			Clipboard.SetContent(dataPackage);
+			// Find the two TextBlocks
+			TextBlock normalTextBlock = (TextBlock)grid.FindName("NormalText");
+			TextBlock copiedTextBlock = (TextBlock)grid.FindName("CopiedText");
 
-			// Retrieve the Grid that is the button's content.
-			if (copyButton.Content is Grid grid)
-			{
-				// Find the two TextBlocks
-				TextBlock normalTextBlock = (TextBlock)grid.FindName("NormalText");
-				TextBlock copiedTextBlock = (TextBlock)grid.FindName("CopiedText");
+			// Create a storyboard to hold both keyframe animations.
+			Storyboard sb = new();
 
-				// Create a storyboard to hold both keyframe animations.
-				Storyboard sb = new();
+			// Create a keyframe animation for the "NormalText" (Copy)
+			// Timeline:
+			// 0ms: Opacity = 1
+			// 200ms: fade out to 0
+			// 1200ms: remain at 0
+			// 1400ms: fade back in to 1
+			DoubleAnimationUsingKeyFrames normalAnimation = new();
+			normalAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(0), Value = 1 });
+			normalAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(200), Value = 0 });
+			normalAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1200), Value = 0 });
+			normalAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1400), Value = 1 });
+			Storyboard.SetTarget(normalAnimation, normalTextBlock);
+			Storyboard.SetTargetProperty(normalAnimation, "Opacity");
 
-				// Create a keyframe animation for the "NormalText" (Copy)
-				// Timeline:
-				// 0ms: Opacity = 1
-				// 200ms: fade out to 0
-				// 1200ms: remain at 0
-				// 1400ms: fade back in to 1
-				DoubleAnimationUsingKeyFrames normalAnimation = new();
-				normalAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(0), Value = 1 });
-				normalAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(200), Value = 0 });
-				normalAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1200), Value = 0 });
-				normalAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1400), Value = 1 });
-				Storyboard.SetTarget(normalAnimation, normalTextBlock);
-				Storyboard.SetTargetProperty(normalAnimation, "Opacity");
+			// Create a keyframe animation for the "CopiedText" (Copied)
+			// Timeline:
+			// 0ms: Opacity = 0
+			// 200ms: fade in to 1
+			// 1200ms: remain at 1
+			// 1400ms: fade out to 0
+			DoubleAnimationUsingKeyFrames copiedAnimation = new();
+			copiedAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(0), Value = 0 });
+			copiedAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(200), Value = 1 });
+			copiedAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1200), Value = 1 });
+			copiedAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1400), Value = 0 });
+			Storyboard.SetTarget(copiedAnimation, copiedTextBlock);
+			Storyboard.SetTargetProperty(copiedAnimation, "Opacity");
 
-				// Create a keyframe animation for the "CopiedText" (Copied)
-				// Timeline:
-				// 0ms: Opacity = 0
-				// 200ms: fade in to 1
-				// 1200ms: remain at 1
-				// 1400ms: fade out to 0
-				DoubleAnimationUsingKeyFrames copiedAnimation = new();
-				copiedAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(0), Value = 0 });
-				copiedAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(200), Value = 1 });
-				copiedAnimation.KeyFrames.Add(new DiscreteDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1200), Value = 1 });
-				copiedAnimation.KeyFrames.Add(new LinearDoubleKeyFrame { KeyTime = TimeSpan.FromMilliseconds(1400), Value = 0 });
-				Storyboard.SetTarget(copiedAnimation, copiedTextBlock);
-				Storyboard.SetTargetProperty(copiedAnimation, "Opacity");
+			// Add animations to the storyboard.
+			sb.Children.Add(normalAnimation);
+			sb.Children.Add(copiedAnimation);
 
-				// Add animations to the storyboard.
-				sb.Children.Add(normalAnimation);
-				sb.Children.Add(copiedAnimation);
+			// Start the storyboard.
+			sb.Begin();
 
-				// Start the storyboard.
-				sb.Begin();
-
-			}
 		}
+
 	}
 }
 

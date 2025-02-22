@@ -451,12 +451,8 @@ public sealed partial class CreateDenyPolicy : Page
 	// Event handler for RadialGauge ValueChanged
 	private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
-		if (sender is RadialGauge gauge)
-		{
-			// Update the button content with the current value of the gauge
-			ScalabilityButton.Content = GlobalVars.Rizz.GetString("Scalability") + gauge.Value;
-
-		}
+		// Update the button content with the current value of the gauge
+		ScalabilityButton.Content = GlobalVars.Rizz.GetString("Scalability") + ((RadialGauge)sender).Value;
 	}
 
 	private void FilesAndFoldersViewFileDetailsSettingsCard_Click(object sender, RoutedEventArgs e)
@@ -565,7 +561,7 @@ public sealed partial class CreateDenyPolicy : Page
 				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
 				{
 					// If invalid, assign a fallback logo
-					logoStr = "ms-appx:///Assets/StoreLogo.backup.png";
+					logoStr = GlobalVars.FallBackAppLogoURI;
 				}
 
 				// Create a new instance of the class that displays each app in the ListView

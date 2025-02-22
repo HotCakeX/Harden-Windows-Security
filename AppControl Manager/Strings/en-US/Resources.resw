@@ -1243,11 +1243,20 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SHA1HashHeader.Text" xml:space="preserve">
     <value>SHA1 Hash</value>
   </data>
+  <data name="SHA256FlatHashHeader.Text" xml:space="preserve">
+    <value>SHA256 Flat Hash</value>
+  </data>
+  <data name="SHA1FlatHashHeader.Text" xml:space="preserve">
+    <value>SHA1 Flat Hash</value>
+  </data>
   <data name="SigningScenarioHeader.Text" xml:space="preserve">
     <value>Signing Scenario</value>
   </data>
   <data name="FilePathHeader.Text" xml:space="preserve">
     <value>File Path</value>
+  </data>
+  <data name="ComputerNameHeader.Text" xml:space="preserve">
+    <value>Computer Name</value>
   </data>
   <data name="SHA1PageHashHeader.Text" xml:space="preserve">
     <value>SHA1 Page Hash</value>

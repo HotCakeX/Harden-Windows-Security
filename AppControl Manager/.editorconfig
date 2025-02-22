@@ -1102,3 +1102,6 @@ dotnet_diagnostic.IDE0130.severity = error
 
 # IDE0320: Make anonymous function static
 dotnet_diagnostic.IDE0320.severity = error
+
+# CA1724: Type names should not match namespaces
+dotnet_diagnostic.CA1724.severity = error

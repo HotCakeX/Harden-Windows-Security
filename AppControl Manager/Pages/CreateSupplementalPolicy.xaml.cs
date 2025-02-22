@@ -750,11 +750,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	// Event handler for RadialGauge ValueChanged
 	private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
-		if (sender is RadialGauge gauge)
-		{
-			// Update the button content with the current value of the gauge
-			ScalabilityButton.Content = $"Scalability: {gauge.Value:N0}";
-		}
+		// Update the button content with the current value of the gauge
+		ScalabilityButton.Content = $"Scalability: {((RadialGauge)sender).Value:N0}";
 	}
 
 
@@ -1847,7 +1844,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
 				{
 					// If invalid, assign a fallback logo
-					logoStr = "ms-appx:///Assets/StoreLogo.backup.png";
+					logoStr = GlobalVars.FallBackAppLogoURI;
 				}
 
 				// Create a new instance of the class that displays each app in the ListView

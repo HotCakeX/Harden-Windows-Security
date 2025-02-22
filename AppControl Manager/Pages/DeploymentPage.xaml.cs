@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
+public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 {
 	// HashSets to store user input selected files
 	private readonly HashSet<string> XMLFiles = [];
@@ -28,7 +28,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 	// When true, policies will be deployed to Intune instead of locally
 	private bool deployToIntune;
 
-	public Deployment()
+	public DeploymentPage()
 	{
 		this.InitializeComponent();
 
@@ -329,7 +329,7 @@ public sealed partial class Deployment : Page, Sidebar.IAnimatedIconsManager
 					SiPolicy.SiPolicy policyObject = AddSigningDetails.Add(file, CertPath);
 
 					// Remove the unsigned policy rule option from the policy
-					CiRuleOptions.Set(filePath: file, rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					CiRuleOptions.Set(filePath: file, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					// Define the path for the CIP file
 					string randomString = GUIDGenerator.GenerateUniqueGUID();

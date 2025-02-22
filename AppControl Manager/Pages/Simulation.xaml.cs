@@ -568,11 +568,8 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 	// Event handler for RadialGauge ValueChanged
 	private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
-		if (sender is RadialGauge gauge)
-		{
-			// Update the button content with the current value of the gauge
-			ScalabilityButton.Content = $"Scalability: {gauge.Value:N0}";
-		}
+		// Update the button content with the current value of the gauge
+		ScalabilityButton.Content = $"Scalability: {((RadialGauge)sender).Value:N0}";
 	}
 
 	// Event handler for the Clear Data button

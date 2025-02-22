@@ -297,9 +297,9 @@
                             <MenuFlyoutSeparator/>
 
                             <MenuFlyoutItem x:Uid="FileNameHeader" Click="ColumnSortingButton_FileName_Click"/>
-                             <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="ColumnSortingButton_TimeCreated_Click"/>
-                             <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
-                             <MenuFlyoutItem x:Uid="ActionHeader" Click="ColumnSortingButton_Action_Click"/>
+                            <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="ColumnSortingButton_TimeCreated_Click"/>
+                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
+                            <MenuFlyoutItem x:Uid="ActionHeader" Click="ColumnSortingButton_Action_Click"/>
                             <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="ColumnSortingButton_OriginalFileName_Click"/>
                             <MenuFlyoutItem x:Uid="InternalNameHeader" Click="ColumnSortingButton_InternalName_Click"/>
                             <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="ColumnSortingButton_FileDescription_Click"/>
@@ -310,13 +310,13 @@
                             <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="ColumnSortingButton_SHA1Hash_Click"/>
                             <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="ColumnSortingButton_SigningScenario_Click"/>
                             <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="ColumnSortingButton_SHA1PageHash_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="ColumnSortingButton_SHA256PageHash_Click"/>
-                            <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="ColumnSortingButton_HasWHQLSigner_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Click="ColumnSortingButton_SHA1FlatHash_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="ColumnSortingButton_SHA256FlatHash_Click"/>
                             <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
                             <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
                             <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="ColumnSortingButton_PolicyID_Click"/>
                             <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="ColumnSortingButton_PolicyName_Click"/>
+                            <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="ColumnSortingButton_ComputerName_Click"/>
 
                         </MenuFlyout>
                     </Button.Flyout>
@@ -379,13 +379,13 @@
                         <TextBlock x:Uid="SHA1HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="SigningScenarioHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA1PageHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA256PageHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="HasWHQLSignerHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FilePublishersHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="17" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="OpusDataHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="18" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyGUIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="19" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="20" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA1FlatHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="SHA256FlatHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="FilePublishersHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="OpusDataHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="17" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PolicyGUIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="18" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="PolicyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="19" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="ComputerNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="20" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                     </Grid>
                 </Border>
             </ListView.Header>
@@ -495,19 +495,13 @@
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="CopySHA1PageHash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Click="CopySHA1FlatHash_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="CopySHA256PageHash_Click">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE8C8;" />
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-
-                                        <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="CopyHasWHQLSigner_Click">
+                                        <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="CopySHA256FlatHash_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -537,6 +531,12 @@
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
+                                        <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="CopyComputerName_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
                                     </MenuFlyoutSubItem.Items>
 
                                 </MenuFlyoutSubItem>
@@ -545,9 +545,9 @@
 
                         <Grid.ColumnDefinitions>
                             <!-- Use standard Binding with ElementName to refer back to the page's properties
-                       because in here the Data Context is set to FileIdentity so we cannot use x.Bind
-                       since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
-                       And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
+                            because in here the Data Context is set to FileIdentity so we cannot use x.Bind
+                            since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
+                            And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
                             <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=EventLogsPolicyCreationXAML}" />
                             <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=EventLogsPolicyCreationXAML}" />
                             <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=EventLogsPolicyCreationXAML}" />
@@ -584,18 +584,17 @@
                         <TextBlock Text="{x:Bind SHA1Hash}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind SISigningScenario}" HorizontalAlignment="Left" Grid.Column="12" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind FilePath}" HorizontalAlignment="Left" Grid.Column="13" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SHA1PageHash}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SHA256PageHash}" HorizontalAlignment="Left" Grid.Column="15" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind HasWHQLSigner}" HorizontalAlignment="Left" Grid.Column="16" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind FilePublishersToDisplay}" HorizontalAlignment="Left" Grid.Column="17" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind Opus}" HorizontalAlignment="Left" Grid.Column="18" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind PolicyGUID}" HorizontalAlignment="Left" Grid.Column="19" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind PolicyName}" HorizontalAlignment="Left" Grid.Column="20" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA1FlatHash}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind SHA256FlatHash}" HorizontalAlignment="Left" Grid.Column="15" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind FilePublishersToDisplay}" HorizontalAlignment="Left" Grid.Column="16" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind Opus}" HorizontalAlignment="Left" Grid.Column="17" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyGUID}" HorizontalAlignment="Left" Grid.Column="18" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyName}" HorizontalAlignment="Left" Grid.Column="19" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind ComputerName}" HorizontalAlignment="Left" Grid.Column="20" Margin="0,2,2,2"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
     </Grid>
-
 </Page>

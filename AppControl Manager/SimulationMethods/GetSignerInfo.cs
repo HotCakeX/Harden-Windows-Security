@@ -21,8 +21,8 @@ internal static class GetSignerInfo
 		// Instantiate the policy
 		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xmlContent);
 
-		SigningScenario? UMCI = policyObj.SigningScenarios.FirstOrDefault(x => string.Equals(x.ID, "12", StringComparison.OrdinalIgnoreCase));
-		SigningScenario? KMCI = policyObj.SigningScenarios.FirstOrDefault(x => string.Equals(x.ID, "131", StringComparison.OrdinalIgnoreCase));
+		SigningScenario? UMCI = policyObj.SigningScenarios.FirstOrDefault(x => Equals(x.Value, (byte)12));
+		SigningScenario? KMCI = policyObj.SigningScenarios.FirstOrDefault(x => Equals(x.Value, (byte)131));
 
 		HashSet<string> allowedUMCISigners = [];
 		HashSet<string> deniedUMCISigners = [];
@@ -31,25 +31,54 @@ internal static class GetSignerInfo
 
 		if (UMCI is not null)
 		{
-			foreach (AllowedSigner item in UMCI.ProductSigners.AllowedSigners.AllowedSigner)
+			if (UMCI.ProductSigners is not null)
 			{
-				_ = allowedUMCISigners.Add(item.SignerId);
-			}
-			foreach (DeniedSigner item in UMCI.ProductSigners.DeniedSigners.DeniedSigner)
-			{
-				_ = deniedUMCISigners.Add(item.SignerId);
+				if (UMCI.ProductSigners.AllowedSigners is not null)
+				{
+					if (UMCI.ProductSigners.AllowedSigners.AllowedSigner is not null)
+					{
+						foreach (AllowedSigner item in UMCI.ProductSigners.AllowedSigners.AllowedSigner)
+						{
+							_ = allowedUMCISigners.Add(item.SignerId);
+						}
+					}
+				}
+				if (UMCI.ProductSigners.DeniedSigners is not null)
+				{
+					if (UMCI.ProductSigners.DeniedSigners.DeniedSigner is not null)
+					{
+						foreach (DeniedSigner item in UMCI.ProductSigners.DeniedSigners.DeniedSigner)
+						{
+							_ = deniedUMCISigners.Add(item.SignerId);
+						}
+					}
+				}
 			}
 		}
-
 		if (KMCI is not null)
 		{
-			foreach (AllowedSigner item in KMCI.ProductSigners.AllowedSigners.AllowedSigner)
+			if (KMCI.ProductSigners is not null)
 			{
-				_ = allowedKMCISigners.Add(item.SignerId);
-			}
-			foreach (DeniedSigner item in KMCI.ProductSigners.DeniedSigners.DeniedSigner)
-			{
-				_ = deniedKMCISigners.Add(item.SignerId);
+				if (KMCI.ProductSigners.AllowedSigners is not null)
+				{
+					if (KMCI.ProductSigners.AllowedSigners.AllowedSigner is not null)
+					{
+						foreach (AllowedSigner item in KMCI.ProductSigners.AllowedSigners.AllowedSigner)
+						{
+							_ = allowedKMCISigners.Add(item.SignerId);
+						}
+					}
+				}
+				if (KMCI.ProductSigners.DeniedSigners is not null)
+				{
+					if (KMCI.ProductSigners.DeniedSigners.DeniedSigner is not null)
+					{
+						foreach (DeniedSigner item in KMCI.ProductSigners.DeniedSigners.DeniedSigner)
+						{
+							_ = deniedKMCISigners.Add(item.SignerId);
+						}
+					}
+				}
 			}
 		}
 
@@ -191,9 +220,12 @@ internal static class GetSignerInfo
 			List<string> ruleIds = [];
 
 			// Extract the RuleID of all of the FileAttribRef nodes
-			foreach (FileAttribRef FileAttribRefNode in signer.FileAttribRef)
+			if (signer.FileAttribRef is not null)
 			{
-				ruleIds.Add(FileAttribRefNode.RuleID);
+				foreach (FileAttribRef FileAttribRefNode in signer.FileAttribRef)
+				{
+					ruleIds.Add(FileAttribRefNode.RuleID);
+				}
 			}
 
 			#region Region File Attributes Processing
@@ -289,9 +321,12 @@ internal static class GetSignerInfo
 			List<string> CertEKUs = [];
 
 			// Select all of the <CertEKU> nodes in the current signer
-			foreach (CertEKU EKU in signer.CertEKU)
+			if (signer.CertEKU is not null)
 			{
-				CertEKUIDs.Add(EKU.ID);
+				foreach (CertEKU EKU in signer.CertEKU)
+				{
+					CertEKUIDs.Add(EKU.ID);
+				}
 			}
 
 			foreach (string EkuID in CertEKUIDs)
@@ -321,10 +356,10 @@ internal static class GetSignerInfo
 				   id: signer.ID,
 					name: signer.Name,
 					certRoot: certRootValue!,
-					certPublisher: signer.CertPublisher.Value,
-					certIssuer: signer.CertIssuer.Value,
+					certPublisher: signer.CertPublisher?.Value,
+					certIssuer: signer.CertIssuer?.Value,
 					certEKU: [.. CertEKUs],
-					certOemID: signer.CertOemID.Value,
+					certOemID: signer.CertOemID?.Value,
 					fileAttribRef: [.. ruleIds],
 					fileAttrib: SignerFileAttributesProperty,
 					signerScope: signerScope,

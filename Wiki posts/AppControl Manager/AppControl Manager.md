@@ -55,7 +55,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 * Secure and transparent development and build process.
 * Built using [WinUI3](https://learn.microsoft.com/en-us/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/en-us/dotnet/csharp/).
-* Built using the latest [.NET](https://dotnet.microsoft.com).
+* Built using the latest [.NET](https://dotnet.microsoft.com) SDK.
 * Powered by the [WinAppSDK](https://github.com/microsoft/WindowsAppSDK) (formerly Project Reunion).
 * Packaged with the modern [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) format.
 * Incorporates the [Mica](https://learn.microsoft.com/en-us/windows/apps/design/style/mica) material design for backgrounds.
@@ -68,6 +68,7 @@ Please feel free to open a discussion if you have any questions about the build 
 * 100% clean uninstallation.
 * 100% open-source and free to use.
 * Natively supports X64 and ARM64 architectures.
+* Full [Trimming](https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot) support.
 
 <br>
 

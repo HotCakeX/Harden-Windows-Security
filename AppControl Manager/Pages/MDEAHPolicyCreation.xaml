@@ -27,16 +27,15 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,0">
 
             <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-    <Span>
-        Leverage <Italic>Microsoft Defender for Endpoint</Italic>
-            <Run Foreground="{ThemeResource SystemAccentColor}">Advanced Hunting</Run>
-        exported logs to build Application Control Policies.
-        Begin by browsing for the MDE AH CSV logs, then click the
-        <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
-        Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
-        to define output configuration and generate the XML policy file.
-    </Span>
+                <Span>
+                    Leverage <Italic>Microsoft Defender for Endpoint</Italic>
+                        <Run Foreground="{ThemeResource SystemAccentColor}">Advanced Hunting</Run>
+                    exported logs to build Application Control Policies.
+                    Begin by browsing for the MDE AH CSV logs, then click the
+                    <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
+                    Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
+                    to define output configuration and generate the XML policy file.
+                </Span>
             </TextBlock>
 
             <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
@@ -69,10 +68,9 @@
 
         </controls:WrapPanel>
 
-        <Border
-  Grid.Row="3" Visibility="{x:Bind IsLocalSelected, Mode=OneWay}"
-  Margin="0,10,0,10"
-  Style="{StaticResource GridCardStyle}" Padding="8">
+        <Border Grid.Row="3" Visibility="{x:Bind IsLocalSelected, Mode=OneWay}"
+            Margin="0,10,0,10"
+            Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -157,7 +155,7 @@
                         <Flyout>
 
                             <ListView ItemsSource="{x:Bind AdvancedHuntingQueries, Mode=OneWay}"
-                  SelectionMode="None">
+                                    SelectionMode="None">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Vertical" Width="300"/>
@@ -205,7 +203,7 @@
 
 
         <Border Grid.Row="3" Visibility="{x:Bind IsCreateSelected, Mode=OneWay}"
-       Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+            Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -239,25 +237,25 @@
 
 
                             <StackPanel
-VerticalAlignment="Top"
-Orientation="Vertical"
-Spacing="8">
+                                VerticalAlignment="Top"
+                                Orientation="Vertical"
+                                Spacing="8">
                                 <controls:Segmented x:Name="segmentedControl"
-            HorizontalAlignment="Stretch"
-            SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">
+                                    HorizontalAlignment="Stretch"
+                                    SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">
                                     <controls:SegmentedItem Content="Add To Policy"
-                    Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
+                                            Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
                                     <controls:SegmentedItem Content="Base Policy File"
-                    Tag="BasePolicyFile" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                            Tag="BasePolicyFile" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                     <controls:SegmentedItem Content="Base GUID"
-                    Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                            Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                 </controls:Segmented>
                                 <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl}" HorizontalAlignment="Center">
 
                                     <controls:Case Value="AddToPolicy">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-            Style="{StaticResource PanelStyle}">
+                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                            Style="{StaticResource PanelStyle}">
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords">
                                                 <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
@@ -269,8 +267,8 @@ Spacing="8">
                                     </controls:Case>
                                     <controls:Case Value="BasePolicyFile">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-            Style="{StaticResource PanelStyle}">
+                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                            Style="{StaticResource PanelStyle}">
 
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="290" >
@@ -286,8 +284,8 @@ Spacing="8">
 
                                     <controls:Case Value="BaseGUID">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-            Style="{StaticResource PanelStyle}">
+                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                            Style="{StaticResource PanelStyle}">
 
                                             <TextBox x:Name="BaseGUIDTextBox" PlaceholderText="Enter a Base policy GUID" Width="300" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
 

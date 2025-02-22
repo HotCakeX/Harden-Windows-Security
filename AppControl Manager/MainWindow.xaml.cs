@@ -113,20 +113,20 @@ public sealed partial class MainWindow : Window
 			Titles = [GlobalVars.Rizz.GetString("SimulationNavItem/Content")],
 			Pages = [typeof(Pages.Simulation)]
 		},
-		[typeof(Pages.Update)] = new PageTitleMap
+		[typeof(Pages.UpdatePage)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("Update"), "Custom MSIXBundle Path"],
-			Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
+			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
 		{
 			Titles = [GlobalVars.Rizz.GetString("Update"), "Custom MSIXBundle Path"],
-			Pages = [typeof(Pages.Update), typeof(Pages.UpdatePageCustomMSIXPath)]
+			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
-		[typeof(Pages.Deployment)] = new PageTitleMap
+		[typeof(Pages.DeploymentPage)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("DeploymentNavItem/Content")],
-			Pages = [typeof(Pages.Deployment)]
+			Pages = [typeof(Pages.DeploymentPage)]
 		},
 		[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
 		{
@@ -222,8 +222,8 @@ public sealed partial class MainWindow : Window
 		{ "Configure Policy Rule Options", typeof(Pages.ConfigurePolicyRuleOptions) },
 		{ "Logs", typeof(Pages.Logs) },
 		{ "Simulation", typeof(Pages.Simulation) },
-		{ "Update", typeof(Pages.Update) },
-		{ "Deploy App Control Policy", typeof(Pages.Deployment) },
+		{ "Update", typeof(Pages.UpdatePage) },
+		{ "Deploy App Control Policy", typeof(Pages.DeploymentPage) },
 		{ "Create policy from Event Logs", typeof(Pages.EventLogsPolicyCreation) },
 		{ "MDE Advanced Hunting", typeof(Pages.MDEAHPolicyCreation) },
 		{ "Allow New Apps", typeof(Pages.AllowNewApps) },

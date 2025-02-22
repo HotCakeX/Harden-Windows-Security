@@ -103,10 +103,10 @@
                 </Button>
 
                 <TextBox x:Uid="TotalLogsTextBlock"
-            x:Name="TotalCountOfTheFilesTextBox"
-            IsReadOnly="True"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"/>
+                x:Name="TotalCountOfTheFilesTextBox"
+                IsReadOnly="True"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"/>
 
                 <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 

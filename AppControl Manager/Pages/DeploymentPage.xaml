@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="AppControlManager.Pages.Deployment"
+    x:Class="AppControlManager.Pages.DeploymentPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
@@ -56,7 +56,7 @@
                 <controls:SettingsExpander x:Name="IntuneDeploymentSettingsExpander"
                      Description="Deploy the policies remotely to the Intune instead of the local system"
                      Header="Use Intune Deployment"
-           HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
+                     HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
 
                     <TextBlock x:Name="LocalIntuneStatusTextBox" Text="Local Deployment is Currently Active" TextWrapping="Wrap" />
 
@@ -80,9 +80,9 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard
-                    Description="Select one of the security groups to assign to the policy in Intune"
-                    Header="Group Assignment (Optional)"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xF0B9;}" IsClickEnabled="False" IsActionIconVisible="False">
+                        Description="Select one of the security groups to assign to the policy in Intune"
+                        Header="Group Assignment (Optional)"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xF0B9;}" IsClickEnabled="False" IsActionIconVisible="False">
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -165,9 +165,9 @@
 
 
                 <controls:SettingsCard
-            Description="Browse for XML policy file(s) to Sign and deploy on the system"
-            Header="Select signed XML policy file(s)"
-            HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}" IsClickEnabled="False" IsActionIconVisible="False">
+                Description="Browse for XML policy file(s) to Sign and deploy on the system"
+                Header="Select signed XML policy file(s)"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}" IsClickEnabled="False" IsActionIconVisible="False">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -221,9 +221,9 @@
                         </Button>
 
                         <TeachingTip x:Name="DeploySignedXMLButtonTeachingTip"
-    Target="{x:Bind DeploySignedXMLButton}"
-    Title="No File was selected"
-    Subtitle="You need to select Signed XML files to deploy first.">
+                        Target="{x:Bind DeploySignedXMLButton}"
+                        Title="No File was selected"
+                        Subtitle="You need to select Signed XML files to deploy first.">
                         </TeachingTip>
 
                     </controls:WrapPanel>

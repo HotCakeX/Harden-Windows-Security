@@ -77,7 +77,11 @@ internal static class GlobalVars
 	// Determine whether the current OS is older than 24H2
 	internal static bool IsOlderThan24H2 => CurrentOSVersion < VersionFor24H2;
 
+	// The namespace of the App Control policies
 	internal const string SiPolicyNamespace = "urn:schemas-microsoft-com:sipolicy";
+
+	// When the the list of installed packaged apps is retrieved, this URI is used whenever an installed app doesn't have a valid URI logo path
+	internal const string FallBackAppLogoURI = "ms-appx:///Assets/StoreLogo.backup.png";
 
 	static GlobalVars()
 	{

@@ -565,7 +565,7 @@ public sealed partial class CreateDenyPolicy : Page
 				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
 				{
 					// If invalid, assign a fallback logo
-					logoStr = "ms-appx:///Assets/StoreLogo.backup.png";
+					logoStr = GlobalVars.FallBackAppLogoURI;
 				}
 
 				// Create a new instance of the class that displays each app in the ListView

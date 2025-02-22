@@ -22,7 +22,7 @@ using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
-public sealed partial class Update : Page
+public sealed partial class UpdatePage : Page
 {
 	// Pattern for finding ASR rules that belong to the AppControl Manager
 	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
@@ -42,9 +42,9 @@ public sealed partial class Update : Page
 	internal string? customMSIXBundlePath;
 
 	// A static instance of the Update class which will hold the single, shared instance of it
-	private static Update? _instance;
+	private static UpdatePage? _instance;
 
-	public Update()
+	public UpdatePage()
 	{
 		this.InitializeComponent();
 
@@ -56,7 +56,7 @@ public sealed partial class Update : Page
 	}
 
 	// Public property to access the singleton instance from other classes
-	public static Update Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("UpdateNotInitialized"));
+	public static UpdatePage Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("UpdateNotInitialized"));
 
 	// Event handler for check for update button
 	private async void CheckForUpdateButton_Click(object sender, RoutedEventArgs e)

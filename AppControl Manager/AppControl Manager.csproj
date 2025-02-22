@@ -55,6 +55,9 @@
     <PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
 
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#rollforward -->
+    <RollForward>LatestMajor</RollForward>
+
     <!-- Automatically created for packing -->
     <!-- https://learn.microsoft.com/en-us/windows/msix/app-installer/create-appinstallerfile-vs -->
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -74,6 +77,7 @@
     <AssemblyName>AppControlManager</AssemblyName>
     <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/optimizing -->
     <PublishAot>True</PublishAot>
+    <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
     <FileVersion>1.9.1.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
@@ -84,6 +88,12 @@
 
     <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code -->
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-guard -->
+    <ControlFlowGuard>Guard</ControlFlowGuard>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
+    <CetCompat>true</CetCompat>
 
     <Version>$(FileVersion)</Version>
     <Copyright>© 2024-Present</Copyright>
@@ -98,6 +108,7 @@
     <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
     <PublishTrimmed>True</PublishTrimmed>
     <TrimMode>full</TrimMode>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
     <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
     <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
@@ -214,7 +225,6 @@
     <None Remove="Pages\CreateDenyPolicyFilesAndFoldersScanResults.xaml" />
     <None Remove="Pages\CreateSupplementalPolicy.xaml" />
     <None Remove="Pages\CreateSupplementalPolicyFilesAndFoldersScanResults.xaml" />
-    <None Remove="Pages\Deployment.xaml" />
     <None Remove="Pages\EventLogsPolicyCreation.xaml" />
     <None Remove="Pages\GetCIHashes.xaml" />
     <None Remove="Pages\GetSecurePolicySettings.xaml" />
@@ -228,7 +238,6 @@
     <None Remove="Pages\StrictKernelPolicyScanResults.xaml" />
     <None Remove="Pages\SystemInformation\CodeIntegrityInfo.xaml" />
     <None Remove="Pages\SystemInformation\SystemInformation.xaml" />
-    <None Remove="Pages\Update.xaml" />
     <None Remove="Pages\ValidatePolicy.xaml" />
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
     <None Remove="Pages\ViewFileCertificates.xaml" />
@@ -337,12 +346,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\Deployment.xaml">
+    <Page Update="Pages\DeploymentPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\Update.xaml">
+    <Page Update="Pages\UpdatePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

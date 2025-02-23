@@ -213,7 +213,7 @@
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
+                                        <FontIcon Glyph="&#xE8B6;" x:Name="DeploySignedXMLButtonFontIcon" Margin="0,0,8,0" />
                                         <TextBlock x:Name="DeploySignedXMLButtonContentTextBlock" Text="Deploy"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -237,7 +237,7 @@
                              Header="Sign Only - No Deployment" Click="SignOnlyNoDeploySettingsCard_Click"
                              HeaderIcon="{ui:FontIcon Glyph=&#xF572;}" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <ToggleSwitch x:Name="SignOnlyNoDeployToggleSwitch" />
+                            <ToggleSwitch x:Name="SignOnlyNoDeployToggleSwitch" Toggled="SignOnlyNoDeployToggleSwitch_Toggled" />
 
                         </controls:SettingsCard>
 

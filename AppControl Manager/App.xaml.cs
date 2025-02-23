@@ -284,7 +284,7 @@ public partial class App : Application
 				{
 					File.Move(filePath, destFilePath, overwrite: true);
 				}
-				catch (IOException ex)
+				catch (Exception ex)
 				{
 					Logger.Write(ErrorWriter.FormatException(ex));
 				}

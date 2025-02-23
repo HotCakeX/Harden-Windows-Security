@@ -991,5 +991,22 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	private void SignOnlyNoDeploySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		SignOnlyNoDeployToggleSwitch.IsOn = !SignOnlyNoDeployToggleSwitch.IsOn;
+
+		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? "Sign Only" : "Deploy";
+
+		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
 	}
+
+	/// <summary>
+	/// Event handler for the toggle button that determines whether policies should be signed + deployed or signed only
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void SignOnlyNoDeployToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? "Sign Only" : "Deploy";
+
+		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
+	}
+
 }

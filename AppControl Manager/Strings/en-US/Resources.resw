@@ -229,14 +229,14 @@
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>Logs</value>
   </data>
+  <data name="SettingsNavItem.Content" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>View the application logs in real time</value>
   </data>
   <data name="ScanResults" xml:space="preserve">
     <value>Scan Results</value>
-  </data>
-  <data name="Update" xml:space="preserve">
-    <value>Update</value>
   </data>
   <data name="BrowseForFilesSettingsCard.Description" xml:space="preserve">
     <value>Browse for a file to see all of its available certificates</value>

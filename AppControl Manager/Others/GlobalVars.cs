@@ -21,13 +21,13 @@ internal static class GlobalVars
 		Environment.GetEnvironmentVariable("SystemDrive") + @"\",
 		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
-	// Storing the path to the WDACConfig folder in the Program Files
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
+	// Storing the path to the AppControl Manager folder in the Program Files
+	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AppControl Manager");
 
-	// Storing the path to User Config JSON file in the WDACConfig folder in the Program Files
+	// Storing the path to User Config JSON file in the AppControl Manager folder in the Program Files
 	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
-	// Storing the path to the StagingArea folder in the WDACConfig folder in the Program Files
+	// Storing the path to the StagingArea folder in the AppControl Manager folder in the Program Files
 	internal static readonly string StagingArea = Path.Combine(UserConfigDir, "StagingArea");
 
 	// The link to the file that contains the download link for the latest version of the AppControl Manager

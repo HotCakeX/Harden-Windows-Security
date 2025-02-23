@@ -79,7 +79,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.9.1.0</FileVersion>
+    <FileVersion>1.9.2.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -117,15 +117,6 @@
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
   </PropertyGroup>
-
-  <!--
-  This section is no longer necessary since this generator is not Native AOT compatible and serialization/deserialization logic has been manually implemented with static code
-
-  ARM64 doesn't support source generated XML de(serialization)
-  <ItemGroup Condition="'$(RuntimeIdentifier)' != 'win-arm64'">
-    <DotNetCliToolReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.1" />
-  </ItemGroup>
-  -->
 
   <!--
   <ItemGroup>
@@ -173,14 +164,6 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
-
-    <!--
-    No longer needed - manual static code has been implemented
-
-    ARM64 doesn't support source generated XML de(serialization)
-    <PackageReference Include="Microsoft.XmlSerializer.Generator" Version="9.0.2" Condition="'$(RuntimeIdentifier)' != 'win-arm64'" />
-   -->
-
     <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.2" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.2" />
   </ItemGroup>

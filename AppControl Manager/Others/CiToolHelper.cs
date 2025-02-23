@@ -69,7 +69,9 @@ internal static class CiToolHelper
 		catch (Exception ex)
 		{
 			// Handle errors by printing an error message and returning a default version of 0.0.0.0
-			Logger.Write($"Error converting number to version: {ex.Message}");
+			Logger.Write($"Error converting number to version.");
+			Logger.Write(ErrorWriter.FormatException(ex));
+
 			return new Version(0, 0, 0, 0);
 		}
 	}

@@ -25,7 +25,6 @@ namespace AppControlManager.Pages;
 
 public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
 {
-
 	internal bool EventLogsDataProcessed;
 	internal bool LocalFilesDataProcessed;
 
@@ -337,6 +336,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				// Instantiate the Content Dialog
 				SigningDetailsDialog customDialog = new(_BasePolicyObject);
 
+				App.CurrentlyOpenContentDialog = customDialog;
+
 				// Show the dialog and await its result
 				ContentDialogResult result = await customDialog.ShowAsync();
 
@@ -429,8 +430,10 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				Logger.Write("Creating Enforced Mode SnapBack guarantee");
 				SnapBackGuarantee.Create(EnforcedModeCIP);
 
+#if !DEBUG
 				Logger.Write("Deploying the Audit mode policy");
 				CiToolHelper.UpdatePolicy(AuditModeCIP);
+#endif
 
 				Logger.Write("The Base policy has been Re-Deployed in Audit Mode");
 
@@ -510,8 +513,10 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					Step2InfoBar.Message = "Deploying the Enforced mode policy.";
 				});
 
-				Logger.Write("Deploying the Enforced mode policy.");
-				CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+#if !DEBUG
+					Logger.Write("Deploying the Enforced mode policy.");
+					CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+#endif
 
 				// Delete the enforced mode CIP file after deployment
 				File.Delete(EnforcedModeCIP);
@@ -568,15 +573,17 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						await DispatcherQueue.EnqueueAsync(() =>
 						{
 							// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-							if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(AllowNewAppsLocalFilesDataGrid)))
+							if (Equals(AllowNewApps.Instance.frame.CurrentSourcePageType, typeof(AllowNewAppsLocalFilesDataGrid)))
 							{
 								LocalFilesDataProcessed = false;
 
-								if (AllowNewAppsLocalFilesDataGrid.Instance is not null)
-								{
-									AllowNewAppsLocalFilesDataGrid.Instance.CalculateColumnWidths();
-									AllowNewAppsLocalFilesDataGrid.Instance.UIListView.ItemsSource = LocalFilesFileIdentities;
-								}
+								AllowNewAppsLocalFilesDataGrid.Instance.CalculateColumnWidths();
+								AllowNewAppsLocalFilesDataGrid.Instance.UIListView.ItemsSource = LocalFilesFileIdentities;
+
+								// Update the total logs on that page once we add data to it from here
+								// Upon switching to that page the OnNavigateTo event will update the count if this doesn't run here.
+								// If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
+								AllowNewAppsLocalFilesDataGrid.Instance.UpdateTotalLogs();
 							}
 							else
 							{
@@ -589,14 +596,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				}
 			});
 
-			// Update the total logs on that page once we add data to it from here
-			// If the page is not loaded yet then this won't run since it's nullable. Upon switching to that page however the OnNavigateTo event will update the count.
-			// If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
-			AllowNewAppsLocalFilesDataGrid.Instance?.UpdateTotalLogs();
-
 			// Update the InfoBadge for the top menu
 			AllowNewApps.Instance.UpdateLocalFilesInfoBadge(LocalFilesFileIdentities.Count, 1);
-
 
 			Step2InfoBar.Message = "Scanning the event logs";
 
@@ -631,15 +632,17 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				await DispatcherQueue.EnqueueAsync(() =>
 				{
 					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-					if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(AllowNewAppsEventLogsDataGrid)))
+					if (Equals(AllowNewApps.Instance.frame.CurrentSourcePageType, typeof(AllowNewAppsEventLogsDataGrid)))
 					{
 						EventLogsDataProcessed = false;
 
-						if (AllowNewAppsEventLogsDataGrid.Instance is not null)
-						{
-							AllowNewAppsEventLogsDataGrid.Instance.CalculateColumnWidths();
-							AllowNewAppsEventLogsDataGrid.Instance.UIListView.ItemsSource = EventLogsFileIdentities;
-						}
+						AllowNewAppsEventLogsDataGrid.Instance.CalculateColumnWidths();
+						AllowNewAppsEventLogsDataGrid.Instance.UIListView.ItemsSource = EventLogsFileIdentities;
+
+						// Update the total logs on that page once we add data to it from here
+						// Upon switching to that page the OnNavigateTo event will update the count if it doesn't run here.
+						// If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
+						AllowNewAppsEventLogsDataGrid.Instance.UpdateTotalLogs();
 					}
 					else
 					{
@@ -648,11 +651,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					}
 				});
 			}
-
-			// Update the total logs on that page once we add data to it from here
-			// If the page is not loaded yet then this won't run since it's nullable. Upon switching to that page however the OnNavigateTo event will update the count.
-			// If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
-			AllowNewAppsEventLogsDataGrid.Instance?.UpdateTotalLogs();
 
 			// Update the InfoBadge for the top menu
 			AllowNewApps.Instance.UpdateEventLogsInfoBadge(EventLogsFileIdentities.Count, 1);
@@ -746,8 +744,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				// Deploy the base policy in enforced mode if user advanced to that step
 				if (Path.Exists(EnforcedModeCIP))
 				{
-					Logger.Write("Deploying the Enforced mode policy because user decided to reset the operation");
-					CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+
+#if !DEBUG
+						Logger.Write("Deploying the Enforced mode policy because user decided to reset the operation");
+						CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+#endif
 
 					// Delete the enforced mode CIP file from the user config directory after deploying it
 					File.Delete(EnforcedModeCIP);
@@ -1011,7 +1012,10 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 					}
 
-					CiToolHelper.UpdatePolicy(CIPPath);
+#if !DEBUG
+						CiToolHelper.UpdatePolicy(CIPPath);
+#endif
+
 				}
 
 			});

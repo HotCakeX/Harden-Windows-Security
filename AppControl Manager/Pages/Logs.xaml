@@ -22,7 +22,7 @@
                 <Span>
                     The following are the logs that the
                         <Run Foreground="{ThemeResource SystemAccentColor}">AppControl Manager</Run>
-                    automatically generates and stores in the <Underline>WDACConfig</Underline> folder in Program Files. The total size of the logs folder will never exceed 1GB.
+                    automatically generates and stores in the <Underline>AppControl Manager</Underline> folder in Program Files. The total size of the logs folder will never exceed 1GB.
                 </Span>
             </TextBlock>
 

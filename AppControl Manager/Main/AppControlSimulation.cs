@@ -567,7 +567,7 @@ internal static class AppControlSimulation
 		// If user chose to output the results to CSV file
 		if (csvOutput)
 		{
-			ExportToCsv(FinalSimulationResults, @$"C:\Program Files\WDACConfig\AppControl Simulation output {DateTime.Now:yyyy-MM-dd HH-mm-ss}.csv");
+			ExportToCsv(FinalSimulationResults, Path.Combine(GlobalVars.UserConfigDir, @$"AppControl Simulation output {DateTime.Now:yyyy-MM-dd HH-mm-ss}.csv"));
 		}
 
 		return FinalSimulationResults;

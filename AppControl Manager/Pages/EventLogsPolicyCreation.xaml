@@ -314,7 +314,7 @@
                             <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="ColumnSortingButton_SHA256FlatHash_Click"/>
                             <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
                             <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
-                            <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="ColumnSortingButton_PolicyID_Click"/>
+                            <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="ColumnSortingButton_PolicyGUID_Click"/>
                             <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="ColumnSortingButton_PolicyName_Click"/>
                             <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="ColumnSortingButton_ComputerName_Click"/>
 

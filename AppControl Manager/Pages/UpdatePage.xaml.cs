@@ -392,12 +392,10 @@ public sealed partial class UpdatePage : Page
 
 						string script2 = $"Add-MpPreference -AttackSurfaceReductionOnlyExclusions '{path2}'";
 						ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script2}\"");
-
 					}
 					catch (Exception ex)
 					{
 						Logger.Write(GlobalVars.Rizz.GetString("ASRAddError") + ex.Message);
-
 					}
 				});
 

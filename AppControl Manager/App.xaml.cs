@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.AppSettings;
+using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI;
@@ -37,6 +38,10 @@ public partial class App : Application
 	private static Mutex? _mutex;
 	private const string MutexName = "AppControlManagerRunning";
 
+	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
+	// to this variable before using ShowAsync() method to display it.
+	internal static ContentDialog? CurrentlyOpenContentDialog;
+
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
 	/// executed, and as such is the logical equivalent of main() or WinMain().
@@ -45,15 +50,16 @@ public partial class App : Application
 	{
 		this.InitializeComponent();
 
+		// to handle unhandled exceptions
+		this.UnhandledException += App_UnhandledException;
+
 		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
 		this.FocusVisualKind = FocusVisualKind.Reveal;
 
-		// to handle unhandled exceptions
-		this.UnhandledException += App_UnhandledException;
-
+		MoveUserConfigDirectory();
 
 		#region
 
@@ -177,6 +183,15 @@ public partial class App : Application
 				await m_window.DispatcherQueue.EnqueueAsync(async () =>
 				{
 
+					// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
+					if (CurrentlyOpenContentDialog is ContentDialog dialog)
+					{
+						dialog.Hide();
+
+						// Remove it after hiding it
+						CurrentlyOpenContentDialog = null;
+					}
+
 					ContentDialog errorDialog = new()
 					{
 						Title = "An error occurred",
@@ -195,6 +210,140 @@ public partial class App : Application
 			{
 				// Release the semaphore after the dialog has been handled
 				_ = _dialogSemaphore.Release();
+			}
+		}
+	}
+
+	// Path to the old user config directory
+	private static readonly string OldUserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
+
+	/// <summary>
+	/// This method will move everything from the old user config dir to the new one and deletes the old one at the end
+	/// This will be removed in few months once all users have installed the new app version and use the new location.
+	/// The old location was called "WDACConfig" because it was the location of the module i had created. I maintained the
+	/// same location to provide interoperability for both the module and the new app but the module is now deprecated so
+	/// it's time to change the user config location name to an appropriate one.
+	/// </summary>
+	private static void MoveUserConfigDirectory()
+	{
+		// Ensure the new user config directory exists
+		if (!Directory.Exists(GlobalVars.UserConfigDir))
+		{
+			_ = Directory.CreateDirectory(GlobalVars.UserConfigDir);
+		}
+
+		// Check if the old user config directory exists
+		if (Directory.Exists(OldUserConfigDir))
+		{
+
+			Logger.Write(@"Moving the user config directory to the new location at 'Program Files\AppControl Manager");
+
+			// Step 1: Recreate the directory structure 
+
+			// Get all subdirectories (recursively) from the old config directory
+			string[] directories = Directory.GetDirectories(OldUserConfigDir, "*", SearchOption.AllDirectories);
+
+			foreach (string oldDir in directories)
+			{
+				// Calculate the relative path of the old directory compared to the root of the old config
+				string relativePath = Path.GetRelativePath(OldUserConfigDir, oldDir);
+
+				// Combine the new config directory with the relative path to get the new directory path
+				string newDir = Path.Combine(GlobalVars.UserConfigDir, relativePath);
+
+				// Create the new directory if it does not exist
+				if (!Directory.Exists(newDir))
+				{
+					_ = Directory.CreateDirectory(newDir);
+				}
+			}
+
+			// Step 2: Move all files while preserving their relative positions
+
+			// Get all files (recursively) from the old config directory
+			string[] files = Directory.GetFiles(OldUserConfigDir, "*", SearchOption.AllDirectories);
+
+			foreach (string filePath in files)
+			{
+				// Calculate the file's relative path from the old config directory
+				string relativeFilePath = Path.GetRelativePath(OldUserConfigDir, filePath);
+
+				// Combine with the new config directory to get the target file path
+				string destFilePath = Path.Combine(GlobalVars.UserConfigDir, relativeFilePath);
+
+				// Ensure that the destination subdirectory exists (double-check)
+				string? destSubDir = Path.GetDirectoryName(destFilePath);
+
+				if (!string.IsNullOrEmpty(destSubDir) && !Directory.Exists(destSubDir))
+				{
+					_ = Directory.CreateDirectory(destSubDir);
+				}
+
+				// Move the file to the new directory				
+				File.Move(filePath, destFilePath, overwrite: true);
+			}
+
+			// Step 3: Delete the old user config directory
+			Directory.Delete(OldUserConfigDir, recursive: true);
+
+			// Step 4: Get all of the user configurations from the JSON file
+			UserConfiguration config = UserConfiguration.Get();
+
+			string? newSignToolCustomPath = null;
+			string? newCertificatePath = null;
+			string? newUnsignedPolicyPath = null;
+			string? newSignedPolicyPath = null;
+
+			if (!string.IsNullOrEmpty(config.SignToolCustomPath) && config.SignToolCustomPath.Contains(OldUserConfigDir))
+			{
+				newSignToolCustomPath = config.SignToolCustomPath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
+
+				if (!File.Exists(newSignToolCustomPath))
+				{
+					newSignToolCustomPath = null;
+				}
+			}
+			if (!string.IsNullOrEmpty(config.CertificatePath) && config.CertificatePath.Contains(OldUserConfigDir))
+			{
+				newCertificatePath = config.CertificatePath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
+
+				if (!File.Exists(newCertificatePath))
+				{
+					newCertificatePath = null;
+				}
+			}
+			if (!string.IsNullOrEmpty(config.UnsignedPolicyPath) && config.UnsignedPolicyPath.Contains(OldUserConfigDir))
+			{
+				newUnsignedPolicyPath = config.UnsignedPolicyPath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
+
+				if (!File.Exists(newUnsignedPolicyPath))
+				{
+					newUnsignedPolicyPath = null;
+				}
+			}
+			if (!string.IsNullOrEmpty(config.SignedPolicyPath) && config.SignedPolicyPath.Contains(OldUserConfigDir))
+			{
+				newSignedPolicyPath = config.SignedPolicyPath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
+
+				if (!File.Exists(newSignedPolicyPath))
+				{
+					newSignedPolicyPath = null;
+				}
+			}
+
+			try
+			{
+				// Replace the "WDACConfig" with "AppControl Manager" in user configurations JSON file
+				_ = UserConfiguration.Set(
+					SignedPolicyPath: newSignedPolicyPath,
+					UnsignedPolicyPath: newUnsignedPolicyPath,
+					SignToolCustomPath: newSignToolCustomPath,
+					CertificatePath: newCertificatePath
+					);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
 			}
 		}
 	}

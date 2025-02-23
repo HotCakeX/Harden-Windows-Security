@@ -579,6 +579,8 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 							XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
 						};
 
+						App.CurrentlyOpenContentDialog = dialog;
+
 						// Show the dialog and wait for user response
 						ContentDialogResult result = await dialog.ShowAsync();
 
@@ -665,6 +667,8 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 										XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
 									};
 
+									App.CurrentlyOpenContentDialog = dialog;
+
 									// Show the dialog and wait for user response
 									_ = await dialog.ShowAsync();
 
@@ -687,6 +691,8 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 
 								// Instantiate the Content Dialog
 								SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
+
+								App.CurrentlyOpenContentDialog = customDialog;
 
 								// Show the dialog and await its result
 								ContentDialogResult result = await customDialog.ShowAsync();
@@ -881,6 +887,8 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 				CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
 				XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
 			};
+
+			App.CurrentlyOpenContentDialog = dialog;
 
 			// Show the dialog and wait for user response
 			ContentDialogResult result = await dialog.ShowAsync();

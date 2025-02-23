@@ -11,6 +11,8 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	// A static instance of the AllowNewApps class which will hold the single, shared instance of the page
 	private static AllowNewApps? _instance;
 
+	internal readonly Frame frame;
+
 	public AllowNewApps()
 	{
 		this.InitializeComponent();
@@ -30,6 +32,8 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 
 		DisableAllowNewAppsNavigationItem("LocalFiles");
 		DisableAllowNewAppsNavigationItem("EventLogs");
+
+		frame = ContentFrame;
 	}
 
 

@@ -486,9 +486,8 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 		UIListView = FileIdentitiesListView;
 	}
 
-	// Public property to access the singleton instance from other classes
-	// It's okay it's nullable, null check will happen before accessing it
-	public static AllowNewAppsLocalFilesDataGrid? Instance => _instance;
+	// Public property to access the singleton instance from other classes	
+	public static AllowNewAppsLocalFilesDataGrid Instance => _instance ?? throw new InvalidOperationException("AllowNewAppsLocalFilesDataGrid is not initialized.");
 
 	#region
 	protected override void OnNavigatedTo(NavigationEventArgs e)

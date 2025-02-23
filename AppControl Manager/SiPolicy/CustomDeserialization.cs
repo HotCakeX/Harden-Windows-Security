@@ -63,6 +63,8 @@ internal static class CustomDeserialization
 		policy.PlatformID = string.IsNullOrEmpty(platformID) ? "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}" : platformID;
 
 		// Deserialize Rules
+		// Make sure it exists even empty
+		policy.Rules = [];
 		XmlElement? rulesElement = root["Rules", GlobalVars.SiPolicyNamespace];
 		if (rulesElement is not null)
 		{
@@ -78,6 +80,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize EKUs
+		// Make sure it exists even empty
+		policy.EKUs = [];
 		XmlElement? ekusElement = root["EKUs", GlobalVars.SiPolicyNamespace];
 		if (ekusElement is not null)
 		{
@@ -97,6 +101,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize FileRules
+		// Make sure it exists even empty
+		policy.FileRules = [];
 		XmlElement? fileRulesElement = root["FileRules", GlobalVars.SiPolicyNamespace];
 		if (fileRulesElement is not null)
 		{
@@ -125,6 +131,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize Signers
+		// Make sure it exists even empty
+		policy.Signers = [];
 		XmlElement? signersElement = root["Signers", GlobalVars.SiPolicyNamespace];
 		if (signersElement is not null)
 		{
@@ -137,6 +145,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize SigningScenarios
+		// Make sure it exists even empty
+		policy.SigningScenarios = [];
 		XmlElement? signingScenariosElement = root["SigningScenarios", GlobalVars.SiPolicyNamespace];
 		if (signingScenariosElement is not null)
 		{
@@ -149,6 +159,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize UpdatePolicySigners
+		// Make sure it exists even empty
+		policy.UpdatePolicySigners = [];
 		XmlElement? upsElement = root["UpdatePolicySigners", GlobalVars.SiPolicyNamespace];
 		if (upsElement is not null)
 		{
@@ -164,6 +176,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize CiSigners
+		// Make sure it exists even empty
+		policy.CiSigners = [];
 		XmlElement? ciElement = root["CiSigners", GlobalVars.SiPolicyNamespace];
 		if (ciElement is not null)
 		{
@@ -187,6 +201,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize Settings
+		// Make sure it exists even empty
+		policy.Settings = [];
 		XmlElement? settingsElem = root["Settings", GlobalVars.SiPolicyNamespace];
 		if (settingsElem is not null)
 		{
@@ -199,6 +215,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize Macros
+		// Make sure it exists even empty
+		policy.Macros = [];
 		XmlElement? macrosElem = root["Macros", GlobalVars.SiPolicyNamespace];
 		if (macrosElem is not null)
 		{
@@ -216,6 +234,8 @@ internal static class CustomDeserialization
 		}
 
 		// Deserialize SupplementalPolicySigners
+		// Make sure it exists even empty
+		policy.SupplementalPolicySigners = [];
 		XmlElement? suppElem = root["SupplementalPolicySigners", GlobalVars.SiPolicyNamespace];
 		if (suppElem is not null)
 		{
@@ -555,18 +575,25 @@ internal static class CustomDeserialization
 			scenario.MinimumHashAlgorithm = ushort.Parse(elem.GetAttribute("MinimumHashAlgorithm"), CultureInfo.InvariantCulture);
 			scenario.MinimumHashAlgorithmSpecified = true;
 		}
+
+		// Make sure it exists even empty
+		scenario.ProductSigners = new ProductSigners();
 		XmlElement? prodSignersElem = elem["ProductSigners", GlobalVars.SiPolicyNamespace];
 		if (prodSignersElem is not null)
 			scenario.ProductSigners = DeserializeProductSigners(prodSignersElem);
+
 		XmlElement? testSignersElem = elem["TestSigners", GlobalVars.SiPolicyNamespace];
 		if (testSignersElem is not null)
 			scenario.TestSigners = DeserializeTestSigners(testSignersElem);
+
 		XmlElement? testSigningSignersElem = elem["TestSigningSigners", GlobalVars.SiPolicyNamespace];
 		if (testSigningSignersElem is not null)
 			scenario.TestSigningSigners = DeserializeTestSigningSigners(testSigningSignersElem);
+
 		XmlElement? appIDTagsElem = elem["AppIDTags", GlobalVars.SiPolicyNamespace];
 		if (appIDTagsElem is not null)
 			scenario.AppIDTags = DeserializeAppIDTags(appIDTagsElem);
+
 		return scenario;
 	}
 

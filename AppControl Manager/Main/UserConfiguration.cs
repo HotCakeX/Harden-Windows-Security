@@ -217,19 +217,19 @@ public sealed partial class UserConfiguration(
 	{
 		try
 		{
-			// Create the WDACConfig folder in Program Files if it doesn't exist
+			// Create the AppControl Manager folder in Program Files if it doesn't exist
 			if (!Directory.Exists(GlobalVars.UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(GlobalVars.UserConfigDir);
-				Logger.Write("The WDACConfig folder in Program Files has been created because it did not exist.");
+				Logger.Write("The AppControl Manager folder in Program Files has been created because it did not exist.");
 			}
 
-			// Create User configuration folder in the WDACConfig folder if it doesn't already exist
+			// Create User configuration folder in the AppControl Manager folder if it doesn't already exist
 			string UserConfigDir = Path.Combine(GlobalVars.UserConfigDir, "UserConfigurations");
 			if (!Directory.Exists(UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(UserConfigDir);
-				Logger.Write("The WDACConfig folder in Program Files has been created because it did not exist.");
+				Logger.Write("The AppControl Manager folder in Program Files has been created because it did not exist.");
 			}
 
 			// Read the JSON file

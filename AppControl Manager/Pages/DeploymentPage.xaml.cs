@@ -274,6 +274,8 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 		// Instantiate the Content Dialog
 		SigningDetailsDialog customDialog = new();
 
+		App.CurrentlyOpenContentDialog = customDialog;
+
 		// Show the dialog and await its result
 		ContentDialogResult result = await customDialog.ShowAsync();
 
@@ -293,6 +295,9 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 
 		bool errorsOccurred = false;
+
+		// Get the status of the toggle button on the UI that defines whether we should only sign or deploy too
+		bool SignOnlyNoDeployToggleSwitchStatus = SignOnlyNoDeployToggleSwitch.IsOn;
 
 		try
 		{
@@ -321,7 +326,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'";
+						StatusInfoBar.Message = (SignOnlyNoDeployToggleSwitchStatus ? "Currently Signing XML file:" : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'";
 					});
 
 
@@ -347,46 +352,53 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePath, CIPFilePath, true);
 
-
-					if (deployToIntune)
+					// If the SignOnlyNoDeployToggleSwitch is on, don't deploy the policy, only create signed CIP
+					if (SignOnlyNoDeployToggleSwitchStatus)
 					{
-						await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
+						File.Move(CIPFilePath, Path.Combine(GlobalVars.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP"), true);
 					}
 					else
 					{
-
-						// Get all of the deployed base and supplemental policies on the system
-						List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
-
-						CiPolicyInfo? possibleAlreadyDeployedUnsignedVersion = policies.
-						FirstOrDefault(x => string.Equals(policyObject.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
-
-						if (possibleAlreadyDeployedUnsignedVersion is not null)
+						if (deployToIntune)
 						{
-							Logger.Write(GlobalVars.Rizz.GetString("PolicyConflictMessage") + possibleAlreadyDeployedUnsignedVersion.PolicyID + GlobalVars.Rizz.GetString("RemovingPolicy"));
-
-							CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
+							await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
 						}
-
-						// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
-						if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
+						else
 						{
-							if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
+
+							// Get all of the deployed base and supplemental policies on the system
+							List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
+
+							CiPolicyInfo? possibleAlreadyDeployedUnsignedVersion = policies.
+							FirstOrDefault(x => string.Equals(policyObject.PolicyID.Trim('{', '}'), x.PolicyID, StringComparison.OrdinalIgnoreCase));
+
+							if (possibleAlreadyDeployedUnsignedVersion is not null)
 							{
-								// Make sure the policy is a base policy and it doesn't have allow all rule
-								if (policyObject.PolicyType is PolicyType.BasePolicy)
+								Logger.Write(GlobalVars.Rizz.GetString("PolicyConflictMessage") + possibleAlreadyDeployedUnsignedVersion.PolicyID + GlobalVars.Rizz.GetString("RemovingPolicy"));
+
+								CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
+							}
+
+							// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
+							if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
+							{
+								if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
 								{
-									if (!CheckForAllowAll.Check(file))
+									// Make sure the policy is a base policy and it doesn't have allow all rule
+									if (policyObject.PolicyType is PolicyType.BasePolicy)
 									{
-										// Sign and deploy the required AppControlManager supplemental policy
-										SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
+										if (!CheckForAllowAll.Check(file))
+										{
+											// Sign and deploy the required AppControlManager supplemental policy
+											SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
+										}
 									}
 								}
 							}
-						}
 
-						// Deploy the CIP file locally
-						CiToolHelper.UpdatePolicy(CIPFilePath);
+							// Deploy the CIP file locally
+							CiToolHelper.UpdatePolicy(CIPFilePath);
+						}
 					}
 				}
 			});
@@ -406,7 +418,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 			if (!errorsOccurred)
 			{
 				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = GlobalVars.Rizz.GetString("SignedDeploymentSuccess");
+				StatusInfoBar.Message = SignOnlyNoDeployToggleSwitchStatus ? "Successfully created signed CIP files for all of the selected XML files." : GlobalVars.Rizz.GetString("SignedDeploymentSuccess");
 
 				// Clear the lists at the end if no errors occurred
 				SignedXMLFiles.Clear();
@@ -843,4 +855,141 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 			BrowseForCIPBinaryFilesButton_Flyout.ShowAt(BrowseForCIPBinaryFilesButton);
 	}
 
+
+
+	private readonly HashSet<string> XMLFilesToConvertToCIP = [];
+
+	/// <summary>
+	/// Event handler for the button to convert XML files to CIP binary files
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void BrowseForXMLPolicesButton_Click(object sender, RoutedEventArgs e)
+	{
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (selectedFiles is { Count: > 0 })
+		{
+			foreach (string file in selectedFiles)
+			{
+				if (XMLFilesToConvertToCIP.Add(file))
+				{
+					// Append the new file to the TextBox, followed by a newline
+					BrowseForXMLPolicesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
+				}
+			}
+		}
+	}
+
+
+
+
+	private void BrowseForXMLPolicesButton_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!BrowseForXMLPolicesButton_Flyout.IsOpen)
+				BrowseForXMLPolicesButton_Flyout.ShowAt(BrowseForXMLPolicesButton);
+	}
+
+	private void BrowseForXMLPolicesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!BrowseForXMLPolicesButton_Flyout.IsOpen)
+			BrowseForXMLPolicesButton_Flyout.ShowAt(BrowseForXMLPolicesButton);
+	}
+
+
+	private async void ConvertXMLToCIPButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		ConvertXMLToCIPButtonTeachingTip.IsOpen = false;
+
+		if (XMLFilesToConvertToCIP.Count is 0)
+		{
+			ConvertXMLToCIPButtonTeachingTip.IsOpen = true;
+			return;
+		}
+
+		bool ErrorsOccurred = false;
+
+		try
+		{
+
+			DeployUnsignedXMLPolicyFilesSettingsCard.IsEnabled = false;
+			DeploySignedXMLPolicyFilesSettingsExpander.IsEnabled = false;
+			DeployCIPFilesSettingsCard.IsEnabled = false;
+			ConvertXMLToCIPButton.IsEnabled = false;
+
+			await Task.Run(() =>
+			{
+				foreach (string file in XMLFilesToConvertToCIP)
+				{
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						StatusInfoBar.Visibility = Visibility.Visible;
+						StatusInfoBar.IsOpen = true;
+						StatusInfoBar.Message = $"Converting {file} to XML";
+						StatusInfoBar.Severity = InfoBarSeverity.Informational;
+						StatusInfoBar.IsClosable = false;
+						MainProgressRing.Visibility = Visibility.Visible;
+					});
+
+					string XMLSavePath = Path.Combine(GlobalVars.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
+
+					if (File.Exists(XMLSavePath))
+					{
+						File.Delete(XMLSavePath);
+					}
+
+					// Convert the XML file to CIP
+					PolicyToCIPConverter.Convert(file, XMLSavePath);
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			ErrorsOccurred = true;
+
+			StatusInfoBar.Severity = InfoBarSeverity.Error;
+			StatusInfoBar.Message = $"There was a problem converting the XML files to CIP: {ex.Message}";
+		}
+		finally
+		{
+			if (!ErrorsOccurred)
+			{
+				StatusInfoBar.Severity = InfoBarSeverity.Success;
+				StatusInfoBar.Message = "Successfully converted all of the selected XML files to CIP binaries";
+			}
+
+			StatusInfoBar.IsClosable = true;
+			MainProgressRing.Visibility = Visibility.Collapsed;
+
+			DeployUnsignedXMLPolicyFilesSettingsCard.IsEnabled = true;
+			DeploySignedXMLPolicyFilesSettingsExpander.IsEnabled = true;
+			DeployCIPFilesSettingsCard.IsEnabled = true;
+			ConvertXMLToCIPButton.IsEnabled = true;
+		}
+
+	}
+
+	/// <summary>
+	/// Event handler to clear the list of XML files that are only converted to CIP files
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void BrowseForXMLPolicesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		XMLFilesToConvertToCIP.Clear();
+	}
+
+
+	/// <summary>
+	/// Event handler for the settings card to toggle the button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void SignOnlyNoDeploySettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		SignOnlyNoDeployToggleSwitch.IsOn = !SignOnlyNoDeployToggleSwitch.IsOn;
+	}
 }

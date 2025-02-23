@@ -455,7 +455,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	{
 		SortColumn(fileIden => fileIden.Opus);
 	}
-	private void ColumnSortingButton_PolicyID_Click(object sender, RoutedEventArgs e)
+	private void ColumnSortingButton_PolicyGUID_Click(object sender, RoutedEventArgs e)
 	{
 		SortColumn(fileIden => fileIden.PolicyGUID);
 	}
@@ -517,14 +517,15 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			.AppendLine($"Package Family Name: {row.PackageFamilyName}")
 			.AppendLine($"SHA256 Hash: {row.SHA256Hash}")
 			.AppendLine($"SHA1 Hash: {row.SHA1Hash}")
-			.AppendLine($"SHA256 Flat Hash: {row.SHA256FlatHash}")
-			.AppendLine($"SHA1 Flat Hash: {row.SHA1FlatHash}")
 			.AppendLine($"Signing Scenario: {row.SISigningScenario}")
 			.AppendLine($"File Path: {row.FilePath}")
-			.AppendLine($"Computer Name: {row.ComputerName}")
+			.AppendLine($"SHA1 Flat Hash: {row.SHA1FlatHash}")
+			.AppendLine($"SHA256 Flat Hash: {row.SHA256FlatHash}")
+			.AppendLine($"File Publishers: {row.FilePublishersToDisplay}")
+			.AppendLine($"Opus: {row.Opus}")
 			.AppendLine($"Policy GUID: {row.PolicyGUID}")
 			.AppendLine($"Policy Name: {row.PolicyName}")
-			.AppendLine($"File Publishers: {row.FilePublishersToDisplay}")
+			.AppendLine($"Computer Name: {row.ComputerName}")
 			.ToString();
 	}
 	#endregion
@@ -622,12 +623,13 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 				(output.ProductName is not null && output.ProductName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.PackageFamilyName is not null && output.PackageFamilyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.PolicyName is not null && output.PolicyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.ComputerName is not null && output.ComputerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 				(output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+				(output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(output.Opus is not null && output.Opus.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(output.PolicyName is not null && output.PolicyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(output.ComputerName is not null && output.ComputerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
 			);
 		}
 

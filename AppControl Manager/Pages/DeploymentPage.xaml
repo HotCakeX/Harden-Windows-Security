@@ -98,6 +98,7 @@
 
 
                 <controls:SettingsCard
+                x:Name="DeployUnsignedXMLPolicyFilesSettingsCard"
                 Description="Browse for XML policy file(s) to deploy unsigned on the system"
                 Header="Select unsigned XML policy file(s)"
                 HeaderIcon="{ui:FontIcon Glyph=&#xE82D;}" IsClickEnabled="False" IsActionIconVisible="False">
@@ -164,15 +165,15 @@
                 </controls:SettingsCard>
 
 
-                <controls:SettingsCard
-                Description="Browse for XML policy file(s) to Sign and deploy on the system"
-                Header="Select signed XML policy file(s)"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}" IsClickEnabled="False" IsActionIconVisible="False">
+                <controls:SettingsExpander x:Name="DeploySignedXMLPolicyFilesSettingsExpander"
+                    Description="Browse for XML policy file(s) to Sign and deploy on the system"
+                    Header="Select signed XML policy file(s)" IsExpanded="True"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
                         <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="BrowseForSignedXMLPolicyFilesButton_Click"
-                                RightTapped="BrowseForSignedXMLPolicyFilesButton_RightTapped" Holding="BrowseForSignedXMLPolicyFilesButton_Holding">
+                            RightTapped="BrowseForSignedXMLPolicyFilesButton_RightTapped" Holding="BrowseForSignedXMLPolicyFilesButton_Holding">
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -208,7 +209,7 @@
                         </Button>
 
                         <Button HorizontalAlignment="Center" x:Name="DeploySignedXMLButton"
-                                HorizontalContentAlignment="Center" Click="DeploySignedXMLButton_Click">
+                            HorizontalContentAlignment="Center" Click="DeploySignedXMLButton_Click">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -221,17 +222,32 @@
                         </Button>
 
                         <TeachingTip x:Name="DeploySignedXMLButtonTeachingTip"
-                        Target="{x:Bind DeploySignedXMLButton}"
-                        Title="No File was selected"
-                        Subtitle="You need to select Signed XML files to deploy first.">
+                            Target="{x:Bind DeploySignedXMLButton}"
+                            Title="No File was selected"
+                            Subtitle="You need to select Signed XML files to deploy first.">
                         </TeachingTip>
 
                     </controls:WrapPanel>
 
-                </controls:SettingsCard>
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard
+                             x:Name="SignOnlyNoDeploySettingsCard"
+                             Description="Only creates signed CIP file(s) in the user config directory without deploying them. Toggle this if you want to deploy them on another system."
+                             Header="Sign Only - No Deployment" Click="SignOnlyNoDeploySettingsCard_Click"
+                             HeaderIcon="{ui:FontIcon Glyph=&#xF572;}" IsClickEnabled="True" IsActionIconVisible="False">
+
+                            <ToggleSwitch x:Name="SignOnlyNoDeployToggleSwitch" />
+
+                        </controls:SettingsCard>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
 
 
                 <controls:SettingsCard
+                    x:Name="DeployCIPFilesSettingsCard"
                     Description="Browse for CIP Binary file(s) to deploy on the system"
                     Header="Select CIP Binary file(s)"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}" IsClickEnabled="False" IsActionIconVisible="False" >
@@ -261,7 +277,6 @@
 
                         </Button>
 
-
                         <Button HorizontalAlignment="Center" x:Name="DeployCIPButton"
                             HorizontalContentAlignment="Center" Click="DeployCIPButton_Click">
                             <Button.Content>
@@ -281,6 +296,62 @@
                             Target="{x:Bind DeployCIPButton}"
                             Title="No File was selected"
                             Subtitle="You need to select CIP files to deploy first.">
+                        </TeachingTip>
+
+                    </controls:WrapPanel>
+
+                </controls:SettingsCard>
+
+
+                <controls:SettingsCard
+                    Description="Browse for XML policy file(s) to convert to CIP file(s)"
+                    Header="Select XML policy file(s)"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xF003;}" IsClickEnabled="False" IsActionIconVisible="False" >
+
+                    <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
+
+                        <Button x:Name="BrowseForXMLPolicesButton" x:Uid="FileBrowseButton" Click="BrowseForXMLPolicesButton_Click"
+                            Holding="BrowseForXMLPolicesButton_Holding" RightTapped="BrowseForXMLPolicesButton_RightTapped">
+
+                            <Button.Flyout>
+                                <Flyout x:Name="BrowseForXMLPolicesButton_Flyout">
+
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                        <Button x:Uid="ClearButton" Click="BrowseForXMLPolicesButton_Flyout_Clear_Click" />
+
+                                        <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
+
+                                        <TextBox x:Name="BrowseForXMLPolicesButton_SelectedFilesTextBox"
+                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                            MinWidth="400" IsReadOnly="True" />
+
+                                    </controls:WrapPanel>
+
+                                </Flyout>
+                            </Button.Flyout>
+
+                        </Button>
+
+                        <Button HorizontalAlignment="Center" x:Name="ConvertXMLToCIPButton"
+                                HorizontalContentAlignment="Center" Click="ConvertXMLToCIPButton_Click">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <FontIcon Glyph="&#xE8B1;" Margin="0,0,8,0" />
+                                        <TextBlock Text="Convert"/>
+                                    </StackPanel>
+
+                                </StackPanel>
+                            </Button.Content>
+
+                        </Button>
+
+                        <TeachingTip x:Name="ConvertXMLToCIPButtonTeachingTip"
+                            Target="{x:Bind ConvertXMLToCIPButton}"
+                            Title="No File was selected"
+                            Subtitle="You need to select XML files to convert first.">
                         </TeachingTip>
 
                     </controls:WrapPanel>

@@ -1,4 +1,4 @@
-$Action = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c `"C:\Program Files\WDACConfig\EnforcedModeSnapBack.cmd`""
+$Action = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument "/c `"C:\Program Files\AppControl Manager\EnforcedModeSnapBack.cmd`""
 $Trigger = New-ScheduledTaskTrigger -AtLogOn
 $Principal = New-ScheduledTaskPrincipal -UserId 'S-1-5-18' -LogonType S4U -RunLevel Highest
 $Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -Compatibility Win8 -Priority 0 -Hidden -RestartCount 2 -RestartInterval (New-TimeSpan -Minutes 3)

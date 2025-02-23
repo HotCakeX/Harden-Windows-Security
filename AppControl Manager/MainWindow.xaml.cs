@@ -75,12 +75,12 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
 		{
-			Titles = ["GitHub Documentation"],
+			Titles = [GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content")],
 			Pages = [typeof(Pages.GitHubDocumentation)]
 		},
 		[typeof(Pages.MicrosoftDocumentation)] = new PageTitleMap
 		{
-			Titles = ["Microsoft Documentation"],
+			Titles = [GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content")],
 			Pages = [typeof(Pages.MicrosoftDocumentation)]
 		},
 		[typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
@@ -90,7 +90,7 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.Settings)] = new PageTitleMap
 		{
-			Titles = ["Settings"],
+			Titles = [GlobalVars.Rizz.GetString("SettingsNavItem/Content")],
 			Pages = [typeof(Pages.Settings)]
 		},
 		[typeof(Pages.SystemInformation)] = new PageTitleMap
@@ -105,7 +105,7 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.Logs)] = new PageTitleMap
 		{
-			Titles = ["Logs"],
+			Titles = [GlobalVars.Rizz.GetString("LogsNavItem/Content")],
 			Pages = [typeof(Pages.Logs)]
 		},
 		[typeof(Pages.Simulation)] = new PageTitleMap
@@ -115,12 +115,12 @@ public sealed partial class MainWindow : Window
 		},
 		[typeof(Pages.UpdatePage)] = new PageTitleMap
 		{
-			Titles = [GlobalVars.Rizz.GetString("Update"), "Custom MSIXBundle Path"],
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
 		{
-			Titles = [GlobalVars.Rizz.GetString("Update"), "Custom MSIXBundle Path"],
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		},
 		[typeof(Pages.DeploymentPage)] = new PageTitleMap
@@ -212,27 +212,27 @@ public sealed partial class MainWindow : Window
 	// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized
 	private static readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
 	{
-		{ "Create Policy", typeof(Pages.CreatePolicy) },
-		{ "Get Code Integrity Hashes", typeof(Pages.GetCIHashes) },
-		{ "GitHub Documentation", typeof(Pages.GitHubDocumentation) },
-		{ "Microsoft Documentation", typeof(Pages.MicrosoftDocumentation) },
-		{ "Get Secure Policy Settings", typeof(Pages.GetSecurePolicySettings) },
-		{ "Settings", typeof(Pages.Settings) },
-		{ "System Information", typeof(Pages.SystemInformation) },
-		{ "Configure Policy Rule Options", typeof(Pages.ConfigurePolicyRuleOptions) },
-		{ "Logs", typeof(Pages.Logs) },
-		{ "Simulation", typeof(Pages.Simulation) },
-		{ "Update", typeof(Pages.UpdatePage) },
-		{ "Deploy App Control Policy", typeof(Pages.DeploymentPage) },
-		{ "Create policy from Event Logs", typeof(Pages.EventLogsPolicyCreation) },
-		{ "MDE Advanced Hunting", typeof(Pages.MDEAHPolicyCreation) },
-		{ "Allow New Apps", typeof(Pages.AllowNewApps) },
-		{ "Build New Certificate", typeof(Pages.BuildNewCertificate) },
-		{ "Create Supplemental Policy", typeof(Pages.CreateSupplementalPolicy) },
-		{ "Merge App Control Policies", typeof(Pages.MergePolicies) },
-		{ "Create Deny Policy", typeof(Pages.CreateDenyPolicy) },
-		{ "Validate Policies", typeof(Pages.ValidatePolicy) },
-		{ "View File Certificates", typeof(Pages.ViewFileCertificates) }
+		{ GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy) },
+		{ GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content"), typeof(Pages.GetCIHashes) },
+		{ GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content"), typeof(Pages.GitHubDocumentation) },
+		{ GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content"), typeof(Pages.MicrosoftDocumentation) },
+		{ GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content"), typeof(Pages.GetSecurePolicySettings) },
+		{ GlobalVars.Rizz.GetString("SettingsNavItem/Content"), typeof(Pages.Settings) },
+		{ GlobalVars.Rizz.GetString("SystemInformationNavItem/Content"), typeof(Pages.SystemInformation) },
+		{ GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content"), typeof(Pages.ConfigurePolicyRuleOptions) },
+		{ GlobalVars.Rizz.GetString("LogsNavItem/Content"), typeof(Pages.Logs) },
+		{ GlobalVars.Rizz.GetString("SimulationNavItem/Content"), typeof(Pages.Simulation) },
+		{ GlobalVars.Rizz.GetString("UpdateNavItem/Content"), typeof(Pages.UpdatePage) },
+		{ GlobalVars.Rizz.GetString("DeploymentNavItem/Content"), typeof(Pages.DeploymentPage) },
+		{ GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content"), typeof(Pages.EventLogsPolicyCreation) },
+		{ GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content"), typeof(Pages.MDEAHPolicyCreation) },
+		{ GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content"), typeof(Pages.AllowNewApps) },
+		{ GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content"), typeof(Pages.BuildNewCertificate) },
+		{ GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), typeof(Pages.CreateSupplementalPolicy) },
+		{ GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content"), typeof(Pages.MergePolicies) },
+		{ GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), typeof(Pages.CreateDenyPolicy) },
+		{ GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content"), typeof(Pages.ValidatePolicy) },
+		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) }
 	};
 
 
@@ -1146,7 +1146,6 @@ public sealed partial class MainWindow : Window
 	private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
 	{
 
-
 		// Get the current system color mode
 		// UISettings uiSettings = new();
 		// ElementTheme currentColorMode = uiSettings.GetColorValue(UIColorType.Background) == Colors.Black
@@ -1263,7 +1262,6 @@ public sealed partial class MainWindow : Window
 							};
 
 						}
-
 					}
 
 					break;

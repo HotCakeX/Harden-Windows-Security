@@ -105,7 +105,7 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * The AppControl Manager does not rely on any 3rd party component or dependency. All the logics are built securely and specifically for the app.
 
-* Any file(s) the AppControl Manager ever produces, uses or expects is only from an Administrator-protected location in `C:\Program Files\WDACConfig`.
+* Any file(s) the AppControl Manager ever produces, uses or expects is only from an Administrator-protected location in `C:\Program Files\AppControl Manager`.
 
 * The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/en-us/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity` and so on.
 
@@ -119,7 +119,7 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 ### Why Does AppControl Manager Require Administrator Privileges?
 
-* AppControl Manager operates exclusively within the "WDACConfig" directory located in the `Program Files` directory for all read and write operations. No data is accessed or modified outside this directory. This design ensures that non-elevated processes, unauthorized software, or unprivileged malware on the system cannot alter the policies you create, the certificates you generate, or the CIP binary files you deploy.
+* AppControl Manager operates exclusively within the "AppControl Manager" directory located in the `Program Files` directory for all read and write operations. No data is accessed or modified outside this directory. This design ensures that non-elevated processes, unauthorized software, or unprivileged malware on the system cannot alter the policies you create, the certificates you generate, or the CIP binary files you deploy.
 
 * AppControl Manager employs MediumIL (Medium Integrity Level) when running as an Administrator, ensuring that non-elevated processes cannot access its memory or attach debuggers. Given that the app handles sensitive information—such as Microsoft 365 authentication tokens stored in private variables—this design decision safeguards these tokens from unauthorized, unelevated access or tampering.
 
@@ -134,7 +134,7 @@ AppControl Manager is engineered with a security-first approach from the ground 
 The Temporary Files Are Stored in the Following Directory
 
 ```
-C:\Program Files\WDACConfig\StagingArea
+C:\Program Files\AppControl Manager\StagingArea
 ```
 
 Each applicable feature of the AppControl Manager that you start using will generate a uniquely named subdirectory within the StagingArea to store its temporary files (if needed). Upon closing the application, the entire StagingArea directory, along with its contents, will be automatically deleted. These files are utilized by the application for tasks such as creating policies, storing temporary scan results, and other related functions.

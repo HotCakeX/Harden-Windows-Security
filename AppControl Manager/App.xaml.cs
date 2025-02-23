@@ -279,8 +279,15 @@ public partial class App : Application
 					_ = Directory.CreateDirectory(destSubDir);
 				}
 
-				// Move the file to the new directory				
-				File.Move(filePath, destFilePath, overwrite: true);
+				// Move the file to the new directory
+				try
+				{
+					File.Move(filePath, destFilePath, overwrite: true);
+				}
+				catch (IOException ex)
+				{
+					Logger.Write(ErrorWriter.FormatException(ex));
+				}
 			}
 
 			// Step 3: Delete the old user config directory

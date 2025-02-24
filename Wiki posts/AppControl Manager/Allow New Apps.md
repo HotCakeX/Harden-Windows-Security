@@ -42,4 +42,6 @@ If something like a power outage occurs during the audit mode phase, on the next
 
 * **Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
 
+* **Browse for folders**: Use this button in Step 2 to browse for the installation directories of the app(s) you installed. This will help improve the accuracy of the supplemental policy that will be created. If for some reason you cannot locate the installation directory of the app you installed, ensure you start the app after installation, use it as you normally would so that audit logs will be generated for all of its files and components. These audit logs will then be displayed to you in the `Review the Event Logs` tab.
+
 <br>

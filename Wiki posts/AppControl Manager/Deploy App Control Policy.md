@@ -10,21 +10,26 @@
 
 <br>
 
-Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) page to select XML policy files or `.cip` binary files to deploy on the system.
+Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) page to select XML policy files or `.cip` binary files to deploy on the local/cloud systems or convert XML files to CIP files for manual deployment.
 
 <br>
 
-## Configuration Details for Unsigned Deployment
-
-* **Select XML Policy File(s)**: Use this button to browse for App Control XML policy files.
-
-* **Select CIP Binary File(s)**: Use this button to browse for App Control CIP binary files.
-
-* **Deploy**: Use this button to deploy all of the XML and CIP files you selected on the system.
+> [!IMPORTANT]\
+> **Intune Cloud Deployment**
+>
+> Please [**refer to this page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Upload-App-Control-Policies-To-Intune-Using-AppControl-Manager) for details on how to upload App Control Policies to Intune using AppControl Manager.
 
 <br>
 
-## Configuration Details for Signed Deployment
+## Configuration Details for Unsigned XML Policy Files Deployment
+
+* **Browse**: Use this button to browse for App Control XML policy files that you want to deploy as unsigned policies.
+
+* **Deploy**: Use this button to deploy all of the XML files you selected on the local or cloud system.
+
+<br>
+
+## Configuration Details for Signed XML Policy Files Deployment
 
 <div align="center">
 
@@ -33,6 +38,14 @@ Use this [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Securit
 </div>
 
 <br>
+
+<br>
+
+* **Browse**: Use this button to browse for App Control XML policy files that you want to Sign and deploy.
+
+* **Deploy**: Use this button to deploy all of the XML files you selected on the local or cloud system.
+
+* **Sign Only - No Deployment**: If you only want to sign the policy without deploying it, you can use this button. It will generate the signed CIP file for you that you can use to manually deploy somewhere else.
 
 <br>
 
@@ -50,8 +63,22 @@ All of the information you submit will be saved in app settings so that the next
 
 <br>
 
-## Intune Cloud Deployment
+## Configuration Details for CIP Binary Files Deployment
 
-Please [**refer to this page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Upload-App-Control-Policies-To-Intune-Using-AppControl-Manager) for details on how to upload App Control Policies to Intune using AppControl Manager.
+This section can deploy `.CIP` binary files on the local or cloud system, whether they are signed or unsigned.
+
+* **Browse**: Use this button to browse for App Control `CIP` binary files that you want to deploy.
+
+* **Deploy**: Use this button to deploy all of the CIP files you selected on the local or cloud system.
+
+<br>
+
+## Configuration Details for Converting XML to CIP Files
+
+Use this section to convert all of your XML files to CIP binaries files in bulk.
+
+* **Browse**: Use this button to browse for App Control XML policy files that you want to convert to `CIP` binary files.
+
+* **Convert**: Use this button to convert all of the selected XML policy files to `CIP` binary files with the same file names.
 
 <br>

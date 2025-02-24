@@ -107,9 +107,9 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * Any file(s) the AppControl Manager ever produces, uses or expects is only from an Administrator-protected location in `C:\Program Files\AppControl Manager`.
 
-* The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/en-us/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity` and so on.
+* The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/en-us/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`.
 
-* The AppControl Manager always uses the latest .NET and SDK versions, ensuring all the security patches released by Microsoft will be included.
+* The AppControl Manager always uses the latest .NET SDK and NuGet package versions, ensuring all the security patches released by Microsoft will be included.
 
 * The entire codebase is thoroughly commented, allowing code reviewers to effortlessly examine and verify every aspect of AppControl Manager's source code.
 
@@ -131,13 +131,13 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 ### Where Are The Temporary Files Saved To?
 
-The Temporary Files Are Stored in the Following Directory
+The temporary files are stored in the following directory
 
 ```
 C:\Program Files\AppControl Manager\StagingArea
 ```
 
-Each applicable feature of the AppControl Manager that you start using will generate a uniquely named subdirectory within the StagingArea to store its temporary files (if needed). Upon closing the application, the entire StagingArea directory, along with its contents, will be automatically deleted. These files are utilized by the application for tasks such as creating policies, storing temporary scan results, and other related functions.
+Each applicable feature of the AppControl Manager that you start using will generate a uniquely named subdirectory within the `StagingArea` to store its temporary files (if needed). Upon closing the application, the entire StagingArea directory, along with its contents, will be automatically deleted. These files are utilized by the application for tasks such as creating policies, storing temporary scan results, and other related functions.
 
 <br>
 

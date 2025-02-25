@@ -7,6 +7,7 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 using WinRT;
@@ -284,7 +285,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 				if (selectedItem is FileIdentity obj)
 
 					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ListViewUIHelpers.ConvertRowToText(obj));
+					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
 
 				// Add a separator between rows for readability in multi-row copies
 				_ = dataBuilder.AppendLine(new string('-', 50));
@@ -554,15 +555,8 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 			);
 		}
 
-		// Clear the current contents of the ObservableCollection
-		AllowNewAppsStart.Instance.LocalFilesFileIdentities.Clear();
-
 		// Populate the ObservableCollection with the filtered results
-		// This triggers the UI to update the ListView based on the filtered data
-		foreach (FileIdentity result in filteredResults)
-		{
-			AllowNewAppsStart.Instance.LocalFilesFileIdentities.Add(result);
-		}
+		AllowNewAppsStart.Instance.LocalFilesFileIdentities = [.. filteredResults];
 
 		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
 		FileIdentitiesListView.ItemsSource = AllowNewAppsStart.Instance.LocalFilesFileIdentities;
@@ -591,17 +585,13 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 	/// <param name="e"></param>
 	private void SelectAll_Click(object sender, RoutedEventArgs e)
 	{
-		_ = DispatcherQueue.TryEnqueue(() =>
+		// Clear existing selections
+		FileIdentitiesListView.SelectedItems.Clear();
+
+		foreach (FileIdentity fileIdentity in AllowNewAppsStart.Instance.LocalFilesFileIdentities)
 		{
-			// Clear existing selections
-			FileIdentitiesListView.SelectedItems.Clear();
-
-			foreach (FileIdentity fileIdentity in AllowNewAppsStart.Instance.LocalFilesFileIdentities)
-			{
-				FileIdentitiesListView.SelectedItems.Add(fileIdentity); // Select each item
-			}
-
-		});
+			FileIdentitiesListView.SelectedItems.Add(fileIdentity); // Select each item
+		}
 	}
 
 	/// <summary>
@@ -619,7 +609,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void DataGridFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
+	private void ListViewFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
 	{
 		// Collect the selected items to delete
 		List<FileIdentity> itemsToDelete = [.. FileIdentitiesListView.SelectedItems.Cast<FileIdentity>()];
@@ -653,5 +643,54 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 			// Update the InfoBadge for the top menu
 			AllowNewApps.Instance.UpdateLocalFilesInfoBadge(AllowNewAppsStart.Instance.LocalFilesFileIdentities.Count, 1);
 		}
+	}
+
+
+	#region Ensuring right-click on rows behaves better and normally on ListView
+
+	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
+	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
+
+	private void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		// When the container is being recycled, detach the handler.
+		if (args.InRecycleQueue)
+		{
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+		}
+		else
+		{
+			// Detach first to avoid multiple subscriptions, then attach the handler.
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+			args.ItemContainer.RightTapped += ListViewItem_RightTapped;
+		}
+	}
+
+	private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (sender is ListViewItem item)
+		{
+			// If the item is not already selected, clear previous selections and select this one.
+			if (!item.IsSelected)
+			{
+				//clear for exclusive selection
+				FileIdentitiesListView.SelectedItems.Clear();
+				item.IsSelected = true;
+			}
+		}
+	}
+
+	#endregion
+
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		args.Handled = true;
 	}
 }

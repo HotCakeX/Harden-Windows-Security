@@ -322,7 +322,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 				if (selectedItem is FileIdentity obj)
 
 					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ListViewUIHelpers.ConvertRowToText(obj));
+					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
 
 				// Add a separator between rows for readability in multi-row copies
 				_ = dataBuilder.AppendLine(new string('-', 50));
@@ -571,25 +571,25 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// <summary>
 	/// Event handler for the CalendarDatePicker date changed event
 	/// </summary>
-	private void FilterByDateCalendarPicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
+	private async void FilterByDateCalendarPicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
 	{
-		ApplyFilters();
+		await ApplyFilters();
 	}
 
 
 	/// <summary>
 	/// Event handler for the SearchBox text change
 	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+	private async void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
-		ApplyFilters();
+		await ApplyFilters();
 	}
 
 
 	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
-	private void ApplyFilters()
+	private async Task ApplyFilters()
 	{
 		// Get the selected date from the CalendarDatePicker (if any)
 		DateTimeOffset? selectedDate = FilterByDateCalendarPicker.Date;
@@ -601,47 +601,44 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		// This list is used as the base set for filtering to preserve original data
 		IEnumerable<FileIdentity> filteredResults = AllFileIdentities.AsEnumerable();
 
-		// Apply the date filter if a date is selected in the CalendarDatePicker
-		if (selectedDate.HasValue)
-		{
-			// Filter results to include only items where 'TimeCreated' is greater than or equal to the selected date
-			filteredResults = filteredResults.Where(item => item.TimeCreated >= selectedDate.Value);
-		}
-
-		// Apply the search filter if there is a non-empty search term
-		if (!string.IsNullOrWhiteSpace(searchTerm))
+		await Task.Run(() =>
 		{
 
-			// Filter results further to match the search term across multiple properties, case-insensitively
-			filteredResults = filteredResults.Where(output =>
-				(output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.Action.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.ProductName is not null && output.ProductName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.PackageFamilyName is not null && output.PackageFamilyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.Opus is not null && output.Opus.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.PolicyName is not null && output.PolicyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.ComputerName is not null && output.ComputerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-			);
-		}
+			// Apply the date filter if a date is selected in the CalendarDatePicker
+			if (selectedDate.HasValue)
+			{
+				// Filter results to include only items where 'TimeCreated' is greater than or equal to the selected date
+				filteredResults = filteredResults.Where(item => item.TimeCreated >= selectedDate.Value);
+			}
 
-		// Clear the current contents of the ObservableCollection
-		FileIdentities.Clear();
+			// Apply the search filter if there is a non-empty search term
+			if (!string.IsNullOrWhiteSpace(searchTerm))
+			{
+
+				// Filter results further to match the search term across multiple properties, case-insensitively
+				filteredResults = filteredResults.Where(output =>
+					(output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.Action.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.ProductName is not null && output.ProductName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.PackageFamilyName is not null && output.PackageFamilyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.Opus is not null && output.Opus.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.PolicyName is not null && output.PolicyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+					(output.ComputerName is not null && output.ComputerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+				);
+			}
+		});
 
 		// Populate the ObservableCollection with the filtered results
-		// This triggers the UI to update the ListView based on the filtered data
-		foreach (FileIdentity result in filteredResults)
-		{
-			FileIdentities.Add(result);
-		}
+		FileIdentities = [.. filteredResults];
 
 		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
 		FileIdentitiesListView.ItemsSource = FileIdentities;
@@ -671,26 +668,27 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			// Disable the Policy creator button while scan is being performed
 			CreatePolicyButton.IsEnabled = false;
 
-			// Clear the FileIdentities before getting and showing the new ones
-			FileIdentities.Clear();
-			AllFileIdentities.Clear();
-
 			UpdateTotalLogs(true);
 
 			// Grab the App Control Logs
 			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(CodeIntegrityEvtxFilePath: CodeIntegrityEVTX, AppLockerEvtxFilePath: AppLockerEVTX);
 
-			// Store all of the data in the ObservableCollection and List
-			foreach (FileIdentity fileIdentity in Output)
+			await Task.Run(() =>
 			{
-				AllFileIdentities.Add(fileIdentity);
+				AllFileIdentities.Clear();
 
-				FileIdentities.Add(fileIdentity);
-			}
+				// Store all of the data in the List
+				AllFileIdentities.AddRange(Output);
+
+				// Store all of the data in the ObservableCollection
+				// At this point the ObservableCollection is not bound to the UI so it won't trigger INotifyPropertyChanged or cause UI to freeze
+				FileIdentities = [.. Output];
+			});
 
 			UpdateTotalLogs();
 
 			CalculateColumnWidths();
+
 			FileIdentitiesListView.ItemsSource = FileIdentities;
 		}
 		finally
@@ -820,7 +818,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void DataGridFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
+	private void ListViewFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
 	{
 		// Collect the selected items to delete
 		List<FileIdentity> itemsToDelete = [.. FileIdentitiesListView.SelectedItems.Cast<FileIdentity>()];
@@ -858,7 +856,6 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// <param name="e"></param>
 	private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -868,7 +865,6 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 
 			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
 		}
-
 	}
 
 
@@ -907,9 +903,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		{
 			throw new ArgumentException("Invalid GUID");
 		}
-
 	}
-
 
 	/// <summary>
 	/// When the main button responsible for creating policy is pressed
@@ -1199,4 +1193,54 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		};
 
 	}
+
+
+	#region Ensuring right-click on rows behaves better and normally on ListView
+
+	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
+	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
+
+	private void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		// When the container is being recycled, detach the handler.
+		if (args.InRecycleQueue)
+		{
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+		}
+		else
+		{
+			// Detach first to avoid multiple subscriptions, then attach the handler.
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+			args.ItemContainer.RightTapped += ListViewItem_RightTapped;
+		}
+	}
+
+	private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (sender is ListViewItem item)
+		{
+			// If the item is not already selected, clear previous selections and select this one.
+			if (!item.IsSelected)
+			{
+				//clear for exclusive selection
+				FileIdentitiesListView.SelectedItems.Clear();
+				item.IsSelected = true;
+			}
+		}
+	}
+
+	#endregion
+
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		args.Handled = true;
+	}
+
 }

@@ -112,11 +112,11 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
+                        <controls:SettingsCard x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}" IsClickEnabled="True" IsActionIconVisible="False" Click="NavigationViewBackgroundToggleSettingsCard_Click">
                             <ToggleSwitch x:Name="NavigationViewBackgroundToggle"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
+                        <controls:SettingsCard x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}" Click="BackgroundComboBoxSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
                             <ComboBox x:Name="BackgroundComboBox">
                                 <x:String>MicaAlt</x:String>
                                 <x:String>Mica</x:String>
@@ -125,7 +125,7 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
+                        <controls:SettingsCard x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}" IsClickEnabled="True" IsActionIconVisible="False" Click="ThemeComboBoxSettingsCard_Click">
                             <ComboBox x:Name="ThemeComboBox">
                                 <x:String>Use System Setting</x:String>
                                 <x:String>Dark</x:String>
@@ -133,7 +133,7 @@
                             </ComboBox>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
+                        <controls:SettingsCard x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}" IsClickEnabled="True" IsActionIconVisible="False" Click="IconsStyleComboBoxSettingsCard_Click">
                             <ComboBox x:Name="IconsStyleComboBox">
                                 <x:String>Animated</x:String>
                                 <x:String>Windows Accent</x:String>
@@ -141,7 +141,7 @@
                             </ComboBox>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
+                        <controls:SettingsCard x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}" IsClickEnabled="True" IsActionIconVisible="False" Click="NavigationMenuLocationSettingsCard_Click">
                             <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
                                 <x:String>Left</x:String>
                                 <x:String>Top</x:String>
@@ -154,7 +154,7 @@
 
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
-                <controls:SettingsCard x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
+                <controls:SettingsCard x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}" IsClickEnabled="True" IsActionIconVisible="False" Click="SoundToggleSwitchSettingsCard_Click">
                     <ToggleSwitch x:Name="SoundToggleSwitch" />
                 </controls:SettingsCard>
 

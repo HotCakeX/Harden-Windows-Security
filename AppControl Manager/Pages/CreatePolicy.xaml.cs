@@ -43,21 +43,28 @@ public sealed partial class CreatePolicy : Page
 	/// <param name="e"></param>
 	private async void AllowMicrosoftCreate_Click(object sender, RoutedEventArgs e)
 	{
+		bool Error = false;
+
+		// Capture UI values
+		bool auditEnabled = AllowMicrosoftAudit.IsOn;
+		bool requireEVSigners = AllowMicrosoftRequireEVSigners.IsOn;
+		bool enableScriptEnforcement = AllowMicrosoftEnableScriptEnforcement.IsOn;
+		bool testMode = AllowMicrosoftTestMode.IsOn;
+		bool shouldDeploy = AllowMicrosoftCreateAndDeploy.IsChecked ?? false;
 
 		try
 		{
+
+			AllowMicrosoftSettingsInfoBar.IsOpen = true;
+			AllowMicrosoftSettingsInfoBar.IsClosable = false;
+			AllowMicrosoftSettingsInfoBar.Severity = InfoBarSeverity.Informational;
+			AllowMicrosoftSettingsInfoBar.Message = "Creating the Allow Microsoft base policy";
+			AllowMicrosoftSettings.IsExpanded = true;
 
 			// Disable the buttons to prevent multiple clicks
 			AllowMicrosoftCreate.IsEnabled = false;
 
 			string stagingArea = StagingArea.NewStagingArea("BuildAllowMicrosoft").ToString();
-
-			// Capture UI values
-			bool auditEnabled = AllowMicrosoftAudit.IsOn;
-			bool requireEVSigners = AllowMicrosoftRequireEVSigners.IsOn;
-			bool enableScriptEnforcement = AllowMicrosoftEnableScriptEnforcement.IsOn;
-			bool testMode = AllowMicrosoftTestMode.IsOn;
-			bool shouldDeploy = AllowMicrosoftCreateAndDeploy.IsChecked ?? false;
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -91,10 +98,28 @@ public sealed partial class CreatePolicy : Page
 			});
 
 		}
+		catch
+		{
+			Error = true;
+			throw;
+		}
 		finally
 		{
 			// Re-enable the buttons once the work is done
 			AllowMicrosoftCreate.IsEnabled = true;
+
+			AllowMicrosoftSettingsInfoBar.IsClosable = true;
+
+			if (!Error)
+			{
+				AllowMicrosoftSettingsInfoBar.Severity = InfoBarSeverity.Success;
+				AllowMicrosoftSettingsInfoBar.Message = shouldDeploy ? "Successfully created and deployed the Allow Microsoft base policy" : "Successfully created the Allow Microsoft base policy";
+			}
+			else
+			{
+				AllowMicrosoftSettingsInfoBar.Severity = InfoBarSeverity.Error;
+				AllowMicrosoftSettingsInfoBar.Message = "There was an error while creating the Allow Microsoft base policy";
+			}
 		}
 	}
 
@@ -131,20 +156,28 @@ public sealed partial class CreatePolicy : Page
 	private async void DefaultWindowsCreate_Click(object sender, RoutedEventArgs e)
 	{
 
+		bool Error = false;
+
+		// Capture UI values
+		bool auditEnabled = DefaultWindowsAudit.IsOn;
+		bool requireEVSigners = DefaultWindowsRequireEVSigners.IsOn;
+		bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
+		bool testMode = DefaultWindowsTestMode.IsOn;
+		bool shouldDeploy = DefaultWindowsCreateAndDeploy.IsChecked ?? false;
+
 		try
 		{
+
+			DefaultWindowsSettingsInfoBar.IsOpen = true;
+			DefaultWindowsSettingsInfoBar.IsClosable = false;
+			DefaultWindowsSettingsInfoBar.Severity = InfoBarSeverity.Informational;
+			DefaultWindowsSettingsInfoBar.Message = "Creating the Default Windows base policy";
+			DefaultWindowsSettings.IsExpanded = true;
 
 			// Disable the buttons to prevent multiple clicks
 			DefaultWindowsCreate.IsEnabled = false;
 
 			string stagingArea = StagingArea.NewStagingArea("BuildDefaultWindows").ToString();
-
-			// Capture UI values
-			bool auditEnabled = DefaultWindowsAudit.IsOn;
-			bool requireEVSigners = DefaultWindowsRequireEVSigners.IsOn;
-			bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
-			bool testMode = DefaultWindowsTestMode.IsOn;
-			bool shouldDeploy = DefaultWindowsCreateAndDeploy.IsChecked ?? false;
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -178,10 +211,28 @@ public sealed partial class CreatePolicy : Page
 			});
 
 		}
+		catch
+		{
+			Error = true;
+			throw;
+		}
 		finally
 		{
 			// Re-enable the buttons once the work is done
 			DefaultWindowsCreate.IsEnabled = true;
+
+			DefaultWindowsSettingsInfoBar.IsClosable = true;
+
+			if (!Error)
+			{
+				DefaultWindowsSettingsInfoBar.Severity = InfoBarSeverity.Success;
+				DefaultWindowsSettingsInfoBar.Message = shouldDeploy ? "Successfully created and deployed the Default Windows base policy" : "Successfully created the Default Windows base policy";
+			}
+			else
+			{
+				DefaultWindowsSettingsInfoBar.Severity = InfoBarSeverity.Error;
+				DefaultWindowsSettingsInfoBar.Message = "There was an error while creating the Default Windows base policy";
+			}
 		}
 	}
 
@@ -219,20 +270,28 @@ public sealed partial class CreatePolicy : Page
 	private async void SignedAndReputableCreate_Click(object sender, RoutedEventArgs e)
 	{
 
+		bool Error = false;
+
+		// Capture the values from UI
+		bool auditEnabled = SignedAndReputableAudit.IsOn;
+		bool requireEVSigners = SignedAndReputableRequireEVSigners.IsOn;
+		bool enableScriptEnforcement = SignedAndReputableEnableScriptEnforcement.IsOn;
+		bool testMode = SignedAndReputableTestMode.IsOn;
+		bool shouldDeploy = SignedAndReputableCreateAndDeploy.IsChecked ?? false;
+
 		try
 		{
+
+			SignedAndReputableSettingsInfoBar.IsOpen = true;
+			SignedAndReputableSettingsInfoBar.IsClosable = false;
+			SignedAndReputableSettingsInfoBar.Severity = InfoBarSeverity.Informational;
+			SignedAndReputableSettingsInfoBar.Message = "Creating the Signed and Reputable base policy";
+			SignedAndReputableSettings.IsExpanded = true;
 
 			// Disable the buttons
 			SignedAndReputableCreate.IsEnabled = false;
 
 			string stagingArea = StagingArea.NewStagingArea("BuildSignedAndReputable").ToString();
-
-			// Capture the values from UI
-			bool auditEnabled = SignedAndReputableAudit.IsOn;
-			bool requireEVSigners = SignedAndReputableRequireEVSigners.IsOn;
-			bool enableScriptEnforcement = SignedAndReputableEnableScriptEnforcement.IsOn;
-			bool testMode = SignedAndReputableTestMode.IsOn;
-			bool shouldDeploy = SignedAndReputableCreateAndDeploy.IsChecked ?? false;
 
 			#region Only modify the log size if the element is enabled meaning the Toggle Switch is toggled
 			ulong? logSize = null;
@@ -264,9 +323,27 @@ public sealed partial class CreatePolicy : Page
 
 			});
 		}
+		catch
+		{
+			Error = true;
+			throw;
+		}
 		finally
 		{
 			SignedAndReputableCreate.IsEnabled = true;
+
+			SignedAndReputableSettingsInfoBar.IsClosable = true;
+
+			if (!Error)
+			{
+				SignedAndReputableSettingsInfoBar.Severity = InfoBarSeverity.Success;
+				SignedAndReputableSettingsInfoBar.Message = shouldDeploy ? "Successfully created and deployed the Signed and Reputable base policy" : "Successfully created the Signed and Reputable base policy";
+			}
+			else
+			{
+				SignedAndReputableSettingsInfoBar.Severity = InfoBarSeverity.Error;
+				SignedAndReputableSettingsInfoBar.Message = "There was an error while creating the Signed and Reputable base policy";
+			}
 		}
 	}
 

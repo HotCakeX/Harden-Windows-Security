@@ -46,7 +46,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <!-- Publish Properties -->
-    <PublishReadyToRun>True</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">true</PublishReadyToRun>
 
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>

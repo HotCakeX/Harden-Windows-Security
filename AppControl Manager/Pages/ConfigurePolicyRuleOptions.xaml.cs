@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Main;
@@ -244,6 +245,19 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 				CiRuleOptions.Set(SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
 			});
 
+			if (DeployAfterApplyingToggleButton.IsChecked == true)
+			{
+				await Task.Run(() =>
+				{
+					DirectoryInfo stagingArea = StagingArea.NewStagingArea("ConfigurePolicyRuleOptionsDeployment");
+
+					string cipPath = Path.Combine(stagingArea.FullName, $"{Path.GetFileName(SelectedFilePath)}.cip");
+
+					PolicyToCIPConverter.Convert(stagingArea.FullName, cipPath);
+
+					CiToolHelper.UpdatePolicy(cipPath);
+				});
+			}
 		}
 		finally
 		{

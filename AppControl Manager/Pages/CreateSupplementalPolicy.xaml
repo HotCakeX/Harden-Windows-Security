@@ -735,6 +735,94 @@
 
                 </controls:SettingsExpander>
 
+
+                <!-- Custom File Path Rules -->
+                <controls:SettingsExpander x:Name="CustomPatternBasedFileRuleSettingsExpander"
+                        x:Uid="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE8A1;}">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="CustomPatternBasedFileRuleInfoBar"
+                            Title="Current Status"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            IsOpen="False"
+                            IsClosable="False"
+                            Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button x:Name="CreateCustomPatternBasedFileRuleSupplementalPolicyButton" Click="CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click" x:Uid="CreateSupplementalPolicyButton"
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+                        <ToggleButton x:Name="CustomPatternBasedFileRulePolicyDeployToggleButton" Click="CustomPatternBasedFileRulePolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+
+                        <TeachingTip x:Name="CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip" Target="{x:Bind CreateCustomPatternBasedFileRuleSupplementalPolicyButton}" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox x:Name="CustomPatternBasedFileRulePolicyNameTextBox" TextChanged="CustomPatternBasedFileRulePolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Name="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                            Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Click"
+                                Holding="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Holding" RightTapped="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_RightTapped">
+
+                            <Button x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton" Click="CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click"
+                                    x:Uid="PickPolicyFileButton" RightTapped="CustomPatternBasedFileRuleBrowseForBasePolicyButton_RightTapped">
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click" />
+
+                                            <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <TextBox x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                 MinWidth="400" IsReadOnly="True" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </Button.Flyout>
+
+                                <Button.Content>
+                                    <controls:WrapPanel Orientation="Horizontal">
+
+                                        <AnimatedIcon x:Name="CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Light/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+
+                                        <TextBlock x:Uid="BrowseTextBlock" />
+
+                                    </controls:WrapPanel>
+                                </Button.Content>
+
+                            </Button>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox x:Name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox" x:Uid="SupplementalPolicyCustomPatternBasedCustomPatternTextBox" TextWrapping="Wrap" MaxWidth="400"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard" IsClickEnabled="True" Click="SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click" IsActionIconVisible="True"/>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
             </StackPanel>
 
         </Grid>

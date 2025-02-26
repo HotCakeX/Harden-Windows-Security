@@ -40,7 +40,7 @@ internal static class NewFilePublisherLevelRules
 
 			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
 			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", filePublisherData.FileName);
+			newFileAttribNode.SetAttribute("FriendlyName", "File Publisher Rule Type");
 
 			#region Creating File Attributes with automatic fallback
 
@@ -183,7 +183,7 @@ internal static class NewFilePublisherLevelRules
 
 			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
 			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", filePublisherData.FileName);
+			newFileAttribNode.SetAttribute("FriendlyName", "File Publisher Rule Type");
 
 			#region Creating File Attributes with automatic fallback
 

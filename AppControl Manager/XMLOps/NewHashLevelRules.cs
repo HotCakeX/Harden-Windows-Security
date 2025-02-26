@@ -41,7 +41,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA256
 			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha256");
+			newAuth256HashNode.SetAttribute("FriendlyName", "Hash Sha256");
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
@@ -49,7 +49,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA1
 			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha1");
+			newAuth1HashNode.SetAttribute("FriendlyName", "Hash Sha1");
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
@@ -129,7 +129,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA256
 			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha256");
+			newAuth256HashNode.SetAttribute("FriendlyName", "Hash Sha256");
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
@@ -137,7 +137,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA1
 			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", $"{hash.FileName} Hash Sha1");
+			newAuth1HashNode.SetAttribute("FriendlyName", "Hash Sha1");
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);

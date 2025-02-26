@@ -132,7 +132,7 @@ public partial class App : Application
 	private Window? m_window;
 
 	// Adding this public property to expose the window
-	public static Window? MainWindow => ((App)Current).m_window;
+	internal static Window? MainWindow => ((App)Current).m_window;
 
 	/// <summary>
 	/// Event handler for unhandled exceptions.

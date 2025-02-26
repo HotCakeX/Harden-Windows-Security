@@ -341,6 +341,51 @@
 
                 </controls:SettingsExpander>
 
+
+                <!-- Custom File Path Rules -->
+                <controls:SettingsExpander x:Name="CustomPatternBasedFileRuleSettingsExpander"
+                        x:Uid="DenyPolicyCustomPatternBasedFileRuleSettingsExpander"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xE8A1;}">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="CustomPatternBasedFileRuleInfoBar"
+                            Title="Current Status"
+                            BorderThickness="0"
+                            CornerRadius="0"
+                            IsIconVisible="True"
+                            IsOpen="False"
+                            IsClosable="False"
+                            Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button x:Name="CreateCustomPatternBasedFileRuleDenyPolicyButton" Click="CreateCustomPatternBasedFileRuleDenyPolicyButton_Click" x:Uid="CreateDenyPolicyButton"
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+                        <ToggleButton x:Name="CustomPatternBasedFileRulePolicyDeployToggleButton" Click="CustomPatternBasedFileRulePolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+
+                        <TeachingTip x:Name="CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip" Target="{x:Bind CreateCustomPatternBasedFileRuleDenyPolicyButton}" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox x:Name="CustomPatternBasedFileRulePolicyNameTextBox" TextChanged="CustomPatternBasedFileRulePolicyNameTextBox_TextChanged" PlaceholderText="Choose a Deny policy name"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox x:Name="DenyPolicyCustomPatternBasedCustomPatternTextBox" x:Uid="DenyPolicyCustomPatternBasedCustomPatternTextBox" TextWrapping="Wrap" MaxWidth="400"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard" IsClickEnabled="True" Click="DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click" IsActionIconVisible="True"/>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
             </StackPanel>
 
         </Grid>

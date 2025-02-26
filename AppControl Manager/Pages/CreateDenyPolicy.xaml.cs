@@ -919,4 +919,165 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 	#endregion
+
+
+
+
+
+	#region Custom Pattern-based File Rule
+
+	private bool CustomPatternBasedFileRuleBasedDeployButton;
+
+	// Selected Deny policy name
+	private string? CustomPatternBasedFileRuleBasedDenyPolicyName;
+
+	private void CustomPatternBasedFileRulePolicyDeployToggleButton_Click(object sender, RoutedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedDeployButton = ((ToggleButton)sender).IsChecked ?? false;
+	}
+
+	private void CustomPatternBasedFileRulePolicyNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedDenyPolicyName = ((TextBox)sender).Text;
+	}
+
+	/// <summary>
+	/// Event handler for the main button - to create Deny pattern based File path policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool errorsOccurred = false;
+
+		if (string.IsNullOrWhiteSpace(DenyPolicyCustomPatternBasedCustomPatternTextBox.Text))
+		{
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = "Enter a custom pattern";
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a custom pattern for the file rule.";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedDenyPolicyName))
+		{
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = "Enter a policy name";
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a name for the Deny policy.";
+			return;
+		}
+
+		try
+		{
+			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = false;
+			CustomPatternBasedFileRulePolicyDeployToggleButton.IsEnabled = false;
+			CustomPatternBasedFileRulePolicyNameTextBox.IsEnabled = false;
+			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
+
+			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
+			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Deny policy.";
+			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
+			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
+
+			string pattern = DenyPolicyCustomPatternBasedCustomPatternTextBox.Text;
+
+			await Task.Run(() =>
+			{
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PatternBasedFilePathRuleDenyPolicy");
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [pattern]);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny);
+
+				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.xml");
+
+				string denyPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null, null);
+
+				// Configure policy rule options
+				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
+
+				// Set policy version
+				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+				// If user selected to deploy the policy
+				if (CustomPatternBasedFileRuleBasedDeployButton)
+				{
+
+					string msg4 = "Deploying the Deny policy on the system";
+
+					Logger.Write(msg4);
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						CustomPatternBasedFileRuleInfoBar.Message = msg4;
+					});
+
+					string CIPPath = Path.Combine(stagingArea.FullName, $"{denyPolicyID}.cip");
+
+					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+
+			});
+
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+
+			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Error;
+			CustomPatternBasedFileRuleInfoBar.Message = $"An error occurred while creating Pattern-based File Path rule Deny policy: {ex.Message}";
+
+			Logger.Write($"An error occurred while creating Pattern-based File Path rule Deny policy: {ex.Message}");
+
+			throw;
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
+
+				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Deny policy.";
+			}
+
+			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = true;
+			CustomPatternBasedFileRulePolicyDeployToggleButton.IsEnabled = true;
+			CustomPatternBasedFileRulePolicyNameTextBox.IsEnabled = true;
+			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = true;
+			CustomPatternBasedFileRuleInfoBar.IsClosable = true;
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler to display the content dialog for more info about patterns
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		// Instantiate the Content Dialog
+		CustomUIElements.CustomPatternBasedFilePath customDialog = new();
+
+		App.CurrentlyOpenContentDialog = customDialog;
+
+		// Show the dialog
+		_ = await customDialog.ShowAsync();
+	}
+
+	#endregion
+
+
+
 }

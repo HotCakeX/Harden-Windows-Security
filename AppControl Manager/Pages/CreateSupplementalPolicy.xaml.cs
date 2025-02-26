@@ -673,8 +673,19 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Set the BasePolicyID of our new policy to the one from user selected policy
 				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersSupplementalPolicyName, policyObj.BasePolicyID, null);
 
+
 				// Configure policy rule options
-				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				if (filesAndFoldersScanLevel is ScanLevels.FilePath || filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
+				{
+					Logger.Write($"The selected scan level is {filesAndFoldersScanLevel}, adding 'Disabled: Runtime FilePath Rule Protection' rule option to the Supplemental policy so non-admin protected file paths will work.'");
+
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
+				}
+				else
+				{
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				}
+
 
 				// Set policy version
 				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));

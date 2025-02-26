@@ -269,7 +269,8 @@
                 ScrollViewer.IsHorizontalRailEnabled="True"
                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
                 ShowsScrollingPlaceholders="True"
-                ScrollViewer.VerticalScrollBarVisibility="Visible">
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                ContainerContentChanging="ListView_ContainerContentChanging">
 
             <ListView.Header>
 
@@ -324,6 +325,9 @@
                             <MenuFlyout>
 
                                 <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutItem.Icon>

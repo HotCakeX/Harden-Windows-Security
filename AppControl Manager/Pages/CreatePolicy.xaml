@@ -47,6 +47,17 @@
                            Header="Create Allow Microsoft Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xF0EF;}">
 
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="AllowMicrosoftSettingsInfoBar"
+                             BorderThickness="0"
+                             CornerRadius="0"
+                             IsIconVisible="True"
+                             IsOpen="False"
+                             IsClosable="False"
+                             Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="AllowMicrosoftCreate" Content="Create" ToolTipService.ToolTip="Create the Allow Microsoft base policy"
@@ -102,6 +113,17 @@
                            Header="Create Default Windows Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA18;}">
 
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="DefaultWindowsSettingsInfoBar"
+                             BorderThickness="0"
+                             CornerRadius="0"
+                             IsIconVisible="True"
+                             IsOpen="False"
+                             IsClosable="False"
+                             Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="DefaultWindowsCreate" Content="Create" ToolTipService.ToolTip="Create the Default Windows base policy"
@@ -156,6 +178,17 @@
                            Description="This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft's Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked."
                            Header="Create Signed And Reputable Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA0D;}">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Name="SignedAndReputableSettingsInfoBar"
+                             BorderThickness="0"
+                             CornerRadius="0"
+                             IsIconVisible="True"
+                             IsOpen="False"
+                             IsClosable="False"
+                             Severity="Informational">
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 

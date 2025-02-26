@@ -7,6 +7,7 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 using WinRT;
@@ -240,7 +241,6 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 
 			double w18 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
 			if (w18 > maxWidth18) maxWidth18 = w18;
-
 		}
 
 		// Set the column width properties.
@@ -525,15 +525,8 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 			);
 		}
 
-		// Clear the current contents of the ObservableCollection
-		CreateSupplementalPolicy.Instance.filesAndFoldersScanResults.Clear();
-
 		// Populate the ObservableCollection with the filtered results
-		// This triggers the UI to update the ListView based on the filtered data
-		foreach (FileIdentity result in filteredResults)
-		{
-			CreateSupplementalPolicy.Instance.filesAndFoldersScanResults.Add(result);
-		}
+		CreateSupplementalPolicy.Instance.filesAndFoldersScanResults = [.. filteredResults];
 
 		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
 		FileIdentitiesListView.ItemsSource = CreateSupplementalPolicy.Instance.filesAndFoldersScanResults;
@@ -586,43 +579,6 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	}
 
 	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void DataGridFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the ListView
-		if (FileIdentitiesListView.SelectedItems.Count > 0)
-		{
-			// Initialize StringBuilder to store all selected rows' data with labels
-			StringBuilder dataBuilder = new();
-
-			// Loop through each selected item in the ListView
-			foreach (var selectedItem in FileIdentitiesListView.SelectedItems)
-			{
-
-				if (selectedItem is FileIdentity item)
-
-					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ListViewUIHelpers.ConvertRowToText(item));
-
-				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(new string('-', 50));
-			}
-
-			// Create a DataPackage to hold the text data
-			DataPackage dataPackage = new();
-
-			// Set the formatted text as the content of the DataPackage
-			dataPackage.SetText(dataBuilder.ToString());
-
-			// Copy the DataPackage content to the clipboard
-			Clipboard.SetContent(dataPackage);
-		}
-	}
-
-	/// <summary>
 	/// Updates the total logs count displayed on the UI
 	/// </summary>
 	internal void UpdateTotalFiles(bool? Zero = null)
@@ -635,5 +591,54 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 		{
 			TotalCountOfTheFilesTextBox.Text = $"Total files: {CreateSupplementalPolicy.Instance.filesAndFoldersScanResults.Count}";
 		}
+	}
+
+
+	#region Ensuring right-click on rows behaves better and normally on ListView
+
+	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
+	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
+
+	private void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		// When the container is being recycled, detach the handler.
+		if (args.InRecycleQueue)
+		{
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+		}
+		else
+		{
+			// Detach first to avoid multiple subscriptions, then attach the handler.
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+			args.ItemContainer.RightTapped += ListViewItem_RightTapped;
+		}
+	}
+
+	private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (sender is ListViewItem item)
+		{
+			// If the item is not already selected, clear previous selections and select this one.
+			if (!item.IsSelected)
+			{
+				//clear for exclusive selection
+				FileIdentitiesListView.SelectedItems.Clear();
+				item.IsSelected = true;
+			}
+		}
+	}
+
+	#endregion
+
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		args.Handled = true;
 	}
 }

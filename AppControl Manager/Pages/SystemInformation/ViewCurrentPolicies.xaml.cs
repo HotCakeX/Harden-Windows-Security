@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
@@ -681,7 +682,6 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 							else
 							{
 
-
 								#region Signing Details acquisition
 
 								string CertCN;
@@ -988,5 +988,56 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			SearchBox.IsEnabled = true;
 			DeployedPolicies.IsEnabled = true;
 		}
+	}
+
+
+	#region Ensuring right-click on rows behaves better and normally on ListView
+
+	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
+	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
+
+	private void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		// When the container is being recycled, detach the handler.
+		if (args.InRecycleQueue)
+		{
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+		}
+		else
+		{
+			// Detach first to avoid multiple subscriptions, then attach the handler.
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+			args.ItemContainer.RightTapped += ListViewItem_RightTapped;
+		}
+	}
+
+
+	private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		// Cast the sender to a ListViewItem.
+		if (sender is ListViewItem item)
+		{
+			// If the item isn't already selected, clear existing selections
+			// and mark this item as selected.
+			if (!item.IsSelected)
+			{
+				item.IsSelected = true;
+			}
+		}
+	}
+
+
+	#endregion
+
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		args.Handled = true;
 	}
 }

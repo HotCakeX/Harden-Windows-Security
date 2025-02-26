@@ -506,7 +506,6 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 	// Event handler for the Select XML File button
 	private void SelectXmlFileButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -522,7 +521,6 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 	// Event handler for the Select Files button
 	private void SelectFilesButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
@@ -602,11 +600,7 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 
 
 		// Update the ObservableCollection on the UI thread with the filtered results
-		SimulationOutputs.Clear();
-		foreach (SimulationOutput result in filteredResults)
-		{
-			SimulationOutputs.Add(result);
-		}
+		SimulationOutputs = [.. filteredResults];
 	}
 
 
@@ -667,4 +661,52 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 			SelectFoldersButton_Flyout.ShowAt(SelectFoldersButton);
 	}
 
+
+	#region Ensuring right-click on rows behaves better and normally on ListView
+
+	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
+	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
+
+	private void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		// When the container is being recycled, detach the handler.
+		if (args.InRecycleQueue)
+		{
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+		}
+		else
+		{
+			// Detach first to avoid multiple subscriptions, then attach the handler.
+			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
+			args.ItemContainer.RightTapped += ListViewItem_RightTapped;
+		}
+	}
+
+	private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (sender is ListViewItem item)
+		{
+			// If the item is not already selected, clear previous selections and select this one.
+			if (!item.IsSelected)
+			{
+				//clear for exclusive selection
+				SimOutputListView.SelectedItems.Clear();
+				item.IsSelected = true;
+			}
+		}
+	}
+
+	#endregion
+
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		args.Handled = true;
+	}
 }

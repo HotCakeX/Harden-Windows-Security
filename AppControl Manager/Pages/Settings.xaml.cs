@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.AppSettings;
@@ -295,26 +294,6 @@ public sealed partial class Settings : Page
 		Logger.Write($"Cleared {fieldName}");
 	}
 
-
-	#region Methods to parse the input values without throwing errors
-	private static Guid? TryParseGuid(string? input)
-	{
-		if (string.IsNullOrWhiteSpace(input))
-			return null;
-
-		return Guid.TryParse(input, out Guid result) ? result : null;
-	}
-
-	private static DateTime? TryParseDateTime(string? input)
-	{
-		if (string.IsNullOrWhiteSpace(input))
-			return null;
-
-		return DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result) ? result : null;
-	}
-	#endregion
-
-
 	// When the browse button of any field is pressed
 	private void BrowseButton_Click(object sender, RoutedEventArgs e)
 	{
@@ -391,5 +370,39 @@ public sealed partial class Settings : Page
 		{
 			CertCommonNames = CertCNFetcher.GetCertCNs();
 		});
+	}
+
+
+	private void BackgroundComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		BackgroundComboBox.IsDropDownOpen = true;
+	}
+
+	private void ThemeComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		ThemeComboBox.IsDropDownOpen = true;
+	}
+
+	private void IconsStyleComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		IconsStyleComboBox.IsDropDownOpen = true;
+	}
+
+	private void NavigationMenuLocationSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		NavigationMenuLocation.IsDropDownOpen = true;
+	}
+
+	private void SoundToggleSwitchSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+
+		SoundToggleSwitch.IsOn = !SoundToggleSwitch.IsOn;
+		SoundToggleSwitch_Toggled(SoundToggleSwitch, new RoutedEventArgs());
+	}
+
+	private void NavigationViewBackgroundToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		NavigationViewBackgroundToggle.IsOn = !NavigationViewBackgroundToggle.IsOn;
+		NavigationViewBackground_Toggled(NavigationViewBackgroundToggle, new RoutedEventArgs());
 	}
 }

@@ -20,6 +20,8 @@ Additionally, this page offers policy templates. These are pre-configured set of
 
 * **Apply The Changes**: Press this button to apply the changes you made to the policy rule options.
 
+* **Deploy After Applying**: If this button is toggled, the policy will also be deployed on the system when you press the `Apply The Changes` button.
+
 * **Retrieve Rules States**: **By default, when you select an XML policy file, the checkboxes representing the rule options will be checked or unchecked according to the rule options in that file.** If you want to retrieve the rule options from the XML policy file again, maybe after modifying it manually, press this button.
 
 <br>

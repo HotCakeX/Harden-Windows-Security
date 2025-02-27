@@ -1,43 +1,26 @@
 # How to Use Microsoft Defender for Endpoint Advanced Hunting With App Control
 
-<br>
+App Control for Business is a highly effective security feature that empowers you to manage the execution of applications on your endpoints. The application whitelisting approach serves as a potent defense against emerging and unknown threats. By emphasizing the identification of trusted applications, it automatically blocks any software that falls outside this trusted realm.
 
-> [!IMPORTANT]\
-> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting) now supports automatically retrieving the Advanced Hunting logs from Microsoft Defender for Endpoint (MDE). The manual steps described below are only additional explanations.
-
-<br>
-
-App Control for Business is a highly effective security feature that empowers you to manage the execution of applications on your endpoints.
-
-The application whitelisting approach serves as a potent defense against emerging and unknown threats. By emphasizing the identification of trusted applications, it automatically blocks any software that falls outside this trusted realm.
-
-Microsoft Defender for Endpoint (MDE) is one of the tools that can be used by enterprises and organizations to develop a trusted application policy and manage it at scale. MDE provides the intelligence and insights needed to create and maintain a robust application control policy through its Advanced Hunting feature. This feature uses KQL [(Kusto Query Language)](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/) to query the data collected by MDE and using the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager), we can turn this actionable data into App Control policies. We can then use Intune to deploy these policies to our endpoints. All of these tools are built for scalability.
-
-<br>
-
-> [!NOTE]\
-> You can access Intune portal by navigating to: [https://intune.microsoft.com](https://intune.microsoft.com)
+Microsoft Defender for Endpoint (MDE) is one of the tools that can be used by enterprises and organizations to develop a trusted application policy and manage it at scale. MDE provides the intelligence and insights needed to create and maintain a robust application control policy through its Advanced Hunting feature. This feature uses KQL [(Kusto Query Language)](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/) to query the data collected by MDE and using the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager), you can turn this actionable data into App Control policies. You can then use [Intune](https://intune.microsoft.com) to deploy these policies to your endpoints. All of these tools are built for scalability.
 
 <br>
 
 ## Preparing the Code Integrity and AppLocker Data
 
-To start, we need our endpoints to be generating data and intelligence we can work with. These data points are the Code Integrity and AppLocker events. These events are generated when an application or file is blocked or audited by App Control, or when a script or MSI file is blocked or audited by AppLocker. We can trigger the data generation by deploying App Control policies to our endpoints in Audit mode. This mode will not block any applications, instead it will generate data points for any application, file, script, MSI file and so on that would have been blocked if the policy was in Enforce mode.
+To start, you need your endpoints to be generating data and intelligence you can work with. These data points are the Code Integrity and AppLocker events. These events are generated when an application or file is blocked or audited by App Control, or when a script or MSI file is blocked or audited by AppLocker. You can trigger the data generation by deploying App Control policies to your endpoints in Audit mode. This mode will not block any applications, instead it will generate data points for any application, file or script that would have been blocked if the policy was in Enforce mode.
 
 You can create Audit mode policies using the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) based on different levels of trust. [Use this page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) to see what kind of audit events each base policy template generates when deployed in audit mode.
 
-For instance, once the DefaultWindows template is deployed on an endpoint, it starts generating Audit logs for any file that runs but is not part of the Windows by default. On the other hand, deploying the AllowMicrosoft base policy in Audit mode starts generating Audit logs for any file that runs but is not signed by Microsoft certificates.
+For instance, once the `DefaultWindows` template is deployed on an endpoint, it starts generating Audit logs for any file that runs but is not part of the Windows by default. On the other hand, deploying the `AllowMicrosoft` base policy in Audit mode starts generating Audit logs for any file that runs but is not signed by Microsoft certificates.
 
-After generating the policy files using the app, you will then use Intune to deploy them to as many endpoints as you want.
-
-> [!TIP]\
-> [Deploy App Control policies using Mobile Device Management (MDM)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune)
+After generating the policy files using the app, you will then use the [Deployment page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy) to deploy them to as many endpoints as you want. It uses Microsoft Graph API to upload the policies to Intune. [You can read more about this feature here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Upload-App-Control-Policies-To-Intune-Using-AppControl-Manager)
 
 <br>
 
 ## Collecting the Data from MDE Advanced Hunting
 
-Now we need to collect the data from MDE Advanced Hunting. The following query will give us a good starting point by collecting all of the Code Integrity and AppLocker events:
+Use the [**Cloud Tab** in the MDE Advanced Hunting page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting#cloud-tab) to sign into your tenant and retrieve the Advanced Hunting logs. However, if you want to manually run the query in the XDR portal, you can use the following query:
 
 ```kql
 DeviceEvents
@@ -48,7 +31,7 @@ DeviceEvents
 
 <br>
 
-We can customize the query to be more specific to our environment, for instance by targeting an specific device among all the devices:
+You can customize the query to be more specific to your environment, for instance by targeting an specific device among all the devices:
 
 ```kql
 
@@ -59,7 +42,7 @@ DeviceEvents
     and DeviceName == "mainframe"
 ```
 
-`mainframe` in this example is the name of our device.
+`mainframe` in this example is the name of a device.
 
 <br>
 
@@ -91,7 +74,9 @@ That query generates a standard output of the data in CSV file format which is c
 
 ## Generating the App Control Policies
 
-After exporting the data from MDE Advanced Hunting, we can use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting) to generate App Control policies. We need to feed the exported CSV file(s) we collected to the application by simply browsing for them. The app will quickly scan them and display them with full details. It provides controls that allow you to filter or sort the logs based on different properties. You can search through the scan results, remove unwanted logs and once you're happy with the results, you can generate the supplemental App Control policy.
+If you used the AppControl Manager to collect the data, you can skip this step as the logs will be automatically made available in the app, ready for you to generate the policies. But if you are doing it manually, after exporting the data from the XDR portal, you need to feed the exported CSV file(s) you collected to the application by simply browsing for them. The app will quickly scan them and display them with full details.
+
+AppControl Manager provides controls that allow you to filter or sort the logs based on different properties. You can search through the scan results, remove unwanted logs and once you're happy with the results, you can generate the supplemental App Control policy.
 
 <br>
 
@@ -102,7 +87,7 @@ After exporting the data from MDE Advanced Hunting, we can use the [AppControl M
 * Provides a GUI for filtering the logs based on various criteria
 * Never includes duplicate rules in the policy, regardless of the number of the duplicate logs you give it
 
-### The App Can Create 3 Types of Rules for Files:
+### The App Can Create 3 Types of Rules:
 
 You can choose the level based on which the logs will be scanned. By default, the following rules apply to the scan:
 
@@ -122,13 +107,17 @@ After generating the Supplemental policies based off of the MDE Advanced Hunting
 <br>
 
 > [!IMPORTANT]\
-> Ensure that the Enforced mode policies align with the type of policies set during Audit mode. For example, if you utilized an Audit mode policy that permits Microsoft-signed files, it is crucial to employ an Enforced mode policy that also allows such files. Conversely, when dealing with the default Windows policy, consistency is key. Mixing these policies can result in files that were allowed during Audit mode being unexpectedly blocked during Enforce mode.
+> Ensure that the Enforced mode policies align with the type of policies set during Audit mode. For example, if you utilized an Audit mode policy that permits Microsoft-signed files (`AllowMicrosoft`), it is crucial to employ an Enforced mode policy that also allows such files. Conversely, when dealing with the `DefaultWindows` policy, consistency is key. Mixing these policies can result in files that were allowed during Audit mode being unexpectedly blocked during Enforce mode.
 
 You can deploy the policies using Intune, [SCCM](https://learn.microsoft.com/en-us/mem/configmgr/core/understand/introduction), or any other MDM solution you are using.
 
-After deploying the base policies, you will then deploy the Supplemental policies generated from MDE AH data, these policies are responsible for allowing any 3rd party apps or files that your endpoints need to use.
+After deploying the base policies, you will then deploy the Supplemental policies generated from MDE Advanced Hunting data, these policies are responsible for allowing any 3rd party apps or files that your endpoints need to use.
 
 You can put your endpoints into different groups and each group can receive different Supplemental policy based on their needs.
+
+<br>
+
+### Here are some screenshots that show you how the manual method looks like
 
 <br>
 
@@ -150,7 +139,7 @@ You can put your endpoints into different groups and each group can receive diff
 <br>
 
 > [!TIP]\
-> You can use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Upload-App-Control-Policies-To-Intune-Using-AppControl-Manager) to seamlessly deploy your App Control policies to the Intune.
+> You can use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Upload-App-Control-Policies-To-Intune-Using-AppControl-Manager) to seamlessly deploy your App Control policies to the Intune. It supports signed and unsigned policy deployment.
 
 <br>
 

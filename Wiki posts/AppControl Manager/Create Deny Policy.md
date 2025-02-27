@@ -39,6 +39,8 @@ With AppControl Manager, you can easily create a Deny base policy by scanning fi
 
 * **Select Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
 
+* **Deploy After Creation**: If toggled, only the Deny policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
 > [!TIP]\
 > Use the ***View Detected File Details*** section to view highly detailed results of the files and folder scans.
 
@@ -57,5 +59,26 @@ You can create Deny policies for the installed packaged apps. This is useful for
    * Use the "Select All" and "Remove Selections" buttons to select/deselect all apps currently available in the list.
 
    * Use the Refresh button to refresh the list of installed apps in case you removed/installed any apps after the list was loaded.
+
+* **Deploy After Creation**: If toggled, only the Deny policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
+<br>
+
+## Create a Deny Policy Based on Custom Pattern-based File Rules
+
+Use this section to create custom pattern-based file rules so that if a file or folder's path matches that pattern, it will be blocked. The pattern is based on regex and supports `*` and `?` characters. You can use this feature to create sophisticated file path rules that can dynamically match multiple files or folders.
+
+Keep in mind that file rules are only supported for user-mode files. Using file rules for kernel-mode files simply has no effect.
+
+### Configuration Details
+
+* **Policy Name**: Enter a name for the Deny policy.
+
+* **Custom Pattern-based File Rule**: Enter your pattern in here. It will be used as is without any further modifications to it. What you enter here will be what you see in the XML file.
+
+* **Deploy After Creation**: If toggled, only the Deny policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
+> [!TIP]\
+> Use the ***More Information*** section to view examples and description of different patterns that you can use in this section.
 
 <br>

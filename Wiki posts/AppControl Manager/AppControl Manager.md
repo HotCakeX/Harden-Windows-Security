@@ -141,6 +141,26 @@ Each applicable feature of the AppControl Manager that you start using will gene
 
 <br>
 
+## Where Is The User Configurations Directory?
+
+The User Configurations directory is located in the following location:
+
+```
+C:\Program Files\AppControl Manager
+```
+
+Everything the AppControl Manager creates/generates will be saved in that directory ***or one of its sub-directories***, such as:
+
+* XML policy files
+* CIP files
+* Generated certificates
+* Automatically acquired SignTool.exe
+* Logs
+* User Configurations JSON file
+* Temporary files (Staging Areas)
+
+<br>
+
 ## About the Installation Process
 
 The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:

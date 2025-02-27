@@ -19,3 +19,11 @@ The Sidebar also includes a toggle switch that, when enabled, automatically assi
 By default, the Sidebar displays the XML policy path specified in the App settings, ensuring immediate access to the main policy you work with.
 
 <br>
+
+### Configuration Details
+
+* **Sidebar Guide**: Use this button to open this page in the browser.
+
+* **Open User Config Directory**: Use this button to open the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) in File Explorer.
+
+<br>

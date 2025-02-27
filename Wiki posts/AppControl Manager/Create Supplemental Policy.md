@@ -37,6 +37,8 @@ With AppControl Manager, you can easily create a supplemental policy by scanning
 
 * **Select Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
 
+* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
 > [!TIP]\
 > Use the ***View Detected File Details*** section to view highly detailed results of the files and folder scans.
 
@@ -56,6 +58,8 @@ If you have certificate `.cer` files, you can use this feature to scan them and 
 
 * **Signing Scenario**: Choose between User Mode or Kernel Mode signing scenarios. If you choose User Mode, the supplemental policy will only allow User Mode files signed by that certificate to run and Kernel mode files such as drivers will remain blocked.
 
+* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
 <br>
 
 ## Create ISG-based Supplemental Policy
@@ -67,6 +71,8 @@ This supplemental policy does not explicitly permit any files or applications by
 * **Policy Name**: Enter a name for the Supplemental policy. You will be able to use this name to detect it after deployment in the **System Information** section of the AppControl Manager.
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
+
+* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
 
 <br>
 
@@ -86,6 +92,8 @@ This supplemental policy can be created only for Kernel-mode files/drivers, typi
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
 
+* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
 <br>
 
 ## Create a Supplemental Policy Based on Package Family Names
@@ -103,5 +111,28 @@ You can create Supplemental policies for the installed packaged apps. These are 
    * Use the "Select All" and "Remove Selections" buttons to select/deselect all apps currently available in the list.
 
    * Use the Refresh button to refresh the list of installed apps in case you removed/installed any apps after the list was loaded.
+
+* **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
+<br>
+
+## Create a Supplemental Policy Based on Custom Pattern-based File Rules
+
+Use this section to create custom pattern-based file rules so that if a file or folder's path matches that pattern, it will be blocked. The pattern is based on regex and supports `*` and `?` characters. You can use this feature to create sophisticated file path rules that can dynamically match multiple files or folders.
+
+Keep in mind that file rules are only supported for user-mode files. Using file rules for kernel-mode files simply has no effect.
+
+### Configuration Details
+
+* **Policy Name**: Enter a name for the Supplemental policy.
+
+* **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
+
+* **Custom Pattern-based File Rule**: Enter your pattern in here. It will be used as is without any further modifications to it. What you enter here will be what you see in the XML file.
+
+* **Deploy After Creation**: If toggled, only the Supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
+
+> [!TIP]\
+> Use the ***More Information*** section to view examples and description of different patterns that you can use in this section.
 
 <br>

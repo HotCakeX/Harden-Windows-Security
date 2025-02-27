@@ -447,6 +447,13 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	{
 		this.InitializeComponent();
 
+		// Make sure navigating to/from this page maintains its state
+		// If we don't have this option enabled, the page will be re-initialized every time we navigate to it
+		// And we will lose the data that was previously displayed. We'd have to run the CalculateColumnWidths() method and then assignment of ItemsSource of ListView
+		// Inside of the OnNavigatedTo method of this class.
+		// Or better option is to move the column bindings from this class and put them in a separate ViewModel class that won't be affected nor requires navigation caching
+		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+
 		UIListView = FileIdentitiesListView;
 
 		// Assign this instance to the static field

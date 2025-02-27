@@ -238,6 +238,8 @@ public sealed partial class CreateDenyPolicy : Page
 
 							CreateDenyPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
 							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
+
+							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UpdateTotalFiles();
 						}
 						else
 						{
@@ -281,6 +283,11 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
@@ -293,11 +300,13 @@ public sealed partial class CreateDenyPolicy : Page
 						FilesAndFoldersInfoBar.Message = msg4;
 					});
 
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 			});
 
@@ -784,7 +793,7 @@ public sealed partial class CreateDenyPolicy : Page
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedDenyPolicyName}.xml");
 
 				// Set policy name and reset the policy ID
-				string denyPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedDenyPolicyName, null, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedDenyPolicyName, null, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
@@ -795,11 +804,14 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{PFNBasedDenyPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-
 					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
 
 					Logger.Write(msg4);
@@ -809,12 +821,13 @@ public sealed partial class CreateDenyPolicy : Page
 						PFNInfoBar.Message = msg4;
 					});
 
-
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{denyPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});
@@ -917,11 +930,12 @@ public sealed partial class CreateDenyPolicy : Page
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [pattern]);
 
 				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny);
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName);
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.xml");
 
-				string denyPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null, null);
+				// Set policy name and reset the policy ID
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
@@ -932,10 +946,14 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-
 					string msg4 = "Deploying the Deny policy on the system";
 
 					Logger.Write(msg4);
@@ -945,11 +963,13 @@ public sealed partial class CreateDenyPolicy : Page
 						CustomPatternBasedFileRuleInfoBar.Message = msg4;
 					});
 
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{denyPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});

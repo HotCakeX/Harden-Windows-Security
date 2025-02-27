@@ -69,11 +69,13 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void LightUp1(object sender, RoutedEventArgs e)
+	private async void LightUp1(object sender, RoutedEventArgs e)
 	{
 		PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
 		PickPolicyFileButton_TextBox.Text = unsignedBasePolicyPathFromSidebar;
 		SelectedFilePath = unsignedBasePolicyPathFromSidebar;
+
+		await LoadPolicyOptionsFromXML(SelectedFilePath);
 	}
 
 	#endregion
@@ -183,7 +185,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// When the XML policy file is selected by the user, get its rule options and check/uncheck the check boxes in the UI accordingly
 	/// </summary>
 	/// <param name="filePath"></param>
-	private async Task LoadPolicyOptionsFromXML(string filePath)
+	private async Task LoadPolicyOptionsFromXML(string? filePath)
 	{
 
 		SiPolicy.SiPolicy policyObj = null!;
@@ -253,7 +255,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 					string cipPath = Path.Combine(stagingArea.FullName, $"{Path.GetFileName(SelectedFilePath)}.cip");
 
-					PolicyToCIPConverter.Convert(stagingArea.FullName, cipPath);
+					PolicyToCIPConverter.Convert(SelectedFilePath, cipPath);
 
 					CiToolHelper.UpdatePolicy(cipPath);
 				});

@@ -1423,4 +1423,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
     <value>Pattern based File Rule</value>
   </data>
+  <data name="NoMSRecommendedBlockRules.Description" xml:space="preserve">
+    <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
+  </data>
+  <data name="NoMSRecommendedBlockRules.Header" xml:space="preserve">
+    <value>No Microsoft Recommended Block Rules</value>
+  </data>
+  <data name="NoMSRecommendedBlockRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
+  </data>
 </root>

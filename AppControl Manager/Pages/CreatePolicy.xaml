@@ -103,6 +103,10 @@
                             <ToggleSwitch x:Name="AllowMicrosoftTestMode" />
                         </controls:SettingsCard>
 
+                        <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
+                            <ToggleSwitch x:Name="AllowMicrosoftNoBockRules" />
+                        </controls:SettingsCard>
+
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
@@ -169,6 +173,10 @@
                             <ToggleSwitch x:Name="DefaultWindowsTestMode" />
                         </controls:SettingsCard>
 
+                        <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
+                            <ToggleSwitch x:Name="DefaultWindowsNoBockRules" />
+                        </controls:SettingsCard>
+
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
@@ -233,6 +241,10 @@
 
                         <controls:SettingsCard x:Uid="TestModeRuleOption">
                             <ToggleSwitch x:Name="SignedAndReputableTestMode" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
+                            <ToggleSwitch x:Name="SignedAndReputableNoBockRules" />
                         </controls:SettingsCard>
 
                     </controls:SettingsExpander.Items>

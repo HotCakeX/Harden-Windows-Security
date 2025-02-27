@@ -18,8 +18,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel;
-using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
@@ -1787,9 +1785,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	#region Package Family Names
 
-	// Package Manager object used by the PFN section
-	private readonly PackageManager packageManager = new();
-
 	// To track whether the expandable settings section for the PFN supplemental policy has expanded so the apps list can be pre-loaded
 	private bool packagesLoadedOnExpand;
 
@@ -1816,48 +1811,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
 	}
 
-	/// <summary>
-	/// Gets the list of all installed Packaged Apps
-	/// </summary>
-	/// <returns></returns>
-	internal async Task<List<PackagedAppView>> GetAppsList()
-	{
-		return await Task.Run(() =>
-		{
-			// The list to return as output
-			List<PackagedAppView> apps = [];
-
-			// Get all of the packages on the system
-			IEnumerable<Package> allApps = packageManager.FindPackages();
-
-			// Loop over each package
-			foreach (Package item in allApps)
-			{
-				// Get the logo string (or an empty string if null)
-				string logoStr = item.Logo?.ToString() ?? string.Empty;
-
-				// Validate that the logo string is a valid absolute URI
-				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
-				{
-					// If invalid, assign a fallback logo
-					logoStr = GlobalVars.FallBackAppLogoURI;
-				}
-
-				// Create a new instance of the class that displays each app in the ListView
-				apps.Add(new PackagedAppView(
-					displayName: item.DisplayName,
-					version: $"Version: {item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
-					packageFamilyName: $"PFN: {item.Id.FamilyName}",
-					logo: logoStr,
-					packageFamilyNameActual: item.Id.FamilyName
-					));
-			}
-
-			return apps;
-		});
-
-	}
-
 
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
@@ -1870,7 +1823,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		{
 			PFNRefreshAppsListButton.IsEnabled = false;
 
-			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+			PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 		}
 		finally
 		{
@@ -1890,7 +1843,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		{
 			PFNRefreshAppsListButton.IsEnabled = false;
 
-			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+			PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 		}
 		finally
 		{
@@ -1926,32 +1879,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
 		}
 	}
-
-
-	// To create a collection of grouped items, create a query that groups
-	// an existing list, or returns a grouped collection from a database.
-	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	private async Task<ObservableCollection<GroupInfoListForPackagedAppView>> GetContactsGroupedAsync()
-	{
-		// Grab Apps objects from pre-existing list (list is returned from method GetAppsList())
-		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await GetAppsList()
-
-																 // Ensure DisplayName is not null before grouping
-																 // This also prevents apps without a DisplayName to exist in the returned apps list
-															 where !string.IsNullOrWhiteSpace(item.DisplayName)
-
-															 // Group the items returned from the query, sort and select the ones you want to keep
-															 group item by item.DisplayName[..1].ToUpper() into g
-															 orderby g.Key
-
-															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
-															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
-															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
-															 select new GroupInfoListForPackagedAppView(g) { Key = g.Key };
-
-		return [.. query];
-	}
-
 
 	/// <summary>
 	/// Event handler to select all apps in the ListView
@@ -2047,7 +1974,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				PFNRefreshAppsListButton.IsEnabled = false;
 
-				PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+				PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 
 				packagesLoadedOnExpand = true;
 			}

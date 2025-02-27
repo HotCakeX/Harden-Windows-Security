@@ -161,7 +161,7 @@ Unprotect-WindowsSecurity # CLI Mode
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in clear text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in clear text, nothing hidden, no 3rd party executable is involved.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> No Windows functionality is removed/disabled against Microsoft's recommendations.
 
@@ -1498,7 +1498,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> **T**o combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying an [App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/feature-availability) in the Downloads folder.
 
-This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.
+This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet and has the potential to protect against zero-click exploits. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.
 
 The App Control policy employs a wildcard pattern to prevent any file from running in the Downloads folder. Additionally, it verifies that the system downloads folder in the user directory matches the downloads folder in the Edge browser's settings. If there is a discrepancy, a warning message is displayed on the console.
 
@@ -1628,7 +1628,7 @@ This repository uses effective methods that make it easy to verify:
 
     - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used for compliance checking.
 
-    - [Harden-Windows-Security.ps1](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) is the boot-strapper for the Harden Windows Security module.
+    - [Harden-Windows-Security.ps1](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) is the boot-strapper for the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) and the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager).
 
 - [How Are Group Policies Used by the Harden Windows Security Module?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-used-by-the-harden-windows-security-module)
 - [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
@@ -1651,6 +1651,8 @@ This repository uses effective methods that make it easy to verify:
 * [![Build AppControl Manager MSIX Package](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml)
 * [![Dependabot Updates](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependabot/dependabot-updates)
 * [![Markdown Link Validator](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Markdown%20Link%20Validator.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Markdown%20Link%20Validator.yml)
+* [![Dependency review](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependency-review.yml)
+* [![OSV-Scanner](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/osv-scanner.yml)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 
@@ -1835,6 +1837,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Exploitability Index](https://www.microsoft.com/en-us/msrc/exploitability-index)
 - [The Microsoft Incident Response Ninja Hub](https://aka.ms/MicrosoftIRNinjaHub)
 - [Understanding the Microsoft Pluton security processor](https://techcommunity.microsoft.com/blog/windows-itpro-blog/understanding-the-microsoft-pluton-security-processor/4370413)
+- [Important Security Topics from Azure and Security MVPs](https://techcommunity.microsoft.com/blog/mvp-blog/mvp%E2%80%99s-favorite-content-important-security-topics-from-azure-and-security-mvps/4382196)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 
@@ -1864,7 +1867,7 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 ### Credits
 
-* Some of the icons are from [icons8](https://icons8.com/)
+* Many of the icons are from [icons8](https://icons8.com/)
 * Windows, Azure etc. are trademarks of [Microsoft Corporation](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general)
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">
@@ -1902,16 +1905,14 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 ## Donations <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/DonateIcon.png" width="48" alt="DonateIcon">
 
-If you would like to support my work financially, your generosity is greatly appreciated. This section is specifically for those who want to make a monetary contribution. There are other ways to support such as sharing the repository on social media, starring and so on.
+If you would like to support my work financially, your generosity is greatly appreciated.
 
-You can donate using the following methods:
-
-* **Donate to a Charity That Matters:** Instead of donating directly to me, you could donate to a charity that is important to me, one that works to keep us safe and alive: [FIDF](https://www.fidf.org/)
+You can donate using the following method:
 
 <details>
 <summary>
 
-* **Donate to me personally:** [My Public Address to Receive BNB (Smart Chain - Coin)](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D) - Click/Tap here to view QR code
+* [My Public Address to Receive BNB (Smart Chain - Coin)](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D) - Click/Tap here to view QR code
 
 </summary>
 

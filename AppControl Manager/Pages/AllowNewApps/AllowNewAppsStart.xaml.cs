@@ -390,11 +390,9 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode]);
 					PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
 				}
-
 				// If the policy is Signed
 				else
 				{
-
 					// Create audit mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode], rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
@@ -424,7 +422,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 					// Rename the .p7 signed file to .cip
 					File.Move(CIPp7SignedFilePathEnforced, EnforcedModeCIP, true);
-
 				}
 
 				Logger.Write("Creating Enforced Mode SnapBack guarantee");
@@ -514,8 +511,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				});
 
 #if !DEBUG
-					Logger.Write("Deploying the Enforced mode policy.");
-					CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+				Logger.Write("Deploying the Enforced mode policy.");
+				CiToolHelper.UpdatePolicy(EnforcedModeCIP);
 #endif
 
 				// Delete the enforced mode CIP file after deployment
@@ -746,8 +743,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				{
 
 #if !DEBUG
-						Logger.Write("Deploying the Enforced mode policy because user decided to reset the operation");
-						CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+					Logger.Write("Deploying the Enforced mode policy because user decided to reset the operation");
+					CiToolHelper.UpdatePolicy(EnforcedModeCIP);
 #endif
 
 					// Delete the enforced mode CIP file from the user config directory after deploying it
@@ -964,7 +961,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{selectedSupplementalPolicyName}.xml");
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, _BasePolicyObject!.BasePolicyID, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, _BasePolicyObject!.BasePolicyID, null);
 
 				// Configure policy rule options
 				if (!_IsSignedPolicy)
@@ -988,34 +985,40 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip");
+
+				// This path is only used if the policy is signed
+				string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip.p7");
+
+				// Convert the XML file to CIP
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+				if (_IsSignedPolicy)
+				{
+					// Sign the CIP
+					SignToolHelper.Sign(new FileInfo(CIPPath), new FileInfo(_SignToolPath!), _CertCN!);
+
+					// Rename the .p7 signed file to .cip
+					File.Move(CIPp7SignedFilePath, CIPPath, true);
+				}
+				else
+				{
+					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				}
+
 				// If user selected to deploy the policy
 				if (deployPolicy)
 				{
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-					if (_IsSignedPolicy)
-					{
-						string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip.p7");
-
-						// Convert the XML file to CIP
-						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
-						// Sign the CIP
-						SignToolHelper.Sign(new FileInfo(CIPPath), new FileInfo(_SignToolPath!), _CertCN!);
-
-						// Rename the .p7 signed file to .cip
-						File.Move(CIPp7SignedFilePath, CIPPath, true);
-					}
-
-					else
-					{
-						PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-					}
-
 #if !DEBUG
-						CiToolHelper.UpdatePolicy(CIPPath);
+					CiToolHelper.UpdatePolicy(CIPPath);
 #endif
+				}
 
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});

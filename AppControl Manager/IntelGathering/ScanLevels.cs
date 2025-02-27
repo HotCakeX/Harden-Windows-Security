@@ -8,5 +8,6 @@ public enum ScanLevels
 	Hash,
 	FilePath,
 	WildCardFolderPath,
-	PFN
+	PFN,
+	CustomFileRulePattern
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -17,6 +18,9 @@ public sealed partial class Logs : Page
 	public Logs()
 	{
 		this.InitializeComponent();
+
+		// Make sure navigating to/from this page maintains its state
+		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
 		// Load log files when the page is initialized.
 		LoadLogFiles();

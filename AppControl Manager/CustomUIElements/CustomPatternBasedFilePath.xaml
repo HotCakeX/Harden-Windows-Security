@@ -1,0 +1,102 @@
+<ContentDialog
+    x:Class="AppControlManager.CustomUIElements.CustomPatternBasedFilePath"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppControlManager.CustomUIElements"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    mc:Ignorable="d"
+    Title="Pattern Based File Path"
+    CloseButtonText="OK"
+    IsPrimaryButtonEnabled="False"
+    DefaultButton="Primary"
+    BorderThickness="1"
+    CornerRadius="8"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}">
+
+    <ContentDialog.Resources>
+        <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->
+        <x:Double x:Key="ContentDialogMaxWidth">900</x:Double>
+    </ContentDialog.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controls:WrapPanel Orientation="Vertical" Margin="0,0,0,15" Grid.Row="0" HorizontalSpacing="10" VerticalSpacing="10">
+
+            <TextBlock IsTextSelectionEnabled="True" TextWrapping="Wrap" VerticalAlignment="Top" Text="Here are some examples of custom patterns for file path rules" />
+
+            <HyperlinkButton Content="More Info" NavigateUri="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#using-wildcards-in-app-control-filepath-rules" />
+
+        </controls:WrapPanel>
+
+        <ListView x:Name="CustomPatternBasedFilePathListView"
+                Grid.Row="1"
+                SelectionMode="None"
+                ScrollViewer.HorizontalScrollMode="Enabled"
+                ScrollViewer.IsHorizontalRailEnabled="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                ShowsScrollingPlaceholders="True"
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                Margin="0,0,0,15">
+
+            <ListView.Header>
+
+                <Border CornerRadius="5" Background="Black">
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:StickyHeaderBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400" />
+                            <ColumnDefinition Width="400" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Example" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock Text="Description" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                    </Grid>
+                </Border>
+            </ListView.Header>
+
+            <!-- DataTemplate for ListView items -->
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:FilePathPatternExample">
+                    <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
+                    <Grid Background="Transparent">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400" />
+                            <ColumnDefinition Width="400" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind Example}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,10,2,10" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="True"/>
+                        <TextBlock Text="{x:Bind Description}" HorizontalAlignment="Left" Grid.Column="1" TextWrapping="WrapWholeWords" Margin="0,10,2,10" IsTextSelectionEnabled="True"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock IsTextSelectionEnabled="True" Margin="0,0,0,15" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top">
+             <Bold><Run Foreground="DeepPink" FontSize="18">*</Run></Bold>            
+            <Span>Matches zero or more characters.</Span>
+        </TextBlock>
+
+        <TextBlock IsTextSelectionEnabled="True" Margin="0,0,0,15" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top">
+            <Bold><Run Foreground="DeepPink" FontSize="18">?</Run></Bold>            
+             <Span>Matches a single character.</Span>
+        </TextBlock>
+
+    </Grid>
+
+</ContentDialog>

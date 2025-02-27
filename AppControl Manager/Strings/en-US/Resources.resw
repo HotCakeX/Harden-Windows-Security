@@ -1366,4 +1366,70 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ExtensionOIDsHeader.Text" xml:space="preserve">
     <value>Extension OIDs</value>
   </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Description" xml:space="preserve">
+    <value>Use this section to enter a custom pattern-based file rule to add to the supplemental policy.</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use this section to enter a custom pattern-based file rule to add to the supplemental policy.</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Header" xml:space="preserve">
+    <value>Custom Pattern-based File Rule</value>
+  </data>
+  <data name="CustomPatternBasedFileRuleInfoSettingsCard.Description" xml:space="preserve">
+    <value>Click/Tap here to see more information about the patterns you can use</value>
+  </data>
+  <data name="CustomPatternBasedFileRuleInfoSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click/Tap here to see more information about the patterns you can use</value>
+  </data>
+  <data name="CustomPatternBasedFileRuleInfoSettingsCard.Header" xml:space="preserve">
+    <value>More Information</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter a custom matching pattern</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter a custom matching pattern for file rules. All of the file paths that match this pattern will be allowed by the Supplemental policy.</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>Create a supplemental policy that uses custom pattern-based file rule.</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a supplemental policy that uses custom pattern-based file rule.</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>Pattern based File Rule</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Description" xml:space="preserve">
+    <value>Use this section to enter a custom pattern-based file rule to add to the Deny policy.</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use this section to enter a custom pattern-based file rule to add to the Deny policy.</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Header" xml:space="preserve">
+    <value>Custom Pattern-based File Rule</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedCustomPatternTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter a custom matching pattern</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedCustomPatternTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter a custom matching pattern for file rules. All of the file paths that match this pattern will be denied by the Deny policy.</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
+    <value>Create a Deny policy that uses custom pattern-based file rule.</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a Deny policy that uses custom pattern-based file rule.</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
+    <value>Pattern based File Rule</value>
+  </data>
+  <data name="NoMSRecommendedBlockRules.Description" xml:space="preserve">
+    <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
+  </data>
+  <data name="NoMSRecommendedBlockRules.Header" xml:space="preserve">
+    <value>No Microsoft Recommended Block Rules</value>
+  </data>
+  <data name="NoMSRecommendedBlockRules.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
+  </data>
 </root>

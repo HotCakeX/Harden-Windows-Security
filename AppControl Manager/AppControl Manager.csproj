@@ -46,7 +46,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <!-- Publish Properties -->
-    <PublishReadyToRun>True</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">true</PublishReadyToRun>
 
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
@@ -79,7 +79,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.9.2.0</FileVersion>
+    <FileVersion>1.9.3.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

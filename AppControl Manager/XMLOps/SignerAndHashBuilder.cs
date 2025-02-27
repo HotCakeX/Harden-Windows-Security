@@ -49,6 +49,7 @@ internal static class SignerAndHashBuilder
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 		List<FileIdentity>? data = null,
 		HashSet<string>? folderPaths = null,
+		HashSet<string>? customFileRulePatterns = null,
 		ScanLevels level = ScanLevels.FilePublisher,
 		bool publisherToHash = false,
 		List<string>? packageFamilyNames = null
@@ -76,6 +77,7 @@ internal static class SignerAndHashBuilder
 		List<FileIdentity> filePathData = [];
 		HashSet<string> wildCardFilePathData = [];
 		List<string> PFNs = [];
+		HashSet<string> customPatternBasedFileRules = [];
 
 		Logger.Write("BuildSignerAndHashObjects: Starting the data separation process.");
 
@@ -190,6 +192,15 @@ internal static class SignerAndHashBuilder
 					if (folderPaths is not null)
 					{
 						wildCardFilePathData = folderPaths;
+					}
+					break;
+				}
+
+			case ScanLevels.CustomFileRulePattern:
+				{
+					if (customFileRulePatterns is not null)
+					{
+						customPatternBasedFileRules = customFileRulePatterns;
 					}
 					break;
 				}
@@ -392,6 +403,20 @@ internal static class SignerAndHashBuilder
 			// Plus we wouldn't know if the folder contains user-mode or kernel-mode files
 			filePaths.Add(new FilePathCreator(
 				wildcardPath,
+				"0.0.0.0", // Minimum version of all files allowed by path
+				1 // for User Mode
+				));
+		}
+
+		Logger.Write("BuildSignerAndHashObjects: Processing Custom Pattern-Based FilePath data");
+
+		foreach (string item in customPatternBasedFileRules)
+		{
+
+			// FilePath rules can only be used for User-Mode files only
+			// Using whatever user entered as is.
+			filePaths.Add(new FilePathCreator(
+				item,
 				"0.0.0.0", // Minimum version of all files allowed by path
 				1 // for User Mode
 				));

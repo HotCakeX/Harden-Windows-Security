@@ -3,6 +3,7 @@ using AppControlManager.Others;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -18,7 +19,7 @@ public sealed partial class MicrosoftDocumentation : Page
 		MicrosoftDocumentationWebView2.NavigationCompleted += WebView2_NavigationCompleted;
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
 	// Event handler for Back button

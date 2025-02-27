@@ -40,7 +40,7 @@ internal static class NewFilePathRules
 			// Create a new Allow FilePath rule
 			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newFileRule.SetAttribute("ID", allowRuleID);
-			newFileRule.SetAttribute("FriendlyName", "File Path Rule");
+			newFileRule.SetAttribute("FriendlyName", "File Path Rule Type");
 			newFileRule.SetAttribute("MinimumFileVersion", item.MinimumFileVersion);
 			newFileRule.SetAttribute("FilePath", item.FilePath);
 			// Add the new node to the FileRules node
@@ -95,7 +95,7 @@ internal static class NewFilePathRules
 			// Create a new Deny FilePath rule
 			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newFileRule.SetAttribute("ID", denyRuleID);
-			newFileRule.SetAttribute("FriendlyName", "File Path Rule");
+			newFileRule.SetAttribute("FriendlyName", "File Path Rule Type");
 			newFileRule.SetAttribute("FilePath", item.FilePath);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);

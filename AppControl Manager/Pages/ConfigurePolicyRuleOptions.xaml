@@ -87,6 +87,8 @@
                         <Button x:Name="ApplyTheChangesButton" Content="Apply the Changes" Click="ApplyTheChangesButton_Click"
                             Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected" />
 
+                        <ToggleButton x:Name="DeployAfterApplyingToggleButton" Content="Deploy After Applying" />
+                        
                         <Button x:Name="RefreshRuleOptionsState" Content="Retrieve Rules States" Click="RefreshRuleOptionsState_Click"
                                 ToolTipService.ToolTip="Retrieve the latest state of policy rule options from the policy file you selected"/>
 

@@ -51,6 +51,7 @@ public sealed partial class CreatePolicy : Page
 		bool enableScriptEnforcement = AllowMicrosoftEnableScriptEnforcement.IsOn;
 		bool testMode = AllowMicrosoftTestMode.IsOn;
 		bool shouldDeploy = AllowMicrosoftCreateAndDeploy.IsChecked ?? false;
+		bool DeployMSRecommendedBlockRules = !AllowMicrosoftNoBlockRules.IsOn;
 
 		try
 		{
@@ -92,7 +93,9 @@ public sealed partial class CreatePolicy : Page
 					requireEVSigners,
 					enableScriptEnforcement,
 					testMode,
-					true
+					true,
+					null,
+					DeployMSRecommendedBlockRules
 				);
 
 			});
@@ -164,6 +167,7 @@ public sealed partial class CreatePolicy : Page
 		bool enableScriptEnforcement = DefaultWindowsEnableScriptEnforcement.IsOn;
 		bool testMode = DefaultWindowsTestMode.IsOn;
 		bool shouldDeploy = DefaultWindowsCreateAndDeploy.IsChecked ?? false;
+		bool DeployMSRecommendedBlockRules = !DefaultWindowsNoBockRules.IsOn;
 
 		try
 		{
@@ -205,7 +209,9 @@ public sealed partial class CreatePolicy : Page
 					requireEVSigners,
 					enableScriptEnforcement,
 					testMode,
-					true
+					true,
+					null,
+					DeployMSRecommendedBlockRules
 				);
 
 			});
@@ -278,6 +284,7 @@ public sealed partial class CreatePolicy : Page
 		bool enableScriptEnforcement = SignedAndReputableEnableScriptEnforcement.IsOn;
 		bool testMode = SignedAndReputableTestMode.IsOn;
 		bool shouldDeploy = SignedAndReputableCreateAndDeploy.IsChecked ?? false;
+		bool DeployMSRecommendedBlockRules = !SignedAndReputableNoBockRules.IsOn;
 
 		try
 		{
@@ -318,7 +325,9 @@ public sealed partial class CreatePolicy : Page
 					requireEVSigners,
 					enableScriptEnforcement,
 					testMode,
-					true
+					true,
+					null,
+					DeployMSRecommendedBlockRules
 				);
 
 			});

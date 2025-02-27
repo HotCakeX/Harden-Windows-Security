@@ -390,7 +390,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null)
+	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null, bool DeployMicrosoftRecommendedBlockRules = true)
 	{
 
 		string policyName;
@@ -414,7 +414,7 @@ internal static partial class BasePolicyCreator
 		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
 		// Get/Deploy the block rules if this base policy is not being swapped
-		if (PolicyIDToUse is null)
+		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			GetBlockRules(StagingArea, deploy);
 
 		Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
@@ -476,7 +476,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null)
+	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null, bool DeployMicrosoftRecommendedBlockRules = true)
 	{
 
 		string policyName;
@@ -500,7 +500,7 @@ internal static partial class BasePolicyCreator
 		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
 		// Get/Deploy the block rules if this base policy is not being swapped
-		if (PolicyIDToUse is null)
+		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			GetBlockRules(StagingArea, deploy);
 
 		Logger.Write("Copying the DefaultWindows.xml from Windows directory to the Staging Area");
@@ -658,7 +658,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null)
+	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null, bool DeployMicrosoftRecommendedBlockRules = true)
 	{
 
 		string policyName;
@@ -682,7 +682,7 @@ internal static partial class BasePolicyCreator
 		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
 		// Get/Deploy the block rules if this base policy is not being swapped
-		if (PolicyIDToUse is null)
+		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			GetBlockRules(StagingArea, deploy);
 
 		Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");

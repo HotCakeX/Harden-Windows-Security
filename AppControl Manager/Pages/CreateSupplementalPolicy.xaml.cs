@@ -18,8 +18,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel;
-using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
@@ -304,7 +302,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForFoldersSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-
 		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
 		if (selectedDirectories is { Count: > 0 })
@@ -352,7 +349,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -376,7 +372,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void FilesAndFoldersBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -532,7 +527,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			return;
 		}
 
-
 		bool errorsOccurred = false;
 
 		try
@@ -603,7 +597,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						return;
 					}
 
-
 					string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Count} AppControl compatible files...";
 					Logger.Write(msg2);
 
@@ -646,6 +639,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
 						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
+
+						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.UpdateTotalFiles();
 					}
 					else
 					{
@@ -671,16 +666,30 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				SiPolicy.SiPolicy policyObj = Management.Initialize(filesAndFoldersBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersSupplementalPolicyName, policyObj.BasePolicyID, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersSupplementalPolicyName, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
-				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				if (filesAndFoldersScanLevel is ScanLevels.FilePath || filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
+				{
+					Logger.Write($"The selected scan level is {filesAndFoldersScanLevel}, adding 'Disabled: Runtime FilePath Rule Protection' rule option to the Supplemental policy so non-admin protected file paths will work.'");
+
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
+				}
+				else
+				{
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				}
 
 				// Set policy version
 				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
 
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersSupplementalPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
@@ -695,11 +704,13 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						FilesAndFoldersInfoBar.Message = msg4;
 					});
 
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 			});
 
@@ -851,7 +862,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private void CertificatesBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -924,10 +934,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			return;
 		}
 
-
 		try
 		{
-
 			CreateCertificatesSupplementalPolicyButton.IsEnabled = false;
 			CertificatesPolicyDeployToggleButton.IsEnabled = false;
 			CertificatesBrowseForCertsButton.IsEnabled = false;
@@ -939,6 +947,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			SigningScenariosRadioButtons.IsEnabled = false;
 
 			CertificatesInfoBar.IsOpen = true;
+			CertificatesInfoBar.IsClosable = false;
 			CertificatesInfoBar.Message = $"Creating the Certificates-based Supplemental policy for {CertificatesBasedCertFilePaths.Count} certificates";
 			CertificatesInfoBar.Severity = InfoBarSeverity.Informational;
 
@@ -951,9 +960,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Get the path to an empty policy file
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
-
 				List<CertificateSignerCreator> certificateResults = [];
-
 
 				foreach (string certificate in CertificatesBasedCertFilePaths)
 				{
@@ -966,7 +973,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						(CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false)),
 						signingScenario ? 1 : 0 // By default it's set to User-Mode in XAML/UI
 					));
-
 				}
 
 
@@ -996,7 +1002,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				SiPolicy.SiPolicy policyObj = Management.Initialize(CertificatesBasedBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CertificatesBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CertificatesBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -1007,11 +1013,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{CertificatesBasedSupplementalPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 				// If user selected to deploy the policy
 				if (CertificatesBasedDeployButton)
 				{
-
 					string msg4 = "Deploying the Supplemental policy on the system";
 
 					Logger.Write(msg4);
@@ -1021,21 +1030,20 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						CertificatesInfoBar.Message = msg4;
 					});
 
-
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});
-
 		}
 
 		catch
 		{
-
 			CertificatesInfoBar.Severity = InfoBarSeverity.Error;
 			CertificatesInfoBar.Message = "An error occurred while creating certificate based Supplemental policy";
 
@@ -1050,7 +1058,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				CertificatesInfoBar.Severity = InfoBarSeverity.Success;
 
 				CertificatesInfoBar.Message = $"Successfully created a certificate-based Supplemental policy named {CertificatesBasedSupplementalPolicyName}.";
-
 			}
 
 			CreateCertificatesSupplementalPolicyButton.IsEnabled = true;
@@ -1062,6 +1069,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			CertificatesBrowseForBasePolicyButton.IsEnabled = true;
 			CertificatesSigningScenarioSettingsCard.IsEnabled = true;
 			SigningScenariosRadioButtons.IsEnabled = true;
+
+			CertificatesInfoBar.IsClosable = true;
 		}
 
 	}
@@ -1137,6 +1146,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ISGBrowseForBasePolicyButton.IsEnabled = false;
 
 			ISGInfoBar.IsOpen = true;
+			ISGInfoBar.IsClosable = false;
 			ISGInfoBar.Message = $"Creating the ISG-based Supplemental policy.";
 			ISGInfoBar.Severity = InfoBarSeverity.Informational;
 
@@ -1148,7 +1158,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Defining the paths
 				string savePathTemp = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.xml");
 				string savePathFinal = Path.Combine(GlobalVars.UserConfigDir, "ISGBasedSupplementalPolicy.xml");
-				string cipPath = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.cip");
+				string CIPPath = Path.Combine(stagingArea.FullName, "ISGBasedSupplementalPolicy.cip");
 
 				// Instantiate the user-selected base policy
 				SiPolicy.SiPolicy basePolicyObj = Management.Initialize(ISGBasedBasePolicyPath, null);
@@ -1185,17 +1195,23 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(savePathTemp, savePathFinal, true);
 
+				// Convert the XML file to CIP
+				PolicyToCIPConverter.Convert(savePathTemp, CIPPath);
+
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
 				{
 					// Prepare the ISG services
 					ConfigureISGServices.Configure();
 
-					// Convert the XML file to CIP
-					PolicyToCIPConverter.Convert(savePathTemp, cipPath);
-
 					// Deploy the signed CIP file
-					CiToolHelper.UpdatePolicy(cipPath);
+					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});
@@ -1225,6 +1241,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ISGPolicyDeployToggleButton.IsEnabled = true;
 			ISGPolicyNameTextBox.IsEnabled = true;
 			ISGBrowseForBasePolicyButton.IsEnabled = true;
+
+			ISGInfoBar.IsClosable = true;
 		}
 	}
 
@@ -1330,7 +1348,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="e"></param>
 	private void StrictKernelModeBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
@@ -1427,50 +1444,46 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				}
 			});
 
-
 			// If any logs were generated since audit mode policy was deployed
-			if (Output.Count > 0)
-			{
-				StrictKernelModeInfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
-
-				// Add the event logs to the ListView
-				foreach (FileIdentity item in Output)
-				{
-					ScanResults.Add(item);
-					ScanResultsList.Add(item);
-				}
-
-				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
-
-
-				await DispatcherQueue.EnqueueAsync(() =>
-				{
-					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-					if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(StrictKernelPolicyScanResults)))
-					{
-						StrictKernelModeDataProcessed = false;
-
-						StrictKernelPolicyScanResults.Instance.CalculateColumnWidths();
-						StrictKernelPolicyScanResults.Instance.UIListView.ItemsSource = ScanResults;
-					}
-					else
-					{
-						// Set it to true so ListView will be updated once user navigated to the page
-						StrictKernelModeDataProcessed = true;
-					}
-				});
-
-
-			}
-			else
+			if (Output.Count is 0)
 			{
 				StrictKernelModeInfoBar.Message = "No logs were generated during the Audit phase";
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Warning;
-				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = false;
 				ErrorsOccurred = true;
 				return;
 			}
 
+			StrictKernelModeInfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
+
+			await Task.Run(() =>
+			{
+				// Add the event logs to the List
+				ScanResultsList.AddRange(Output);
+
+				// Add the event logs to the ObservableCollection
+				ScanResults = [.. Output];
+			});
+
+			await DispatcherQueue.EnqueueAsync(() =>
+			{
+				// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+				if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(StrictKernelPolicyScanResults)))
+				{
+					StrictKernelModeDataProcessed = false;
+
+					StrictKernelPolicyScanResults.Instance.CalculateColumnWidths();
+					StrictKernelPolicyScanResults.Instance.UIListView.ItemsSource = ScanResults;
+
+					StrictKernelPolicyScanResults.Instance.UpdateTotalFiles();
+				}
+				else
+				{
+					// Set it to true so ListView will be updated once user navigated to the page
+					StrictKernelModeDataProcessed = true;
+				}
+			});
+
+			DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
 		}
 
 		catch (Exception ex)
@@ -1562,7 +1575,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			await Task.Run(() =>
 			{
-
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("StrictKernelModeSupplementalPolicy");
 
 				// Get the path to an empty policy file
@@ -1580,7 +1592,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				SiPolicy.SiPolicy policyObj = Management.Initialize(StrictKernelModeBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyNameChosenByUser, policyObj.BasePolicyID, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyNameChosenByUser, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -1593,11 +1605,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{policyNameChosenByUser}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-
 					string msg4 = "Deploying the Supplemental policy on the system";
 
 					Logger.Write(msg4);
@@ -1607,17 +1622,17 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						StrictKernelModeInfoBar.Message = msg4;
 					});
 
-
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});
 		}
-
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
@@ -1627,10 +1642,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			throw;
 		}
-
 		finally
 		{
-
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
@@ -1645,7 +1658,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeScanSinceLastRebootButton.IsEnabled = true;
 			StrictKernelModeBrowseForBasePolicyButton.IsEnabled = true;
 			StrictKernelModeInfoBar.IsClosable = true;
-
 		}
 	}
 
@@ -1660,6 +1672,9 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		DriverAutoDetector();
 	}
 
+	/// <summary>
+	/// Detects the kernel-mode drivers from the system and scans them
+	/// </summary>
 	private async void DriverAutoDetector()
 	{
 		bool ErrorsOccurred = false;
@@ -1713,13 +1728,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			});
 
-
-			if (kernelModeDriversList.Count > 0)
-			{
-
-				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
-			}
-			else
+			if (kernelModeDriversList.Count is 0)
 			{
 				StrictKernelModeInfoBar.Message = "No kernel-mode drivers could be detected";
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Warning;
@@ -1730,26 +1739,43 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			StrictKernelModeInfoBar.Message = $"Scanning {kernelModeDriversList.Count} files";
 
+			HashSet<FileIdentity> LocalFilesResults = [];
+
 			await Task.Run(() =>
 			{
-
 				// Scan all of the detected files from the user selected directories
-				HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 2, null, null);
+				LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 2, null, null);
 
-				// Add the results to the ListView
-				// Only signed kernel-mode files
-				foreach (FileIdentity item in LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned))
-				{
-					_ = DispatcherQueue.TryEnqueue(() =>
-					{
-						ScanResults.Add(item);
-						ScanResultsList.Add(item);
+				// Only keep the signed kernel-mode files
+				IEnumerable<FileIdentity> ILocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
 
-					});
-				}
+				// Add the results to the List
+				ScanResultsList.AddRange(ILocalFilesResults);
 
+				// Add the results to the ObservableCollection
+				ScanResults = [.. ILocalFilesResults];
 			});
 
+			await DispatcherQueue.EnqueueAsync(() =>
+			{
+				// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
+				if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(StrictKernelPolicyScanResults)))
+				{
+					StrictKernelModeDataProcessed = false;
+
+					StrictKernelPolicyScanResults.Instance.CalculateColumnWidths();
+					StrictKernelPolicyScanResults.Instance.UIListView.ItemsSource = ScanResults;
+
+					StrictKernelPolicyScanResults.Instance.UpdateTotalFiles();
+				}
+				else
+				{
+					// Set it to true so ListView will be updated once user navigated to the page
+					StrictKernelModeDataProcessed = true;
+				}
+			});
+
+			DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
 		}
 
 		catch (Exception ex)
@@ -1785,21 +1811,16 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		DriverAutoDetector();
 	}
 
-
 	#endregion
 
 
 	#region Package Family Names
-
-	// Package Manager object used by the PFN section
-	private readonly PackageManager packageManager = new();
 
 	// To track whether the expandable settings section for the PFN supplemental policy has expanded so the apps list can be pre-loaded
 	private bool packagesLoadedOnExpand;
 
 	// Path to the base policy for the PFN based supplemental policy
 	private string? PFNBasePolicyPath;
-
 
 	private void PFNBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
@@ -1820,48 +1841,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
 	}
 
-	/// <summary>
-	/// Gets the list of all installed Packaged Apps
-	/// </summary>
-	/// <returns></returns>
-	internal async Task<List<PackagedAppView>> GetAppsList()
-	{
-		return await Task.Run(() =>
-		{
-			// The list to return as output
-			List<PackagedAppView> apps = [];
-
-			// Get all of the packages on the system
-			IEnumerable<Package> allApps = packageManager.FindPackages();
-
-			// Loop over each package
-			foreach (Package item in allApps)
-			{
-				// Get the logo string (or an empty string if null)
-				string logoStr = item.Logo?.ToString() ?? string.Empty;
-
-				// Validate that the logo string is a valid absolute URI
-				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
-				{
-					// If invalid, assign a fallback logo
-					logoStr = GlobalVars.FallBackAppLogoURI;
-				}
-
-				// Create a new instance of the class that displays each app in the ListView
-				apps.Add(new PackagedAppView(
-					displayName: item.DisplayName,
-					version: $"Version: {item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
-					packageFamilyName: $"PFN: {item.Id.FamilyName}",
-					logo: logoStr,
-					packageFamilyNameActual: item.Id.FamilyName
-					));
-			}
-
-			return apps;
-		});
-
-	}
-
 
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
@@ -1874,7 +1853,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		{
 			PFNRefreshAppsListButton.IsEnabled = false;
 
-			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+			PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 		}
 		finally
 		{
@@ -1894,7 +1873,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		{
 			PFNRefreshAppsListButton.IsEnabled = false;
 
-			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+			PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 		}
 		finally
 		{
@@ -1930,32 +1909,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
 		}
 	}
-
-
-	// To create a collection of grouped items, create a query that groups
-	// an existing list, or returns a grouped collection from a database.
-	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	private async Task<ObservableCollection<GroupInfoListForPackagedAppView>> GetContactsGroupedAsync()
-	{
-		// Grab Apps objects from pre-existing list (list is returned from method GetAppsList())
-		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await GetAppsList()
-
-																 // Ensure DisplayName is not null before grouping
-																 // This also prevents apps without a DisplayName to exist in the returned apps list
-															 where !string.IsNullOrWhiteSpace(item.DisplayName)
-
-															 // Group the items returned from the query, sort and select the ones you want to keep
-															 group item by item.DisplayName[..1].ToUpper() into g
-															 orderby g.Key
-
-															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
-															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
-															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
-															 select new GroupInfoListForPackagedAppView(g) { Key = g.Key };
-
-		return [.. query];
-	}
-
 
 	/// <summary>
 	/// Event handler to select all apps in the ListView
@@ -2051,7 +2004,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				PFNRefreshAppsListButton.IsEnabled = false;
 
-				PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+				PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 
 				packagesLoadedOnExpand = true;
 			}
@@ -2095,7 +2048,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		}
 	}
 
-
 	private void PFNBasePolicyClearButton_Click(object sender, RoutedEventArgs e)
 	{
 
@@ -2103,7 +2055,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
 
 	}
-
 
 	/// <summary>
 	/// Main button's event handler - Create Supplemental policy based on PFNs
@@ -2145,7 +2096,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			return;
 		}
 
-
 		bool ErrorsOccurred = false;
 
 		try
@@ -2163,10 +2113,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			PFNInfoBar.Message = "Creating the Supplemental policy based on Package Family Names";
 			PFNSettingsCard.IsExpanded = true;
 
-
 			// A list to store the selected PackagedAppView items
 			List<string> selectedAppsPFNs = [];
-
 
 			// Loop through the selected items
 			foreach (var selectedItem in PFNPackagedAppsListView.SelectedItems)
@@ -2177,7 +2125,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
 				}
 			}
-
 
 			await Task.Run(() =>
 			{
@@ -2199,7 +2146,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				SiPolicy.SiPolicy policyObj = Management.Initialize(PFNBasePolicyPath, null);
 
 				// Set the BasePolicyID of our new policy to the one from user selected policy
-				string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -2210,11 +2157,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{PFNBasedSupplementalPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-
 					string msg4 = "Deploying the Supplemental policy on the system";
 
 					Logger.Write(msg4);
@@ -2224,16 +2174,16 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						PFNInfoBar.Message = msg4;
 					});
 
-
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});
-
 
 		}
 
@@ -2263,6 +2213,237 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			PFNInfoBar.IsClosable = true;
 		}
 
+	}
+
+	#endregion
+
+
+	#region Custom Pattern-based File Rule
+
+	// Path to the base policy for the Custom Pattern-based File Rule supplemental policy
+	private string? CustomPatternBasedFileRuleBasedBasePolicyPath;
+
+	private bool CustomPatternBasedFileRuleBasedDeployButton;
+
+	// Selected Supplemental policy name
+	private string? CustomPatternBasedFileRuleBasedSupplementalPolicyName;
+
+	private void CustomPatternBasedFileRulePolicyDeployToggleButton_Click(object sender, RoutedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedDeployButton = ((ToggleButton)sender).IsChecked ?? false;
+	}
+
+	private void CustomPatternBasedFileRulePolicyNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedSupplementalPolicyName = ((TextBox)sender).Text;
+	}
+
+	private void CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState is HoldingState.Started)
+			if (!CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.IsOpen)
+				CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard);
+	}
+
+	private void CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.IsOpen)
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard);
+	}
+
+	private void CustomPatternBasedFileRuleBrowseForBasePolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (!CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.IsOpen)
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicyButton);
+	}
+
+	private void CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			CustomPatternBasedFileRuleBasedBasePolicyPath = selectedFile;
+
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard);
+		}
+	}
+
+	private void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			CustomPatternBasedFileRuleBasedBasePolicyPath = selectedFile;
+
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
+		}
+	}
+
+	private void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedBasePolicyPath = null;
+		CustomPatternBasedFileRuleBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
+	}
+
+
+	/// <summary>
+	/// Event handler for the main button - to create Supplemental pattern based File path policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool errorsOccurred = false;
+
+		if (CustomPatternBasedFileRuleBasedBasePolicyPath is null)
+		{
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Select base policy";
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to select a base policy before you can create a Supplemental policy.";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(SupplementalPolicyCustomPatternBasedCustomPatternTextBox.Text))
+		{
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Enter a custom pattern";
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to enter a custom pattern for the file rule.";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedSupplementalPolicyName))
+		{
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Enter a policy name";
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to enter a name for the supplemental policy.";
+			return;
+		}
+
+		try
+		{
+			CreateCustomPatternBasedFileRuleSupplementalPolicyButton.IsEnabled = false;
+			CustomPatternBasedFileRulePolicyDeployToggleButton.IsEnabled = false;
+			CustomPatternBasedFileRulePolicyNameTextBox.IsEnabled = false;
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton.IsEnabled = false;
+			SupplementalPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
+
+			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
+			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Supplemental policy.";
+			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
+			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
+
+			string pattern = SupplementalPolicyCustomPatternBasedCustomPatternTextBox.Text;
+
+			await Task.Run(() =>
+			{
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PatternBasedFilePathRulePolicy");
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [pattern]);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+
+				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedSupplementalPolicyName}.xml");
+
+				// Instantiate the user selected Base policy
+				SiPolicy.SiPolicy policyObj = Management.Initialize(CustomPatternBasedFileRuleBasedBasePolicyPath, null);
+
+				// Set the BasePolicyID of our new policy to the one from user selected policy
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
+
+				// Configure policy rule options
+				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
+
+				// Set policy version
+				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedSupplementalPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+				// If user selected to deploy the policy
+				if (CustomPatternBasedFileRuleBasedDeployButton)
+				{
+					string msg4 = "Deploying the Supplemental policy on the system";
+
+					Logger.Write(msg4);
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						CustomPatternBasedFileRuleInfoBar.Message = msg4;
+					});
+
+					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
+				}
+
+			});
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+
+			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Error;
+			CustomPatternBasedFileRuleInfoBar.Message = $"An error occurred while creating Pattern-based File Path rule Supplemental policy: {ex.Message}";
+
+			Logger.Write($"An error occurred while creating Pattern-based File Path rule Supplemental policy: {ex.Message}");
+
+			throw;
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
+
+				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Supplemental policy.";
+			}
+
+			CreateCustomPatternBasedFileRuleSupplementalPolicyButton.IsEnabled = true;
+			CustomPatternBasedFileRulePolicyDeployToggleButton.IsEnabled = true;
+			CustomPatternBasedFileRulePolicyNameTextBox.IsEnabled = true;
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton.IsEnabled = true;
+			SupplementalPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = true;
+			CustomPatternBasedFileRuleInfoBar.IsClosable = true;
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler to display the content dialog for more info about patterns
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		// Instantiate the Content Dialog
+		CustomUIElements.CustomPatternBasedFilePath customDialog = new();
+
+		App.CurrentlyOpenContentDialog = customDialog;
+
+		// Show the dialog
+		_ = await customDialog.ShowAsync();
 	}
 
 	#endregion

@@ -16,8 +16,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel;
-using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
@@ -240,6 +238,8 @@ public sealed partial class CreateDenyPolicy : Page
 
 							CreateDenyPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
 							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
+
+							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UpdateTotalFiles();
 						}
 						else
 						{
@@ -283,6 +283,11 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
@@ -295,11 +300,13 @@ public sealed partial class CreateDenyPolicy : Page
 						FilesAndFoldersInfoBar.Message = msg4;
 					});
 
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 			});
 
@@ -532,52 +539,7 @@ public sealed partial class CreateDenyPolicy : Page
 	#endregion
 
 
-	#region Package Family Names
-
-	// Package Manager object used by the PFN section
-	private readonly PackageManager packageManager = new();
-
-	/// <summary>
-	/// Gets the list of all installed Packaged Apps
-	/// </summary>
-	/// <returns></returns>
-	internal async Task<List<PackagedAppView>> GetAppsList()
-	{
-		return await Task.Run(() =>
-		{
-			// The list to return as output
-			List<PackagedAppView> apps = [];
-
-			// Get all of the packages on the system
-			IEnumerable<Package> allApps = packageManager.FindPackages();
-
-			// Loop over each package
-			foreach (Package item in allApps)
-			{
-				// Get the logo string (or an empty string if null)
-				string logoStr = item.Logo?.ToString() ?? string.Empty;
-
-				// Validate that the logo string is a valid absolute URI
-				if (!Uri.TryCreate(logoStr, UriKind.Absolute, out _))
-				{
-					// If invalid, assign a fallback logo
-					logoStr = GlobalVars.FallBackAppLogoURI;
-				}
-
-				// Create a new instance of the class that displays each app in the ListView
-				apps.Add(new PackagedAppView(
-					displayName: item.DisplayName,
-					version: $"Version: {item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
-					packageFamilyName: $"PFN: {item.Id.FamilyName}",
-					logo: logoStr,
-					packageFamilyNameActual: item.Id.FamilyName
-					));
-			}
-
-			return apps;
-		});
-	}
-
+	#region Package Family Names	
 
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
@@ -590,7 +552,7 @@ public sealed partial class CreateDenyPolicy : Page
 		{
 			PFNRefreshAppsListButton.IsEnabled = false;
 
-			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+			PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 		}
 		finally
 		{
@@ -609,7 +571,7 @@ public sealed partial class CreateDenyPolicy : Page
 		{
 			PFNRefreshAppsListButton.IsEnabled = false;
 
-			PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+			PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 		}
 		finally
 		{
@@ -644,32 +606,6 @@ public sealed partial class CreateDenyPolicy : Page
 			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
 		}
 	}
-
-
-	// To create a collection of grouped items, create a query that groups
-	// an existing list, or returns a grouped collection from a database.
-	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	private async Task<ObservableCollection<GroupInfoListForPackagedAppView>> GetContactsGroupedAsync()
-	{
-		// Grab Apps objects from pre-existing list (list is returned from method GetAppsList())
-		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await GetAppsList()
-
-																 // Ensure DisplayName is not null before grouping
-																 // This also prevents apps without a DisplayName to exist in the returned apps list
-															 where !string.IsNullOrWhiteSpace(item.DisplayName)
-
-															 // Group the items returned from the query, sort and select the ones you want to keep
-															 group item by item.DisplayName[..1].ToUpper() into g
-															 orderby g.Key
-
-															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
-															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
-															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
-															 select new GroupInfoListForPackagedAppView(g) { Key = g.Key };
-
-		return [.. query];
-	}
-
 
 	/// <summary>
 	/// Event handler to select all apps in the ListView
@@ -767,7 +703,7 @@ public sealed partial class CreateDenyPolicy : Page
 			{
 				PFNRefreshAppsListButton.IsEnabled = false;
 
-				PackagedAppsCollectionViewSource.Source = await GetContactsGroupedAsync();
+				PackagedAppsCollectionViewSource.Source = await GetAppsList.GetContactsGroupedAsync();
 
 				packagesLoadedOnExpand = true;
 			}
@@ -857,7 +793,7 @@ public sealed partial class CreateDenyPolicy : Page
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedDenyPolicyName}.xml");
 
 				// Set policy name and reset the policy ID
-				string denyPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedDenyPolicyName, null, null);
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedDenyPolicyName, null, null);
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
@@ -868,11 +804,14 @@ public sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{PFNBasedDenyPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-
 					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
 
 					Logger.Write(msg4);
@@ -882,12 +821,13 @@ public sealed partial class CreateDenyPolicy : Page
 						PFNInfoBar.Message = msg4;
 					});
 
-
-					string CIPPath = Path.Combine(stagingArea.FullName, $"{denyPolicyID}.cip");
-
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
-
 					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
 			});
@@ -919,4 +859,167 @@ public sealed partial class CreateDenyPolicy : Page
 	}
 
 	#endregion
+
+
+	#region Custom Pattern-based File Rule
+
+	private bool CustomPatternBasedFileRuleBasedDeployButton;
+
+	// Selected Deny policy name
+	private string? CustomPatternBasedFileRuleBasedDenyPolicyName;
+
+	private void CustomPatternBasedFileRulePolicyDeployToggleButton_Click(object sender, RoutedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedDeployButton = ((ToggleButton)sender).IsChecked ?? false;
+	}
+
+	private void CustomPatternBasedFileRulePolicyNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		CustomPatternBasedFileRuleBasedDenyPolicyName = ((TextBox)sender).Text;
+	}
+
+	/// <summary>
+	/// Event handler for the main button - to create Deny pattern based File path policy
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click(object sender, RoutedEventArgs e)
+	{
+
+		bool errorsOccurred = false;
+
+		if (string.IsNullOrWhiteSpace(DenyPolicyCustomPatternBasedCustomPatternTextBox.Text))
+		{
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = "Enter a custom pattern";
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a custom pattern for the file rule.";
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedDenyPolicyName))
+		{
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = "Enter a policy name";
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a name for the Deny policy.";
+			return;
+		}
+
+		try
+		{
+			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = false;
+			CustomPatternBasedFileRulePolicyDeployToggleButton.IsEnabled = false;
+			CustomPatternBasedFileRulePolicyNameTextBox.IsEnabled = false;
+			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
+
+			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
+			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Deny policy.";
+			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
+			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
+
+			string pattern = DenyPolicyCustomPatternBasedCustomPatternTextBox.Text;
+
+			await Task.Run(() =>
+			{
+
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PatternBasedFilePathRuleDenyPolicy");
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [pattern]);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName);
+
+				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.xml");
+
+				// Set policy name and reset the policy ID
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null, null);
+
+				// Configure policy rule options
+				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
+
+				// Set policy version
+				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.cip");
+
+				// Convert the XML file to CIP and save it in the defined path
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+				// If user selected to deploy the policy
+				if (CustomPatternBasedFileRuleBasedDeployButton)
+				{
+					string msg4 = "Deploying the Deny policy on the system";
+
+					Logger.Write(msg4);
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						CustomPatternBasedFileRuleInfoBar.Message = msg4;
+					});
+
+					CiToolHelper.UpdatePolicy(CIPPath);
+				}
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
+				}
+
+			});
+
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+
+			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Error;
+			CustomPatternBasedFileRuleInfoBar.Message = $"An error occurred while creating Pattern-based File Path rule Deny policy: {ex.Message}";
+
+			Logger.Write($"An error occurred while creating Pattern-based File Path rule Deny policy: {ex.Message}");
+
+			throw;
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
+
+				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Deny policy.";
+			}
+
+			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = true;
+			CustomPatternBasedFileRulePolicyDeployToggleButton.IsEnabled = true;
+			CustomPatternBasedFileRulePolicyNameTextBox.IsEnabled = true;
+			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = true;
+			CustomPatternBasedFileRuleInfoBar.IsClosable = true;
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler to display the content dialog for more info about patterns
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		// Instantiate the Content Dialog
+		CustomUIElements.CustomPatternBasedFilePath customDialog = new();
+
+		App.CurrentlyOpenContentDialog = customDialog;
+
+		// Show the dialog
+		_ = await customDialog.ShowAsync();
+	}
+
+	#endregion
+
 }

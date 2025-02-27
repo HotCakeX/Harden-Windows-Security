@@ -51,7 +51,7 @@ public sealed partial class CreatePolicy : Page
 		bool enableScriptEnforcement = AllowMicrosoftEnableScriptEnforcement.IsOn;
 		bool testMode = AllowMicrosoftTestMode.IsOn;
 		bool shouldDeploy = AllowMicrosoftCreateAndDeploy.IsChecked ?? false;
-		bool DeployMSRecommendedBlockRules = !AllowMicrosoftNoBockRules.IsOn;
+		bool DeployMSRecommendedBlockRules = !AllowMicrosoftNoBlockRules.IsOn;
 
 		try
 		{

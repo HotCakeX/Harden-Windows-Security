@@ -104,7 +104,7 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch x:Name="AllowMicrosoftNoBockRules" />
+                            <ToggleSwitch x:Name="AllowMicrosoftNoBlockRules" />
                         </controls:SettingsCard>
 
                     </controls:SettingsExpander.Items>

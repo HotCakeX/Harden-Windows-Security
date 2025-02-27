@@ -942,6 +942,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			SigningScenariosRadioButtons.IsEnabled = false;
 
 			CertificatesInfoBar.IsOpen = true;
+			CertificatesInfoBar.IsClosable = false;
 			CertificatesInfoBar.Message = $"Creating the Certificates-based Supplemental policy for {CertificatesBasedCertFilePaths.Count} certificates";
 			CertificatesInfoBar.Severity = InfoBarSeverity.Informational;
 
@@ -1059,6 +1060,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			CertificatesBrowseForBasePolicyButton.IsEnabled = true;
 			CertificatesSigningScenarioSettingsCard.IsEnabled = true;
 			SigningScenariosRadioButtons.IsEnabled = true;
+
+			CertificatesInfoBar.IsClosable = true;
 		}
 
 	}
@@ -1134,6 +1137,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ISGBrowseForBasePolicyButton.IsEnabled = false;
 
 			ISGInfoBar.IsOpen = true;
+			ISGInfoBar.IsClosable = false;
 			ISGInfoBar.Message = $"Creating the ISG-based Supplemental policy.";
 			ISGInfoBar.Severity = InfoBarSeverity.Informational;
 
@@ -1222,6 +1226,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			ISGPolicyDeployToggleButton.IsEnabled = true;
 			ISGPolicyNameTextBox.IsEnabled = true;
 			ISGBrowseForBasePolicyButton.IsEnabled = true;
+
+			ISGInfoBar.IsClosable = true;
 		}
 	}
 

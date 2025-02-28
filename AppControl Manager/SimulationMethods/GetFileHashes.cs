@@ -35,8 +35,7 @@ internal static partial class GetFileHashes
 			}
 		}
 
-		Logger.Write($"Returning {outputHashInfoProcessingString.Count} file rules that are based ons hashes");
-
+		Logger.Write($"Returning {outputHashInfoProcessingString.Count} file rules that are based on hashes");
 		// Return the output HashSet
 		return outputHashInfoProcessingString;
 	}

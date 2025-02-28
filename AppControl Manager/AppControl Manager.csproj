@@ -79,7 +79,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.9.3.0</FileVersion>
+    <FileVersion>1.9.4.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

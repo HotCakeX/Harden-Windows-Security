@@ -390,7 +390,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null, bool DeployMicrosoftRecommendedBlockRules = true)
+	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -431,8 +431,7 @@ internal static partial class BasePolicyCreator
 			policyID = PolicyIDToUse;
 		}
 
-
-		if (deployAppControlSupplementalPolicy == true)
+		if (deployAppControlSupplementalPolicy)
 		{
 			// Supply the policy ID of the policy being deployed to this method
 			SupplementalForSelf.Deploy(StagingArea, policyID);
@@ -448,7 +447,6 @@ internal static partial class BasePolicyCreator
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
 
-
 		if (deploy)
 		{
 			Logger.Write("Converting the policy file to .CIP binary");
@@ -459,7 +457,6 @@ internal static partial class BasePolicyCreator
 		}
 
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
 
 		// Assign the created policy path to the Sidebar if condition is met
 		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
@@ -476,7 +473,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null, bool DeployMicrosoftRecommendedBlockRules = true)
+	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -518,8 +515,7 @@ internal static partial class BasePolicyCreator
 			policyID = PolicyIDToUse;
 		}
 
-
-		if (deployAppControlSupplementalPolicy == true)
+		if (deployAppControlSupplementalPolicy)
 		{
 			// Supply the policy ID of the policy being deployed to this method
 			SupplementalForSelf.Deploy(StagingArea, policyID);
@@ -535,7 +531,6 @@ internal static partial class BasePolicyCreator
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
 
-
 		if (deploy)
 		{
 			Logger.Write("Converting the policy file to .CIP binary");
@@ -546,7 +541,6 @@ internal static partial class BasePolicyCreator
 		}
 
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
 
 		// Assign the created policy path to the Sidebar if condition is met
 		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
@@ -658,7 +652,7 @@ internal static partial class BasePolicyCreator
 	/// <param name="RequireEVSigners"></param>
 	/// <param name="EnableScriptEnforcement"></param>
 	/// <param name="TestMode"></param>
-	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy, string? PolicyIDToUse = null, bool DeployMicrosoftRecommendedBlockRules = true)
+	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -710,14 +704,13 @@ internal static partial class BasePolicyCreator
 			policyID = PolicyIDToUse;
 		}
 
-
-		if (deployAppControlSupplementalPolicy == true)
+		if (deployAppControlSupplementalPolicy)
 		{
+			// Supply the policy ID of the policy being deployed to this method
 			SupplementalForSelf.Deploy(StagingArea, policyID);
 		}
 
 		SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"), PolicyIDToUse);
-
 
 		if (deploy)
 		{
@@ -731,7 +724,6 @@ internal static partial class BasePolicyCreator
 		}
 
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
-
 
 		// Assign the created policy path to the Sidebar if condition is met
 		MainWindow.Instance.AssignToSidebar(finalPolicyPath);

@@ -76,6 +76,9 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 		SelectedFilePath = unsignedBasePolicyPathFromSidebar;
 
 		await LoadPolicyOptionsFromXML(SelectedFilePath);
+
+		// Expand the settings expander when user selects a policy
+		PolicyRuleExpander.IsExpanded = true;
 	}
 
 	#endregion
@@ -255,7 +258,24 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 					string cipPath = Path.Combine(stagingArea.FullName, $"{Path.GetFileName(SelectedFilePath)}.cip");
 
+					SiPolicy.SiPolicy policyObj = Management.Initialize(SelectedFilePath, null);
+
+					if (!policyObj.Rules.Any(x => x.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
+					{
+						_ = DispatcherQueue.TryEnqueue(() =>
+						{
+							MainTeachingTip.IsOpen = true;
+							MainTeachingTip.Subtitle = "The selected policy requires signing. Please use the 'Deploy App Control Policy' page to deploy it as a signed policy.";
+						});
+
+						return;
+					}
+
 					PolicyToCIPConverter.Convert(SelectedFilePath, cipPath);
+
+					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+					if (SupplementalForSelf.IsEligible(policyObj, SelectedFilePath))
+						SupplementalForSelf.Deploy(stagingArea.FullName, policyObj.PolicyID);
 
 					CiToolHelper.UpdatePolicy(cipPath);
 				});

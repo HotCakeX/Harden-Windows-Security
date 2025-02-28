@@ -323,7 +323,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 				// If the policy doesn't have any rule options or it doesn't have the EnabledUnsignedSystemIntegrityPolicy rule option then it is signed
-				_IsSignedPolicy = (_BasePolicyObject.Rules is null || !_BasePolicyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy));
+				_IsSignedPolicy = (!_BasePolicyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy));
 			});
 
 			if (_IsSignedPolicy)

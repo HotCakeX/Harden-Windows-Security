@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AppControlManager.Main;
+using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
+using AppControlManager.XMLOps;
 
 namespace AppControlManager.Others;
 
 internal static class SupplementalForSelf
 {
 	/// <summary>
-	/// Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment
-	/// Each Base policy should have this supplemental policy
+	/// Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment.
+	/// Each Base policy should have this supplemental policy.
 	/// </summary>
 	/// <param name="StagingArea"></param>
 	internal static void Deploy(string StagingArea, string basePolicyID)
 	{
 		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
 
 		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
 
@@ -38,7 +40,7 @@ internal static class SupplementalForSelf
 		string cipPath = Path.Combine(StagingArea, $"{GlobalVars.AppControlManagerSpecialPolicyName}.cip");
 
 		// Save the XML to the path as XML file
-		SiPolicy.Management.SavePolicyToFile(policyObj, savePath);
+		Management.SavePolicyToFile(policyObj, savePath);
 
 		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
 
@@ -46,6 +48,7 @@ internal static class SupplementalForSelf
 
 		string trimmedBasePolicyID = basePolicyID.Trim('{', '}');
 
+		// Get all of the supplemental policies deployed on the system
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicyNoFilter = CiToolHelper.GetPolicies(false, false, true);
 
 		List<CiPolicyInfo> CurrentlyDeployedSupplementalPolicy1stFilter = [.. CurrentlyDeployedSupplementalPolicyNoFilter.Where(policy => string.Equals(policy.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase))];
@@ -79,7 +82,7 @@ internal static class SupplementalForSelf
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("SignedSupplementalPolicySpecialDeployment");
 
 		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
+		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
 
 		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
 
@@ -98,7 +101,7 @@ internal static class SupplementalForSelf
 		string savePath = Path.Combine(stagingArea.FullName, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
 
 		// Save the XML to the path as XML file
-		SiPolicy.Management.SavePolicyToFile(policyObj, savePath);
+		Management.SavePolicyToFile(policyObj, savePath);
 
 		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
 
@@ -129,7 +132,7 @@ internal static class SupplementalForSelf
 		_ = AddSigningDetails.Add(savePath, CertPath);
 
 		// Remove the unsigned policy rule option from the policy
-		CiRuleOptions.Set(filePath: savePath, rulesToRemove: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+		CiRuleOptions.Set(filePath: savePath, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 		// Define the path for the CIP file
 		string randomString = GUIDGenerator.GenerateUniqueGUID();
@@ -149,5 +152,33 @@ internal static class SupplementalForSelf
 
 		// Deploy the signed CIP file
 		CiToolHelper.UpdatePolicy(CIPFilePath);
+	}
+
+
+	/// <summary>
+	/// Checks whether an App Control policy is eligible to have the AppControlManager supplemental policy
+	/// </summary>
+	/// <param name="policyObj"></param>
+	/// <param name="policyFile"></param>
+	/// <returns></returns>
+	internal static bool IsEligible(SiPolicy.SiPolicy policyObj, string policyFile)
+	{
+		// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
+		if (!string.Equals(policyObj.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
+		{
+			if (!string.Equals(policyObj.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
+			{
+				// Make sure the policy is a base policy and it doesn't have allow all rule
+				if (policyObj.PolicyType is PolicyType.BasePolicy)
+				{
+					if (!CheckForAllowAll.Check(policyFile))
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 }

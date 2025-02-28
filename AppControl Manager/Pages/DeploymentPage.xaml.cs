@@ -8,7 +8,6 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
-using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -159,7 +158,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 					// Instantiate the policy
 					SiPolicy.SiPolicy policyObject = Management.Initialize(file, null);
 
-					if (policyObject.Rules is null || !policyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
+					if (!policyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
 						throw new InvalidOperationException(GlobalVars.Rizz.GetString("SignedPolicyError") + file + "'");
 					}
@@ -178,7 +177,6 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 					// Convert the XML file to CIP
 					PolicyToCIPConverter.Convert(file, CIPFilePath);
 
-
 					if (deployToIntune)
 					{
 						await DeployToIntunePrivate(CIPFilePath, policyObject.PolicyID, file);
@@ -194,22 +192,9 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 						// Delete the CIP file after deployment
 						File.Delete(CIPFilePath);
 
-						// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
-						if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
-						{
-							if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
-							{
-								// Make sure the policy is a base policy and it doesn't have allow all rule
-								if (policyObject.PolicyType is PolicyType.BasePolicy)
-								{
-									if (!CheckForAllowAll.Check(file))
-									{
-										// Deploy the AppControlManager supplemental policy
-										SupplementalForSelf.Deploy(stagingArea.FullName, policyObject.PolicyID);
-									}
-								}
-							}
-						}
+						// Deploy the AppControlManager supplemental policy
+						if (SupplementalForSelf.IsEligible(policyObject, file))
+							SupplementalForSelf.Deploy(stagingArea.FullName, policyObject.PolicyID);
 					}
 				}
 			});
@@ -379,22 +364,9 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 								CiToolHelper.RemovePolicy(possibleAlreadyDeployedUnsignedVersion.PolicyID!);
 							}
 
-							// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies
-							if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Recommended User Mode BlockList", StringComparison.OrdinalIgnoreCase))
-							{
-								if (!string.Equals(policyObject.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
-								{
-									// Make sure the policy is a base policy and it doesn't have allow all rule
-									if (policyObject.PolicyType is PolicyType.BasePolicy)
-									{
-										if (!CheckForAllowAll.Check(file))
-										{
-											// Sign and deploy the required AppControlManager supplemental policy
-											SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
-										}
-									}
-								}
-							}
+							// Sign and deploy the required AppControlManager supplemental policy
+							if (SupplementalForSelf.IsEligible(policyObject, file))
+								SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
 
 							// Deploy the CIP file locally
 							CiToolHelper.UpdatePolicy(CIPFilePath);
@@ -854,7 +826,6 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 		if (!BrowseForCIPBinaryFilesButton_Flyout.IsOpen)
 			BrowseForCIPBinaryFilesButton_Flyout.ShowAt(BrowseForCIPBinaryFilesButton);
 	}
-
 
 
 	private readonly HashSet<string> XMLFilesToConvertToCIP = [];

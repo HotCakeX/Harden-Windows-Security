@@ -1432,4 +1432,22 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoMSRecommendedBlockRules.ToolTipService.ToolTip" xml:space="preserve">
     <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
   </data>
+  <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Change the behavior of the AppControl Manager and various elements inside of it</value>
+  </data>
+  <data name="Behavior.Text" xml:space="preserve">
+    <value>Behavior</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Change the behavior of the AppControl Manager and various elements inside of it</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Whenever you select an item in a List View, center that item vertically on the screen.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Header" xml:space="preserve">
+    <value>List Views Center Vertically Upon Selection</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Whenever you select an item in a List View, center that item vertically on the screen.</value>
+  </data>
 </root>

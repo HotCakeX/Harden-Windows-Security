@@ -270,6 +270,7 @@
                 ScrollViewer.HorizontalScrollBarVisibility="Visible"
                 ShowsScrollingPlaceholders="True"
                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                SelectionChanged="SimOutputListView_SelectionChanged"
                 ContainerContentChanging="ListView_ContainerContentChanging">
 
             <ListView.Header>

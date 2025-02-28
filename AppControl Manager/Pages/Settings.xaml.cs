@@ -39,6 +39,8 @@ public sealed partial class Settings : Page
 
 		SoundToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.SoundSetting);
 
+		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.ListViewsVerticalCentering);
+
 		BackgroundComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.BackDropBackground)) switch
 		{
 			"MicaAlt" => 0,
@@ -78,6 +80,7 @@ public sealed partial class Settings : Page
 		NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
 		SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
 		IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
+		ListViewsCenterVerticallyUponSelectionToggleSwitch.Toggled += ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled;
 	}
 
 
@@ -198,7 +201,7 @@ public sealed partial class Settings : Page
 		// Raise the event to notify the app of the sound setting change
 		SoundManager.OnSoundSettingChanged(isSoundOn);
 
-		// Save the sound setting to the local app settings
+		// Save the setting to the local app settings
 		SaveSetting(SettingKeys.SoundSetting, isSoundOn);
 	}
 
@@ -405,4 +408,24 @@ public sealed partial class Settings : Page
 		NavigationViewBackgroundToggle.IsOn = !NavigationViewBackgroundToggle.IsOn;
 		NavigationViewBackground_Toggled(NavigationViewBackgroundToggle, new RoutedEventArgs());
 	}
+
+
+	private void ListViewsCenterVerticallyUponSelectionSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = !ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn;
+	}
+
+
+	private void ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		// Get the ToggleSwitch that triggered the event
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
+
+		// Get the state of the toggle switch (on or off)
+		bool IsOn = toggleSwitch.IsOn;
+
+		// Save the setting to the local app settings
+		SaveSetting(SettingKeys.ListViewsVerticalCentering, IsOn);
+	}
+
 }

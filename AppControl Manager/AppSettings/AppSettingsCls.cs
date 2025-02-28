@@ -81,6 +81,7 @@ internal static class AppSettingsCls
 		MainWindowHeight,
 		MainWindowIsMaximized,
 		AutomaticAssignmentSidebar,
-		AutoCheckForUpdateAtStartup
+		AutoCheckForUpdateAtStartup,
+		ListViewsVerticalCentering
 	}
 }

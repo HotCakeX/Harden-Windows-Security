@@ -805,6 +805,9 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			// If the item is not already selected, clear previous selections and select this one.
 			if (!item.IsSelected)
 			{
+				// Set the counter so that the SelectionChanged event handler will ignore the next 2 events.
+				_skipSelectionChangedCount = 2;
+
 				item.IsSelected = true;
 			}
 		}
@@ -821,5 +824,20 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	{
 		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
 		args.Handled = true;
+	}
+
+	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
+	private int _skipSelectionChangedCount;
+
+	private async void FileCertificatesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		// Check if we need to skip this event.
+		if (_skipSelectionChangedCount > 0)
+		{
+			_skipSelectionChangedCount--;
+			return;
+		}
+
+		await ListViewUIHelpers.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 	}
 }

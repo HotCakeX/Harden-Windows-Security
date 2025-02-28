@@ -472,6 +472,9 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 	}
 
 
+	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
+	private int _skipSelectionChangedCount;
+
 	/// <summary>
 	/// Event handler for when a policy is selected from the ListView. It will contain the selected policy.
 	/// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, ListView's SelectedItem property will be null,
@@ -479,8 +482,17 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private void DeployedPolicies_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	private async void DeployedPolicies_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
+		// Check if we need to skip this event.
+		if (_skipSelectionChangedCount > 0)
+		{
+			_skipSelectionChangedCount--;
+			return;
+		}
+
+		await ListViewUIHelpers.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
+
 		// Get the selected policy from the ListView
 		CiPolicyInfo? temp = (CiPolicyInfo)DeployedPolicies.SelectedItem;
 
@@ -1021,6 +1033,9 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			// and mark this item as selected.
 			if (!item.IsSelected)
 			{
+				// Set the counter so that the SelectionChanged event handler will ignore the next 2 events.
+				_skipSelectionChangedCount = 2;
+
 				item.IsSelected = true;
 			}
 		}

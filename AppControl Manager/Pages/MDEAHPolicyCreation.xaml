@@ -408,6 +408,7 @@
              ScrollViewer.HorizontalScrollMode="Enabled"
              ScrollViewer.IsHorizontalRailEnabled="True"
              ScrollViewer.HorizontalScrollBarVisibility="Visible"
+             SelectionChanged="FileIdentitiesListView_SelectionChanged"
              ShowsScrollingPlaceholders="True"
              ScrollViewer.VerticalScrollBarVisibility="Visible"
              ContainerContentChanging="ListView_ContainerContentChanging">

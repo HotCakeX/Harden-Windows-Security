@@ -152,6 +152,16 @@
 
                 </controls:SettingsExpander>
 
+                <!-- Behavior section -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Behavior" />
+                <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}" IsClickEnabled="True" IsActionIconVisible="False" Click="ListViewsCenterVerticallyUponSelectionSettingsCard_Click">
+                            <ToggleSwitch x:Name="ListViewsCenterVerticallyUponSelectionToggleSwitch" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
                 <controls:SettingsCard x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}" IsClickEnabled="True" IsActionIconVisible="False" Click="SoundToggleSwitchSettingsCard_Click">

@@ -923,45 +923,51 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 				{
 					case 0: // Default Windows
 						{
-							BasePolicyCreator.BuildDefaultWindows(stagingArea,
-								false,
-								null,
-								true,
-								false,
-								false,
-								false,
-								false,
-								policyID
+							BasePolicyCreator.BuildDefaultWindows(
+							StagingArea: stagingArea,
+							IsAudit: false,
+							LogSize: null,
+							deploy: true,
+							RequireEVSigners: false,
+							EnableScriptEnforcement: false,
+							TestMode: false,
+							deployAppControlSupplementalPolicy: false,
+							PolicyIDToUse: null,
+							DeployMicrosoftRecommendedBlockRules: false
 							);
 
 							break;
 						}
 					case 1: // Allow Microsoft
 						{
-							BasePolicyCreator.BuildAllowMSFT(stagingArea,
-								false,
-								null,
-								true,
-								false,
-								false,
-								false,
-								false,
-								policyID
+							BasePolicyCreator.BuildAllowMSFT(
+							StagingArea: stagingArea,
+							IsAudit: false,
+							LogSize: null,
+							deploy: true,
+							RequireEVSigners: false,
+							EnableScriptEnforcement: false,
+							TestMode: false,
+							deployAppControlSupplementalPolicy: false,
+							PolicyIDToUse: policyID,
+							DeployMicrosoftRecommendedBlockRules: false
 							);
 
 							break;
 						}
 					case 2: // Signed and Reputable
 						{
-							BasePolicyCreator.BuildSignedAndReputable(stagingArea,
-								false,
-								null,
-								true,
-								false,
-								false,
-								false,
-								false,
-								policyID
+							BasePolicyCreator.BuildSignedAndReputable(
+							StagingArea: stagingArea,
+							IsAudit: false,
+							LogSize: null,
+							deploy: true,
+							RequireEVSigners: false,
+							EnableScriptEnforcement: false,
+							TestMode: false,
+							deployAppControlSupplementalPolicy: false,
+							PolicyIDToUse: null,
+							DeployMicrosoftRecommendedBlockRules: false
 							);
 
 							break;

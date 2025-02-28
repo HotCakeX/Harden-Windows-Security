@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml;
 using AppControlManager.Others;
 
@@ -706,8 +705,63 @@ internal static class CustomSerialization
 		}
 	}
 
+
+	/*
 	internal static string ConvertByteArrayToHex(byte[]? data)
 	{
 		return data is not null ? string.Concat(data.Select(x => x.ToString("X2"))) : string.Empty;
 	}
+	*/
+
+
+	internal static unsafe string ConvertByteArrayToHex(byte[]? data)
+	{
+		// If the input data is null or has no elements,
+		// return an empty string immediately.
+		if (data is null || data.Length == 0)
+			return string.Empty;
+
+		// Pre-allocate a string to hold the hexadecimal representation.
+		// Each byte will be represented by 2 hexadecimal characters.
+		// The string is initially filled with null characters ('\0').
+		string result = new('\0', data.Length * 2);
+
+		// Use the 'fixed' statement to pin the data array and the result string in memory.
+		// This prevents the garbage collector from relocating them while we work with pointers.
+		fixed (byte* dataPtr = data)
+		fixed (char* resultPtr = result)
+		{
+			// Create local pointer variables for clarity:
+			// pData points to the start of the byte array.
+			// pResult points to the start of the pre-allocated result string.
+			byte* pData = dataPtr;
+			char* pResult = resultPtr;
+
+			// Loop through each byte in the input array.
+			for (int i = 0; i < data.Length; i++)
+			{
+				// Retrieve the current byte from the array.
+				byte b = pData[i];
+
+				// Process the high nibble (upper 4 bits) of the byte:
+				// Right-shift by 4 to isolate the high nibble.
+				// If the value is less than 10, convert it to its corresponding ASCII numeral ('0'-'9')
+				// by adding the ASCII value of '0'. Otherwise, convert to an uppercase hexadecimal letter ('A'-'F')
+				// by subtracting 10 and adding the ASCII value of 'A'.
+				// The resulting character is stored at position i*2 in the result string.
+				pResult[i * 2] = (char)(b >> 4 < 10 ? (b >> 4) + '0' : (b >> 4) - 10 + 'A');
+
+				// Process the low nibble (lower 4 bits) of the byte:
+				// Use bitwise AND with 0xF to isolate the lower nibble.
+				// Similar to the high nibble, if the value is less than 10, convert it to a numeral;
+				// otherwise, convert it to an uppercase letter.
+				// The resulting character is stored at position i*2 + 1 in the result string.
+				pResult[i * 2 + 1] = (char)(((b & 0xF) < 10) ? ((b & 0xF) + '0') : ((b & 0xF) - 10 + 'A'));
+			}
+		}
+		// After processing all bytes, return the constructed hexadecimal string.
+		return result;
+	}
+
+
 }

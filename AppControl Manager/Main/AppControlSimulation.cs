@@ -20,6 +20,12 @@ namespace AppControlManager.Main;
 internal static class AppControlSimulation
 {
 
+	// Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
+	private static readonly HashSet<string> unsignedExtensions = new(StringComparer.OrdinalIgnoreCase)
+		{
+			".ocx", ".bat", ".bin"
+		};
+
 	/// <summary>
 	/// An Aux method that calls the main method then checks the result to make sure all files are allowed, if they are then returns true, otherwise returns false
 	/// </summary>
@@ -163,13 +169,6 @@ internal static class AppControlSimulation
 		// Get the signer information from the XML
 		List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
 
-		// Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
-		HashSet<string> unsignedExtensions = new(StringComparer.OrdinalIgnoreCase)
-		{
-			".ocx", ".bat", ".bin"
-		};
-
-
 		#region Region FilePath Rule Checking
 		Logger.Write("Checking see if the XML policy has any FilePath rules");
 
@@ -222,10 +221,10 @@ internal static class AppControlSimulation
 			Logger.Write("Skipping Security Catalogs in the Simulation.");
 		}
 
-		// Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
-		Logger.Write("Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file");
+		// All Hash values of all the file rules based on hash in the supplied xml policy file
+		Logger.Write("Getting the Hash values of all the file rules based on hash in the supplied xml policy file");
 
-		HashSet<string> SHA256HashesFromXML = [.. GetFileRuleOutput.Get(XMLData).Select(i => i.HashValue)];
+		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(XMLData);
 
 		Logger.Write("Getting all of the file paths of the files that App Control supports, from the user provided directory");
 
@@ -347,7 +346,7 @@ internal static class AppControlSimulation
 					}
 
 					// if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
-					if (SHA256HashesFromXML.Contains(CurrentFilePathHashSHA256))
+					if (AllHashTypesFromXML.Contains(CurrentFilePathHashSHA256) || AllHashTypesFromXML.Contains(CurrentFilePathHashSHA1))
 					{
 						_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
 							new SimulationOutput(

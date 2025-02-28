@@ -68,6 +68,11 @@
   <CiSigners/>
   <HvciOptions>2</HvciOptions>
   <Settings>
+    <Setting Provider="AllHostIds" Key="AllKeys" ValueName="EnterpriseDefinedClsId">
+      <Value>
+        <Boolean>true</Boolean>
+      </Value>
+    </Setting>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>
         <String>StrictKernelMode</String>

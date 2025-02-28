@@ -86,18 +86,18 @@ public sealed partial class CreatePolicy : Page
 			// Run background work using captured values
 			await Task.Run(() =>
 			{
-				BasePolicyCreator.BuildAllowMSFT(stagingArea,
-					auditEnabled,
-					logSize,
-					shouldDeploy,
-					requireEVSigners,
-					enableScriptEnforcement,
-					testMode,
-					true,
-					null,
-					DeployMSRecommendedBlockRules
+				BasePolicyCreator.BuildAllowMSFT(
+				StagingArea: stagingArea,
+				IsAudit: auditEnabled,
+				LogSize: logSize,
+				deploy: shouldDeploy,
+				RequireEVSigners: requireEVSigners,
+				EnableScriptEnforcement: enableScriptEnforcement,
+				TestMode: testMode,
+				deployAppControlSupplementalPolicy: shouldDeploy,
+				PolicyIDToUse: null,
+				DeployMicrosoftRecommendedBlockRules: DeployMSRecommendedBlockRules
 				);
-
 			});
 
 		}
@@ -202,16 +202,17 @@ public sealed partial class CreatePolicy : Page
 			// Run background work using captured values
 			await Task.Run(() =>
 			{
-				BasePolicyCreator.BuildDefaultWindows(stagingArea,
-					auditEnabled,
-					logSize,
-					shouldDeploy,
-					requireEVSigners,
-					enableScriptEnforcement,
-					testMode,
-					true,
-					null,
-					DeployMSRecommendedBlockRules
+				BasePolicyCreator.BuildDefaultWindows(
+				StagingArea: stagingArea,
+				IsAudit: auditEnabled,
+				LogSize: logSize,
+				deploy: shouldDeploy,
+				RequireEVSigners: requireEVSigners,
+				EnableScriptEnforcement: enableScriptEnforcement,
+				TestMode: testMode,
+				deployAppControlSupplementalPolicy: shouldDeploy,
+				PolicyIDToUse: null,
+				DeployMicrosoftRecommendedBlockRules: DeployMSRecommendedBlockRules
 				);
 
 			});
@@ -318,16 +319,17 @@ public sealed partial class CreatePolicy : Page
 
 			await Task.Run(() =>
 			{
-				BasePolicyCreator.BuildSignedAndReputable(stagingArea,
-					auditEnabled,
-					logSize,
-					shouldDeploy,
-					requireEVSigners,
-					enableScriptEnforcement,
-					testMode,
-					true,
-					null,
-					DeployMSRecommendedBlockRules
+				BasePolicyCreator.BuildSignedAndReputable(
+				StagingArea: stagingArea,
+				IsAudit: auditEnabled,
+				LogSize: logSize,
+				deploy: shouldDeploy,
+				RequireEVSigners: requireEVSigners,
+				EnableScriptEnforcement: enableScriptEnforcement,
+				TestMode: testMode,
+				deployAppControlSupplementalPolicy: shouldDeploy,
+				PolicyIDToUse: null,
+				DeployMicrosoftRecommendedBlockRules: DeployMSRecommendedBlockRules
 				);
 
 			});

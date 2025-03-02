@@ -551,57 +551,70 @@ DeviceEvents
 	*/
 
 	// Define the class structure for the custom policy
-	public sealed class Windows10CustomConfiguration
+	internal sealed class Windows10CustomConfiguration
 	{
+		[JsonInclude]
 		[JsonPropertyName("@odata.type")]
-		public string? ODataType { get; set; }
+		internal string? ODataType { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("displayName")]
-		public string? DisplayName { get; set; }
+		internal string? DisplayName { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("description")]
-		public string? Description { get; set; }
+		internal string? Description { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("omaSettings")]
-		public OmaSettingBase64[]? OmaSettings { get; set; }
+		internal OmaSettingBase64[]? OmaSettings { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("platforms")]
-		public string[]? Platforms { get; set; }
+		internal string[]? Platforms { get; set; }
 	}
 
 
-	public sealed class OmaSettingBase64
+	internal sealed class OmaSettingBase64
 	{
+		[JsonInclude]
 		[JsonPropertyName("@odata.type")]
-		public string? ODataType { get; set; }
+		internal string? ODataType { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("displayName")]
-		public string? DisplayName { get; set; }
+		internal string? DisplayName { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("description")]
-		public string? Description { get; set; }
+		internal string? Description { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("omaUri")]
-		public string? OmaUri { get; set; }
+		internal string? OmaUri { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("fileName")]
-		public string? FileName { get; set; }
+		internal string? FileName { get; set; }
 
+		[JsonInclude]
 		[JsonPropertyName("value")]
-		public string? Value { get; set; }
+		internal string? Value { get; set; }
 	}
 
 
-	public sealed class AssignmentPayload
+	internal sealed class AssignmentPayload
 	{
+		[JsonInclude]
 		[JsonPropertyName("target")]
-		public Dictionary<string, object>? Target { get; set; }
+		internal Dictionary<string, object>? Target { get; set; }
 	}
 
-	public sealed class QueryPayload
+	internal sealed class QueryPayload
 	{
+		[JsonInclude]
 		[JsonPropertyName("Query")]
-		public string? Query { get; set; }
+		internal string? Query { get; set; }
 	}
 
 

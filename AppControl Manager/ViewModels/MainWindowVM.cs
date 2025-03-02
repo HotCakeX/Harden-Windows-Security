@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel;
+using AppControlManager.Others;
 using Microsoft.UI.Dispatching;
 
-namespace AppControlManager.Others;
+namespace AppControlManager.ViewModels;
 
 /// <summary>
 /// ViewModel for the MainWindow, responsible for managing UI properties and
 /// handling updates to the InfoBadge visibility when an application update is available.
 /// Implements INotifyPropertyChanged to support data binding to UI elements.
 /// </summary>
-public partial class MainWindowViewModel : INotifyPropertyChanged
+internal sealed partial class MainWindowVM : INotifyPropertyChanged
 {
 	// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
 	// https://learn.microsoft.com/en-us/windows/apps/design/controls/info-badge
@@ -48,7 +49,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
 	/// and subscribes to the update notification event.
 	/// </summary>
 	/// <param name="updateService">Instance of AppUpdate service used for update checks.</param>
-	internal MainWindowViewModel(AppUpdate updateService)
+	internal MainWindowVM(AppUpdate updateService)
 	{
 		_updateService = updateService; // Store AppUpdate service instance
 

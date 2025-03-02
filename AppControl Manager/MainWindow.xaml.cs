@@ -27,10 +27,10 @@ namespace AppControlManager;
 
 // https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
 // Represents an item in the BreadCrumBar's ItemsSource collection
-public readonly struct Crumb(String label, Type page)
+internal readonly struct Crumb(String label, Type page)
 {
-	public string Label { get; } = label;
-	public Type Page { get; } = page;
+	internal string Label { get; } = label;
+	internal Type Page { get; } = page;
 	public override string ToString() => Label;
 }
 
@@ -38,7 +38,7 @@ public readonly struct Crumb(String label, Type page)
 public sealed partial class MainWindow : Window
 {
 
-	public MainWindowViewModel ViewModel { get; }
+	internal ViewModels.MainWindowVM ViewModel { get; }
 
 	private readonly AppWindow m_AppWindow;
 
@@ -306,7 +306,7 @@ public sealed partial class MainWindow : Window
 		AppUpdate updateService = AppUpdate.Instance;
 
 		// Pass the AppUpdate class instance to MainWindowViewModel
-		ViewModel = new MainWindowViewModel(updateService);
+		ViewModel = new ViewModels.MainWindowVM(updateService);
 
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = ViewModel;

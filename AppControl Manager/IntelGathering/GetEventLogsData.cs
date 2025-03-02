@@ -73,7 +73,7 @@ internal static class GetEventLogsData
 		}
 
 		// Make sure there are events to process
-		if (rawEvents.Count == 0)
+		if (rawEvents.Count is 0)
 		{
 			Logger.Write("No Code Integrity logs found");
 			return fileIdentities.FileIdentitiesInternal;
@@ -1052,7 +1052,7 @@ internal static class GetEventLogsData
 	/// Gets Code Integrity and AppLocker event logs Asynchronously
 	/// </summary>
 	/// <returns></returns>
-	public static async Task<HashSet<FileIdentity>> GetAppControlEvents(string? CodeIntegrityEvtxFilePath = null, string? AppLockerEvtxFilePath = null, int EventsToCapture = 0)
+	internal static async Task<HashSet<FileIdentity>> GetAppControlEvents(string? CodeIntegrityEvtxFilePath = null, string? AppLockerEvtxFilePath = null, int EventsToCapture = 0)
 	{
 		// Output
 		HashSet<FileIdentity> combinedResult = [];

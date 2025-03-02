@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel.DataTransfer;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -166,80 +164,80 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth12 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth13 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
-		double maxWidth14 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
-		double maxWidth15 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
-		double maxWidth16 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth17 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsECCSignedHeader/Text"));
-		double maxWidth18 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
+		double maxWidth13 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
+		double maxWidth14 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
+		double maxWidth15 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsECCSignedHeader/Text"));
+		double maxWidth18 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in CreateSupplementalPolicy.Instance.ScanResults)
 		{
-			double w1 = ListViewUIHelpers.MeasureTextWidth(item.FileName);
+			double w1 = ListViewHelper.MeasureTextWidth(item.FileName);
 			if (w1 > maxWidth1) maxWidth1 = w1;
 
-			double w2 = ListViewUIHelpers.MeasureTextWidth(item.SignatureStatus.ToString());
+			double w2 = ListViewHelper.MeasureTextWidth(item.SignatureStatus.ToString());
 			if (w2 > maxWidth2) maxWidth2 = w2;
 
-			double w3 = ListViewUIHelpers.MeasureTextWidth(item.OriginalFileName);
+			double w3 = ListViewHelper.MeasureTextWidth(item.OriginalFileName);
 			if (w3 > maxWidth3) maxWidth3 = w3;
 
-			double w4 = ListViewUIHelpers.MeasureTextWidth(item.InternalName);
+			double w4 = ListViewHelper.MeasureTextWidth(item.InternalName);
 			if (w4 > maxWidth4) maxWidth4 = w4;
 
-			double w5 = ListViewUIHelpers.MeasureTextWidth(item.FileDescription);
+			double w5 = ListViewHelper.MeasureTextWidth(item.FileDescription);
 			if (w5 > maxWidth5) maxWidth5 = w5;
 
-			double w6 = ListViewUIHelpers.MeasureTextWidth(item.ProductName);
+			double w6 = ListViewHelper.MeasureTextWidth(item.ProductName);
 			if (w6 > maxWidth6) maxWidth6 = w6;
 
-			double w7 = ListViewUIHelpers.MeasureTextWidth(item.FileVersion?.ToString());
+			double w7 = ListViewHelper.MeasureTextWidth(item.FileVersion?.ToString());
 			if (w7 > maxWidth7) maxWidth7 = w7;
 
-			double w8 = ListViewUIHelpers.MeasureTextWidth(item.PackageFamilyName);
+			double w8 = ListViewHelper.MeasureTextWidth(item.PackageFamilyName);
 			if (w8 > maxWidth8) maxWidth8 = w8;
 
-			double w9 = ListViewUIHelpers.MeasureTextWidth(item.SHA256Hash);
+			double w9 = ListViewHelper.MeasureTextWidth(item.SHA256Hash);
 			if (w9 > maxWidth9) maxWidth9 = w9;
 
-			double w10 = ListViewUIHelpers.MeasureTextWidth(item.SHA1Hash);
+			double w10 = ListViewHelper.MeasureTextWidth(item.SHA1Hash);
 			if (w10 > maxWidth10) maxWidth10 = w10;
 
-			double w11 = ListViewUIHelpers.MeasureTextWidth(item.SISigningScenario.ToString());
+			double w11 = ListViewHelper.MeasureTextWidth(item.SISigningScenario.ToString());
 			if (w11 > maxWidth11) maxWidth11 = w11;
 
-			double w12 = ListViewUIHelpers.MeasureTextWidth(item.FilePath);
+			double w12 = ListViewHelper.MeasureTextWidth(item.FilePath);
 			if (w12 > maxWidth12) maxWidth12 = w12;
 
-			double w13 = ListViewUIHelpers.MeasureTextWidth(item.SHA1PageHash);
+			double w13 = ListViewHelper.MeasureTextWidth(item.SHA1PageHash);
 			if (w13 > maxWidth13) maxWidth13 = w13;
 
-			double w14 = ListViewUIHelpers.MeasureTextWidth(item.SHA256PageHash);
+			double w14 = ListViewHelper.MeasureTextWidth(item.SHA256PageHash);
 			if (w14 > maxWidth14) maxWidth14 = w14;
 
-			double w15 = ListViewUIHelpers.MeasureTextWidth(item.HasWHQLSigner.ToString());
+			double w15 = ListViewHelper.MeasureTextWidth(item.HasWHQLSigner.ToString());
 			if (w15 > maxWidth15) maxWidth15 = w15;
 
-			double w16 = ListViewUIHelpers.MeasureTextWidth(item.FilePublishersToDisplay);
+			double w16 = ListViewHelper.MeasureTextWidth(item.FilePublishersToDisplay);
 			if (w16 > maxWidth16) maxWidth16 = w16;
 
-			double w17 = ListViewUIHelpers.MeasureTextWidth(item.IsECCSigned.ToString());
+			double w17 = ListViewHelper.MeasureTextWidth(item.IsECCSigned.ToString());
 			if (w17 > maxWidth17) maxWidth17 = w17;
 
-			double w18 = ListViewUIHelpers.MeasureTextWidth(item.Opus);
+			double w18 = ListViewHelper.MeasureTextWidth(item.Opus);
 			if (w18 > maxWidth18) maxWidth18 = w18;
 		}
 
@@ -275,170 +273,36 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 		// Check if there are selected items in the ListView
 		if (FileIdentitiesListView.SelectedItems.Count > 0)
 		{
-			// Initialize StringBuilder to store all selected rows' data with labels
-			StringBuilder dataBuilder = new();
-
-			// Loop through each selected item in the ListView
-			foreach (var selectedItem in FileIdentitiesListView.SelectedItems)
-			{
-				if (selectedItem is FileIdentity obj)
-
-					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ListViewUIHelpers.ConvertRowToText(obj));
-
-				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(new string('-', 50));
-			}
-
-			// Create a DataPackage to hold the text data
-			DataPackage dataPackage = new();
-
-			// Set the formatted text as the content of the DataPackage
-			dataPackage.SetText(dataBuilder.ToString());
-
-			// Copy the DataPackage content to the clipboard
-			Clipboard.SetContent(dataPackage);
+			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems);
 		}
-	}
-
-
-	// Click event handlers for each property
-	private void CopyFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileName);
-	private void CopySignatureStatus_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SignatureStatus.ToString());
-	private void CopyOriginalFileName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.OriginalFileName);
-	private void CopyInternalName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.InternalName);
-	private void CopyFileDescription_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileDescription);
-	private void CopyProductName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.ProductName);
-	private void CopyFileVersion_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FileVersion?.ToString());
-	private void CopyPackageFamilyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PackageFamilyName);
-	private void CopySHA256Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256Hash);
-	private void CopySHA1Hash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1Hash);
-	private void CopySigningScenario_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SISigningScenario.ToString());
-	private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePath);
-	private void CopySHA1PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA1PageHash);
-	private void CopySHA256PageHash_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.SHA256PageHash);
-	private void CopyHasWHQLSigner_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.HasWHQLSigner.ToString());
-	private void CopyFilePublishers_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FilePublishersToDisplay);
-	private void CopyIsECCSigned_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsECCSigned.ToString());
-	private void CopyOpusData_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Opus);
-
-	/// <summary>
-	/// Helper method to copy a specified property to clipboard without reflection
-	/// </summary>
-	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
-	private void CopyToClipboard(Func<FileIdentity, string?> getProperty)
-	{
-		if (FileIdentitiesListView.SelectedItem is FileIdentity selectedItem)
-		{
-			string? propertyValue = getProperty(selectedItem);
-			if (propertyValue is not null)
-			{
-				DataPackage dataPackage = new();
-				dataPackage.SetText(propertyValue);
-				Clipboard.SetContent(dataPackage);
-			}
-		}
-	}
-
-	// Event handlers for each sort button
-	private void ColumnSortingButton_FileName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.FileName);
-	}
-	private void ColumnSortingButton_SignatureStatus_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.SignatureStatus);
-	}
-	private void ColumnSortingButton_OriginalFileName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.OriginalFileName);
-	}
-	private void ColumnSortingButton_InternalName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.InternalName);
-	}
-	private void ColumnSortingButton_FileDescription_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.FileDescription);
-	}
-	private void ColumnSortingButton_ProductName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.ProductName);
-	}
-	private void ColumnSortingButton_FileVersion_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.FileVersion);
-	}
-	private void ColumnSortingButton_PackageFamilyName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.PackageFamilyName);
-	}
-	private void ColumnSortingButton_SHA256Hash_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.SHA256Hash);
-	}
-	private void ColumnSortingButton_SHA1Hash_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.SHA1Hash);
-	}
-	private void ColumnSortingButton_SigningScenario_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.SISigningScenario);
-	}
-	private void ColumnSortingButton_FilePath_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.FilePath);
-	}
-	private void ColumnSortingButton_SHA1PageHash_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.SHA1PageHash);
-	}
-	private void ColumnSortingButton_SHA256PageHash_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.SHA256PageHash);
-	}
-	private void ColumnSortingButton_HasWHQLSigner_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.HasWHQLSigner);
-	}
-	private void ColumnSortingButton_FilePublishers_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.FilePublishersToDisplay);
-	}
-	private void ColumnSortingButton_IsECCSigned_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.IsECCSigned);
-	}
-	private void ColumnSortingButton_OpusData_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(fileIden => fileIden.Opus);
 	}
 
 	/// <summary>
-	/// Performs data sorting
+	/// Click event handler for copy
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="keySelector"></param>
-	private void SortColumn<T>(Func<FileIdentity, T> keySelector)
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
-		// Determine if a search filter is active.
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
-		// Use either the full list (CreateSupplementalPolicy.Instance.ScanResultsList) or the current display list.
-		List<FileIdentity> collectionToSort = isSearchEmpty ? CreateSupplementalPolicy.Instance.ScanResultsList : [.. CreateSupplementalPolicy.Instance.ScanResults];
-
-		if (SortingDirectionToggle.IsChecked)
+		// Attempt to retrieve the property mapping using the Tag as the key.
+		if (ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 		{
-			// Sort in descending order.
-			CreateSupplementalPolicy.Instance.ScanResults = [.. collectionToSort.OrderByDescending(keySelector)];
+			// Use the mapping's Getter, converting the result to a string.
+			ListViewHelper.CopyToClipboard(item => mapping.Getter(item)?.ToString(), FileIdentitiesListView);
 		}
-		else
-		{
-			// Sort in ascending order.
-			CreateSupplementalPolicy.Instance.ScanResults = [.. collectionToSort.OrderBy(keySelector)];
-		}
+	}
 
-		// Refresh the ItemsSource so the UI updates.
-		FileIdentitiesListView.ItemsSource = CreateSupplementalPolicy.Instance.ScanResults;
+	/// <summary>
+	/// Event handler for all sort buttons
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void ColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	{
+		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
+
+		Func<FileIdentity, object?> selector = mapping.Getter;
+		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateSupplementalPolicy.Instance.ScanResultsList, CreateSupplementalPolicy.Instance.ScanResults, FileIdentitiesListView);
 	}
 
 	#endregion
@@ -463,8 +327,6 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	// Public property to access the singleton instance from other classes
 	public static StrictKernelPolicyScanResults Instance => _instance ?? throw new InvalidOperationException("StrictKernelPolicyScanResults is not initialized.");
 
-
-	#region
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);
@@ -483,7 +345,6 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 			CreateSupplementalPolicy.Instance.StrictKernelModeDataProcessed = false;
 		}
 	}
-	#endregion
 
 	/// <summary>
 	/// Event handler for the SearchBox text change
@@ -499,43 +360,13 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	/// </summary>
 	private void ApplyFilters()
 	{
-
-		// Get the search term from the SearchBox, converting it to lowercase for case-insensitive searching
-		string searchTerm = SearchBox.Text.Trim().ToLowerInvariant();
-
-		// Start with all items from the complete list, 'AllFileIdentities'
-		// This list is used as the base set for filtering to preserve original data
-		IEnumerable<FileIdentity> filteredResults = CreateSupplementalPolicy.Instance.ScanResultsList.AsEnumerable();
-
-		// Apply the search filter if there is a non-empty search term
-		if (!string.IsNullOrWhiteSpace(searchTerm))
-		{
-
-			// Filter results further to match the search term across multiple properties, case-insensitively
-			filteredResults = filteredResults.Where(output =>
-				(output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.ProductName is not null && output.ProductName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.PackageFamilyName is not null && output.PackageFamilyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.SHA1PageHash is not null && output.SHA1PageHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				output.FilePublishersToDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-				output.Opus.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-			);
-		}
-
-		// Populate the ObservableCollection with the filtered results		
-		CreateSupplementalPolicy.Instance.ScanResults = [.. filteredResults];
-
-		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
-		FileIdentitiesListView.ItemsSource = CreateSupplementalPolicy.Instance.ScanResults;
-
-		// Update any visual or text element showing the total logs count
+		CreateSupplementalPolicy.Instance.ScanResults = ListViewHelper.ApplyFilters(
+		allFileIdentities: CreateSupplementalPolicy.Instance.ScanResultsList.AsEnumerable(),
+		filteredCollection: CreateSupplementalPolicy.Instance.ScanResults,
+		searchTextBox: SearchBox,
+		listView: FileIdentitiesListView,
+		datePicker: null
+		);
 		UpdateTotalFiles();
 	}
 
@@ -561,13 +392,7 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 	/// <param name="e"></param>
 	private void SelectAll_Click(object sender, RoutedEventArgs e)
 	{
-		// Clear existing selections
-		FileIdentitiesListView.SelectedItems.Clear();
-
-		foreach (FileIdentity fileIdentity in CreateSupplementalPolicy.Instance.ScanResults)
-		{
-			FileIdentitiesListView.SelectedItems.Add(fileIdentity); // Select each item
-		}
+		ListViewHelper.SelectAll(FileIdentitiesListView, CreateSupplementalPolicy.Instance.ScanResults);
 	}
 
 	/// <summary>
@@ -679,6 +504,6 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 			return;
 		}
 
-		await ListViewUIHelpers.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
+		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 	}
 }

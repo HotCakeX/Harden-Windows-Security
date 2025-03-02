@@ -16,7 +16,7 @@ namespace AppControlManager.IntelGathering;
 /// If the existing item is newer or has the same timestamp, the new item will not be added
 /// because they are considered equal or the existing one is preferred.
 /// </summary>
-public sealed class FileIdentityTimeBasedHashSet
+internal sealed class FileIdentityTimeBasedHashSet
 {
 	// A HashSet to store FileIdentity objects with a custom comparer.
 	// This comparer defines equality based on selected properties in that comparer, ignoring TimeCreated for now.
@@ -25,7 +25,7 @@ public sealed class FileIdentityTimeBasedHashSet
 	/// <summary>
 	/// Initializes a new instance of the FileIdentityTimeBasedHashSet class.
 	/// </summary>
-	public FileIdentityTimeBasedHashSet()
+	internal FileIdentityTimeBasedHashSet()
 	{
 		_set = new HashSet<FileIdentity>(new FileIdentityComparer());
 	}
@@ -33,7 +33,7 @@ public sealed class FileIdentityTimeBasedHashSet
 	/// <summary>
 	/// Expose the internal HashSet so we can access it directly.
 	/// </summary>
-	public HashSet<FileIdentity> FileIdentitiesInternal => _set;
+	internal HashSet<FileIdentity> FileIdentitiesInternal => _set;
 
 	/// <summary>
 	/// Adds a FileIdentity item to the set, replacing an older equivalent item if it exists.

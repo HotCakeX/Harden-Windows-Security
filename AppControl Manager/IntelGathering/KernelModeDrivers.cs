@@ -24,13 +24,13 @@ internal static class KernelModeDrivers
 
 	private static readonly HashSet<string> UserModeDlls = ["kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"];
 
-	public struct IMAGE_IMPORT_DESCRIPTOR
+	internal struct IMAGE_IMPORT_DESCRIPTOR
 	{
-		public uint CharacteristicsOrOriginalFirstThunk;
-		public uint TimeDateStamp;
-		public uint ForwarderChain;
-		public uint Name;
-		public uint FirstThunk;
+		internal uint CharacteristicsOrOriginalFirstThunk;
+		internal uint TimeDateStamp;
+		internal uint ForwarderChain;
+		internal uint Name;
+		internal uint FirstThunk;
 	}
 
 

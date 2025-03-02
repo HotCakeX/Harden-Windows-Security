@@ -2,24 +2,24 @@
 
 namespace AppControlManager.IntelGathering;
 
-public sealed class FileSignerInfo
+internal sealed class FileSignerInfo
 {
-	public int? TotalSignatureCount { get; set; }
-	public int? Signature { get; set; }
-	public string? Hash { get; set; }
-	public bool? PageHash { get; set; }
-	public string? SignatureType { get; set; }
-	public string? ValidatedSigningLevel { get; set; }
-	public string? VerificationError { get; set; }
-	public int? Flags { get; set; }
-	public DateTime? NotValidBefore { get; set; }
-	public DateTime? NotValidAfter { get; set; }
-	public string? PublisherName { get; set; }
-	public string? IssuerName { get; set; }
-	public string? PublisherTBSHash { get; set; }
-	public string? IssuerTBSHash { get; set; }
-	public string? OPUSInfo { get; set; }
-	public string? EKUs { get; set; }
-	public int? KnownRoot { get; set; }
-	public bool? IsWHQL { get; set; }
+	internal int? TotalSignatureCount { get; set; }
+	internal int? Signature { get; set; }
+	internal string? Hash { get; set; }
+	internal bool? PageHash { get; set; }
+	internal string? SignatureType { get; set; }
+	internal string? ValidatedSigningLevel { get; set; }
+	internal string? VerificationError { get; set; }
+	internal int? Flags { get; set; }
+	internal DateTime? NotValidBefore { get; set; }
+	internal DateTime? NotValidAfter { get; set; }
+	internal string? PublisherName { get; set; }
+	internal string? IssuerName { get; set; }
+	internal string? PublisherTBSHash { get; set; }
+	internal string? IssuerTBSHash { get; set; }
+	internal string? OPUSInfo { get; set; }
+	internal string? EKUs { get; set; }
+	internal int? KnownRoot { get; set; }
+	internal bool? IsWHQL { get; set; }
 }

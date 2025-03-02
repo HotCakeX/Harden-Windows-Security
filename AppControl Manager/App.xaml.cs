@@ -53,6 +53,12 @@ public partial class App : Application
 		// to handle unhandled exceptions
 		this.UnhandledException += App_UnhandledException;
 
+		// Subscribe to FirstChanceException events
+		// AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+
+		// Subscribe to UnobservedTaskException events
+		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
 		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
@@ -103,6 +109,43 @@ public partial class App : Application
 			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
 			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
 		}
+	}
+
+
+	/*
+
+	/// <summary>
+	/// Event handler for FirstChanceException events.
+	/// This event is raised as soon as an exception is thrown, before any catch blocks are executed.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
+	{
+		// Log the first chance exception details.
+		// Note: FirstChanceExceptions are raised for all exceptions, even if they are handled later.
+		Logger.Write($"FirstChanceException caught: {e.Exception.Message}");
+	}
+
+	*/
+
+
+	/// <summary>
+	/// Event handler for UnobservedTaskException events.
+	/// This event is raised when a faulted Task's exception is not observed.
+	/// UnobservedTaskException doesn't help for exceptions thrown in event handlers.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+	{
+		// Log the unobserved task exception details.
+		Logger.Write($"UnobservedTaskException caught: {e.Exception.Message}");
+
+		// Mark the exception as observed to prevent the process from terminating.
+		e.SetObserved();
+
+		await ShowErrorDialogAsync(e.Exception);
 	}
 
 

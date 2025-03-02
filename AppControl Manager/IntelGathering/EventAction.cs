@@ -1,6 +1,6 @@
 ﻿namespace AppControlManager.IntelGathering;
 
-public enum EventAction
+internal enum EventAction
 {
 	Audit,
 	Block

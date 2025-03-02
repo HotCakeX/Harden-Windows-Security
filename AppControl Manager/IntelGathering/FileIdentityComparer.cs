@@ -8,7 +8,7 @@ namespace AppControlManager.IntelGathering;
 /// This comparer is used to determine the uniqueness of FileIdentity instances
 /// based on specific properties.
 /// </summary>
-public sealed class FileIdentityComparer : IEqualityComparer<FileIdentity>
+internal sealed class FileIdentityComparer : IEqualityComparer<FileIdentity>
 {
 	/// <summary>
 	/// Determines whether two FileIdentity instances are equal.

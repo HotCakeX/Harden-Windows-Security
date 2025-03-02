@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -277,6 +278,15 @@ internal static class FileDialogHelper
 
 			}
 
+			// See if user selected one file
+			if (selectedFiles.Count is 1)
+			{
+				// Assign the file where user last browsed for a file to the directory where file picker will be opened from next time
+				string? _selectedFilePath = Path.GetDirectoryName(selectedFiles.FirstOrDefault());
+				if (!string.IsNullOrEmpty(_selectedFilePath))
+					DirectoryToOpen = _selectedFilePath;
+			}
+
 			return selectedFiles;
 		}
 		finally
@@ -487,6 +497,17 @@ internal static class FileDialogHelper
 				// Clean up the IShellItem COM object
 				_ = ppsi->Release();
 
+			}
+
+			// If user selected only one directory
+			if (selectedFolders.Count is 1)
+			{
+				// Get the first/only directory
+				string? firstDir = selectedFolders.FirstOrDefault();
+
+				// Assign the directory where user last browsed for to the directory where folder picker will be opened from next time
+				if (!string.IsNullOrEmpty(firstDir))
+					DirectoryToOpen = firstDir;
 			}
 
 			return selectedFolders;

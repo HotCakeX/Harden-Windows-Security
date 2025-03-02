@@ -113,7 +113,6 @@ internal static class LocalFilesScan
 					try
 					{
 
-
 						#region Gather File information
 
 						// Get the Code integrity hashes of the file
@@ -299,14 +298,12 @@ internal static class LocalFilesScan
 
 
 									_ = currentFileIdentity.FileSignerInfos.Add(signerInfo);
-
 								}
 
 								// If Leaf certificate is null, according to the GetCertificateDetails class's logic,
 								// use Root certificate. That means the current signer of the file is a root certificate.
 								else if (package.RootCertificate is not null)
 								{
-
 
 									// See if the root certificate in the current signer has WHQL OID for its EKU
 									bool WHQLConfirmed = package.RootCertificate.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>()

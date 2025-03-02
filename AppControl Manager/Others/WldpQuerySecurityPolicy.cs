@@ -15,9 +15,9 @@ internal enum WLDP_SECURE_SETTING_VALUE_TYPE
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 internal struct UNICODE_STRING
 {
-	public ushort Length;
-	public ushort MaximumLength;
-	public IntPtr Buffer;
+	internal ushort Length;
+	internal ushort MaximumLength;
+	internal IntPtr Buffer;
 }
 
 internal static partial class WldpQuerySecurityPolicyWrapper

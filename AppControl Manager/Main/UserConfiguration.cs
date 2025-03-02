@@ -15,7 +15,7 @@ namespace AppControlManager.Main;
 // Embeds the WriteIndented = true configuration into the generated metadata. This means the resulting JSON will be formatted with indentation.
 [JsonSerializable(typeof(UserConfiguration), GenerationMode = JsonSourceGenerationMode.Serialization)]
 [JsonSourceGenerationOptions(WriteIndented = true)]
-public partial class UserConfigurationContext : JsonSerializerContext
+internal sealed partial class UserConfigurationContext : JsonSerializerContext
 {
 }
 
@@ -23,7 +23,7 @@ public partial class UserConfigurationContext : JsonSerializerContext
 // Represents an instance of the User configurations JSON settings file
 // Maintains the order of the properties when writing to the JSON file
 // Includes the methods for interacting with user configurations JSON file
-public sealed partial class UserConfiguration(
+internal sealed partial class UserConfiguration(
 		string? signedPolicyPath,
 		string? unsignedPolicyPath,
 		string? signToolCustomPath,
@@ -35,32 +35,41 @@ public sealed partial class UserConfiguration(
 		Dictionary<string, DateTime>? signedPolicyStage1RemovalTimes = null
 	)
 {
+	[JsonInclude]
 	[JsonPropertyOrder(1)]
-	public string? SignedPolicyPath { get; set; } = signedPolicyPath;
+	internal string? SignedPolicyPath { get; set; } = signedPolicyPath;
 
+	[JsonInclude]
 	[JsonPropertyOrder(2)]
-	public string? UnsignedPolicyPath { get; set; } = unsignedPolicyPath;
+	internal string? UnsignedPolicyPath { get; set; } = unsignedPolicyPath;
 
+	[JsonInclude]
 	[JsonPropertyOrder(3)]
-	public string? SignToolCustomPath { get; set; } = signToolCustomPath;
+	internal string? SignToolCustomPath { get; set; } = signToolCustomPath;
 
+	[JsonInclude]
 	[JsonPropertyOrder(4)]
-	public string? CertificateCommonName { get; set; } = certificateCommonName;
+	internal string? CertificateCommonName { get; set; } = certificateCommonName;
 
+	[JsonInclude]
 	[JsonPropertyOrder(5)]
-	public string? CertificatePath { get; set; } = certificatePath;
+	internal string? CertificatePath { get; set; } = certificatePath;
 
+	[JsonInclude]
 	[JsonPropertyOrder(6)]
-	public Guid? StrictKernelPolicyGUID { get; set; } = strictKernelPolicyGUID;
+	internal Guid? StrictKernelPolicyGUID { get; set; } = strictKernelPolicyGUID;
 
+	[JsonInclude]
 	[JsonPropertyOrder(7)]
-	public DateTime? LastUpdateCheck { get; set; } = lastUpdateCheck;
+	internal DateTime? LastUpdateCheck { get; set; } = lastUpdateCheck;
 
+	[JsonInclude]
 	[JsonPropertyOrder(8)]
-	public bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
+	internal bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
 
+	[JsonInclude]
 	[JsonPropertyOrder(9)]
-	public Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
+	internal Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
 
 
 	/// <summary>

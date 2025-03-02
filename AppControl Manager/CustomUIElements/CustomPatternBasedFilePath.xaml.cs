@@ -48,6 +48,6 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 
 internal sealed class FilePathPatternExample
 {
-	public string? Example;
-	public string? Description;
+	internal string? Example;
+	internal string? Description;
 }

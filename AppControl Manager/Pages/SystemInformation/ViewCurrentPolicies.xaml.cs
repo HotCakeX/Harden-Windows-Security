@@ -112,48 +112,48 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("VersionHeader/Text"));
-		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
-		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsEnforcedHeader/Text"));
-		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsOnDiskHeader/Text"));
-		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
-		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSystemPolicyHeader/Text"));
-		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("VersionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsEnforcedHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsOnDiskHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSystemPolicyHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (CiPolicyInfo item in AllPolicies)
 		{
-			double w1 = ListViewUIHelpers.MeasureTextWidth(item.PolicyID);
+			double w1 = ListViewHelper.MeasureTextWidth(item.PolicyID);
 			if (w1 > maxWidth1) maxWidth1 = w1;
 
-			double w2 = ListViewUIHelpers.MeasureTextWidth(item.BasePolicyID);
+			double w2 = ListViewHelper.MeasureTextWidth(item.BasePolicyID);
 			if (w2 > maxWidth2) maxWidth2 = w2;
 
-			double w3 = ListViewUIHelpers.MeasureTextWidth(item.FriendlyName);
+			double w3 = ListViewHelper.MeasureTextWidth(item.FriendlyName);
 			if (w3 > maxWidth3) maxWidth3 = w3;
 
-			double w4 = ListViewUIHelpers.MeasureTextWidth(item.Version!.ToString());
+			double w4 = ListViewHelper.MeasureTextWidth(item.Version!.ToString());
 			if (w4 > maxWidth4) maxWidth4 = w4;
 
-			double w5 = ListViewUIHelpers.MeasureTextWidth(item.IsAuthorized.ToString());
+			double w5 = ListViewHelper.MeasureTextWidth(item.IsAuthorized.ToString());
 			if (w5 > maxWidth5) maxWidth5 = w5;
 
-			double w6 = ListViewUIHelpers.MeasureTextWidth(item.IsEnforced.ToString());
+			double w6 = ListViewHelper.MeasureTextWidth(item.IsEnforced.ToString());
 			if (w6 > maxWidth6) maxWidth6 = w6;
 
-			double w7 = ListViewUIHelpers.MeasureTextWidth(item.IsOnDisk.ToString());
+			double w7 = ListViewHelper.MeasureTextWidth(item.IsOnDisk.ToString());
 			if (w7 > maxWidth7) maxWidth7 = w7;
 
-			double w8 = ListViewUIHelpers.MeasureTextWidth(item.IsSignedPolicy.ToString());
+			double w8 = ListViewHelper.MeasureTextWidth(item.IsSignedPolicy.ToString());
 			if (w8 > maxWidth8) maxWidth8 = w8;
 
-			double w9 = ListViewUIHelpers.MeasureTextWidth(item.IsSystemPolicy.ToString());
+			double w9 = ListViewHelper.MeasureTextWidth(item.IsSystemPolicy.ToString());
 			if (w9 > maxWidth9) maxWidth9 = w9;
 
-			double w10 = ListViewUIHelpers.MeasureTextWidth(item.PolicyOptionsDisplay);
+			double w10 = ListViewHelper.MeasureTextWidth(item.PolicyOptionsDisplay);
 			if (w10 > maxWidth10) maxWidth10 = w10;
 		}
 
@@ -214,7 +214,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
 
 				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(new string('-', 50));
+				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
 			}
 
 			// Create a DataPackage to hold the text data
@@ -491,7 +491,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 			return;
 		}
 
-		await ListViewUIHelpers.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
+		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 
 		// Get the selected policy from the ListView
 		CiPolicyInfo? temp = (CiPolicyInfo)DeployedPolicies.SelectedItem;

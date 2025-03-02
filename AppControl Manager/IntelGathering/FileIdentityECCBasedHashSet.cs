@@ -8,7 +8,7 @@ namespace AppControlManager.IntelGathering;
 /// prioritizing items with IsECCSigned set to true over others when adding items
 /// with identical properties, based on the custom equality comparer.
 /// </summary>
-public sealed class FileIdentityECCBasedHashSet
+internal sealed class FileIdentityECCBasedHashSet
 {
 	// A HashSet to store FileIdentity objects with a custom comparer.
 	private readonly HashSet<FileIdentity> _set;
@@ -16,7 +16,7 @@ public sealed class FileIdentityECCBasedHashSet
 	/// <summary>
 	/// Initializes a new instance of the FileIdentityECCBasedHashSet class.
 	/// </summary>
-	public FileIdentityECCBasedHashSet()
+	internal FileIdentityECCBasedHashSet()
 	{
 		_set = new HashSet<FileIdentity>(new FileIdentityComparer());
 	}
@@ -24,7 +24,7 @@ public sealed class FileIdentityECCBasedHashSet
 	/// <summary>
 	/// Expose the internal HashSet so we can access it directly.
 	/// </summary>
-	public HashSet<FileIdentity> FileIdentitiesInternal => _set;
+	internal HashSet<FileIdentity> FileIdentitiesInternal => _set;
 
 	/// <summary>
 	/// Adds a FileIdentity item to the set, replacing an item if it exists and is less preferred.

@@ -1,7 +1,6 @@
-﻿
-namespace AppControlManager.IntelGathering;
+﻿namespace AppControlManager.IntelGathering;
 
-public enum SignatureStatus
+internal enum SignatureStatus
 {
 	IsSigned,
 	IsUnsigned

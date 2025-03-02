@@ -10,12 +10,12 @@ namespace AppControlManager.IntelGathering;
 internal static partial class OptimizeMDECSVData
 {
 	/// <summary>
-	/// Public method of this class.
+	/// The Main method of the class.
 	/// Optimizes the MDE CSV data by adding the nested properties in the "AdditionalFields" property to the parent record as first-level properties, all in one class.
 	/// </summary>
 	/// <param name="CSVFilePath"></param>
 	/// <returns></returns>
-	public static List<MDEAdvancedHuntingData> Optimize(string CSVFilePath)
+	internal static List<MDEAdvancedHuntingData> Optimize(string CSVFilePath)
 	{
 		List<MDEAdvancedHuntingData> csvRecords = ReadCsv(CSVFilePath);
 		return csvRecords;

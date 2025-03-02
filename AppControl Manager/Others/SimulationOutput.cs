@@ -4,7 +4,7 @@ namespace AppControlManager.Others;
 /// Used by AppControl Simulations, the output of the comparer function/method
 /// This class holds the details of the current file in the App Control Simulation comparer
 /// </summary>
-public sealed class SimulationOutput(
+internal sealed class SimulationOutput(
 	string? path,
 	string source,
 	bool isAuthorized,
@@ -24,50 +24,50 @@ public sealed class SimulationOutput(
 )
 {
 	// The name of the file, which is a truncated version of its path
-	public string? Path { get; set; } = path;
+	internal string? Path { get; set; } = path;
 
 	// Source from the Comparer function is always 'Signer'
-	public string Source { get; set; } = source;
+	internal string Source { get; set; } = source;
 
 	// Whether the file is authorized or not
-	public bool IsAuthorized { get; set; } = isAuthorized;
+	internal bool IsAuthorized { get; set; } = isAuthorized;
 
 	// Gathered from the GetSignerInfo method
-	public string? SignerID { get; set; } = signerID;
+	internal string? SignerID { get; set; } = signerID;
 
 	// Gathered from the GetSignerInfo method
-	public string? SignerName { get; set; } = signerName;
+	internal string? SignerName { get; set; } = signerName;
 
 	// Gathered from the GetSignerInfo method
-	public string? SignerCertRoot { get; set; } = signerCertRoot;
+	internal string? SignerCertRoot { get; set; } = signerCertRoot;
 
 	// Gathered from the GetSignerInfo method
-	public string? SignerCertPublisher { get; set; } = signerCertPublisher;
+	internal string? SignerCertPublisher { get; set; } = signerCertPublisher;
 
 	// Gathered from the GetSignerInfo method
-	public string? SignerScope { get; set; } = signerScope;
+	internal string? SignerScope { get; set; } = signerScope;
 
 	// Gathered from the GetSignerInfo method
-	public string[]? SignerFileAttributeIDs { get; set; } = signerFileAttributeIDs;
+	internal string[]? SignerFileAttributeIDs { get; set; } = signerFileAttributeIDs;
 
 	// The main level based on which the file is authorized
-	public string? MatchCriteria { get; set; } = matchCriteria;
+	internal string? MatchCriteria { get; set; } = matchCriteria;
 
 	// Only those eligible for FilePublisher, WHQLFilePublisher, or SignedVersion levels assign this value, otherwise it stays null
-	public string? SpecificFileNameLevelMatchCriteria { get; set; } = specificFileNameLevelMatchCriteria;
+	internal string? SpecificFileNameLevelMatchCriteria { get; set; } = specificFileNameLevelMatchCriteria;
 
 	// Subject CN of the signer that allows the file
-	public string? CertSubjectCN { get; set; } = certSubjectCN;
+	internal string? CertSubjectCN { get; set; } = certSubjectCN;
 
 	// Issuer CN of the signer that allows the file
-	public string? CertIssuerCN { get; set; } = certIssuerCN;
+	internal string? CertIssuerCN { get; set; } = certIssuerCN;
 
 	// NotAfter date of the signer that allows the file
-	public string? CertNotAfter { get; set; } = certNotAfter;
+	internal string? CertNotAfter { get; set; } = certNotAfter;
 
 	// TBS value of the signer that allows the file
-	public string? CertTBSValue { get; set; } = certTBSValue;
+	internal string? CertTBSValue { get; set; } = certTBSValue;
 
 	// Full path of the file
-	public string? FilePath { get; set; } = filePath;
+	internal string? FilePath { get; set; } = filePath;
 }

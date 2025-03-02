@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 
 namespace AppControlManager.SimulationMethods;
@@ -51,9 +52,7 @@ internal static class Arbitrator
 			// If the signer has any EKUs, try to match it with the file's EKU OIDs
 			if (signer.HasEKU)
 			{
-
-				Logger.Write("The signer has EKUs");
-				Logger.Write($"The current file has {simulationInput.EKUOIDs!.Length} EKUs");
+				Logger.Write($"The current file '{simulationInput.FilePath.FullName}' has {simulationInput.EKUOIDs?.Count} EKUs");
 
 				// Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
 				// This is used for all levels, not just WHQL levels
@@ -72,13 +71,13 @@ internal static class Arbitrator
 				if (EKUsMatch)
 				{
 
-					Logger.Write("The EKUs of the signer matched with the file's EKUs");
+					Logger.Write($"The EKUs of the signer '{signer.Name}' matched with the file's EKUs");
 
 					// If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
 					if (signer.IsWHQL)
 					{
 
-						Logger.Write("The signer is WHQL");
+						Logger.Write($"The signer '{signer.Name}' is WHQL");
 
 						// At this point the file is definitely WHQL-Signed
 
@@ -88,7 +87,7 @@ internal static class Arbitrator
 							  sig.LeafCertificate.Certificate.Extensions
 							  .OfType<X509EnhancedKeyUsageExtension>()
 							  .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
-							  .Any(oid => oid.Value is not null && oid.Value.Contains("1.3.6.1.4.1.311.10.3.5", StringComparison.OrdinalIgnoreCase))))];
+							  .Any(oid => oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))))];
 
 
 						// HashSet to store all of the Opus data from the WHQL chain packages candidates

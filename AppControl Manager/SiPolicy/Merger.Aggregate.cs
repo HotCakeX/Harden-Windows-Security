@@ -597,7 +597,6 @@ internal static class Factory
 		Dictionary<string, Signer> Signers,
 		HashSet<SupplementalPolicySignerRule> supplementalPolicySignersSet)
 	{
-
 		foreach (string ID in supplementalPolicySignerIDs)
 		{
 			if (Signers.TryGetValue(ID, out Signer? possibleSupplementalPolicySigner))
@@ -610,13 +609,11 @@ internal static class Factory
 				// Replace the Signer's ID
 				possibleSupplementalPolicySigner.ID = rand;
 
-
 				// Create a new SupplementalPolicySigner element with the new ID
 				SupplementalPolicySigner suppRule = new()
 				{
 					SignerId = rand
 				};
-
 
 				_ = supplementalPolicySignersSet.Add(new SupplementalPolicySignerRule
 				{
@@ -639,7 +636,6 @@ internal static class Factory
 		Dictionary<string, Signer> Signers,
 		HashSet<UpdatePolicySignerRule> updatePolicySignersSet)
 	{
-
 		foreach (string ID in updatePolicySignerIDs)
 		{
 			if (Signers.TryGetValue(ID, out Signer? possibleUpdatePolicySigner))
@@ -665,8 +661,6 @@ internal static class Factory
 				});
 			}
 		}
-
-
 	}
 
 }

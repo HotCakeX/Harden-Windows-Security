@@ -333,7 +333,7 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, AllowNewAppsStart.Instance.EventLogsAllFileIdentities, AllowNewAppsStart.Instance.EventLogsFileIdentities, FileIdentitiesListView);
+		AllowNewAppsStart.Instance.EventLogsFileIdentities = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, AllowNewAppsStart.Instance.EventLogsAllFileIdentities, AllowNewAppsStart.Instance.EventLogsFileIdentities, FileIdentitiesListView);
 	}
 
 	#endregion

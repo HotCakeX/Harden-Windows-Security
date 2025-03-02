@@ -299,7 +299,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, AllowNewAppsStart.Instance.LocalFilesAllFileIdentities, AllowNewAppsStart.Instance.LocalFilesFileIdentities, FileIdentitiesListView);
+		AllowNewAppsStart.Instance.LocalFilesFileIdentities = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, AllowNewAppsStart.Instance.LocalFilesAllFileIdentities, AllowNewAppsStart.Instance.LocalFilesFileIdentities, FileIdentitiesListView);
 	}
 
 	#endregion

@@ -599,8 +599,11 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 		)];
 
 
-		// Update the ObservableCollection on the UI thread with the filtered results
+		// Update the ObservableCollection with the filtered results
 		SimulationOutputs = [.. filteredResults];
+
+		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
+		SimOutputListView.ItemsSource = SimulationOutputs;
 	}
 
 

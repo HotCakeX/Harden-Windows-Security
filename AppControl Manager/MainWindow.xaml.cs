@@ -313,30 +313,36 @@ public sealed partial class MainWindow : Window
 
 		_ = Task.Run(() =>
 		   {
-
-			   // If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
-			   // If a new version is available.
-			   // Will also check for update if it's null meaning user hasn't configured the auto update check yet
-			   if (AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
+			   try
 			   {
 
-				   Logger.Write("Checking for update on startup");
-
-				   // Start the update check
-				   UpdateCheckResponse updateCheckResponse = updateService.Check();
-
-				   // If a new version is available
-				   if (updateCheckResponse.IsNewVersionAvailable)
+				   // If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
+				   // If a new version is available.
+				   // Will also check for update if it's null meaning user hasn't configured the auto update check yet
+				   if (AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
 				   {
-					   // Set the text for the button in the update page
-					   GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
-				   }
-				   else
-				   {
-					   Logger.Write("No new version of the AppControl Manager is available.");
+
+					   Logger.Write("Checking for update on startup");
+
+					   // Start the update check
+					   UpdateCheckResponse updateCheckResponse = updateService.Check();
+
+					   // If a new version is available
+					   if (updateCheckResponse.IsNewVersionAvailable)
+					   {
+						   // Set the text for the button in the update page
+						   GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
+					   }
+					   else
+					   {
+						   Logger.Write("No new version of the AppControl Manager is available.");
+					   }
 				   }
 			   }
-
+			   catch (Exception ex)
+			   {
+				   Logger.Write("Error checking for update on startup: " + ex.Message);
+			   }
 		   });
 
 		#endregion
@@ -1666,6 +1672,10 @@ public sealed partial class MainWindow : Window
 
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
 		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar) ?? true;
+
+		// Enables Security catalogs caching by default. If the value doesn't exist in the settings then it will be null and assigned to true. If it's false it will remain false.
+		bool? CacheSecurityCatalogResultsStatus = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.CacheSecurityCatalogsScanResults);
+		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.CacheSecurityCatalogsScanResults, CacheSecurityCatalogResultsStatus ?? true);
 	}
 
 

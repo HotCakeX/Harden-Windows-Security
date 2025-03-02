@@ -30,6 +30,9 @@ internal static class GlobalVars
 	// Storing the path to the StagingArea folder in the AppControl Manager folder in the Program Files
 	internal static readonly string StagingArea = Path.Combine(UserConfigDir, "StagingArea");
 
+	// The directory where the logs will be stored
+	internal static readonly string LogsDirectory = Path.Combine(UserConfigDir, "Logs");
+
 	// The link to the file that contains the download link for the latest version of the AppControl Manager
 	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt");
 

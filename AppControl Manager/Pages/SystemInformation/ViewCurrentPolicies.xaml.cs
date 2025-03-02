@@ -345,7 +345,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 		DataContext = this; // Set the DataContext for x:Bind references in the header in XAML
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Initially disable the RemovePolicyButton
 		RemovePolicyButton.IsEnabled = false;
@@ -459,13 +459,10 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
             (p.PolicyOptionsDisplay?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 		)];
 
-		// Update the ObservableCollection on the UI thread with the filtered results
-		AllPolicies.Clear();
+		// Update the ObservableCollection with the filtered results
+		AllPolicies = [.. filteredResults];
 
-		foreach (CiPolicyInfo result in filteredResults)
-		{
-			AllPolicies.Add(result);
-		}
+		DeployedPolicies.ItemsSource = AllPolicies;
 
 		// Update the policies count text
 		PoliciesCountTextBlock.Text = GlobalVars.Rizz.GetString("NumberOfPolicies") + filteredResults.Count;
@@ -932,7 +929,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 							EnableScriptEnforcement: false,
 							TestMode: false,
 							deployAppControlSupplementalPolicy: false,
-							PolicyIDToUse: null,
+							PolicyIDToUse: policyID,
 							DeployMicrosoftRecommendedBlockRules: false
 							);
 
@@ -966,7 +963,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 							EnableScriptEnforcement: false,
 							TestMode: false,
 							deployAppControlSupplementalPolicy: false,
-							PolicyIDToUse: null,
+							PolicyIDToUse: policyID,
 							DeployMicrosoftRecommendedBlockRules: false
 							);
 
@@ -974,13 +971,23 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 						}
 					case 3: // Strict Kernel-Mode
 						{
-							BasePolicyCreator.BuildStrictKernelMode(stagingArea, false, false, true, policyID);
+							BasePolicyCreator.BuildStrictKernelMode(
+								StagingArea: stagingArea,
+								IsAudit: false,
+								NoFlightRoots: false,
+								deploy: true,
+								PolicyIDToUse: policyID);
 
 							break;
 						}
 					case 4: // Strict Kernel-Mode(No Flight Roots)
 						{
-							BasePolicyCreator.BuildStrictKernelMode(stagingArea, false, true, true, policyID);
+							BasePolicyCreator.BuildStrictKernelMode(
+								StagingArea: stagingArea,
+								IsAudit: false,
+								NoFlightRoots: true,
+								deploy: true,
+								PolicyIDToUse: policyID);
 
 							break;
 						}

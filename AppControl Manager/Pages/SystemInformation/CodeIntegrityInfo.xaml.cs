@@ -12,7 +12,7 @@ public sealed partial class CodeIntegrityInfo : Page
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 	/// <summary>

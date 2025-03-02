@@ -179,7 +179,8 @@ internal static class ListViewHelper
 	/// <param name="originalList">The full list to sort if no filter is active.</param>
 	/// <param name="observableCollection">The ObservableCollection to update with sorted data.</param>
 	/// <param name="listView">The ListView whose ItemsSource will be refreshed.</param>
-	internal static void SortColumn<T>(
+	/// <returns>Returns the ObservableCollection so it can replace the original collection that was passed to this method via value.</returns>
+	internal static ObservableCollection<FileIdentity> SortColumn<T>(
 		Func<FileIdentity, T> keySelector,
 		TextBox searchBox,
 		ToggleMenuFlyoutItem sortingToggle,
@@ -201,12 +202,13 @@ internal static class ListViewHelper
 
 		// Refresh the ItemsSource.
 		listView.ItemsSource = sortedData;
+
+		return sortedData;
 	}
 
 
 	/// <summary>
 	/// Applies the search (and optional date) filters to the provided data.
-	/// Returns the ObservableCollection so its values can replace the collection in the page's code behind. It is passed by value to this method.
 	/// </summary>
 	/// <param name="allFileIdentities">
 	/// The complete list of FileIdentity objects (unfiltered).
@@ -225,7 +227,8 @@ internal static class ListViewHelper
 	/// </param>
 	/// <param name="datePicker">
 	/// An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
-	/// </param>	
+	/// </param>
+	/// <returns>Returns the ObservableCollection so it can replace the original collection that was passed to this method via value.</returns>
 	internal static ObservableCollection<FileIdentity> ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,

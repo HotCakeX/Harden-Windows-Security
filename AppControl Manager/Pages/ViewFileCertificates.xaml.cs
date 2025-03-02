@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
@@ -361,32 +363,14 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	private ObservableCollection<FileCertificateInfoCol> FilteredCertificates = [];
 
 	// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
-	private readonly Dictionary<string, string> AllSecurityCatalogHashes = [];
+	private ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
 
 	private bool SecurityCatalogsWereCached;
 
 	private void GatherSecurityCatalogs()
 	{
-
-		// Get the .cat files in the CatRoot directory
-		List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast([new DirectoryInfo(@"C:\Windows\System32\CatRoot")], null, [".cat"]);
-
-		Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the file certificate acquisition process");
-
-		foreach (FileInfo file in detectedCatFiles)
-		{
-			// Get the hashes of the security catalog file
-			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
-
-			// If the security catalog file has hashes, then add them to the dictionary
-			if (catHashes.Count > 0)
-			{
-				foreach (string hash in catHashes)
-				{
-					_ = AllSecurityCatalogHashes.TryAdd(hash, file.FullName);
-				}
-			}
-		}
+		// Get the security catalog data to include in the scan
+		AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
 	}
 
 	/// <summary>
@@ -652,7 +636,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			}
 
 			// Get full chains of all of the file's certificates
-			List<ChainPackage> result = GetCertificateDetails.Get([.. signerDetails]);
+			List<ChainPackage> result = GetCertificateDetails.Get(signerDetails);
 
 			// Start the counter with 1 instead of 0 for better display
 			int i = 1;
@@ -744,7 +728,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
 		// Get the search term from the search box
-		string query = SearchBox.Text.Trim();
+		string query = SearchBox.Text.Trim().ToLowerInvariant();
 
 		if (string.IsNullOrWhiteSpace(query))
 		{

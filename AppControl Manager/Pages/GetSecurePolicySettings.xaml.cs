@@ -14,7 +14,7 @@ public sealed partial class GetSecurePolicySettings : Page
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 	// Event handler for the Fetch button

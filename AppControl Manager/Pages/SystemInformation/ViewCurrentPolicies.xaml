@@ -17,6 +17,19 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.Resources>
+            <Binding x:Key="Column1Binding" Path="ColumnWidth1" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column2Binding" Path="ColumnWidth2" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column3Binding" Path="ColumnWidth3" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column4Binding" Path="ColumnWidth4" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column5Binding" Path="ColumnWidth5" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column6Binding" Path="ColumnWidth6" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column7Binding" Path="ColumnWidth7" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column8Binding" Path="ColumnWidth8" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column9Binding" Path="ColumnWidth9" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+            <Binding x:Key="Column10Binding" Path="ColumnWidth10" Source="{x:Bind ViewCurrentPoliciesXAML}" />
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -183,6 +196,7 @@
                 <DataTemplate x:DataType="others:CiPolicyInfo">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
+
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
@@ -269,17 +283,16 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <!-- Use standard Binding with ElementName to refer back to the page's properties because in here the Data Context is set to CiPolicyInfo so we cannot use x.Bind since CiPolicyInfo doesn't have the ColumnWidth properties -->
-                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=ViewCurrentPoliciesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=ViewCurrentPoliciesXAML}" />
+                            <ColumnDefinition Width="{StaticResource Column1Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column2Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column3Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column4Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column5Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column6Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column7Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column8Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column9Binding}" />
+                            <ColumnDefinition Width="{StaticResource Column10Binding}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind PolicyID}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind BasePolicyID}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>

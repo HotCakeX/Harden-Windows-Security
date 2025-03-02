@@ -303,7 +303,7 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, AllFileIdentities, FileIdentities, FileIdentitiesListView);
+		FileIdentities = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, AllFileIdentities, FileIdentities, FileIdentitiesListView);
 	}
 
 	#endregion

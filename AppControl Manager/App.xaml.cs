@@ -50,6 +50,9 @@ public partial class App : Application
 	{
 		this.InitializeComponent();
 
+		// Create the Logs directory if it doesn't exist, won't do anything if it exists
+		_ = Directory.CreateDirectory(GlobalVars.LogsDirectory);
+
 		// to handle unhandled exceptions
 		this.UnhandledException += App_UnhandledException;
 

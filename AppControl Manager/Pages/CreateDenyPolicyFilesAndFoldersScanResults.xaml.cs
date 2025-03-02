@@ -299,7 +299,7 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, I
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateDenyPolicy.Instance.filesAndFoldersScanResultsList, CreateDenyPolicy.Instance.filesAndFoldersScanResults, FileIdentitiesListView);
+		CreateDenyPolicy.Instance.filesAndFoldersScanResults = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateDenyPolicy.Instance.filesAndFoldersScanResultsList, CreateDenyPolicy.Instance.filesAndFoldersScanResults, FileIdentitiesListView);
 	}
 
 	#endregion

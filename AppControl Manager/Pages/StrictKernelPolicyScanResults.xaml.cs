@@ -302,7 +302,7 @@ public sealed partial class StrictKernelPolicyScanResults : Page, INotifyPropert
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateSupplementalPolicy.Instance.ScanResultsList, CreateSupplementalPolicy.Instance.ScanResults, FileIdentitiesListView);
+		CreateSupplementalPolicy.Instance.ScanResults = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateSupplementalPolicy.Instance.ScanResultsList, CreateSupplementalPolicy.Instance.ScanResults, FileIdentitiesListView);
 	}
 
 	#endregion

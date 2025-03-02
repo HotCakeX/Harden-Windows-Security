@@ -7,6 +7,11 @@ namespace AppControlManager.Others;
 
 internal static class XmlFilePathExtractor
 {
+	/// <summary>
+	/// Extracts all the file paths from the Allow rules in an App Control policy
+	/// </summary>
+	/// <param name="xmlFilePath"></param>
+	/// <returns></returns>
 	internal static HashSet<string> GetFilePaths(string xmlFilePath)
 	{
 		// Initialize HashSet with StringComparer.OrdinalIgnoreCase to ensure case-insensitive, ordinal comparison

@@ -1,48 +1,73 @@
 using System;
 using System.IO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace AppControlManager.Others;
 
 internal static class Logger
 {
-	// The Logs directory
-	internal static readonly string LogsDirectory = Path.Combine(GlobalVars.UserConfigDir, "Logs");
-
 	// The Logs file path
-	private static readonly string LogFileName = Path.Combine(LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+	private static readonly string LogFileName = Path.Combine(GlobalVars.LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+
+	// The log channel for high-performance asynchronous logging
+	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
+	{
+		SingleReader = true,
+		AllowSynchronousContinuations = false
+	});
+
+	// The StreamWriter used for writing to the log file
+	private static readonly StreamWriter _streamWriter = new(
+		new FileStream(
+			path: LogFileName,
+			mode: FileMode.Append,
+			access: FileAccess.Write,
+			share: FileShare.Read,
+			bufferSize: 4096,
+			useAsync: true))
+	{
+		// Ensures log messages are written to disk right away, reducing the risk of data loss in case of a crash or unexpected termination.
+		AutoFlush = true
+	};
 
 	static Logger()
 	{
-		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(LogsDirectory);
-
 		// Check the size of the directory and clear it if it exceeds 1000 MB
 		// To ensure the logs directory doesn't get too big
-		if (GetDirectorySize(LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
+		if (GetDirectorySize(GlobalVars.LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
 		{
 			// Empty the directory while retaining the most recent file
-			EmptyDirectory(LogsDirectory);
+			EmptyDirectory(GlobalVars.LogsDirectory);
 		}
+
+		// Start the background log processing task
+		// allowing the log processing to run concurrently without blocking the main thread.
+		_ = Task.Run(async () =>
+		{
+			// Asynchronously enumerates all available log messages from the channel.
+			// The ReadAllAsync method ensures that the loop waits for new entries if none are available.
+			await foreach (string log in _logChannel.Reader.ReadAllAsync())
+			{
+				await _streamWriter.WriteLineAsync(log);
+			}
+		});
 	}
 
 	/// <summary>
-	/// Write a verbose message to the console
-	/// https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.host.pshostuserinterface
+	/// Write the log to the file
 	/// </summary>
 	/// <param name="message"></param>
 	internal static void Write(string message)
 	{
-		try
+		string logEntry = $"{DateTime.Now}: {message}";
+
+		// Enqueue the log message for asynchronous writing
+		if (!_logChannel.Writer.TryWrite(logEntry))
 		{
-
-			// Write the message to the log file
-			using StreamWriter sw = File.AppendText(LogFileName);
-			sw.WriteLine($"{DateTime.Now}: {message}");
-
+			//  If TryWrite returns false, falls back to writing directly to the log file asynchronously so no log messages are lost, even if the channel cannot accept new entries.
+			_ = _streamWriter.WriteLineAsync(logEntry);
 		}
-		// Do not do anything if errors occur
-		// Since many methods write to the console or text file asynchronously or in parallel, this might throw errors
-		catch { }
 	}
 
 	private static long GetDirectorySize(string directoryPath)

@@ -7,8 +7,13 @@ namespace AppControlManager.Others;
 
 internal static class CertificateHelper
 {
+	/// <summary>
+	/// Calculates the TBS value of a certificate
+	/// </summary>
+	/// <param name="cert"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
 	internal static string GetTBSCertificate(X509Certificate2 cert)
-	// Calculates the TBS value of a certificate
 	{
 		// Get the raw data of the certificate
 		byte[] rawData = cert.RawData;
@@ -28,40 +33,39 @@ internal static class CertificateHelper
 		// Read the algorithm OID of the signature
 		string algorithmOid = signatureAlgorithm.ReadObjectIdentifier();
 
-		// Define a hash function based on the algorithm OID
-		HashAlgorithm hashFunction = algorithmOid switch
+		byte[] hash = algorithmOid switch
 		{
-			"1.2.840.113549.1.1.4" => MD5.Create(),
-			"1.2.840.113549.1.1.5" or "1.3.14.3.2.29" => SHA1.Create(), // sha-1WithRSAEncryption
-			"1.2.840.113549.1.1.11" => SHA256.Create(),
-			"1.2.840.113549.1.1.12" => SHA384.Create(),
-			"1.2.840.113549.1.1.13" => SHA512.Create(),
+			"1.2.840.113549.1.1.4" => MD5.HashData(tbsCertificate.Span),
+			"1.2.840.113549.1.1.5" or "1.3.14.3.2.29" => SHA1.HashData(tbsCertificate.Span), // sha-1WithRSAEncryption
+			"1.2.840.113549.1.1.11" => SHA256.HashData(tbsCertificate.Span),
+			"1.2.840.113549.1.1.12" => SHA384.HashData(tbsCertificate.Span),
+			"1.2.840.113549.1.1.13" => SHA512.HashData(tbsCertificate.Span),
 			// These are less likely to be used since Code Integrity doesn't support their OIDs
-			"1.2.840.10040.4.3" => SHA1.Create(),
-			"2.16.840.1.101.3.4.3.2" => SHA256.Create(),
-			"2.16.840.1.101.3.4.3.3" => SHA384.Create(),
-			"2.16.840.1.101.3.4.3.4" => SHA512.Create(),
-			"1.2.840.10045.4.1" => SHA1.Create(),
-			"1.2.840.10045.4.3.2" => SHA256.Create(),
-			"1.2.840.10045.4.3.3" => SHA384.Create(),
-			"1.2.840.10045.4.3.4" => SHA512.Create(),
+			"1.2.840.10040.4.3" => SHA1.HashData(tbsCertificate.Span),
+			"2.16.840.1.101.3.4.3.2" => SHA256.HashData(tbsCertificate.Span),
+			"2.16.840.1.101.3.4.3.3" => SHA384.HashData(tbsCertificate.Span),
+			"2.16.840.1.101.3.4.3.4" => SHA512.HashData(tbsCertificate.Span),
+			"1.2.840.10045.4.1" => SHA1.HashData(tbsCertificate.Span),
+			"1.2.840.10045.4.3.2" => SHA256.HashData(tbsCertificate.Span),
+			"1.2.840.10045.4.3.3" => SHA384.HashData(tbsCertificate.Span),
+			"1.2.840.10045.4.3.4" => SHA512.HashData(tbsCertificate.Span),
 			_ => throw new InvalidOperationException($"No handler for algorithm {algorithmOid}"),
 		};
-		using (hashFunction)
-		{
-			// Compute the hash of the TBS value using the hash function
-			byte[] hash = hashFunction.ComputeHash(tbsCertificate.ToArray());
 
-			// Convert the hash to a hex string
-			string hexStringOutput = Convert.ToHexString(hash);
+		// Convert the hash to a hex string
+		string hexStringOutput = Convert.ToHexString(hash);
 
-			return hexStringOutput;
-		}
+		return hexStringOutput;
 	}
 
+	/// <summary>
+	/// Converts a hexadecimal string to an OID
+	/// Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
+	/// </summary>
+	/// <param name="hex"></param>
+	/// <returns></returns>
+	/// <exception cref="ArgumentException"></exception>
 	internal static string ConvertHexToOID(string hex)
-	// Converts a hexadecimal string to an OID
-	// Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
 	{
 		if (string.IsNullOrEmpty(hex))
 		{

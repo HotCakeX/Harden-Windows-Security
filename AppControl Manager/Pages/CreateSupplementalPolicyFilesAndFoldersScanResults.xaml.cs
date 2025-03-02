@@ -297,7 +297,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateSupplementalPolicy.Instance.filesAndFoldersScanResultsList, CreateSupplementalPolicy.Instance.filesAndFoldersScanResults, FileIdentitiesListView);
+		CreateSupplementalPolicy.Instance.filesAndFoldersScanResults = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, CreateSupplementalPolicy.Instance.filesAndFoldersScanResultsList, CreateSupplementalPolicy.Instance.filesAndFoldersScanResults, FileIdentitiesListView);
 	}
 
 	#endregion

@@ -328,8 +328,57 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	#endregion
 
 
-	// Expose the list of queries as a public property for x:Bind
-	internal ObservableCollection<MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage> AdvancedHuntingQueries { get; } = [];
+	// The list of queries property for x:Bind
+	internal readonly List<MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage> AdvancedHuntingQueries = [
+
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query",
+			Query = """
+DeviceEvents
+| where ActionType startswith "AppControlCodeIntegrity"
+   or ActionType startswith "AppControlCIScriptBlocked"
+   or ActionType startswith "AppControlCIScriptAudited"
+"""
+		},
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name filter",
+			Query = """
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName"
+"""
+		},
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name and Time filter",
+			Query = """
+DeviceEvents
+| where Timestamp >= ago(1h)
+
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName"
+"""
+		},
+
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name and Policy name filter",
+			Query = """
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName" | where parse_json(AdditionalFields)["PolicyName"] == 'NameOfThePolicy'
+"""
+		}
+
+		];
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
@@ -366,32 +415,6 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 		// Add the DateChanged event handler
 		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
-
-
-		// Instances of MDEAdvancedHuntingQueries
-		AdvancedHuntingQueries.Add(new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query",
-			Query = """
-DeviceEvents
-| where ActionType startswith "AppControlCodeIntegrity"
-   or ActionType startswith "AppControlCIScriptBlocked"
-   or ActionType startswith "AppControlCIScriptAudited"
-"""
-		});
-
-		AdvancedHuntingQueries.Add(new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name filter",
-			Query = """
-DeviceEvents
-| where (ActionType startswith "AppControlCodeIntegrity"
-    or ActionType startswith "AppControlCIScriptBlocked"
-    or ActionType startswith "AppControlCIScriptAudited")
-    and DeviceName == "deviceName"
-"""
-		});
-
 	}
 
 

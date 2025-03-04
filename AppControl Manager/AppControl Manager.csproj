@@ -151,7 +151,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
     <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250129-preview2" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.68.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.69.1" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -175,7 +175,7 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
     <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.2" />
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.2" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.1" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 
   </ItemGroup>

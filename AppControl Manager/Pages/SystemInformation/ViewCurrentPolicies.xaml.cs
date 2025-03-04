@@ -670,7 +670,7 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 									ContentDialog dialog = new()
 									{
 										Title = GlobalVars.Rizz.GetString("WarningTitle"),
-										Content = GlobalVars.Rizz.GetString("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.Rizz.GetString("RestartRequiredEnd") + policy.PolicyID + "')",
+										Content = GlobalVars.Rizz.GetString("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.Rizz.GetString("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
 										PrimaryButtonText = GlobalVars.Rizz.GetString("Understand"),
 										BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 										BorderThickness = new Thickness(1),
@@ -1067,5 +1067,16 @@ public sealed partial class ViewCurrentPolicies : Page, INotifyPropertyChanged
 	{
 		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
 		args.Handled = true;
+	}
+
+
+	/// <summary>
+	/// Event handler for when F5 is pressed to refresh the policies
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	private void F5_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		RetrievePolicies();
 	}
 }

@@ -362,17 +362,6 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	// Collection used during search
 	private ObservableCollection<FileCertificateInfoCol> FilteredCertificates = [];
 
-	// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
-	private ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
-
-	private bool SecurityCatalogsWereCached;
-
-	private void GatherSecurityCatalogs()
-	{
-		// Get the security catalog data to include in the scan
-		AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
-	}
-
 	/// <summary>
 	/// Event handler for the Browse button
 	/// </summary>
@@ -599,16 +588,11 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			// If the file has no signers and the user wants to include security catalogs
 			if (signerDetails.Count is 0 && shouldProcessSecurityCats)
 			{
-				// Process the security catalogs if they haven't been processed
-				if (!SecurityCatalogsWereCached)
-				{
-					GatherSecurityCatalogs();
-					SecurityCatalogsWereCached = true;
-				}
+				// Get the security catalog data to include in the scan				
+				ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
 
 				// Grab the file's Code Integrity hashes
 				CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(file);
-
 
 				if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
 				{

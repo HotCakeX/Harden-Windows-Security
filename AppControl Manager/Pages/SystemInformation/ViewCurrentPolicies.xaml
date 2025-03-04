@@ -118,6 +118,9 @@
                             <TextBlock Text="Retrieve Policies" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F5" Invoked="F5_Invoked"/>
+                    </Button.KeyboardAccelerators>
                 </Button>
 
                 <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="The count of all of the displayed policies"/>

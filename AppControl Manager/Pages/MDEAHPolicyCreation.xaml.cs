@@ -1057,9 +1057,6 @@ DeviceEvents
 	/// <param name="e"></param>
 	private async void RetrieveTheLogsButton_Click(object sender, RoutedEventArgs e)
 	{
-
-		bool errorsOccurred = false;
-
 		MainInfoBar.Visibility = Visibility.Visible;
 		MainInfoBar.IsOpen = true;
 		MainInfoBar.Message = "Retrieving the Microsoft Defender for Endpoint Advanced Hunting data";
@@ -1084,24 +1081,31 @@ DeviceEvents
 
 				if (root is null)
 				{
-					MainInfoBar.Message = $"There were no logs to be retrieved";
+					MainInfoBar.Message = "There were no logs to be retrieved";
 					MainInfoBar.Severity = InfoBarSeverity.Warning;
-					errorsOccurred = true;
 					return;
 				}
 
 				if (root.Results.Count is 0)
 				{
-					MainInfoBar.Message = $"0 logs were retrieved";
+					MainInfoBar.Message = "0 logs were retrieved";
 					MainInfoBar.Severity = InfoBarSeverity.Warning;
-					errorsOccurred = true;
 					return;
 				}
 
-				Logger.Write("Deserialization complete. Number of records: " + (root.Results.Count));
+				MainInfoBar.Message = $"Successfully retrieved {root.Results.Count} logs from the cloud";
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+
+				Logger.Write("Deserialization complete. Number of records: " + root.Results.Count);
 
 				// Grab the App Control Logs
 				HashSet<FileIdentity> Output = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
+
+				if (Output.Count is 0)
+				{
+					MainInfoBar.Message = "No actionable logs were found among the retrieved data to create a Supplemental policy with.";
+					MainInfoBar.Severity = InfoBarSeverity.Warning;
+				}
 
 				AllFileIdentities.Clear();
 				FileIdentities.Clear();
@@ -1123,17 +1127,10 @@ DeviceEvents
 		{
 			MainInfoBar.Message = $"There was an error retrieving the MDE Advanced Hunting logs from MSGraph: {ex.Message}";
 			MainInfoBar.Severity = InfoBarSeverity.Error;
-			errorsOccurred = true;
 			throw;
 		}
 		finally
 		{
-			if (!errorsOccurred)
-			{
-				MainInfoBar.Message = $"Successfully retrieved {root?.Results.Count} logs from the cloud";
-				MainInfoBar.Severity = InfoBarSeverity.Success;
-			}
-
 			RetrieveTheLogsButton.IsEnabled = true;
 			MSGraphDeviceNameButton.IsEnabled = true;
 

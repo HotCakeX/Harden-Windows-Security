@@ -939,8 +939,8 @@ internal static class CustomDeserialization
 		}
 
 		// Parse the AppIDTag child elements
-		var appIDTagNodes = elem.GetElementsByTagName("AppIDTag");
-		var tags = new List<AppIDTag>();
+		XmlNodeList appIDTagNodes = elem.GetElementsByTagName("AppIDTag");
+		List<AppIDTag> tags = [];
 		foreach (XmlElement tagElem in appIDTagNodes)
 		{
 			AppIDTag tag = new();

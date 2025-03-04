@@ -159,6 +159,9 @@
                         <controls:SettingsCard x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}" IsClickEnabled="True" IsActionIconVisible="False" Click="ListViewsCenterVerticallyUponSelectionSettingsCard_Click">
                             <ToggleSwitch x:Name="ListViewsCenterVerticallyUponSelectionToggleSwitch" />
                         </controls:SettingsCard>
+                        <controls:SettingsCard x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}" IsClickEnabled="True" IsActionIconVisible="False" Click="CacheSecurityCatalogsScanResultsSettingsCard_Click">
+                            <ToggleSwitch x:Name="CacheSecurityCatalogsScanResultsToggleSwitch" />
+                        </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

@@ -239,7 +239,9 @@
                         <controls:SettingsCard Description="The higher this number, the faster the scan completes and the more system resources will be consumed."
                             Header="Scalability" IsClickEnabled="False" IsActionIconVisible="False">
 
-                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15">
+                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+
+                                <ProgressRing x:Name="FilesAndFoldersProgressRing" IsIndeterminate="False" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
 
                                 <!-- Scalability Button with RadialGauge Flyout -->
                                 <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.">
@@ -265,8 +267,6 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-
-                                <ProgressBar x:Name="FilesAndFoldersProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
 
                             </controls:WrapPanel>
 
@@ -510,7 +510,13 @@
                              Header="Auto Driver Detection"
                              IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModeAutoDetectAllDriversSettingsCard_Click">
 
-                            <Button x:Name="StrictKernelModeAutoDetectAllDriversButton" Content="Begin" Click="StrictKernelModeAutoDetectAllDriversButton_Click" />
+                            <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+
+                                <ProgressRing x:Name="DriverAutoDetectionProgressRing" IsIndeterminate="False" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
+
+                                <Button x:Name="StrictKernelModeAutoDetectAllDriversButton" Content="Begin" Click="StrictKernelModeAutoDetectAllDriversButton_Click" />
+
+                            </controls:WrapPanel>
 
                         </controls:SettingsCard>
 

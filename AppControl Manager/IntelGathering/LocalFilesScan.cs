@@ -18,36 +18,21 @@ namespace AppControlManager.IntelGathering;
 internal static class LocalFilesScan
 {
 
-	private const string WHQLOid = "1.3.6.1.4.1.311.10.3.5";
+	internal const string WHQLOid = "1.3.6.1.4.1.311.10.3.5";
 	private const string ECCOID = "1.2.840.10045.2.1";
 
-
-	internal static HashSet<FileIdentity> Scan(List<FileInfo> files, ushort scalability, ProgressBar? UIProgressBar, ProgressRing? UIProgressRing)
+	/// <summary>
+	/// Scans the local files and returns the scan results
+	/// </summary>
+	/// <param name="files">File paths to scan</param>
+	/// <param name="scalability">How many parallel tasks to use during the scan</param>
+	/// <param name="UIProgressRing">ProgressRing UI element that will display the scan progress in real time</param>
+	/// <returns></returns>
+	internal static HashSet<FileIdentity> Scan(List<FileInfo> files, ushort scalability, ProgressRing UIProgressRing)
 	{
 
-		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
-		Dictionary<string, string> AllSecurityCatalogHashes = [];
-
-		// Get the .cat files in the CatRoot directory
-		List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast([new DirectoryInfo(@"C:\Windows\System32\CatRoot")], null, [".cat"]);
-
-		Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the scan process");
-
-		foreach (FileInfo file in detectedCatFiles)
-		{
-			// Get the hashes of the security catalog file
-			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
-
-			// If the security catalog file has hashes, then add them to the dictionary
-			if (catHashes.Count > 0)
-			{
-				foreach (string hash in catHashes)
-				{
-					_ = AllSecurityCatalogHashes.TryAdd(hash, file.FullName);
-				}
-			}
-		}
-
+		// Get the security catalog data to include in the scan
+		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, scalability);
 
 		// Store the output of all of the parallel tasks in this
 		ConcurrentDictionary<FileInfo, FileIdentity> temporaryOutput = [];
@@ -57,6 +42,24 @@ internal static class LocalFilesScan
 
 		// The count of all of the files that are going to be processed
 		double AllFilesCount = files.Count;
+
+		// Create a timer to update the progress ring every 2 seconds.
+		using Timer progressTimer = new(state =>
+		{
+			// Read the current value in a thread-safe manner.
+			int current = Volatile.Read(ref processedFilesCount);
+
+			// Calculate the percentage complete
+			int currentPercentage = (int)(current / AllFilesCount * 100);
+
+			// Update the UI element
+			_ = UIProgressRing.DispatcherQueue.TryEnqueue(() =>
+			{
+				// The value is set to the calculated percentage, but capped at 100 using Math.Min.
+				UIProgressRing.Value = Math.Min(currentPercentage, 100);
+			});
+
+		}, null, 0, 2000);
 
 		// split the file paths by the value of Scalability variable
 		IEnumerable<FileInfo[]> SplitArrays = Enumerable.Chunk(files, (int)Math.Ceiling(AllFilesCount / scalability));
@@ -70,37 +73,10 @@ internal static class LocalFilesScan
 			// Run each chunk of data in a different thread
 			tasks.Add(Task.Run(() =>
 			{
-
 				foreach (FileInfo file in chunk)
 				{
-
 					// Increment the processed file count safely
 					_ = Interlocked.Increment(ref processedFilesCount);
-
-					if (UIProgressBar is not null)
-					{
-
-						// Update progress bar safely on the UI thread
-						_ = UIProgressBar.DispatcherQueue.TryEnqueue(() =>
-						{
-							double progressPercentage = (processedFilesCount / AllFilesCount) * 100;
-
-							UIProgressBar.Value = Math.Min(progressPercentage, 100);
-						});
-
-					}
-					else if (UIProgressRing is not null)
-					{
-
-						// Update progress ring safely on the UI thread
-						_ = UIProgressRing.DispatcherQueue.TryEnqueue(() =>
-						{
-							double progressPercentage = (processedFilesCount / AllFilesCount) * 100;
-
-							UIProgressRing.Value = Math.Min(progressPercentage, 100);
-						});
-					}
-
 
 					// To track whether ECC Signed signature has been detected or not
 					// Once it's been set to true, it won't be changed to false anymore for the current file
@@ -109,10 +85,8 @@ internal static class LocalFilesScan
 					// String path of the current file
 					string fileString = file.ToString();
 
-
 					try
 					{
-
 
 						#region Gather File information
 
@@ -135,9 +109,6 @@ internal static class LocalFilesScan
 						{
 							Logger.Write($"The file '{file.FullName}' has hash mismatch, Hash based rule will be created for it.");
 						}
-
-
-						List<string> ekuOIDs = [];
 
 						bool fileIsSigned = false;
 
@@ -176,7 +147,6 @@ internal static class LocalFilesScan
 							fileIsSigned = true;
 						}
 
-
 						#endregion
 
 						FileIdentity currentFileIdentity = new()
@@ -199,17 +169,8 @@ internal static class LocalFilesScan
 
 						if (fileIsSigned)
 						{
-
-							// The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
-							// Only the leaf certificate of the primary signer has EKUs, others such as root or intermediate have KUs only.
-							ekuOIDs = FileSignatureResults
-							   .Where(p => p.Signer?.SignerInfos is not null)
-							   .SelectMany(p => p.Signer.SignerInfos.Cast<SignerInfo>())
-							   .Where(info => info.Certificate is not null)
-							   .SelectMany(info => info.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>())
-							   .SelectMany(ext => ext.EnhancedKeyUsages.Cast<Oid>())
-							   .Select(oid => oid.Value)
-							   .ToList()!;
+							// Get all of the file's OIDs
+							List<string> ekuOIDs = GetOIDs(FileSignatureResults);
 
 							// Check if the file has WHQL signer
 							bool HasWHQLSigner = ekuOIDs.Contains(WHQLOid);
@@ -219,8 +180,7 @@ internal static class LocalFilesScan
 							currentFileIdentity.HasWHQLSigner = HasWHQLSigner;
 
 							// Get all of the certificates of the file
-							List<ChainPackage> FileSignerInfo = GetCertificateDetails.Get([.. FileSignatureResults]);
-
+							List<ChainPackage> FileSignerInfo = GetCertificateDetails.Get(FileSignatureResults);
 
 							// Iterate through the certificates of the file
 							foreach (ChainPackage package in FileSignerInfo)
@@ -244,17 +204,13 @@ internal static class LocalFilesScan
 									Logger.Write($"Failed to get the Opus data of the current chain package");
 								}
 
-
 								// If the Leaf Certificate exists in the current package
 								// Indicating that the current signer of the file is a normal certificate with Leaf/Intermediate(s)/Root
 								if (package.LeafCertificate is not null)
 								{
 
 									// See if the leaf certificate in the current signer has WHQL OID for its EKU
-									bool WHQLConfirmed = package.LeafCertificate.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>()
-										   .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
-										   .Any(oid => oid.Value is not null && oid.Value.Contains(WHQLOid, StringComparison.OrdinalIgnoreCase)));
-
+									bool WHQLConfirmed = DetermineWHQL(package.LeafCertificate.Certificate!.Extensions);
 
 									// Get the TBSHash of the Issuer certificate of the Leaf Certificate of the current file's signer
 									string IssuerTBSHash = CertificateHelper.GetTBSCertificate(package.LeafCertificate.Issuer);
@@ -273,7 +229,6 @@ internal static class LocalFilesScan
 										EKUs = WHQLConfirmed ? WHQLOid : ekuOIDs.FirstOrDefault() // If the Leaf certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the leaf certificate of the file.
 									};
 
-
 									// Add the CN of the file's leaf certificate to the FilePublishers HashSet of the current FileIdentity
 									if (package.LeafCertificate?.SubjectCN is not null)
 									{
@@ -283,7 +238,6 @@ internal static class LocalFilesScan
 										// We don't want to find an ECC signed certificate and then overwrite the property's value and set it to false by the next non-ECC signed certificate
 										if (!IsECCSigned)
 										{
-
 											// Check see if the file is ECC-Signed
 											currentFileIdentity.IsECCSigned = string.Equals(package.LeafCertificate.Certificate?.PublicKey?.EncodedKeyValue.Oid?.Value, ECCOID, StringComparison.OrdinalIgnoreCase);
 
@@ -297,22 +251,14 @@ internal static class LocalFilesScan
 										}
 									}
 
-
 									_ = currentFileIdentity.FileSignerInfos.Add(signerInfo);
-
 								}
-
 								// If Leaf certificate is null, according to the GetCertificateDetails class's logic,
 								// use Root certificate. That means the current signer of the file is a root certificate.
 								else if (package.RootCertificate is not null)
 								{
-
-
 									// See if the root certificate in the current signer has WHQL OID for its EKU
-									bool WHQLConfirmed = package.RootCertificate.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>()
-										   .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
-										   .Any(oid => oid.Value is not null && oid.Value.Contains(WHQLOid, StringComparison.OrdinalIgnoreCase)));
-
+									bool WHQLConfirmed = DetermineWHQL(package.RootCertificate.Certificate!.Extensions);
 
 									FileSignerInfo signerInfo = new()
 									{
@@ -328,18 +274,15 @@ internal static class LocalFilesScan
 										EKUs = WHQLConfirmed ? WHQLOid : ekuOIDs.FirstOrDefault() // If the root certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the root certificate of the file.
 									};
 
-
 									// Add the CN of the file's root certificate to the FilePublishers HashSet of the current FileIdentity
 									if (package.RootCertificate.SubjectCN is not null)
 									{
 										_ = currentFileIdentity.FilePublishers.Add(package.RootCertificate.SubjectCN);
 
-
 										// Check to see if it hasn't already been determined that the file is ECC signed
 										// We don't want to find an ECC signed certificate and then overwrite the property's value and set it to false by the next non-ECC signed certificate
 										if (!IsECCSigned)
 										{
-
 											// Check see if the file is ECC-Signed
 											currentFileIdentity.IsECCSigned = string.Equals(package.RootCertificate.Certificate?.PublicKey?.EncodedKeyValue.Oid?.Value, ECCOID, StringComparison.OrdinalIgnoreCase);
 
@@ -351,7 +294,6 @@ internal static class LocalFilesScan
 												Logger.Write($"ECC Signed File Detected: {currentFileIdentity.FilePath}. Will create Hash rules for it.");
 											}
 										}
-
 									}
 
 									_ = currentFileIdentity.FileSignerInfos.Add(signerInfo);
@@ -361,32 +303,25 @@ internal static class LocalFilesScan
 
 						// Add the current file's identity to the output HashSet
 						_ = temporaryOutput.TryAdd(file, currentFileIdentity);
-
 					}
-
-
 					catch (IOException ex) when (ex.HResult == unchecked((int)0x80070020)) // File in use by another process
 					{
 						Logger.Write($"Skipping the file '{file.FullName}' because it is being used by another process.");
 					}
-
 					catch (IOException ex) when (ex.HResult == unchecked((int)0x80070780)) // File cannot be accessed by the system
 					{
 						Logger.Write($"Skipping the file '{file.FullName}' because it cannot be accessed by the system.");
 					}
-
 					// Custom "Could not hash file via SHA1" error
 					// Either thrown from CiFileHash.GetCiFileHashes or CiFileHash.GetAuthenticodeHash
 					catch (Exception ex) when (ex.HResult == -2146233079)
 					{
 						Logger.Write($"Skipping the file '{file.FullName}' because it could not be hashed via SHA1.");
 					}
-
 					catch (IOException ex) when (ex.HResult == -2147024894) // FileNotFoundException (0x80070002)
 					{
 						Logger.Write($"Skipping the file '{file.FullName}' because it could not be found.");
 					}
-
 					// Defender files in Program Data directory can throw this
 					catch (UnauthorizedAccessException)
 					{
@@ -394,14 +329,15 @@ internal static class LocalFilesScan
 					}
 
 				}
-
 			}));
 		}
-
 
 		// Wait for all tasks to complete without making the method async
 		// The method is already being called in an async/await fashion
 		Task.WaitAll([.. tasks]);
+
+		// update the progress ring to 100%
+		_ = UIProgressRing.DispatcherQueue.TryEnqueue(() => UIProgressRing.Value = 100);
 
 		// HashSet to store the output, ensures the data are unique
 		HashSet<FileIdentity> fileIdentities = new(new FileIdentityComparer());
@@ -413,5 +349,70 @@ internal static class LocalFilesScan
 		}
 
 		return fileIdentities;
+	}
+
+
+	/// <summary>
+	/// Gets all of the OIDs in a file. The OIDs are collected from all of the file's signers and each certificate (Leaf/Intermediate/Root) in each signer.
+	/// </summary>
+	/// <param name="fileSigners"></param>
+	/// <returns></returns>
+	internal static List<string> GetOIDs(List<AllFileSigners> fileSigners)
+	{
+		List<string> output = [];
+
+		// The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
+		// Only the leaf certificate of the primary signer has EKUs, others such as root or intermediate have KUs only.
+		foreach (AllFileSigners fileSignature in fileSigners)
+		{
+			// Only process entries where Signer and its SignerInfos exist.
+			if (fileSignature.Signer?.SignerInfos is not null)
+			{
+				foreach (SignerInfo signerInfo in fileSignature.Signer.SignerInfos)
+				{
+					// Only process if a certificate is present.
+					if (signerInfo.Certificate is not null)
+					{
+						// Iterate over the certificate extensions and select those of type X509EnhancedKeyUsageExtension.
+						foreach (X509EnhancedKeyUsageExtension extension in signerInfo.Certificate.Extensions.OfType<X509EnhancedKeyUsageExtension>())
+						{
+							// Iterate over each Oid in the EnhancedKeyUsages.
+							foreach (Oid oid in extension.EnhancedKeyUsages)
+							{
+								if (oid.Value is not null)
+								{
+									output.Add(oid.Value);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return output;
+	}
+
+
+	/// <summary>
+	/// Determines whether a file has WHQL signer among all of its signers
+	/// </summary>
+	/// <param name="Collection"></param>
+	/// <returns></returns>
+	private static bool DetermineWHQL(X509ExtensionCollection Collection)
+	{
+		foreach (var ext in Collection)
+		{
+			if (ext is X509EnhancedKeyUsageExtension eku)
+			{
+				foreach (Oid oid in eku.EnhancedKeyUsages)
+				{
+					if (oid.Value is not null && oid.Value.Contains(WHQLOid, StringComparison.OrdinalIgnoreCase))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

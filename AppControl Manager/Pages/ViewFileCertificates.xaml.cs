@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
@@ -116,52 +118,52 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNumberHeader/Text"));
-		double maxWidth2 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("TypeHeader/Text"));
-		double maxWidth3 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text"));
-		double maxWidth4 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text"));
-		double maxWidth5 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("NotBeforeHeader/Text"));
-		double maxWidth6 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("NotAfterHeader/Text"));
-		double maxWidth7 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text"));
-		double maxWidth8 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("SerialNumberHeader/Text"));
-		double maxWidth9 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ThumbprintHeader/Text"));
-		double maxWidth10 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("TBSHashHeader/Text"));
-		double maxWidth11 = ListViewUIHelpers.MeasureTextWidth(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNumberHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TypeHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("NotBeforeHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("NotAfterHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SerialNumberHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ThumbprintHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TBSHashHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileCertificateInfoCol item in FileCertificates)
 		{
-			double w1 = ListViewUIHelpers.MeasureTextWidth(item.SignerNumber.ToString());
+			double w1 = ListViewHelper.MeasureTextWidth(item.SignerNumber.ToString());
 			if (w1 > maxWidth1) maxWidth1 = w1;
 
-			double w2 = ListViewUIHelpers.MeasureTextWidth(item.Type.ToString());
+			double w2 = ListViewHelper.MeasureTextWidth(item.Type.ToString());
 			if (w2 > maxWidth2) maxWidth2 = w2;
 
-			double w3 = ListViewUIHelpers.MeasureTextWidth(item.SubjectCN);
+			double w3 = ListViewHelper.MeasureTextWidth(item.SubjectCN);
 			if (w3 > maxWidth3) maxWidth3 = w3;
 
-			double w4 = ListViewUIHelpers.MeasureTextWidth(item.IssuerCN);
+			double w4 = ListViewHelper.MeasureTextWidth(item.IssuerCN);
 			if (w4 > maxWidth4) maxWidth4 = w4;
 
-			double w5 = ListViewUIHelpers.MeasureTextWidth(item.NotBefore.ToString());
+			double w5 = ListViewHelper.MeasureTextWidth(item.NotBefore.ToString());
 			if (w5 > maxWidth5) maxWidth5 = w5;
 
-			double w6 = ListViewUIHelpers.MeasureTextWidth(item.NotAfter.ToString());
+			double w6 = ListViewHelper.MeasureTextWidth(item.NotAfter.ToString());
 			if (w6 > maxWidth6) maxWidth6 = w6;
 
-			double w7 = ListViewUIHelpers.MeasureTextWidth(item.HashingAlgorithm);
+			double w7 = ListViewHelper.MeasureTextWidth(item.HashingAlgorithm);
 			if (w7 > maxWidth7) maxWidth7 = w7;
 
-			double w8 = ListViewUIHelpers.MeasureTextWidth(item.SerialNumber);
+			double w8 = ListViewHelper.MeasureTextWidth(item.SerialNumber);
 			if (w8 > maxWidth8) maxWidth8 = w8;
 
-			double w9 = ListViewUIHelpers.MeasureTextWidth(item.Thumbprint);
+			double w9 = ListViewHelper.MeasureTextWidth(item.Thumbprint);
 			if (w9 > maxWidth9) maxWidth9 = w9;
 
-			double w10 = ListViewUIHelpers.MeasureTextWidth(item.TBSHash);
+			double w10 = ListViewHelper.MeasureTextWidth(item.TBSHash);
 			if (w10 > maxWidth10) maxWidth10 = w10;
 
-			double w11 = ListViewUIHelpers.MeasureTextWidth(item.OIDs);
+			double w11 = ListViewHelper.MeasureTextWidth(item.OIDs);
 			if (w11 > maxWidth11) maxWidth11 = w11;
 		}
 
@@ -188,17 +190,17 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	{
 		// Use StringBuilder to format each property with its label for easy reading
 		return new StringBuilder()
-			.AppendLine(GlobalVars.Rizz.GetString("SignerNumberHeader/Text") + row.SignerNumber)
-			.AppendLine(GlobalVars.Rizz.GetString("TypeHeader/Text") + row.Type)
-			.AppendLine(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text") + row.SubjectCN)
-			.AppendLine(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text") + row.IssuerCN)
-			.AppendLine(GlobalVars.Rizz.GetString("NotBeforeHeader/Text") + row.NotBefore)
-			.AppendLine(GlobalVars.Rizz.GetString("NotAfterHeader/Text") + row.NotAfter)
-			.AppendLine(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text") + row.HashingAlgorithm)
-			.AppendLine(GlobalVars.Rizz.GetString("SerialNumberHeader/Text") + row.SerialNumber)
-			.AppendLine(GlobalVars.Rizz.GetString("ThumbprintHeader/Text") + row.Thumbprint)
-			.AppendLine(GlobalVars.Rizz.GetString("TBSHashHeader/Text") + row.TBSHash)
-			.AppendLine(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text") + row.OIDs)
+			.AppendLine(GlobalVars.Rizz.GetString("SignerNumberHeader/Text") + ": " + row.SignerNumber)
+			.AppendLine(GlobalVars.Rizz.GetString("TypeHeader/Text") + ": " + row.Type)
+			.AppendLine(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text") + ": " + row.SubjectCN)
+			.AppendLine(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text") + ": " + row.IssuerCN)
+			.AppendLine(GlobalVars.Rizz.GetString("NotBeforeHeader/Text") + ": " + row.NotBefore)
+			.AppendLine(GlobalVars.Rizz.GetString("NotAfterHeader/Text") + ": " + row.NotAfter)
+			.AppendLine(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text") + ": " + row.HashingAlgorithm)
+			.AppendLine(GlobalVars.Rizz.GetString("SerialNumberHeader/Text") + ": " + row.SerialNumber)
+			.AppendLine(GlobalVars.Rizz.GetString("ThumbprintHeader/Text") + ": " + row.Thumbprint)
+			.AppendLine(GlobalVars.Rizz.GetString("TBSHashHeader/Text") + ": " + row.TBSHash)
+			.AppendLine(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text") + ": " + row.OIDs)
 			.ToString();
 	}
 
@@ -219,14 +221,13 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			// Loop through each selected item in the ListView
 			foreach (var selectedItem in FileCertificatesListView.SelectedItems)
 			{
-
 				if (selectedItem is FileCertificateInfoCol obj)
 
 					// Append each row's formatted data to the StringBuilder
 					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
 
 				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(new string('-', 50));
+				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
 			}
 
 			// Create a DataPackage to hold the text data
@@ -360,35 +361,6 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 
 	// Collection used during search
 	private ObservableCollection<FileCertificateInfoCol> FilteredCertificates = [];
-
-	// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
-	private readonly Dictionary<string, string> AllSecurityCatalogHashes = [];
-
-	private bool SecurityCatalogsWereCached;
-
-	private void GatherSecurityCatalogs()
-	{
-
-		// Get the .cat files in the CatRoot directory
-		List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast([new DirectoryInfo(@"C:\Windows\System32\CatRoot")], null, [".cat"]);
-
-		Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the file certificate acquisition process");
-
-		foreach (FileInfo file in detectedCatFiles)
-		{
-			// Get the hashes of the security catalog file
-			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
-
-			// If the security catalog file has hashes, then add them to the dictionary
-			if (catHashes.Count > 0)
-			{
-				foreach (string hash in catHashes)
-				{
-					_ = AllSecurityCatalogHashes.TryAdd(hash, file.FullName);
-				}
-			}
-		}
-	}
 
 	/// <summary>
 	/// Event handler for the Browse button
@@ -616,16 +588,11 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			// If the file has no signers and the user wants to include security catalogs
 			if (signerDetails.Count is 0 && shouldProcessSecurityCats)
 			{
-				// Process the security catalogs if they haven't been processed
-				if (!SecurityCatalogsWereCached)
-				{
-					GatherSecurityCatalogs();
-					SecurityCatalogsWereCached = true;
-				}
+				// Get the security catalog data to include in the scan				
+				ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
 
 				// Grab the file's Code Integrity hashes
 				CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(file);
-
 
 				if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
 				{
@@ -653,7 +620,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			}
 
 			// Get full chains of all of the file's certificates
-			List<ChainPackage> result = GetCertificateDetails.Get([.. signerDetails]);
+			List<ChainPackage> result = GetCertificateDetails.Get(signerDetails);
 
 			// Start the counter with 1 instead of 0 for better display
 			int i = 1;
@@ -745,7 +712,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
 		// Get the search term from the search box
-		string query = SearchBox.Text.Trim();
+		string query = SearchBox.Text.Trim().ToLowerInvariant();
 
 		if (string.IsNullOrWhiteSpace(query))
 		{
@@ -838,6 +805,6 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			return;
 		}
 
-		await ListViewUIHelpers.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
+		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 	}
 }

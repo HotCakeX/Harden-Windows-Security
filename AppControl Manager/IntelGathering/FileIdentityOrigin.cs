@@ -1,6 +1,6 @@
 ﻿namespace AppControlManager.IntelGathering;
 
-public enum FileIdentityOrigin
+internal enum FileIdentityOrigin
 {
 	EventLog,
 	MDEAdvancedHunting,

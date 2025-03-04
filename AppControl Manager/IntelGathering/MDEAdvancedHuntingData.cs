@@ -8,7 +8,7 @@ namespace AppControlManager.IntelGathering;
 // The following converters are needed for when parsing the MDE AH CSV file
 // The parsing from JSON string via MS Graph doesn't require it, but we use it for both
 
-public class NullableBoolJsonConverter : JsonConverter<bool?>
+internal sealed class NullableBoolJsonConverter : JsonConverter<bool?>
 {
 	public override bool? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -65,7 +65,7 @@ public class NullableBoolJsonConverter : JsonConverter<bool?>
 }
 
 
-public class NullableIntJsonConverter : JsonConverter<int?>
+internal sealed class NullableIntJsonConverter : JsonConverter<int?>
 {
 	public override int? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -103,7 +103,7 @@ public class NullableIntJsonConverter : JsonConverter<int?>
 }
 
 
-public class NullableLongJsonConverter : JsonConverter<long?>
+internal sealed class NullableLongJsonConverter : JsonConverter<long?>
 {
 	public override long? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

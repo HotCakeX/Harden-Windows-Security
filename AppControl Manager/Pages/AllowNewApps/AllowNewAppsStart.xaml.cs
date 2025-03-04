@@ -554,7 +554,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						});
 
 						// Scan all of the detected files from the user selected directories
-						HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, null, Step2ProgressRing);
+						HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, Step2ProgressRing);
 
 						// Add the results of the directories scans to the ListView
 						foreach (FileIdentity item in LocalFilesResults)

@@ -13,7 +13,7 @@ namespace AppControlManager.IntelGathering;
 /// If the existing item is unsigned and the new item is signed: The unsigned item is removed, and the signed item is added to the set.
 /// If the existing item is already signed: The new item, signed or unsigned, will simply not be added because they are considered equal according to the FileIdentityComparer.
 /// </summary>
-public sealed class FileIdentitySignatureBasedHashSet
+internal sealed class FileIdentitySignatureBasedHashSet
 {
 	// A HashSet to store FileIdentity objects with a custom comparer.
 	// This comparer defines equality based on selected properties in that comparer, ignoring SignatureStatus for now.
@@ -22,7 +22,7 @@ public sealed class FileIdentitySignatureBasedHashSet
 	/// <summary>
 	/// Initializes a new instance of the FileIdentitySignatureBasedHashSet class.
 	/// </summary>
-	public FileIdentitySignatureBasedHashSet()
+	internal FileIdentitySignatureBasedHashSet()
 	{
 		_set = new HashSet<FileIdentity>(new FileIdentityComparer());
 	}
@@ -30,7 +30,7 @@ public sealed class FileIdentitySignatureBasedHashSet
 	/// <summary>
 	/// Expose the internal HashSet so we can access it directly.
 	/// </summary>
-	public HashSet<FileIdentity> FileIdentitiesInternal => _set;
+	internal HashSet<FileIdentity> FileIdentitiesInternal => _set;
 
 	/// <summary>
 	/// Adds a FileIdentity item to the set.

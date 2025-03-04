@@ -19,10 +19,15 @@ public sealed partial class Logs : Page
 	{
 		this.InitializeComponent();
 
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		// This forces the page to reload when user visits the page without the need to click on the refresh button
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+	}
 
-		// Load log files when the page is initialized.
+	protected override void OnNavigatedTo(NavigationEventArgs e)
+	{
+		base.OnNavigatedTo(e);
+
+		// Load log files
 		LoadLogFiles();
 	}
 
@@ -33,7 +38,7 @@ public sealed partial class Logs : Page
 	private void LoadLogFiles()
 	{
 		// Get files matching the pattern;
-		List<FileInfo> logFiles = [.. Directory.GetFiles(Logger.LogsDirectory, "AppControlManager_Logs_*.txt")
+		List<FileInfo> logFiles = [.. Directory.GetFiles(GlobalVars.LogsDirectory, "AppControlManager_Logs_*.txt")
 			.Select(f => new FileInfo(f))
 			.OrderByDescending(f => f.CreationTime)];
 
@@ -77,17 +82,26 @@ public sealed partial class Logs : Page
 	}
 
 	/// <summary>
-	/// Reads the log file content asynchronously and splits it into lines.
-	/// Then it updates the ItemsRepeater to display the log lines.
+	/// Reads the log file content asynchronously using a FileStream with FileShare.ReadWrite.
+	/// This allows reading even while the file is in use by the logger.
+	/// The file content is then split into lines and the ItemsRepeater updated.
 	/// </summary>
 	private async Task DisplayLogContentAsync(string filePath)
 	{
 		if (File.Exists(filePath))
 		{
-			// Read all lines from the file in a background task.
-			string[] lines = await File.ReadAllLinesAsync(filePath);
+			// Since the logger might be writing to the file at the same time the UI is reading it, we open the file with FileShare.ReadWrite
+			// This allows concurrent read/write operations without file locking issues.
+			using FileStream stream = new(
+				filePath,
+				FileMode.Open,
+				FileAccess.Read,
+				FileShare.ReadWrite);
+			using StreamReader reader = new(stream);
+			string content = await reader.ReadToEndAsync();
 
-			_allLogLines = [.. lines];
+			// Split file content into individual lines.
+			_allLogLines = [.. content.Split(["\r\n", "\n"], StringSplitOptions.None)];
 
 			// Update the displayed log lines (filtered by search text if applicable).
 			UpdateLogDisplay();

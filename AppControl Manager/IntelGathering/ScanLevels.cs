@@ -1,7 +1,7 @@
 ﻿namespace AppControlManager.IntelGathering;
 
 // The levels used by the BuildSignerAndHashObjects method
-public enum ScanLevels
+internal enum ScanLevels
 {
 	FilePublisher,
 	Publisher,

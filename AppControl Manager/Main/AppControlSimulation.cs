@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.Pkcs;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using AppControlManager.XMLOps;
@@ -179,42 +177,12 @@ internal static class AppControlSimulation
 
 
 		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
-		Dictionary<string, string> AllSecurityCatalogHashes = [];
+		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
 
 		if (!noCatalogScanning)
 		{
-
-			// Loop through each .cat security catalog on the system - If user selected custom CatRoot folders then use them instead
-			DirectoryInfo[] catRootDirectories = [];
-
-			if (catRootPath is { Count: > 0 })
-			{
-				catRootDirectories = [.. catRootPath.Select(dir => new DirectoryInfo(dir))];
-			}
-			else
-			{
-				catRootDirectories = [new(@"C:\Windows\System32\CatRoot")];
-			}
-
-			// Get the .cat files in the directories
-			List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast(catRootDirectories, null, [".cat"]);
-
-			Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the Simulation process");
-
-			foreach (FileInfo file in detectedCatFiles)
-			{
-				// Get the hashes of the security catalog file
-				HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
-
-				// If the security catalog file has hashes, then add them to the dictionary
-				if (catHashes.Count > 0)
-				{
-					foreach (string hash in catHashes)
-					{
-						_ = AllSecurityCatalogHashes.TryAdd(hash, file.FullName);
-					}
-				}
-			}
+			// Get the security catalog data to include in the scan
+			AllSecurityCatalogHashes = CatRootScanner.Scan(catRootPath, threadsCount);
 		}
 		else
 		{
@@ -247,321 +215,334 @@ internal static class AppControlSimulation
 		// The count of all of the files that are going to be processed
 		double AllFilesCount = CollectedFiles.Count;
 
-		// split the file paths by ThreadsCount which by default is 2 and minimum 1
-		IEnumerable<FileInfo[]> SplitArrays = CollectedFiles.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
+		// Create a timer to update the progress bar every 2 seconds.
+		Timer? progressTimer = null;
 
-		// List of tasks to run in parallel
-		List<Task> tasks = [];
-
-		// Loop over each chunk of data
-		foreach (FileInfo[] chunk in SplitArrays)
+		if (UIProgressBar is not null)
 		{
-			// Run each chunk of data in a different thread
-			tasks.Add(Task.Run(() =>
-			{
-				// Loop over the current chunk of data
-				foreach (FileInfo CurrentFilePath in chunk)
-				{
+			progressTimer = new(state =>
+			   {
+				   // Read the current value in a thread-safe manner.
+				   int current = Volatile.Read(ref processedFilesCount);
 
-					// If using the GUI to perform the simulation
-					if (UIProgressBar is not null)
+				   // Calculate the percentage complete
+				   int currentPercentage = (int)(current / AllFilesCount * 100);
+
+				   _ = UIProgressBar.DispatcherQueue.TryEnqueue(() =>
+				   {
+					   UIProgressBar.Value = Math.Min(currentPercentage, 100);
+				   });
+			   }, null, 0, 2000);
+		}
+
+		try
+		{
+			// split the file paths by ThreadsCount which by default is 2 and minimum 1
+			IEnumerable<FileInfo[]> SplitArrays = CollectedFiles.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
+
+			// List of tasks to run in parallel
+			List<Task> tasks = [];
+
+			// Loop over each chunk of data
+			foreach (FileInfo[] chunk in SplitArrays)
+			{
+				// Run each chunk of data in a different thread
+				tasks.Add(Task.Run(() =>
+				{
+					// Loop over the current chunk of data
+					foreach (FileInfo CurrentFilePath in chunk)
 					{
 						// Increment the processed file count safely
 						_ = Interlocked.Increment(ref processedFilesCount);
 
-						// Update progress bar safely on the UI thread
-						_ = UIProgressBar.DispatcherQueue.TryEnqueue(() =>
+						// Check see if the file's hash exists in the XML file regardless of whether it's signed or not
+						// This is because App Control policies sometimes have hash rules for signed files too
+						// So here we prioritize being authorized by file hash over being authorized by Signature
+
+						if (HasFilePathRules && FilePathRules.Contains(CurrentFilePath.FullName))
 						{
-							double progressPercentage = processedFilesCount / AllFilesCount * 100;
+							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+								new SimulationOutput(
+									CurrentFilePath.Name,
+									"FilePath",
+									true,
+									null,
+									null,
+									null,
+									null,
+									null,
+									null,
+									"Allowed By File Path",
+									null,
+									null,
+									null,
+									null,
+									null,
+									CurrentFilePath.FullName
+								));
 
-							UIProgressBar.Value = Math.Min(progressPercentage, 100);
-						});
-					}
+							// Move to the next file
+							continue;
+						}
 
+						string CurrentFilePathHashSHA256;
+						string CurrentFilePathHashSHA1;
 
-					// Check see if the file's hash exists in the XML file regardless of whether it's signed or not
-					// This is because App Control policies sometimes have hash rules for signed files too
-					// So here we prioritize being authorized by file hash over being authorized by Signature
-
-					if (HasFilePathRules && FilePathRules.Contains(CurrentFilePath.FullName))
-					{
-						_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-							new SimulationOutput(
-								CurrentFilePath.Name,
-								"FilePath",
-								true,
-								null,
-								null,
-								null,
-								null,
-								null,
-								null,
-								"Allowed By File Path",
-								null,
-								null,
-								null,
-								null,
-								null,
-								CurrentFilePath.FullName
-							));
-
-						// Move to the next file
-						continue;
-					}
-
-					string CurrentFilePathHashSHA256;
-					string CurrentFilePathHashSHA1;
-
-					try
-					{
-						CodeIntegrityHashes CurrentFileHashResult = CiFileHash.GetCiFileHashes(CurrentFilePath.FullName);
-
-						CurrentFilePathHashSHA256 = CurrentFileHashResult.SHA256Authenticode!;
-						CurrentFilePathHashSHA1 = CurrentFileHashResult.SHa1Authenticode!;
-					}
-					catch
-					{
-						_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-							new SimulationOutput(
-								CurrentFilePath.Name,
-								"Signer",
-								false,
-								null,
-								null,
-								null,
-								null,
-								null,
-								null,
-								"Not processed, Inaccessible file",
-								null,
-								null,
-								null,
-								null,
-								null,
-								CurrentFilePath.FullName
-							));
-
-						// Move to the next file
-						continue;
-					}
-
-					// if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
-					if (AllHashTypesFromXML.Contains(CurrentFilePathHashSHA256) || AllHashTypesFromXML.Contains(CurrentFilePathHashSHA1))
-					{
-						_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-							new SimulationOutput(
-								CurrentFilePath.Name,
-								"Hash",
-								true,
-								null,
-								null,
-								null,
-								null,
-								null,
-								null,
-								"Hash Level",
-								null,
-								null,
-								null,
-								null,
-								null,
-								CurrentFilePath.FullName
-							));
-
-						// Move to the next file
-						continue;
-					}
-
-					// If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
-					else if (unsignedExtensions.Contains(CurrentFilePath.Extension))
-					{
-						_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-							new SimulationOutput(
-								CurrentFilePath.Name,
-								"Unsigned",
-								false,
-								null,
-								null,
-								null,
-								null,
-								null,
-								null,
-								"Not Allowed",
-								null,
-								null,
-								null,
-								null,
-								null,
-								CurrentFilePath.FullName
-							));
-
-						// Move to the next file
-						continue;
-					}
-
-					// If the file's hash does not exist in the supplied XML file, then check its signature
-					else
-					{
 						try
 						{
-							List<AllFileSigners> FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePath.FullName);
+							CodeIntegrityHashes CurrentFileHashResult = CiFileHash.GetCiFileHashes(CurrentFilePath.FullName);
 
-							// If there is no result then check if the file is allowed by a security catalog
-							if (FileSignatureResults.Count == 0)
+							CurrentFilePathHashSHA256 = CurrentFileHashResult.SHA256Authenticode!;
+							CurrentFilePathHashSHA1 = CurrentFileHashResult.SHa1Authenticode!;
+						}
+						catch
+						{
+							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+								new SimulationOutput(
+									CurrentFilePath.Name,
+									"Signer",
+									false,
+									null,
+									null,
+									null,
+									null,
+									null,
+									null,
+									"Not processed, Inaccessible file",
+									null,
+									null,
+									null,
+									null,
+									null,
+									CurrentFilePath.FullName
+								));
+
+							// Move to the next file
+							continue;
+						}
+
+						// if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
+						if (AllHashTypesFromXML.Contains(CurrentFilePathHashSHA256) || AllHashTypesFromXML.Contains(CurrentFilePathHashSHA1))
+						{
+							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+								new SimulationOutput(
+									CurrentFilePath.Name,
+									"Hash",
+									true,
+									null,
+									null,
+									null,
+									null,
+									null,
+									null,
+									"Hash Level",
+									null,
+									null,
+									null,
+									null,
+									null,
+									CurrentFilePath.FullName
+								));
+
+							// Move to the next file
+							continue;
+						}
+
+						// If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
+						else if (unsignedExtensions.Contains(CurrentFilePath.Extension))
+						{
+							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+								new SimulationOutput(
+									CurrentFilePath.Name,
+									"Unsigned",
+									false,
+									null,
+									null,
+									null,
+									null,
+									null,
+									null,
+									"Not Allowed",
+									null,
+									null,
+									null,
+									null,
+									null,
+									CurrentFilePath.FullName
+								));
+
+							// Move to the next file
+							continue;
+						}
+
+						// If the file's hash does not exist in the supplied XML file, then check its signature
+						else
+						{
+							try
 							{
-								string? MatchedHashResult = null;
+								List<AllFileSigners> FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePath.FullName);
 
-								if (!noCatalogScanning)
+								// If there is no result then check if the file is allowed by a security catalog
+								if (FileSignatureResults.Count == 0)
 								{
-									_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA1, out string? CurrentFilePathHashSHA1CatResult);
-									_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA256, out string? CurrentFilePathHashSHA256CatResult);
+									string? MatchedHashResult = null;
 
-									MatchedHashResult = CurrentFilePathHashSHA1CatResult ?? CurrentFilePathHashSHA256CatResult;
-								}
+									if (!noCatalogScanning)
+									{
+										_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA1, out string? CurrentFilePathHashSHA1CatResult);
+										_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA256, out string? CurrentFilePathHashSHA256CatResult);
 
-								if (!noCatalogScanning && MatchedHashResult is not null)
-								{
-									AllFileSigners CatalogSignerDits = AllCertificatesGrabber.GetAllFileSigners(MatchedHashResult).First();
+										MatchedHashResult = CurrentFilePathHashSHA1CatResult ?? CurrentFilePathHashSHA256CatResult;
+									}
 
-									nint handle = CatalogSignerDits.Chain.ChainElements[0].Certificate.Handle;
+									if (!noCatalogScanning && MatchedHashResult is not null)
+									{
+										AllFileSigners CatalogSignerDits = AllCertificatesGrabber.GetAllFileSigners(MatchedHashResult).First();
 
-									// The file is authorized by a security catalog on the system
-									_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-										new SimulationOutput(
-											CurrentFilePath.Name,
-											"Catalog Signed",
-											true,
-											null,
-											null,
-											null,
-											null,
-											null,
-											null,
-											"Catalog Hash",
-											MatchedHashResult,
-											CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
-											CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
-											CatalogSignerDits.Chain.ChainElements[0].Certificate.NotAfter.ToString(CultureInfo.InvariantCulture),
-											CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
-											CurrentFilePath.FullName
-										));
+										nint handle = CatalogSignerDits.Chain.ChainElements[0].Certificate.Handle;
 
-									// Move to the next file
-									continue;
+										// The file is authorized by a security catalog on the system
+										_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+											new SimulationOutput(
+												CurrentFilePath.Name,
+												"Catalog Signed",
+												true,
+												null,
+												null,
+												null,
+												null,
+												null,
+												null,
+												"Catalog Hash",
+												MatchedHashResult,
+												CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
+												CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
+												CatalogSignerDits.Chain.ChainElements[0].Certificate.NotAfter.ToString(CultureInfo.InvariantCulture),
+												CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
+												CurrentFilePath.FullName
+											));
+
+										// Move to the next file
+										continue;
+									}
+									else
+									{
+										// The file is not signed and is not allowed by hash using Security Catalog
+										_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+											new SimulationOutput(
+												CurrentFilePath.Name,
+												"Unsigned",
+												false,
+												null,
+												null,
+												null,
+												null,
+												null,
+												null,
+												"Not Allowed",
+												null,
+												null,
+												null,
+												null,
+												null,
+												CurrentFilePath.FullName
+											));
+
+										// Move to the next file
+										continue;
+									}
 								}
 								else
 								{
-									// The file is not signed and is not allowed by hash using Security Catalog
-									_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-										new SimulationOutput(
-											CurrentFilePath.Name,
-											"Unsigned",
-											false,
-											null,
-											null,
-											null,
-											null,
-											null,
-											null,
-											"Not Allowed",
-											null,
-											null,
-											null,
-											null,
-											null,
-											CurrentFilePath.FullName
-										));
+									// Use the Compare method to process it
 
-									// Move to the next file
-									continue;
+									// The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
+									List<string> ekuOIDs = LocalFilesScan.GetOIDs(FileSignatureResults);
+
+									SimulationInput inPutSim = new(
+										CurrentFilePath, // Path of the signed file
+										GetCertificateDetails.Get(FileSignatureResults), //  Get all of the details of all certificates of the signed file
+										SignerInfo, // The entire Signer Info of the App Control Policy file
+										ekuOIDs);
+
+									SimulationOutput ComparisonResult = Arbitrator.Compare(inPutSim);
+
+									_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName, ComparisonResult);
 								}
 							}
-							else
+							catch (HashMismatchInCertificateException)
 							{
-								// Use the Compare method to process it
+								_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+									new SimulationOutput(
+										CurrentFilePath.Name,
+										"Signer",
+										false,
+										null,
+										null,
+										null,
+										null,
+										null,
+										null,
+										"Hash Mismatch",
+										null,
+										null,
+										null,
+										null,
+										null,
+										CurrentFilePath.FullName
+									));
 
-								// The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
-								string[] ekuOIDs = FileSignatureResults
-									.Where(p => p.Signer?.SignerInfos is not null)
-									.SelectMany(p => p.Signer.SignerInfos.Cast<SignerInfo>())
-									.Where(info => info.Certificate is not null)
-									.SelectMany(info => info.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>())
-									.SelectMany(ext => ext.EnhancedKeyUsages.Cast<Oid>())
-									.Select(oid => oid.Value)
-									.ToArray()!;
+								// Move to the next file
+								continue;
+							}
 
-								SimulationInput inPutSim = new(
-									CurrentFilePath, // Path of the signed file
-									[.. GetCertificateDetails.Get([.. FileSignatureResults])], //  Get all of the details of all certificates of the signed file
-									[.. SignerInfo], // The entire Signer Info of the App Control Policy file
-									ekuOIDs);
+							// Handle any other error by storing the file path and the reason for the error to display to the user
+							catch (Exception ex)
+							{
+								// If the file is signed but has unknown signature status
+								_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+									new SimulationOutput(
+										CurrentFilePath.Name,
+										"Signer",
+										false,
+										null,
+										null,
+										null,
+										null,
+										null,
+										null,
+										$"UnknownError: {ex.Message}",
+										null,
+										null,
+										null,
+										null,
+										null,
+										CurrentFilePath.FullName
+									));
 
-								SimulationOutput ComparisonResult = Arbitrator.Compare(inPutSim);
-
-								_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName, ComparisonResult);
+								// Move to the next file
+								continue;
 							}
 						}
-						catch (HashMismatchInCertificateException)
-						{
-							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-								new SimulationOutput(
-									CurrentFilePath.Name,
-									"Signer",
-									false,
-									null,
-									null,
-									null,
-									null,
-									null,
-									null,
-									"Hash Mismatch",
-									null,
-									null,
-									null,
-									null,
-									null,
-									CurrentFilePath.FullName
-								));
-
-							// Move to the next file
-							continue;
-						}
-
-						// Handle any other error by storing the file path and the reason for the error to display to the user
-						catch (Exception ex)
-						{
-							// If the file is signed but has unknown signature status
-							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
-								new SimulationOutput(
-									CurrentFilePath.Name,
-									"Signer",
-									false,
-									null,
-									null,
-									null,
-									null,
-									null,
-									null,
-									$"UnknownError: {ex.Message}",
-									null,
-									null,
-									null,
-									null,
-									null,
-									CurrentFilePath.FullName
-								));
-
-							// Move to the next file
-							continue;
-						}
 					}
-				}
-			}));
-		}
+				}));
+			}
 
-		// Wait for all tasks to complete without making the method async
-		// The method is already being called in an async/await fashion
-		Task.WaitAll([.. tasks]);
+			// Wait for all tasks to complete without making the method async
+			// The method is already being called in an async/await fashion
+			Task.WaitAll([.. tasks]);
+
+			// Dispose the timer and update the progress bar to 100%
+			if (UIProgressBar is not null)
+			{
+				_ = UIProgressBar.DispatcherQueue.TryEnqueue(() => UIProgressBar.Value = 100);
+			}
+
+		}
+		finally
+		{   // Dispose of the timer
+			progressTimer?.Dispose();
+		}
 
 		// If user chose to output the results to CSV file
 		if (csvOutput)

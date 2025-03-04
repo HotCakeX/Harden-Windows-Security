@@ -79,7 +79,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.9.4.0</FileVersion>
+    <FileVersion>1.9.5.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -105,7 +105,7 @@
 
     <!-- There should be absolutely no trim warnings before this can be enabled
     Otherwise there is no guarantee that the app will work as expected at all times -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->    
     <PublishTrimmed>True</PublishTrimmed>
     <TrimMode>full</TrimMode>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -113,6 +113,9 @@
     <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+    <!-- WASDK isn't a .NET libary so it can't use these features and cannot be affected
+    We won't get warnings for these in compile time if a code or library relies on them.
+    We can get NotSupportedException exception during runtime instead. -->
     <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
@@ -137,35 +140,44 @@
   https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
   -->
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
+
+    <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
     <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250129-preview2" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.68.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.6.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.69.1" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.2" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
+
+    <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.6.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="63.0.31-preview" />
     <PackageReference Include="Microsoft.Windows.WDK.Win32Metadata" Version="0.13.25-experimental" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
-    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.2" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.2" />
+    <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.2" />
+    <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.2" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
+
   </ItemGroup>
 
   <ItemGroup>

@@ -498,8 +498,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		// it will be opened again if necessary
 		CreateSupplementalPolicyTeachingTip.IsOpen = false;
 
-		// Reset the progress bar from previous runs or in case an error occurred
-		FilesAndFoldersProgressBar.Value = 0;
+		// Reset the progress ring from previous runs or in case an error occurred
+		FilesAndFoldersProgressRing.Value = 0;
 
 		FilesAndFoldersInfoBar.IsClosable = false;
 
@@ -607,7 +607,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 					// Scan all of the detected files from the user selected directories
-					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
+					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressRing);
 
 					// Add the results of the directories scans to the ListView
 					foreach (FileIdentity item in LocalFilesResults)
@@ -986,7 +986,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					_ = DispatcherQueue.TryEnqueue(() =>
 					 {
 						 CertificatesInfoBar.IsOpen = true;
-						 CertificatesInfoBar.Message = $"No certificate details could be found for creating the policy";
+						 CertificatesInfoBar.Message = "No certificate details could be found for creating the policy";
 						 CertificatesInfoBar.Severity = InfoBarSeverity.Warning;
 					 });
 
@@ -1147,7 +1147,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			ISGInfoBar.IsOpen = true;
 			ISGInfoBar.IsClosable = false;
-			ISGInfoBar.Message = $"Creating the ISG-based Supplemental policy.";
+			ISGInfoBar.Message = "Creating the ISG-based Supplemental policy.";
 			ISGInfoBar.Severity = InfoBarSeverity.Informational;
 
 			await Task.Run(() =>
@@ -1234,7 +1234,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				ISGInfoBar.Severity = InfoBarSeverity.Success;
 
-				ISGInfoBar.Message = $"Successfully created an ISG-based Supplemental policy.";
+				ISGInfoBar.Message = "Successfully created an ISG-based Supplemental policy.";
 			}
 
 			CreateISGSupplementalPolicyButton.IsEnabled = true;
@@ -1694,6 +1694,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.Message = "Scanning the system for drivers";
 			StrictKernelModeSection.IsExpanded = true;
 
+			DriverAutoDetectionProgressRing.Value = 0;
+
 			List<FileInfo> kernelModeDriversList = [];
 
 			ScanResults.Clear();
@@ -1744,7 +1746,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			await Task.Run(() =>
 			{
 				// Scan all of the detected files from the user selected directories
-				LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 2, null, null);
+				LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 3, DriverAutoDetectionProgressRing);
 
 				// Only keep the signed kernel-mode files
 				IEnumerable<FileIdentity> ILocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
@@ -2335,7 +2337,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			SupplementalPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
 
 			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
-			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Supplemental policy.";
+			CustomPatternBasedFileRuleInfoBar.Message = "Creating the Pattern-based File Path rule Supplemental policy.";
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
 			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
 
@@ -2417,7 +2419,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
-				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Supplemental policy.";
+				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Supplemental policy.";
 			}
 
 			CreateCustomPatternBasedFileRuleSupplementalPolicyButton.IsEnabled = true;

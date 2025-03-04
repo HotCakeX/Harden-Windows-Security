@@ -55,7 +55,7 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 1" Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing x:Name="Step1ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
+                            <ProgressRing x:Name="Step1ProgressRing" IsActive="False" Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep1Text" TextWrapping="WrapWholeWords" />
@@ -129,7 +129,7 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 2" Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing x:Name="Step2ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
+                            <ProgressRing x:Name="Step2ProgressRing" IsActive="False" Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep2Text" TextWrapping="WrapWholeWords" />
@@ -182,7 +182,7 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 3" Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing x:Name="Step3ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
+                            <ProgressRing x:Name="Step3ProgressRing" IsActive="False" Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep3Text" TextWrapping="WrapWholeWords" />

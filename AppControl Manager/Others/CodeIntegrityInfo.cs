@@ -24,8 +24,8 @@ internal static partial class DetailsRetrieval
 	[StructLayout(LayoutKind.Sequential)]
 	private struct SYSTEM_CODEINTEGRITY_INFORMATION
 	{
-		public uint Length;
-		public uint CodeIntegrityOptions;
+		internal uint Length;
+		internal uint CodeIntegrityOptions;
 	}
 
 	// https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_codeintegrity_information

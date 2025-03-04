@@ -115,8 +115,8 @@ public sealed partial class CreateDenyPolicy : Page
 		// it will be opened again if necessary
 		CreateDenyPolicyTeachingTip.IsOpen = false;
 
-		// Reset the progress bar from previous runs or in case an error occurred
-		FilesAndFoldersProgressBar.Value = 0;
+		// Reset the progress ring from previous runs or in case an error occurred
+		FilesAndFoldersProgressRing.Value = 0;
 
 		FilesAndFoldersInfoBar.IsClosable = false;
 
@@ -216,7 +216,7 @@ public sealed partial class CreateDenyPolicy : Page
 					});
 
 					// Scan all of the detected files from the user selected directories
-					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressBar, null);
+					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressRing);
 
 					// Add the results of the directories scans to the ListView
 					foreach (FileIdentity item in LocalFilesResults)
@@ -912,7 +912,7 @@ public sealed partial class CreateDenyPolicy : Page
 			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
 
 			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
-			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Deny policy.";
+			CustomPatternBasedFileRuleInfoBar.Message = "Creating the Pattern-based File Path rule Deny policy.";
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
 			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
 
@@ -992,7 +992,7 @@ public sealed partial class CreateDenyPolicy : Page
 			{
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
-				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Deny policy.";
+				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Deny policy.";
 			}
 
 			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = true;

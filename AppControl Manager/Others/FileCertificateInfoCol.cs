@@ -4,17 +4,17 @@ namespace AppControlManager.Others;
 
 // a class that represents each certificate in a chain
 // Used by the ListView in the View File Certificates page
-public sealed class FileCertificateInfoCol
+internal sealed class FileCertificateInfoCol
 {
-	public int SignerNumber { get; set; }
-	public CertificateType Type { get; set; }
-	public string? SubjectCN { get; set; }
-	public string? IssuerCN { get; set; }
-	public DateTime NotBefore { get; set; }
-	public DateTime NotAfter { get; set; }
-	public string? HashingAlgorithm { get; set; }
-	public string? SerialNumber { get; set; }
-	public string? Thumbprint { get; set; }
-	public string? TBSHash { get; set; }
-	public string? OIDs { get; set; }
+	internal int SignerNumber { get; set; }
+	internal CertificateType Type { get; set; }
+	internal string? SubjectCN { get; set; }
+	internal string? IssuerCN { get; set; }
+	internal DateTime NotBefore { get; set; }
+	internal DateTime NotAfter { get; set; }
+	internal string? HashingAlgorithm { get; set; }
+	internal string? SerialNumber { get; set; }
+	internal string? Thumbprint { get; set; }
+	internal string? TBSHash { get; set; }
+	internal string? OIDs { get; set; }
 }

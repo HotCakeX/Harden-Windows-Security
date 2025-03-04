@@ -68,24 +68,24 @@
 
                             <MenuFlyoutSeparator/>
 
-                            <MenuFlyoutItem x:Uid="FileNameHeader" Click="ColumnSortingButton_FileName_Click"/>
-                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
-                            <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="ColumnSortingButton_OriginalFileName_Click"/>
-                            <MenuFlyoutItem x:Uid="InternalNameHeader" Click="ColumnSortingButton_InternalName_Click"/>
-                            <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="ColumnSortingButton_FileDescription_Click"/>
-                            <MenuFlyoutItem x:Uid="ProductNameHeader" Click="ColumnSortingButton_ProductName_Click"/>
-                            <MenuFlyoutItem x:Uid="FileVersionHeader" Click="ColumnSortingButton_FileVersion_Click"/>
-                            <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="ColumnSortingButton_PackageFamilyName_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="ColumnSortingButton_SHA256Hash_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="ColumnSortingButton_SHA1Hash_Click"/>
-                            <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="ColumnSortingButton_SigningScenario_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="ColumnSortingButton_SHA1PageHash_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="ColumnSortingButton_SHA256PageHash_Click"/>
-                            <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="ColumnSortingButton_HasWHQLSigner_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
-                            <MenuFlyoutItem x:Uid="IsECCSignedHeader" Click="ColumnSortingButton_IsECCSigned_Click"/>
-                            <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
+                            <MenuFlyoutItem x:Uid="FileNameHeader" Tag="FileName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Tag="SignatureStatus" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Tag="OriginalFileName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="InternalNameHeader" Tag="InternalName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FileDescriptionHeader" Tag="FileDescription" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="ProductNameHeader" Tag="ProductName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FileVersionHeader" Tag="FileVersion" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Tag="PackageFamilyName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256HashHeader" Tag="SHA256Hash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1HashHeader" Tag="SHA1Hash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SigningScenarioHeader" Tag="SISigningScenario" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePathHeader" Tag="FilePath" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Tag="SHA1PageHash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Tag="SHA256PageHash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Tag="HasWHQLSigner" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Tag="FilePublishersToDisplay" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="IsECCSignedHeader" Tag="IsECCSigned" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="OpusDataHeader" Tag="Opus" Click="ColumnSortingButton_Click"/>
 
                         </MenuFlyout>
                     </Button.Flyout>
@@ -193,109 +193,109 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="FileNameHeader" Click="CopyFileName_Click">
+                                        <MenuFlyoutItem x:Uid="FileNameHeader" Tag="FileName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="CopySignatureStatus_Click">
+                                        <MenuFlyoutItem x:Uid="SignatureStatusHeader" Tag="SignatureStatus" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="CopyOriginalFileName_Click">
+                                        <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Tag="OriginalFileName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="InternalNameHeader" Click="CopyInternalName_Click">
+                                        <MenuFlyoutItem x:Uid="InternalNameHeader" Tag="InternalName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="CopyFileDescription_Click">
+                                        <MenuFlyoutItem x:Uid="FileDescriptionHeader" Tag="FileDescription" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ProductNameHeader" Click="CopyProductName_Click">
+                                        <MenuFlyoutItem x:Uid="ProductNameHeader" Tag="ProductName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FileVersionHeader" Click="CopyFileVersion_Click">
+                                        <MenuFlyoutItem x:Uid="FileVersionHeader" Tag="FileVersion" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="CopyPackageFamilyName_Click">
+                                        <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Tag="PackageFamilyName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="CopySHA256Hash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA256HashHeader" Tag="SHA256Hash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="CopySHA1Hash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA1HashHeader" Tag="SHA1Hash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="CopySigningScenario_Click">
+                                        <MenuFlyoutItem x:Uid="SigningScenarioHeader" Tag="SISigningScenario" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="CopyFilePath_Click">
+                                        <MenuFlyoutItem x:Uid="FilePathHeader" Tag="FilePath" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Click="CopySHA1PageHash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA1PageHashHeader" Tag="SHA1PageHash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Click="CopySHA256PageHash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA256PageHashHeader" Tag="SHA256PageHash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Click="CopyHasWHQLSigner_Click">
+                                        <MenuFlyoutItem x:Uid="HasWHQLSignerHeader" Tag="HasWHQLSigner" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="CopyFilePublishers_Click">
+                                        <MenuFlyoutItem x:Uid="FilePublishersHeader" Tag="FilePublishersToDisplay" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsECCSignedHeader" Click="CopyIsECCSigned_Click">
+                                        <MenuFlyoutItem x:Uid="IsECCSignedHeader" Tag="IsECCSigned" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="OpusDataHeader" Click="CopyOpusData_Click">
+                                        <MenuFlyoutItem x:Uid="OpusDataHeader" Tag="Opus" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

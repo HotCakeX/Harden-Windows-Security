@@ -1450,4 +1450,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Whenever you select an item in a List View, center that item vertically on the screen.</value>
   </data>
+  <data name="CacheSecurityCatalogsScanResultsSettingsCard.Description" xml:space="preserve">
+    <value>Cache the results of the security catalogs scan for 5 minutes before scanning them again. This can improve scan performance within the app.</value>
+  </data>
+  <data name="CacheSecurityCatalogsScanResultsSettingsCard.Header" xml:space="preserve">
+    <value>Cache the Security Catalog Scan Results</value>
+  </data>
+  <data name="CacheSecurityCatalogsScanResultsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cache the results of the security catalogs scan for 5 minutes before scanning them again. This can improve scan performance within the app.</value>
+  </data>
 </root>

@@ -68,27 +68,27 @@
 
                             <MenuFlyoutSeparator/>
 
-                            <MenuFlyoutItem x:Uid="FileNameHeader" Click="ColumnSortingButton_FileName_Click"/>
-                            <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="ColumnSortingButton_TimeCreated_Click"/>
-                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="ColumnSortingButton_SignatureStatus_Click"/>
-                            <MenuFlyoutItem x:Uid="ActionHeader" Click="ColumnSortingButton_Action_Click"/>
-                            <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="ColumnSortingButton_OriginalFileName_Click"/>
-                            <MenuFlyoutItem x:Uid="InternalNameHeader" Click="ColumnSortingButton_InternalName_Click"/>
-                            <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="ColumnSortingButton_FileDescription_Click"/>
-                            <MenuFlyoutItem x:Uid="ProductNameHeader" Click="ColumnSortingButton_ProductName_Click"/>
-                            <MenuFlyoutItem x:Uid="FileVersionHeader" Click="ColumnSortingButton_FileVersion_Click"/>
-                            <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="ColumnSortingButton_PackageFamilyName_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="ColumnSortingButton_SHA256Hash_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="ColumnSortingButton_SHA1Hash_Click"/>
-                            <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="ColumnSortingButton_SigningScenario_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Click="ColumnSortingButton_SHA1FlatHash_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="ColumnSortingButton_SHA256FlatHash_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="ColumnSortingButton_FilePublishers_Click"/>
-                            <MenuFlyoutItem x:Uid="OpusDataHeader" Click="ColumnSortingButton_OpusData_Click"/>
-                            <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="ColumnSortingButton_PolicyGUID_Click"/>
-                            <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="ColumnSortingButton_PolicyName_Click"/>
-                            <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="ColumnSortingButton_ComputerName_Click"/>
+                            <MenuFlyoutItem x:Uid="FileNameHeader" Tag="FileName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="TimeCreatedHeader" Tag="TimeCreated" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Tag="SignatureStatus" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="ActionHeader" Tag="Action" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Tag="OriginalFileName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="InternalNameHeader" Tag="InternalName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FileDescriptionHeader" Tag="FileDescription" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="ProductNameHeader" Tag="ProductName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FileVersionHeader" Tag="FileVersion" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Tag="PackageFamilyName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256HashHeader" Tag="SHA256Hash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1HashHeader" Tag="SHA1Hash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SigningScenarioHeader" Tag="SISigningScenario" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePathHeader" Tag="FilePath" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Tag="SHA1FlatHash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Tag="SHA256FlatHash" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Tag="FilePublishersToDisplay" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="OpusDataHeader" Tag="Opus" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Tag="PolicyGUID" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="PolicyNameHeader" Tag="PolicyName" Click="ColumnSortingButton_Click"/>
+                            <MenuFlyoutItem x:Uid="ComputerNameHeader" Tag="ComputerName" Click="ColumnSortingButton_Click"/>
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>
@@ -201,127 +201,127 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="FileNameHeader" Click="CopyFileName_Click">
+                                        <MenuFlyoutItem x:Uid="FileNameHeader" Tag="FileName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="TimeCreatedHeader" Click="CopyTimeCreated_Click">
+                                        <MenuFlyoutItem x:Uid="TimeCreatedHeader" Tag="TimeCreated" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignatureStatusHeader" Click="CopySignatureStatus_Click">
+                                        <MenuFlyoutItem x:Uid="SignatureStatusHeader" Tag="SignatureStatus" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ActionHeader" Click="CopyAction_Click">
+                                        <MenuFlyoutItem x:Uid="ActionHeader" Tag="Action" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Click="CopyOriginalFileName_Click">
+                                        <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Tag="OriginalFileName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="InternalNameHeader" Click="CopyInternalName_Click">
+                                        <MenuFlyoutItem x:Uid="InternalNameHeader" Tag="InternalName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FileDescriptionHeader" Click="CopyFileDescription_Click">
+                                        <MenuFlyoutItem x:Uid="FileDescriptionHeader" Tag="FileDescription" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ProductNameHeader" Click="CopyProductName_Click">
+                                        <MenuFlyoutItem x:Uid="ProductNameHeader" Tag="ProductName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FileVersionHeader" Click="CopyFileVersion_Click">
+                                        <MenuFlyoutItem x:Uid="FileVersionHeader" Tag="FileVersion" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Click="CopyPackageFamilyName_Click">
+                                        <MenuFlyoutItem x:Uid="PackageFamilyNameHeader" Tag="PackageFamilyName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA256HashHeader" Click="CopySHA256Hash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA256HashHeader" Tag="SHA256Hash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA1HashHeader" Click="CopySHA1Hash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA1HashHeader" Tag="SHA1Hash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SigningScenarioHeader" Click="CopySigningScenario_Click">
+                                        <MenuFlyoutItem x:Uid="SigningScenarioHeader" Tag="SISigningScenario" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="CopyFilePath_Click">
+                                        <MenuFlyoutItem x:Uid="FilePathHeader" Tag="FilePath" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Click="CopySHA1FlatHash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Tag="SHA1FlatHash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Click="CopySHA256FlatHash_Click">
+                                        <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Tag="SHA256FlatHash" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FilePublishersHeader" Click="CopyFilePublishers_Click">
+                                        <MenuFlyoutItem x:Uid="FilePublishersHeader" Tag="FilePublishersToDisplay" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="OpusDataHeader" Click="CopyOpusData_Click">
+                                        <MenuFlyoutItem x:Uid="OpusDataHeader" Tag="Opus" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Click="CopyPolicyGUID_Click">
+                                        <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Tag="PolicyGUID" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="PolicyNameHeader" Click="CopyPolicyName_Click">
+                                        <MenuFlyoutItem x:Uid="PolicyNameHeader" Tag="PolicyName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ComputerNameHeader" Click="CopyComputerName_Click">
+                                        <MenuFlyoutItem x:Uid="ComputerNameHeader" Tag="ComputerName" Click="CopyToClipboard_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

@@ -9,23 +9,23 @@ using System.Text.Json;
 namespace AppControlManager.Others;
 
 // Class to represent a policy with various attributes
-public sealed class CiPolicyInfo
+internal sealed class CiPolicyInfo
 {
-	public string? PolicyID { get; set; }           // Unique identifier for the policy
-	public string? BasePolicyID { get; set; }       // Identifier for the base policy
-	public string? FriendlyName { get; set; }       // Human-readable name of the policy
-	public Version? Version { get; set; }            // Version object representing the policy version
-	public string? VersionString { get; set; }       // Original version string from the policy data
-	public bool IsSystemPolicy { get; set; }         // Indicates if it's a system policy
-	public bool IsSignedPolicy { get; set; }         // Indicates if the policy is signed
-	public bool IsOnDisk { get; set; }               // Indicates if the policy is present on disk
-	public bool IsEnforced { get; set; }             // Indicates if the policy is enforced
-	public bool IsAuthorized { get; set; }           // Indicates if the policy is authorized
+	internal string? PolicyID { get; set; }           // Unique identifier for the policy
+	internal string? BasePolicyID { get; set; }       // Identifier for the base policy
+	internal string? FriendlyName { get; set; }       // Human-readable name of the policy
+	internal Version? Version { get; set; }            // Version object representing the policy version
+	internal string? VersionString { get; set; }       // Original version string from the policy data
+	internal bool IsSystemPolicy { get; set; }         // Indicates if it's a system policy
+	internal bool IsSignedPolicy { get; set; }         // Indicates if the policy is signed
+	internal bool IsOnDisk { get; set; }               // Indicates if the policy is present on disk
+	internal bool IsEnforced { get; set; }             // Indicates if the policy is enforced
+	internal bool IsAuthorized { get; set; }           // Indicates if the policy is authorized
 	internal List<string>? PolicyOptions { get; set; } // List of options or settings related to the policy
 
 
 	// A property to format PolicyOptions as a comma-separated string
-	public string PolicyOptionsDisplay => PolicyOptions is not null ? string.Join(", ", PolicyOptions) : string.Empty;
+	internal string PolicyOptionsDisplay => PolicyOptions is not null ? string.Join(", ", PolicyOptions) : string.Empty;
 }
 
 

@@ -21,7 +21,7 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 		_instance = this;
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Navigate to the AllowNewAppsStart page when the window is loaded
 		_ = ContentFrame.Navigate(typeof(AllowNewAppsStart));

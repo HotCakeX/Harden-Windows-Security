@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace AppControlManager.Others;
 
 // Information that's included in an App Control policy
-public sealed class SignerX(
+internal sealed class SignerX(
 	string id,
 	string name,
 	string certRoot,
@@ -20,17 +20,17 @@ public sealed class SignerX(
 	bool hasEKU
 	)
 {
-	public string ID { get; set; } = id;
-	public string Name { get; set; } = name;
-	public string CertRoot { get; set; } = certRoot;
-	public string? CertPublisher { get; set; } = certPublisher;
-	public string? CertIssuer { get; set; } = certIssuer;
-	public string[]? CertEKU { get; set; } = certEKU;
-	public string? CertOemID { get; set; } = certOemID;
-	public string[] FileAttribRef { get; set; } = fileAttribRef;
-	public Dictionary<string, Dictionary<string, string>> FileAttrib { get; set; } = fileAttrib;
-	public string SignerScope { get; set; } = signerScope;
-	public bool IsWHQL { get; set; } = isWHQL;
-	public bool IsAllowed { get; set; } = isAllowed;
-	public bool HasEKU { get; set; } = hasEKU;
+	internal string ID { get; set; } = id;
+	internal string Name { get; set; } = name;
+	internal string CertRoot { get; set; } = certRoot;
+	internal string? CertPublisher { get; set; } = certPublisher;
+	internal string? CertIssuer { get; set; } = certIssuer;
+	internal string[]? CertEKU { get; set; } = certEKU;
+	internal string? CertOemID { get; set; } = certOemID;
+	internal string[] FileAttribRef { get; set; } = fileAttribRef;
+	internal Dictionary<string, Dictionary<string, string>> FileAttrib { get; set; } = fileAttrib;
+	internal string SignerScope { get; set; } = signerScope;
+	internal bool IsWHQL { get; set; } = isWHQL;
+	internal bool IsAllowed { get; set; } = isAllowed;
+	internal bool HasEKU { get; set; } = hasEKU;
 }

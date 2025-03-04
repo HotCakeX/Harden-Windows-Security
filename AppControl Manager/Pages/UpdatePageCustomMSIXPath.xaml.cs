@@ -15,7 +15,7 @@ public sealed partial class UpdatePageCustomMSIXPath : Page
 		// Set the initial state of things
 		SetConfirmToggleSwitchState();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 

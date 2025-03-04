@@ -24,7 +24,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Call the method to generate SettingsCards dynamically
 		GenerateSettingsCards();

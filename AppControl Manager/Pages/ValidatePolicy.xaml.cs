@@ -14,7 +14,7 @@ public sealed partial class ValidatePolicy : Page
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
 	private async void BrowseForXMLSettingsCard_Click(object sender, RoutedEventArgs e)

@@ -18,13 +18,13 @@ internal static class GetCertificateDetails
 	/// </summary>
 	/// <param name="completeSignatureResult"></param>
 	/// <returns></returns>
-	internal static List<ChainPackage> Get(AllFileSigners[] completeSignatureResult)
+	internal static List<ChainPackage> Get(List<AllFileSigners> completeSignatureResult)
 	{
 		// A list to hold the final result of the method
 		List<ChainPackage> finalObject = [];
 
 		// Loop over each signer of the file, in case the file has multiple separate signers
-		for (int i = 0; i < completeSignatureResult.Length; i++)
+		for (int i = 0; i < completeSignatureResult.Count; i++)
 		{
 			// Get the current chain and SignedCms of the signer
 			X509Chain currentChain = completeSignatureResult[i].Chain;

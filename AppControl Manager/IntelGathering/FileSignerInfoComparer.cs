@@ -8,7 +8,7 @@ namespace AppControlManager.IntelGathering;
 /// This comparer is used to determine the uniqueness of FileSignerInfo instances
 /// based on PublisherTBSHash and IssuerTBSHash properties.
 /// </summary>
-public sealed class FileSignerInfoComparer : IEqualityComparer<FileSignerInfo>
+internal sealed class FileSignerInfoComparer : IEqualityComparer<FileSignerInfo>
 {
 	/// <summary>
 	/// Determines whether two FileSignerInfo instances are equal.

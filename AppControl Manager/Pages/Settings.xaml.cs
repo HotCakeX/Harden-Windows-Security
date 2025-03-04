@@ -23,7 +23,7 @@ public sealed partial class Settings : Page
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		// Set the version in the settings card to the current app version
 		VersionTextBlock.Text = $"Version {App.currentAppVersion}";
@@ -40,6 +40,8 @@ public sealed partial class Settings : Page
 		SoundToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.SoundSetting);
 
 		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.ListViewsVerticalCentering);
+
+		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.CacheSecurityCatalogsScanResults);
 
 		BackgroundComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.BackDropBackground)) switch
 		{
@@ -81,6 +83,7 @@ public sealed partial class Settings : Page
 		SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
 		IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
 		ListViewsCenterVerticallyUponSelectionToggleSwitch.Toggled += ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled;
+		CacheSecurityCatalogsScanResultsToggleSwitch.Toggled += CacheSecurityCatalogsScanResultsToggleSwitch_Toggled;
 	}
 
 
@@ -376,6 +379,34 @@ public sealed partial class Settings : Page
 	}
 
 
+	private void ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		// Get the ToggleSwitch that triggered the event
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
+
+		// Get the state of the toggle switch (on or off)
+		bool IsOn = toggleSwitch.IsOn;
+
+		// Save the setting to the local app settings
+		SaveSetting(SettingKeys.ListViewsVerticalCentering, IsOn);
+	}
+
+
+	private void CacheSecurityCatalogsScanResultsToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		// Get the ToggleSwitch that triggered the event
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
+
+		// Get the state of the toggle switch (on or off)
+		bool IsOn = toggleSwitch.IsOn;
+
+		// Save the setting to the local app settings
+		SaveSetting(SettingKeys.CacheSecurityCatalogsScanResults, IsOn);
+	}
+
+
+	#region Settings cards clicks event handlers
+
 	private void BackgroundComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		BackgroundComboBox.IsDropDownOpen = true;
@@ -409,23 +440,18 @@ public sealed partial class Settings : Page
 		NavigationViewBackground_Toggled(NavigationViewBackgroundToggle, new RoutedEventArgs());
 	}
 
-
 	private void ListViewsCenterVerticallyUponSelectionSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
 		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = !ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn;
+		ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(ListViewsCenterVerticallyUponSelectionToggleSwitch, new RoutedEventArgs());
 	}
 
-
-	private void ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	private void CacheSecurityCatalogsScanResultsSettingsCard_Click(object sender, RoutedEventArgs e)
 	{
-		// Get the ToggleSwitch that triggered the event
-		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
-
-		// Get the state of the toggle switch (on or off)
-		bool IsOn = toggleSwitch.IsOn;
-
-		// Save the setting to the local app settings
-		SaveSetting(SettingKeys.ListViewsVerticalCentering, IsOn);
+		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = !CacheSecurityCatalogsScanResultsToggleSwitch.IsOn;
+		CacheSecurityCatalogsScanResultsToggleSwitch_Toggled(CacheSecurityCatalogsScanResultsToggleSwitch, new RoutedEventArgs());
 	}
+
+	#endregion
 
 }

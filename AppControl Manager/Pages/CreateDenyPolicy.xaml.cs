@@ -912,7 +912,7 @@ public sealed partial class CreateDenyPolicy : Page
 			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
 
 			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
-			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Deny policy.";
+			CustomPatternBasedFileRuleInfoBar.Message = "Creating the Pattern-based File Path rule Deny policy.";
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
 			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
 
@@ -992,7 +992,7 @@ public sealed partial class CreateDenyPolicy : Page
 			{
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
-				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Deny policy.";
+				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Deny policy.";
 			}
 
 			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = true;

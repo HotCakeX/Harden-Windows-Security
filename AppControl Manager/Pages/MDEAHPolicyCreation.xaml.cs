@@ -597,7 +597,7 @@ DeviceEvents
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: 0";
+			TotalCountOfTheFilesTextBox.Text = "Total logs: 0";
 		}
 		else
 		{

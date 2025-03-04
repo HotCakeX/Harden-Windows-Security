@@ -986,7 +986,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					_ = DispatcherQueue.TryEnqueue(() =>
 					 {
 						 CertificatesInfoBar.IsOpen = true;
-						 CertificatesInfoBar.Message = $"No certificate details could be found for creating the policy";
+						 CertificatesInfoBar.Message = "No certificate details could be found for creating the policy";
 						 CertificatesInfoBar.Severity = InfoBarSeverity.Warning;
 					 });
 
@@ -1147,7 +1147,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			ISGInfoBar.IsOpen = true;
 			ISGInfoBar.IsClosable = false;
-			ISGInfoBar.Message = $"Creating the ISG-based Supplemental policy.";
+			ISGInfoBar.Message = "Creating the ISG-based Supplemental policy.";
 			ISGInfoBar.Severity = InfoBarSeverity.Informational;
 
 			await Task.Run(() =>
@@ -1234,7 +1234,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				ISGInfoBar.Severity = InfoBarSeverity.Success;
 
-				ISGInfoBar.Message = $"Successfully created an ISG-based Supplemental policy.";
+				ISGInfoBar.Message = "Successfully created an ISG-based Supplemental policy.";
 			}
 
 			CreateISGSupplementalPolicyButton.IsEnabled = true;
@@ -2337,7 +2337,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			SupplementalPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
 
 			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
-			CustomPatternBasedFileRuleInfoBar.Message = $"Creating the Pattern-based File Path rule Supplemental policy.";
+			CustomPatternBasedFileRuleInfoBar.Message = "Creating the Pattern-based File Path rule Supplemental policy.";
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
 			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
 
@@ -2419,7 +2419,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			{
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
-				CustomPatternBasedFileRuleInfoBar.Message = $"Successfully created Pattern-based File Path rule Supplemental policy.";
+				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Supplemental policy.";
 			}
 
 			CreateCustomPatternBasedFileRuleSupplementalPolicyButton.IsEnabled = true;

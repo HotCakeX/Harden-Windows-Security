@@ -323,6 +323,11 @@ if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed
 
 winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
+# Update the workloads
+dotnet workload update
+dotnet workload config --update-mode workload-set
+dotnet workload update
+
 # Refresh the environment variables so the current session detects the new dotnet installation
 $Env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';' +
 [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User)

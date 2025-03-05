@@ -17,14 +17,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// Custom HashSet comparer to de-duplicate WHQLFilePublisher Signers
+/// Provides custom equality comparison for <see cref="WHQLPublisher"/> objects.
+/// Two WHQLPublisher objects are considered equal if:
+/// - Their SigningScenario and Auth properties match.
+/// - Their signer elements match based on either:
+///   Rule 1: Name, CertRoot.Value, and CertPublisher.Value match and their EKU lists are equivalent, or
+///   Rule 2: Name and CertRoot.Value match and their EKU lists are equivalent.
 /// </summary>
+
 internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPublisher>
 {
 	public bool Equals(WHQLPublisher? x, WHQLPublisher? y)
@@ -48,7 +53,7 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
 		// And CertEKUs match
 		// For intermediate certificate type that uses full proper chain in signer
-		if (IsSignerRule1Match(signerX, signerY) && DoEKUsMatch(x.Ekus, y.Ekus))
+		if (Merger.IsSignerRule1Match(signerX, signerY) && Merger.DoEKUsMatch(x.Ekus, y.Ekus))
 		{
 			return true;
 		}
@@ -56,7 +61,7 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 		// Rule 2: Check if Name and CertRoot.Value are equal
 		// And CertEKUs match
 		// For WHQL but PCA/Root/Leaf certificate signer types
-		if (IsSignerRule2Match(signerX, signerY) && DoEKUsMatch(x.Ekus, y.Ekus))
+		if (Merger.IsSignerRule2Match(signerX, signerY) && Merger.DoEKUsMatch(x.Ekus, y.Ekus))
 		{
 			return true;
 		}
@@ -122,49 +127,4 @@ internal sealed class WHQLPublisherSignerRuleComparer : IEqualityComparer<WHQLPu
 		// Ensure non-negative hash value
 		return (int)(hash & 0x7FFFFFFF);
 	}
-
-	/// <summary>
-	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
-	/// </summary>
-	private static bool IsSignerRule1Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value) &&
-			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
-	}
-
-
-	/// <summary>
-	/// Rule 2: Name and CertRoot.Value must match
-	/// </summary>
-	private static bool IsSignerRule2Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value);
-	}
-
-
-	/// <summary>
-	/// Rule 3: Compare EKU lists based on Value only (ignore IDs)
-	/// </summary>
-	/// <param name="ekusX">EKU list for first signer</param>
-	/// <param name="ekusY">EKU list for second signer</param>
-	/// <returns>True if EKU values match</returns>
-	private static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
-	{
-
-		// Extract EKU values and ignore IDs
-		HashSet<int> ekuValuesX = [.. ekusX.Where(e => e.Value != null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
-
-		HashSet<int> ekuValuesY = [.. ekusY.Where(e => e.Value != null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
-
-		// Compare sets of EKU values
-		return ekuValuesX.SetEquals(ekuValuesY);
-	}
-
-
 }

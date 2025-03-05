@@ -21,6 +21,22 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
+/// <summary>
+/// Provides custom equality comparison for <see cref="AllowRule"/> objects.
+/// Two AllowRule objects are considered equal if they have the same SigningScenario and at least one
+/// of the following property-based matching rules holds true:
+/// 
+/// Rule 1: Both Allow elements have non-empty PackageFamilyName values that are equal (case-insensitive).
+/// Rule 2: Both Allow elements have non-null Hash values that are equal (using <see cref="BytesArrayComparer.AreByteArraysEqual"/>).
+/// Rule 3: Both Allow elements have non-empty FilePath values that are equal (case-insensitive).
+/// Special Rule: Both Allow elements have a FileName value equal to "*" (wildcard, case-insensitive).
+/// Rule 4: If both Allow elements specify MinimumFileVersion or both specify MaximumFileVersion,
+///         then at least one of the name-related properties (InternalName, FileDescription, ProductName, or FileName)
+///         must match (case-insensitive).
+/// 
+/// In addition, if one element has a MinimumFileVersion and the other has a MaximumFileVersion, they are not considered equal.
+/// </summary>
+
 internal sealed class AllowRuleComparer : IEqualityComparer<AllowRule>
 {
 	public bool Equals(AllowRule? x, AllowRule? y)
@@ -30,73 +46,21 @@ internal sealed class AllowRuleComparer : IEqualityComparer<AllowRule>
 			return false;
 		}
 
-		// Check SSType
-		if (x.SigningScenario != y.SigningScenario)
-		{
-			return false;
-		}
-
 		Allow allowX = x.AllowElement;
 		Allow allowY = y.AllowElement;
 
-		// Rule 1: Check if PackageFamilyName is present in both and are equal
-		if (!string.IsNullOrWhiteSpace(allowX.PackageFamilyName) &&
-			!string.IsNullOrWhiteSpace(allowY.PackageFamilyName) &&
-		   string.Equals(allowX.PackageFamilyName, allowY.PackageFamilyName, StringComparison.OrdinalIgnoreCase))
-		{
-			return true;
-		}
-
-		// Rule 2: Check if Hash is present in both and are equal
-		if (allowX.Hash is not null && allowY.Hash is not null && BytesArrayComparer.AreByteArraysEqual(allowX.Hash, allowY.Hash))
-		{
-			return true;
-		}
-
-		// Rule 3: Check if FilePath is present in both and are equal
-		if (!string.IsNullOrWhiteSpace(allowX.FilePath) &&
-			!string.IsNullOrWhiteSpace(allowY.FilePath) &&
-			string.Equals(allowX.FilePath, allowY.FilePath, StringComparison.OrdinalIgnoreCase))
-		{
-			return true;
-		}
-
-		// Rule special case: Check if FileName is "*" in both and are equal
-		if (string.Equals(allowX.FileName, "*", StringComparison.OrdinalIgnoreCase) && string.Equals(allowY.FileName, "*", StringComparison.OrdinalIgnoreCase))
-		{
-			return true;
-		}
-
-		// Rule 4: Check for MinimumFileVersion or MaximumFileVersion and the other properties
-		bool hasMinX = !string.IsNullOrWhiteSpace(allowX.MinimumFileVersion);
-		bool hasMaxX = !string.IsNullOrWhiteSpace(allowX.MaximumFileVersion);
-		bool hasMinY = !string.IsNullOrWhiteSpace(allowY.MinimumFileVersion);
-		bool hasMaxY = !string.IsNullOrWhiteSpace(allowY.MaximumFileVersion);
-
-		// If both Allow elements have MinimumFileVersion or both have MaximumFileVersion
-		if ((hasMinX && hasMinY) || (hasMaxX && hasMaxY))
-		{
-			// Check if any of the name-related properties are the same
-			bool nameMatch =
-				(!string.IsNullOrWhiteSpace(allowX.InternalName) && string.Equals(allowX.InternalName, allowY.InternalName, StringComparison.OrdinalIgnoreCase)) ||
-				(!string.IsNullOrWhiteSpace(allowX.FileDescription) && string.Equals(allowX.FileDescription, allowY.FileDescription, StringComparison.OrdinalIgnoreCase)) ||
-				(!string.IsNullOrWhiteSpace(allowX.ProductName) && string.Equals(allowX.ProductName, allowY.ProductName, StringComparison.OrdinalIgnoreCase)) ||
-				(!string.IsNullOrWhiteSpace(allowX.FileName) && string.Equals(allowX.FileName, allowY.FileName, StringComparison.OrdinalIgnoreCase));
-
-			if (nameMatch)
-			{
-				return true;
-			}
-		}
-
-		// If one has MinimumFileVersion and the other has MaximumFileVersion, they are not duplicates
-		if ((hasMinX && hasMaxY) || (hasMaxX && hasMinY))
-		{
-			return false;
-		}
-
-		// If none of the rules match, the AllowRule objects are not equal
-		return false;
+		return Merger.CompareCommonRuleProperties(
+			x.SigningScenario, y.SigningScenario,
+			null, null,
+			allowX.PackageFamilyName, allowY.PackageFamilyName,
+			allowX.Hash, allowY.Hash,
+			allowX.FilePath, allowY.FilePath,
+			allowX.FileName, allowY.FileName,
+			allowX.MinimumFileVersion, allowY.MinimumFileVersion,
+			allowX.MaximumFileVersion, allowY.MaximumFileVersion,
+			allowX.InternalName, allowY.InternalName,
+			allowX.FileDescription, allowY.FileDescription,
+			allowX.ProductName, allowY.ProductName);
 	}
 
 	public int GetHashCode(AllowRule obj)

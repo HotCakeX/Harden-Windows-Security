@@ -475,7 +475,7 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page, INotifyPropert
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: 0";
+			TotalCountOfTheFilesTextBox.Text = "Total logs: 0";
 
 			// Update the InfoBadge for the top menu
 			AllowNewApps.Instance.UpdateEventLogsInfoBadge(0, 1);

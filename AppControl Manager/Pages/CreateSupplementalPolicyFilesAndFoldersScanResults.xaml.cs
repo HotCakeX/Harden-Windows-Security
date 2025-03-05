@@ -418,7 +418,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total files: 0";
+			TotalCountOfTheFilesTextBox.Text = "Total files: 0";
 		}
 		else
 		{

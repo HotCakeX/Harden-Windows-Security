@@ -46,13 +46,13 @@ internal sealed class UpdatePolicySignerRuleComparer : IEqualityComparer<UpdateP
 		Signer signerY = y.SignerElement;
 
 		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
-		if (IsSignerRule1Match(signerX, signerY))
+		if (Merger.IsSignerRule1Match(signerX, signerY))
 		{
 			return true;
 		}
 
 		// Rule 2: Check if Name and CertRoot.Value are equal
-		if (IsSignerRule2Match(signerX, signerY))
+		if (Merger.IsSignerRule2Match(signerX, signerY))
 		{
 			return true;
 		}
@@ -93,28 +93,5 @@ internal sealed class UpdatePolicySignerRuleComparer : IEqualityComparer<UpdateP
 		}
 
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash
-	}
-
-	/// <summary>
-	/// Rule 1: Name, CertRoot.Value, and CertPublisher.Value must match.
-	/// </summary>
-	private static bool IsSignerRule1Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value) &&
-			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
-	}
-
-	/// <summary>
-	/// Rule 2: Name and CertRoot.Value must match.
-	/// </summary>
-	private static bool IsSignerRule2Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value);
 	}
 }

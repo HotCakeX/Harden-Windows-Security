@@ -422,7 +422,7 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, I
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total files: 0";
+			TotalCountOfTheFilesTextBox.Text = "Total files: 0";
 		}
 		else
 		{

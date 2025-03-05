@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 //
 // Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
 //
@@ -66,7 +66,7 @@ internal sealed class FileIdentityTimeBasedHashSet
 			if (existingItem.TimeCreated.HasValue && item.TimeCreated.HasValue &&
 				existingItem.TimeCreated < item.TimeCreated)
 			{
-				Logger.Write($"Replacing an older FileIdentity item with a newer one in the Logs " +
+				Logger.Write("Replacing an older FileIdentity item with a newer one in the Logs " +
 							 $"for the file with name {existingItem.FileName} and SHA256 hash {existingItem.SHA256Hash}.");
 
 				// Remove the existing older item and add the newer one

@@ -124,6 +124,8 @@
     <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
+
+    <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
   </PropertyGroup>
 
 

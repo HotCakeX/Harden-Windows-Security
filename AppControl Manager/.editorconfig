@@ -7,7 +7,7 @@ trim_trailing_whitespace = true
 end_of_line = crlf
 
 # https://learn.microsoft.com/en-us/visualstudio/ide/reference/add-file-header
-file_header_template = This file is licensed to you under the MIT license.\r\nSee the LICENSE file in the GitHub repository at the following location for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+file_header_template = MIT License\r\n\r\nCopyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the "Software"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nSee here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE\r\n
 
 # Applies to C# files only
 [*.cs]

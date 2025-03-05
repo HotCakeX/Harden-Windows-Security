@@ -58,6 +58,12 @@ jobs:
         working-directory: './AppControl Manager' # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
         run: |
           $global:ErrorActionPreference = 'Stop'
+
+          # Update the workloads
+          dotnet workload update
+          dotnet workload config --update-mode workload-set
+          dotnet workload update
+
           [System.String]$AppControlManagerDirectory = $PWD.Path
 
           Write-Host -Object "`nChecking .NET info`n`n" -ForegroundColor Magenta

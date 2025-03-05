@@ -353,7 +353,8 @@ internal static class LocalFilesScan
 
 
 	/// <summary>
-	/// Gets all of the OIDs in a file. The OIDs are collected from all of the file's signers and each certificate (Leaf/Intermediate/Root) in each signer.
+	/// Gets the EKU OIDs of the leaf certificates of all of the signers of a signed file, the ones that App Control policy uses for EKU-based authorization.
+	/// Only the leaf certificates have EKUs, others such as root or intermediate have KUs only.
 	/// </summary>
 	/// <param name="fileSigners"></param>
 	/// <returns></returns>
@@ -361,8 +362,6 @@ internal static class LocalFilesScan
 	{
 		List<string> output = [];
 
-		// The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that App Control policy uses for EKU-based authorization
-		// Only the leaf certificate of the primary signer has EKUs, others such as root or intermediate have KUs only.
 		foreach (AllFileSigners fileSignature in fileSigners)
 		{
 			// Only process entries where Signer and its SignerInfos exist.

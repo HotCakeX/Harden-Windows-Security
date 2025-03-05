@@ -1,12 +1,22 @@
-﻿[*.cs]
+﻿# https://github.com/dotnet/roslyn-analyzers/blob/main/src/NetAnalyzers/Microsoft.CodeAnalysis.NetAnalyzers.md
+
+# Applies to All files
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+end_of_line = crlf
+
+# https://learn.microsoft.com/en-us/visualstudio/ide/reference/add-file-header
+file_header_template = This file is licensed to you under the MIT license.\r\nSee the LICENSE file in the GitHub repository at the following location for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+
+# Applies to C# files only
+[*.cs]
 
 # Spell Checker dictionary
 spelling_exclusion_path = .\exclusion.dic
 
 # Miscellaneous settings
 # https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
-trim_trailing_whitespace = true
-end_of_line = crlf
 indent_style = tab
 insert_final_newline = true
 

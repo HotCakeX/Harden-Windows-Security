@@ -1,1 +1,10 @@
 images export-ignore
+*.cs text eol=crlf
+*.xaml text eol=crlf
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+*.txt text eol=crlf
+*.md text eol=crlf
+*.xml text eol=crlf
+*.json text eol=crlf

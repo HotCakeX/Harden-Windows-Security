@@ -70,7 +70,9 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
     <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
-    <AppxPackageDir>MSIXOutputX64\</AppxPackageDir>
+    <!-- Defining it in each publish profile -->
+    <!-- <AppxPackageDir>MSIXOutputX64\</AppxPackageDir> -->
+
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
@@ -134,7 +136,7 @@
   "C:\Users\HotCakeX\.nuget\packages\runtime.win-x64.microsoft.dotnet.ilcompiler\9.0.2\tools\ilc.exe" 
   
   
-  We can see what parameters were used by the NAOT code generator, iLC, by inspecting the response file located at:
+  We can see what parameters were used by the NAOT code generator, ILC, by inspecting the response file located at:
   "Harden-Windows-Security\AppControl Manager\obj\x64\Release\net9.0-windows10.0.26100.0\win-x64\native\AppControlManager.ilc.rsp"
   
   -->

@@ -439,7 +439,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page, INotifyProper
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: 0";
+			TotalCountOfTheFilesTextBox.Text = "Total logs: 0";
 
 			// Update the InfoBadge for the top menu
 			AllowNewApps.Instance.UpdateLocalFilesInfoBadge(0, 1);

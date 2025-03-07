@@ -20,14 +20,11 @@ using AppControlManager.SiPolicy;
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// For Levels: Publisher, LeafCertificate, PcaCertificate, RootCertificate,
+/// For File Path rules only in the <FileRules> node
 /// </summary>
-internal sealed class SignerRule
+internal sealed class FileRuleRule
 {
-	internal required Signer SignerElement { get; set; }
-	internal AllowedSigner? AllowedSignerElement { get; set; }
-	internal DeniedSigner? DeniedSignerElement { get; set; }
-	internal CiSigner? CiSignerElement { get; set; }
+	internal required FileRule FileRuleElement { get; set; }
+	internal required FileRuleRef FileRuleRefElement { get; set; }
 	internal required SSType SigningScenario { get; set; }
-	internal required Authorization Auth { get; set; }
 }

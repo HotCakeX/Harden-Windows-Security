@@ -19,7 +19,9 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
-// For levels: Hash, FileName, FilePath, PFN
+/// <summary>
+/// For levels: Hash, FileName, FilePath, PFN
+/// </summary>
 internal sealed class AllowRule
 {
 	internal required Allow AllowElement { get; set; }

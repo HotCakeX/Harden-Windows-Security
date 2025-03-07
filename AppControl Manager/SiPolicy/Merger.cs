@@ -15,15 +15,16 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 
 namespace AppControlManager.SiPolicy;
-
 
 /// <summary>
 /// --- EXTRA information regarding the overall merge operation and what needs to happen ---
@@ -43,7 +44,7 @@ namespace AppControlManager.SiPolicy;
 ///
 ///
 /// </summary>
-internal static partial class Merger
+internal static class Merger
 {
 
 	/// <summary>
@@ -76,22 +77,36 @@ internal static partial class Merger
 		// Add the main policy to the mix
 		allPolicies.Add(mainXML);
 
-
 		// Data aggregation
 		// ID randomization
-		// De-duplication
-		HashSet<AllowRule> allowRules = Factory.CollectAllowRules(allPolicies);
-		HashSet<DenyRule> denyRules = Factory.CollectDenyRules(allPolicies);
-		SignerCollection signerCollection = Factory.CollectSignerRules(allPolicies);
+		// De-duplication		
+		Task<HashSet<AllowRule>> taskAllowRules = Task.Run(() => Factory.CollectAllowRules(allPolicies));
+		Task<HashSet<DenyRule>> taskDenyRules = Task.Run(() => Factory.CollectDenyRules(allPolicies));
+		Task<HashSet<FileRuleRule>> taskFileRules = Task.Run(() => Factory.CollectFileRules(allPolicies));
+		Task<SignerCollection> taskSignerRules = Task.Run(() => Factory.CollectSignerRules(allPolicies));
 
-		// Get all of the EKUs from rule types that generate it
-		IEnumerable<EKU> ekusToUse = signerCollection.WHQLFilePublishers.SelectMany(x => x.Ekus).Concat(signerCollection.WHQLPublishers.SelectMany(x => x.Ekus)).Where(x => x is not null);
+		// Await all tasks to complete
+		Task.WaitAll(taskAllowRules, taskDenyRules, taskFileRules, taskSignerRules);
+
+		// Retrieve the results
+		HashSet<AllowRule> allowRules = taskAllowRules.Result;
+		HashSet<DenyRule> denyRules = taskDenyRules.Result;
+		HashSet<FileRuleRule> fileRules = taskFileRules.Result;
+		SignerCollection signerCollection = taskSignerRules.Result;
+
+		// Get all of the EKUs from rule types that generate them
+		Task<IEnumerable<EKU>> taskEkusToUse = Task.Run(() => signerCollection.WHQLFilePublishers.SelectMany(x => x.Ekus).Concat(signerCollection.WHQLPublishers.SelectMany(x => x.Ekus)).Where(x => x is not null));
 
 		// Get all FileRules that go to <FileRules>
-		IEnumerable<object> fileRules = allowRules.Select(x => x.AllowElement).Cast<object>().
-			Concat(denyRules.Select(x => x.DenyElement)).
-			Concat(signerCollection.FilePublisherSigners.SelectMany(x => x.FileAttribElements)).
-			Concat(signerCollection.WHQLFilePublishers.SelectMany(x => x.FileAttribElements)).Where(x => x is not null);
+		Task<IEnumerable<object>> taskFileRulesNode = Task.Run(() =>
+		{
+			return allowRules.Select(x => x.AllowElement).Cast<object>().
+				Concat(denyRules.Select(x => x.DenyElement)).
+				Concat(fileRules.Select(x => x.FileRuleElement)).
+				Concat(signerCollection.FilePublisherSigners.SelectMany(x => x.FileAttribElements)).
+				Concat(signerCollection.WHQLFilePublishers.SelectMany(x => x.FileAttribElements)).Where(x => x is not null);
+		});
+
 
 		// Get all FileRuleRefs - User Mode - that go to <FileRulesRef> in ProductSigners
 		IEnumerable<FileRuleRef> userModeFileRulesRefs = allowRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.FileRuleRefElement).
@@ -101,20 +116,27 @@ internal static partial class Merger
 		IEnumerable<FileRuleRef> kernelModeFileRulesRefs = allowRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement).
 			Concat(denyRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement)).Where(x => x is not null);
 
-		// Get all Signers
-		IEnumerable<Signer> signers = signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
-			Concat(signerCollection.WHQLFilePublishers.Select(x => x.SignerElement)).
-			Concat(signerCollection.WHQLPublishers.Select(x => x.SignerElement)).
-			Concat(signerCollection.SignerRules.Select(x => x.SignerElement)).
-			Concat(signerCollection.SupplementalPolicySigners.Select(x => x.SignerElement)).
-			Concat(signerCollection.UpdatePolicySigners.Select(x => x.SignerElement)).Where(x => x is not null);
+
+		// Get all Signers		
+		Task<IEnumerable<Signer>> taskSigners = Task.Run(() =>
+		{
+			return signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
+				Concat(signerCollection.WHQLFilePublishers.Select(x => x.SignerElement)).
+				Concat(signerCollection.WHQLPublishers.Select(x => x.SignerElement)).
+				Concat(signerCollection.SignerRules.Select(x => x.SignerElement)).
+				Concat(signerCollection.SupplementalPolicySigners.Select(x => x.SignerElement)).
+				Concat(signerCollection.UpdatePolicySigners.Select(x => x.SignerElement)).Where(x => x is not null);
+		});
+
 
 		// Get all CiSigners
-		IEnumerable<CiSigner> ciSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement).
-			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement).
-			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement))).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement)).Where(x => x is not null)!;
-
+		Task<IEnumerable<CiSigner>> taskCiSigners = Task.Run(() =>
+		{
+			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
+			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!).
+			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!))).
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode).Select(x => x.CiSignerElement!)).Where(x => x is not null);
+		});
 
 		// Get any possible SigningScenario from XML1 (main)
 		// Will use some of its rare details when building the new policy
@@ -126,34 +148,59 @@ internal static partial class Merger
 
 
 		// Get all of the AllowedSigners - User Mode
-		IEnumerable<AllowedSigner> userModeAllowedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement).
-			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
-			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).Where(x => x is not null)!;
+		Task<IEnumerable<AllowedSigner>> taskUserModeAllowedSigners = Task.Run(() =>
+		{
+			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!).
+			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
+			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).Where(x => x is not null);
+		});
+
 
 		// Get all of the DeniedSigners - User Mode
-		IEnumerable<DeniedSigner> userModeDeniedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement).
-			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
-			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).Where(x => x is not null)!;
+		Task<IEnumerable<DeniedSigner>> taskUserModeDeniedSigners = Task.Run(() =>
+		{
+			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!).
+			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
+			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.UserMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).Where(x => x is not null);
+		});
 
-		// Get all of the AllowedSigners - Kernel Mode
-		IEnumerable<AllowedSigner> kernelModeAllowedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement).
-		  Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
-		  Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).
-		  Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement)).Where(x => x is not null)!;
 
-		// Get all of the DeniedSigners - Kernel Mode
-		IEnumerable<DeniedSigner> kernelModeDeniedSigners = signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement).
-			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
-			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).
-			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement)).Where(x => x is not null)!;
+		// Get all of the AllowedSigners - Kernel Mode		
+		Task<IEnumerable<AllowedSigner>> taskKernelModeAllowedSigners = Task.Run(() =>
+		{
+			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!).
+			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
+			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!)).Where(x => x is not null);
+		});
 
+
+		// Get all of the DeniedSigners - Kernel Mode		
+		Task<IEnumerable<DeniedSigner>> taskKernelModeDeniedSigners = Task.Run(() =>
+		{
+			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!).
+			Concat(signerCollection.WHQLFilePublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
+			Concat(signerCollection.SignerRules.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).
+			Concat(signerCollection.FilePublisherSigners.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!)).Where(x => x is not null);
+		});
 
 		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol = signerCollection.SupplementalPolicySigners.Where(x => x is not null).Select(x => x.SupplementalPolicySigner).Where(x => x is not null);
 
 		IEnumerable<UpdatePolicySigner> updatePolicySignersCol = signerCollection.UpdatePolicySigners.Where(x => x is not null).Select(x => x.UpdatePolicySigner).Where(x => x is not null);
 
+		// Wait for all tasks to complete before constructing the policy
+		Task.WaitAll(taskEkusToUse, taskFileRulesNode, taskSigners, taskCiSigners, taskUserModeAllowedSigners, taskUserModeDeniedSigners, taskKernelModeAllowedSigners, taskKernelModeDeniedSigners);
+
+		IEnumerable<EKU> ekusToUse = taskEkusToUse.Result;
+		IEnumerable<object> fileRulesNode = taskFileRulesNode.Result;
+		IEnumerable<Signer> signers = taskSigners.Result;
+		IEnumerable<CiSigner> ciSigners = taskCiSigners.Result;
+		IEnumerable<AllowedSigner> userModeAllowedSigners = taskUserModeAllowedSigners.Result;
+		IEnumerable<DeniedSigner> userModeDeniedSigners = taskUserModeDeniedSigners.Result;
+		IEnumerable<AllowedSigner> kernelModeAllowedSigners = taskKernelModeAllowedSigners.Result;
+		IEnumerable<DeniedSigner> kernelModeDeniedSigners = taskKernelModeDeniedSigners.Result;
 
 		// Construct the User Mode Signing Scenario
 		SigningScenario UMCISigningScenario = new()
@@ -255,7 +302,7 @@ internal static partial class Merger
 			BasePolicyID = mainXML.BasePolicyID, // Main policy takes priority
 			Rules = mainXML.Rules, // Main policy takes priority
 			EKUs = [.. ekusToUse], // Aggregated data
-			FileRules = [.. fileRules], // Aggregated data
+			FileRules = [.. fileRulesNode], // Aggregated data
 			Signers = [.. signers], // Aggregated data
 			SigningScenarios = [UMCISigningScenario, KMCISigningScenario], // Aggregated data
 			UpdatePolicySigners = [.. updatePolicySignersCol], // Aggregated data
@@ -271,31 +318,21 @@ internal static partial class Merger
 			PolicyTypeSpecified = mainXML.PolicyTypeSpecified // Main policy takes priority
 		};
 
+		SiPolicy outputV2 = FileAttribDeDuplication.EnsureUniqueFileAttributes(output);
 
 		// Save the changes to the main XML File
-		Management.SavePolicyToFile(output, mainXmlFilePath);
+		Management.SavePolicyToFile(outputV2, mainXmlFilePath);
 
 		// Close any empty nodes
 		CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);
-
 
 		// The reason this method is being used to go over the XML one more time and its logic wasn't implemented during policy creation
 		// is because this operation needs the complete view of the policy, whereas the policy creation operation micro-manages things
 		// And puts each element in their own box, so they don't have access to the complete view of the policy.
 		// Another reason is because multiple different elements refer to the same EKU, which again can't be put in those specific element "boxes" since they don't have information about other "boxes".
 		EnsureUniqueEKUs(mainXmlFilePath);
-
-
-		// Not necessary for the current implementation
-		//
-		// When 2 FilePublisher or WHQLFilePublisher level signers reference the same FileAttrib
-		// And they are in different Signing Scenarios, the FileAttrib must remain.
-		// However, if they belong to the same SigningScenario, both signers "can" reference the same FileAttrib.
-		// De-duplication is not necessary here but if it is to be done, each signer must have its context.
-		// Context: Whether signer is allowing or denying, or if it's kernel-mode or user-mode.
-		//
-		// AppControlManager.SiPolicyIntel.SiPolicyProcessor.ProcessSiPolicyXml(mainXmlFilePath);
 	}
+
 
 
 	/// <summary>
@@ -322,14 +359,15 @@ internal static partial class Merger
 			XElement ekuToKeep = group.First();
 			List<XElement> ekusToRemove = [.. group.Skip(1)];
 
+			string ekuToKeepId = (string)ekuToKeep.Attribute("ID")!;
+
 			// Update Signer CertEKU references to point to the retained EKU
 			foreach (XElement ekuToRemove in ekusToRemove)
 			{
 				string ekuToRemoveId = (string)ekuToRemove.Attribute("ID")!;
-				string ekuToKeepId = (string)ekuToKeep.Attribute("ID")!;
 
 				IEnumerable<XElement> certEKURefs = doc.Descendants(ns + "CertEKU")
-					.Where(e => (string)e.Attribute("ID")! == ekuToRemoveId);
+					.Where(e => string.Equals((string)e.Attribute("ID")!, ekuToRemoveId, StringComparison.OrdinalIgnoreCase));
 
 				foreach (XElement certEKURef in certEKURefs)
 				{
@@ -344,5 +382,207 @@ internal static partial class Merger
 		// Save the updated XML document
 		doc.Save(xmlFilePath);
 	}
+
+
+	/// <summary>
+	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
+	/// </summary>
+	/// <param name="signerX"></param>
+	/// <param name="signerY"></param>
+	/// <returns></returns>
+	internal static bool IsSignerRule1Match(Signer signerX, Signer signerY)
+	{
+		return !string.IsNullOrWhiteSpace(signerX.Name) &&
+			   !string.IsNullOrWhiteSpace(signerY.Name) &&
+			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
+			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value) &&
+			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
+	}
+
+	/// <summary>
+	/// Rule 2: Name and CertRoot.Value must match
+	/// </summary>
+	/// <param name="signerX"></param>
+	/// <param name="signerY"></param>
+	/// <returns></returns>
+	internal static bool IsSignerRule2Match(Signer signerX, Signer signerY)
+	{
+		return !string.IsNullOrWhiteSpace(signerX.Name) &&
+			   !string.IsNullOrWhiteSpace(signerY.Name) &&
+			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
+			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value);
+	}
+
+	/// <summary>
+	/// Rule 3: Compare EKU lists based on Value only (ignore IDs)
+	/// </summary>
+	/// <param name="ekusX">EKU list for first signer</param>
+	/// <param name="ekusY">EKU list for second signer</param>
+	/// <returns>True if EKU values match</returns>
+	internal static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
+	{
+
+		// Extract EKU values and ignore IDs
+		HashSet<int> ekuValuesX = [.. ekusX.Where(e => e.Value is not null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
+
+		HashSet<int> ekuValuesY = [.. ekusY.Where(e => e.Value is not null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
+
+		// Compare sets of EKU values
+		return ekuValuesX.SetEquals(ekuValuesY);
+	}
+
+
+
+
+	/// <summary>
+	/// Compares the common properties of two rule objects.
+	/// For properties that aren't applicable in a given rule type, pass null.
+	/// </summary>
+	/// <param name="signingScenarioX"></param>
+	/// <param name="signingScenarioY"></param>
+	/// <param name="ruleTypeX"></param>
+	/// <param name="ruleTypeY"></param>
+	/// <param name="packageFamilyNameX"></param>
+	/// <param name="packageFamilyNameY"></param>
+	/// <param name="hashX"></param>
+	/// <param name="hashY"></param>
+	/// <param name="filePathX"></param>
+	/// <param name="filePathY"></param>
+	/// <param name="fileNameX"></param>
+	/// <param name="fileNameY"></param>
+	/// <param name="minimumFileVersionX"></param>
+	/// <param name="minimumFileVersionY"></param>
+	/// <param name="maximumFileVersionX"></param>
+	/// <param name="maximumFileVersionY"></param>
+	/// <param name="internalNameX"></param>
+	/// <param name="internalNameY"></param>
+	/// <param name="fileDescriptionX"></param>
+	/// <param name="fileDescriptionY"></param>
+	/// <param name="productNameX"></param>
+	/// <param name="productNameY"></param>
+	/// <returns>True if the rules are considered equal according to the common logic; otherwise false.</returns>
+	internal static bool CompareCommonRuleProperties(
+	SSType? signingScenarioX, SSType? signingScenarioY,
+	RuleTypeType? ruleTypeX, RuleTypeType? ruleTypeY, // Ony for FileRule type
+	string? packageFamilyNameX, string? packageFamilyNameY,
+	byte[]? hashX, byte[]? hashY,
+	string? filePathX, string? filePathY,
+	string? fileNameX, string? fileNameY,
+	string? minimumFileVersionX, string? minimumFileVersionY,
+	string? maximumFileVersionX, string? maximumFileVersionY,
+	string? internalNameX, string? internalNameY,
+	string? fileDescriptionX, string? fileDescriptionY,
+	string? productNameX, string? productNameY)
+	{
+		// If signing scenarios are provided, they must match.
+		if (signingScenarioX is not null || signingScenarioY is not null)
+		{
+			if (signingScenarioX != signingScenarioY)
+			{
+				return false;
+			}
+		}
+
+		// If rule types are provided, they must match.
+		if (ruleTypeX is not null || ruleTypeY is not null)
+		{
+			if (ruleTypeX != ruleTypeY)
+			{
+				return false;
+			}
+		}
+
+		// Rule 1: If both have a non-empty PackageFamilyName that is equal (ignoring case), consider them equal.
+		if (!string.IsNullOrWhiteSpace(packageFamilyNameX) &&
+			!string.IsNullOrWhiteSpace(packageFamilyNameY) &&
+			string.Equals(packageFamilyNameX, packageFamilyNameY, StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		// Rule 2: If both have non-null Hash values that are byte-for-byte equal, consider them equal.
+		if (hashX is not null && hashY is not null && BytesArrayComparer.AreByteArraysEqual(hashX, hashY))
+		{
+			return true;
+		}
+
+		// Rule 3: If both have a non-empty FilePath that is equal (ignoring case), consider them equal.
+		if (!string.IsNullOrWhiteSpace(filePathX) &&
+			!string.IsNullOrWhiteSpace(filePathY) &&
+			string.Equals(filePathX, filePathY, StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		// Special Case: If both FileName values are "*" (ignoring case), consider them equal.
+		if (string.Equals(fileNameX, "*", StringComparison.OrdinalIgnoreCase) &&
+			string.Equals(fileNameY, "*", StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+
+		// Rule 4: If both have MinimumFileVersion or both have MaximumFileVersion,
+		// and one of the name-related properties (InternalName, FileDescription, ProductName, or FileName) match,
+		// then consider them equal.
+		bool hasMinX = !string.IsNullOrWhiteSpace(minimumFileVersionX);
+		bool hasMaxX = !string.IsNullOrWhiteSpace(maximumFileVersionX);
+		bool hasMinY = !string.IsNullOrWhiteSpace(minimumFileVersionY);
+		bool hasMaxY = !string.IsNullOrWhiteSpace(maximumFileVersionY);
+
+		if ((hasMinX && hasMinY) || (hasMaxX && hasMaxY))
+		{
+			bool nameMatch =
+				BothAreWhitespaceOrEqual(internalNameX, internalNameY) ||
+				BothAreWhitespaceOrEqual(fileDescriptionX, fileDescriptionY) ||
+				BothAreWhitespaceOrEqual(productNameX, productNameY) ||
+				BothAreWhitespaceOrEqual(fileNameX, fileNameY);
+
+			if (nameMatch)
+			{
+				return true;
+			}
+		}
+
+		// If one has a MinimumFileVersion and the other a MaximumFileVersion, they are not considered duplicates.
+		if ((hasMinX && hasMaxY) || (hasMaxX && hasMinY))
+		{
+			return false;
+		}
+
+		// If none of the rules match, the FileRuleRule objects are not equal.
+		return false;
+	}
+
+
+
+	/// <summary>
+	/// Helper method to check if two strings are both whitespace or exactly equal
+	/// ✅ " " and " " → Equal
+	/// ✅ "text" and "text" → Equal
+	/// ❌ "text" and " text " → Not Equal
+	/// ❌ null and " " → Not Equal
+	/// ❌ null and null → Not Equal
+	/// </summary>
+	/// <param name="a"></param>
+	/// <param name="b"></param>
+	/// <returns></returns>
+	private static bool BothAreWhitespaceOrEqual(string? a, string? b)
+	{
+		bool isAEmpty = a is not null && string.IsNullOrWhiteSpace(a);
+		bool isBEmpty = b is not null && string.IsNullOrWhiteSpace(b);
+
+		if (isAEmpty && isBEmpty)
+		{
+			return true; // Both are only whitespace, consider equal
+		}
+
+		if (a is not null && b is not null && string.Equals(a, b, StringComparison.OrdinalIgnoreCase))
+		{
+			return true; // Both are exactly equal (ignoring case)
+		}
+
+		return false; // Otherwise, they are not equal
+	}
+
 
 }

@@ -17,10 +17,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
+
+/// <summary>
+/// Provides custom equality comparison for <see cref="WHQLFilePublisher"/> objects.
+/// Two WHQLFilePublisher objects are considered equal if:
+/// - Their SigningScenario and Auth properties match.
+/// - Their Signer elements match based on either:
+///   Rule 1: Name, CertRoot.Value, and CertPublisher.Value match and their EKU lists are equivalent, or
+///   Rule 2: Name and CertRoot.Value match and their EKU lists are equivalent.
+/// 
+/// When a match is detected, the FileAttribElements from the duplicate rule are merged into the existing rule.
 
 internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WHQLFilePublisher>
 {
@@ -43,7 +52,7 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
 		// And certEKUs match
 		// For WHQLFilePublisher
-		if (IsSignerRule1Match(signerX, signerY) && DoEKUsMatch(x.Ekus, y.Ekus))
+		if (Merger.IsSignerRule1Match(signerX, signerY) && Merger.DoEKUsMatch(x.Ekus, y.Ekus))
 		{
 			// Merge the FileAttribElements of the ignored rule into the existing one
 			MergeFileAttribElements(x, y);
@@ -53,7 +62,7 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 		// Rule 2: Check if Name and CertRoot.Value are equal
 		// And certEKUs match
 		// For WHQL but PCA/Root/Leaf certificate signer types
-		if (IsSignerRule2Match(signerX, signerY) && DoEKUsMatch(x.Ekus, y.Ekus))
+		if (Merger.IsSignerRule2Match(signerX, signerY) && Merger.DoEKUsMatch(x.Ekus, y.Ekus))
 		{
 			// Merge the FileAttribElements of the ignored rule into the existing one
 			MergeFileAttribElements(x, y);
@@ -117,57 +126,6 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value
 	}
 
-
-	/// <summary>
-	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
-	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
-	private static bool IsSignerRule1Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value) &&
-			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
-	}
-
-
-	/// <summary>
-	/// Rule 2: Name and CertRoot.Value must match
-	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
-	private static bool IsSignerRule2Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value);
-	}
-
-
-	/// <summary>
-	/// Rule 3: Compare EKU lists based on Value only (ignore IDs)
-	/// </summary>
-	/// <param name="ekusX">EKU list for first signer</param>
-	/// <param name="ekusY">EKU list for second signer</param>
-	/// <returns>True if EKU values match</returns>
-	private static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
-	{
-
-		// Extract EKU values and ignore IDs
-		HashSet<int> ekuValuesX = [.. ekusX.Where(e => e.Value != null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
-
-		HashSet<int> ekuValuesY = [.. ekusY.Where(e => e.Value != null).Select(e => CustomMethods.GetByteArrayHashCode(e.Value))];
-
-		// Compare sets of EKU values
-		return ekuValuesX.SetEquals(ekuValuesY);
-	}
-
-
 	/// <summary>
 	/// Merge FileAttribElements of the ignored rule into the existing one
 	/// </summary>
@@ -180,54 +138,18 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 
 		foreach (FileAttrib fileAttrib in newRule.FileAttribElements)
 		{
-			bool shouldAdd = true;
+			existing.FileAttribElements.Add(fileAttrib);
 
-			foreach (FileAttrib existingFileAttrib in existing.FileAttribElements)
+			FileAttribRef fileAttribRef = new()
 			{
-				// Check Rule 4: MinimumFileVersion or MaximumFileVersion comparison
-				bool hasMinX = !string.IsNullOrWhiteSpace(fileAttrib.MinimumFileVersion);
-				bool hasMaxX = !string.IsNullOrWhiteSpace(fileAttrib.MaximumFileVersion);
-				bool hasMinY = !string.IsNullOrWhiteSpace(existingFileAttrib.MinimumFileVersion);
-				bool hasMaxY = !string.IsNullOrWhiteSpace(existingFileAttrib.MaximumFileVersion);
+				RuleID = fileAttrib.ID
+			};
 
-				// Rule: If both elements have MinimumFileVersion or both have MaximumFileVersion
-				if (
-					 ((hasMinX && hasMinY) || (hasMaxX && hasMaxY)) && (string.Equals(fileAttrib.MinimumFileVersion, existingFileAttrib.MinimumFileVersion, StringComparison.OrdinalIgnoreCase) || string.Equals(fileAttrib.MaximumFileVersion, existingFileAttrib.MaximumFileVersion, StringComparison.OrdinalIgnoreCase))
-					 )
-				{
-					// Check if any of the name-related properties are the same
-					bool nameMatch =
-						(!string.IsNullOrWhiteSpace(fileAttrib.InternalName) && string.Equals(fileAttrib.InternalName, existingFileAttrib.InternalName, StringComparison.OrdinalIgnoreCase)) ||
-						(!string.IsNullOrWhiteSpace(fileAttrib.FileDescription) && string.Equals(fileAttrib.FileDescription, existingFileAttrib.FileDescription, StringComparison.OrdinalIgnoreCase)) ||
-						(!string.IsNullOrWhiteSpace(fileAttrib.ProductName) && string.Equals(fileAttrib.ProductName, existingFileAttrib.ProductName, StringComparison.OrdinalIgnoreCase)) ||
-						(!string.IsNullOrWhiteSpace(fileAttrib.FileName) && string.Equals(fileAttrib.FileName, existingFileAttrib.FileName, StringComparison.OrdinalIgnoreCase));
+			List<FileAttribRef> List1 = [.. existing.SignerElement.FileAttribRef];
 
-					// If there's a name match, then don't add the FileAttrib
-					if (nameMatch)
-					{
-						shouldAdd = false;
-						break; // No need to add this FileAttrib, exit the loop
-					}
-				}
-			}
+			List1.Add(fileAttribRef);
 
-			// If the FileAttrib should be added, then add it
-			if (shouldAdd)
-			{
-				existing.FileAttribElements.Add(fileAttrib);
-
-				FileAttribRef fileAttribRef = new()
-				{
-					RuleID = fileAttrib.ID
-				};
-
-				List<FileAttribRef> List1 = [.. existing.SignerElement.FileAttribRef];
-
-				List1.Add(fileAttribRef);
-
-				existing.SignerElement.FileAttribRef = [.. List1];
-			}
+			existing.SignerElement.FileAttribRef = [.. List1];
 		}
-
 	}
 }

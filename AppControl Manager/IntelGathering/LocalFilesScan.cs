@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 //
 // Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
 //
@@ -218,7 +218,7 @@ internal static class LocalFilesScan
 								}
 								catch
 								{
-									Logger.Write($"Failed to get the Opus data of the current chain package");
+									Logger.Write("Failed to get the Opus data of the current chain package");
 								}
 
 								// If the Leaf Certificate exists in the current package

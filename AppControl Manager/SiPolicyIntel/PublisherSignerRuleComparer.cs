@@ -21,6 +21,15 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
+/// <summary>
+/// Provides custom equality comparison for <see cref="SignerRule"/> objects.
+/// Two SignerRule objects are considered equal if:
+/// - Their SigningScenario and Auth properties are equal.
+/// - Either:
+///   Rule 1: Their Signer elements have matching Name, CertRoot.Value, and CertPublisher.Value, or
+///   Rule 2: Their Signer elements have matching Name and CertRoot.Value.
+/// </summary>
+
 internal sealed class PublisherSignerRuleComparer : IEqualityComparer<SignerRule>
 {
 	public bool Equals(SignerRule? x, SignerRule? y)
@@ -41,14 +50,14 @@ internal sealed class PublisherSignerRuleComparer : IEqualityComparer<SignerRule
 
 		// Rule 1: Check if Name, CertRoot.Value, and CertPublisher.Value are equal
 		// For intermediate certificate type that uses full proper chain in signer
-		if (IsSignerRule1Match(signerX, signerY))
+		if (Merger.IsSignerRule1Match(signerX, signerY))
 		{
 			return true;
 		}
 
 		// Rule 2: Check if Name and CertRoot.Value are equal
 		// For PCA/Root/Leaf certificate signer types
-		if (IsSignerRule2Match(signerX, signerY))
+		if (Merger.IsSignerRule2Match(signerX, signerY))
 		{
 			return true;
 		}
@@ -98,37 +107,6 @@ internal sealed class PublisherSignerRuleComparer : IEqualityComparer<SignerRule
 		}
 
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value
-	}
-
-
-	/// <summary>
-	/// Rule 1: Name, CertRoot.Value, CertPublisher.Value must match
-	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
-	private static bool IsSignerRule1Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value) &&
-			   string.Equals(signerX.CertPublisher?.Value, signerY.CertPublisher?.Value, StringComparison.OrdinalIgnoreCase);
-	}
-
-
-	/// <summary>
-	/// Rule 2: Name and CertRoot.Value must match
-	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
-	/// <returns></returns>
-	private static bool IsSignerRule2Match(Signer signerX, Signer signerY)
-	{
-		return !string.IsNullOrWhiteSpace(signerX.Name) &&
-			   !string.IsNullOrWhiteSpace(signerY.Name) &&
-			   string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
-			   BytesArrayComparer.AreByteArraysEqual(signerX.CertRoot?.Value, signerY.CertRoot?.Value);
 	}
 
 }

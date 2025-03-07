@@ -30,73 +30,21 @@ internal sealed class DenyRuleComparer : IEqualityComparer<DenyRule>
 			return false;
 		}
 
-		// Check SSType
-		if (x.SigningScenario != y.SigningScenario)
-		{
-			return false;
-		}
-
 		Deny denyX = x.DenyElement;
 		Deny denyY = y.DenyElement;
 
-		// Rule 1: Check if PackageFamilyName is present in both and are equal
-		if (!string.IsNullOrWhiteSpace(denyX.PackageFamilyName) &&
-			!string.IsNullOrWhiteSpace(denyY.PackageFamilyName) &&
-		   string.Equals(denyX.PackageFamilyName, denyY.PackageFamilyName, StringComparison.OrdinalIgnoreCase))
-		{
-			return true;
-		}
-
-		// Rule 2: Check if Hash is present in both and are equal
-		if (denyX.Hash is not null && denyY.Hash is not null && BytesArrayComparer.AreByteArraysEqual(denyX.Hash, denyY.Hash))
-		{
-			return true;
-		}
-
-		// Rule 3: Check if FilePath is present in both and are equal
-		if (!string.IsNullOrWhiteSpace(denyX.FilePath) &&
-			!string.IsNullOrWhiteSpace(denyY.FilePath) &&
-			string.Equals(denyX.FilePath, denyY.FilePath, StringComparison.OrdinalIgnoreCase))
-		{
-			return true;
-		}
-
-		// Rule special case: Check if FileName is "*" in both and are equal
-		if (string.Equals(denyX.FileName, "*", StringComparison.OrdinalIgnoreCase) && string.Equals(denyX.FileName, "*", StringComparison.OrdinalIgnoreCase))
-		{
-			return true;
-		}
-
-		// Rule 4: Check for MinimumFileVersion or MaximumFileVersion and the other properties
-		bool hasMinX = !string.IsNullOrWhiteSpace(denyX.MinimumFileVersion);
-		bool hasMaxX = !string.IsNullOrWhiteSpace(denyX.MaximumFileVersion);
-		bool hasMinY = !string.IsNullOrWhiteSpace(denyY.MinimumFileVersion);
-		bool hasMaxY = !string.IsNullOrWhiteSpace(denyY.MaximumFileVersion);
-
-		// If both deny elements have MinimumFileVersion or both have MaximumFileVersion
-		if ((hasMinX && hasMinY) || (hasMaxX && hasMaxY))
-		{
-			// Check if any of the name-related properties are the same
-			bool nameMatch =
-				(!string.IsNullOrWhiteSpace(denyX.InternalName) && string.Equals(denyX.InternalName, denyY.InternalName, StringComparison.OrdinalIgnoreCase)) ||
-				(!string.IsNullOrWhiteSpace(denyX.FileDescription) && string.Equals(denyX.FileDescription, denyY.FileDescription, StringComparison.OrdinalIgnoreCase)) ||
-				(!string.IsNullOrWhiteSpace(denyX.ProductName) && string.Equals(denyX.ProductName, denyY.ProductName, StringComparison.OrdinalIgnoreCase)) ||
-				(!string.IsNullOrWhiteSpace(denyX.FileName) && string.Equals(denyX.FileName, denyY.FileName, StringComparison.OrdinalIgnoreCase));
-
-			if (nameMatch)
-			{
-				return true;
-			}
-		}
-
-		// If one has MinimumFileVersion and the other has MaximumFileVersion, they are not duplicates
-		if ((hasMinX && hasMaxY) || (hasMaxX && hasMinY))
-		{
-			return false;
-		}
-
-		// If none of the rules match, the DenyRule objects are not equal
-		return false;
+		return Merger.CompareCommonRuleProperties(
+			x.SigningScenario, y.SigningScenario,
+			null, null,
+			denyX.PackageFamilyName, denyY.PackageFamilyName,
+			denyX.Hash, denyY.Hash,
+			denyX.FilePath, denyY.FilePath,
+			denyX.FileName, denyY.FileName,
+			denyX.MinimumFileVersion, denyY.MinimumFileVersion,
+			denyX.MaximumFileVersion, denyY.MaximumFileVersion,
+			denyX.InternalName, denyY.InternalName,
+			denyX.FileDescription, denyY.FileDescription,
+			denyX.ProductName, denyY.ProductName);
 	}
 
 	public int GetHashCode(DenyRule obj)

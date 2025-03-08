@@ -79,7 +79,7 @@ internal static class Merger
 
 		// Data aggregation
 		// ID randomization
-		// De-duplication		
+		// De-duplication
 		Task<HashSet<AllowRule>> taskAllowRules = Task.Run(() => Factory.CollectAllowRules(allPolicies));
 		Task<HashSet<DenyRule>> taskDenyRules = Task.Run(() => Factory.CollectDenyRules(allPolicies));
 		Task<HashSet<FileRuleRule>> taskFileRules = Task.Run(() => Factory.CollectFileRules(allPolicies));
@@ -117,7 +117,7 @@ internal static class Merger
 			Concat(denyRules.Where(x => x.SigningScenario is SSType.KernelMode).Select(x => x.FileRuleRefElement)).Where(x => x is not null);
 
 
-		// Get all Signers		
+		// Get all Signers
 		Task<IEnumerable<Signer>> taskSigners = Task.Run(() =>
 		{
 			return signerCollection.FilePublisherSigners.Select(x => x.SignerElement).
@@ -167,7 +167,7 @@ internal static class Merger
 		});
 
 
-		// Get all of the AllowedSigners - Kernel Mode		
+		// Get all of the AllowedSigners - Kernel Mode
 		Task<IEnumerable<AllowedSigner>> taskKernelModeAllowedSigners = Task.Run(() =>
 		{
 			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Allow).Select(x => x.AllowedSignerElement!).
@@ -177,7 +177,7 @@ internal static class Merger
 		});
 
 
-		// Get all of the DeniedSigners - Kernel Mode		
+		// Get all of the DeniedSigners - Kernel Mode
 		Task<IEnumerable<DeniedSigner>> taskKernelModeDeniedSigners = Task.Run(() =>
 		{
 			return signerCollection.WHQLPublishers.Where(x => x.SigningScenario is SSType.KernelMode && x.Auth is Authorization.Deny).Select(x => x.DeniedSignerElement!).
@@ -585,4 +585,7 @@ internal static class Merger
 	}
 
 
+
+	internal const long modulus = 0x7FFFFFFF; // A prime modulus to prevent overflow and ensure a non-negative int.
 }
+

@@ -263,7 +263,7 @@ internal static class ListViewHelper
 
 		// If a CalendarDatePicker is provided and a date is selected, filter by date.
 		// Filter results to include only items where 'TimeCreated' is greater than or equal to the selected date
-		if (datePicker != null && datePicker.Date.HasValue)
+		if (datePicker is not null && datePicker.Date.HasValue)
 		{
 			DateTimeOffset selectedDate = datePicker.Date.Value;
 			filteredResults = filteredResults.Where(item =>
@@ -293,7 +293,7 @@ internal static class ListViewHelper
 			);
 		}
 
-		// Populate the ObservableCollection with the filtered results		
+		// Populate the ObservableCollection with the filtered results
 		filteredCollection = [.. filteredResults];
 
 		// Explicitly set the ListView's ItemsSource to ensure the data refreshes

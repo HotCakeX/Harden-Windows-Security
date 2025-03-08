@@ -49,66 +49,59 @@ internal sealed class DenyRuleComparer : IEqualityComparer<DenyRule>
 
 	public int GetHashCode(DenyRule obj)
 	{
-		ArgumentNullException.ThrowIfNull(obj);
-
 		Deny deny = obj.DenyElement;
 		long hash = 17;  // Start with an initial value
-
-		// A prime modulus to prevent overflow and ensure valid hash
-		const long modulus = 0x7FFFFFFF; // Max value for int
 
 		// Rule 1: Use PackageFamilyName for hash calculation
 		if (!string.IsNullOrWhiteSpace(deny.PackageFamilyName))
 		{
-			hash = (hash * 31 + deny.PackageFamilyName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.PackageFamilyName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		// Rule 2: Use Hash for hash calculation
 		if (deny.Hash is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(deny.Hash)) % modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(deny.Hash)) % Merger.modulus;
 		}
 
 		// Rule 3: Use FilePath for hash calculation
 		if (!string.IsNullOrWhiteSpace(deny.FilePath))
 		{
-			hash = (hash * 31 + deny.FilePath.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.FilePath.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		// Rule 4: Use MinimumFileVersion, MaximumFileVersion, and name-related properties for hash
 		if (!string.IsNullOrWhiteSpace(deny.MinimumFileVersion))
 		{
-			hash = (hash * 31 + deny.MinimumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.MinimumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(deny.MaximumFileVersion))
 		{
-			hash = (hash * 31 + deny.MaximumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.MaximumFileVersion.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(deny.InternalName))
 		{
-			hash = (hash * 31 + deny.InternalName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.InternalName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(deny.FileDescription))
 		{
-			hash = (hash * 31 + deny.FileDescription.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.FileDescription.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(deny.ProductName))
 		{
-			hash = (hash * 31 + deny.ProductName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.ProductName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(deny.FileName))
 		{
-			hash = (hash * 31 + deny.FileName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + deny.FileName.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		// Final adjustment to ensure the result is a non-negative int
 		return (int)(hash & 0x7FFFFFFF); // Use only positive values
 	}
-
-
 }

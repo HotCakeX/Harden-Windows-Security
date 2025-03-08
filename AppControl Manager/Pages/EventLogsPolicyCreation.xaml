@@ -334,7 +334,7 @@
             ScrollViewer.HorizontalScrollBarVisibility="Visible"
             ShowsScrollingPlaceholders="True"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
-            SelectionChanged="FileIdentitiesListView_SelectionChanged"                  
+            SelectionChanged="FileIdentitiesListView_SelectionChanged"
             ContainerContentChanging="ListView_ContainerContentChanging">
 
             <ListView.Header>

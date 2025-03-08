@@ -605,7 +605,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 			// If the file has no signers and the user wants to include security catalogs
 			if (signerDetails.Count is 0 && shouldProcessSecurityCats)
 			{
-				// Get the security catalog data to include in the scan				
+				// Get the security catalog data to include in the scan
 				ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
 
 				// Grab the file's Code Integrity hashes

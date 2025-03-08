@@ -68,28 +68,25 @@ internal sealed class SupplementalPolicySignerRuleComparer : IEqualityComparer<S
 	/// <returns>A hash code for the object.</returns>
 	public int GetHashCode(SupplementalPolicySignerRule obj)
 	{
-		ArgumentNullException.ThrowIfNull(obj);
-
 		Signer signer = obj.SignerElement;
 		long hash = 17;  // Initial hash value
-		const long modulus = 0x7FFFFFFF; // Maximum positive integer
 
 		// Include Name in hash calculation if present
 		if (!string.IsNullOrWhiteSpace(signer.Name))
 		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		// Include CertRoot.Value in hash calculation if present
-		if (signer.CertRoot?.Value != null)
+		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
 		}
 
 		// Include CertPublisher.Value in hash calculation if present
 		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
 		{
-			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash

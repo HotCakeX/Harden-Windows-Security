@@ -147,10 +147,12 @@ public sealed partial class Logs : Page
 			: _allLogLines.Where(line => line.Contains(searchText, StringComparison.OrdinalIgnoreCase));
 
 		// Create a list of LogLine objects.
-		List<LogLine> logLines = [.. filteredLines.Select(line => new LogLine
+		List<LogLine> logLines = [];
+
+		foreach (string item in filteredLines)
 		{
-			Text = line
-		})];
+			logLines.Add(new LogLine(item));
+		}
 
 		LogItemsRepeater.ItemsSource = logLines;
 	}
@@ -159,7 +161,7 @@ public sealed partial class Logs : Page
 /// <summary>
 /// Represents one log line.
 /// </summary>
-internal sealed class LogLine
+internal readonly struct LogLine(string text)
 {
-	internal required string Text { get; set; }
+	internal readonly string Text => text;
 }

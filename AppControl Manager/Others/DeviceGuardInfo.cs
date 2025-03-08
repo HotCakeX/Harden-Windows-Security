@@ -17,10 +17,10 @@
 
 namespace AppControlManager.Others;
 
-internal sealed class DeviceGuardStatus
+internal readonly struct DeviceGuardStatus(uint? usermodeCodeIntegrityPolicyEnforcementStatus, uint? codeIntegrityPolicyEnforcementStatus)
 {
-	internal uint? UsermodeCodeIntegrityPolicyEnforcementStatus { get; set; }
-	internal uint? CodeIntegrityPolicyEnforcementStatus { get; set; }
+	internal readonly uint? UsermodeCodeIntegrityPolicyEnforcementStatus => usermodeCodeIntegrityPolicyEnforcementStatus;
+	internal readonly uint? CodeIntegrityPolicyEnforcementStatus => codeIntegrityPolicyEnforcementStatus;
 }
 
 internal static class DeviceGuardInfo
@@ -78,10 +78,10 @@ internal static class DeviceGuardInfo
 		string KMscript = "(Get-CimInstance -Namespace \\\"root\\Microsoft\\Windows\\DeviceGuard\\\" -Query \\\"SELECT CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard\\\").CodeIntegrityPolicyEnforcementStatus";
 		string KMoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{KMscript}\"");
 
-		return new DeviceGuardStatus()
-		{
-			UsermodeCodeIntegrityPolicyEnforcementStatus = uint.Parse(UMoutput),
-			CodeIntegrityPolicyEnforcementStatus = uint.Parse(KMoutput)
-		};
+
+		return new DeviceGuardStatus(
+			usermodeCodeIntegrityPolicyEnforcementStatus: uint.Parse(UMoutput),
+			codeIntegrityPolicyEnforcementStatus: uint.Parse(KMoutput)
+		);
 	}
 }

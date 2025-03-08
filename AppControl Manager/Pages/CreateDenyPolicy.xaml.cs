@@ -556,7 +556,7 @@ public sealed partial class CreateDenyPolicy : Page
 	#endregion
 
 
-	#region Package Family Names	
+	#region Package Family Names
 
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list

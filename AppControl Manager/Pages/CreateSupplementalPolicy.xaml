@@ -811,7 +811,7 @@
                                                 <animatedvisuals:Light/>
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
-                                        
+
                                         -->
 
                                         <TextBlock x:Uid="BrowseTextBlock" />

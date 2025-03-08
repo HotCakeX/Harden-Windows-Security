@@ -90,8 +90,8 @@ internal static class CiRuleOptions
 
 	private static readonly HashSet<OptionType> SupplementalPolicyAllowedRuleOptions = [
 		OptionType.DisabledRuntimeFilePathRuleProtection,
-		OptionType.EnabledIntelligentSecurityGraphAuthorization ,
-		OptionType.EnabledManagedInstaller ,
+		OptionType.EnabledIntelligentSecurityGraphAuthorization,
+		OptionType.EnabledManagedInstaller,
 		OptionType.EnabledInheritDefaultPolicy,
 		OptionType.EnabledUnsignedSystemIntegrityPolicy
 		];

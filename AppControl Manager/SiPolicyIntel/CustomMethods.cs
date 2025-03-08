@@ -15,16 +15,12 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
-
 namespace AppControlManager.SiPolicyIntel;
 
 internal static class CustomMethods
 {
 	internal static int GetByteArrayHashCode(byte[] data)
 	{
-		ArgumentNullException.ThrowIfNull(data);
-
 		int hash = 17;
 
 		foreach (byte b in data)

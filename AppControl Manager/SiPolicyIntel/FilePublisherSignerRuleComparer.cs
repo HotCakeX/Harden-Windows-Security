@@ -28,7 +28,7 @@ namespace AppControlManager.SiPolicyIntel;
 /// - Depending on the signer properties, either Rule 1 or Rule 2 conditions are met:
 ///   Rule 1: Signer.Name, Signer.CertRoot.Value, and Signer.CertPublisher.Value are equal.
 ///   Rule 2: Signer.Name and Signer.CertRoot.Value are equal.
-/// 
+///
 /// When a match is found, the FileAttribElements of the new rule are merged into the existing rule.
 /// </summary>
 
@@ -75,42 +75,38 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 
 	public int GetHashCode(FilePublisherSignerRule obj)
 	{
-		ArgumentNullException.ThrowIfNull(obj);
-
 		Signer signer = obj.SignerElement;
 		long hash = 17;  // Start with an initial value
 
-		const long modulus = 0x7FFFFFFF; // Max value for int
-
 		// First: Include SSType and Authorization in the hash calculation
-		hash = (hash * 31 + obj.SigningScenario.GetHashCode()) % modulus;
-		hash = (hash * 31 + obj.Auth.GetHashCode()) % modulus;
+		hash = (hash * 31 + obj.SigningScenario.GetHashCode()) % Merger.modulus;
+		hash = (hash * 31 + obj.Auth.GetHashCode()) % Merger.modulus;
 
 		// Rule 1: Use Name, CertRoot.Value, and CertPublisher.Value for hash calculation
 		if (!string.IsNullOrWhiteSpace(signer.Name))
 		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
-		if (signer.CertRoot?.Value != null)
+		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
 		}
 
 		if (!string.IsNullOrWhiteSpace(signer.CertPublisher?.Value))
 		{
-			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + signer.CertPublisher.Value.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
 		// Rule 2: Use Name and CertRoot.Value for hash calculation
 		if (!string.IsNullOrWhiteSpace(signer.Name))
 		{
-			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % modulus;
+			hash = (hash * 31 + signer.Name.GetHashCode(StringComparison.OrdinalIgnoreCase)) % Merger.modulus;
 		}
 
-		if (signer.CertRoot?.Value != null)
+		if (signer.CertRoot?.Value is not null)
 		{
-			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % modulus;
+			hash = (hash * 31 + CustomMethods.GetByteArrayHashCode(signer.CertRoot.Value)) % Merger.modulus;
 		}
 
 		return (int)(hash & 0x7FFFFFFF); // Ensure non-negative hash value

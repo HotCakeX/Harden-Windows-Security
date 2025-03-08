@@ -88,12 +88,12 @@
         </ListView>
 
         <TextBlock IsTextSelectionEnabled="True" Margin="0,0,0,15" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top">
-             <Bold><Run Foreground="DeepPink" FontSize="18">*</Run></Bold>            
+             <Bold><Run Foreground="DeepPink" FontSize="18">*</Run></Bold>
             <Span>Matches zero or more characters.</Span>
         </TextBlock>
 
         <TextBlock IsTextSelectionEnabled="True" Margin="0,0,0,15" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top">
-            <Bold><Run Foreground="DeepPink" FontSize="18">?</Run></Bold>            
+            <Bold><Run Foreground="DeepPink" FontSize="18">?</Run></Bold>
              <Span>Matches a single character.</Span>
         </TextBlock>
 

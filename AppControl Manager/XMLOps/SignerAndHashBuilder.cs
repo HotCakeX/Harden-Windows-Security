@@ -377,20 +377,21 @@ internal static class SignerAndHashBuilder
 
 			string? sha256 = hashData.SHA256Hash;
 			string? sha1 = hashData.SHA1Hash;
-			string? fileName = hashData.FilePath;
+			string? filePath = hashData.FilePath;
 			int siSigningScenario = hashData.SISigningScenario;
 
-			if (string.IsNullOrWhiteSpace(sha256) || string.IsNullOrWhiteSpace(sha1) || string.IsNullOrWhiteSpace(fileName))
+			if (string.IsNullOrWhiteSpace(sha256) || string.IsNullOrWhiteSpace(sha1) || string.IsNullOrWhiteSpace(filePath))
 			{
 				Logger.Write("BuildSignerAndHashObjects: One or more necessary properties are null or empty in hashData.");
 				continue;
 			}
 
 			completeHashes.Add(new HashCreator(
-				sha256,
-				sha1,
-				fileName,
-				siSigningScenario
+				authenticodeSHA256: sha256,
+				authenticodeSHA1: sha1,
+				filePath: filePath,
+				fileName: hashData.FileName,
+				siSigningScenario: siSigningScenario
 			));
 		}
 

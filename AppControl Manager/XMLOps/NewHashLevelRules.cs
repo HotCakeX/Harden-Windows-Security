@@ -58,7 +58,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA256
 			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", "Hash Sha256");
+			newAuth256HashNode.SetAttribute("FriendlyName", $"Sha256 Hash for: {hash.FileName}");
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
@@ -66,7 +66,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA1
 			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", "Hash Sha1");
+			newAuth1HashNode.SetAttribute("FriendlyName", $"Sha1 Hash for: {hash.FileName}");
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
@@ -91,9 +91,9 @@ internal static class NewHashLevelRules
 
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
 				// Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
-				if (!hash.FileName.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
+				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write($"Creating Hash rule for Kernel-Mode file: {hash.FileName}. Kernel-Mode file should be signed!");
+					Logger.Write($"Creating Hash rule for Kernel-Mode file: {hash.FilePath}. Kernel-Mode file should be signed!");
 				}
 
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
@@ -146,7 +146,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA256
 			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", "Hash Sha256");
+			newAuth256HashNode.SetAttribute("FriendlyName", $"Sha256 Hash for: {hash.FileName}");
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
@@ -154,7 +154,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA1
 			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", "Hash Sha1");
+			newAuth1HashNode.SetAttribute("FriendlyName", $"Sha1 Hash for: {hash.FileName}");
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
@@ -179,9 +179,9 @@ internal static class NewHashLevelRules
 
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
 				// Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
-				if (!hash.FileName.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
+				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write($"Creating Hash rule for Kernel-Mode file: {hash.FileName}. Kernel-Mode file should be signed!");
+					Logger.Write($"Creating Hash rule for Kernel-Mode file: {hash.FilePath}. Kernel-Mode file should be signed!");
 				}
 
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">

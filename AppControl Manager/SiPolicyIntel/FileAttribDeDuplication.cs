@@ -181,7 +181,7 @@ internal static class FileAttribDeDuplication
 			and updates every FileAttribRef that points to the duplicate by setting its RuleID to the kept FileAttrib’s ID.
 
 			So in the following scenario:
-			
+
 			A signer originally has two FileAttribRef entries:
 			One referencing the kept FileAttrib (ID = "A")
 			Another referencing a duplicate FileAttrib (ID = "B")

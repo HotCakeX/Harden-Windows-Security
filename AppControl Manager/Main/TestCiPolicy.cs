@@ -41,13 +41,13 @@ internal static class CiPolicyTest
 		// Make sure the schema file exists
 		if (!File.Exists(schemaPath))
 		{
-			throw new FileNotFoundException($"The Code Integrity Schema file could not be found at: {schemaPath}");
+			throw new FileNotFoundException("The Code Integrity Schema file could not be found", schemaPath);
 		}
 
 		// Make sure the input XML file exists
 		if (!File.Exists(xmlFilePath))
 		{
-			throw new FileNotFoundException($"The file {xmlFilePath} does not exist.");
+			throw new FileNotFoundException("The file does not exist.", xmlFilePath);
 		}
 
 		// Validate XML file against schema

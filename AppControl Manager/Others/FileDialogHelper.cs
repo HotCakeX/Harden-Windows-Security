@@ -135,7 +135,7 @@ internal static class FileDialogHelper
 			string selectedFilePath = new(filename);
 
 			// Free the allocated memory for filename
-			if (filename.Value != null)
+			if (filename.Value is not null)
 			{
 				Marshal.FreeCoTaskMem((IntPtr)filename.Value);
 			}
@@ -153,7 +153,7 @@ internal static class FileDialogHelper
 
 		finally
 		{
-			if (fileOpenDialog != null)
+			if (fileOpenDialog is not null)
 			{
 				_ = fileOpenDialog->Release();
 			}
@@ -161,11 +161,11 @@ internal static class FileDialogHelper
 			// Clean up extensions memory
 			foreach (COMDLG_FILTERSPEC extension in extensions)
 			{
-				if (extension.pszName.Value != null)
+				if (extension.pszName.Value is not null)
 				{
 					Marshal.FreeHGlobal((IntPtr)extension.pszName.Value);
 				}
-				if (extension.pszSpec.Value != null)
+				if (extension.pszSpec.Value is not null)
 				{
 					Marshal.FreeHGlobal((IntPtr)extension.pszSpec.Value);
 				}
@@ -284,7 +284,7 @@ internal static class FileDialogHelper
 				selectedFiles.Add(filePath);
 
 				// Free the unmanaged memory allocated for the file path
-				if (filename.Value != null)
+				if (filename.Value is not null)
 				{
 					Marshal.FreeCoTaskMem((IntPtr)filename.Value);
 				}
@@ -311,11 +311,11 @@ internal static class FileDialogHelper
 			// Clean up extensions memory
 			foreach (COMDLG_FILTERSPEC extension in extensions)
 			{
-				if (extension.pszName.Value != null)
+				if (extension.pszName.Value is not null)
 				{
 					Marshal.FreeHGlobal((IntPtr)extension.pszName.Value);
 				}
-				if (extension.pszSpec.Value != null)
+				if (extension.pszSpec.Value is not null)
 				{
 					Marshal.FreeHGlobal((IntPtr)extension.pszSpec.Value);
 				}
@@ -323,7 +323,7 @@ internal static class FileDialogHelper
 
 			// Release COM objects
 			_ = ppsiCollection->Release();
-			if (fileOpenDialog != null)
+			if (fileOpenDialog is not null)
 			{
 				_ = fileOpenDialog->Release();
 			}
@@ -418,7 +418,7 @@ internal static class FileDialogHelper
 
 
 			// Release the IFileOpenDialog COM object
-			if (fileOpenDialog != null)
+			if (fileOpenDialog is not null)
 			{
 				_ = fileOpenDialog->Release();
 			}
@@ -536,7 +536,7 @@ internal static class FileDialogHelper
 			_ = ppsiCollection->Release();
 
 			// Release the IFileOpenDialog COM object
-			if (fileOpenDialog != null)
+			if (fileOpenDialog is not null)
 			{
 				_ = fileOpenDialog->Release();
 			}

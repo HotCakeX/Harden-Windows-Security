@@ -266,7 +266,7 @@ internal static partial class BasePolicyCreator
 		}
 		catch (Exception ex)
 		{
-			Logger.Write($"An error occurred while retrieving additional information related to the Microsoft recommended driver block rules.");
+			Logger.Write("An error occurred while retrieving additional information related to the Microsoft recommended driver block rules.");
 
 			Logger.Write(ErrorWriter.FormatException(ex));
 

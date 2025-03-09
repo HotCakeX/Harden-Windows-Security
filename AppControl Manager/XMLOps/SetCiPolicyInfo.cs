@@ -67,7 +67,9 @@ internal static class SetCiPolicyInfo
 
 			foreach (SiPolicy.Setting item in policyObj.Settings)
 			{
-				if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
 				{
 					item.Value.Item = policyName;
 
@@ -118,19 +120,15 @@ internal static class SetCiPolicyInfo
 
 		if (!string.IsNullOrWhiteSpace(basePolicyID))
 		{
+			(bool, string) response = ValidatePolicyID(basePolicyID);
 
-			basePolicyID = basePolicyID.Trim('{', '}');
-
-			// Make sure the input parameter is a valid GUID, doesn't need to have curly brackets, just a GUID string with correct length and format
-			if (!Guid.TryParse(basePolicyID, out _))
+			if (!response.Item1)
 			{
 				throw new ArgumentException($"The provided string '{basePolicyID}' is not a valid GUID format.");
 			}
 
-			string tempVar = $"{{{basePolicyID.ToUpperInvariant()}}}";
-
 			// Set the BasePolicyID of the policy file to the user provided one
-			policyObj.BasePolicyID = tempVar;
+			policyObj.BasePolicyID = response.Item2;
 		}
 
 		#endregion
@@ -201,27 +199,53 @@ internal static class SetCiPolicyInfo
 		// If the ID parameter was provided
 		if (ID is not null)
 		{
-			string AdjustedID = ID.Trim('{', '}');
+			(bool, string) response = ValidatePolicyID(ID);
 
-			// Make sure the input parameter is a valid GUID, doesn't need to have curly brackets, just a GUID string with correct length and format
-			if (!Guid.TryParse(AdjustedID, out _))
+			if (!response.Item1)
 			{
-				throw new ArgumentException($"The provided string '{AdjustedID}' is not a valid GUID format.");
+				throw new ArgumentException($"The provided string '{ID}' is not a valid GUID format.");
 			}
 
-			string tempVar = $"{{{AdjustedID.ToUpperInvariant()}}}";
-
 			// Set the BasePolicyID of the policy file to the user provided one
-			policyObj.BasePolicyID = tempVar;
+			policyObj.BasePolicyID = response.Item2;
 
 			// Set the PolicyID of the policy file to the user provided one
-			policyObj.PolicyID = tempVar;
+			policyObj.PolicyID = response.Item2;
 		}
 
 		// Save the changes to the XML file
 		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 
 		Logger.Write($"Successfully set the version of the policy file at '{filePath}' from '{OriginalXMLPolicyVersion}' to '{version}'.");
+	}
+
+
+
+	/// <summary>
+	/// A method that accepts a string and tests if it is valid to be a Policy ID or Base Policy ID
+	/// </summary>
+	/// <param name="id">the string to verify. Having Curly brackets isn't necessary as the method will add them automatically.</param>
+	/// <returns>Returns a tuple with 2 items.
+	/// First item is a bool indicating the string is valid.
+	/// The 2nd item includes the string that can be used in the policy.</returns>
+	internal static (bool, string) ValidatePolicyID(string? id)
+	{
+
+		if (string.IsNullOrWhiteSpace(id))
+		{
+			return (false, string.Empty);
+		}
+
+		string AdjustedID = id.Trim('{', '}');
+
+		bool IsValid;
+
+		// Make sure the input parameter is a valid GUID, doesn't need to have curly brackets, just a GUID string with correct length and format
+		IsValid = Guid.TryParse(AdjustedID, out _);
+
+		string tempVar = $"{{{AdjustedID.ToUpperInvariant()}}}";
+
+		return (IsValid, tempVar);
 	}
 
 }

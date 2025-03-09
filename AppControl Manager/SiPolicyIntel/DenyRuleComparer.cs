@@ -21,6 +21,10 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
+/// <summary>
+/// Compares two DenyRule objects for equality based on various properties. Generates a hash code for a DenyRule using
+/// multiple attributes.
+/// </summary>
 internal sealed class DenyRuleComparer : IEqualityComparer<DenyRule>
 {
 	public bool Equals(DenyRule? x, DenyRule? y)

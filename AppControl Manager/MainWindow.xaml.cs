@@ -204,6 +204,11 @@ public sealed partial class MainWindow : Window
 		{
 			Titles = [GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")],
 			Pages = [typeof(Pages.ViewFileCertificates)]
+		},
+		[typeof(Pages.PolicyEditor)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content")],
+			Pages = [typeof(Pages.PolicyEditor)]
 		}
 	};
 
@@ -249,7 +254,8 @@ public sealed partial class MainWindow : Window
 		{ GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content"), typeof(Pages.MergePolicies) },
 		{ GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), typeof(Pages.CreateDenyPolicy) },
 		{ GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content"), typeof(Pages.ValidatePolicy) },
-		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) }
+		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) },
+		{ GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor) }
 	};
 
 
@@ -770,6 +776,13 @@ public sealed partial class MainWindow : Window
 						Source = new ViewAllCertificates()
 					};
 
+					// Policy Editor
+					PolicyEditorNavItem.Icon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -11, -11, -11),
+						Source = new Honeymoon()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -917,6 +930,13 @@ public sealed partial class MainWindow : Window
 						Foreground = accentBrush
 					};
 
+					// Policy Editor
+					PolicyEditorNavItem.Icon = new FontIcon
+					{
+						Glyph = "\uE70F",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 
@@ -1043,6 +1063,12 @@ public sealed partial class MainWindow : Window
 					ViewFileCertificatesNavItem.Icon = new FontIcon
 					{
 						Glyph = "\uEBD2"
+					};
+
+					// Policy Editor
+					PolicyEditorNavItem.Icon = new FontIcon
+					{
+						Glyph = "\uE70F"
 					};
 
 					break;

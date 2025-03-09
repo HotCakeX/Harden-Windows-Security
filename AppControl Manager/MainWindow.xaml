@@ -121,7 +121,7 @@
 
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8"
-                    Height="32" Margin="5,0,30,0">
+                    Height="32" Margin="5,0,30,0" Background="Transparent" BorderThickness="0">
 
                 <Button.Content>
                     <controls:WrapPanel Orientation="Horizontal">
@@ -198,8 +198,9 @@
 
                 <NavigationViewItemHeader Content="Tactical"/>
 
-                <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem"/>
                 <NavigationViewItem x:Name="AllowNewAppsNavItem" x:Uid="AllowNewAppsNavItem"/>
+                <NavigationViewItem x:Name="PolicyEditorNavItem" x:Uid="PolicyEditorNavItem"/>
+                <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem"/>
 
                 <NavigationViewItemHeader Content="Info Gathering"/>
 

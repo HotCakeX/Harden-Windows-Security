@@ -23,6 +23,12 @@ namespace AppControlManager.SiPolicy;
 
 internal static class CustomSerialization
 {
+	/// <summary>
+	/// Generates an XML document from a given security policy object, encapsulating various attributes and elements.
+	/// </summary>
+	/// <param name="policy">The security policy object provides the necessary data to populate the XML structure.</param>
+	/// <returns>An XmlDocument representing the structured XML of the security policy.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when required elements or attributes cannot be appended to the XML document.</exception>
 	internal static XmlDocument CreateXmlFromSiPolicy(SiPolicy policy)
 	{
 		XmlDocument xmlDoc = new();
@@ -40,10 +46,22 @@ internal static class CustomSerialization
 			root.SetAttribute("PolicyType", ConvertPolicyType(policy.PolicyType));
 
 		// VersionEx, PolicyID, BasePolicyID, PlatformID
-		AppendTextElement(xmlDoc, root, "VersionEx", policy.VersionEx);
-		AppendTextElement(xmlDoc, root, "PolicyID", policy.PolicyID);
-		AppendTextElement(xmlDoc, root, "BasePolicyID", policy.BasePolicyID);
-		AppendTextElement(xmlDoc, root, "PlatformID", policy.PlatformID);
+		if (!AppendTextElement(xmlDoc, root, "VersionEx", policy.VersionEx))
+		{
+			throw new InvalidOperationException("Could not get the policy version");
+		}
+		if (!AppendTextElement(xmlDoc, root, "PolicyID", policy.PolicyID))
+		{
+			throw new InvalidOperationException("Could not get the policy ID");
+		}
+		if (!AppendTextElement(xmlDoc, root, "BasePolicyID", policy.BasePolicyID))
+		{
+			throw new InvalidOperationException("Could not get the Base policy ID");
+		}
+		if (!AppendTextElement(xmlDoc, root, "PlatformID", policy.PlatformID))
+		{
+			throw new InvalidOperationException("Could not get the Platform ID");
+		}
 
 		// Rules
 		// Adding this first so if there are no rules, an empty Rules node will exist to satisfy the schema validation
@@ -54,8 +72,15 @@ internal static class CustomSerialization
 		{
 			foreach (RuleType rule in policy.Rules)
 			{
+
+				if (rule is null)
+					continue;
+
 				XmlElement ruleElement = xmlDoc.CreateElement("Rule", GlobalVars.SiPolicyNamespace);
-				AppendTextElement(xmlDoc, ruleElement, "Option", ConvertOptionType(rule.Item));
+
+				if (!AppendTextElement(xmlDoc, ruleElement, "Option", ConvertOptionType(rule.Item)))
+					continue;
+
 				_ = rulesElement.AppendChild(ruleElement);
 			}
 		}
@@ -69,6 +94,10 @@ internal static class CustomSerialization
 		{
 			foreach (EKU eku in policy.EKUs)
 			{
+
+				if (eku is null)
+					continue;
+
 				XmlElement ekuElement = xmlDoc.CreateElement("EKU", GlobalVars.SiPolicyNamespace);
 				ekuElement.SetAttribute("ID", eku.ID);
 
@@ -89,6 +118,10 @@ internal static class CustomSerialization
 			// Detect the types of each FileRule
 			foreach (object fr in policy.FileRules)
 			{
+
+				if (fr is null)
+					continue;
+
 				if (fr is Allow allow)
 				{
 					AppendAllow(xmlDoc, fileRulesElement, allow);
@@ -116,6 +149,10 @@ internal static class CustomSerialization
 		{
 			foreach (Signer signer in policy.Signers)
 			{
+
+				if (signer is null)
+					continue;
+
 				XmlElement signerElement = xmlDoc.CreateElement("Signer", GlobalVars.SiPolicyNamespace);
 				signerElement.SetAttribute("ID", signer.ID);
 				signerElement.SetAttribute("Name", signer.Name);
@@ -144,11 +181,26 @@ internal static class CustomSerialization
 
 				// CertIssuer, CertPublisher, CertOemID
 				if (signer.CertIssuer is not null)
-					AppendAttributeElement(xmlDoc, signerElement, "CertIssuer", "Value", signer.CertIssuer.Value);
+				{
+					if (!AppendAttributeElement(xmlDoc, signerElement, "CertIssuer", "Value", signer.CertIssuer.Value))
+					{
+						throw new InvalidOperationException("Could not get the CertIssuer value");
+					}
+				}
 				if (signer.CertPublisher is not null)
-					AppendAttributeElement(xmlDoc, signerElement, "CertPublisher", "Value", signer.CertPublisher.Value);
+				{
+					if (!AppendAttributeElement(xmlDoc, signerElement, "CertPublisher", "Value", signer.CertPublisher.Value))
+					{
+						throw new InvalidOperationException("Could not get the CertPublisher value");
+					}
+				}
 				if (signer.CertOemID is not null)
-					AppendAttributeElement(xmlDoc, signerElement, "CertOemID", "Value", signer.CertOemID.Value);
+				{
+					if (!AppendAttributeElement(xmlDoc, signerElement, "CertOemID", "Value", signer.CertOemID.Value))
+					{
+						throw new InvalidOperationException("Could not get the CertOemID value");
+					}
+				}
 
 				// FileAttribRef(s)
 				if (signer.FileAttribRef is { Length: > 0 })
@@ -172,6 +224,10 @@ internal static class CustomSerialization
 
 			foreach (SigningScenario scenario in policy.SigningScenarios)
 			{
+
+				if (scenario is null)
+					continue;
+
 				XmlElement scenarioElement = xmlDoc.CreateElement("SigningScenario", GlobalVars.SiPolicyNamespace);
 				scenarioElement.SetAttribute("Value", scenario.Value.ToString());
 				scenarioElement.SetAttribute("ID", scenario.ID);
@@ -212,10 +268,15 @@ internal static class CustomSerialization
 					XmlElement appIDTagsElement = xmlDoc.CreateElement("AppIDTags", GlobalVars.SiPolicyNamespace);
 					if (scenario.AppIDTags.EnforceDLLSpecified)
 						appIDTagsElement.SetAttribute("EnforceDLL", scenario.AppIDTags.EnforceDLL.ToString().ToLowerInvariant()); // Only lowercase "true" is considered valid by the schema
+
 					if (scenario.AppIDTags.AppIDTag is not null)
 					{
 						foreach (AppIDTag tag in scenario.AppIDTags.AppIDTag)
 						{
+
+							if (tag is null)
+								continue;
+
 							XmlElement tagElement = xmlDoc.CreateElement("AppIDTag", GlobalVars.SiPolicyNamespace);
 							tagElement.SetAttribute("Key", tag.Key);
 							tagElement.SetAttribute("Value", tag.Value);
@@ -236,6 +297,9 @@ internal static class CustomSerialization
 		{
 			foreach (UpdatePolicySigner ups in policy.UpdatePolicySigners)
 			{
+				if (ups is null)
+					continue;
+
 				XmlElement upsChild = xmlDoc.CreateElement("UpdatePolicySigner", GlobalVars.SiPolicyNamespace);
 				upsChild.SetAttribute("SignerId", ups.SignerId);
 				_ = upsElement.AppendChild(upsChild);
@@ -250,6 +314,10 @@ internal static class CustomSerialization
 		{
 			foreach (CiSigner ci in policy.CiSigners)
 			{
+
+				if (ci is null)
+					continue;
+
 				XmlElement ciSignerElement = xmlDoc.CreateElement("CiSigner", GlobalVars.SiPolicyNamespace);
 				ciSignerElement.SetAttribute("SignerId", ci.SignerId);
 				_ = ciElement.AppendChild(ciSignerElement);
@@ -258,7 +326,10 @@ internal static class CustomSerialization
 
 		// HvciOptions
 		if (policy.HvciOptionsSpecified)
-			AppendTextElement(xmlDoc, root, "HvciOptions", policy.HvciOptions.ToString());
+			if (!AppendTextElement(xmlDoc, root, "HvciOptions", policy.HvciOptions.ToString()))
+			{
+				throw new InvalidOperationException("Could not get the HVCI Optons value");
+			}
 
 		// Settings
 		if (policy.Settings is { Length: > 0 })
@@ -268,24 +339,55 @@ internal static class CustomSerialization
 
 			foreach (Setting setting in policy.Settings)
 			{
+
+				// If the Setting's value is null we shouldn't create any setting at all because it would be against the schema guidelines
+				if (setting is null || setting.Value is null || setting.Value.Item is null)
+					continue;
+
 				XmlElement settingElement = xmlDoc.CreateElement("Setting", GlobalVars.SiPolicyNamespace);
 				settingElement.SetAttribute("Provider", setting.Provider);
 				settingElement.SetAttribute("Key", setting.Key);
 				settingElement.SetAttribute("ValueName", setting.ValueName);
 
-				if (setting.Value is not null)
+
+				XmlElement valueElement = xmlDoc.CreateElement("Value", GlobalVars.SiPolicyNamespace);
+				if (setting.Value.Item is byte[] b)
 				{
-					XmlElement valueElement = xmlDoc.CreateElement("Value", GlobalVars.SiPolicyNamespace);
-					if (setting.Value.Item is byte[] b)
-						AppendTextElement(xmlDoc, valueElement, "Binary", ConvertByteArrayToHex(b));
-					else if (setting.Value.Item is bool boolVal)
-						AppendTextElement(xmlDoc, valueElement, "Boolean", boolVal.ToString().ToLowerInvariant()); // Somehow the CIP conversion cmdlet doesn't like "True" but "true" is ok
-					else if (setting.Value.Item is uint uintVal)
-						AppendTextElement(xmlDoc, valueElement, "DWord", uintVal.ToString());
-					else if (setting.Value.Item is string s)
-						AppendTextElement(xmlDoc, valueElement, "String", s);
-					_ = settingElement.AppendChild(valueElement);
+					if (!AppendTextElement(xmlDoc, valueElement, "Binary", ConvertByteArrayToHex(b)))
+					{
+						continue;
+					}
 				}
+				else if (setting.Value.Item is bool boolVal)
+				{
+					// Somehow the CIP conversion cmdlet doesn't like "True" but "true" is ok
+					if (!AppendTextElement(xmlDoc, valueElement, "Boolean", boolVal.ToString().ToLowerInvariant()))
+					{
+						continue;
+					}
+				}
+				else if (setting.Value.Item is uint uintVal)
+				{
+					if (!AppendTextElement(xmlDoc, valueElement, "DWord", uintVal.ToString()))
+					{
+						continue;
+					}
+				}
+				else if (setting.Value.Item is string s)
+				{
+					if (!AppendTextElement(xmlDoc, valueElement, "String", s))
+					{
+						continue;
+					}
+				}
+				else
+				{
+					// If the value doesn't match then do not add this setting at all
+					continue;
+				}
+
+				_ = settingElement.AppendChild(valueElement);
+
 				_ = settingsElement.AppendChild(settingElement);
 			}
 		}
@@ -297,6 +399,9 @@ internal static class CustomSerialization
 			_ = root.AppendChild(macrosElement);
 			foreach (MacrosMacro macro in policy.Macros)
 			{
+				if (macro is null)
+					continue;
+
 				XmlElement macroElement = xmlDoc.CreateElement("Macro", GlobalVars.SiPolicyNamespace);
 				macroElement.SetAttribute("Id", macro.Id);
 				macroElement.SetAttribute("Value", macro.Value);
@@ -311,6 +416,9 @@ internal static class CustomSerialization
 			_ = root.AppendChild(suppElement);
 			foreach (SupplementalPolicySigner sps in policy.SupplementalPolicySigners)
 			{
+				if (sps is null)
+					continue;
+
 				XmlElement spsElement = xmlDoc.CreateElement("SupplementalPolicySigner", GlobalVars.SiPolicyNamespace);
 				spsElement.SetAttribute("SignerId", sps.SignerId);
 				_ = suppElement.AppendChild(spsElement);
@@ -326,6 +434,10 @@ internal static class CustomSerialization
 			{
 				foreach (AppRoot app in policy.AppSettings.App)
 				{
+
+					if (app is null)
+						continue;
+
 					XmlElement appElement = xmlDoc.CreateElement("App", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(app.Manifest))
 						appElement.SetAttribute("Manifest", app.Manifest);
@@ -333,13 +445,23 @@ internal static class CustomSerialization
 					{
 						foreach (AppSetting appSetting in app.Setting)
 						{
+
+							if (appSetting is null)
+								continue;
+
 							XmlElement settingElem = xmlDoc.CreateElement("Setting", GlobalVars.SiPolicyNamespace);
 							settingElem.SetAttribute("Name", appSetting.Name);
 							if (appSetting.Value is { Length: > 0 })
 							{
 								foreach (string val in appSetting.Value)
 								{
-									AppendTextElement(xmlDoc, settingElem, "Value", val);
+									if (val is null)
+										continue;
+
+									if (!AppendTextElement(xmlDoc, settingElem, "Value", val))
+									{
+										continue;
+									}
 								}
 							}
 							_ = appElement.AppendChild(settingElem);
@@ -381,7 +503,7 @@ internal static class CustomSerialization
 			OptionType.EnabledManagedInstaller => "Enabled:Managed Installer",
 			OptionType.EnabledUpdatePolicyNoReboot => "Enabled:Update Policy No Reboot",
 			OptionType.EnabledConditionalWindowsLockdownPolicy => "Enabled:Conditional Windows Lockdown Policy",
-			_ => option.ToString(),
+			_ => throw new InvalidOperationException("Policy Rule Option is not valid"),
 		};
 	}
 
@@ -487,6 +609,10 @@ internal static class CustomSerialization
 			{
 				foreach (AllowedSigner aSigner in ps.AllowedSigners.AllowedSigner)
 				{
+
+					if (aSigner is null)
+						continue;
+
 					XmlElement aSignerElement = doc.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(aSigner.SignerId))
 						aSignerElement.SetAttribute("SignerId", aSigner.SignerId);
@@ -494,6 +620,9 @@ internal static class CustomSerialization
 					{
 						foreach (ExceptDenyRule rule in aSigner.ExceptDenyRule)
 						{
+							if (rule is null)
+								continue;
+
 							XmlElement ruleElem = doc.CreateElement("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.DenyRuleID))
 								ruleElem.SetAttribute("DenyRuleID", rule.DenyRuleID);
@@ -514,6 +643,10 @@ internal static class CustomSerialization
 			{
 				foreach (DeniedSigner dSigner in ps.DeniedSigners.DeniedSigner)
 				{
+
+					if (dSigner is null)
+						continue;
+
 					XmlElement dSignerElement = doc.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(dSigner.SignerId))
 						dSignerElement.SetAttribute("SignerId", dSigner.SignerId);
@@ -521,6 +654,10 @@ internal static class CustomSerialization
 					{
 						foreach (ExceptAllowRule rule in dSigner.ExceptAllowRule)
 						{
+
+							if (rule is null)
+								continue;
+
 							XmlElement ruleElem = doc.CreateElement("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.AllowRuleID))
 								ruleElem.SetAttribute("AllowRuleID", rule.AllowRuleID);
@@ -541,6 +678,10 @@ internal static class CustomSerialization
 			{
 				foreach (FileRuleRef fr in ps.FileRulesRef.FileRuleRef)
 				{
+
+					if (fr is null)
+						continue;
+
 					XmlElement frElement = doc.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(fr.RuleID))
 						frElement.SetAttribute("RuleID", fr.RuleID);
@@ -562,6 +703,10 @@ internal static class CustomSerialization
 			{
 				foreach (AllowedSigner aSigner in ts.AllowedSigners.AllowedSigner)
 				{
+
+					if (aSigner is null)
+						continue;
+
 					XmlElement aSignerElement = doc.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(aSigner.SignerId))
 						aSignerElement.SetAttribute("SignerId", aSigner.SignerId);
@@ -569,6 +714,9 @@ internal static class CustomSerialization
 					{
 						foreach (ExceptDenyRule rule in aSigner.ExceptDenyRule)
 						{
+							if (rule is null)
+								continue;
+
 							XmlElement ruleElem = doc.CreateElement("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.DenyRuleID))
 								ruleElem.SetAttribute("DenyRuleID", rule.DenyRuleID);
@@ -589,6 +737,10 @@ internal static class CustomSerialization
 			{
 				foreach (DeniedSigner dSigner in ts.DeniedSigners.DeniedSigner)
 				{
+
+					if (dSigner is null)
+						continue;
+
 					XmlElement dSignerElement = doc.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(dSigner.SignerId))
 						dSignerElement.SetAttribute("SignerId", dSigner.SignerId);
@@ -596,6 +748,10 @@ internal static class CustomSerialization
 					{
 						foreach (ExceptAllowRule rule in dSigner.ExceptAllowRule)
 						{
+
+							if (rule is null)
+								continue;
+
 							XmlElement ruleElem = doc.CreateElement("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.AllowRuleID))
 								ruleElem.SetAttribute("AllowRuleID", rule.AllowRuleID);
@@ -616,6 +772,10 @@ internal static class CustomSerialization
 			{
 				foreach (FileRuleRef fr in ts.FileRulesRef.FileRuleRef)
 				{
+
+					if (fr is null)
+						continue;
+
 					XmlElement frElement = doc.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(fr.RuleID))
 						frElement.SetAttribute("RuleID", fr.RuleID);
@@ -637,6 +797,10 @@ internal static class CustomSerialization
 			{
 				foreach (AllowedSigner aSigner in tss.AllowedSigners.AllowedSigner)
 				{
+
+					if (aSigner is null)
+						continue;
+
 					XmlElement aSignerElement = doc.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(aSigner.SignerId))
 						aSignerElement.SetAttribute("SignerId", aSigner.SignerId);
@@ -644,6 +808,10 @@ internal static class CustomSerialization
 					{
 						foreach (ExceptDenyRule rule in aSigner.ExceptDenyRule)
 						{
+
+							if (rule is null)
+								continue;
+
 							XmlElement ruleElem = doc.CreateElement("ExceptDenyRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.DenyRuleID))
 								ruleElem.SetAttribute("DenyRuleID", rule.DenyRuleID);
@@ -664,6 +832,10 @@ internal static class CustomSerialization
 			{
 				foreach (DeniedSigner dSigner in tss.DeniedSigners.DeniedSigner)
 				{
+
+					if (dSigner is null)
+						continue;
+
 					XmlElement dSignerElement = doc.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(dSigner.SignerId))
 						dSignerElement.SetAttribute("SignerId", dSigner.SignerId);
@@ -671,6 +843,10 @@ internal static class CustomSerialization
 					{
 						foreach (ExceptAllowRule rule in dSigner.ExceptAllowRule)
 						{
+
+							if (rule is null)
+								continue;
+
 							XmlElement ruleElem = doc.CreateElement("ExceptAllowRule", GlobalVars.SiPolicyNamespace);
 							if (!string.IsNullOrEmpty(rule.AllowRuleID))
 								ruleElem.SetAttribute("AllowRuleID", rule.AllowRuleID);
@@ -691,6 +867,10 @@ internal static class CustomSerialization
 			{
 				foreach (FileRuleRef fr in tss.FileRulesRef.FileRuleRef)
 				{
+
+					if (fr is null)
+						continue;
+
 					XmlElement frElement = doc.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
 					if (!string.IsNullOrEmpty(fr.RuleID))
 						frElement.SetAttribute("RuleID", fr.RuleID);
@@ -701,25 +881,49 @@ internal static class CustomSerialization
 		}
 	}
 
-	// Utility Helpers
-	private static void AppendTextElement(XmlDocument doc, XmlElement parent, string name, string? value)
+
+	/// <summary>
+	/// Helper method, its return value must be checked by the caller and handled accordingly
+	/// </summary>
+	/// <param name="doc"></param>
+	/// <param name="parent"></param>
+	/// <param name="name"></param>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	private static bool AppendTextElement(XmlDocument doc, XmlElement parent, string name, string? value)
 	{
 		if (!string.IsNullOrEmpty(value))
 		{
 			XmlElement element = doc.CreateElement(name, GlobalVars.SiPolicyNamespace);
 			element.InnerText = value;
 			_ = parent.AppendChild(element);
+
+			return true;
 		}
+		return false;
 	}
 
-	private static void AppendAttributeElement(XmlDocument doc, XmlElement parent, string name, string attribute, string? value)
+
+	/// <summary>
+	/// Helper method, its return value must be checked by the caller and handled accordingly
+	/// </summary>
+	/// <param name="doc"></param>
+	/// <param name="parent"></param>
+	/// <param name="name"></param>
+	/// <param name="attribute"></param>
+	/// <param name="value"></param>
+	/// <returns></returns>
+	private static bool AppendAttributeElement(XmlDocument doc, XmlElement parent, string name, string attribute, string? value)
 	{
 		if (!string.IsNullOrEmpty(value))
 		{
 			XmlElement element = doc.CreateElement(name, GlobalVars.SiPolicyNamespace);
 			element.SetAttribute(attribute, value);
 			_ = parent.AppendChild(element);
+
+			return true;
 		}
+		return false;
 	}
 
 

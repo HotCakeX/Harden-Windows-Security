@@ -639,7 +639,7 @@ internal static partial class BasePolicyCreator
 				Logger.Write($"{policyName} policy is already deployed, updating it using the same GUID which is {CurrentlyDeployedBlockRulesGUID}.");
 
 				// Swap the policyID in the current policy XML file with the one from the deployed policy
-				PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, tempPolicyPath);
+				XMLOps.PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, tempPolicyPath);
 			}
 			else
 			{

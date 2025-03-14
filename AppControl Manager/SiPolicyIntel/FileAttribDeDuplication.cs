@@ -35,13 +35,24 @@ internal static class FileAttribDeDuplication
 	/// So 1 file attribute is enough for a single file to refer to all of its signers that are in the same signing scenario and authorization section.
 	/// The only time when 2 file attributes for the same file (with same details) need to exist is when the same file is referenced in different signing scenarios and/or authorization sections, and for each signing scenario/authorization section there needs to be a different fileAttribute.
 	/// </summary>
-	/// <param name="siPolicy"></param>
-	/// <returns></returns>
-	internal static SiPolicy.SiPolicy EnsureUniqueFileAttributes(SiPolicy.SiPolicy siPolicy)
+	/// <param name="fileRulesNode"></param>
+	/// <param name="signers"></param>
+	/// <param name="userModeAllowedSigners"></param>
+	/// <param name="userModeDeniedSigners"></param>
+	/// <param name="kernelModeAllowedSigners"></param>
+	/// <param name="kernelModeDeniedSigners"></param>
+	internal static void EnsureUniqueFileAttributes(
+		ref IEnumerable<object> fileRulesNode,
+		List<Signer> signers,
+		IEnumerable<AllowedSigner> userModeAllowedSigners,
+		IEnumerable<DeniedSigner> userModeDeniedSigners,
+		IEnumerable<AllowedSigner> kernelModeAllowedSigners,
+		IEnumerable<DeniedSigner> kernelModeDeniedSigners
+		)
 	{
 
 		// Step 1: a list of file attributes in the <FileRules> node
-		List<FileAttrib> fileAttribs = siPolicy.FileRules?.OfType<FileAttrib>().ToList() ?? [];
+		List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
 
 
 		// Step 2: Group duplicate FileAttribs using custom equality logic.
@@ -74,7 +85,7 @@ internal static class FileAttribDeDuplication
 
 		// This dictionary indexes Signer objects by their ID for later lookup.
 		Dictionary<string, Signer> signerDictionary = [];
-		foreach (Signer signer in siPolicy.Signers)
+		foreach (Signer signer in signers)
 		{
 			if (!signerDictionary.TryAdd(signer.ID, signer))
 			{
@@ -92,49 +103,40 @@ internal static class FileAttribDeDuplication
 		Dictionary<string, Signer> deniedSignerKMCIDictionary = [];
 
 		// Process each SigningScenario from the policy.
-		foreach (SigningScenario signingScenario in siPolicy.SigningScenarios)
+
+		// For each User-Mode allowed signer, add it to the corresponding dictionary
+		foreach (AllowedSigner item in userModeAllowedSigners)
 		{
-			ProductSigners? possibleProdSigners = signingScenario.ProductSigners;
-			if (possibleProdSigners is not null)
+			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
 			{
-				AllowedSigner[]? allowedSigners = possibleProdSigners.AllowedSigners?.AllowedSigner;
-				DeniedSigner[]? deniedSigners = possibleProdSigners.DeniedSigners?.DeniedSigner;
-				if (allowedSigners is { Length: > 0 })
-				{
-					// For each allowed signer, add it to the corresponding dictionary
-					foreach (AllowedSigner item in allowedSigners)
-					{
-						if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
-						{
-							if (signingScenario.Value == 12)
-							{
-								allowedSignerUMCIDictionary.Add(item.SignerId, signer);
-							}
-							else
-							{
-								allowedSignerKMCIDictionary.Add(item.SignerId, signer);
-							}
-						}
-					}
-				}
-				if (deniedSigners is { Length: > 0 })
-				{
-					// For each denied signer, add it to the corresponding dictionary
-					foreach (DeniedSigner item in deniedSigners)
-					{
-						if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
-						{
-							if (signingScenario.Value == 12)
-							{
-								deniedSignerUMCIDictionary.Add(item.SignerId, signer);
-							}
-							else
-							{
-								deniedSignerKMCIDictionary.Add(item.SignerId, signer);
-							}
-						}
-					}
-				}
+				allowedSignerUMCIDictionary.Add(item.SignerId, signer);
+			}
+		}
+
+		// For each Kernel-Mode allowed signer, add it to the corresponding dictionary
+		foreach (AllowedSigner item in kernelModeAllowedSigners)
+		{
+			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+			{
+				allowedSignerKMCIDictionary.Add(item.SignerId, signer);
+			}
+		}
+
+		// For each User-Mode denied signer, add it to the corresponding dictionary
+		foreach (DeniedSigner item in userModeDeniedSigners)
+		{
+			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+			{
+				deniedSignerUMCIDictionary.Add(item.SignerId, signer);
+			}
+		}
+
+		// For each Kernel-Mode denied signer, add it to the corresponding dictionary
+		foreach (DeniedSigner item in kernelModeDeniedSigners)
+		{
+			if (signerDictionary.TryGetValue(item.SignerId, out Signer? signer))
+			{
+				deniedSignerKMCIDictionary.Add(item.SignerId, signer);
 			}
 		}
 
@@ -160,13 +162,9 @@ internal static class FileAttribDeDuplication
 
 
 		// Step 6: Update the FileRules collection to remove duplicate FileAttrib objects.
-
-		if (siPolicy.FileRules is not null)
-		{
-			List<object> fileRulesItems = [.. siPolicy.FileRules];
-			_ = fileRulesItems.RemoveAll(item => item is FileAttrib fa && fileAttribIdsToRemove.Contains(fa.ID));
-			siPolicy.FileRules = [.. fileRulesItems];
-		}
+		List<object> fileRulesItems = [.. fileRulesNode];
+		_ = fileRulesItems.RemoveAll(item => item is FileAttrib fa && fileAttribIdsToRemove.Contains(fa.ID));
+		fileRulesNode = [.. fileRulesItems];
 
 
 		// Step 7: Post-process each signer to deduplicate FileAttribRef arrays.
@@ -194,7 +192,7 @@ internal static class FileAttribDeDuplication
 
 		// If a signer ends up with multiple FileAttribRef objects pointing to the same FileAttrib,
 		// this ensures only one reference is retained.
-		foreach (Signer signer in siPolicy.Signers)
+		foreach (Signer signer in signers)
 		{
 			if (signer.FileAttribRef is not null && signer.FileAttribRef.Length > 1)
 			{
@@ -203,8 +201,6 @@ internal static class FileAttribDeDuplication
 					.Select(g => g.First())];
 			}
 		}
-
-		return siPolicy;
 	}
 
 	/// <summary>

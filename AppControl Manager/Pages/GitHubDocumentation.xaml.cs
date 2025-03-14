@@ -31,7 +31,7 @@ public sealed partial class GitHubDocumentation : Page
 		this.InitializeComponent();
 
 		// Background color of the WebView2 while content is loading
-		GitHubDocumentationWebView2.DefaultBackgroundColor = Colors.Black;
+		GitHubDocumentationWebView2.DefaultBackgroundColor = Colors.Transparent;
 
 		// Handle navigation events to manage button state
 		GitHubDocumentationWebView2.NavigationCompleted += WebView2_NavigationCompleted;

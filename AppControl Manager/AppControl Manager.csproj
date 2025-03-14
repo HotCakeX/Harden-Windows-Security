@@ -84,7 +84,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.9.6.0</FileVersion>
+    <FileVersion>1.9.7.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -220,9 +220,9 @@
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.2" />
-    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250228001" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.3" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
 
     <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
@@ -230,15 +230,15 @@
     <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
     <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.6.1" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="63.0.31-preview" />
     <PackageReference Include="Microsoft.Windows.WDK.Win32Metadata" Version="0.13.25-experimental" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-    <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.2" />
-    <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.2" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.2" />
+    <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
+    <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 
   </ItemGroup>
@@ -291,6 +291,7 @@
     <None Remove="Pages\MDEAHPolicyCreation.xaml" />
     <None Remove="Pages\MergePolicies.xaml" />
     <None Remove="Pages\MicrosoftDocumentation.xaml" />
+    <None Remove="Pages\PolicyEditor.xaml" />
     <None Remove="Pages\Settings.xaml" />
     <None Remove="Pages\Simulation.xaml" />
     <None Remove="Pages\StrictKernelPolicyScanResults.xaml" />
@@ -450,6 +451,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\PolicyEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\StrictKernelPolicyScanResults.xaml">

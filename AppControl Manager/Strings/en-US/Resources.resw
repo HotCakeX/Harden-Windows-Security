@@ -1459,4 +1459,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Cache the results of the security catalogs scan for 5 minutes before scanning them again. This can improve scan performance within the app.</value>
   </data>
+  <data name="PolicyEditorNavItem.Content" xml:space="preserve">
+    <value>Policy Editor</value>
+  </data>
+  <data name="PolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Edit App Control policies, view and remove individual rules and modify other details.</value>
+  </data>
 </root>

@@ -15,15 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.SiPolicy;
-
-namespace AppControlManager.SiPolicyIntel;
+namespace AppControlManager.PolicyEditor;
 
 /// <summary>
-/// Represents a rule for updating a policy signer with a required signer element and an update policy signer. 
+/// Levels used by the Policy Editor
 /// </summary>
-internal sealed class UpdatePolicySignerRule
+internal enum FileBasedRuleType
 {
-	internal required Signer SignerElement { get; set; }
-	internal required UpdatePolicySigner UpdatePolicySigner { get; set; }
+	Allow,
+	Deny,
+	FileRule,
+	CompoundPublisher // For FilePublisher and WHQLFilePublisher levels
 }

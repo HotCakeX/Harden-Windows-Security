@@ -30,7 +30,7 @@ public sealed partial class MicrosoftDocumentation : Page
 	{
 		this.InitializeComponent();
 		// Set background color of WebView2 while content is loading
-		MicrosoftDocumentationWebView2.DefaultBackgroundColor = Colors.Black;
+		MicrosoftDocumentationWebView2.DefaultBackgroundColor = Colors.Transparent;
 
 		// Handle navigation events to manage button state
 		MicrosoftDocumentationWebView2.NavigationCompleted += WebView2_NavigationCompleted;

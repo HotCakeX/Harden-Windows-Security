@@ -27,7 +27,13 @@ namespace AppControlManager.SiPolicy;
 
 internal static class CustomDeserialization
 {
-
+	/// <summary>
+	/// Deserializes a security policy from either a file path or an XML document into a SiPolicy object.
+	/// </summary>
+	/// <param name="filePath">Specifies the location of the XML file to load the policy from.</param>
+	/// <param name="Xml">Provides an XML document to deserialize the policy if the file path is not used.</param>
+	/// <returns>Returns a SiPolicy object populated with data from the provided XML.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when neither a valid file path nor an XML document is provided for deserialization.</exception>
 	internal static SiPolicy DeserializeSiPolicy(string? filePath, XmlDocument? Xml)
 	{
 

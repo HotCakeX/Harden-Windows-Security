@@ -1045,7 +1045,7 @@ NistP384
 
     - Windows Media Player (legacy): isn't needed anymore, [Windows 11 has a modern media player app](https://blogs.windows.com/windows-insider/2021/11/16/new-media-player-for-windows-11-begins-rolling-out-to-windows-insiders/).
 
-    - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview), it's [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features#deprecated-features). Learn more about [Microsoft Edge Security Features here](https://edgestatic.azureedge.net/shared/cms/pdfs/Microsoft_Edge_Security_Whitepaper_v2.pdf).
+    - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview), it's [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features#deprecated-features). Learn more about [Microsoft Edge Security Features here](https://learn.microsoft.com/en-us/deployedge/ms-edge-security-for-business).
 
 <br>
 

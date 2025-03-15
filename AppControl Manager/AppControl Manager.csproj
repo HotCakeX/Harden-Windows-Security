@@ -49,7 +49,9 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <!-- Publish Properties -->
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">true</PublishReadyToRun>
+    <!-- Can't use and don't need Ready2Run when using Native AOT -->
+    <!-- <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">true</PublishReadyToRun> -->
+    <PublishReadyToRun>false</PublishReadyToRun>
 
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>

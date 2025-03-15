@@ -115,6 +115,21 @@
                 <ToggleSwitch HorizontalAlignment="Center" VerticalAlignment="Center" Toggled="{x:Bind ViewModel.ChangeTextSelectionsState}" OnContent="Text Selection is Enabled" OffContent="Text Selection is Disabled"
                               ToolTipService.ToolTip="Enable or Disable the ability to be able to select texts in the List View rows" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"/>
 
+
+                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                       ToolTipService.ToolTip="Clears all of the data loaded on the UI from the selected policy" Click="{x:Bind ViewModel.ClearData}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:TrashCan/>
+                                </AnimatedIcon.Source>
+                            </AnimatedIcon>
+                            <TextBlock Text="Clear the Data" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                
             </controls:WrapPanel>
         </Border>
 

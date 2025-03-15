@@ -729,7 +729,7 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
 		// Get the search term from the search box
-		string query = SearchBox.Text.Trim().ToLowerInvariant();
+		string query = SearchBox.Text.Trim();
 
 		if (string.IsNullOrWhiteSpace(query))
 		{

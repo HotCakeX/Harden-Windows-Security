@@ -215,27 +215,24 @@ public sealed partial class PolicyEditor : Page
 	{
 
 		string searchTerm = SearchBoxTextBox.Text;
-
-		searchTerm = searchTerm.Trim().ToLowerInvariant();
+		searchTerm = searchTerm.Trim();
 
 		List<AppControlManager.PolicyEditor.FileBasedRulesForListView> filteredResults = [];
 
 		await Task.Run(() =>
 		{
-
 			// Perform a case-insensitive search in all relevant fields
 			filteredResults = [.. PolicyEditorVM.Instance.FileRulesCollectionList.Where(p =>
-			(p.Id?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FriendlyName?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FileDescription?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FileName?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FilePath?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.InternalName?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.PackageFamilyName?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.ProductName?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.Hash?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FileName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FilePath?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.InternalName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 			)];
-
 		});
 
 		PolicyEditorVM.Instance.FileRulesCollection.Clear();
@@ -245,20 +242,24 @@ public sealed partial class PolicyEditor : Page
 			PolicyEditorVM.Instance.FileRulesCollection.Add(item);
 		}
 
-
 		PolicyEditorVM.Instance.UpdateFileBasedCollectionsCount();
 
 
-		// Perform a case-insensitive search in all relevant fields
-		List<AppControlManager.PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [.. PolicyEditorVM.Instance.SignatureRulesCollectionList.Where(p =>
-			(p.Id?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertIssuer?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertificateEKU?.ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertOemID?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertPublisher?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertRoot?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.Name?.ToString().ToLowerInvariant().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-		)];
+		List<AppControlManager.PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [];
+
+		await Task.Run(() =>
+		{
+			// Perform a case-insensitive search in all relevant fields
+			filteredResults2 = [.. PolicyEditorVM.Instance.SignatureRulesCollectionList.Where(p =>
+			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertOemID?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertPublisher?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+			)];
+		});
 
 		PolicyEditorVM.Instance.SignatureRulesCollection.Clear();
 
@@ -266,7 +267,6 @@ public sealed partial class PolicyEditor : Page
 		{
 			PolicyEditorVM.Instance.SignatureRulesCollection.Add(item);
 		}
-
 
 		PolicyEditorVM.Instance.UpdateSignatureBasedCollectionsCount();
 

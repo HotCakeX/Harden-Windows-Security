@@ -255,7 +255,7 @@ internal static class ListViewHelper
 		)
 	{
 		// Get the search term from the SearchBox, converting it to lowercase for case-insensitive searching
-		string searchTerm = searchTextBox.Text.Trim().ToLowerInvariant();
+		string searchTerm = searchTextBox.Text.Trim();
 
 		// Start with the full list.
 		// This list is used as the base set for filtering to preserve original data

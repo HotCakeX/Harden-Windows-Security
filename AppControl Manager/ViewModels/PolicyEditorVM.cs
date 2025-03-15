@@ -615,21 +615,21 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	internal async void ProcessData()
 	{
 
-		MainTeachingTipIsOpen = false;
-
-		UIElementsEnabledState = false;
-
-		if (SelectedPolicyFile is null)
-		{
-			MainTeachingTitle = "No policy file selected";
-			MainTeachingSubTitle = "Please select a policy file to view its contents.";
-			MainTeachingTipIsOpen = true;
-
-			return;
-		}
-
 		try
 		{
+
+			MainTeachingTipIsOpen = false;
+
+			UIElementsEnabledState = false;
+
+			if (SelectedPolicyFile is null)
+			{
+				MainTeachingTitle = "No policy file selected";
+				MainTeachingSubTitle = "Please select a policy file to view its contents.";
+				MainTeachingTipIsOpen = true;
+
+				return;
+			}
 
 			// Clear the class variables
 			PolicyObj = null;
@@ -1660,6 +1660,45 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 		}
 	}
 
+
+	/// <summary>
+	/// Event handler for the button that clears the data
+	/// </summary>
+	internal void ClearData()
+	{
+		FileRulesCollection.Clear();
+		FileRulesCollectionList.Clear();
+		SignatureRulesCollection.Clear();
+		SignatureRulesCollectionList.Clear();
+
+		ekusToUse = [];
+		PolicyObj = null;
+		SignerCollectionCol = null;
+
+		SelectedPolicyFile = null;
+
+		FileBasedCollectionTabItemHeader = "File-based Rules - count: 0";
+		SignatureBasedCollectionTabItemHeader = "Signature-based Rules - count: 0";
+
+		PolicyNameTextBox = string.Empty;
+		PolicyIDTextBox = null;
+		PolicyBaseIDTextBox = null;
+		PolicyVersionTextBox = null;
+		PolicyInfoIDTextBox = null;
+		PolicyTypeComboBox = null;
+		HVCIOptionComboBox = null;
+
+		AllowRulesCount = "• Allow Rules count: 0";
+		DenyRulesCount = "• Deny Rules count: 0";
+		FileRulesCount = "• File Rules count: 0";
+		FilePublishersCount = "  ⚬ File Publisher Rules count: 0";
+		WHQLFilePublishersCount = "  ⚬ WHQL File Publisher Rules count: 0";
+		FileAttributesCount = "• File Attributes count: 0";
+		WHQLPublishersCount = "• WHQL Publisher Rules count: 0";
+		GenericSignersCount = "• Generic Signer Rules count: 0";
+		UpdatePolicySignersCount = "• Update Policy Signer Rules count: 0";
+		SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
+	}
 
 
 	/// <summary>

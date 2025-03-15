@@ -602,7 +602,7 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 	// Event handler for the SearchBox text change
 	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
-		string searchTerm = SearchBox.Text.Trim().ToLowerInvariant();
+		string searchTerm = SearchBox.Text.Trim();
 
 		// Perform a case-insensitive search in all relevant fields
 		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>

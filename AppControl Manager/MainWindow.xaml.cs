@@ -297,6 +297,9 @@ public sealed partial class MainWindow : Window
 		// Subscribe to the global BackDrop change event
 		ThemeManager.BackDropChanged += OnBackgroundChanged;
 
+		// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.settitlebar
+		// This is required. Without it, the page that has the TabView would make the App Window's TitleBar non-draggable.
+		this.SetTitleBar(AppTitleBar);
 
 		// Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems
 		allNavigationItems =

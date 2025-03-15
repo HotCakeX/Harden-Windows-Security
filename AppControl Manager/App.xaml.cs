@@ -17,12 +17,15 @@
 
 using System;
 using System.IO;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.AppSettings;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -55,9 +58,27 @@ public partial class App : Application
 	private static Mutex? _mutex;
 	private const string MutexName = "AppControlManagerRunning";
 
+	// To determine whether the app has Administrator privileges
+	internal static readonly bool IsElevated = IsRunningAsAdministrator();
+
+	// The directory where the logs will be stored
+	internal static readonly string LogsDirectory = IsElevated ?
+		Path.Combine(GlobalVars.UserConfigDir, "Logs") :
+		Path.Combine(Path.GetTempPath(), "AppControlManagerLogs");
+
 	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
 	// to this variable before using ShowAsync() method to display it.
 	internal static ContentDialog? CurrentlyOpenContentDialog;
+
+	// Host for dependency injection container to be used across the app
+	internal static IHost AppHost { get; } = Host.CreateDefaultBuilder()
+		.ConfigureServices((context, services) =>
+		{
+			_ = services.AddSingleton<ViewModels.ViewCurrentPoliciesVM>();
+			_ = services.AddSingleton<ViewModels.PolicyEditorVM>();
+			_ = services.AddSingleton<ViewModels.SettingsVM>();
+		})
+		.Build();
 
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
@@ -68,7 +89,7 @@ public partial class App : Application
 		this.InitializeComponent();
 
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(GlobalVars.LogsDirectory);
+		_ = Directory.CreateDirectory(LogsDirectory);
 
 		// to handle unhandled exceptions
 		this.UnhandledException += App_UnhandledException;
@@ -85,7 +106,8 @@ public partial class App : Application
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
 		this.FocusVisualKind = FocusVisualKind.Reveal;
 
-		MoveUserConfigDirectory();
+		if (IsElevated)
+			MoveUserConfigDirectory();
 
 		#region
 
@@ -218,11 +240,14 @@ public partial class App : Application
 	/// </summary>
 	private void Window_Closed(object sender, WindowEventArgs e)
 	{
-		// Clean up the staging area only if there are no other instance of the AppControl Manager running
-		// Don't want to disrupt their workflow
-		if (Directory.Exists(GlobalVars.StagingArea) && IsUniqueAppInstance)
+		if (IsElevated)
 		{
-			Directory.Delete(GlobalVars.StagingArea, true);
+			// Clean up the staging area only if there are no other instance of the AppControl Manager running
+			// Don't want to disrupt their workflow
+			if (Directory.Exists(GlobalVars.StagingArea) && IsUniqueAppInstance)
+			{
+				Directory.Delete(GlobalVars.StagingArea, true);
+			}
 		}
 
 		// Release the Mutex
@@ -277,9 +302,6 @@ public partial class App : Application
 		}
 	}
 
-	// Path to the old user config directory
-	private static readonly string OldUserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
-
 	/// <summary>
 	/// This method will move everything from the old user config dir to the new one and deletes the old one at the end
 	/// This will be removed in few months once all users have installed the new app version and use the new location.
@@ -289,6 +311,10 @@ public partial class App : Application
 	/// </summary>
 	private static void MoveUserConfigDirectory()
 	{
+
+		// Path to the old user config directory
+		string OldUserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
+
 		// Ensure the new user config directory exists
 		if (!Directory.Exists(GlobalVars.UserConfigDir))
 		{
@@ -416,5 +442,18 @@ public partial class App : Application
 				Logger.Write(ErrorWriter.FormatException(ex));
 			}
 		}
+	}
+
+
+	/// <summary>
+	/// Checks if the current process is running with administrator privileges.
+	/// </summary>
+	/// <returns>True if running as admin; otherwise, false.</returns>
+	private static bool IsRunningAsAdministrator()
+	{
+		using WindowsIdentity identity = WindowsIdentity.GetCurrent();
+
+		WindowsPrincipal principal = new(identity);
+		return principal.IsInRole(WindowsBuiltInRole.Administrator);
 	}
 }

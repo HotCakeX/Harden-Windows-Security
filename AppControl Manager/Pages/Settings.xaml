@@ -41,6 +41,7 @@
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="UserConfigurations" />
 
                 <controls:SettingsExpander x:Uid="UserConfigsSettingsExpander"
+                                           IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}"
                                            x:Name="MainUserConfigurationsSettingsExpander"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
                     <Button Content="Get Configuration" Click="GetConfigurationButton_Click"

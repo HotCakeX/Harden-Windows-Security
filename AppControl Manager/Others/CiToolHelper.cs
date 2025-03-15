@@ -22,6 +22,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using AppControlManager.ViewModels;
 
 namespace AppControlManager.Others;
 
@@ -43,6 +44,12 @@ internal sealed class CiPolicyInfo
 
 	// A property to format PolicyOptions as a comma-separated string
 	internal string PolicyOptionsDisplay => PolicyOptions is not null ? string.Join(", ", PolicyOptions) : string.Empty;
+
+
+
+	// A property for the parent view model of the ViewCurrentPolicies page to store a reference to it
+	// so we can access the variables in the View Model class via compiled binding in XAML.
+	internal ViewCurrentPoliciesVM? ParentViewModel { get; set; }
 }
 
 

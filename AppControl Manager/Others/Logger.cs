@@ -25,7 +25,7 @@ namespace AppControlManager.Others;
 internal static class Logger
 {
 	// The Logs file path
-	private static readonly string LogFileName = Path.Combine(GlobalVars.LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+	private static readonly string LogFileName = Path.Combine(App.LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
 	// The log channel for high-performance asynchronous logging
 	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
@@ -52,10 +52,10 @@ internal static class Logger
 	{
 		// Check the size of the directory and clear it if it exceeds 1000 MB
 		// To ensure the logs directory doesn't get too big
-		if (GetDirectorySize(GlobalVars.LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
+		if (GetDirectorySize(App.LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
 		{
 			// Empty the directory while retaining the most recent file
-			EmptyDirectory(GlobalVars.LogsDirectory);
+			EmptyDirectory(App.LogsDirectory);
 		}
 
 		// Start the background log processing task

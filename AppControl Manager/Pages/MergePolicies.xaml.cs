@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -36,12 +38,19 @@ public sealed partial class MergePolicies : Page
 	private static readonly HashSet<string> otherPolicies = [];
 	private static bool shouldDeploy;
 
+
+#pragma warning disable CA1822
+	internal MergePoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MergePoliciesVM>();
+#pragma warning restore CA1822
+
 	public MergePolicies()
 	{
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
+
+		this.DataContext = ViewModel;
 	}
 
 

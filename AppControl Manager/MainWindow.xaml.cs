@@ -84,7 +84,8 @@ public sealed partial class MainWindow : Window
 		typeof(Pages.GetCIHashes),
 		typeof(Pages.PolicyEditor),
 		typeof(Pages.MergePolicies),
-		typeof(Pages.Settings)
+		typeof(Pages.Settings),
+		typeof(Pages.ConfigurePolicyRuleOptions)
 		];
 
 

@@ -77,6 +77,8 @@ public partial class App : Application
 			_ = services.AddSingleton<ViewModels.ViewCurrentPoliciesVM>();
 			_ = services.AddSingleton<ViewModels.PolicyEditorVM>();
 			_ = services.AddSingleton<ViewModels.SettingsVM>();
+			_ = services.AddSingleton<ViewModels.MergePoliciesVM>();
+			_ = services.AddSingleton<ViewModels.ConfigurePolicyRuleOptionsVM>();
 		})
 		.Build();
 

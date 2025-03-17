@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -55,7 +54,7 @@ public sealed partial class Logs : Page
 	private void LoadLogFiles()
 	{
 		// Get files matching the pattern;
-		List<FileInfo> logFiles = [.. Directory.GetFiles(GlobalVars.LogsDirectory, "AppControlManager_Logs_*.txt")
+		List<FileInfo> logFiles = [.. Directory.GetFiles(App.LogsDirectory, "AppControlManager_Logs_*.txt")
 			.Select(f => new FileInfo(f))
 			.OrderByDescending(f => f.CreationTime)];
 

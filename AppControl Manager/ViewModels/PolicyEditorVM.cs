@@ -31,11 +31,11 @@ using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
-public partial class PolicyEditorVM : INotifyPropertyChanged
+#pragma warning disable CA1812 // an internal class that is apparently never instantiated
+// It's handled by Dependency Injection so this warning is a false-positive.
+internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 {
 	public event PropertyChangedEventHandler? PropertyChanged;
-
-	private static PolicyEditorVM? _instance;
 
 	private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
@@ -46,98 +46,98 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	// ------------ File Based ------------
 
 	private GridLength _FileBasedColumnWidth1;
-	public GridLength FileBasedColumnWidth1
+	internal GridLength FileBasedColumnWidth1
 	{
 		get => _FileBasedColumnWidth1;
 		set { _FileBasedColumnWidth1 = value; OnPropertyChanged(nameof(FileBasedColumnWidth1)); }
 	}
 
 	private GridLength _FileBasedColumnWidth2;
-	public GridLength FileBasedColumnWidth2
+	internal GridLength FileBasedColumnWidth2
 	{
 		get => _FileBasedColumnWidth2;
 		set { _FileBasedColumnWidth2 = value; OnPropertyChanged(nameof(FileBasedColumnWidth2)); }
 	}
 
 	private GridLength _FileBasedColumnWidth3;
-	public GridLength FileBasedColumnWidth3
+	internal GridLength FileBasedColumnWidth3
 	{
 		get => _FileBasedColumnWidth3;
 		set { _FileBasedColumnWidth3 = value; OnPropertyChanged(nameof(FileBasedColumnWidth3)); }
 	}
 
 	private GridLength _FileBasedColumnWidth4;
-	public GridLength FileBasedColumnWidth4
+	internal GridLength FileBasedColumnWidth4
 	{
 		get => _FileBasedColumnWidth4;
 		set { _FileBasedColumnWidth4 = value; OnPropertyChanged(nameof(FileBasedColumnWidth4)); }
 	}
 
 	private GridLength _FileBasedColumnWidth5;
-	public GridLength FileBasedColumnWidth5
+	internal GridLength FileBasedColumnWidth5
 	{
 		get => _FileBasedColumnWidth5;
 		set { _FileBasedColumnWidth5 = value; OnPropertyChanged(nameof(FileBasedColumnWidth5)); }
 	}
 
 	private GridLength _FileBasedColumnWidth6;
-	public GridLength FileBasedColumnWidth6
+	internal GridLength FileBasedColumnWidth6
 	{
 		get => _FileBasedColumnWidth6;
 		set { _FileBasedColumnWidth6 = value; OnPropertyChanged(nameof(FileBasedColumnWidth6)); }
 	}
 
 	private GridLength _FileBasedColumnWidth7;
-	public GridLength FileBasedColumnWidth7
+	internal GridLength FileBasedColumnWidth7
 	{
 		get => _FileBasedColumnWidth7;
 		set { _FileBasedColumnWidth7 = value; OnPropertyChanged(nameof(FileBasedColumnWidth7)); }
 	}
 
 	private GridLength _FileBasedColumnWidth8;
-	public GridLength FileBasedColumnWidth8
+	internal GridLength FileBasedColumnWidth8
 	{
 		get => _FileBasedColumnWidth8;
 		set { _FileBasedColumnWidth8 = value; OnPropertyChanged(nameof(FileBasedColumnWidth8)); }
 	}
 
 	private GridLength _FileBasedColumnWidth9;
-	public GridLength FileBasedColumnWidth9
+	internal GridLength FileBasedColumnWidth9
 	{
 		get => _FileBasedColumnWidth9;
 		set { _FileBasedColumnWidth9 = value; OnPropertyChanged(nameof(FileBasedColumnWidth9)); }
 	}
 
 	private GridLength _FileBasedColumnWidth10;
-	public GridLength FileBasedColumnWidth10
+	internal GridLength FileBasedColumnWidth10
 	{
 		get => _FileBasedColumnWidth10;
 		set { _FileBasedColumnWidth10 = value; OnPropertyChanged(nameof(FileBasedColumnWidth10)); }
 	}
 
 	private GridLength _FileBasedColumnWidth11;
-	public GridLength FileBasedColumnWidth11
+	internal GridLength FileBasedColumnWidth11
 	{
 		get => _FileBasedColumnWidth11;
 		set { _FileBasedColumnWidth11 = value; OnPropertyChanged(nameof(FileBasedColumnWidth11)); }
 	}
 
 	private GridLength _FileBasedColumnWidth12;
-	public GridLength FileBasedColumnWidth12
+	internal GridLength FileBasedColumnWidth12
 	{
 		get => _FileBasedColumnWidth12;
 		set { _FileBasedColumnWidth12 = value; OnPropertyChanged(nameof(FileBasedColumnWidth12)); }
 	}
 
 	private GridLength _FileBasedColumnWidth13;
-	public GridLength FileBasedColumnWidth13
+	internal GridLength FileBasedColumnWidth13
 	{
 		get => _FileBasedColumnWidth13;
 		set { _FileBasedColumnWidth13 = value; OnPropertyChanged(nameof(FileBasedColumnWidth13)); }
 	}
 
 	private GridLength _FileBasedColumnWidth14;
-	public GridLength FileBasedColumnWidth14
+	internal GridLength FileBasedColumnWidth14
 	{
 		get => _FileBasedColumnWidth14;
 		set { _FileBasedColumnWidth14 = value; OnPropertyChanged(nameof(FileBasedColumnWidth14)); }
@@ -148,49 +148,49 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	// ------------ Signature Based ------------
 
 	private GridLength _SignatureBasedColumnWidth1;
-	public GridLength SignatureBasedColumnWidth1
+	internal GridLength SignatureBasedColumnWidth1
 	{
 		get => _SignatureBasedColumnWidth1;
 		set { _SignatureBasedColumnWidth1 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth1)); }
 	}
 
 	private GridLength _SignatureBasedColumnWidth2;
-	public GridLength SignatureBasedColumnWidth2
+	internal GridLength SignatureBasedColumnWidth2
 	{
 		get => _SignatureBasedColumnWidth2;
 		set { _SignatureBasedColumnWidth2 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth2)); }
 	}
 
 	private GridLength _SignatureBasedColumnWidth3;
-	public GridLength SignatureBasedColumnWidth3
+	internal GridLength SignatureBasedColumnWidth3
 	{
 		get => _SignatureBasedColumnWidth3;
 		set { _SignatureBasedColumnWidth3 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth3)); }
 	}
 
 	private GridLength _SignatureBasedColumnWidth4;
-	public GridLength SignatureBasedColumnWidth4
+	internal GridLength SignatureBasedColumnWidth4
 	{
 		get => _SignatureBasedColumnWidth4;
 		set { _SignatureBasedColumnWidth4 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth4)); }
 	}
 
 	private GridLength _SignatureBasedColumnWidth5;
-	public GridLength SignatureBasedColumnWidth5
+	internal GridLength SignatureBasedColumnWidth5
 	{
 		get => _SignatureBasedColumnWidth5;
 		set { _SignatureBasedColumnWidth5 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth5)); }
 	}
 
 	private GridLength _SignatureBasedColumnWidth6;
-	public GridLength SignatureBasedColumnWidth6
+	internal GridLength SignatureBasedColumnWidth6
 	{
 		get => _SignatureBasedColumnWidth6;
 		set { _SignatureBasedColumnWidth6 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth6)); }
 	}
 
 	private GridLength _SignatureBasedColumnWidth7;
-	public GridLength SignatureBasedColumnWidth7
+	internal GridLength SignatureBasedColumnWidth7
 	{
 		get => _SignatureBasedColumnWidth7;
 		set { _SignatureBasedColumnWidth7 = value; OnPropertyChanged(nameof(SignatureBasedColumnWidth7)); }
@@ -243,180 +243,201 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	#region UI-Bound Properties
 
 	private bool _UIElementsEnabledState = true;
-	public bool UIElementsEnabledState
+	internal bool UIElementsEnabledState
 	{
 		get => _UIElementsEnabledState;
 		set => SetProperty(_UIElementsEnabledState, value, newValue => _UIElementsEnabledState = newValue);
 	}
 
 	private string? _selectedPolicyFile;
-	public string? SelectedPolicyFile
+	internal string? SelectedPolicyFile
 	{
 		get => _selectedPolicyFile;
 		set => SetProperty(_selectedPolicyFile, value, newValue => _selectedPolicyFile = newValue);
 	}
 
 	private bool _TextsAreSelectableToggleState;
-	public bool TextsAreSelectableToggleState
+	internal bool TextsAreSelectableToggleState
 	{
 		get => _TextsAreSelectableToggleState;
 		set => SetProperty(_TextsAreSelectableToggleState, value, newValue => _TextsAreSelectableToggleState = newValue);
 	}
 
 	private string _FileBasedCollectionTabItemHeader = "File-based Rules - count: 0";
-	public string FileBasedCollectionTabItemHeader
+	internal string FileBasedCollectionTabItemHeader
 	{
 		get => _FileBasedCollectionTabItemHeader;
 		set => SetProperty(_FileBasedCollectionTabItemHeader, value, newValue => _FileBasedCollectionTabItemHeader = newValue);
 	}
 
 	private string _SignatureBasedCollectionTabItemHeader = "Signature-based Rules - count: 0";
-	public string SignatureBasedCollectionTabItemHeader
+	internal string SignatureBasedCollectionTabItemHeader
 	{
 		get => _SignatureBasedCollectionTabItemHeader;
 		set => SetProperty(_SignatureBasedCollectionTabItemHeader, value, newValue => _SignatureBasedCollectionTabItemHeader = newValue);
 	}
 
 	private string _PolicyNameTextBox = string.Empty;
-	public string PolicyNameTextBox
+	internal string PolicyNameTextBox
 	{
 		get => _PolicyNameTextBox;
 		set => SetProperty(_PolicyNameTextBox, value, newValue => _PolicyNameTextBox = newValue);
 	}
 
 	private string? _MainTeachingSubTitle;
-	public string? MainTeachingSubTitle
+	internal string? MainTeachingSubTitle
 	{
 		get => _MainTeachingSubTitle;
 		set => SetProperty(_MainTeachingSubTitle, value, newValue => _MainTeachingSubTitle = newValue);
 	}
 
 	private string? _MainTeachingTitle;
-	public string? MainTeachingTitle
+	internal string? MainTeachingTitle
 	{
 		get => _MainTeachingTitle;
 		set => SetProperty(_MainTeachingTitle, value, newValue => _MainTeachingTitle = newValue);
 	}
 
 	private bool _MainTeachingTipIsOpen;
-	public bool MainTeachingTipIsOpen
+	internal bool MainTeachingTipIsOpen
 	{
 		get => _MainTeachingTipIsOpen;
 		set => SetProperty(_MainTeachingTipIsOpen, value, newValue => _MainTeachingTipIsOpen = newValue);
 	}
 
 	private string? _PolicyIDTextBox;
-	public string? PolicyIDTextBox
+	internal string? PolicyIDTextBox
 	{
 		get => _PolicyIDTextBox;
 		set => SetProperty(_PolicyIDTextBox, value, newValue => _PolicyIDTextBox = newValue);
 	}
 
 	private string? _PolicyBaseIDTextBox;
-	public string? PolicyBaseIDTextBox
+	internal string? PolicyBaseIDTextBox
 	{
 		get => _PolicyBaseIDTextBox;
 		set => SetProperty(_PolicyBaseIDTextBox, value, newValue => _PolicyBaseIDTextBox = newValue);
 	}
 
 	private string? _PolicyVersionTextBox;
-	public string? PolicyVersionTextBox
+	internal string? PolicyVersionTextBox
 	{
 		get => _PolicyVersionTextBox;
 		set => SetProperty(_PolicyVersionTextBox, value, newValue => _PolicyVersionTextBox = newValue);
 	}
 
 	private string? _PolicyInfoIDTextBox;
-	public string? PolicyInfoIDTextBox
+	internal string? PolicyInfoIDTextBox
 	{
 		get => _PolicyInfoIDTextBox;
 		set => SetProperty(_PolicyInfoIDTextBox, value, newValue => _PolicyInfoIDTextBox = newValue);
 	}
 
 	private PolicyType? _PolicyTypeComboBox;
-	public PolicyType? PolicyTypeComboBox
+	internal PolicyType? PolicyTypeComboBox
 	{
 		get => _PolicyTypeComboBox;
 		set => SetProperty(_PolicyTypeComboBox, value, newValue => _PolicyTypeComboBox = newValue);
 	}
 
 	// The valid values for the ItemsSource of the Policy Type ComboBox
-	public readonly Array ComboBoxSource = Enum.GetValues<PolicyType>();
+	internal readonly Array ComboBoxSource = Enum.GetValues<PolicyType>();
 
 	private string? _HVCIOptionComboBox;
-	public string? HVCIOptionComboBox
+	internal string? HVCIOptionComboBox
 	{
 		get => _HVCIOptionComboBox;
 		set => SetProperty(_HVCIOptionComboBox, value, newValue => _HVCIOptionComboBox = newValue);
 	}
 
+	private string? _SearchTextBox;
+	internal string? SearchTextBox
+	{
+		get => _SearchTextBox;
+		set => SetProperty(_SearchTextBox, value, newValue => _SearchTextBox = newValue);
+	}
+
+	private bool _PolicyTypeComboBoxOpenState;
+	internal bool PolicyTypeComboBoxOpenState
+	{
+		get => _PolicyTypeComboBoxOpenState;
+		set => SetProperty(_PolicyTypeComboBoxOpenState, value, newValue => _PolicyTypeComboBoxOpenState = newValue);
+	}
+
+	private bool _PolicyHVCIOptionsComboBoxOpenState;
+	internal bool PolicyHVCIOptionsComboBoxOpenState
+	{
+		get => _PolicyHVCIOptionsComboBoxOpenState;
+		set => SetProperty(_PolicyHVCIOptionsComboBoxOpenState, value, newValue => _PolicyHVCIOptionsComboBoxOpenState = newValue);
+	}
+
 	#region Counting properties
 
 	private string? _AllowRulesCount = "• Allow Rules count: 0";
-	public string? AllowRulesCount
+	internal string? AllowRulesCount
 	{
 		get => _AllowRulesCount;
 		set => SetProperty(_AllowRulesCount, value, newValue => _AllowRulesCount = newValue);
 	}
 
 	private string? _DenyRulesCount = "• Deny Rules count: 0";
-	public string? DenyRulesCount
+	internal string? DenyRulesCount
 	{
 		get => _DenyRulesCount;
 		set => SetProperty(_DenyRulesCount, value, newValue => _DenyRulesCount = newValue);
 	}
 
 	private string? _FileRulesCount = "• File Rules count: 0";
-	public string? FileRulesCount
+	internal string? FileRulesCount
 	{
 		get => _FileRulesCount;
 		set => SetProperty(_FileRulesCount, value, newValue => _FileRulesCount = newValue);
 	}
 
 	private string? _FilePublishersCount = "  ⚬ File Publisher Rules count: 0";
-	public string? FilePublishersCount
+	internal string? FilePublishersCount
 	{
 		get => _FilePublishersCount;
 		set => SetProperty(_FilePublishersCount, value, newValue => _FilePublishersCount = newValue);
 	}
 
 	private string? _WHQLFilePublishersCount = "  ⚬ WHQL File Publisher Rules count: 0";
-	public string? WHQLFilePublishersCount
+	internal string? WHQLFilePublishersCount
 	{
 		get => _WHQLFilePublishersCount;
 		set => SetProperty(_WHQLFilePublishersCount, value, newValue => _WHQLFilePublishersCount = newValue);
 	}
 
 	private string? _FileAttributesCount = "• File Attributes count: 0";
-	public string? FileAttributesCount
+	internal string? FileAttributesCount
 	{
 		get => _FileAttributesCount;
 		set => SetProperty(_FileAttributesCount, value, newValue => _FileAttributesCount = newValue);
 	}
 
 	private string? _WHQLPublishersCount = "• WHQL Publisher Rules count: 0";
-	public string? WHQLPublishersCount
+	internal string? WHQLPublishersCount
 	{
 		get => _WHQLPublishersCount;
 		set => SetProperty(_WHQLPublishersCount, value, newValue => _WHQLPublishersCount = newValue);
 	}
 
 	private string? _GenericSignersCount = "• Generic Signer Rules count: 0";
-	public string? GenericSignersCount
+	internal string? GenericSignersCount
 	{
 		get => _GenericSignersCount;
 		set => SetProperty(_GenericSignersCount, value, newValue => _GenericSignersCount = newValue);
 	}
 
 	private string? _UpdatePolicySignersCount = "• Update Policy Signer Rules count: 0";
-	public string? UpdatePolicySignersCount
+	internal string? UpdatePolicySignersCount
 	{
 		get => _UpdatePolicySignersCount;
 		set => SetProperty(_UpdatePolicySignersCount, value, newValue => _UpdatePolicySignersCount = newValue);
 	}
 
 	private string? _SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
-	public string? SupplementalPolicySignersCount
+	internal string? SupplementalPolicySignersCount
 	{
 		get => _SupplementalPolicySignersCount;
 		set => SetProperty(_SupplementalPolicySignersCount, value, newValue => _SupplementalPolicySignersCount = newValue);
@@ -1097,7 +1118,7 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	/// <summary>
 	/// Event handler for browse for policy button
 	/// </summary>
-	public void BrowseForPolicyButton_Click()
+	internal void BrowseForPolicyButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -1112,7 +1133,7 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	/// <summary>
 	/// Event handler for the Clear selected policy button
 	/// </summary>
-	public void ClearButton_Click()
+	internal void ClearButton_Click()
 	{
 		SelectedPolicyFile = null;
 	}
@@ -1142,13 +1163,6 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	{
 		TextsAreSelectableToggleState = !TextsAreSelectableToggleState;
 	}
-
-	public PolicyEditorVM()
-	{
-		_instance = this;
-	}
-
-	public static PolicyEditorVM Instance => _instance ?? throw new InvalidOperationException("PolicyEditorVM is not initialized.");
 
 
 	#region Custom HashSet comparers so that when processing FilePublisher and WHQLFilePublisher rules, we don't add duplicate signers to the policy.
@@ -1702,6 +1716,94 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 
 
 	/// <summary>
+	/// Performs search in both collections of the ListView.
+	/// Implementing it in the ViewModel via x:Bind would not work properly.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void SearchBox_TextChanged()
+	{
+
+		if (SearchTextBox is null)
+			return;
+
+		string searchTerm = SearchTextBox.Trim();
+
+		List<PolicyEditor.FileBasedRulesForListView> filteredResults = [];
+
+		await Task.Run(() =>
+		{
+			// Perform a case-insensitive search in all relevant fields
+			filteredResults = [.. FileRulesCollectionList.Where(p =>
+			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FileName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.FilePath?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.InternalName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+			)];
+		});
+
+		FileRulesCollection.Clear();
+
+		foreach (PolicyEditor.FileBasedRulesForListView item in filteredResults)
+		{
+			FileRulesCollection.Add(item);
+		}
+
+		UpdateFileBasedCollectionsCount();
+
+
+		List<PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [];
+
+		await Task.Run(() =>
+		{
+			// Perform a case-insensitive search in all relevant fields
+			filteredResults2 = [.. SignatureRulesCollectionList.Where(p =>
+			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertOemID?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertPublisher?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+			(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+			)];
+		});
+
+		SignatureRulesCollection.Clear();
+
+		foreach (PolicyEditor.SignatureBasedRulesForListView item in filteredResults2)
+		{
+			SignatureRulesCollection.Add(item);
+		}
+
+		UpdateSignatureBasedCollectionsCount();
+
+	}
+
+
+	/// <summary>
+	/// Event handler to open the Policy type ComboBox's dropdown menu when its parent settings card is clicked on
+	/// </summary>
+	internal void PolicyTypeSettingsCard_Click()
+	{
+		PolicyTypeComboBoxOpenState = true;
+	}
+
+
+	/// <summary>
+	/// Event handler to open the Policy HVCI Option/Level ComboBox's dropdown menu when its parent settings card is clicked on
+	/// </summary>
+	internal void PolicyHVCIOptionsComboBox_Click()
+	{
+		PolicyHVCIOptionsComboBoxOpenState = true;
+	}
+
+
+	/// <summary>
 	/// Sets the property and raises the PropertyChanged event if the value has changed.
 	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
 	/// </summary>
@@ -1711,7 +1813,7 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	/// <param name="setter"></param>
 	/// <param name="propertyName"></param>
 	/// <returns></returns>
-	protected bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
+	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
 	{
 		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
 			return false;
@@ -1721,7 +1823,7 @@ public partial class PolicyEditorVM : INotifyPropertyChanged
 	}
 
 
-	protected void OnPropertyChanged(string? propertyName)
+	private void OnPropertyChanged(string? propertyName)
 	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}

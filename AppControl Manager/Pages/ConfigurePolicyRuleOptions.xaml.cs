@@ -23,7 +23,9 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,11 +39,17 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	// To store the selected policy path
 	private string? SelectedFilePath;
 
+#pragma warning disable CA1822
+	internal ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
+#pragma warning restore CA1822
+
 	public ConfigurePolicyRuleOptions()
 	{
 		this.InitializeComponent();
 
 		this.NavigationCacheMode = NavigationCacheMode.Required;
+
+		this.DataContext = ViewModel;
 
 		// Call the method to generate SettingsCards dynamically
 		GenerateSettingsCards();

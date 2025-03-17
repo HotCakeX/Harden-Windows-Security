@@ -74,6 +74,22 @@ public sealed partial class MainWindow : Window
 	private readonly IEnumerable<NavigationViewItem> allNavigationItems = [];
 
 	/// <summary>
+	/// Pages that are allowed to run when running without Administrator privileges
+	/// </summary>
+	private static readonly IEnumerable<Type> UnelevatedPages = [
+		typeof(Pages.ValidatePolicy),
+		typeof(Pages.GitHubDocumentation),
+		typeof(Pages.MicrosoftDocumentation),
+		typeof(Pages.Logs),
+		typeof(Pages.GetCIHashes),
+		typeof(Pages.PolicyEditor),
+		typeof(Pages.MergePolicies),
+		typeof(Pages.Settings),
+		typeof(Pages.ConfigurePolicyRuleOptions)
+		];
+
+
+	/// <summary>
 	/// Every page in the application must be defined in this dictionary.
 	/// It is used by the BreadCrumbBar.
 	/// Sub-pages must use the same value as their main page in the dictionary.
@@ -373,13 +389,24 @@ public sealed partial class MainWindow : Window
 
 		#endregion
 
+		if (App.IsElevated)
+		{
+			// Navigate to the CreatePolicy page when the window is loaded
+			_ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
 
-		// Navigate to the CreatePolicy page when the window is loaded
-		_ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
+			// Set the "Create Policy" item as selected in the NavigationView
+			MainNavigation.SelectedItem = allNavigationItems
+				.First(item => string.Equals(item.Content.ToString(), "Create Policy", StringComparison.OrdinalIgnoreCase));
+		}
+		else
+		{
+			_ = ContentFrame.Navigate(typeof(Pages.PolicyEditor));
 
-		// Set the "Create Policy" item as selected in the NavigationView
-		MainNavigation.SelectedItem = allNavigationItems
-			.First(item => string.Equals(item.Content.ToString(), "Create Policy", StringComparison.OrdinalIgnoreCase));
+			// Set the "Policy Editor" item as selected in the NavigationView
+			MainNavigation.SelectedItem = allNavigationItems
+				.First(item => string.Equals(item.Content.ToString(), "Policy Editor", StringComparison.OrdinalIgnoreCase));
+		}
+
 
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.NavViewBackground)));
@@ -1401,7 +1428,7 @@ public sealed partial class MainWindow : Window
 	/// <param name="navPageType"></param>
 	/// <param name="transitionInfo"></param>
 	/// <param name="navItemName"></param>
-	internal void NavView_Navigate(Type? navPageType, NavigationTransitionInfo? transitionInfo = null, string? navItemName = null)
+	internal async void NavView_Navigate(Type? navPageType, NavigationTransitionInfo? transitionInfo = null, string? navItemName = null)
 	{
 		// Get the page's type before navigation so we can prevent duplicate entries in the BackStack
 		// This will prevent reloading the same page if we're already on it and works with sub-pages to navigate back to the main page
@@ -1431,6 +1458,81 @@ public sealed partial class MainWindow : Window
 		{
 			return;
 		}
+
+
+		// If not running as Admin
+		if (!App.IsElevated)
+		{
+			if (!UnelevatedPages.Contains(nextNavPageType))
+			{
+				// Create and display a ContentDialog with styled TextBlock
+				ContentDialog dialog = new()
+				{
+					Title = "Administrator privileges required",
+					Content = "Please launch AppControl Manager as Administrator to access this page",
+					CloseButtonText = "Cancel",
+					BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
+					SecondaryButtonText = "Relaunch as Admin",
+					BorderThickness = new Thickness(1),
+					XamlRoot = this.Content.XamlRoot
+				};
+
+				App.CurrentlyOpenContentDialog = dialog;
+
+				// Show the dialog and wait for user response
+				ContentDialogResult result = await dialog.ShowAsync();
+
+				// If user chose to elevate to Admin
+				if (result is ContentDialogResult.Secondary)
+				{
+					ProcessStartInfo processInfo = new()
+					{
+						FileName = Environment.ProcessPath,
+						Verb = "runas",
+						UseShellExecute = true
+					};
+
+					Process? processStartResult = null;
+
+					try
+					{
+						processStartResult = Process.Start(processInfo);
+					}
+
+					// Error code 1223: The operation was canceled by the user.
+					catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+					{
+						// Do nothing if the user cancels the UAC prompt.
+						Logger.Write("User canceled the UAC prompt.");
+					}
+
+					// Explicitly exit the current instance only after launching the elevated instance
+					if (processStartResult is not null)
+					{
+						Application.Current.Exit();
+					}
+
+					return;
+				}
+				else
+				{
+					// Settings page is not in the MainNavigation by default so we need to explicitly check for it
+					// Casting MainNavigation.SettingsItem to <NavigationViewItem> in order to add it to allNavigationItems wouldn't work because it results in null
+					if (Equals(preNavPageType, typeof(Pages.Settings)))
+					{
+						MainNavigation.SelectedItem = MainNavigation.SettingsItem;
+					}
+					else
+					{
+						// The SelectedItem is automatically set to the page that is unavailable
+						// But here we set it back to the last available page to make it a smooth experience
+						MainNavigation.SelectedItem = allNavigationItems.FirstOrDefault(x => string.Equals(x.Content.ToString(), NavigationPageToItemContentMap.FirstOrDefault(x => Equals(x.Value, preNavPageType)).Key, StringComparison.OrdinalIgnoreCase));
+					}
+					return;
+				}
+			}
+		}
+
 
 
 		// Play a sound

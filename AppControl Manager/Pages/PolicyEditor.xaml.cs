@@ -15,12 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -30,7 +29,10 @@ namespace AppControlManager.Pages;
 
 public sealed partial class PolicyEditor : Page
 {
-	internal PolicyEditorVM ViewModel { get; } = new PolicyEditorVM();
+
+#pragma warning disable CA1822
+	internal PolicyEditorVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
+#pragma warning restore CA1822
 
 	public PolicyEditor()
 	{
@@ -58,7 +60,7 @@ public sealed partial class PolicyEditor : Page
 		// Iterate over the copy to remove each item
 		foreach (AppControlManager.PolicyEditor.FileBasedRulesForListView item in itemsToDelete)
 		{
-			PolicyEditorVM.Instance.RemoveFileRuleFromCollection(item);
+			ViewModel.RemoveFileRuleFromCollection(item);
 		}
 	}
 
@@ -76,7 +78,7 @@ public sealed partial class PolicyEditor : Page
 		// Iterate over the copy to remove each item
 		foreach (AppControlManager.PolicyEditor.SignatureBasedRulesForListView item in itemsToDelete)
 		{
-			PolicyEditorVM.Instance.RemoveSignatureRuleFromCollection(item);
+			ViewModel.RemoveSignatureRuleFromCollection(item);
 		}
 	}
 
@@ -204,88 +206,4 @@ public sealed partial class PolicyEditor : Page
 
 	#endregion
 
-
-	/// <summary>
-	/// Performs search in both collections of the ListView.
-	/// Implementing it in the ViewModel via x:Bind would not work properly.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-
-		string searchTerm = SearchBoxTextBox.Text;
-		searchTerm = searchTerm.Trim();
-
-		List<AppControlManager.PolicyEditor.FileBasedRulesForListView> filteredResults = [];
-
-		await Task.Run(() =>
-		{
-			// Perform a case-insensitive search in all relevant fields
-			filteredResults = [.. PolicyEditorVM.Instance.FileRulesCollectionList.Where(p =>
-			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FileName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FilePath?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.InternalName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			)];
-		});
-
-		PolicyEditorVM.Instance.FileRulesCollection.Clear();
-
-		foreach (AppControlManager.PolicyEditor.FileBasedRulesForListView item in filteredResults)
-		{
-			PolicyEditorVM.Instance.FileRulesCollection.Add(item);
-		}
-
-		PolicyEditorVM.Instance.UpdateFileBasedCollectionsCount();
-
-
-		List<AppControlManager.PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [];
-
-		await Task.Run(() =>
-		{
-			// Perform a case-insensitive search in all relevant fields
-			filteredResults2 = [.. PolicyEditorVM.Instance.SignatureRulesCollectionList.Where(p =>
-			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertOemID?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertPublisher?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			)];
-		});
-
-		PolicyEditorVM.Instance.SignatureRulesCollection.Clear();
-
-		foreach (AppControlManager.PolicyEditor.SignatureBasedRulesForListView item in filteredResults2)
-		{
-			PolicyEditorVM.Instance.SignatureRulesCollection.Add(item);
-		}
-
-		PolicyEditorVM.Instance.UpdateSignatureBasedCollectionsCount();
-
-	}
-
-	/// <summary>
-	/// Event handler to open the Policy type ComboBox's dropdown menu when its parent settings card is clicked on
-	/// </summary>
-	private void PolicyTypeSettingsCard_Click()
-	{
-		PolicyTypeComboBox.IsDropDownOpen = true;
-	}
-
-
-	/// <summary>
-	/// Event handler to open the Policy HVCI Option/Level ComboBox's dropdown menu when its parent settings card is clicked on
-	/// </summary>
-	private void PolicyHVCIOptionsComboBox_Click()
-	{
-		PolicyHVCIOptionsComboBox.IsDropDownOpen = true;
-	}
 }

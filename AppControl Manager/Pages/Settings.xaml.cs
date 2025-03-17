@@ -23,6 +23,8 @@ using AppControlManager.AppSettings;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -32,12 +34,20 @@ namespace AppControlManager.Pages;
 
 public sealed partial class Settings : Page
 {
+
+
+#pragma warning disable CA1822
+	internal SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
+#pragma warning restore CA1822
+
 	// To store the selectable Certificate common names
 	private HashSet<string> CertCommonNames = [];
 
 	public Settings()
 	{
 		this.InitializeComponent();
+
+		this.DataContext = ViewModel;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;

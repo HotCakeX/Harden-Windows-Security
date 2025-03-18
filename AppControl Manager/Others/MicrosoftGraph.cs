@@ -329,6 +329,7 @@ DeviceEvents
 	/// <param name="policyPath"></param>
 	/// <param name="groupName"></param>
 	/// <param name="policyName"></param>
+	/// <param name="policyID"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task UploadPolicyToIntune(string policyPath, string? groupName, string? policyName, string policyID)
@@ -423,6 +424,8 @@ DeviceEvents
 	/// </summary>
 	/// <param name="accessToken"></param>
 	/// <param name="policyData"></param>
+	/// <param name="policyID"></param>
+	/// <param name="policyName"></param>
 	/// <returns></returns>
 	private static async Task<string?> CreateCustomIntunePolicy(string accessToken, string policyData, string? policyName, string policyID)
 	{

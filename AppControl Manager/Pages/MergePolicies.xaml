@@ -42,34 +42,39 @@
                 </win:StackPanel.ChildrenTransitions>
 
 
-                <controls:SettingsExpander x:Name="MergePoliciesSettings"
+                <controls:SettingsExpander
                            Description="Merge App Control Policies"
                            Header="Merge"
                            IsExpanded="True"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA3C;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="PolicyMergerInfoBar"
+                        <InfoBar
                             Title="Current Status"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            IsOpen="{x:Bind ViewModel.PolicyMergerInfoBarIsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.PolicyMergerInfoBarMessage, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"                           
+                            Severity="{x:Bind ViewModel.PolicyMergerInfoBarSeverity, Mode=OneWay}">
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="MergeButton" Content="Merge"
-                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="MergeButton_Click" />
+                        <Button x:Name="MergeButton" Content="Merge" IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
+                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.MergeButton_Click}" />
 
-                        <ToggleButton x:Name="DeployToggleButton" IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" Content="Deploy after Merge" Click="DeployToggleButton_Click" Margin="0,0,15,0" />
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.ShouldDeployToggleState, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" Content="Deploy after Merge" Margin="0,0,15,0" />
 
-                        <ProgressRing IsIndeterminate="True" Visibility="Collapsed" x:Name="MergeProgressRing" />
+                        <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.MergeProgressRingVisibility, Mode=OneWay}" />
 
-                        <TeachingTip x:Name="MergeButtonTeachingTip" Target="{x:Bind MergeButton}" />
+                        <TeachingTip
+                                IsOpen="{x:Bind ViewModel.MergeButtonTeachingTipIsOpen, Mode=TwoWay}"
+                                Title="{x:Bind ViewModel.MergeButtonTeachingTipTitle, Mode=OneWay}"
+                                Subtitle="{x:Bind ViewModel.MergeButtonTeachingTipSubTitle, Mode=OneWay}"
+                                Target="{x:Bind MergeButton}" />
 
                     </controls:WrapPanel>
 
@@ -79,18 +84,18 @@
                                Header="Select Main Policy" x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click"
                                Holding="MainPolicySettingsCard_Holding" RightTapped="MainPolicySettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button Content="Browse" RightTapped="MainPolicyBrowseButton_RightTapped" x:Name="MainPolicyBrowseButton" Click="MainPolicyBrowseButton_Click">
+                            <Button Content="Browse" RightTapped="MainPolicyBrowseButton_RightTapped" x:Name="MainPolicyBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="MainPolicy_Flyout">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="MainPolicy_Flyout_ClearButton" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.MainPolicy_Flyout_ClearButton}" />
 
                                             <TextBlock Text="View the Main policy you selected." TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="MainPolicy_Flyout_TextBox"
+                                            <TextBox Text="{x:Bind ViewModel.MainPolicy, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -107,18 +112,18 @@
                             Header="Select other policies" x:Name="OtherPoliciesSettingsCard" Click="OtherPoliciesSettingsCard_Click"
                             Holding="OtherPoliciesSettingsCard_Holding" RightTapped="OtherPoliciesSettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button Content="Browse" x:Name="OtherPoliciesBrowseButton" RightTapped="OtherPoliciesBrowseButton_RightTapped" Click="OtherPoliciesBrowseButton_Click">
+                            <Button Content="Browse" x:Name="OtherPoliciesBrowseButton" RightTapped="OtherPoliciesBrowseButton_RightTapped" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="OtherPolicies_Flyout">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="OtherPolicies_Flyout_ClearButton" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.OtherPolicies_Flyout_ClearButton}" />
 
                                             <TextBlock Text="View the other policies you selected." TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="OtherPolicies_Flyout_TextBox"
+                                            <TextBox Text="{x:Bind ViewModel.OtherPoliciesString, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 

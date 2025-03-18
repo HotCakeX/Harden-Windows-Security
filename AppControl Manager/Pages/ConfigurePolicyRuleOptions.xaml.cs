@@ -34,6 +34,10 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Configures policy rules and manages UI interactions for policy templates. Initializes components, handles file
+/// selection, and updates settings dynamically.
+/// </summary>
 public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimatedIconsManager
 {
 	// To store the selected policy path
@@ -43,6 +47,10 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	internal ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
 #pragma warning restore CA1822
 
+	/// <summary>
+	/// Initializes the ConfigurePolicyRuleOptions class, sets up navigation caching, binds the data context, and generates
+	/// settings cards.
+	/// </summary>
 	public ConfigurePolicyRuleOptions()
 	{
 		this.InitializeComponent();
@@ -63,7 +71,16 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 
 	private string? unsignedBasePolicyPathFromSidebar;
 
-	// Implement the SetVisibility method required by IAnimatedIconsManager
+	/// <summary>
+	/// Sets the visibility of button icons and manages the content and event handlers for specified buttons.Implement the SetVisibility method required by IAnimatedIconsManager
+	/// </summary>
+	/// <param name="visibility">Controls the visibility state of the button icons.</param>
+	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar.</param>
+	/// <param name="button1">Manages the visibility and content of the first button.</param>
+	/// <param name="button2">Handles the visibility of the second button.</param>
+	/// <param name="button3">Controls the visibility of the third button.</param>
+	/// <param name="button4">Sets the visibility of the fourth button.</param>
+	/// <param name="button5">Manages the visibility of the fifth button.</param>
 	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons

@@ -111,6 +111,7 @@ internal static class AppControlSimulation
 	/// <param name="csvOutput"></param>
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
+	/// <param name="UIProgressBar"></param>
 	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>

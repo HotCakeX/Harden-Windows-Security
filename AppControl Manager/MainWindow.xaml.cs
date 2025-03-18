@@ -42,16 +42,10 @@ using Rect = Windows.Foundation.Rect;
 
 namespace AppControlManager;
 
-// https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
-// Represents an item in the BreadCrumBar's ItemsSource collection
-internal readonly struct Crumb(String label, Type page)
-{
-	internal string Label { get; } = label;
-	internal Type Page { get; } = page;
-	public override string ToString() => Label;
-}
-
-
+/// <summary>
+/// MainWindow is a sealed class that represents the main application window, managing navigation, UI elements, and
+/// event handling.
+/// </summary>
 public sealed partial class MainWindow : Window
 {
 
@@ -61,7 +55,9 @@ public sealed partial class MainWindow : Window
 
 	internal readonly Frame AppFrame;
 
-	// Used for the BreadCrumBar's data to define valid navigational paths in the app
+	/// <summary>
+	/// Used for the BreadCrumBar's data to define valid navigational paths in the app
+	/// </summary>
 	internal sealed class PageTitleMap
 	{
 		internal required List<string> Titles { get; set; }
@@ -85,7 +81,8 @@ public sealed partial class MainWindow : Window
 		typeof(Pages.PolicyEditor),
 		typeof(Pages.MergePolicies),
 		typeof(Pages.Settings),
-		typeof(Pages.ConfigurePolicyRuleOptions)
+		typeof(Pages.ConfigurePolicyRuleOptions),
+		typeof(Pages.MDEAHPolicyCreation)
 		];
 
 
@@ -275,10 +272,15 @@ public sealed partial class MainWindow : Window
 	};
 
 
-	// A static instance of the MainWindow class which will hold the single, shared instance of it
+	/// <summary>
+	/// A static instance of the MainWindow class which will hold the single, shared instance of it
+	/// </summary>
 	private static MainWindow? _instance;
 
-
+	/// <summary>
+	/// Initializes the main window, sets up event handlers, and configures UI elements like the title bar and navigation
+	/// items.
+	/// </summary>
 	public MainWindow()
 	{
 		this.InitializeComponent();
@@ -431,7 +433,9 @@ public sealed partial class MainWindow : Window
 		Events.UnsignedPolicyManager.UnsignedPolicyInUserConfigChanged += SidebarOnUnsignedPolicyChanged;
 	}
 
-	// Public property to access the singleton instance from other classes
+	/// <summary>
+	/// Public property to access the singleton instance from other classes
+	/// </summary>
 	public static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
 
 
@@ -1815,8 +1819,9 @@ public sealed partial class MainWindow : Window
 		// Adjust the elevation of the border to achieve the shadow effect
 		Border1.Translation += new Vector3(0, 0, 500);
 
-		// Get the user configuration for unsigned policy path and fill in the text box for sidebar
-		SidebarBasePolicyPathTextBox.Text = UserConfiguration.Get().UnsignedPolicyPath;
+		if (App.IsElevated)
+			// Get the user configuration for unsigned policy path and fill in the text box for sidebar
+			SidebarBasePolicyPathTextBox.Text = UserConfiguration.Get().UnsignedPolicyPath;
 
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
 		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar) ?? true;
@@ -1888,6 +1893,11 @@ public sealed partial class MainWindow : Window
 	/// <param name="e"></param>
 	private void OpenConfigDirectoryButton_Click(object sender, RoutedEventArgs e)
 	{
+		if (!App.IsElevated)
+		{
+			return;
+		}
+
 		_ = Process.Start(new ProcessStartInfo
 		{
 			FileName = GlobalVars.UserConfigDir,

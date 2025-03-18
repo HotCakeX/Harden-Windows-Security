@@ -31,7 +31,7 @@ internal static class GetSignerInfo
 	/// The output contains as much info as possible about each signer
 	/// </summary>
 	/// <param name="xmlContent"></param>
-	/// <returns> List<AppControlManager.Signer> </returns>
+	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static List<SignerX> Get(XmlDocument xmlContent)
 	{

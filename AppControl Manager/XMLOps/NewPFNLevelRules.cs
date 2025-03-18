@@ -28,7 +28,7 @@ internal static class NewPFNLevelRules
 	/// Creates PFN rules and adds them to an App Control policy XML file
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
-	/// <param name="packageFamilyNames"></param>
+	/// <param name="PFNData"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void CreateAllow(string xmlFilePath, List<PFNRuleCreator> PFNData)
 	{
@@ -74,7 +74,7 @@ internal static class NewPFNLevelRules
 	/// Creates PFN rules and adds them to an App Control policy XML file
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
-	/// <param name="packageFamilyNames"></param>
+	/// <param name="PFNData"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void CreateDeny(string xmlFilePath, List<PFNRuleCreator> PFNData)
 	{

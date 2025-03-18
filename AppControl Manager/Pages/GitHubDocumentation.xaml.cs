@@ -24,8 +24,16 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Initializes the GitHubDocumentation component, sets the WebView2 background color, and manages navigation events.
+/// Maintains page state.
+/// </summary>
 public sealed partial class GitHubDocumentation : Page
 {
+	/// <summary>
+	/// Initializes the GitHubDocumentation component, sets the background color of the WebView2, and manages navigation
+	/// events. Maintains page state during navigation.
+	/// </summary>
 	public GitHubDocumentation()
 	{
 		this.InitializeComponent();

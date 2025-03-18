@@ -21,19 +21,54 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
+/// <summary>
+/// Represents extended file information, including properties like original file name, internal name, product name, and
+/// version.
+/// </summary>
 public sealed partial class ExFileInfo
 {
 	// Constants used for encoding fallback and error handling
 	private const string UnicodeFallbackCode = "04B0";
 	private const string Cp1252FallbackCode = "04E4";
+
+	/// <summary>
+	/// Constant representing the neutral file version, set to 2. Used for identifying a specific version in file
+	/// operations.
+	/// </summary>
 	public const int FILE_VER_GET_NEUTRAL = 2;
+
+	/// <summary>
+	/// Represents an error code indicating that a specified resource type could not be found. The value is -2147023083.
+	/// </summary>
 	public const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
 
 	// Properties to hold file information
+
+	/// <summary>
+	/// Holds the original name of the file. It can be null if no name is provided.
+	/// </summary>
 	public string? OriginalFileName { get; set; }
+
+	/// <summary>
+	/// Represents the internal name of an entity, which can be null. It is a string property that can be accessed and
+	/// modified.
+	/// </summary>
 	public string? InternalName { get; set; }
+
+	/// <summary>
+	/// Represents the name of a product. It can be null, indicating that the product name is not specified.
+	/// </summary>
 	public string? ProductName { get; set; }
+
+	/// <summary>
+	/// Represents the version of an object, allowing for nullable values. It can be used to track or specify the
+	/// versioning of data.
+	/// </summary>
 	public Version? Version { get; set; }
+
+	/// <summary>
+	/// Represents an optional description of a file. It can hold a string value or be null.
+	/// </summary>
 	public string? FileDescription { get; set; }
 
 	// Importing external functions from Version.dll to work with file version info
@@ -57,7 +92,12 @@ public sealed partial class ExFileInfo
 	// Private constructor to prevent direct instantiation
 	private ExFileInfo() { }
 
-	// Static method to get extended file info
+	/// <summary>
+	/// Retrieves extended file information, including version, original file name, internal name, file description, and
+	/// product name.
+	/// </summary>
+	/// <param name="filePath">Specifies the path to the file for which extended information is being retrieved.</param>
+	/// <returns>Returns an object containing the extended file information, with properties set to null in case of an error.</returns>
 	public static ExFileInfo GetExtendedFileInfo(string filePath)
 	{
 		ExFileInfo ExFileInfo = new();

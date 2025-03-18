@@ -151,9 +151,10 @@ internal static class ListViewHelper
 
 
 	/// <summary>
-	/// Helper method to copy a specified property to clipboards
+	/// Copies a specified property of a selected file identity to the clipboard if it exists.
 	/// </summary>
-	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
+	/// <param name="getProperty">A function that retrieves a specific property value from a file identity.</param>
+	/// <param name="lw">A list view component that displays file identities and allows selection.</param>
 	internal static void CopyToClipboard(Func<FileIdentity, string?> getProperty, ListView lw)
 	{
 		if (lw.SelectedItem is FileIdentity selectedItem)
@@ -187,7 +188,8 @@ internal static class ListViewHelper
 
 
 	/// <summary>
-	/// Sorts a collection and updates the provided ListView.
+	/// Sorts a collection
+	/// Used for the ObservableCollection of ListViews
 	/// </summary>
 	/// <typeparam name="T">The type returned by the key selector.</typeparam>
 	/// <param name="keySelector">The key selector used for sorting.</param>
@@ -195,15 +197,12 @@ internal static class ListViewHelper
 	/// <param name="sortingToggle">Reference to the ToggleMenuFlyoutItem that indicates sort direction.</param>
 	/// <param name="originalList">The full list to sort if no filter is active.</param>
 	/// <param name="observableCollection">The ObservableCollection to update with sorted data.</param>
-	/// <param name="listView">The ListView whose ItemsSource will be refreshed.</param>
-	/// <returns>Returns the ObservableCollection so it can replace the original collection that was passed to this method via value.</returns>
-	internal static ObservableCollection<FileIdentity> SortColumn<T>(
+	internal static void SortColumn<T>(
 		Func<FileIdentity, T> keySelector,
 		TextBox searchBox,
 		ToggleMenuFlyoutItem sortingToggle,
 		List<FileIdentity> originalList,
-		ObservableCollection<FileIdentity> observableCollection,
-		ListView listView)
+		ObservableCollection<FileIdentity> observableCollection)
 	{
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBox.Text);
@@ -214,13 +213,17 @@ internal static class ListViewHelper
 			: [.. observableCollection];
 
 		// Sort based on toggle state.
-		ObservableCollection<FileIdentity> sortedData = sortingToggle.IsChecked ? [.. collectionToSort.OrderByDescending(keySelector)]
+		List<FileIdentity> sortedData = sortingToggle.IsChecked ? [.. collectionToSort.OrderByDescending(keySelector)]
 			: [.. collectionToSort.OrderBy(keySelector)];
 
-		// Refresh the ItemsSource.
-		listView.ItemsSource = sortedData;
+		// Clear the ObservableCollection
+		observableCollection.Clear();
 
-		return sortedData;
+		// Add each item to the ObservableCollection
+		foreach (FileIdentity item in sortedData)
+		{
+			observableCollection.Add(item);
+		}
 	}
 
 
@@ -236,21 +239,13 @@ internal static class ListViewHelper
 	/// <param name="searchTextBox">
 	/// The TextBox containing the search term.
 	/// </param>
-	/// <param name="listView">
-	/// The ListView to be updated with the filtered collection.
-	/// </param>
-	/// <param name="updateTotalFiles">
-	/// A delegate to the method that updates the total logs/files count.
-	/// </param>
 	/// <param name="datePicker">
 	/// An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
 	/// </param>
-	/// <returns>Returns the ObservableCollection so it can replace the original collection that was passed to this method via value.</returns>
-	internal static ObservableCollection<FileIdentity> ApplyFilters(
+	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,
 		TextBox searchTextBox,
-		ListView listView,
 		CalendarDatePicker? datePicker
 		)
 	{
@@ -293,13 +288,14 @@ internal static class ListViewHelper
 			);
 		}
 
-		// Populate the ObservableCollection with the filtered results
-		filteredCollection = [.. filteredResults];
+		// Clear the ObservableCollection
+		filteredCollection.Clear();
 
-		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
-		listView.ItemsSource = filteredCollection;
-
-		return filteredCollection;
+		// Add the new filtered results to the ObservableCollection
+		foreach (FileIdentity item in filteredResults)
+		{
+			filteredCollection.Add(item);
+		}
 	}
 
 
@@ -327,16 +323,18 @@ internal static class ListViewHelper
 
 	private static readonly Dictionary<ListView, int> ObjRemovalTracking = [];
 
+
 	/// <summary>
 	/// Smooth scrolling the list to bring the specified index into view, centering vertically
 	/// </summary>
-	/// <param name="listViewBase">List to scroll</param>
-	/// <param name="index">The index to bring into view. Index can be negative.</param>
-	/// <param name="disableAnimation">Set true to disable animation</param>
-	/// <param name="scrollIfVisible">Set false to disable scrolling when the corresponding item is in view</param>
-	/// <param name="additionalHorizontalOffset">Adds additional horizontal offset</param>
-	/// <param name="additionalVerticalOffset">Adds additional vertical offset</param>
-	/// <returns>Returns <see cref="Task"/> that completes after scrolling</returns>
+	/// <param name="listViewBase">Represents the base list view that contains the items to be scrolled into view.</param>
+	/// <param name="listView">Specifies the ListView that displays the items and is affected by the scrolling action.</param>
+	/// <param name="index">Indicates the position of the item to be centered vertically in the ListView.</param>
+	/// <param name="disableAnimation">Controls whether the scrolling action should be animated or occur instantly.</param>
+	/// <param name="scrollIfVisible">Determines if the scrolling should occur even if the item is already visible.</param>
+	/// <param name="additionalHorizontalOffset">Allows for an extra horizontal adjustment when positioning the item in view.</param>
+	/// <param name="additionalVerticalOffset">Enables an additional vertical adjustment when centering the item in the view.</param>
+	/// <returns>Returns a Task representing the asynchronous operation of scrolling the item into view.</returns>
 	internal static async Task SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(this ListViewBase listViewBase, ListView listView, int index, bool disableAnimation = false, bool scrollIfVisible = true, int additionalHorizontalOffset = 0, int additionalVerticalOffset = 0)
 	{
 

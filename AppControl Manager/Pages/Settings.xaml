@@ -82,15 +82,18 @@
                                     <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
                                         Header="Certificate Common Name:"
                                         QueryIcon="Find"
-                                        GotFocus="CertificateCommonNameAutoSuggestBox_GotFocus"
-                                        TextChanged="CertificateCNAutoSuggestBox_TextChanged"
+                                        GotFocus="{x:Bind ViewModel.CertificateCommonNameAutoSuggestBox_GotFocus}"
+                                        IsSuggestionListOpen="{x:Bind ViewModel.CertCNAutoSuggestBoxIsSuggestionListOpen, Mode=TwoWay}"
+                                        Text="{x:Bind ViewModel.CertCNsAutoSuggestBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        TextChanged="{x:Bind ViewModel.CertificateCNAutoSuggestBox_TextChanged}"
                                         PlaceholderText="Find Certificate Common Names"
+                                        ItemsSource="{x:Bind ViewModel.CertCommonNames, Mode=OneWay}"
                                         MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
 
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="CertificateCommonName"/>
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="CertificateCommonName"/>
-                                        <AppBarButton Icon="Refresh" x:Uid="RefreshAppBarButton" Click="CertificateCommonNameSuggestionsRefresh_Click" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Refresh" x:Uid="RefreshAppBarButton" Click="{x:Bind ViewModel.FetchLatestCertificateCNs}" Tag="CertificateCommonName"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
                                 <!-- Certificate Path -->
@@ -178,8 +181,9 @@
                 <controls:SettingsExpander x:Name="CopyRightSettingsExpander"
                                            Header="AppControl Manager"
                                            IsExpanded="True"
+                                           Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
-                    <TextBlock x:Name="VersionTextBlock" win:IsTextSelectionEnabled="True"
+                    <TextBlock Text="{x:Bind ViewModel.VersionTextBlockText, Mode=OneTime}" win:IsTextSelectionEnabled="True"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">

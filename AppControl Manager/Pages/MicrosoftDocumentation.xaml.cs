@@ -24,8 +24,16 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Represents a page for Microsoft documentation with navigation controls. It manages WebView2 state and handles back,
+/// forward, reload, and home actions.
+/// </summary>
 public sealed partial class MicrosoftDocumentation : Page
 {
+	/// <summary>
+	/// Initializes the MicrosoftDocumentation component, sets the background color of WebView2 to transparent, and handles
+	/// navigation events.
+	/// </summary>
 	public MicrosoftDocumentation()
 	{
 		this.InitializeComponent();

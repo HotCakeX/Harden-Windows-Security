@@ -31,8 +31,15 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Initializes the CreatePolicy component, disabling log size inputs and maintaining navigation state.
+/// of various policies.
+/// </summary>
 public sealed partial class CreatePolicy : Page
 {
+	/// <summary>
+	/// Initializes the CreatePolicy component and sets various log size inputs to disabled. Maintains navigation state.
+	/// </summary>
 	public CreatePolicy()
 	{
 		this.InitializeComponent();

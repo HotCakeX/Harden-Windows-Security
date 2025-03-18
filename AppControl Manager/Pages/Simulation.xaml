@@ -12,7 +12,6 @@
     xmlns:others="using:AppControlManager.Others"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    x:Name="SimulationXAML"
     mc:Ignorable="d">
 
     <Grid TabFocusNavigation="Cycle">
@@ -263,6 +262,7 @@
 
 
         <ListView x:Name="SimOutputListView"
+                ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
                 Grid.Row="2"
                 SelectionMode="Extended"
                 ScrollViewer.HorizontalScrollMode="Enabled"
@@ -282,21 +282,21 @@
                     <Grid>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="PathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="SourceHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -438,25 +438,21 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <!-- Use standard Binding with ElementName to refer back to the page's properties
-                                because in here the Data Context is set to FileIdentity so we cannot use x.Bind
-                                since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
-                                And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
-                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth12, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth13, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth14, ElementName=SimulationXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth15, ElementName=SimulationXAML}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind Path}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind Source}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>

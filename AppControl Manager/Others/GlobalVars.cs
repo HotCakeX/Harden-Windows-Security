@@ -102,6 +102,10 @@ internal static class GlobalVars
 
 	static GlobalVars()
 	{
+
+		if (!App.IsElevated)
+			return;
+
 		// Ensure the directory exists
 		if (!Directory.Exists(UserConfigDir))
 		{

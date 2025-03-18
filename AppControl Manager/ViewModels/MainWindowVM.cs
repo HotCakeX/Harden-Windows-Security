@@ -84,7 +84,7 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 	/// Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
 	/// </summary>
 	/// <param name="sender">Sender of the event, in this case, AppUpdate instance.</param>
-	/// <param name="isUpdateAvailable">Boolean indicating whether an update is available.</param>
+	/// <param name="e">Boolean indicating whether an update is available.</param>
 	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
 	{
 		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties

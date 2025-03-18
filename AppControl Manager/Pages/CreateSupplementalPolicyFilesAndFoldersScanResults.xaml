@@ -10,8 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    x:Name="CreateSupplementalPolicyFilesAndFoldersScanResultsXAML">
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
 
@@ -103,7 +102,7 @@
                 </Button>
 
                 <TextBox x:Uid="TotalLogsTextBlock"
-                x:Name="TotalCountOfTheFilesTextBox"
+                Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
                 IsReadOnly="True"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"/>
@@ -115,6 +114,7 @@
 
 
         <ListView x:Name="FileIdentitiesListView"
+           ItemsSource="{x:Bind ViewModel.filesAndFoldersScanResults, Mode=OneWay}"
            Grid.Row="2"
            SelectionMode="Extended"
            ScrollViewer.HorizontalScrollMode="Enabled"
@@ -134,24 +134,24 @@
                     <Grid>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth18, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthFilesAndFolders18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="SignatureStatusHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -318,24 +318,24 @@
                             because in here the Data Context is set to FileIdentity so we cannot use x.Bind
                             since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
                             And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
-                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth12, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth13, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth14, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth15, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth16, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth17, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth18, ElementName=CreateSupplementalPolicyFilesAndFoldersScanResultsXAML}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind SignatureStatus}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>

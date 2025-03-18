@@ -23,8 +23,15 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Initializes the CodeIntegrityInfo class and sets the navigation cache mode. Retrieves and displays code integrity
+/// information.
+/// </summary>
 public sealed partial class CodeIntegrityInfo : Page
 {
+	/// <summary>
+	/// Initializes a new instance of the CodeIntegrityInfo class. Sets the navigation cache mode to required.
+	/// </summary>
 	public CodeIntegrityInfo()
 	{
 		this.InitializeComponent();

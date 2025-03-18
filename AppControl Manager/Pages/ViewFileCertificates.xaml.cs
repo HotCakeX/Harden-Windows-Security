@@ -18,8 +18,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.Pkcs;
@@ -30,173 +28,42 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
+using AppControlManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
-using WinRT;
 
 namespace AppControlManager.Pages;
 
-// Since the columns for data in the ItemTemplate use "Binding" instead of "x:Bind", we need to use [GeneratedBindableCustomProperty] for them to work properly
-[GeneratedBindableCustomProperty]
-public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
+/// <summary>
+/// Represents a page for viewing file certificates, managing their display, and facilitating clipboard
+/// operations.
+/// </summary>
+public sealed partial class ViewFileCertificates : Page
 {
 
-	#region LISTVIEW IMPLEMENTATIONS
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-	// Properties to hold each columns' width.
-	private GridLength _columnWidth1;
-	public GridLength ColumnWidth1
-	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
-	}
-
-	private GridLength _columnWidth2;
-	public GridLength ColumnWidth2
-	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
-	}
-
-	private GridLength _columnWidth3;
-	public GridLength ColumnWidth3
-	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
-	}
-
-	private GridLength _columnWidth4;
-	public GridLength ColumnWidth4
-	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
-	}
-
-	private GridLength _columnWidth5;
-	public GridLength ColumnWidth5
-	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
-	}
-
-	private GridLength _columnWidth6;
-	public GridLength ColumnWidth6
-	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
-	}
-
-	private GridLength _columnWidth7;
-	public GridLength ColumnWidth7
-	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
-	}
-
-	private GridLength _columnWidth8;
-	public GridLength ColumnWidth8
-	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
-	}
-
-	private GridLength _columnWidth9;
-	public GridLength ColumnWidth9
-	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
-	}
-
-	private GridLength _columnWidth10;
-	public GridLength ColumnWidth10
-	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
-	}
-
-	private GridLength _columnWidth11;
-	public GridLength ColumnWidth11
-	{
-		get => _columnWidth11;
-		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
-	}
+#pragma warning disable CA1822
+	internal ViewFileCertificatesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
+#pragma warning restore CA1822
 
 	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
+	/// Constructor for the ViewFileCertificates class. Initializes components, sets navigation cache mode, and assigns the
+	/// data context.
 	/// </summary>
-	private void CalculateColumnWidths()
+	public ViewFileCertificates()
 	{
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNumberHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TypeHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("NotBeforeHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("NotAfterHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SerialNumberHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ThumbprintHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TBSHashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text"));
+		this.InitializeComponent();
 
-		// Iterate over all items to determine the widest string for each column.
-		foreach (FileCertificateInfoCol item in FileCertificates)
-		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.SignerNumber.ToString());
-			if (w1 > maxWidth1) maxWidth1 = w1;
+		// Make sure navigating to/from this page maintains its state
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
-			double w2 = ListViewHelper.MeasureTextWidth(item.Type.ToString());
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.SubjectCN);
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.IssuerCN);
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.NotBefore.ToString());
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.NotAfter.ToString());
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.HashingAlgorithm);
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.SerialNumber);
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.Thumbprint);
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.TBSHash);
-			if (w10 > maxWidth10) maxWidth10 = w10;
-
-			double w11 = ListViewHelper.MeasureTextWidth(item.OIDs);
-			if (w11 > maxWidth11) maxWidth11 = w11;
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
-		ColumnWidth7 = new GridLength(maxWidth7);
-		ColumnWidth8 = new GridLength(maxWidth8);
-		ColumnWidth9 = new GridLength(maxWidth9);
-		ColumnWidth10 = new GridLength(maxWidth10);
-		ColumnWidth11 = new GridLength(maxWidth11);
+		this.DataContext = ViewModel;
 	}
+
+
 
 	/// <summary>
 	/// Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
@@ -344,40 +211,30 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 	{
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
+
 		// Use either the full list (FilteredCertificates) or the current display list.
-		ObservableCollection<FileCertificateInfoCol> collectionToSort = isSearchEmpty ? FilteredCertificates : [.. FileCertificates];
+		List<FileCertificateInfoCol> collectionToSort = isSearchEmpty ? ViewModel.FilteredCertificates : [.. ViewModel.FileCertificates];
+
+		ViewModel.FileCertificates.Clear();
 
 		if (SortingDirectionToggle.IsChecked)
 		{
 			// Sort in descending order.
-			FileCertificates = [.. collectionToSort.OrderByDescending(keySelector)];
+			foreach (FileCertificateInfoCol item in collectionToSort.OrderByDescending(keySelector))
+			{
+				ViewModel.FileCertificates.Add(item);
+			}
 		}
 		else
 		{
 			// Sort in ascending order.
-			FileCertificates = [.. collectionToSort.OrderBy(keySelector)];
+			foreach (FileCertificateInfoCol item in collectionToSort.OrderBy(keySelector))
+			{
+				ViewModel.FileCertificates.Add(item);
+			}
 		}
-
-		// Refresh the ItemsSource so the UI updates.
-		FileCertificatesListView.ItemsSource = FileCertificates;
 	}
 
-	#endregion
-
-
-	public ViewFileCertificates()
-	{
-		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-	}
-
-	// Main collection assigned to the ListView
-	private ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
-
-	// Collection used during search
-	private ObservableCollection<FileCertificateInfoCol> FilteredCertificates = [];
 
 	/// <summary>
 	/// Event handler for the Browse button
@@ -401,18 +258,18 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 				List<FileCertificateInfoCol> result = await Fetch(selectedFiles);
 
 				// Add the results to the collection
-				FileCertificates.Clear();
+				ViewModel.FileCertificates.Clear();
+				ViewModel.FilteredCertificates.Clear();
+
+				ViewModel.FilteredCertificates.AddRange(result);
+
 				foreach (FileCertificateInfoCol item in result)
 				{
-					FileCertificates.Add(item);
+					item.ParentViewModel = ViewModel;
+					ViewModel.FileCertificates.Add(item);
 				}
 
-				// Initialize filtered collection with all certificates
-				FilteredCertificates = [.. FileCertificates];
-
-				CalculateColumnWidths();
-
-				FileCertificatesListView.ItemsSource = FilteredCertificates;
+				ViewModel.CalculateColumnWidths();
 			}
 		}
 		finally
@@ -466,18 +323,18 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 				}
 
 				// Add the results to the collection
-				FileCertificates.Clear();
+				ViewModel.FileCertificates.Clear();
+				ViewModel.FilteredCertificates.Clear();
+
+				ViewModel.FilteredCertificates.AddRange(result);
+
 				foreach (FileCertificateInfoCol item in result)
 				{
-					FileCertificates.Add(item);
+					item.ParentViewModel = ViewModel;
+					ViewModel.FileCertificates.Add(item);
 				}
 
-				// Initialize filtered collection with all certificates
-				FilteredCertificates = [.. FileCertificates];
-
-				CalculateColumnWidths();
-
-				FileCertificatesListView.ItemsSource = FilteredCertificates;
+				ViewModel.CalculateColumnWidths();
 			}
 
 		}
@@ -731,13 +588,11 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 		// Get the search term from the search box
 		string query = SearchBox.Text.Trim();
 
-		if (string.IsNullOrWhiteSpace(query))
-		{
-			FilteredCertificates = [.. FileCertificates];
-		}
-		else
-		{
-			FilteredCertificates = [.. FileCertificates.Where(cert =>
+		List<FileCertificateInfoCol> results = [];
+
+
+
+		results = [.. ViewModel.FilteredCertificates.Where(cert =>
 					(cert.SubjectCN is not null && cert.SubjectCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.IssuerCN is not null && cert.IssuerCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.TBSHash is not null && cert.TBSHash.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
@@ -750,9 +605,14 @@ public sealed partial class ViewFileCertificates : Page, INotifyPropertyChanged
 					(cert.SerialNumber is not null && cert.SerialNumber.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.Thumbprint is not null && cert.Thumbprint.Contains(query, StringComparison.OrdinalIgnoreCase))
 				)];
-		}
 
-		FileCertificatesListView.ItemsSource = FilteredCertificates;
+
+		ViewModel.FileCertificates.Clear();
+
+		foreach (FileCertificateInfoCol item in results)
+		{
+			ViewModel.FileCertificates.Add(item);
+		}
 	}
 
 

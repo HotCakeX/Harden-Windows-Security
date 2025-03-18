@@ -16,11 +16,7 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AppControlManager.AppSettings;
-using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -32,17 +28,21 @@ using static AppControlManager.AppSettings.AppSettingsCls;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// The Settings class manages user configurations and UI elements for a settings page. It initializes settings, handles
+/// events, and updates the UI.
+/// </summary>
 public sealed partial class Settings : Page
 {
-
 
 #pragma warning disable CA1822
 	internal SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
 #pragma warning restore CA1822
 
-	// To store the selectable Certificate common names
-	private HashSet<string> CertCommonNames = [];
-
+	/// <summary>
+	/// Initializes the settings page, loading user configurations into UI elements and setting up event handlers for user
+	/// interactions.
+	/// </summary>
 	public Settings()
 	{
 		this.InitializeComponent();
@@ -51,14 +51,6 @@ public sealed partial class Settings : Page
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
-
-		// Set the version in the settings card to the current app version
-		VersionTextBlock.Text = $"Version {App.currentAppVersion}";
-
-		// Set the year for the copyright section
-		CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
-
-		FetchLatestCertificateCNs();
 
 		#region Load the user configurations in the UI elements
 
@@ -351,59 +343,6 @@ public sealed partial class Settings : Page
 		}
 	}
 
-
-	/// <summary>
-	/// Event handler for AutoSuggestBox
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void CertificateCNAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-	{
-		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-		{
-			string query = sender.Text.ToLowerInvariant();
-
-			// Filter menu items based on the search query
-			List<string> suggestions = [.. CertCommonNames.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
-
-			// Set the filtered items as suggestions in the AutoSuggestBox
-			sender.ItemsSource = suggestions;
-		}
-	}
-
-	/// <summary>
-	/// Start suggesting when tap or mouse click happens
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CertificateCommonNameAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
-	{
-		// Set the filtered items as suggestions in the AutoSuggestBox
-		((AutoSuggestBox)sender).ItemsSource = CertCommonNames;
-	}
-
-
-	/// <summary>
-	/// When the Refresh button is pressed for certificate common name selection
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CertificateCommonNameSuggestionsRefresh_Click(object sender, RoutedEventArgs e)
-	{
-		FetchLatestCertificateCNs();
-	}
-
-
-	/// <summary>
-	/// Get all of the common names of the certificates in the user/my certificate store over time
-	/// </summary>
-	private async void FetchLatestCertificateCNs()
-	{
-		await Task.Run(() =>
-		{
-			CertCommonNames = CertCNFetcher.GetCertCNs();
-		});
-	}
 
 
 	private void ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)

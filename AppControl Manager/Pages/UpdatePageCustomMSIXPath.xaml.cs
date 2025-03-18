@@ -23,8 +23,16 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Handles the selection and confirmation of a custom MSIX file path for updates. Updates UI elements based on user
+/// interactions.
+/// </summary>
 public sealed partial class UpdatePageCustomMSIXPath : Page
 {
+	/// <summary>
+	/// Initializes the UpdatePageCustomMSIXPath component and sets the initial state of the confirm toggle switch.
+	/// Navigation cache mode is set to required.
+	/// </summary>
 	public UpdatePageCustomMSIXPath()
 	{
 		this.InitializeComponent();

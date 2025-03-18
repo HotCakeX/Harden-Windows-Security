@@ -26,11 +26,21 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// The Logs class manages log files, allowing users to view and filter log content. It initializes with navigation
+/// cache disabled.
+/// </summary>
 public sealed partial class Logs : Page
 {
-	// Holds all lines from the currently loaded log file.
+	/// <summary>
+	/// Holds all lines from the currently loaded log file.
+	/// </summary>
 	private List<string> _allLogLines = [];
 
+	/// <summary>
+	/// Initializes the Logs component and sets the navigation cache mode to disabled. This ensures the page reloads when
+	/// visited.
+	/// </summary>
 	public Logs()
 	{
 		this.InitializeComponent();
@@ -39,6 +49,11 @@ public sealed partial class Logs : Page
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 
+	/// <summary>
+	/// Called when the page is navigated to. Invokes the base navigation logic
+	/// and updates the animated icons' visibility on the main window for the current content frame.
+	/// </summary>
+	/// <param name="e">The navigation event data.</param>
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);

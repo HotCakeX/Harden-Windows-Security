@@ -20,7 +20,7 @@ using AppControlManager.SiPolicy;
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// For File Path rules only in the <FileRules> node
+/// For File Path rules only in the "FileRules" node
 /// </summary>
 internal sealed class FileRuleRule
 {

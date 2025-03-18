@@ -34,6 +34,10 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
+/// user interactions for file selection and deployment status updates.
+/// </summary>
 public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 {
 	// HashSets to store user input selected files
@@ -44,6 +48,10 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	// When true, policies will be deployed to Intune instead of locally
 	private bool deployToIntune;
 
+	/// <summary>
+	/// Initializes a new instance of the DeploymentPage class. Disables the DeploySignedXMLButton if the system is older
+	/// than Windows 11 24H2.
+	/// </summary>
 	public DeploymentPage()
 	{
 		this.InitializeComponent();
@@ -62,7 +70,17 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 	private string? unsignedBasePolicyPathFromSidebar;
 
-	// Implement the SetVisibility method required by IAnimatedIconsManager
+	/// <summary>
+	/// Controls the visibility of button icons and manages their content and event handlers based on the provided
+	/// visibility state.
+	/// </summary>
+	/// <param name="visibility">Determines the visibility state for the button icons and sidebar buttons.</param>
+	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar into a local variable.</param>
+	/// <param name="button1">Sets the visibility and content for the first sidebar button.</param>
+	/// <param name="button2">Sets the visibility and content for the second sidebar button.</param>
+	/// <param name="button3">Sets the visibility for the third sidebar button, though it is not used for content assignment.</param>
+	/// <param name="button4">Sets the visibility for the fourth sidebar button, though it is not used for content assignment.</param>
+	/// <param name="button5">Sets the visibility for the fifth sidebar button, though it is not used for content assignment.</param>
 	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons

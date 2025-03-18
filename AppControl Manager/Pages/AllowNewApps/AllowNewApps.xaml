@@ -31,14 +31,14 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem x:Uid="ReviewLocalFilesNavItem" Tag="LocalFiles" >
+                <NavigationViewItem x:Uid="ReviewLocalFilesNavItem" Tag="LocalFiles" IsEnabled="{x:Bind ViewModel.LocalFilesMenuItemState, Mode=OneWay}" >
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE83D;" />
                     </NavigationViewItem.Icon>
 
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge x:Name="LocalFilesCountInfoBadge"
-                            Value="0" Opacity="0"
+                            Value="{x:Bind ViewModel.LocalFilesCountInfoBadgeValue, Mode=OneWay}" Opacity="{x:Bind ViewModel.LocalFilesCountInfoBadgeOpacity, Mode=OneWay}"
                             Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>
@@ -48,14 +48,14 @@
 
                 </NavigationViewItem>
 
-                <NavigationViewItem x:Uid="ReviewEventLogsNavItem" Tag="EventLogs" >
+                <NavigationViewItem x:Uid="ReviewEventLogsNavItem" Tag="EventLogs" IsEnabled="{x:Bind ViewModel.EventLogsMenuItemState, Mode=OneWay}">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE964;" />
                     </NavigationViewItem.Icon>
 
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge x:Name="EventLogsCountInfoBadge"
-                            Value="0" Opacity="0"
+                            Value="{x:Bind ViewModel.EventLogsCountInfoBadgeValue, Mode=OneWay}" Opacity="{x:Bind ViewModel.EventLogsCountInfoBadgeOpacity, Mode=OneWay}"
                             Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>

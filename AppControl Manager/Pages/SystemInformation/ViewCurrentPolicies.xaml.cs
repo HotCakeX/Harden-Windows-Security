@@ -26,6 +26,10 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Represents a page for viewing current policies with data binding and navigation state management. It includes event
+/// handlers for menu and list interactions.
+/// </summary>
 public sealed partial class ViewCurrentPolicies : Page
 {
 
@@ -38,6 +42,10 @@ public sealed partial class ViewCurrentPolicies : Page
 	// Singleton instance of the class
 	private static ViewCurrentPolicies? _instance;
 
+	/// <summary>
+	/// Initializes the component and sets the DataContext for data binding in XAML. Ensures navigation maintains the
+	/// page's state.
+	/// </summary>
 	public ViewCurrentPolicies()
 	{
 		this.InitializeComponent();

@@ -22,8 +22,15 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// SystemInformation page
+/// </summary>
 public sealed partial class SystemInformation : Page
 {
+	/// <summary>
+	/// Initializes the SystemInformation page, maintains its navigation state, and navigates to the ViewCurrentPolicies
+	/// page on load.
+	/// </summary>
 	public SystemInformation()
 	{
 		this.InitializeComponent();

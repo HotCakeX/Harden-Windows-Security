@@ -26,9 +26,11 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,12 +40,20 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Represents a page for creating supplemental policies, managing data display and user interactions.
+/// </summary>
 public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIconsManager
 {
 
-	// A static instance of the CreateSupplementalPolicy class which will hold the single, shared instance of the page
-	private static CreateSupplementalPolicy? _instance;
+#pragma warning disable CA1822
+	internal CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
+#pragma warning restore CA1822
 
+	/// <summary>
+	/// Constructor for the CreateSupplementalPolicy class. Initializes components, sets navigation cache mode, and assigns
+	/// the data context.
+	/// </summary>
 	public CreateSupplementalPolicy()
 	{
 		this.InitializeComponent();
@@ -51,8 +61,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 
-		// Assign this instance to the static field
-		_instance = this;
+		this.DataContext = ViewModel;
 	}
 
 
@@ -60,7 +69,16 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	private string? unsignedBasePolicyPathFromSidebar;
 
-	// Implement the SetVisibility method required by IAnimatedIconsManager
+	/// <summary>
+	/// Implement the SetVisibility method required by IAnimatedIconsManager
+	/// </summary>
+	/// <param name="visibility"></param>
+	/// <param name="unsignedBasePolicyPath"></param>
+	/// <param name="button1"></param>
+	/// <param name="button2"></param>
+	/// <param name="button3"></param>
+	/// <param name="button4"></param>
+	/// <param name="button5"></param>
 	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons
@@ -175,13 +193,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	#endregion
 
 
-	// Public property to access the singleton instance from other classes
-	public static CreateSupplementalPolicy Instance => _instance ?? throw new InvalidOperationException("CreateSupplementalPolicy is not initialized.");
-
-
 	#region Files and Folders scan
-
-	internal bool filesAndFoldersDataProcessed;
 
 	// Selected File Paths
 	private readonly HashSet<string> filesAndFoldersFilePaths = [];
@@ -201,10 +213,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	private bool filesAndFoldersDeployButton;
 
 	private bool usingWildCardFilePathRules;
-
-	// Used to store the scan results and as the source for the results ListViews
-	internal ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
-	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
 
 
 	private void FilesAndFoldersBrowseForFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -568,8 +576,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			Logger.Write(msg1);
 
 			// Clear variables responsible for the ListView
-			filesAndFoldersScanResultsList.Clear();
-			filesAndFoldersScanResults.Clear();
+			ViewModel.filesAndFoldersScanResultsList.Clear();
+			ViewModel.filesAndFoldersScanResults.Clear();
 
 			double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
 
@@ -626,15 +634,22 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressRing);
 
-					// Add the results of the directories scans to the ListView
-					foreach (FileIdentity item in LocalFilesResults)
+					ViewModel.filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
+
+					await DispatcherQueue.EnqueueAsync(() =>
 					{
-						_ = DispatcherQueue.TryEnqueue(() =>
+						// Add the results of the directories scans to the ListView
+						foreach (FileIdentity item in LocalFilesResults)
 						{
-							filesAndFoldersScanResults.Add(item);
-							filesAndFoldersScanResultsList.Add(item);
-						});
-					}
+							// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
+							item.ParentViewModelCreateSupplementalPolicyVM = ViewModel;
+							ViewModel.filesAndFoldersScanResults.Add(item);
+						}
+
+						ViewModel.CalculateColumnWidths();
+
+						ViewModel.UpdateTotalFilesFilesAndFolders();
+					});
 
 					string msg3 = "Scan completed, creating the Supplemental policy";
 
@@ -647,24 +662,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				}
 
-				await DispatcherQueue.EnqueueAsync(() =>
-				{
-					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-					if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(CreateSupplementalPolicyFilesAndFoldersScanResults)))
-					{
-						filesAndFoldersDataProcessed = false;
-
-						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
-						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
-
-						CreateSupplementalPolicyFilesAndFoldersScanResults.Instance.UpdateTotalFiles();
-					}
-					else
-					{
-						// Set it to true so ListView will be updated once user navigated to the page
-						filesAndFoldersDataProcessed = true;
-					}
-				});
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersSupplementalPolicy");
 
@@ -1318,15 +1315,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 	#region Strict Kernel-Mode Supplemental Policy
 
-	internal bool StrictKernelModeDataProcessed;
-
 	// Path to the base policy for the Strict kernel-mode supplemental policy
 	private string? StrictKernelModeBasePolicyPath;
-
-	// Used to store the scan results and as the source for the results ListViews
-	internal ObservableCollection<FileIdentity> ScanResults = [];
-	internal List<FileIdentity> ScanResultsList = [];
-
 
 	private void StrictKernelModeBrowseForBasePolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
@@ -1436,8 +1426,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeSection.IsExpanded = true;
 
 			// Clear variables responsible for the ListView
-			ScanResults.Clear();
-			ScanResultsList.Clear();
+			ViewModel.StrictKernelModeScanResults.Clear();
+			ViewModel.StrictKernelModeScanResultsList.Clear();
 
 
 			// Grab the App Control Logs
@@ -1472,33 +1462,20 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			StrictKernelModeInfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
 
-			await Task.Run(() =>
+			// Add the event logs to the List
+			ViewModel.StrictKernelModeScanResultsList.AddRange(Output);
+
+			// Add the event logs to the ObservableCollection
+			foreach (FileIdentity item in Output)
 			{
-				// Add the event logs to the List
-				ScanResultsList.AddRange(Output);
+				// Add a reference to the ViewModel class to each item for navigation in the XAML
+				item.ParentViewModelCreateSupplementalPolicyVM = ViewModel;
+				ViewModel.StrictKernelModeScanResults.Add(item);
+			}
 
-				// Add the event logs to the ObservableCollection
-				ScanResults = [.. Output];
-			});
+			ViewModel.CalculateColumnWidthsStrictKernelMode();
 
-			await DispatcherQueue.EnqueueAsync(() =>
-			{
-				// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-				if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(StrictKernelPolicyScanResults)))
-				{
-					StrictKernelModeDataProcessed = false;
-
-					StrictKernelPolicyScanResults.Instance.CalculateColumnWidths();
-					StrictKernelPolicyScanResults.Instance.UIListView.ItemsSource = ScanResults;
-
-					StrictKernelPolicyScanResults.Instance.UpdateTotalFiles();
-				}
-				else
-				{
-					// Set it to true so ListView will be updated once user navigated to the page
-					StrictKernelModeDataProcessed = true;
-				}
-			});
+			ViewModel.UpdateTotalFilesStrictKernelMode();
 
 			DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
 		}
@@ -1537,7 +1514,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 		// it will be opened again if necessary
 		StrictKernelModeCreateButtonTeachingTip.IsOpen = false;
 
-		if (ScanResults.Count is 0)
+		if (ViewModel.StrictKernelModeScanResults.Count is 0)
 		{
 			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
 			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
@@ -1576,7 +1553,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			StrictKernelModeInfoBar.IsClosable = false;
 			StrictKernelModeInfoBar.IsOpen = true;
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
-			StrictKernelModeInfoBar.Message = $"Creating Strict Kernel-mode supplemental policy for {ScanResults.Count} files";
+			StrictKernelModeInfoBar.Message = $"Creating Strict Kernel-mode supplemental policy for {ViewModel.StrictKernelModeScanResults.Count} files";
 			StrictKernelModeSection.IsExpanded = true;
 
 
@@ -1598,7 +1575,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. ScanResults], level: ScanLevels.FilePublisher);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. ViewModel.StrictKernelModeScanResults], level: ScanLevels.FilePublisher);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
@@ -1715,8 +1692,8 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			List<FileInfo> kernelModeDriversList = [];
 
-			ScanResults.Clear();
-			ScanResultsList.Clear();
+			ViewModel.StrictKernelModeScanResults.Clear();
+			ViewModel.StrictKernelModeScanResultsList.Clear();
 
 			await Task.Run(() =>
 			{
@@ -1769,30 +1746,18 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				IEnumerable<FileIdentity> ILocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
 
 				// Add the results to the List
-				ScanResultsList.AddRange(ILocalFilesResults);
-
-				// Add the results to the ObservableCollection
-				ScanResults = [.. ILocalFilesResults];
+				ViewModel.StrictKernelModeScanResultsList.AddRange(ILocalFilesResults);
 			});
 
-			await DispatcherQueue.EnqueueAsync(() =>
+			// Add the results to the ObservableCollection
+			foreach (FileIdentity item in LocalFilesResults)
 			{
-				// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-				if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(StrictKernelPolicyScanResults)))
-				{
-					StrictKernelModeDataProcessed = false;
+				ViewModel.StrictKernelModeScanResults.Add(item);
+			}
 
-					StrictKernelPolicyScanResults.Instance.CalculateColumnWidths();
-					StrictKernelPolicyScanResults.Instance.UIListView.ItemsSource = ScanResults;
+			ViewModel.CalculateColumnWidthsStrictKernelMode();
 
-					StrictKernelPolicyScanResults.Instance.UpdateTotalFiles();
-				}
-				else
-				{
-					// Set it to true so ListView will be updated once user navigated to the page
-					StrictKernelModeDataProcessed = true;
-				}
-			});
+			ViewModel.UpdateTotalFilesStrictKernelMode();
 
 			DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
 		}

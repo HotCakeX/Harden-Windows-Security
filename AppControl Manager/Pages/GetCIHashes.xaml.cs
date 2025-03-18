@@ -27,8 +27,16 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Handles the file selection and computes various cryptographic hashes for the selected file. Displays the results in
+/// the UI.
+/// </summary>
 public sealed partial class GetCIHashes : Page
 {
+
+	/// <summary>
+	/// Initializes the component and sets the navigation cache mode to required for the GetCIHashes class.
+	/// </summary>
 	public GetCIHashes()
 	{
 		this.InitializeComponent();

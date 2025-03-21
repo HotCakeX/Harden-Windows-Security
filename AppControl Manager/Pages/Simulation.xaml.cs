@@ -18,16 +18,15 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using CommunityToolkit.WinUI;
+using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -35,221 +34,39 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
-using WinRT;
 
 namespace AppControlManager.Pages;
 
-// Since the columns for data in the ItemTemplate use "Binding" instead of "x:Bind", we need to use [GeneratedBindableCustomProperty] for them to work properly
-[GeneratedBindableCustomProperty]
-public sealed partial class Simulation : Page, INotifyPropertyChanged
+/// <summary>
+/// Represents a simulation page that initializes components, manages file paths, and handles user interactions for
+/// simulations.
+/// </summary>
+public sealed partial class Simulation : Page
 {
 
-	#region LISTVIEW IMPLEMENTATIONS
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-	// Properties to hold each columns' width.
-	private GridLength _columnWidth1;
-	public GridLength ColumnWidth1
-	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
-	}
-
-	private GridLength _columnWidth2;
-	public GridLength ColumnWidth2
-	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
-	}
-
-	private GridLength _columnWidth3;
-	public GridLength ColumnWidth3
-	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
-	}
-
-	private GridLength _columnWidth4;
-	public GridLength ColumnWidth4
-	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
-	}
-
-	private GridLength _columnWidth5;
-	public GridLength ColumnWidth5
-	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
-	}
-
-	private GridLength _columnWidth6;
-	public GridLength ColumnWidth6
-	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
-	}
-
-	private GridLength _columnWidth7;
-	public GridLength ColumnWidth7
-	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
-	}
-
-	private GridLength _columnWidth8;
-	public GridLength ColumnWidth8
-	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
-	}
-
-	private GridLength _columnWidth9;
-	public GridLength ColumnWidth9
-	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
-	}
-
-	private GridLength _columnWidth10;
-	public GridLength ColumnWidth10
-	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
-	}
-
-	private GridLength _columnWidth11;
-	public GridLength ColumnWidth11
-	{
-		get => _columnWidth11;
-		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
-	}
-
-	private GridLength _columnWidth12;
-	public GridLength ColumnWidth12
-	{
-		get => _columnWidth12;
-		set { _columnWidth12 = value; OnPropertyChanged(nameof(ColumnWidth12)); }
-	}
-
-	private GridLength _columnWidth13;
-	public GridLength ColumnWidth13
-	{
-		get => _columnWidth13;
-		set { _columnWidth13 = value; OnPropertyChanged(nameof(ColumnWidth13)); }
-	}
-
-	private GridLength _columnWidth14;
-	public GridLength ColumnWidth14
-	{
-		get => _columnWidth14;
-		set { _columnWidth14 = value; OnPropertyChanged(nameof(ColumnWidth14)); }
-	}
-
-	private GridLength _columnWidth15;
-	public GridLength ColumnWidth15
-	{
-		get => _columnWidth15;
-		set { _columnWidth15 = value; OnPropertyChanged(nameof(ColumnWidth15)); }
-	}
-
+#pragma warning disable CA1822
+	internal SimulationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SimulationVM>();
+#pragma warning restore CA1822
 
 	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
-	/// And only after this method, the ItemsSource must be assigned to the ListView.
+	/// Initializes a new instance of the Simulation class. Sets up the component, navigation cache mode, data context, and
+	/// initializes file and folder path arrays.
 	/// </summary>
-	internal void CalculateColumnWidths()
+	public Simulation()
 	{
+		this.InitializeComponent();
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PathHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SourceHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("MatchCriteriaHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SpecificFileNameLevelMatchCriteriaHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerIDHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNameHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerCertRootHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerCertPublisherHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerScopeHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("CertSubjectCNHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("CertIssuerCNHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("CertNotAfterHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("CertTBSValueHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
+		this.DataContext = ViewModel;
 
-		// Iterate over all items to determine the widest string for each column.
-		foreach (SimulationOutput item in SimulationOutputs)
-		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.Path);
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.Source);
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.IsAuthorized.ToString());
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.MatchCriteria?.ToString());
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.SpecificFileNameLevelMatchCriteria);
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.SignerID);
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.SignerName);
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.SignerCertRoot);
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.SignerCertPublisher);
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.SignerScope);
-			if (w10 > maxWidth10) maxWidth10 = w10;
-
-			double w11 = ListViewHelper.MeasureTextWidth(item.CertSubjectCN);
-			if (w11 > maxWidth11) maxWidth11 = w11;
-
-			double w12 = ListViewHelper.MeasureTextWidth(item.CertIssuerCN);
-			if (w12 > maxWidth12) maxWidth12 = w12;
-
-			double w13 = ListViewHelper.MeasureTextWidth(item.CertNotAfter);
-			if (w13 > maxWidth13) maxWidth13 = w13;
-
-			double w14 = ListViewHelper.MeasureTextWidth(item.CertTBSValue);
-			if (w14 > maxWidth14) maxWidth14 = w14;
-
-			double w15 = ListViewHelper.MeasureTextWidth(item.FilePath);
-			if (w15 > maxWidth15) maxWidth15 = w15;
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
-		ColumnWidth7 = new GridLength(maxWidth7);
-		ColumnWidth8 = new GridLength(maxWidth8);
-		ColumnWidth9 = new GridLength(maxWidth9);
-		ColumnWidth10 = new GridLength(maxWidth10);
-		ColumnWidth11 = new GridLength(maxWidth11);
-		ColumnWidth12 = new GridLength(maxWidth12);
-		ColumnWidth13 = new GridLength(maxWidth13);
-		ColumnWidth14 = new GridLength(maxWidth14);
-		ColumnWidth15 = new GridLength(maxWidth15);
+		filePaths = [];
+		folderPaths = [];
+		catRootPaths = [];
 	}
 
+
+
+	#region ListView Stuff
 
 	/// <summary>
 	/// Converts the properties of a SimulationOutput row into a labeled, formatted string for copying to clipboard.
@@ -421,43 +238,36 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 		// Use either the full list (AllSimulationOutputs) or the current display list.
-		List<SimulationOutput> collectionToSort = isSearchEmpty ? AllSimulationOutputs : [.. SimulationOutputs];
+		List<SimulationOutput> collectionToSort = isSearchEmpty ? ViewModel.AllSimulationOutputs : [.. ViewModel.SimulationOutputs];
+
+		ViewModel.SimulationOutputs.Clear();
 
 		if (SortingDirectionToggle.IsChecked)
 		{
-			// Sort in descending order.
-			SimulationOutputs = [.. collectionToSort.OrderByDescending(keySelector)];
+			// Sort in descending order
+			foreach (SimulationOutput item in collectionToSort.OrderByDescending(keySelector))
+			{
+				ViewModel.SimulationOutputs.Add(item);
+			}
 		}
 		else
 		{
-			// Sort in ascending order.
-			SimulationOutputs = [.. collectionToSort.OrderBy(keySelector)];
+			// Sort in ascending order
+			foreach (SimulationOutput item in collectionToSort.OrderBy(keySelector))
+			{
+				ViewModel.SimulationOutputs.Add(item);
+			}
 		}
-
-		// Refresh the ItemsSource so the UI updates.
-		SimOutputListView.ItemsSource = SimulationOutputs;
 	}
 
 	#endregion
 
-	internal ObservableCollection<SimulationOutput> SimulationOutputs { get; set; }
-	private readonly List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching
+
 	private List<string> filePaths; // For selected file paths
 	private readonly List<string> folderPaths; // For selected folder paths
 	private string? xmlFilePath; // For selected XML file path
 	private List<string> catRootPaths; // For selected Cat Root paths
 
-	public Simulation()
-	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
-		SimulationOutputs = [];
-		AllSimulationOutputs = [];
-		filePaths = [];
-		folderPaths = [];
-		catRootPaths = [];
-	}
 
 	// Event handler for the Begin Simulation button
 	private async void BeginSimulationButton_Click(object sender, RoutedEventArgs e)
@@ -491,27 +301,23 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 			});
 
 			// Clear the current ObservableCollection and backup the full data set
-			SimulationOutputs.Clear();
-			AllSimulationOutputs.Clear();
+			ViewModel.SimulationOutputs.Clear();
+			ViewModel.AllSimulationOutputs.Clear();
 
 			// Update the TextBox with the total count of files
 			TotalCountOfTheFilesTextBox.Text = result.Count.ToString(CultureInfo.InvariantCulture);
 
+			ViewModel.AllSimulationOutputs.AddRange(result.Values);
+
 			// Add to the ObservableCollection bound to the UI
-			await DispatcherQueue.EnqueueAsync(() =>
+			foreach (KeyValuePair<string, SimulationOutput> entry in result)
 			{
-				// Update the ObservableCollection on the UI thread
-				foreach (KeyValuePair<string, SimulationOutput> entry in result)
-				{
-					// Add to the full list and observable collection
-					SimulationOutputs.Add(entry.Value);
+				// Add a reference to the ViewModel class so we can use it for navigation in the XAML
+				entry.Value.ParentViewModelSimulationVM = ViewModel;
+				ViewModel.SimulationOutputs.Add(entry.Value);
+			}
 
-					AllSimulationOutputs.Add(entry.Value);
-				}
-
-				CalculateColumnWidths();
-				SimOutputListView.ItemsSource = SimulationOutputs;
-			});
+			ViewModel.CalculateColumnWidths();
 		}
 		finally
 		{
@@ -591,21 +397,25 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
 	{
 		// Clear the ObservableCollection
-		SimulationOutputs.Clear();
+		ViewModel.SimulationOutputs.Clear();
 		// Clear the full data
-		AllSimulationOutputs.Clear();
+		ViewModel.AllSimulationOutputs.Clear();
 
 		// set the total count to 0 after clearing all the data
 		TotalCountOfTheFilesTextBox.Text = "0";
 	}
 
-	// Event handler for the SearchBox text change
+	/// <summary>
+	/// Event handler for the SearchBox text change
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
 		string searchTerm = SearchBox.Text.Trim();
 
 		// Perform a case-insensitive search in all relevant fields
-		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
+		List<SimulationOutput> filteredResults = [.. ViewModel.AllSimulationOutputs.Where(output =>
 			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -616,11 +426,13 @@ public sealed partial class Simulation : Page, INotifyPropertyChanged
 		)];
 
 
-		// Update the ObservableCollection with the filtered results
-		SimulationOutputs = [.. filteredResults];
+		ViewModel.SimulationOutputs.Clear();
 
-		// Explicitly set the ListView's ItemsSource to ensure the data refreshes
-		SimOutputListView.ItemsSource = SimulationOutputs;
+		foreach (SimulationOutput item in filteredResults)
+		{
+			ViewModel.SimulationOutputs.Add(item);
+		}
+
 	}
 
 

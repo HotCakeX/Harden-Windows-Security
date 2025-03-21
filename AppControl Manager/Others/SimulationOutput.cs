@@ -15,6 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.ViewModels;
+
 namespace AppControlManager.Others;
 
 /// <summary>
@@ -87,4 +89,7 @@ internal sealed class SimulationOutput(
 
 	// Full path of the file
 	internal string? FilePath { get; set; } = filePath;
+
+	// Reference for the ViewModel's class
+	internal SimulationVM? ParentViewModelSimulationVM { get; set; }
 }

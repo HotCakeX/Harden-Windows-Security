@@ -17,305 +17,63 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using WinRT;
 
 namespace AppControlManager.Pages;
 
-// Since the columns for data in the ItemTemplate use "Binding" instead of "x:Bind", we need to use [GeneratedBindableCustomProperty] for them to work properly
-[GeneratedBindableCustomProperty]
-public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChanged
+/// <summary>
+/// Handles the creation and management of event logs policies, including scanning logs, filtering, and clipboard
+/// operations.
+/// </summary>
+public sealed partial class EventLogsPolicyCreation : Page
 {
 
-	#region LISTVIEW IMPLEMENTATIONS
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-	// Properties to hold each columns' width.
-	private GridLength _columnWidth1;
-	public GridLength ColumnWidth1
-	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
-	}
-
-	private GridLength _columnWidth2;
-	public GridLength ColumnWidth2
-	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
-	}
-
-	private GridLength _columnWidth3;
-	public GridLength ColumnWidth3
-	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
-	}
-
-	private GridLength _columnWidth4;
-	public GridLength ColumnWidth4
-	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
-	}
-
-	private GridLength _columnWidth5;
-	public GridLength ColumnWidth5
-	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
-	}
-
-	private GridLength _columnWidth6;
-	public GridLength ColumnWidth6
-	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
-	}
-
-	private GridLength _columnWidth7;
-	public GridLength ColumnWidth7
-	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
-	}
-
-	private GridLength _columnWidth8;
-	public GridLength ColumnWidth8
-	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
-	}
-
-	private GridLength _columnWidth9;
-	public GridLength ColumnWidth9
-	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
-	}
-
-	private GridLength _columnWidth10;
-	public GridLength ColumnWidth10
-	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
-	}
-
-	private GridLength _columnWidth11;
-	public GridLength ColumnWidth11
-	{
-		get => _columnWidth11;
-		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
-	}
-
-	private GridLength _columnWidth12;
-	public GridLength ColumnWidth12
-	{
-		get => _columnWidth12;
-		set { _columnWidth12 = value; OnPropertyChanged(nameof(ColumnWidth12)); }
-	}
-
-	private GridLength _columnWidth13;
-	public GridLength ColumnWidth13
-	{
-		get => _columnWidth13;
-		set { _columnWidth13 = value; OnPropertyChanged(nameof(ColumnWidth13)); }
-	}
-
-	private GridLength _columnWidth14;
-	public GridLength ColumnWidth14
-	{
-		get => _columnWidth14;
-		set { _columnWidth14 = value; OnPropertyChanged(nameof(ColumnWidth14)); }
-	}
-
-	private GridLength _columnWidth15;
-	public GridLength ColumnWidth15
-	{
-		get => _columnWidth15;
-		set { _columnWidth15 = value; OnPropertyChanged(nameof(ColumnWidth15)); }
-	}
-
-	private GridLength _columnWidth16;
-	public GridLength ColumnWidth16
-	{
-		get => _columnWidth16;
-		set { _columnWidth16 = value; OnPropertyChanged(nameof(ColumnWidth16)); }
-	}
-
-	private GridLength _columnWidth17;
-	public GridLength ColumnWidth17
-	{
-		get => _columnWidth17;
-		set { _columnWidth17 = value; OnPropertyChanged(nameof(ColumnWidth17)); }
-	}
-
-	private GridLength _columnWidth18;
-	public GridLength ColumnWidth18
-	{
-		get => _columnWidth18;
-		set { _columnWidth18 = value; OnPropertyChanged(nameof(ColumnWidth18)); }
-	}
-
-	private GridLength _columnWidth19;
-	public GridLength ColumnWidth19
-	{
-		get => _columnWidth19;
-		set { _columnWidth19 = value; OnPropertyChanged(nameof(ColumnWidth19)); }
-	}
-
-	private GridLength _columnWidth20;
-	public GridLength ColumnWidth20
-	{
-		get => _columnWidth20;
-		set { _columnWidth20 = value; OnPropertyChanged(nameof(ColumnWidth20)); }
-	}
-
-	private GridLength _columnWidth21;
-	public GridLength ColumnWidth21
-	{
-		get => _columnWidth21;
-		set { _columnWidth21 = value; OnPropertyChanged(nameof(ColumnWidth21)); }
-	}
+#pragma warning disable CA1822
+	internal EventLogsPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<EventLogsPolicyCreationVM>();
+#pragma warning restore CA1822
 
 	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
-	/// And only after this method, the ItemsSource must be assigned to the ListView.
+	/// Initializes the EventLogsPolicyCreation component, sets navigation cache mode, and binds the DataContext to the
+	/// ViewModel. Also adds a DateChanged event handler.
 	/// </summary>
-	internal void CalculateColumnWidths()
+	public EventLogsPolicyCreation()
 	{
+		this.InitializeComponent();
 
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TimeCreatedHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ActionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1FlatHashHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256FlatHashHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
-		double maxWidth19 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
-		double maxWidth20 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
-		double maxWidth21 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ComputerNameHeader/Text"));
+		// Make sure navigating to/from this page maintains its state
+		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
-		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in FileIdentities)
-		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.FileName);
-			if (w1 > maxWidth1) maxWidth1 = w1;
+		this.DataContext = ViewModel;
 
-			double w2 = ListViewHelper.MeasureTextWidth(item.TimeCreated.ToString());
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.SignatureStatus.ToString());
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.Action.ToString());
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.OriginalFileName);
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.InternalName);
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.FileDescription);
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.ProductName);
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.FileVersion?.ToString());
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.PackageFamilyName);
-			if (w10 > maxWidth10) maxWidth10 = w10;
-
-			double w11 = ListViewHelper.MeasureTextWidth(item.SHA256Hash);
-			if (w11 > maxWidth11) maxWidth11 = w11;
-
-			double w12 = ListViewHelper.MeasureTextWidth(item.SHA1Hash);
-			if (w12 > maxWidth12) maxWidth12 = w12;
-
-			double w13 = ListViewHelper.MeasureTextWidth(item.SISigningScenario.ToString());
-			if (w13 > maxWidth13) maxWidth13 = w13;
-
-			double w14 = ListViewHelper.MeasureTextWidth(item.FilePath);
-			if (w14 > maxWidth14) maxWidth14 = w14;
-
-			double w15 = ListViewHelper.MeasureTextWidth(item.SHA1FlatHash);
-			if (w15 > maxWidth15) maxWidth15 = w15;
-
-			double w16 = ListViewHelper.MeasureTextWidth(item.SHA256FlatHash);
-			if (w16 > maxWidth16) maxWidth16 = w16;
-
-			double w17 = ListViewHelper.MeasureTextWidth(item.FilePublishersToDisplay);
-			if (w17 > maxWidth17) maxWidth17 = w17;
-
-			double w18 = ListViewHelper.MeasureTextWidth(item.Opus);
-			if (w18 > maxWidth18) maxWidth18 = w18;
-
-			double w19 = ListViewHelper.MeasureTextWidth(item.PolicyGUID.ToString());
-			if (w19 > maxWidth19) maxWidth19 = w19;
-
-			double w20 = ListViewHelper.MeasureTextWidth(item.PolicyName);
-			if (w20 > maxWidth20) maxWidth20 = w20;
-
-			double w21 = ListViewHelper.MeasureTextWidth(item.ComputerName);
-			if (w21 > maxWidth21) maxWidth21 = w21;
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
-		ColumnWidth7 = new GridLength(maxWidth7);
-		ColumnWidth8 = new GridLength(maxWidth8);
-		ColumnWidth9 = new GridLength(maxWidth9);
-		ColumnWidth10 = new GridLength(maxWidth10);
-		ColumnWidth11 = new GridLength(maxWidth11);
-		ColumnWidth12 = new GridLength(maxWidth12);
-		ColumnWidth13 = new GridLength(maxWidth13);
-		ColumnWidth14 = new GridLength(maxWidth14);
-		ColumnWidth15 = new GridLength(maxWidth15);
-		ColumnWidth16 = new GridLength(maxWidth16);
-		ColumnWidth17 = new GridLength(maxWidth17);
-		ColumnWidth18 = new GridLength(maxWidth18);
-		ColumnWidth19 = new GridLength(maxWidth19);
-		ColumnWidth20 = new GridLength(maxWidth20);
-		ColumnWidth21 = new GridLength(maxWidth21);
+		// Add the DateChanged event handler
+		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
 	}
+
+
+	private string? CodeIntegrityEVTX; // To store the Code Integrity EVTX file path
+	private string? AppLockerEVTX; // To store the AppLocker EVTX file path
+
+	// The user selected scan level
+	private ScanLevels scanLevel = ScanLevels.FilePublisher;
+
+
+	// Variables to hold the data supplied by the UI elements
+	private Guid? BasePolicyGUID;
+	private string? PolicyToAddLogsTo;
+	private string? BasePolicyXMLFile;
 
 
 	/// <summary>
@@ -353,48 +111,8 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		FileIdentities = ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle,
-			AllFileIdentities, FileIdentities, FileIdentitiesListView);
-	}
-
-	#endregion
-
-
-	// To store the FileIdentities displayed on the ListView
-	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
-	internal ObservableCollection<FileIdentity> FileIdentities { get; set; }
-
-	// Store all outputs for searching, used as a temporary storage for filtering
-	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
-	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	private readonly List<FileIdentity> AllFileIdentities;
-
-	private string? CodeIntegrityEVTX; // To store the Code Integrity EVTX file path
-	private string? AppLockerEVTX; // To store the AppLocker EVTX file path
-
-	// The user selected scan level
-	private ScanLevels scanLevel = ScanLevels.FilePublisher;
-
-
-	// Variables to hold the data supplied by the UI elements
-	private Guid? BasePolicyGUID;
-	private string? PolicyToAddLogsTo;
-	private string? BasePolicyXMLFile;
-
-
-	public EventLogsPolicyCreation()
-	{
-		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
-
-		// Initialize the lists
-		FileIdentities = [];
-		AllFileIdentities = [];
-
-		// Add the DateChanged event handler
-		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
+		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle,
+			ViewModel.AllFileIdentities, ViewModel.FileIdentities);
 	}
 
 	/// <summary>
@@ -420,11 +138,10 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// </summary>
 	private void ApplyFilters()
 	{
-		FileIdentities = ListViewHelper.ApplyFilters(
-		allFileIdentities: AllFileIdentities.AsEnumerable(),
-		filteredCollection: FileIdentities,
+		ListViewHelper.ApplyFilters(
+		allFileIdentities: ViewModel.AllFileIdentities.AsEnumerable(),
+		filteredCollection: ViewModel.FileIdentities,
 		searchTextBox: SearchBox,
-		listView: FileIdentitiesListView,
 		datePicker: FilterByDateCalendarPicker
 		);
 		UpdateTotalLogs();
@@ -456,23 +173,22 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			// Grab the App Control Logs
 			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(CodeIntegrityEvtxFilePath: CodeIntegrityEVTX, AppLockerEvtxFilePath: AppLockerEVTX);
 
-			await Task.Run(() =>
+			ViewModel.AllFileIdentities.Clear();
+
+			// Store all of the data in the List
+			ViewModel.AllFileIdentities.AddRange(Output);
+
+			foreach (FileIdentity item in Output)
 			{
-				AllFileIdentities.Clear();
+				// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
+				item.ParentViewModelEventLogsPolicyCreationVM = ViewModel;
+				ViewModel.FileIdentities.Add(item);
+			}
 
-				// Store all of the data in the List
-				AllFileIdentities.AddRange(Output);
-
-				// Store all of the data in the ObservableCollection
-				// At this point the ObservableCollection is not bound to the UI so it won't trigger INotifyPropertyChanged or cause UI to freeze
-				FileIdentities = [.. Output];
-			});
 
 			UpdateTotalLogs();
 
-			CalculateColumnWidths();
-
-			FileIdentitiesListView.ItemsSource = FileIdentities;
+			ViewModel.CalculateColumnWidths();
 		}
 		finally
 		{
@@ -560,8 +276,8 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// <param name="e"></param>
 	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
 	{
-		FileIdentities.Clear();
-		AllFileIdentities.Clear();
+		ViewModel.FileIdentities.Clear();
+		ViewModel.AllFileIdentities.Clear();
 
 		UpdateTotalLogs(true);
 	}
@@ -573,7 +289,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 	/// <param name="e"></param>
 	private void SelectAll_Click(object sender, RoutedEventArgs e)
 	{
-		ListViewHelper.SelectAll(FileIdentitiesListView, FileIdentities);
+		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FileIdentities);
 	}
 
 	/// <summary>
@@ -599,8 +315,8 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		// Remove each selected item from the FileIdentities collection
 		foreach (FileIdentity item in itemsToDelete)
 		{
-			_ = FileIdentities.Remove(item);
-			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
+			_ = ViewModel.FileIdentities.Remove(item);
+			_ = ViewModel.AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
 
 		UpdateTotalLogs();
@@ -617,7 +333,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: {FileIdentities.Count}";
+			TotalCountOfTheFilesTextBox.Text = $"Total logs: {ViewModel.FileIdentities.Count}";
 		}
 	}
 
@@ -700,7 +416,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
 
-			if (FileIdentities.Count is 0)
+			if (ViewModel.FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException("There are no logs. Use the scan button first.");
 			}
@@ -744,7 +460,7 @@ public sealed partial class EventLogsPolicyCreation : Page, INotifyPropertyChang
 			// If no item was selected from the ListView, use everything in the ObservableCollection
 			else
 			{
-				SelectedLogs = [.. FileIdentities];
+				SelectedLogs = [.. ViewModel.FileIdentities];
 			}
 
 			// If user selected to deploy the policy

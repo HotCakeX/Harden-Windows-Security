@@ -10,8 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    x:Name="AllowNewAppsEventLogsDataGridXAML">
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
 
@@ -43,7 +42,7 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearEventLogsDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -92,13 +91,7 @@
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>
-
-                <TextBox x:Uid="TotalLogsTextBlock"
-               x:Name="TotalCountOfTheFilesTextBox"
-               IsReadOnly="True"
-               VerticalAlignment="Center"
-               VerticalContentAlignment="Center"/>
-
+                
                 <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
             </controls:WrapPanel>
@@ -107,6 +100,7 @@
         <ListView x:Name="FileIdentitiesListView"
             Grid.Row="1"
             SelectionMode="Extended"
+            ItemsSource="{x:Bind ViewModel.EventLogsFileIdentities, Mode=OneWay}"
             ScrollViewer.HorizontalScrollMode="Enabled"
             ScrollViewer.IsHorizontalRailEnabled="True"
             ScrollViewer.HorizontalScrollBarVisibility="Visible"
@@ -124,27 +118,27 @@
                     <Grid>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth18, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth19, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth20, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth21, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs18, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs19, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs20, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs21, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="TimeCreatedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -334,31 +328,27 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <!-- Use standard Binding with ElementName to refer back to the page's properties
-                                because in here the Data Context is set to FileIdentity so we cannot use x.Bind
-                                since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
-                                And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
-                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth12, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth13, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth14, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth15, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth16, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth17, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth18, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth19, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth20, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth21, ElementName=AllowNewAppsEventLogsDataGridXAML}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs1}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs2}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs3}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs4}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs5}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs6}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs7}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs8}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs9}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs10}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs11}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs12}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs13}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs14}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs15}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs16}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs17}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs18}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs19}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs20}"  />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthEventLogs21}"  />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind TimeCreated}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>

@@ -38,7 +38,7 @@ namespace AppControlManager.PolicyEditor;
 /// <param name="type"></param>
 /// <param name="sourceType"></param>
 /// <param name="source"></param>
-/// <param name="ParentViewModel"></param>
+/// <param name="parentViewModel"></param>
 internal sealed class FileBasedRulesForListView(
 	string? id,
 	string? friendlyName,
@@ -79,5 +79,5 @@ internal sealed class FileBasedRulesForListView(
 
 	// A property for the parent view model of the Policy Editor page to store a reference to it
 	// so we can access the variables in the View Model class via compiled binding in XAML.
-	public PolicyEditorVM ParentViewModel => parentViewModel;
+	internal PolicyEditorVM ParentViewModel => parentViewModel;
 }

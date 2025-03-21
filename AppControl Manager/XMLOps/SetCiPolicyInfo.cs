@@ -24,33 +24,29 @@ namespace AppControlManager.XMLOps;
 internal static class SetCiPolicyInfo
 {
 	/// <summary>
-	/// Configures a XML Code Integrity policy by modifying its details.
+	/// Configures an XML Code Integrity policy by modifying its details.
 	/// When it comes to PolicyID, the only time it is modified is through random GUID generation.
-	/// The BasePolicyID however can be modified by supplying a XML file, or providing the GUID directory, or through GUID random generation.
-	/// If the policy doesn't have a <Settings> node with a <Setting> node inside of it for PolicyName, it will be created. This is regardless of whether the policyName parameter was provided or not.
+	/// The BasePolicyID, however, can be modified by supplying an XML file, providing the GUID directory, or through GUID random generation.
+	/// If the policy doesn't have a "Settings" node with a "Setting" node inside it for PolicyName, it will be created. This is regardless of whether the policyName parameter was provided or not.
 	/// </summary>
-	/// <param name="filePath">Path to the XML policy file to modify</param>
-	///
+	/// <param name="filePath">Path to the XML policy file to modify.</param>
 	/// <param name="resetPolicyID">
 	/// Will assign a random GUID for the PolicyID and BasePolicyID of the selected XML file.
-	/// If this parameter is specified along with basePolicyID, first both policyID and BasePolicyID will reset and then basePolicyID will be applied to the policy.
-	/// Which is the same behavior as Set-CIPolicyIdInfo cmdlet.
+	/// If this parameter is specified along with basePolicyID, first both PolicyID and BasePolicyID will reset and then basePolicyID will be applied to the policy.
 	/// </param>
-	///
-	/// <param name="policyName">The policy name to set for the selected XML policy file</param>
-	///
+	/// <param name="policyName">The policy name to set for the selected XML policy file.</param>
 	/// <param name="basePolicyID">
 	/// The BasePolicyID to set for the selected XML policy file.
-	/// It doesn't need to have curly brackets. They will be added automatically by the method.
-	/// It is the same as the -SupplementsBasePolicyID parameter of the Set-CIPolicyIdInfo cmdlet.
+	/// It doesn't need to have curly brackets; they will be added automatically by the method.
+	/// This is the same as the -SupplementsBasePolicyID parameter of the Set-CIPolicyIdInfo cmdlet.
 	/// It will change the type of the policy to a Supplemental Policy type.
 	/// </param>
-	///
 	/// <param name="basePolicyToSupplementPath">
-	/// The path to a XML file. The PolicyID of the file will be extracted and applied to the BasePolicyID of the XML file selected in the filePath parameter.
+	/// The path to an XML file. The PolicyID of the file will be extracted and applied to the BasePolicyID of the XML file selected in the filePath parameter.
 	/// </param>
-	///
-	/// <returns> Returns the final policy ID of the XML policy. It will have curly brackets. </returns>
+	/// <returns>
+	/// Returns the final policy ID of the XML policy. It will have curly brackets.
+	/// </returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static string Set(string filePath, bool? resetPolicyID, string? policyName, string? basePolicyID, string? basePolicyToSupplementPath)
 	{

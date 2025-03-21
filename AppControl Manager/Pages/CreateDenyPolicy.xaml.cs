@@ -24,9 +24,11 @@ using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -36,25 +38,29 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// CreateDenyPolicy is a page for creating deny policies for files and folders. It initializes components and manages
+/// user interactions.
+/// </summary>
 public sealed partial class CreateDenyPolicy : Page
 {
 
-	// A static instance of the CreateDenyPolicy class which will hold the single, shared instance of the page
-	private static CreateDenyPolicy? _instance;
+#pragma warning disable CA1822
+	internal CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
+#pragma warning restore CA1822
 
+	/// <summary>
+	/// Constructor for the CreateDenyPolicy class. Initializes components, sets navigation cache mode, and assigns the
+	/// data context.
+	/// </summary>
 	public CreateDenyPolicy()
 	{
 		this.InitializeComponent();
 
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 
-		// Assign this instance to the static field
-		_instance = this;
+		this.DataContext = ViewModel;
 	}
-
-	// Public property to access the singleton instance from other classes
-	public static CreateDenyPolicy Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("CreateDenyPolicyNotInitialized"));
-
 
 	#region Files and Folders scan
 
@@ -73,12 +79,6 @@ public sealed partial class CreateDenyPolicy : Page
 	private bool filesAndFoldersDeployButton;
 
 	private bool usingWildCardFilePathRules;
-
-	// Used to store the scan results and as the source for the results ListViews
-	internal ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
-	internal List<FileIdentity> filesAndFoldersScanResultsList = [];
-
-	internal bool filesAndFoldersDataProcessed;
 
 	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
 	{
@@ -177,8 +177,8 @@ public sealed partial class CreateDenyPolicy : Page
 			Logger.Write(msg1);
 
 			// Clear variables responsible for the ListView
-			filesAndFoldersScanResultsList.Clear();
-			filesAndFoldersScanResults.Clear();
+			ViewModel.filesAndFoldersScanResultsList.Clear();
+			ViewModel.filesAndFoldersScanResults.Clear();
 
 			double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
 
@@ -235,34 +235,22 @@ public sealed partial class CreateDenyPolicy : Page
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressRing);
 
-					// Add the results of the directories scans to the ListView
-					foreach (FileIdentity item in LocalFilesResults)
-					{
-						_ = DispatcherQueue.TryEnqueue(() =>
-						{
-							filesAndFoldersScanResults.Add(item);
-							filesAndFoldersScanResultsList.Add(item);
 
-						});
-					}
+					ViewModel.filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
 
 					await DispatcherQueue.EnqueueAsync(() =>
 					{
-						// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-						if (Equals(MainWindow.Instance.AppFrame.CurrentSourcePageType, typeof(CreateDenyPolicyFilesAndFoldersScanResults)))
+						// Add the results of the directories scans to the ListView
+						foreach (FileIdentity item in LocalFilesResults)
 						{
-							filesAndFoldersDataProcessed = false;
-
-							CreateDenyPolicyFilesAndFoldersScanResults.Instance.CalculateColumnWidths();
-							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UIListView.ItemsSource = filesAndFoldersScanResults;
-
-							CreateDenyPolicyFilesAndFoldersScanResults.Instance.UpdateTotalFiles();
+							// Add the reference to the ViewModel class to the item so we can use it for navigation from the XAML
+							item.ParentViewModelCreateDenyPolicyVM = ViewModel;
+							ViewModel.filesAndFoldersScanResults.Add(item);
 						}
-						else
-						{
-							// Set it to true so ListView will be updated once user navigated to the page
-							filesAndFoldersDataProcessed = true;
-						}
+
+						ViewModel.CalculateColumnWidths();
+
+						ViewModel.UpdateTotalFiles();
 					});
 
 					string msg3 = GlobalVars.Rizz.GetString("ScanCompleted");

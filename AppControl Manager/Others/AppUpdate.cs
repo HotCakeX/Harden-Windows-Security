@@ -69,19 +69,3 @@ internal sealed class AppUpdate
 		);
 	}
 }
-
-/// <summary>
-/// EventArgs class to provide data for the UpdateAvailable event.
-/// </summary>
-internal sealed class UpdateAvailableEventArgs(bool isUpdateAvailable, Version availableVersion) : EventArgs
-{
-	/// <summary>
-	/// Indicates whether an update is available.
-	/// </summary>
-	internal bool IsUpdateAvailable { get; } = isUpdateAvailable;
-
-	/// <summary>
-	/// The version of the available update.
-	/// </summary>
-	internal Version AvailableVersion { get; } = availableVersion;
-}

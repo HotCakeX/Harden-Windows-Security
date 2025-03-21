@@ -25,8 +25,15 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// Validates an XML policy file selected by the user and displays the result in an info bar. It handles errors and
+/// updates UI elements accordingly.
+/// </summary>
 public sealed partial class ValidatePolicy : Page
 {
+	/// <summary>
+	/// Initializes a new instance of the ValidatePolicy class. Sets the navigation cache mode to required.
+	/// </summary>
 	public ValidatePolicy()
 	{
 		this.InitializeComponent();

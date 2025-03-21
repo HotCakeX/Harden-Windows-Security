@@ -38,9 +38,9 @@ namespace AppControlManager.SiPolicy;
 /// So there are 4 different Signer types to consider.
 ///
 ///
-/// Each <Allow> node in <FileRules> nodes is associated only with one Signing scenario at a time. Same goes for <Deny> nodes.
+/// Each "Allow" node in "FileRules" nodes is associated only with one Signing scenario at a time. Same goes for "Deny" nodes.
 ///
-/// In the <EKUs> node there must be unique EKUs only based on their value. If 2 Signers need to reference the same EKU value, they must use same EKU's ID in their CertEKU section.
+/// In the "EKUs" node there must be unique EKUs only based on their value. If 2 Signers need to reference the same EKU value, they must use same EKU's ID in their CertEKU section.
 ///
 /// </summary>
 internal static class Merger
@@ -54,7 +54,7 @@ internal static class Merger
 	/// No date is lost in the merge process.
 	/// </summary>
 	/// <param name="mainXmlFilePath"></param>
-	/// <param name="subXmlFilePath"></param>
+	/// <param name="otherXmlFilePaths"></param>
 	internal static void Merge(string mainXmlFilePath, HashSet<string> otherXmlFilePaths)
 	{
 		// Close the empty nodes in the main policy

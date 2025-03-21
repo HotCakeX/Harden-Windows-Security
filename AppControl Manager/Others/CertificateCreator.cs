@@ -28,10 +28,13 @@ internal static class CertificateGenerator
 {
 
 	/// <summary>
-	/// Build a self-signed on-device certificate for the purpose of App Control policy signing
+	/// Generates a self-signed X.509 certificate with specified parameters and saves it to the user's personal store.
 	/// </summary>
-	/// <param name="CommonName"></param>
-	/// <param name="Password"></param>
+	/// <param name="CommonName">Specifies the name that will be associated with the generated certificate.</param>
+	/// <param name="Password">Sets the password for protecting the private key of the generated certificate.</param>
+	/// <param name="validity">Defines the duration in years for which the certificate will be valid.</param>
+	/// <param name="keySize">Indicates the size of the key used for the certificate, affecting its security level.</param>
+	/// <returns>Returns the generated X509Certificate2 object representing the newly created certificate.</returns>
 	internal static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize)
 	{
 		// Paths for .cer and .pfx files
@@ -207,10 +210,11 @@ internal static class CertificateGenerator
 
 
 	/// <summary>
-	/// Stores the certificate in one of the pre-defined certificate stores
+	/// Stores a certificate in a specified certificate store location, optionally including only the public key.
 	/// </summary>
-	/// <param name="cert"></param>
-	/// <param name="storeLocation"></param>
+	/// <param name="cert">The certificate to be stored in the designated certificate store.</param>
+	/// <param name="storeLocation">Indicates whether the certificate should be stored for the current user or the local machine.</param>
+	/// <param name="publicKeyOnly">Determines if only the public key of the certificate should be stored.</param>
 	internal static void StoreCertificateInStore(X509Certificate2 cert, CertificateStoreLocation? storeLocation, bool publicKeyOnly)
 	{
 		// Choose the store based on the user selection

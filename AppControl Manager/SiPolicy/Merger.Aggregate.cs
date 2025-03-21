@@ -25,7 +25,7 @@ namespace AppControlManager.SiPolicy;
 internal static class Factory
 {
 	/// <summary>
-	/// This is a context-aware method that collects all <Allow> elements or Allow rules in the policy from FileRules node/section.
+	/// This is a context-aware method that collects all "Allow" elements or Allow rules in the policy from FileRules node/section.
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
 	/// <param name="siPolicies"></param>
@@ -111,7 +111,7 @@ internal static class Factory
 
 
 	/// <summary>
-	/// This is a context-aware method that collects all <Deny> elements or Deny rules in the policy from FileRules node/section.
+	/// This is a context-aware method that collects all "Deny" elements or Deny rules in the policy from FileRules node/section.
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
 	/// <param name="siPolicies"></param>
@@ -193,7 +193,7 @@ internal static class Factory
 
 
 	/// <summary>
-	/// This is a context-aware method that collects all <FileRule> elements or FileRule rules in the policy from FileRules node/section.
+	/// This is a context-aware method that collects all "FileRule" elements or FileRule rules in the policy from FileRules node/section.
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
 	/// <param name="siPolicies"></param>
@@ -276,7 +276,7 @@ internal static class Factory
 
 
 	/// <summary>
-	/// This is a context-aware method that collects all <Signer> elements or Signer rules in the policy from Signers node/section.
+	/// This is a context-aware method that collects all "Signer" elements or Signer rules in the policy from Signers node/section.
 	/// Each signer is complete and has all of the elements that can be used in the policy file independently.
 	/// </summary>
 	/// <param name="siPolicies"></param>

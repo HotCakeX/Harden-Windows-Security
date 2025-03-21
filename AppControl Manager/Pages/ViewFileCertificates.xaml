@@ -4,8 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
-    xmlns:others="using:AppControlManager.Others"
-    x:Name="ViewFileCertificatesXAML"
+    xmlns:others="using:AppControlManager.Others"    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -96,6 +95,7 @@
 
         <ListView x:Name="FileCertificatesListView"
           Grid.Row="3"
+          ItemsSource="{x:Bind ViewModel.FileCertificates, Mode=OneWay}"
           SelectionMode="Single"
           ScrollViewer.HorizontalScrollMode="Enabled"
           ScrollViewer.IsHorizontalRailEnabled="True"
@@ -114,17 +114,17 @@
                     <Grid>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth11, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="SignerNumberHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="TypeHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -238,18 +238,17 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <!-- Use standard Binding with ElementName to refer back to the page's properties because in here the Data Context is set to CiPolicyInfo so we cannot use x.Bind since CiPolicyInfo doesn't have the ColumnWidth properties -->
-                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=ViewFileCertificatesXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=ViewFileCertificatesXAML}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth11, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind SignerNumber}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind Type}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>

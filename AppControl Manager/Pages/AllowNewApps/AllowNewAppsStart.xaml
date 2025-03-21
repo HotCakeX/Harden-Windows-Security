@@ -190,7 +190,7 @@
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
 
-                        <ToggleButton x:Name="DeployToggleButton" Checked="DeployToggleButton_Checked" Unchecked="DeployToggleButton_Unchecked" IsChecked="True" x:Uid="DeployAfterCreationButton" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.DeployPolicy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DeployPolicyState, Mode=OneWay}" x:Uid="DeployAfterCreationButton" />
 
                         <ComboBox SelectedIndex="0" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" Header="Scan level" Margin="0,0,0,27">
                             <x:String>FilePublisher</x:String>

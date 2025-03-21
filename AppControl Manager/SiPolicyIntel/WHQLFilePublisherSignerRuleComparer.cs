@@ -30,7 +30,7 @@ namespace AppControlManager.SiPolicyIntel;
 ///   Rule 2: Name and CertRoot.Value match and their EKU lists are equivalent.
 ///
 /// When a match is detected, the FileAttribElements from the duplicate rule are merged into the existing rule.
-
+/// </summary>
 internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WHQLFilePublisher>
 {
 	public bool Equals(WHQLFilePublisher? x, WHQLFilePublisher? y)

@@ -16,6 +16,7 @@
 //
 
 using System;
+using AppControlManager.ViewModels;
 
 namespace AppControlManager.Others;
 
@@ -34,4 +35,6 @@ internal sealed class FileCertificateInfoCol
 	internal string? Thumbprint { get; set; }
 	internal string? TBSHash { get; set; }
 	internal string? OIDs { get; set; }
+
+	internal ViewFileCertificatesVM? ParentViewModel { get; set; }
 }

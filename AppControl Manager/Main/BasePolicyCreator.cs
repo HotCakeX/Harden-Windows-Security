@@ -398,15 +398,18 @@ internal static partial class BasePolicyCreator
 
 
 	/// <summary>
-	/// Creates a base policy based on the AllowMicrosoft template
+	/// Creates and deploys an AllowMicrosoft policy based on various configurations and parameters.
 	/// </summary>
-	/// <param name="StagingArea"></param>
-	/// <param name="IsAudit"></param>
-	/// <param name="LogSize"></param>
-	/// <param name="deploy"></param>
-	/// <param name="RequireEVSigners"></param>
-	/// <param name="EnableScriptEnforcement"></param>
-	/// <param name="TestMode"></param>
+	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
+	/// <param name="IsAudit">Indicates whether the policy should operate in audit mode, affecting logging behavior.</param>
+	/// <param name="LogSize">Sets the size of the log for audit events, defaulting to zero if not specified.</param>
+	/// <param name="deploy">Determines if the policy should be deployed after creation, enabling further actions.</param>
+	/// <param name="RequireEVSigners">Specifies if extended validation signers are required for the policy.</param>
+	/// <param name="EnableScriptEnforcement">Controls whether script enforcement is enabled within the policy.</param>
+	/// <param name="TestMode">Indicates if the policy should be created in test mode, affecting its execution.</param>
+	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
+	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
+	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
 	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
@@ -481,15 +484,19 @@ internal static partial class BasePolicyCreator
 
 
 	/// <summary>
-	/// Creates a base policy based on the DefaultWindows template
+	/// Creates and configures a DefaultWindows policy based on various parameters, handling staging and deployment
+	/// options.
 	/// </summary>
-	/// <param name="StagingArea"></param>
-	/// <param name="IsAudit"></param>
-	/// <param name="LogSize"></param>
-	/// <param name="deploy"></param>
-	/// <param name="RequireEVSigners"></param>
-	/// <param name="EnableScriptEnforcement"></param>
-	/// <param name="TestMode"></param>
+	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
+	/// <param name="IsAudit">Indicates whether the policy should operate in audit mode, affecting logging behavior.</param>
+	/// <param name="LogSize">Sets the size limit for the event log if audit mode is enabled.</param>
+	/// <param name="deploy">Determines whether the policy should be deployed after creation.</param>
+	/// <param name="RequireEVSigners">Specifies if extended validation signers are required for the policy.</param>
+	/// <param name="EnableScriptEnforcement">Controls whether script enforcement is enabled in the policy.</param>
+	/// <param name="TestMode">Indicates if the policy should be created in test mode, affecting its enforcement.</param>
+	/// <param name="deployAppControlSupplementalPolicy">Specifies if a supplemental policy should be deployed alongside the main policy.</param>
+	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID instead of generating a new one.</param>
+	/// <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
 	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
@@ -564,11 +571,14 @@ internal static partial class BasePolicyCreator
 	}
 
 
+
 	/// <summary>
 	/// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
 	/// It generates a XML file compliant with CI Policies Schema.
 	/// </summary>
-	/// <param name="StagingArea"></param>
+	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
+	/// <param name="deploy">Indicates whether the policy should be deployed after processing.</param>
+	/// <exception cref="InvalidOperationException">Thrown when no XML content is found in the downloaded markdown from the Microsoft GitHub source.</exception>
 	internal static void GetBlockRules(string StagingArea, bool deploy)
 	{
 
@@ -662,13 +672,16 @@ internal static partial class BasePolicyCreator
 	/// Creates SignedAndReputable App Control policy which is based on AllowMicrosoft template policy.
 	/// It uses ISG to authorize files with good reputation.
 	/// </summary>
-	/// <param name="StagingArea"></param>
-	/// <param name="IsAudit"></param>
-	/// <param name="LogSize"></param>
-	/// <param name="deploy"></param>
-	/// <param name="RequireEVSigners"></param>
-	/// <param name="EnableScriptEnforcement"></param>
-	/// <param name="TestMode"></param>
+	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
+	/// <param name="IsAudit">Indicates whether the operation should be performed in audit mode.</param>
+	/// <param name="LogSize">Sets the size of the event log for recording actions taken during the process.</param>
+	/// <param name="deploy">Determines if the policy should be deployed after creation.</param>
+	/// <param name="RequireEVSigners">Specifies if extended validation signers are required for the policy.</param>
+	/// <param name="EnableScriptEnforcement">Controls whether script enforcement is enabled in the policy.</param>
+	/// <param name="TestMode">Indicates if the operation should run in test mode without making permanent changes.</param>
+	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
+	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
+	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to retrieve and deploy Microsoft recommended block rules.</param>
 	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
@@ -747,14 +760,16 @@ internal static partial class BasePolicyCreator
 	}
 
 
+
 	/// <summary>
 	/// Creates and deploys the Strict Kernel-mode base policy
 	/// Since this is only Kernel-mode, we don't need to deploy the special AppControl Manager supplemental policy
 	/// </summary>
-	/// <param name="StagingArea"></param>
-	/// <param name="IsAudit"></param>
-	/// <param name="deploy"></param>
-	/// <param name="deployAppControlSupplementalPolicy"></param>
+	/// <param name="StagingArea">Specifies the directory where the policy file will be created and stored.</param>
+	/// <param name="IsAudit">Indicates whether to add audit mode rules to the policy.</param>
+	/// <param name="NoFlightRoots">Determines the filename variant used for the policy based on flight root settings.</param>
+	/// <param name="deploy">Indicates whether the policy should be deployed after creation.</param>
+	/// <param name="PolicyIDToUse">Specifies an optional policy ID to associate with the created policy.</param>
 	internal static void BuildStrictKernelMode(string StagingArea, bool IsAudit, bool NoFlightRoots, bool deploy, string? PolicyIDToUse = null)
 	{
 

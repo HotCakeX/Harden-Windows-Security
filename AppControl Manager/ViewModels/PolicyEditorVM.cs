@@ -1719,8 +1719,6 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 	/// Performs search in both collections of the ListView.
 	/// Implementing it in the ViewModel via x:Bind would not work properly.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void SearchBox_TextChanged()
 	{
 

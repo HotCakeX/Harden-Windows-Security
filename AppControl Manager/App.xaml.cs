@@ -17,7 +17,6 @@
 
 using System;
 using System.IO;
-using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.AppSettings;
@@ -59,7 +58,7 @@ public partial class App : Application
 	private const string MutexName = "AppControlManagerRunning";
 
 	// To determine whether the app has Administrator privileges
-	internal static readonly bool IsElevated = IsRunningAsAdministrator();
+	internal static readonly bool IsElevated = Environment.IsPrivilegedProcess;
 
 	// The directory where the logs will be stored
 	internal static readonly string LogsDirectory = IsElevated ?
@@ -79,6 +78,13 @@ public partial class App : Application
 			_ = services.AddSingleton<ViewModels.SettingsVM>();
 			_ = services.AddSingleton<ViewModels.MergePoliciesVM>();
 			_ = services.AddSingleton<ViewModels.ConfigurePolicyRuleOptionsVM>();
+			_ = services.AddSingleton<ViewModels.AllowNewAppsVM>();
+			_ = services.AddSingleton<ViewModels.CreateDenyPolicyVM>();
+			_ = services.AddSingleton<ViewModels.CreateSupplementalPolicyVM>();
+			_ = services.AddSingleton<ViewModels.EventLogsPolicyCreationVM>();
+			_ = services.AddSingleton<ViewModels.SimulationVM>();
+			_ = services.AddSingleton<ViewModels.MDEAHPolicyCreationVM>();
+			_ = services.AddSingleton<ViewModels.ViewFileCertificatesVM>();
 		})
 		.Build();
 
@@ -103,6 +109,9 @@ public partial class App : Application
 		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
 		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
+
+		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
+		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
@@ -446,16 +455,4 @@ public partial class App : Application
 		}
 	}
 
-
-	/// <summary>
-	/// Checks if the current process is running with administrator privileges.
-	/// </summary>
-	/// <returns>True if running as admin; otherwise, false.</returns>
-	private static bool IsRunningAsAdministrator()
-	{
-		using WindowsIdentity identity = WindowsIdentity.GetCurrent();
-
-		WindowsPrincipal principal = new(identity);
-		return principal.IsInRole(WindowsBuiltInRole.Administrator);
-	}
 }

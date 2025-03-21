@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -28,8 +27,10 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
+using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -40,10 +41,17 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// AllowNewAppsStart is a page that manages the process of allowing new applications through policy management. It
+/// handles user interactions for selecting policies, scanning directories, and creating supplemental policies.
+/// </summary>
 public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
 {
-	internal bool EventLogsDataProcessed;
-	internal bool LocalFilesDataProcessed;
+
+#pragma warning disable CA1822
+	internal AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
+#pragma warning restore CA1822
+
 
 	// The user selected XML base policy path
 	internal string? selectedXMLFilePath;
@@ -53,9 +61,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	// The user selected directories to scan
 	private static readonly HashSet<string> selectedDirectoriesToScan = [];
-
-	// The user selected deploy button status
-	private bool deployPolicy = true;
 
 	// The user selected scan level
 	private ScanLevels scanLevel = ScanLevels.FilePublisher;
@@ -78,28 +83,6 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	// So that the respective methods will make Hash based rule for that file since AppControl doesn't support ECC Signed files yet
 	private static readonly FileIdentityECCBasedHashSet fileIdentities = new();
 
-	#region
-
-	// To store the FileIdentities displayed on the Local Files ListView
-	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities { get; set; }
-
-	// Store all outputs for searching, used as a temporary storage for filtering
-	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
-	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal List<FileIdentity> LocalFilesAllFileIdentities;
-
-
-	// To store the FileIdentities displayed on the Event Logs ListView
-	internal ObservableCollection<FileIdentity> EventLogsFileIdentities { get; set; }
-
-	// Store all outputs for searching, used as a temporary storage for filtering
-	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
-	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
-	internal List<FileIdentity> EventLogsAllFileIdentities;
-
-	#endregion
-
-
 	// A static instance of the AllowNewAppsStart class which will hold the single, shared instance of the page
 	private static AllowNewAppsStart? _instance;
 
@@ -118,11 +101,18 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	private string? _CertPath;
 	private string? _SignToolPath;
 
+	/// <summary>
+	/// Initializes the AllowNewAppsStart instance, setting up the navigation cache mode, data context, and UI elements. It
+	/// also retrieves the shared shadow resource and configures initial states for UI components.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">Thrown if the sharedShadow resource cannot be found in the XAML.</exception>
 	public AllowNewAppsStart()
 	{
 		this.InitializeComponent();
 
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
+
+		this.DataContext = ViewModel;
 
 		// Assign this instance to the static field
 		_instance = this;
@@ -135,19 +125,15 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 		DisableStep2();
 		DisableStep3();
 
-		// Initialize the collections
-		EventLogsAllFileIdentities = [];
-		EventLogsFileIdentities = [];
-		LocalFilesAllFileIdentities = [];
-		LocalFilesFileIdentities = [];
-
 		// Initially set the log size in the number box to the current size of the Code Integrity Operational log
 		double currentLogSize = EventLogUtility.GetCurrentLogSize();
 		LogSizeNumberBox.Value = currentLogSize;
 		LogSize = Convert.ToUInt64(currentLogSize);
 	}
 
-	// Public property to access the singleton instance from other classes
+	/// <summary>
+	/// Public property to access the singleton instance from other classes
+	/// </summary>
 	public static AllowNewAppsStart Instance => _instance ?? throw new InvalidOperationException("AllowNewAppsStart is not initialized.");
 
 
@@ -166,7 +152,17 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	private string? unsignedBasePolicyPathFromSidebar;
 
 
-	// Implement the SetVisibility method required by IAnimatedIconsManager
+	/// <summary>
+	/// Sets the visibility of various UI elements and updates button content and event handlers based on the provided
+	/// visibility state.
+	/// </summary>
+	/// <param name="visibility">Controls the visibility state of the UI elements.</param>
+	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar.</param>
+	/// <param name="button1">Represents the first button whose visibility and content are updated.</param>
+	/// <param name="button2">Represents the second button, though it is not modified in this context.</param>
+	/// <param name="button3">Represents the third button, though it is not modified in this context.</param>
+	/// <param name="button4">Represents the fourth button, though it is not modified in this context.</param>
+	/// <param name="button5">Represents the fifth button, though it is not modified in this context.</param>
 	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
 	{
 		// Light up the local page's button icons
@@ -253,7 +249,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	private void DisableStep3()
 	{
-		DeployToggleButton.IsEnabled = false;
+		ViewModel.DeployPolicyState = false;
 		ScanLevelComboBox.IsEnabled = false;
 		CreatePolicyButton.IsEnabled = false;
 		Step3Grid.Opacity = 0.5;
@@ -264,7 +260,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 	private void EnableStep3()
 	{
-		DeployToggleButton.IsEnabled = true;
+		ViewModel.DeployPolicyState = true;
 		ScanLevelComboBox.IsEnabled = true;
 		CreatePolicyButton.IsEnabled = true;
 		Step3Grid.Opacity = 1;
@@ -508,8 +504,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			Step2ProgressRing.IsIndeterminate = true;
 
 			// Enable the ListView pages so user can select the logs
-			AllowNewApps.Instance.EnableAllowNewAppsNavigationItem("LocalFiles");
-			AllowNewApps.Instance.EnableAllowNewAppsNavigationItem("EventLogs");
+			ViewModel.EventLogsMenuItemState = true;
+			ViewModel.LocalFilesMenuItemState = true;
 
 			Step2InfoBar.IsOpen = true;
 
@@ -573,45 +569,32 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 						// Scan all of the detected files from the user selected directories
 						HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, Step2ProgressRing);
 
-						// Add the results of the directories scans to the ListView
-						foreach (FileIdentity item in LocalFilesResults)
-						{
-							_ = DispatcherQueue.TryEnqueue(() =>
-							{
-								LocalFilesFileIdentities.Add(item);
-								LocalFilesAllFileIdentities.Add(item);
-
-							});
-						}
+						// Add the results to the backing list
+						ViewModel.LocalFilesAllFileIdentities.Clear();
+						ViewModel.LocalFilesAllFileIdentities.AddRange(LocalFilesResults);
 
 						await DispatcherQueue.EnqueueAsync(() =>
 						{
-							// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-							if (Equals(AllowNewApps.Instance.frame.CurrentSourcePageType, typeof(AllowNewAppsLocalFilesDataGrid)))
-							{
-								LocalFilesDataProcessed = false;
+							// Clear the ObservableCollection
+							ViewModel.LocalFilesFileIdentities.Clear();
 
-								AllowNewAppsLocalFilesDataGrid.Instance.CalculateColumnWidths();
-								AllowNewAppsLocalFilesDataGrid.Instance.UIListView.ItemsSource = LocalFilesFileIdentities;
-
-								// Update the total logs on that page once we add data to it from here
-								// Upon switching to that page the OnNavigateTo event will update the count if this doesn't run here.
-								// If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
-								AllowNewAppsLocalFilesDataGrid.Instance.UpdateTotalLogs();
-							}
-							else
+							// Add the results of the directories scans to the ObservableCollection
+							foreach (FileIdentity item in LocalFilesResults)
 							{
-								// Set it to true so ListView will be updated once user navigated to the page
-								LocalFilesDataProcessed = true;
+								// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
+								item.ParentViewModelAllowNewApps = ViewModel;
+								ViewModel.LocalFilesFileIdentities.Add(item);
 							}
+
+							ViewModel.CalculateColumnWidthLocalFiles();
 						});
-
 					}
 				}
 			});
 
 			// Update the InfoBadge for the top menu
-			AllowNewApps.Instance.UpdateLocalFilesInfoBadge(LocalFilesFileIdentities.Count, 1);
+			ViewModel.LocalFilesCountInfoBadgeValue = ViewModel.LocalFilesFileIdentities.Count;
+			ViewModel.LocalFilesCountInfoBadgeOpacity = 1;
 
 			Step2InfoBar.Message = "Scanning the event logs";
 
@@ -623,51 +606,44 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			// Grab the App Control Logs
 			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents();
 
+#if !DEBUG
+
 			// Filter the logs and keep only ones generated after audit mode policy was deployed
 			await Task.Run(() =>
 			{
 				Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= LogsScanStartTime)];
 			});
 
+#endif
 
 			Step2InfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
 
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count > 0)
 			{
-
-				// Add the event logs to the ListView
-				foreach (FileIdentity item in Output)
-				{
-					EventLogsFileIdentities.Add(item);
-					EventLogsAllFileIdentities.Add(item);
-				}
+				// Add the results to the backing list
+				ViewModel.EventLogsAllFileIdentities.Clear();
+				ViewModel.EventLogsAllFileIdentities.AddRange(Output);
 
 				await DispatcherQueue.EnqueueAsync(() =>
 				{
-					// If the ListView page is loaded and user is on that page at this moment then calculate the column widths assign ItemsSource for ListView here
-					if (Equals(AllowNewApps.Instance.frame.CurrentSourcePageType, typeof(AllowNewAppsEventLogsDataGrid)))
-					{
-						EventLogsDataProcessed = false;
+					ViewModel.EventLogsFileIdentities.Clear();
 
-						AllowNewAppsEventLogsDataGrid.Instance.CalculateColumnWidths();
-						AllowNewAppsEventLogsDataGrid.Instance.UIListView.ItemsSource = EventLogsFileIdentities;
-
-						// Update the total logs on that page once we add data to it from here
-						// Upon switching to that page the OnNavigateTo event will update the count if it doesn't run here.
-						// If the page is already loaded and user is sitting on it, that means instance is initialized so we can update it in real time from here.
-						AllowNewAppsEventLogsDataGrid.Instance.UpdateTotalLogs();
-					}
-					else
+					// Add the event logs to the ObservableCollection
+					foreach (FileIdentity item in Output)
 					{
-						// Set it to true so ListView will be updated once user navigated to the page
-						EventLogsDataProcessed = true;
+						// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
+						item.ParentViewModelAllowNewApps = ViewModel;
+						ViewModel.EventLogsFileIdentities.Add(item);
 					}
+
+					ViewModel.CalculateColumnWidthEventLogs();
 				});
 			}
 
 			// Update the InfoBadge for the top menu
-			AllowNewApps.Instance.UpdateEventLogsInfoBadge(EventLogsFileIdentities.Count, 1);
+			ViewModel.EventLogsCountInfoBadgeValue = ViewModel.EventLogsFileIdentities.Count;
+			ViewModel.EventLogsCountInfoBadgeOpacity = 1;
 
 			DisableStep1();
 			DisableStep2();
@@ -716,15 +692,15 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			DisableStep3();
 
 			// Clear the ListViews and their respective search/filter-related lists
-			LocalFilesFileIdentities.Clear();
-			LocalFilesAllFileIdentities.Clear();
-			EventLogsFileIdentities.Clear();
-			EventLogsAllFileIdentities.Clear();
+			ViewModel.LocalFilesFileIdentities.Clear();
+			ViewModel.LocalFilesAllFileIdentities.Clear();
+			ViewModel.EventLogsFileIdentities.Clear();
+			ViewModel.EventLogsAllFileIdentities.Clear();
 
 			// reset the class variables back to their default states
 			fileIdentities.FileIdentitiesInternal.Clear();
 			selectedDirectoriesToScan.Clear();
-			deployPolicy = true;
+			ViewModel.DeployPolicy = true;
 			selectedSupplementalPolicyName = null;
 			LogsScanStartTime = null;
 			tempBasePolicyPath = null;
@@ -737,16 +713,18 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 			LogSizeNumberBox.Value = EventLogUtility.GetCurrentLogSize();
 
 			// Disable the data grids access
-			AllowNewApps.Instance.DisableAllowNewAppsNavigationItem("LocalFiles");
-			AllowNewApps.Instance.DisableAllowNewAppsNavigationItem("EventLogs");
+			ViewModel.EventLogsMenuItemState = false;
+			ViewModel.LocalFilesMenuItemState = false;
 
 
 			// Update the InfoBadges for the top menu
-			AllowNewApps.Instance.UpdateEventLogsInfoBadge(0, 0);
-			AllowNewApps.Instance.UpdateLocalFilesInfoBadge(0, 0);
+			ViewModel.LocalFilesCountInfoBadgeValue = 0;
+			ViewModel.LocalFilesCountInfoBadgeOpacity = 0;
+			ViewModel.EventLogsCountInfoBadgeOpacity = 0;
+			ViewModel.EventLogsCountInfoBadgeValue = 0;
 
 			// Reset the UI inputs back to their default states
-			DeployToggleButton.IsChecked = true;
+			ViewModel.DeployPolicy = true;
 			SelectedDirectoriesTextBox.Text = null;
 			SupplementalPolicyNameTextBox.Text = null;
 			ScanLevelComboBox.SelectedIndex = 0;
@@ -783,6 +761,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	}
 
 
+	/// <summary>
+	/// Clears the text box and the list of selected directories when the button is clicked.
+	/// </summary>
+	/// <param name="sender">Represents the source of the event that triggered the button click.</param>
+	/// <param name="e">Contains event data related to the button click action.</param>
 	private void ClearSelectedDirectoriesButton_Click(object sender, RoutedEventArgs e)
 	{
 		// Clear the text box on the UI
@@ -793,18 +776,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	}
 
 
-	private void DeployToggleButton_Checked(object sender, RoutedEventArgs e)
-	{
-		deployPolicy = true;
-
-	}
-
-	private void DeployToggleButton_Unchecked(object sender, RoutedEventArgs e)
-	{
-		deployPolicy = false;
-	}
-
-
+	/// <summary>
+	/// Handles the selection change event for a ComboBox, updating the scan level based on the selected item.
+	/// </summary>
+	/// <param name="sender">Represents the source of the event, allowing access to the ComboBox that triggered the selection change.</param>
+	/// <param name="e">Contains event data related to the selection change, providing information about the new selection.</param>
 	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Get the ComboBox that triggered the event
@@ -817,6 +793,12 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	}
 
 
+	/// <summary>
+	/// Handles the click event for a button to browse and select multiple folders. Selected folders are added to a
+	/// collection and displayed in the UI.
+	/// </summary>
+	/// <param name="sender">Represents the source of the click event, typically the button that was clicked.</param>
+	/// <param name="e">Contains event data related to the click event, providing additional information about the action.</param>
 	private void BrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
 	{
 		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
@@ -837,6 +819,12 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	}
 
 
+	/// <summary>
+	/// Handles the click event for a button to browse and select an XML policy file.
+	/// </summary>
+	/// <param name="sender">Represents the source of the click event.</param>
+	/// <param name="e">Contains event data related to the click event.</param>
+	/// <exception cref="InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
 	private void BrowseForXMLPolicyButton_Click(object sender, RoutedEventArgs e)
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -931,20 +919,20 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 			// Check if there are items for the local file scans ListView
-			if (LocalFilesFileIdentities.Count > 0)
+			if (ViewModel.LocalFilesFileIdentities.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
-				foreach (FileIdentity item in LocalFilesFileIdentities)
+				foreach (FileIdentity item in ViewModel.LocalFilesFileIdentities)
 				{
 					_ = fileIdentities.Add(item);
 				}
 			}
 
 			// Check if there are selected items for the Event Logs scan ListView
-			if (EventLogsFileIdentities.Count > 0)
+			if (ViewModel.EventLogsFileIdentities.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
-				foreach (FileIdentity item in EventLogsFileIdentities)
+				foreach (FileIdentity item in ViewModel.EventLogsFileIdentities)
 				{
 					_ = fileIdentities.Add(item);
 				}
@@ -1024,7 +1012,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				}
 
 				// If user selected to deploy the policy
-				if (deployPolicy)
+				if (ViewModel.DeployPolicy)
 				{
 #if !DEBUG
 					CiToolHelper.UpdatePolicy(CIPPath);
@@ -1042,7 +1030,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 			Step3InfoBar.Severity = InfoBarSeverity.Success;
 			Step3InfoBar.IsClosable = true;
-			Step3InfoBar.Message = deployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.";
+			Step3InfoBar.Message = ViewModel.DeployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.";
 
 		}
 		finally
@@ -1095,12 +1083,23 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	}
 
 
+	/// <summary>
+	/// Handles the right-tap event on a button to display a flyout menu if it is not already open.
+	/// </summary>
+	/// <param name="sender">Represents the source of the right-tap event.</param>
+	/// <param name="e">Contains data related to the right-tap event.</param>
 	private void BrowseForXMLPolicyButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
 		if (!BrowseForXMLPolicyButton_FlyOut.IsOpen)
 			BrowseForXMLPolicyButton_FlyOut.ShowAt(BrowseForXMLPolicyButton);
 	}
 
+	/// <summary>
+	/// Handles the holding event for a button to display a flyout if the holding state has started and the flyout is not
+	/// already open.
+	/// </summary>
+	/// <param name="sender">Represents the source of the event, typically the UI element that was interacted with.</param>
+	/// <param name="e">Contains data related to the holding event, including the current state of the hold action.</param>
 	private void BrowseForXMLPolicyButton_Holding(object sender, HoldingRoutedEventArgs e)
 	{
 		if (e.HoldingState is HoldingState.Started)
@@ -1108,13 +1107,22 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 				BrowseForXMLPolicyButton_FlyOut.ShowAt(BrowseForXMLPolicyButton);
 	}
 
-
+	/// <summary>
+	/// Handles the right-tap event on a button to display a flyout menu if it is not already open.
+	/// </summary>
+	/// <param name="sender">Represents the source of the right-tap event.</param>
+	/// <param name="e">Contains data related to the right-tap event.</param>
 	private void BrowseForFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
 		if (!BrowseForFoldersButton_FlyOut.IsOpen)
 			BrowseForFoldersButton_FlyOut.ShowAt(BrowseForFoldersButton);
 	}
 
+	/// <summary>
+	/// Handles the holding gesture on a button to display a flyout menu if it is not already open.
+	/// </summary>
+	/// <param name="sender">Represents the source of the event, typically the button being held.</param>
+	/// <param name="e">Contains data related to the holding gesture, including its current state.</param>
 	private void BrowseForFoldersButton_Holding(object sender, HoldingRoutedEventArgs e)
 	{
 		if (e.HoldingState is HoldingState.Started)

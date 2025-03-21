@@ -365,8 +365,6 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	/// <summary>
 	/// Event handler for when the Swap Policy ComboBox's selection changes
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void SwapPolicyComboBox_SelectionChanged()
 	{
 		if (ListViewSelectedPolicy is null)
@@ -550,12 +548,9 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	}
 
 
-
 	/// <summary>
 	/// Event handler for the RemovePolicyButton click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void RemovePolicy_Click()
 	{
 
@@ -910,8 +905,6 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	/// <summary>
 	/// Event handler for the search box text change
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void SearchBox_TextChanged()
 	{
 		string? searchTerm = SearchBoxTextBox?.Trim();
@@ -936,22 +929,17 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 			)];
 		});
 
-		await Dispatch.EnqueueAsync(() =>
+		AllPolicies.Clear();
+
+		// Update the ObservableCollection with the filtered results
+		foreach (CiPolicyInfo item in filteredResults)
 		{
-			AllPolicies.Clear();
+			AllPolicies.Add(item);
+		}
 
-			// Update the ObservableCollection with the filtered results
-			foreach (CiPolicyInfo item in filteredResults)
-			{
-				AllPolicies.Add(item);
-			}
-
-			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + filteredResults.Count;
-		});
+		// Update the policies count text
+		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + filteredResults.Count;
 	}
-
-
 
 
 	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
@@ -962,8 +950,6 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	/// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, ListView's SelectedItem property will be null,
 	/// so we detect it here and return from the method without assigning null to the selectedPolicy class instance.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void DeployedPolicies_SelectionChanged()
 	{
 
@@ -1030,8 +1016,6 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
 	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
 	internal void ListViewFlyoutMenuCopy_Click()
 	{
 		// Check if there are selected items in the ListView

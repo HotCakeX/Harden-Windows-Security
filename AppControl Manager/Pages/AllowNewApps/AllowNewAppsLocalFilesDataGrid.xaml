@@ -10,8 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    x:Name="AllowNewAppsLocalFilesDataGridXAML">
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
 
@@ -43,7 +42,7 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearLocalFilesDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -89,13 +88,7 @@
 
                         </MenuFlyout>
                     </Button.Flyout>
-                </Button>
-
-                <TextBox PlaceholderText="Total files: 0"
-               x:Name="TotalCountOfTheFilesTextBox"
-               IsReadOnly="True"
-               VerticalAlignment="Center"
-               VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files"/>
+                </Button>              
 
                 <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
@@ -105,6 +98,7 @@
         <ListView x:Name="FileIdentitiesListView"
          Grid.Row="1"
          SelectionMode="Extended"
+         ItemsSource="{x:Bind ViewModel.LocalFilesFileIdentities, Mode=OneWay}"
          ScrollViewer.HorizontalScrollMode="Enabled"
          ScrollViewer.IsHorizontalRailEnabled="True"
          ScrollViewer.HorizontalScrollBarVisibility="Visible"
@@ -122,24 +116,24 @@
                     <Grid>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ColumnWidth18, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthLocalFiles18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                         <TextBlock x:Uid="SignatureStatusHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -308,28 +302,24 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <!-- Use standard Binding with ElementName to refer back to the page's properties
-                                because in here the Data Context is set to FileIdentity so we cannot use x.Bind
-                                since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
-                                And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
-                            <ColumnDefinition Width="{Binding ColumnWidth1, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth2, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth3, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth4, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth5, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth6, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth7, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth8, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth9, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth10, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth11, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth12, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth13, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth14, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth15, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth16, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth17, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
-                            <ColumnDefinition Width="{Binding ColumnWidth18, ElementName=AllowNewAppsLocalFilesDataGridXAML}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
                         <TextBlock Text="{x:Bind SignatureStatus}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>

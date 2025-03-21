@@ -86,7 +86,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>1.9.7.0</FileVersion>
+    <FileVersion>1.9.8.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -142,10 +142,19 @@
 
         This is the only suported way to enable folding. Disabling stack traces means I don't care about stack, feel free to fold method bodies.
      -->
-    <StackTraceSupport>false</StackTraceSupport>
+    <StackTraceSupport>true</StackTraceSupport>
 
 
     <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
+
+
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+
+    <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
+
+
+    <PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
 
 
 
@@ -217,7 +226,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250129-preview2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.69.1" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.70.0" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -242,7 +251,7 @@
     <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
 
   </ItemGroup>
 
@@ -354,6 +363,10 @@
     <Content Remove="DownloadURL.txt" />
     <None Remove="DownloadURL.txt" />
 
+    <Compile Remove="AppControlManagerAPIDocumentation.xml" />
+    <Content Remove="AppControlManagerAPIDocumentation.xml" />
+    <None Remove="AppControlManagerAPIDocumentation.xml" />
+
     <Compile Remove="MSIXBundleDownloadURL.txt" />
     <Content Remove="MSIXBundleDownloadURL.txt" />
     <None Remove="MSIXBundleDownloadURL.txt" />
@@ -388,6 +401,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\Wiki posts\AppControl Manager\AppControl Manager.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

@@ -34,6 +34,7 @@ internal static class Management
 	/// . "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\xsd.exe" "C:\Windows\schemas\CodeIntegrity\cipolicy.xsd" /classes /namespace:AppControlManager.SiPolicy /language:CS
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
+	/// <param name="XmlObj"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy Initialize(string? xmlFilePath, XmlDocument? XmlObj)

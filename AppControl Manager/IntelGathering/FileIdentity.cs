@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AppControlManager.ViewModels;
 
 namespace AppControlManager.IntelGathering;
 
@@ -88,5 +89,15 @@ internal sealed class FileIdentity
 	internal string Opus => string.Join(", ", FileSignerInfos
 		.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo))
 		.Select(signerInfo => signerInfo.OPUSInfo));
+
+
+
+	// Properties for the parent view model of every page that hosts ListViews for FileIdentity.
+	// They store references to the view model classes so we can access them via compiled binding in XAML.
+	internal AllowNewAppsVM? ParentViewModelAllowNewApps { get; set; }
+	internal CreateDenyPolicyVM? ParentViewModelCreateDenyPolicyVM { get; set; }
+	internal CreateSupplementalPolicyVM? ParentViewModelCreateSupplementalPolicyVM { get; set; }
+	internal EventLogsPolicyCreationVM? ParentViewModelEventLogsPolicyCreationVM { get; set; }
+	internal MDEAHPolicyCreationVM? ParentViewModelMDEAHPolicyCreationVM { get; set; }
 
 }

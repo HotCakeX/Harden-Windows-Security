@@ -28,11 +28,13 @@ namespace AppControlManager.Others;
 
 internal static class SupplementalForSelf
 {
+
 	/// <summary>
 	/// Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment.
 	/// Each Base policy should have this supplemental policy.
 	/// </summary>
-	/// <param name="StagingArea"></param>
+	/// <param name="StagingArea">Specifies the directory where the policy files will be saved.</param>
+	/// <param name="basePolicyID">Identifies the base policy to which the supplemental policy is associated.</param>
 	internal static void Deploy(string StagingArea, string basePolicyID)
 	{
 		// Instantiate the policy
@@ -92,7 +94,10 @@ internal static class SupplementalForSelf
 	/// Signs and Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment
 	/// Each Base policy should have this supplemental policy
 	/// </summary>
-	/// <param name="StagingArea"></param>
+	/// <param name="basePolicyID">Identifies the base policy to which the supplemental policy is associated.</param>
+	/// <param name="CertPath">Specifies the location of the certificate used for signing the policy.</param>
+	/// <param name="SignToolPath">Indicates the path to the tool used for signing the policy.</param>
+	/// <param name="CertCN">Represents the common name of the certificate for signing purposes.</param>
 	internal static void DeploySigned(string basePolicyID, string CertPath, string SignToolPath, string CertCN)
 	{
 

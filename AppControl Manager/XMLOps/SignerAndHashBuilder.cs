@@ -59,9 +59,12 @@ internal static class SignerAndHashBuilder
 	/// Its use case is not clear yet and there haven't been any files with that condition yet. <summary>
 	/// </summary>
 	/// <param name="data">The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.</param>
-	/// </param>
 	/// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
 	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
+	/// <param name="folderPaths"></param>
+	/// <param name="customFileRulePatterns"></param>
+	/// <param name="packageFamilyNames"></param>
+	/// </summary>
 	/// <returns></returns>
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 		List<FileIdentity>? data = null,

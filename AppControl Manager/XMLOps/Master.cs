@@ -27,8 +27,10 @@ internal static class Master
 	/// <summary>
 	/// Uses the scan data to generate an App Control policy and makes sure the data are unique
 	/// </summary>
-	/// <param name="incomingData"></param>
-	/// <param name="xmlFilePath"></param>
+	/// <param name="incomingData">Contains information about file publisher signers, publisher signers, complete hashes, file paths, and PFN rules.</param>
+	/// <param name="xmlFilePath">Specifies the path to the XML file where the merged policy rules will be saved.</param>
+	/// <param name="authorization">Determines whether to allow or deny the specified rules during the merging process.</param>
+	/// <param name="stagingArea">Indicates the location where temporary files can be stored during the merging operation.</param>
 	internal static void Initiate(FileBasedInfoPackage incomingData, string xmlFilePath, SiPolicyIntel.Authorization authorization, string? stagingArea = null)
 	{
 		Logger.Write("Merging");

@@ -27,6 +27,10 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// The PolicyEditor class manages the UI for editing policies, including handling item deletions and enhancing ListView
+/// interactions.
+/// </summary>
 public sealed partial class PolicyEditor : Page
 {
 
@@ -34,6 +38,10 @@ public sealed partial class PolicyEditor : Page
 	internal PolicyEditorVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 #pragma warning restore CA1822
 
+	/// <summary>
+	/// Initializes a new instance of the PolicyEditor class. Sets up the component, enables navigation caching, and
+	/// assigns the data context.
+	/// </summary>
 	public PolicyEditor()
 	{
 		this.InitializeComponent();

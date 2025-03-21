@@ -944,7 +944,7 @@ internal static class GetEventLogsData
 
 
 	/// <summary>
-	/// Only works for the <EventData> node of the Event
+	/// Only works for the "EventData" node of the Event
 	/// </summary>
 	private static DateTime? GetEventDataDateTimeValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
 	{

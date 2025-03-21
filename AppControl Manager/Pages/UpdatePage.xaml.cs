@@ -39,6 +39,10 @@ using Windows.Management.Deployment;
 
 namespace AppControlManager.Pages;
 
+/// <summary>
+/// UpdatePage manages the update process for the AppControl Manager, including checking for updates, downloading
+/// packages, and signing them.
+/// </summary>
 public sealed partial class UpdatePage : Page
 {
 	// Pattern for finding ASR rules that belong to the AppControl Manager
@@ -61,6 +65,9 @@ public sealed partial class UpdatePage : Page
 	// A static instance of the Update class which will hold the single, shared instance of it
 	private static UpdatePage? _instance;
 
+	/// <summary>
+	/// Initializes a new instance of the UpdatePage class. Caches the page for improved performance during navigation.
+	/// </summary>
 	public UpdatePage()
 	{
 		this.InitializeComponent();
@@ -72,7 +79,9 @@ public sealed partial class UpdatePage : Page
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
-	// Public property to access the singleton instance from other classes
+	/// <summary>
+	/// Public property to access the singleton instance from other classes
+	/// </summary>
 	public static UpdatePage Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("UpdateNotInitialized"));
 
 	// Event handler for check for update button

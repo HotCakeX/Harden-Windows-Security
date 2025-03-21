@@ -27,7 +27,6 @@ internal static class CloseEmptyXmlNodesSemantic
 	/// Closes all empty XML nodes and removes empty nodes that are neither base nodes nor 'ProductSigners' nodes
 	/// According to the CI Schema
 	/// </summary>
-	/// <param name="xmlFilePath">The path to the XML file to be processed</param>
 
 	/*
 

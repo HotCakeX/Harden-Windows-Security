@@ -202,6 +202,7 @@
 
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
+                                    <HyperlinkButton Content="Privacy Policy" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Privacy-Policy-for-the-AppControl-Manager" />
                                 </StackPanel>
 
                             </controls:WrapPanel>

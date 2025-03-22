@@ -37,7 +37,13 @@ internal sealed partial class AllowNewAppsVM : INotifyPropertyChanged
 	#region
 
 	// To store the FileIdentities displayed on the Local Files ListView
-	internal readonly ObservableCollection<FileIdentity> LocalFilesFileIdentities = [];
+	private ObservableCollection<FileIdentity> _LocalFilesFileIdentities = [];
+	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities
+	{
+		get => _LocalFilesFileIdentities;
+		set => SetProperty(_LocalFilesFileIdentities, value, newValue => _LocalFilesFileIdentities = newValue);
+	}
+
 
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently

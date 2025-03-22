@@ -1,4 +1,4 @@
-﻿# https://github.com/dotnet/roslyn-analyzers/blob/main/src/NetAnalyzers/Microsoft.CodeAnalysis.NetAnalyzers.md
+# https://github.com/dotnet/roslyn-analyzers/blob/main/src/NetAnalyzers/Microsoft.CodeAnalysis.NetAnalyzers.md
 
 # Applies to All files
 [*]
@@ -193,7 +193,11 @@ dotnet_diagnostic.IDE0100.severity = error
 dotnet_diagnostic.IDE0041.severity = error
 
 # IDE0028: Simplify collection initialization
-dotnet_diagnostic.IDE0028.severity = error
+# When using [.. ], it doesn't use the correct special constructor of the collections and significantly degrades performance. 
+# Using ToList() or ToArray() is preferred over [.. ] spread operator for performance reasons.
+dotnet_diagnostic.IDE0028.severity = silent
+dotnet_diagnostic.IDE0306.severity = silent
+dotnet_diagnostic.IDE0305.severity = silent
 
 # CA1510: Use ArgumentNullException throw helper
 dotnet_diagnostic.CA1510.severity = error
@@ -296,9 +300,6 @@ dotnet_diagnostic.CA2101.severity = error
 
 # IL2026: Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
 dotnet_diagnostic.IL2026.severity = error
-
-# IDE0305: Simplify collection initialization
-dotnet_diagnostic.IDE0305.severity = error
 
 # IDE0004: Remove Unnecessary Cast
 dotnet_diagnostic.IDE0004.severity = error
@@ -1115,3 +1116,20 @@ dotnet_diagnostic.IDE0320.severity = error
 
 # CA1724: Type names should not match namespaces
 dotnet_diagnostic.CA1724.severity = error
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = error
+
+# CA1051: Do not declare visible instance fields
+dotnet_diagnostic.CA1051.severity = error
+
+# CA1819: Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = error
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-quality-rule-options#api_surface
+dotnet_code_quality.CA1819.api_surface = private, internal, public
+
+# CA2227: Collection properties should be read only
+dotnet_diagnostic.CA2227.severity = error
+
+# CA1815: Override equals and operator equals on value types
+dotnet_diagnostic.CA1815.severity = error

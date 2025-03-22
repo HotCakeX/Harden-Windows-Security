@@ -638,7 +638,7 @@ internal static partial class BasePolicyCreator
 			Logger.Write($"Checking if the {policyName} policy is already deployed");
 
 			// Getting the list of the deployed base policies whose names match the policyName
-			List<CiPolicyInfo> CurrentlyDeployedBlockRules = [.. CiToolHelper.GetPolicies(false, true, false).Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase))];
+			List<CiPolicyInfo> CurrentlyDeployedBlockRules = CiToolHelper.GetPolicies(false, true, false).Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase)).ToList();
 
 			// If any policy was found
 			if (CurrentlyDeployedBlockRules.Count > 0)

@@ -25,27 +25,27 @@ namespace AppControlManager.IntelGathering;
 internal sealed class FileIdentity
 {
 	// The origin of this File Identity object, where it came from and how it was compiled
-	internal FileIdentityOrigin Origin { get; set; }
+	internal FileIdentityOrigin Origin { get; init; }
 
 	// Whether the file is signed or unsigned
 	internal SignatureStatus SignatureStatus { get; set; }
 
 	// Properties related to logs
-	internal EventAction Action { get; set; }
-	internal int EventID { get; set; }
-	internal DateTime? TimeCreated { get; set; }
-	internal string? ComputerName { get; set; }
-	internal Guid? PolicyGUID { get; set; }
-	internal bool? UserWriteable { get; set; }
-	internal string? ProcessName { get; set; }
-	internal string? RequestedSigningLevel { get; set; }
-	internal string? ValidatedSigningLevel { get; set; }
-	internal string? Status { get; set; }
-	internal long? USN { get; set; }
-	internal string? PolicyName { get; set; }
-	internal string? PolicyID { get; set; }
-	internal string? PolicyHash { get; set; }
-	internal string? UserID { get; set; }
+	internal EventAction Action { get; init; }
+	internal int EventID { get; init; }
+	internal DateTime? TimeCreated { get; init; }
+	internal string? ComputerName { get; init; }
+	internal Guid? PolicyGUID { get; init; }
+	internal bool? UserWriteable { get; init; }
+	internal string? ProcessName { get; init; }
+	internal string? RequestedSigningLevel { get; init; }
+	internal string? ValidatedSigningLevel { get; init; }
+	internal string? Status { get; init; }
+	internal long? USN { get; init; }
+	internal string? PolicyName { get; init; }
+	internal string? PolicyID { get; init; }
+	internal string? PolicyHash { get; init; }
+	internal string? UserID { get; init; }
 
 
 	// Properties applicable to files in general

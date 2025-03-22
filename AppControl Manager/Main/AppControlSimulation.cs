@@ -142,16 +142,69 @@ internal static class AppControlSimulation
 
 		Logger.Write($"Running App Control Simulation with {threadsCount} threads count");
 
-		// The Concurrent Dictionary contains any and all of the Simulation results
-		// Keys of it are the fil paths which aren't important, values are the important items needed at the end of the simulation
-		ConcurrentDictionary<string, SimulationOutput> FinalSimulationResults = [];
-
 		// Read the content of the XML file into a string
 		string xmlContent = File.ReadAllText(xmlFilePath);
 
 		// Convert the string to XML Document
 		XmlDocument XMLData = new();
 		XMLData.LoadXml(xmlContent);
+
+
+		// Get the signer information from the XML
+		List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
+
+		#region Region FilePath Rule Checking
+		Logger.Write("Checking see if the XML policy has any FilePath rules");
+
+		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(xmlFilePath);
+
+		bool HasFilePathRules = FilePathRules.Count > 0;
+		#endregion
+
+
+		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
+		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
+
+		if (!noCatalogScanning)
+		{
+			// Get the security catalog data to include in the scan
+			AllSecurityCatalogHashes = CatRootScanner.Scan(catRootPath, threadsCount);
+		}
+		else
+		{
+			Logger.Write("Skipping Security Catalogs in the Simulation.");
+		}
+
+		Logger.Write("Getting the Hash values of all the file rules based on hash in the supplied xml policy file");
+
+		// All Hash values of all the file rules based on hash in the supplied xml policy file
+		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(XMLData);
+
+		Logger.Write("Getting all of the file paths of the files that App Control supports, from the user provided directory");
+
+		(IEnumerable<FileInfo>, int) CollectedFiles = FileUtility.GetFilesFast(
+			folderPaths?.Select(dir => new DirectoryInfo(dir)).ToArray(),
+			filePaths?.Select(file => new FileInfo(file)).ToArray(),
+			null);
+
+		// Make sure the selected directories and files contain files with the supported extensions
+		if (CollectedFiles.Item2 == 0)
+		{
+			throw new InvalidOperationException("There are no files in the selected directory that are supported by the App Control engine.");
+		}
+
+		Logger.Write("Looping through each supported file");
+
+		// The counter variable to track processed files
+		int processedFilesCount = 0;
+
+		// The count of all of the files that are going to be processed
+		double AllFilesCount = CollectedFiles.Item2;
+
+		// The Concurrent Dictionary contains any and all of the Simulation results
+		// Keys of it are the file paths which aren't important, values are the important items needed at the end of the simulation
+		ConcurrentDictionary<string, SimulationOutput> FinalSimulationResults = new(threadsCount, CollectedFiles.Item2);
+
 
 		#region Region Making Sure No AllowAll Rule Exists
 
@@ -182,56 +235,6 @@ internal static class AppControlSimulation
 		}
 		#endregion
 
-		// Get the signer information from the XML
-		List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
-
-		#region Region FilePath Rule Checking
-		Logger.Write("Checking see if the XML policy has any FilePath rules");
-
-		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(xmlFilePath);
-
-		bool HasFilePathRules = FilePathRules.Count > 0;
-		#endregion
-
-
-		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
-		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
-
-		if (!noCatalogScanning)
-		{
-			// Get the security catalog data to include in the scan
-			AllSecurityCatalogHashes = CatRootScanner.Scan(catRootPath, threadsCount);
-		}
-		else
-		{
-			Logger.Write("Skipping Security Catalogs in the Simulation.");
-		}
-
-		// All Hash values of all the file rules based on hash in the supplied xml policy file
-		Logger.Write("Getting the Hash values of all the file rules based on hash in the supplied xml policy file");
-
-		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(XMLData);
-
-		Logger.Write("Getting all of the file paths of the files that App Control supports, from the user provided directory");
-
-		List<FileInfo> CollectedFiles = FileUtility.GetFilesFast(
-			folderPaths?.Select(dir => new DirectoryInfo(dir)).ToArray(),
-			filePaths?.Select(file => new FileInfo(file)).ToArray(),
-			null);
-
-		// Make sure the selected directories and files contain files with the supported extensions
-		if (CollectedFiles.Count == 0)
-		{
-			throw new InvalidOperationException("There are no files in the selected directory that are supported by the App Control engine.");
-		}
-
-		Logger.Write("Looping through each supported file");
-
-		// The counter variable to track processed files
-		int processedFilesCount = 0;
-
-		// The count of all of the files that are going to be processed
-		double AllFilesCount = CollectedFiles.Count;
 
 		// Create a timer to update the progress bar every 2 seconds.
 		Timer? progressTimer = null;
@@ -256,7 +259,7 @@ internal static class AppControlSimulation
 		try
 		{
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
-			IEnumerable<FileInfo[]> SplitArrays = CollectedFiles.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
+			IEnumerable<FileInfo[]> SplitArrays = CollectedFiles.Item1.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
 
 			// List of tasks to run in parallel
 			List<Task> tasks = [];

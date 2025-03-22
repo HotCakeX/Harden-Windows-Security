@@ -15,20 +15,18 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager.Others;
 
-internal sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
- List<ChainElement>? intermediatecertificates,
-  ChainElement? leafcertificate)
+/// <summary>
+/// Represents a signed CMS and its certificate chain
+/// </summary>
+/// <param name="signerCertificate"></param>
+/// <param name="certificateChain"></param>
+internal sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
 {
-	internal X509Chain CertificateChain { get; set; } = certificatechain;
-	internal SignedCms SignedCms { get; set; } = signedcms;
-	internal ChainElement RootCertificate { get; set; } = rootcertificate;
-	internal List<ChainElement>? IntermediateCertificates { get; set; } = intermediatecertificates;
-	internal ChainElement? LeafCertificate { get; set; } = leafcertificate;
+	internal SignedCms Signer { get; } = signerCertificate;
+	internal X509Chain Chain { get; } = certificateChain;
 }
-

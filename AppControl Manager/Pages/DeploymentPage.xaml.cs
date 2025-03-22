@@ -81,8 +81,12 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <param name="button3">Sets the visibility for the third sidebar button, though it is not used for content assignment.</param>
 	/// <param name="button4">Sets the visibility for the fourth sidebar button, though it is not used for content assignment.</param>
 	/// <param name="button5">Sets the visibility for the fifth sidebar button, though it is not used for content assignment.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
 	{
+
+		ArgumentNullException.ThrowIfNull(button1);
+		ArgumentNullException.ThrowIfNull(button2);
+
 		// Light up the local page's button icons
 		UnsignedXMLFilesLightAnimatedIcon.Visibility = visibility;
 		SignedXMLFilesLightAnimatedIcon.Visibility = visibility;
@@ -664,7 +668,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 			IntuneSignInButton.IsEnabled = false;
 
-			await MicrosoftGraph.SignIn(MicrosoftGraph.AuthenticationContext.Intune);
+			await MicrosoftGraph.Main.SignIn(MicrosoftGraph.AuthenticationContext.Intune);
 
 			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInSuccess");
 			StatusInfoBar.Severity = InfoBarSeverity.Success;
@@ -729,7 +733,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 			IntuneSignOutButton.IsEnabled = false;
 
-			await MicrosoftGraph.SignOut(MicrosoftGraph.AuthenticationContext.Intune);
+			await MicrosoftGraph.Main.SignOut(MicrosoftGraph.AuthenticationContext.Intune);
 
 			signOutSuccessful = true;
 
@@ -767,8 +771,8 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 	private async void RefreshIntuneGroupsButton_Click(object sender, RoutedEventArgs e)
 	{
-		await MicrosoftGraph.FetchGroups();
-		Dictionary<string, string> groups = MicrosoftGraph.GetGroups();
+		await MicrosoftGraph.Main.FetchGroups();
+		Dictionary<string, string> groups = MicrosoftGraph.Main.GetGroups();
 
 		// Update the ComboBox with group names
 		IntuneGroupsComboBox.ItemsSource = groups.Keys;
@@ -809,7 +813,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 		});
 
-		await MicrosoftGraph.UploadPolicyToIntune(file, groupID, policyName, policyID);
+		await MicrosoftGraph.Main.UploadPolicyToIntune(file, groupID, policyName, policyID);
 	}
 
 
@@ -820,7 +824,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <param name="e"></param>
 	private void IntuneCancelSignInButton_Click(object sender, RoutedEventArgs e)
 	{
-		MicrosoftGraph.CancelSignIn();
+		MicrosoftGraph.Main.CancelSignIn();
 	}
 
 	private void BrowseForXMLPolicyFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)

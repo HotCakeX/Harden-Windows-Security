@@ -23,15 +23,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.Others;
 using Microsoft.Identity.Client;
-using static AppControlManager.Others.MicrosoftGraph;
 
-namespace AppControlManager.Others;
+namespace AppControlManager.MicrosoftGraph;
 
-internal static class MicrosoftGraph
+internal static class Main
 {
 	// For Microsoft Graph Command Line Tools
 	private const string ClientId = "14d82eec-204b-4c2f-b7e8-296a70dab67e";
@@ -52,13 +51,6 @@ internal static class MicrosoftGraph
 
 	// To manage Sign in cancellation
 	private static CancellationTokenSource? _cts;
-
-	// Used to determine which scope to use
-	internal enum AuthenticationContext
-	{
-		Intune,
-		MDEAdvancedHunting
-	}
 
 	// The correlation between scopes and required permissions
 	private static readonly Dictionary<AuthenticationContext, string[]> Scopes = new() {
@@ -570,74 +562,14 @@ DeviceEvents
 	}
 	*/
 
-	// Define the class structure for the custom policy
-	internal sealed class Windows10CustomConfiguration
-	{
-		[JsonInclude]
-		[JsonPropertyName("@odata.type")]
-		internal string? ODataType { get; set; }
 
-		[JsonInclude]
-		[JsonPropertyName("displayName")]
-		internal string? DisplayName { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("description")]
-		internal string? Description { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("omaSettings")]
-		internal OmaSettingBase64[]? OmaSettings { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("platforms")]
-		internal string[]? Platforms { get; set; }
-	}
-
-
-	internal sealed class OmaSettingBase64
-	{
-		[JsonInclude]
-		[JsonPropertyName("@odata.type")]
-		internal string? ODataType { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("displayName")]
-		internal string? DisplayName { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("description")]
-		internal string? Description { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("omaUri")]
-		internal string? OmaUri { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("fileName")]
-		internal string? FileName { get; set; }
-
-		[JsonInclude]
-		[JsonPropertyName("value")]
-		internal string? Value { get; set; }
-	}
-
-
-	internal sealed class AssignmentPayload
-	{
-		[JsonInclude]
-		[JsonPropertyName("target")]
-		internal Dictionary<string, object>? Target { get; set; }
-	}
-
-	internal sealed class QueryPayload
-	{
-		[JsonInclude]
-		[JsonPropertyName("Query")]
-		internal string? Query { get; set; }
-	}
-
-
+	/// <summary>
+	/// Converts a binary file to a Base64 string after checking its size against a specified limit.
+	/// </summary>
+	/// <param name="filePath">Specifies the location of the binary file to be converted.</param>
+	/// <param name="maxSizeInBytes">Defines the maximum allowable size for the file before conversion.</param>
+	/// <returns>Returns the Base64 encoded string of the file's contents.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when the file size exceeds the specified maximum limit.</exception>
 	private static string ConvertBinFileToBase64(string filePath, int maxSizeInBytes)
 	{
 		FileInfo fileInfo = new(filePath);
@@ -653,15 +585,4 @@ DeviceEvents
 		return Convert.ToBase64String(fileBytes);
 	}
 
-}
-
-
-[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
-[JsonSerializable(typeof(JsonElement))]
-[JsonSerializable(typeof(AssignmentPayload))]
-[JsonSerializable(typeof(QueryPayload))]
-[JsonSerializable(typeof(Windows10CustomConfiguration))]
-[JsonSerializable(typeof(OmaSettingBase64))]
-internal sealed partial class IntuneJsonContext : JsonSerializerContext
-{
 }

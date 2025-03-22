@@ -44,21 +44,25 @@ internal static class LocalFilesScan
 	/// <param name="files">File paths to scan</param>
 	/// <param name="scalability">How many parallel tasks to use during the scan</param>
 	/// <param name="UIProgressRing">ProgressRing UI element that will display the scan progress in real time</param>
+	/// <param name="assignVMRef">Assigns the reference to the ViewModel reference to each instance of the FileIdentity class so we can use it via compiled binding in XAML to navigate our way into the ViewModel Class in the ItemTemplate of the ListView and use it for XAML compiled binding of column widths.</param>
+	/// <param name="VMRef">The reference to the ViewModel class.</param>
+	/// <typeparam name="TReference">The generic type used for ViewModel class reference. There are mode than 1 type.</typeparam>
 	/// <returns></returns>
-	internal static HashSet<FileIdentity> Scan(List<FileInfo> files, ushort scalability, ProgressRing UIProgressRing)
+	internal static IEnumerable<FileIdentity> Scan<TReference>((IEnumerable<FileInfo>, int) files, ushort scalability, ProgressRing UIProgressRing, TReference VMRef, Action<FileIdentity, TReference> assignVMRef)
 	{
 
 		// Get the security catalog data to include in the scan
 		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, scalability);
 
-		// Store the output of all of the parallel tasks in this
-		ConcurrentDictionary<FileInfo, FileIdentity> temporaryOutput = [];
+		// Store the output of all of the parallel tasks
+		// Uses our custom comparer to ensure unique FileIdentities
+		ConcurrentDictionary<FileIdentity, bool> MainOutput = new(scalability, files.Item2, new FileIdentityComparer());
 
 		// The counter variable to track processed files
 		int processedFilesCount = 0;
 
 		// The count of all of the files that are going to be processed
-		double AllFilesCount = files.Count;
+		double AllFilesCount = files.Item2;
 
 		// Create a timer to update the progress ring every 2 seconds.
 		using Timer progressTimer = new(state =>
@@ -79,10 +83,10 @@ internal static class LocalFilesScan
 		}, null, 0, 2000);
 
 		// split the file paths by the value of Scalability variable
-		IEnumerable<FileInfo[]> SplitArrays = Enumerable.Chunk(files, (int)Math.Ceiling(AllFilesCount / scalability));
+		IEnumerable<FileInfo[]> SplitArrays = Enumerable.Chunk(files.Item1, (int)Math.Ceiling(AllFilesCount / scalability));
 
 		// List of tasks to run in parallel
-		List<Task> tasks = [];
+		List<Task> tasks = new(scalability);
 
 		// Loop over each chunk of data
 		foreach (FileInfo[] chunk in SplitArrays)
@@ -318,8 +322,11 @@ internal static class LocalFilesScan
 							}
 						}
 
-						// Add the current file's identity to the output HashSet
-						_ = temporaryOutput.TryAdd(file, currentFileIdentity);
+						// Assign the extra parameter to the appropriate property using the delegate for ViewModel instance.
+						assignVMRef(currentFileIdentity, VMRef);
+
+						// Add the current file's identity to the output ConcurrentDictionary with a dummy bool for value
+						_ = MainOutput.TryAdd(currentFileIdentity, true);
 					}
 					catch (IOException ex) when (ex.HResult == unchecked((int)0x80070020)) // File in use by another process
 					{
@@ -351,22 +358,14 @@ internal static class LocalFilesScan
 
 		// Wait for all tasks to complete without making the method async
 		// The method is already being called in an async/await fashion
-		Task.WaitAll([.. tasks]);
+		Task.WaitAll(tasks.ToArray());
 
 		// update the progress ring to 100%
 		_ = UIProgressRing.DispatcherQueue.TryEnqueue(() => UIProgressRing.Value = 100);
 
-		// HashSet to store the output, ensures the data are unique
-		HashSet<FileIdentity> fileIdentities = new(new FileIdentityComparer());
-
-		// Add all the items from the Concurrent Dictionary to the Custom HashSet
-		foreach (FileIdentity item in temporaryOutput.Values)
-		{
-			_ = fileIdentities.Add(item);
-		}
-
-		return fileIdentities;
+		return MainOutput.Keys;
 	}
+
 
 
 	/// <summary>

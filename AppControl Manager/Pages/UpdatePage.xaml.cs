@@ -103,8 +103,8 @@ public sealed partial class UpdatePage : Page
 			if (!useCustomMSIXBundlePath)
 			{
 				UpdateStatusInfoBar.Message = GlobalVars.Rizz.GetString("CheckingForUpdate");
-				// Check for update asynchronously using the AppUpdate class's singleton instance
-				updateCheckResult = await Task.Run(AppUpdate.Instance.Check);
+				// Check for update asynchronously
+				updateCheckResult = await Task.Run(AppUpdate.Check);
 			}
 
 			// If a new version is available or user supplied a custom MSIXBundle path to be installed

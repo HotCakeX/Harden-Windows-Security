@@ -36,10 +36,24 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 	// private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// Used to store the scan results and as the source for the results ListViews
-	internal readonly ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
+	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
+	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults
+	{
+		get => _filesAndFoldersScanResults;
+		set => SetProperty(_filesAndFoldersScanResults, value, newValue => _filesAndFoldersScanResults = newValue);
+	}
+
+
 	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
 
-	internal readonly ObservableCollection<FileIdentity> StrictKernelModeScanResults = [];
+
+	private ObservableCollection<FileIdentity> _StrictKernelModeScanResults = [];
+	internal ObservableCollection<FileIdentity> StrictKernelModeScanResults
+	{
+		get => _StrictKernelModeScanResults;
+		set => SetProperty(_StrictKernelModeScanResults, value, newValue => _StrictKernelModeScanResults = newValue);
+	}
+
 	internal readonly List<FileIdentity> StrictKernelModeScanResultsList = [];
 
 
@@ -221,7 +235,7 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 		double maxWidth18 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in filesAndFoldersScanResults)
+		foreach (FileIdentity item in FilesAndFoldersScanResults)
 		{
 			double w1 = ListViewHelper.MeasureTextWidth(item.FileName);
 			if (w1 > maxWidth1) maxWidth1 = w1;
@@ -300,7 +314,6 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 	}
 
 	#endregion
-
 
 
 
@@ -556,7 +569,7 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox = $"Total files: {filesAndFoldersScanResults.Count}";
+			TotalCountOfTheFilesTextBox = $"Total files: {FilesAndFoldersScanResults.Count}";
 		}
 	}
 

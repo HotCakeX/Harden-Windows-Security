@@ -207,22 +207,45 @@ internal static class ListViewHelper
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBox.Text);
 
-		// Use either the full list or the current display list (ObservableCollection)
-		List<FileIdentity> collectionToSort = isSearchEmpty
-			? originalList
-			: [.. observableCollection];
-
-		// Sort based on toggle state.
-		List<FileIdentity> sortedData = sortingToggle.IsChecked ? [.. collectionToSort.OrderByDescending(keySelector)]
-			: [.. collectionToSort.OrderBy(keySelector)];
-
 		// Clear the ObservableCollection
 		observableCollection.Clear();
 
-		// Add each item to the ObservableCollection
-		foreach (FileIdentity item in sortedData)
+		// Sort based on toggle state.
+		// Use either the full list or the current display list (ObservableCollection).
+		if (sortingToggle.IsChecked)
 		{
-			observableCollection.Add(item);
+			if (isSearchEmpty)
+			{
+				// Add each item to the ObservableCollection
+				foreach (FileIdentity item in originalList.OrderByDescending(keySelector))
+				{
+					observableCollection.Add(item);
+				}
+			}
+			else
+			{
+				foreach (FileIdentity item in observableCollection.OrderByDescending(keySelector))
+				{
+					observableCollection.Add(item);
+				}
+			}
+		}
+		else
+		{
+			if (isSearchEmpty)
+			{
+				foreach (FileIdentity item in originalList.OrderBy(keySelector))
+				{
+					observableCollection.Add(item);
+				}
+			}
+			else
+			{
+				foreach (FileIdentity item in observableCollection.OrderBy(keySelector))
+				{
+					observableCollection.Add(item);
+				}
+			}
 		}
 	}
 

@@ -79,8 +79,14 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// <param name="button3"></param>
 	/// <param name="button4"></param>
 	/// <param name="button5"></param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
 	{
+		ArgumentNullException.ThrowIfNull(button1);
+		ArgumentNullException.ThrowIfNull(button2);
+		ArgumentNullException.ThrowIfNull(button3);
+		ArgumentNullException.ThrowIfNull(button4);
+		ArgumentNullException.ThrowIfNull(button5);
+
 		// Light up the local page's button icons
 		FilesAndFoldersBasePolicyLightAnimatedIcon.Visibility = visibility;
 		CertificatesBasePolicyPathLightAnimatedIcon.Visibility = visibility;
@@ -97,7 +103,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
 		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
-
 
 		if (visibility is Visibility.Visible)
 		{
@@ -127,7 +132,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			button5.Click += LightUp5;
 			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect5EventHandler = LightUp5;
 		}
-
 	}
 
 	/// <summary>
@@ -575,9 +579,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
-			// Clear variables responsible for the ListView
-			ViewModel.filesAndFoldersScanResultsList.Clear();
-			ViewModel.filesAndFoldersScanResults.Clear();
 
 			double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
 
@@ -593,7 +594,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				FileInfo[] selectedFiles = [];
 
-				HashSet<FileIdentity> LocalFilesResults = [];
+				IEnumerable<FileIdentity> LocalFilesResults = [];
 
 				// Convert user selected file paths that are strings to FileInfo objects
 				selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
@@ -603,10 +604,10 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 				{
 
 					// Collect all of the AppControl compatible files from user selected directories and files
-					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
+					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
 
 					// Make sure there are AppControl compatible files
-					if (DetectedFilesInSelectedDirectories.Count is 0)
+					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
@@ -622,7 +623,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 						return;
 					}
 
-					string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Count} AppControl compatible files...";
+					string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Item2} AppControl compatible files...";
 					Logger.Write(msg2);
 
 					_ = DispatcherQueue.TryEnqueue(() =>
@@ -632,19 +633,23 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 
 					// Scan all of the detected files from the user selected directories
-					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressRing);
+					// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
+					LocalFilesResults = LocalFilesScan.Scan(
+						DetectedFilesInSelectedDirectories,
+						(ushort)radialGaugeValue,
+						FilesAndFoldersProgressRing,
+						ViewModel,
+						(fi, vm) => fi.ParentViewModelCreateSupplementalPolicyVM = vm);
+
+					// Clear variables responsible for the ListView
+					ViewModel.filesAndFoldersScanResultsList.Clear();
 
 					ViewModel.filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
 
 					await DispatcherQueue.EnqueueAsync(() =>
 					{
 						// Add the results of the directories scans to the ListView
-						foreach (FileIdentity item in LocalFilesResults)
-						{
-							// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
-							item.ParentViewModelCreateSupplementalPolicyVM = ViewModel;
-							ViewModel.filesAndFoldersScanResults.Add(item);
-						}
+						ViewModel.FilesAndFoldersScanResults = new(LocalFilesResults);
 
 						ViewModel.CalculateColumnWidths();
 
@@ -1692,9 +1697,6 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			List<FileInfo> kernelModeDriversList = [];
 
-			ViewModel.StrictKernelModeScanResults.Clear();
-			ViewModel.StrictKernelModeScanResultsList.Clear();
-
 			await Task.Run(() =>
 			{
 
@@ -1715,12 +1717,9 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 				DirectoryInfo sys32Dir = new(Path.Combine(systemDrive, "Windows", "System32"));
 
-				List<FileInfo> filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
+				(IEnumerable<FileInfo>, int) filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
 
-				foreach (FileInfo file in filesOutput)
-				{
-					kernelModeDriversList.Add(file);
-				}
+				kernelModeDriversList.AddRange(filesOutput.Item1);
 
 			});
 
@@ -1735,25 +1734,30 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 
 			StrictKernelModeInfoBar.Message = $"Scanning {kernelModeDriversList.Count} files";
 
-			HashSet<FileIdentity> LocalFilesResults = [];
+			IEnumerable<FileIdentity> LocalFilesResults = [];
 
 			await Task.Run(() =>
 			{
 				// Scan all of the detected files from the user selected directories
-				LocalFilesResults = LocalFilesScan.Scan(kernelModeDriversList, 3, DriverAutoDetectionProgressRing);
+				// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
+				LocalFilesResults = LocalFilesScan.Scan(
+					(kernelModeDriversList, kernelModeDriversList.Count),
+					3,
+					DriverAutoDetectionProgressRing,
+					ViewModel,
+					(fi, vm) => fi.ParentViewModelCreateSupplementalPolicyVM = vm);
 
 				// Only keep the signed kernel-mode files
-				IEnumerable<FileIdentity> ILocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
+				LocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
+
+				ViewModel.StrictKernelModeScanResultsList.Clear();
 
 				// Add the results to the List
-				ViewModel.StrictKernelModeScanResultsList.AddRange(ILocalFilesResults);
+				ViewModel.StrictKernelModeScanResultsList.AddRange(LocalFilesResults);
 			});
 
 			// Add the results to the ObservableCollection
-			foreach (FileIdentity item in LocalFilesResults)
-			{
-				ViewModel.StrictKernelModeScanResults.Add(item);
-			}
+			ViewModel.StrictKernelModeScanResults = new(LocalFilesResults);
 
 			ViewModel.CalculateColumnWidthsStrictKernelMode();
 

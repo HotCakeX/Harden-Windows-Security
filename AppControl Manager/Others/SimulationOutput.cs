@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using AppControlManager.ViewModels;
 
 namespace AppControlManager.Others;
@@ -32,7 +33,7 @@ internal sealed class SimulationOutput(
 	string? signerCertRoot,
 	string? signerCertPublisher,
 	string? signerScope,
-	string[]? signerFileAttributeIDs,
+	List<string>? signerFileAttributeIDs,
 	string? matchCriteria,
 	string? specificFileNameLevelMatchCriteria,
 	string? certSubjectCN,
@@ -67,7 +68,7 @@ internal sealed class SimulationOutput(
 	internal string? SignerScope { get; set; } = signerScope;
 
 	// Gathered from the GetSignerInfo method
-	internal string[]? SignerFileAttributeIDs { get; set; } = signerFileAttributeIDs;
+	internal List<string>? SignerFileAttributeIDs { get; set; } = signerFileAttributeIDs;
 
 	// The main level based on which the file is authorized
 	internal string? MatchCriteria { get; set; } = matchCriteria;

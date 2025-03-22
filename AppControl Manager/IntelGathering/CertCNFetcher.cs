@@ -29,9 +29,10 @@ internal static class CertCNFetcher
 	/// </summary>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static HashSet<string> GetCertCNs()
+	internal static IEnumerable<string> GetCertCNs()
 	{
 
+		// Output collection
 		HashSet<string> output = [];
 
 		// Open the current user's personal store
@@ -57,7 +58,6 @@ internal static class CertCNFetcher
 			}
 		}
 
-		// Explicitly call ToArray() from Enumerable
-		return [.. output];
+		return output;
 	}
 }

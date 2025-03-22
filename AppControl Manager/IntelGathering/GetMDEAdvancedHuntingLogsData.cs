@@ -68,7 +68,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 			MDEAdvancedHuntingData? possibleAppLockerBlockEvent = group.FirstOrDefault(g => string.Equals(g.ActionType, "AppControlCIScriptBlocked", StringComparison.OrdinalIgnoreCase));
 
 			// Get the possible correlated data
-			List<MDEAdvancedHuntingData> correlatedEvents = [.. group.Where(g => string.Equals(g.ActionType, "AppControlCodeIntegritySigningInformation", StringComparison.OrdinalIgnoreCase))];
+			List<MDEAdvancedHuntingData> correlatedEvents = group.Where(g => string.Equals(g.ActionType, "AppControlCodeIntegritySigningInformation", StringComparison.OrdinalIgnoreCase)).ToList();
 
 
 			// The SHA256 must be available in Audit/Block type of events for either Code Integrity or AppLocker

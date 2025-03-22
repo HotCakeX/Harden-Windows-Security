@@ -15,7 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using AppControlManager.Others;
 using Microsoft.UI.Dispatching;
 
@@ -28,71 +32,99 @@ namespace AppControlManager.ViewModels;
 /// </summary>
 internal sealed partial class MainWindowVM : INotifyPropertyChanged
 {
-	// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
-	// https://learn.microsoft.com/en-us/windows/apps/design/controls/info-badge
-	private double _infoBadgeOpacity;
-
-	// Instance of the AppUpdate service to handle update checks.
-	private readonly AppUpdate _updateService;
-
 	// DispatcherQueue provides access to the UI thread dispatcher, allowing for UI updates from background threads.
-	private readonly DispatcherQueue _dispatcher;
+	private readonly DispatcherQueue Dispatch;
 
 	// Event triggered when a bound property value changes, allowing the UI to reactively update.
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
+	/// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
+	/// https://learn.microsoft.com/en-us/windows/apps/design/controls/info-badge
 	/// Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
 	/// When set to 0, the badge is hidden.
 	/// </summary>
+	private double _infoBadgeOpacity;
 	internal double InfoBadgeOpacity
 	{
 		get => _infoBadgeOpacity;
-		set
-		{
-			// Only update if the value has changed to avoid unnecessary notifications
-			if (_infoBadgeOpacity != value)
-			{
-				_infoBadgeOpacity = value;
-
-				// Notify UI of property change to update the binding
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InfoBadgeOpacity)));
-			}
-		}
+		set => SetProperty(_infoBadgeOpacity, value, newValue => _infoBadgeOpacity = newValue);
 	}
 
 	/// <summary>
-	/// Constructor initializes the ViewModel with the AppUpdate service instance
-	/// and subscribes to the update notification event.
+	/// Constructor initializes the ViewModel and subscribes to the update notification event.
 	/// </summary>
-	/// <param name="updateService">Instance of AppUpdate service used for update checks.</param>
-	internal MainWindowVM(AppUpdate updateService)
+	public MainWindowVM()
 	{
-		_updateService = updateService; // Store AppUpdate service instance
-
-		// Retrieve the dispatcher queue associated with the main (UI) thread
-		// for safe UI updates from event handlers or background threads.
-		// Because the update check always happens on another thread via Task.Run.
-		_dispatcher = DispatcherQueue.GetForCurrentThread();
+		Dispatch = DispatcherQueue.GetForCurrentThread();
 
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
-		_updateService.UpdateAvailable += OnUpdateAvailable!;
+		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
 	}
 
 	/// <summary>
 	/// Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
 	/// Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
 	/// </summary>
-	/// <param name="sender">Sender of the event, in this case, AppUpdate instance.</param>
+	/// <param name="sender">Sender of the event, in this case, AppUpdate class.</param>
 	/// <param name="e">Boolean indicating whether an update is available.</param>
 	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
 	{
 		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
-		_ = _dispatcher.TryEnqueue(() =>
+		_ = Dispatch.TryEnqueue(() =>
 		{
 			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
 			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
 		});
 	}
 
+
+
+	/// <summary>
+	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar
+	/// </summary>
+	private bool _OpenConfigDirectoryButtonState = App.IsElevated;
+	internal bool OpenConfigDirectoryButtonState
+	{
+		get => _OpenConfigDirectoryButtonState;
+		set => SetProperty(_OpenConfigDirectoryButtonState, value, newValue => _OpenConfigDirectoryButtonState = newValue);
+	}
+
+
+	/// <summary>
+	/// Event handler for the Sidebar button to open the user config directory
+	/// </summary>
+	internal void OpenConfigDirectoryButton_Click()
+	{
+		_ = Process.Start(new ProcessStartInfo
+		{
+			FileName = GlobalVars.UserConfigDir,
+			UseShellExecute = true
+		});
+	}
+
+
+	/// <summary>
+	/// Sets the property and raises the PropertyChanged event if the value has changed.
+	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="currentValue"></param>
+	/// <param name="newValue"></param>
+	/// <param name="setter"></param>
+	/// <param name="propertyName"></param>
+	/// <returns></returns>
+	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
+	{
+		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
+			return false;
+		setter(newValue);
+		OnPropertyChanged(propertyName);
+		return true;
+	}
+
+	private void OnPropertyChanged(string? propertyName)
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
 }

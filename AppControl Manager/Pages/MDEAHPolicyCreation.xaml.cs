@@ -732,7 +732,7 @@ DeviceEvents
 	/// <param name="e"></param>
 	private void MSGraphCancelSignInButton_Click(object sender, RoutedEventArgs e)
 	{
-		MicrosoftGraph.CancelSignIn();
+		MicrosoftGraph.Main.CancelSignIn();
 	}
 
 
@@ -758,7 +758,7 @@ DeviceEvents
 
 			MSGraphSignInButton.IsEnabled = false;
 
-			await MicrosoftGraph.SignIn(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
+			await MicrosoftGraph.Main.SignIn(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
 
 			MainInfoBar.Message = "Successfully signed into MSGraph";
 			MainInfoBar.Severity = InfoBarSeverity.Success;
@@ -825,7 +825,7 @@ DeviceEvents
 
 			RetrieveTheLogsButton.IsEnabled = false;
 
-			await MicrosoftGraph.SignOut(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
+			await MicrosoftGraph.Main.SignOut(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
 
 			signOutSuccessful = true;
 
@@ -878,7 +878,7 @@ DeviceEvents
 			MSGraphDeviceNameButton.IsEnabled = false;
 
 			// Retrieve the MDE Advanced Hunting data as a JSON string
-			string? result = await MicrosoftGraph.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text);
+			string? result = await MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text);
 
 			// If there were results
 			if (result is not null)

@@ -27,6 +27,8 @@ using AppControlManager.AppSettings;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Sidebar;
+using AppControlManager.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Input;
@@ -49,7 +51,9 @@ namespace AppControlManager;
 public sealed partial class MainWindow : Window
 {
 
-	internal ViewModels.MainWindowVM ViewModel { get; }
+#pragma warning disable CA1822
+	internal MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+#pragma warning restore CA1822
 
 	private readonly AppWindow m_AppWindow;
 
@@ -326,7 +330,7 @@ public sealed partial class MainWindow : Window
 							 .SelectMany(GetAllChildren)
 ,
 			 .. MainNavigation.FooterMenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren),
-		 ];
+			];
 
 		static IEnumerable<NavigationViewItem> GetAllChildren(NavigationViewItem parent) =>
 			new[] { parent }.Concat(parent.MenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren));
@@ -346,48 +350,42 @@ public sealed partial class MainWindow : Window
 
 		#region
 
-		// Use the singleton instance of AppUpdate class
-		AppUpdate updateService = AppUpdate.Instance;
-
-		// Pass the AppUpdate class instance to MainWindowViewModel
-		ViewModel = new ViewModels.MainWindowVM(updateService);
-
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = ViewModel;
 
 		_ = Task.Run(() =>
-		   {
-			   try
-			   {
+		{
+			try
+			{
 
-				   // If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
-				   // If a new version is available.
-				   // Will also check for update if it's null meaning user hasn't configured the auto update check yet
-				   if (AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
-				   {
+				// If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
+				// If a new version is available.
+				// Will also check for update if it's null meaning user hasn't configured the auto update check yet
+				if (AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
+				{
 
-					   Logger.Write("Checking for update on startup");
+					Logger.Write("Checking for update on startup");
 
-					   // Start the update check
-					   UpdateCheckResponse updateCheckResponse = updateService.Check();
+					// Start the update check
+					UpdateCheckResponse updateCheckResponse = AppUpdate.Check();
 
-					   // If a new version is available
-					   if (updateCheckResponse.IsNewVersionAvailable)
-					   {
-						   // Set the text for the button in the update page
-						   GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
-					   }
-					   else
-					   {
-						   Logger.Write("No new version of the AppControl Manager is available.");
-					   }
-				   }
-			   }
-			   catch (Exception ex)
-			   {
-				   Logger.Write("Error checking for update on startup: " + ex.Message);
-			   }
-		   });
+					// If a new version is available
+					if (updateCheckResponse.IsNewVersionAvailable)
+					{
+						// Set the text for the button in the update page
+						GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
+					}
+					else
+					{
+						Logger.Write("No new version of the AppControl Manager is available.");
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write("Error checking for update on startup: " + ex.Message);
+			}
+		});
 
 		#endregion
 
@@ -432,6 +430,7 @@ public sealed partial class MainWindow : Window
 		// Subscribing to the event that is fired when User Configuration changes for Unsigned policy path to that the Sidebar can be updated accordingly
 		Events.UnsignedPolicyManager.UnsignedPolicyInUserConfigChanged += SidebarOnUnsignedPolicyChanged;
 	}
+
 
 	/// <summary>
 	/// Public property to access the singleton instance from other classes
@@ -1369,7 +1368,7 @@ public sealed partial class MainWindow : Window
 			string query = sender.Text.ToLowerInvariant().Trim();
 
 			// Filter menu items based on the search query
-			List<string> suggestions = [.. NavigationPageToItemContentMap.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
+			List<string> suggestions = new(NavigationPageToItemContentMap.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
 
 			// Set the filtered items as suggestions in the AutoSuggestBox
 			sender.ItemsSource = suggestions;
@@ -1885,23 +1884,4 @@ public sealed partial class MainWindow : Window
 		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
 	}
 
-
-	/// <summary>
-	/// Event handler for the Sidebar button to open the user config directory
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OpenConfigDirectoryButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (!App.IsElevated)
-		{
-			return;
-		}
-
-		_ = Process.Start(new ProcessStartInfo
-		{
-			FileName = GlobalVars.UserConfigDir,
-			UseShellExecute = true
-		});
-	}
 }

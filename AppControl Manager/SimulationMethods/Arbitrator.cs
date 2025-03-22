@@ -480,7 +480,7 @@ internal static class Arbitrator
 						{
 
 							// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
-							if (signer.FileAttribRef.Length > 0)
+							if (signer.FileAttribRef.Count > 0)
 							{
 								continue;
 							}
@@ -519,7 +519,7 @@ internal static class Arbitrator
 					{
 
 						// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
-						if (signer.FileAttribRef.Length > 0)
+						if (signer.FileAttribRef.Count > 0)
 						{
 							continue;
 						}
@@ -559,7 +559,7 @@ internal static class Arbitrator
 				{
 
 					// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
-					if (signer.FileAttribRef.Length > 0)
+					if (signer.FileAttribRef.Count > 0)
 					{
 						continue;
 					}
@@ -709,7 +709,7 @@ internal static class Arbitrator
 					else
 					{
 						// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
-						if (signer.FileAttribRef.Length > 0)
+						if (signer.FileAttribRef.Count > 0)
 						{
 							continue;
 						}
@@ -748,7 +748,7 @@ internal static class Arbitrator
 				{
 
 					// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
-					if (signer.FileAttribRef.Length > 0)
+					if (signer.FileAttribRef.Count > 0)
 					{
 						continue;
 					}

@@ -20,8 +20,10 @@ using AppControlManager.ViewModels;
 
 namespace AppControlManager.Others;
 
-// a class that represents each certificate in a chain
-// Used by the ListView in the View File Certificates page
+/// <summary>
+/// A class that represents each certificate in a chain
+/// Used by the ListView in the View File Certificates page
+/// </summary>
 internal sealed class FileCertificateInfoCol
 {
 	internal int SignerNumber { get; set; }

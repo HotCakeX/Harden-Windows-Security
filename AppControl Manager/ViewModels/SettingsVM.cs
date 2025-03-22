@@ -80,12 +80,7 @@ internal sealed partial class SettingsVM : INotifyPropertyChanged
 	{
 		_InitialFetchComplete = true;
 
-		HashSet<string> certCNs = [];
-
-		await Task.Run(() =>
-		{
-			certCNs = CertCNFetcher.GetCertCNs();
-		});
+		IEnumerable<string> certCNs = await Task.Run(CertCNFetcher.GetCertCNs);
 
 		CertCommonNames.Clear();
 		CertCommonNamesList.Clear();

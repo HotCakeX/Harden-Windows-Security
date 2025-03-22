@@ -15,20 +15,16 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-using System.Security.Cryptography.Pkcs;
-using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 
-namespace AppControlManager.Others;
+namespace AppControlManager.MicrosoftGraph;
 
-internal sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
- List<ChainElement>? intermediatecertificates,
-  ChainElement? leafcertificate)
+/// <summary>
+/// Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
+/// </summary>
+internal sealed class QueryPayload
 {
-	internal X509Chain CertificateChain { get; set; } = certificatechain;
-	internal SignedCms SignedCms { get; set; } = signedcms;
-	internal ChainElement RootCertificate { get; set; } = rootcertificate;
-	internal List<ChainElement>? IntermediateCertificates { get; set; } = intermediatecertificates;
-	internal ChainElement? LeafCertificate { get; set; } = leafcertificate;
+	[JsonInclude]
+	[JsonPropertyName("Query")]
+	internal string? Query { get; set; }
 }
-

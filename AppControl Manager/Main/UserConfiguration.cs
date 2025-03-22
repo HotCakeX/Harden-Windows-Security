@@ -120,7 +120,7 @@ internal sealed partial class UserConfiguration(
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName))
 		{
 			// Get valid certificate common names
-			HashSet<string> certCommonNames = CertCNFetcher.GetCertCNs();
+			IEnumerable<string> certCommonNames = CertCNFetcher.GetCertCNs();
 
 			if (!certCommonNames.Contains(CertificateCommonName))
 			{

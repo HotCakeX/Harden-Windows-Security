@@ -51,7 +51,7 @@ internal static class CatRootScanner
 		}
 
 		// The output dictionary that will contain the hashes of the security catalogs and their file paths
-		ConcurrentDictionary<string, string> output = [];
+		ConcurrentDictionary<string, string> output = new(scalability, paths?.Count ?? 1);
 
 		List<DirectoryInfo> DirectoriesToScan = [];
 
@@ -69,14 +69,14 @@ internal static class CatRootScanner
 		}
 
 		// Get the .cat files in the CatRoot directories
-		List<FileInfo> detectedCatFiles = FileUtility.GetFilesFast([.. DirectoriesToScan], null, [".cat"]);
+		(IEnumerable<FileInfo>, int) detectedCatFiles = FileUtility.GetFilesFast([.. DirectoriesToScan], null, [".cat"]);
 
-		Logger.Write($"Including {detectedCatFiles.Count} Security Catalogs in the scan process");
+		Logger.Write($"Including {detectedCatFiles.Item2} Security Catalogs in the scan process");
 
 		// Make sure the degree of parallelism is always at least 4
 		ParallelOptions options = new() { MaxDegreeOfParallelism = scalability is > 4 ? scalability : 4 };
 
-		_ = Parallel.ForEach(detectedCatFiles, options, file =>
+		_ = Parallel.ForEach(detectedCatFiles.Item1, options, file =>
 		{
 			// Get the hashes of the security catalog file
 			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);

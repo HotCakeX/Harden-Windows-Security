@@ -37,7 +37,12 @@ internal sealed partial class CreateDenyPolicyVM : INotifyPropertyChanged
 
 
 	// Used to store the scan results and as the source for the results ListViews
-	internal readonly ObservableCollection<FileIdentity> filesAndFoldersScanResults = [];
+	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
+	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults
+	{
+		get => _filesAndFoldersScanResults;
+		set => SetProperty(_filesAndFoldersScanResults, value, newValue => _filesAndFoldersScanResults = newValue);
+	}
 
 	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
 
@@ -213,7 +218,7 @@ internal sealed partial class CreateDenyPolicyVM : INotifyPropertyChanged
 		double maxWidth18 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in filesAndFoldersScanResults)
+		foreach (FileIdentity item in FilesAndFoldersScanResults)
 		{
 			double w1 = ListViewHelper.MeasureTextWidth(item.FileName);
 			if (w1 > maxWidth1) maxWidth1 = w1;
@@ -295,7 +300,6 @@ internal sealed partial class CreateDenyPolicyVM : INotifyPropertyChanged
 
 
 
-
 	/// <summary>
 	/// Updates the total logs count displayed on the UI
 	/// </summary>
@@ -307,10 +311,9 @@ internal sealed partial class CreateDenyPolicyVM : INotifyPropertyChanged
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox = $"Total files: {filesAndFoldersScanResults.Count}";
+			TotalCountOfTheFilesTextBox = $"Total files: {FilesAndFoldersScanResults.Count}";
 		}
 	}
-
 
 
 

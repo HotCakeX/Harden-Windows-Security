@@ -27,40 +27,6 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager.Others;
 
-// a class to throw a custom exception when the certificate has HashMismatch
-internal sealed class HashMismatchInCertificateException : Exception
-{
-	// Constructor with no parameters
-	internal HashMismatchInCertificateException()
-	{
-	}
-
-	// Constructor with a message parameter
-	internal HashMismatchInCertificateException(string message)
-		: base(message)
-	{
-	}
-
-	// Constructor with message and functionName, calling the base constructor
-	internal HashMismatchInCertificateException(string message, string functionName)
-		: base($"{functionName}: {message}")
-	{
-	}
-
-	// Constructor with message and inner exception, calling the base constructor
-	internal HashMismatchInCertificateException(string message, Exception innerException)
-		: base(message, innerException)
-	{
-	}
-}
-
-// Represents a signed CMS and its certificate chain
-internal sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
-{
-	internal SignedCms Signer { get; } = signerCertificate;
-	internal X509Chain Chain { get; } = certificateChain;
-}
-
 internal static partial class AllCertificatesGrabber
 {
 	// Structure defining signer information for cryptographic providers

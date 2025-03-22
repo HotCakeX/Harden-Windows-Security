@@ -15,20 +15,21 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-using System.Security.Cryptography.Pkcs;
-using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace AppControlManager.Others;
+namespace AppControlManager.MicrosoftGraph;
 
-internal sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
- List<ChainElement>? intermediatecertificates,
-  ChainElement? leafcertificate)
+/// <summary>
+/// Defines a context for JSON serialization with specific options for formatting and ignoring null values. It includes
+/// serialization support for various types.
+/// </summary>
+[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+[JsonSerializable(typeof(JsonElement))]
+[JsonSerializable(typeof(AssignmentPayload))]
+[JsonSerializable(typeof(QueryPayload))]
+[JsonSerializable(typeof(Windows10CustomConfiguration))]
+[JsonSerializable(typeof(OmaSettingBase64))]
+internal sealed partial class IntuneJsonContext : JsonSerializerContext
 {
-	internal X509Chain CertificateChain { get; set; } = certificatechain;
-	internal SignedCms SignedCms { get; set; } = signedcms;
-	internal ChainElement RootCertificate { get; set; } = rootcertificate;
-	internal List<ChainElement>? IntermediateCertificates { get; set; } = intermediatecertificates;
-	internal ChainElement? LeafCertificate { get; set; } = leafcertificate;
 }
-

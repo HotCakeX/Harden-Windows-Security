@@ -45,13 +45,10 @@ internal sealed partial class EventLogsPolicyCreationVM : INotifyPropertyChanged
 	internal readonly List<FileIdentity> AllFileIdentities = [];
 
 
-
-
 	#region UI-Bound Properties
 
 
 	#endregion
-
 
 
 
@@ -329,10 +326,6 @@ internal sealed partial class EventLogsPolicyCreationVM : INotifyPropertyChanged
 	}
 
 	#endregion
-
-
-
-
 
 
 

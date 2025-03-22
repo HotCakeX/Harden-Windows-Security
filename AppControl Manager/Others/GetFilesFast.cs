@@ -80,8 +80,8 @@ internal static class FileUtility
 	/// <param name="directories">Directories to process.</param>
 	/// <param name="files">Files to process.</param>
 	/// <param name="extensionsToFilterBy">Extensions to filter by. If null or empty, default App Control supported extensions are used.</param>
-	/// <returns>List of FileInfo objects.</returns>
-	internal static List<FileInfo> GetFilesFast(
+	/// <returns>A Tuple containing the IEnumerable and count of the data</returns>
+	internal static (IEnumerable<FileInfo>, int) GetFilesFast(
 		DirectoryInfo[]? directories,
 		FileInfo[]? files,
 		string[]? extensionsToFilterBy)
@@ -101,9 +101,6 @@ internal static class FileUtility
 		{
 			extensions = appControlExtensions;
 		}
-
-		// Define a HashSet to store the final output
-		HashSet<FileInfo> output = new(new FileInfoComparer());
 
 		// https://learn.microsoft.com/en-us/dotnet/api/system.collections.concurrent.blockingcollection-1
 		// https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/when-to-use-a-thread-safe-collection
@@ -268,11 +265,9 @@ internal static class FileUtility
 		// Stop adding items to the collection
 		bc.CompleteAdding();
 
-		// Add each item to the HashSet from the Blocking Collection
-		foreach (FileInfo item in bc.GetConsumingEnumerable())
-		{
-			_ = output.Add(item);
-		}
+		// Defining a HashSet to store the final output and add each item to the HashSet from the Blocking Collection
+		// Using the HashSet's special constructor for higher performance
+		HashSet<FileInfo> output = new(bc.GetConsumingEnumerable(), new FileInfoComparer());
 
 		// Stop measuring time
 		stopwatch.Stop();
@@ -282,6 +277,6 @@ internal static class FileUtility
 
 		Logger.Write($"File enumeration took {elapsedTime.Hours} hours and {elapsedTime.Minutes} minutes and {elapsedTime.Seconds} seconds to complete.");
 
-		return [.. output];
+		return (output, output.Count);
 	}
 }

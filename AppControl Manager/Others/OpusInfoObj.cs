@@ -24,21 +24,23 @@ namespace AppControlManager.Others;
 /// https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
 /// Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
 /// </summary>
-public struct OpusInfoObj
+[StructLayout(LayoutKind.Sequential)]
+internal struct OpusInfoObj
 {
-	/// <summary>
-	/// Declaring a public field CertOemID of type string with LPWStr marshaling
-	/// </summary>
 	[MarshalAs(UnmanagedType.LPWStr)]
-	public string CertOemID;
+	internal string CertOemID = string.Empty;
 
-	/// <summary>
-	/// Publisher Info
-	/// </summary>
-	public IntPtr PublisherInfo;
+	internal IntPtr PublisherInfo = IntPtr.Zero;
 
 	/// <summary>
 	/// not always present
 	/// </summary>
-	public IntPtr MoreInfo;
+	internal IntPtr MoreInfo = IntPtr.Zero;
+
+	public OpusInfoObj()
+	{
+		CertOemID = string.Empty;
+		PublisherInfo = IntPtr.Zero;
+		MoreInfo = IntPtr.Zero;
+	}
 }

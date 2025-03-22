@@ -98,8 +98,11 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	/// <param name="button3">Represents the third button, though its visibility is not directly modified in this context.</param>
 	/// <param name="button4">Represents the fourth button, though its visibility is not directly modified in this context.</param>
 	/// <param name="button5">Represents the fifth button, though its visibility is not directly modified in this context.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
 	{
+
+		ArgumentNullException.ThrowIfNull(button1);
+
 		// Light up the local page's button icons
 		AllowNewAppsStart.Instance.BrowseForXMLPolicyButtonLightAnimatedIconPub.Visibility = visibility;
 

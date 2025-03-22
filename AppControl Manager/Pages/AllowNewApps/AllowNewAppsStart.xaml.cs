@@ -163,8 +163,11 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	/// <param name="button3">Represents the third button, though it is not modified in this context.</param>
 	/// <param name="button4">Represents the fourth button, though it is not modified in this context.</param>
 	/// <param name="button5">Represents the fifth button, though it is not modified in this context.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
 	{
+
+		ArgumentNullException.ThrowIfNull(button1);
+
 		// Light up the local page's button icons
 		BrowseForXMLPolicyButtonLightAnimatedIcon.Visibility = visibility;
 
@@ -552,22 +555,28 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 					selectedDirectories = [.. selectedDirectoriesToScan.Select(dir => new DirectoryInfo(dir))];
 
 					// Get all of the AppControl compatible files from user selected directories
-					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
+					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
 
 					// If any App Control compatible files were found in the user selected directories
-					if (DetectedFilesInSelectedDirectories.Count > 0)
+					if (DetectedFilesInSelectedDirectories.Item2 > 0)
 					{
 
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
-							Step2InfoBar.Message = $"Scanning {DetectedFilesInSelectedDirectories.Count} files found in the selected directories";
+							Step2InfoBar.Message = $"Scanning {DetectedFilesInSelectedDirectories.Item2} files found in the selected directories";
 
 							// Set the progress ring to no longer be indeterminate since file scan will take control of its value
 							Step2ProgressRing.IsIndeterminate = false;
 						});
 
 						// Scan all of the detected files from the user selected directories
-						HashSet<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, 2, Step2ProgressRing);
+						// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
+						IEnumerable<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(
+							DetectedFilesInSelectedDirectories,
+							2,
+							Step2ProgressRing,
+							ViewModel,
+							(fi, vm) => fi.ParentViewModelAllowNewApps = vm);
 
 						// Add the results to the backing list
 						ViewModel.LocalFilesAllFileIdentities.Clear();
@@ -575,16 +584,8 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 						await DispatcherQueue.EnqueueAsync(() =>
 						{
-							// Clear the ObservableCollection
-							ViewModel.LocalFilesFileIdentities.Clear();
-
-							// Add the results of the directories scans to the ObservableCollection
-							foreach (FileIdentity item in LocalFilesResults)
-							{
-								// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
-								item.ParentViewModelAllowNewApps = ViewModel;
-								ViewModel.LocalFilesFileIdentities.Add(item);
-							}
+							// Add the results of the Files/Directories scans to the ObservableCollection
+							ViewModel.LocalFilesFileIdentities = new(LocalFilesResults);
 
 							ViewModel.CalculateColumnWidthLocalFiles();
 						});

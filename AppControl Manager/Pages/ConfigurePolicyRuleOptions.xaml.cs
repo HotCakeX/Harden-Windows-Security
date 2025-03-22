@@ -81,8 +81,10 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// <param name="button3">Controls the visibility of the third button.</param>
 	/// <param name="button4">Sets the visibility of the fourth button.</param>
 	/// <param name="button5">Manages the visibility of the fifth button.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5)
+	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
 	{
+		ArgumentNullException.ThrowIfNull(button1);
+
 		// Light up the local page's button icons
 		PickPolicyFileButtonAnimatedIconLight.Visibility = visibility;
 

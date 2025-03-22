@@ -204,14 +204,6 @@ internal sealed partial class ViewFileCertificatesVM : INotifyPropertyChanged
 
 
 
-
-
-
-
-
-
-
-
 	/// <summary>
 	/// Sets the property and raises the PropertyChanged event if the value has changed.
 	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.

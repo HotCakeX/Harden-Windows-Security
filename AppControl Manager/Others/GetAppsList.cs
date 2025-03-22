@@ -110,7 +110,7 @@ internal static class GetAppsList
 															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
 															 select new GroupInfoListForPackagedAppView(g) { Key = g.Key };
 
-		return [.. query];
+		return new(query);
 	}
 
 }

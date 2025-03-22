@@ -115,7 +115,7 @@
         <ListView x:Name="FileIdentitiesListView"
             Grid.Row="2"
             SelectionMode="Extended"
-            ItemsSource="{x:Bind ViewModel.filesAndFoldersScanResults, Mode=OneWay}"
+            ItemsSource="{x:Bind ViewModel.FilesAndFoldersScanResults, Mode=OneWay}"
             ScrollViewer.HorizontalScrollMode="Enabled"
             ScrollViewer.IsHorizontalRailEnabled="True"
             ScrollViewer.HorizontalScrollBarVisibility="Visible"

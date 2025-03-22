@@ -28,7 +28,7 @@
     <Nullable>enable</Nullable>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
-    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+    <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
 
     <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
@@ -69,6 +69,7 @@
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
     <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
+    <!-- <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm> -->
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
     <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
@@ -156,7 +157,7 @@
 
     <PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
 
-
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc -->
     <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/background-gc -->
@@ -166,6 +167,18 @@
       <ServerGarbageCollection>true</ServerGarbageCollection>
       <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     -->
+
+
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
+    <AnalysisModeDocumentation>All</AnalysisModeDocumentation>
+    <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
+    <AnalysisModePerformance>All</AnalysisModePerformance>
+
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
+    <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
 
   </PropertyGroup>
 

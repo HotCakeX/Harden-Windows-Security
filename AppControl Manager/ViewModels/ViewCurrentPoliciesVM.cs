@@ -875,27 +875,47 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
 
 		// Use either the full list (AllPoliciesOutput) or the current display list.
-		List<CiPolicyInfo> collectionToSort = isSearchEmpty ? AllPoliciesOutput : [.. AllPolicies];
-
 		await Dispatch.EnqueueAsync(() =>
 		{
-
+			// Clear the ObservableCollection
 			AllPolicies.Clear();
 
 			if (SortingDirectionToggleStatus)
 			{
-				// Sort in descending order.
-				foreach (CiPolicyInfo item in collectionToSort.OrderByDescending(keySelector))
+				if (isSearchEmpty)
 				{
-					AllPolicies.Add(item);
+					// Sort in descending order.
+					foreach (CiPolicyInfo item in AllPoliciesOutput.OrderByDescending(keySelector))
+					{
+						AllPolicies.Add(item);
+					}
+				}
+				else
+				{
+					// Sort in descending order.
+					foreach (CiPolicyInfo item in AllPolicies.OrderByDescending(keySelector))
+					{
+						AllPolicies.Add(item);
+					}
 				}
 			}
 			else
 			{
-				// Sort in ascending order.
-				foreach (CiPolicyInfo item in collectionToSort.OrderBy(keySelector))
+				if (isSearchEmpty)
 				{
-					AllPolicies.Add(item);
+					// Sort in ascending order.
+					foreach (CiPolicyInfo item in AllPoliciesOutput.OrderBy(keySelector))
+					{
+						AllPolicies.Add(item);
+					}
+				}
+				else
+				{
+					// Sort in ascending order.
+					foreach (CiPolicyInfo item in AllPolicies.OrderBy(keySelector))
+					{
+						AllPolicies.Add(item);
+					}
 				}
 			}
 		});
@@ -912,12 +932,12 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 		if (searchTerm is null)
 			return;
 
-		List<CiPolicyInfo> filteredResults = [];
+		IEnumerable<CiPolicyInfo> filteredResults = [];
 
 		await Task.Run(() =>
 		{
 			// Perform a case-insensitive search in all relevant fields
-			filteredResults = [.. AllPoliciesOutput.Where(p =>
+			filteredResults = AllPoliciesOutput.Where(p =>
 			(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -926,7 +946,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 			(p.IsOnDisk.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(p.IsEnforced.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			)];
+			);
 		});
 
 		AllPolicies.Clear();
@@ -938,7 +958,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 		}
 
 		// Update the policies count text
-		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + filteredResults.Count;
+		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
 	}
 
 

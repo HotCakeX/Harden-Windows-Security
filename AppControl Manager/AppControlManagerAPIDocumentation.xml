@@ -1215,6 +1215,12 @@
             </summary>
             <param name="args">Details about the launch request and process.</param>
         </member>
+        <member name="P:AppControlManager.App.MainWindow">
+            <summary>
+            Exposes the main application window as a static property. It retrieves the window from the current application
+            instance.
+            </summary>
+        </member>
         <member name="M:AppControlManager.App.App_UnhandledException(System.Object,Microsoft.UI.Xaml.UnhandledExceptionEventArgs)">
             <summary>
             Event handler for unhandled exceptions.
@@ -1924,13 +1930,16 @@
             <param name="certCN"></param>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.IntelGathering.LocalFilesScan.Scan(System.Collections.Generic.List{System.IO.FileInfo},System.UInt16,Microsoft.UI.Xaml.Controls.ProgressRing)">
+        <member name="M:AppControlManager.IntelGathering.LocalFilesScan.Scan``1(System.ValueTuple{System.Collections.Generic.IEnumerable{System.IO.FileInfo},System.Int32},System.UInt16,Microsoft.UI.Xaml.Controls.ProgressRing,``0,System.Action{AppControlManager.IntelGathering.FileIdentity,``0})">
             <summary>
             Scans the local files and returns the scan results
             </summary>
             <param name="files">File paths to scan</param>
             <param name="scalability">How many parallel tasks to use during the scan</param>
             <param name="UIProgressRing">ProgressRing UI element that will display the scan progress in real time</param>
+            <param name="assignVMRef">Assigns the reference to the ViewModel reference to each instance of the FileIdentity class so we can use it via compiled binding in XAML to navigate our way into the ViewModel Class in the ItemTemplate of the ListView and use it for XAML compiled binding of column widths.</param>
+            <param name="VMRef">The reference to the ViewModel class.</param>
+            <typeparam name="TReference">The generic type used for ViewModel class reference. There are mode than 1 type.</typeparam>
             <returns></returns>
         </member>
         <member name="M:AppControlManager.IntelGathering.LocalFilesScan.GetOIDs(System.Collections.Generic.List{AppControlManager.Others.AllFileSigners})">
@@ -2332,13 +2341,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.MainWindow.OpenConfigDirectoryButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the Sidebar button to open the user config directory
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.MainWindow.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -2676,6 +2678,200 @@
             <param name="key">The key to remove.</param>
             <returns>True if the key was successfully removed; false if the key was not found.</returns>
         </member>
+        <member name="T:AppControlManager.MicrosoftGraph.AssignmentPayload">
+            <summary>
+            Represents a payload for assignments containing a dictionary of target properties. The dictionary maps string keys
+            to object values.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.AuthenticationContext">
+            <summary>
+            Used to determine which scope to use
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.IntuneJsonContext">
+            <summary>
+            Defines a context for JSON serialization with specific options for formatting and ignoring null values. It includes
+            serialization support for various types.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.AssignmentPayload">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.OmaSettingBase64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.QueryPayload">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.Windows10CustomConfiguration">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.DictionaryStringObject">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.ListOmaSettingBase64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.ListString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.JsonElement">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.IntuneJsonContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.IntuneJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.IntuneJsonContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(System.String)">
+            <summary>
+            Perform an Advanced Hunting query using Microsoft Defender for Endpoint
+            Accepts a device name as an optional parameter for filtering
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.FetchGroups">
+            <summary>
+            Fetches the security groups
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.GetGroups">
+            <summary>
+            Returns the Groups dictionary
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.SignIn(AppControlManager.MicrosoftGraph.AuthenticationContext)">
+            <summary>
+            Signs into a tenant
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.CancelSignIn">
+            <summary>
+            Cancels the current sign-in operation
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.SignOut(AppControlManager.MicrosoftGraph.AuthenticationContext)">
+            <summary>
+            Signs out the user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.UploadPolicyToIntune(System.String,System.String,System.String,System.String)">
+            <summary>
+            Grabs the path to a CIP file and upload it to Intune.
+            </summary>
+            <param name="policyPath"></param>
+            <param name="groupName"></param>
+            <param name="policyName"></param>
+            <param name="policyID"></param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.AssignIntunePolicyToGroup(System.String,System.String,System.String)">
+            <summary>
+            Assigns a group to the created Intune policy
+            </summary>
+            <param name="policyId"></param>
+            <param name="accessToken"></param>
+            <param name="groupID"></param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.CreateCustomIntunePolicy(System.String,System.String,System.String,System.String)">
+            <summary>
+            https://learn.microsoft.com/en-us/mem/intune/configuration/custom-settings-windows-10
+            </summary>
+            <param name="accessToken"></param>
+            <param name="policyData"></param>
+            <param name="policyID"></param>
+            <param name="policyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.ConvertBinFileToBase64(System.String,System.Int32)">
+            <summary>
+            Converts a binary file to a Base64 string after checking its size against a specified limit.
+            </summary>
+            <param name="filePath">Specifies the location of the binary file to be converted.</param>
+            <param name="maxSizeInBytes">Defines the maximum allowable size for the file before conversion.</param>
+            <returns>Returns the Base64 encoded string of the file's contents.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when the file size exceeds the specified maximum limit.</exception>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.OmaSettingBase64">
+            <summary>
+            Represents a configuration setting with properties for OData type, display name, description, URI, file name, and
+            value.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.QueryPayload">
+            <summary>
+            Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration">
+            <summary>
+            Define the class structure for the custom policy
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Others.AllFileSigners">
+            <summary>
+            Represents a signed CMS and its certificate chain
+            </summary>
+            <param name="signerCertificate"></param>
+            <param name="certificateChain"></param>
+        </member>
+        <member name="M:AppControlManager.Others.AllFileSigners.#ctor(System.Security.Cryptography.Pkcs.SignedCms,System.Security.Cryptography.X509Certificates.X509Chain)">
+            <summary>
+            Represents a signed CMS and its certificate chain
+            </summary>
+            <param name="signerCertificate"></param>
+            <param name="certificateChain"></param>
+        </member>
         <member name="T:AppControlManager.Others.AppUpdate">
             <summary>
             AppUpdate class is responsible for checking for application updates.
@@ -2882,6 +3078,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:AppControlManager.Others.FileCertificateInfoCol">
+            <summary>
+            A class that represents each certificate in a chain
+            Used by the ListView in the View File Certificates page
+            </summary>
+        </member>
         <member name="T:AppControlManager.Others.FileDialogHelper">
             <summary>
             https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100
@@ -2988,7 +3190,7 @@
             <param name="directories">Directories to process.</param>
             <param name="files">Files to process.</param>
             <param name="extensionsToFilterBy">Extensions to filter by. If null or empty, default App Control supported extensions are used.</param>
-            <returns>List of FileInfo objects.</returns>
+            <returns>A Tuple containing the IEnumerable and count of the data</returns>
         </member>
         <member name="T:AppControlManager.Others.Opus">
             <summary>
@@ -3003,6 +3205,11 @@
         <member name="F:AppControlManager.Others.Opus.SPC_SP_OPUS_INFO_OBJID">
             <summary>
             for the SpcSpOpusInfo structure
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Others.HashMismatchInCertificateException">
+            <summary>
+            a class to throw a custom exception when the certificate has HashMismatch
             </summary>
         </member>
         <member name="T:AppControlManager.Others.ListViewHelper">
@@ -3104,158 +3311,10 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.RunMDEAdvancedHuntingQuery(System.String)">
-            <summary>
-            Perform an Advanced Hunting query using Microsoft Defender for Endpoint
-            Accepts a device name as an optional parameter for filtering
-            </summary>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.FetchGroups">
-            <summary>
-            Fetches the security groups
-            </summary>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.GetGroups">
-            <summary>
-            Returns the Groups dictionary
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.SignIn(AppControlManager.Others.MicrosoftGraph.AuthenticationContext)">
-            <summary>
-            Signs into a tenant
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.CancelSignIn">
-            <summary>
-            Cancels the current sign-in operation
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.SignOut(AppControlManager.Others.MicrosoftGraph.AuthenticationContext)">
-            <summary>
-            Signs out the user
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.UploadPolicyToIntune(System.String,System.String,System.String,System.String)">
-            <summary>
-            Grabs the path to a CIP file and upload it to Intune.
-            </summary>
-            <param name="policyPath"></param>
-            <param name="groupName"></param>
-            <param name="policyName"></param>
-            <param name="policyID"></param>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.AssignIntunePolicyToGroup(System.String,System.String,System.String)">
-            <summary>
-            Assigns a group to the created Intune policy
-            </summary>
-            <param name="policyId"></param>
-            <param name="accessToken"></param>
-            <param name="groupID"></param>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Others.MicrosoftGraph.CreateCustomIntunePolicy(System.String,System.String,System.String,System.String)">
-            <summary>
-            https://learn.microsoft.com/en-us/mem/intune/configuration/custom-settings-windows-10
-            </summary>
-            <param name="accessToken"></param>
-            <param name="policyData"></param>
-            <param name="policyID"></param>
-            <param name="policyName"></param>
-            <returns></returns>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.AssignmentPayload">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.OmaSettingBase64">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.OmaSettingBase64Array">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.QueryPayload">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.Windows10CustomConfiguration">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.DictionaryStringObject">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.JsonElement">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.Object">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.String">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.StringArray">
-            <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.Default">
-            <summary>
-            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.IntuneJsonContext.GeneratedSerializerOptions">
-            <summary>
-            The source-generated options associated with this context.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Others.IntuneJsonContext.#ctor">
-            <inheritdoc/>
-        </member>
-        <member name="M:AppControlManager.Others.IntuneJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
-            <inheritdoc/>
-        </member>
-        <member name="M:AppControlManager.Others.IntuneJsonContext.GetTypeInfo(System.Type)">
-            <inheritdoc/>
-        </member>
         <member name="T:AppControlManager.Others.OpusInfoObj">
             <summary>
             https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
             Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Others.OpusInfoObj.CertOemID">
-            <summary>
-            Declaring a public field CertOemID of type string with LPWStr marshaling
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Others.OpusInfoObj.PublisherInfo">
-            <summary>
-            Publisher Info
             </summary>
         </member>
         <member name="F:AppControlManager.Others.OpusInfoObj.MoreInfo">
@@ -3321,6 +3380,42 @@
             This class enforces minimum HTTP version of 2.0 and is future proof since it tries the highest available HTTP version by default
             </summary>
         </member>
+        <member name="T:AppControlManager.Others.SignerX">
+            <summary>
+            Contains information relevant to an App Control policy regarding a signer element. Information that's included in an App Control policy
+            </summary>
+            <param name="id">Identifies the signer uniquely within the policy.</param>
+            <param name="name">Represents the name associated with the signer.</param>
+            <param name="certRoot">Indicates the root certificate authority for the signer.</param>
+            <param name="certPublisher">Specifies the publisher of the certificate, if applicable.</param>
+            <param name="certIssuer">Denotes the issuer of the certificate, if provided.</param>
+            <param name="certEKU">Lists the enhanced key usages associated with the certificate.</param>
+            <param name="certOemID">Represents the OEM identifier related to the certificate, if any.</param>
+            <param name="fileAttribRef">References attributes related to files associated with the signer.</param>
+            <param name="fileAttrib">Contains a dictionary of file attributes linked to the signer.</param>
+            <param name="signerScope">Defines the scope of the signer within the policy.</param>
+            <param name="isWHQL">Indicates whether the signer is Windows Hardware Quality Labs certified.</param>
+            <param name="isAllowed">Specifies if the signer is permitted under the policy.</param>
+            <param name="hasEKU">Indicates whether the signer has enhanced key usages defined.</param>
+        </member>
+        <member name="M:AppControlManager.Others.SignerX.#ctor(System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.String}},System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Contains information relevant to an App Control policy regarding a signer element. Information that's included in an App Control policy
+            </summary>
+            <param name="id">Identifies the signer uniquely within the policy.</param>
+            <param name="name">Represents the name associated with the signer.</param>
+            <param name="certRoot">Indicates the root certificate authority for the signer.</param>
+            <param name="certPublisher">Specifies the publisher of the certificate, if applicable.</param>
+            <param name="certIssuer">Denotes the issuer of the certificate, if provided.</param>
+            <param name="certEKU">Lists the enhanced key usages associated with the certificate.</param>
+            <param name="certOemID">Represents the OEM identifier related to the certificate, if any.</param>
+            <param name="fileAttribRef">References attributes related to files associated with the signer.</param>
+            <param name="fileAttrib">Contains a dictionary of file attributes linked to the signer.</param>
+            <param name="signerScope">Defines the scope of the signer within the policy.</param>
+            <param name="isWHQL">Indicates whether the signer is Windows Hardware Quality Labs certified.</param>
+            <param name="isAllowed">Specifies if the signer is permitted under the policy.</param>
+            <param name="hasEKU">Indicates whether the signer has enhanced key usages defined.</param>
+        </member>
         <member name="M:AppControlManager.Others.SignToolHelper.Sign(System.IO.FileInfo,System.IO.FileInfo,System.String)">
             <summary>
             Invokes SignTool.exe to sign a Code Integrity Policy file.
@@ -3363,13 +3458,21 @@
         </member>
         <member name="T:AppControlManager.Others.SimulationInput">
             <summary>
-            Used by App Control Simulations
+            Represents input for a simulation, encapsulating file information and associated signer details.
             </summary>
+            <param name="filePath">Specifies the file associated with the simulation input.</param>
+            <param name="allFileSigners">Contains a list of all signers related to the file.</param>
+            <param name="signerInfo">Holds detailed information about the signers involved.</param>
+            <param name="ekuOids">Lists the Extended Key Usage Object Identifiers relevant to the simulation.</param>
         </member>
         <member name="M:AppControlManager.Others.SimulationInput.#ctor(System.IO.FileInfo,System.Collections.Generic.List{AppControlManager.Others.ChainPackage},System.Collections.Generic.List{AppControlManager.Others.SignerX},System.Collections.Generic.List{System.String})">
             <summary>
-            Used by App Control Simulations
+            Represents input for a simulation, encapsulating file information and associated signer details.
             </summary>
+            <param name="filePath">Specifies the file associated with the simulation input.</param>
+            <param name="allFileSigners">Contains a list of all signers related to the file.</param>
+            <param name="signerInfo">Holds detailed information about the signers involved.</param>
+            <param name="ekuOids">Lists the Extended Key Usage Object Identifiers relevant to the simulation.</param>
         </member>
         <member name="T:AppControlManager.Others.SimulationOutput">
             <summary>
@@ -3377,7 +3480,7 @@
             This class holds the details of the current file in the App Control Simulation comparer
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.SimulationOutput.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.String,System.String,System.String,System.String[],System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+        <member name="M:AppControlManager.Others.SimulationOutput.#ctor(System.String,System.String,System.Boolean,System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.List{System.String},System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
             Used by AppControl Simulations, the output of the comparer function/method
             This class holds the details of the current file in the App Control Simulation comparer
@@ -7597,26 +7700,48 @@
             Implements INotifyPropertyChanged to support data binding to UI elements.
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.MainWindowVM.InfoBadgeOpacity">
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._infoBadgeOpacity">
             <summary>
+            Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
+            https://learn.microsoft.com/en-us/windows/apps/design/controls/info-badge
             Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
             When set to 0, the badge is hidden.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.MainWindowVM.#ctor(AppControlManager.Others.AppUpdate)">
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.#ctor">
             <summary>
-            Constructor initializes the ViewModel with the AppUpdate service instance
-            and subscribes to the update notification event.
+            Constructor initializes the ViewModel and subscribes to the update notification event.
             </summary>
-            <param name="updateService">Instance of AppUpdate service used for update checks.</param>
         </member>
         <member name="M:AppControlManager.ViewModels.MainWindowVM.OnUpdateAvailable(System.Object,AppControlManager.Others.UpdateAvailableEventArgs)">
             <summary>
             Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
             Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
             </summary>
-            <param name="sender">Sender of the event, in this case, AppUpdate instance.</param>
+            <param name="sender">Sender of the event, in this case, AppUpdate class.</param>
             <param name="e">Boolean indicating whether an update is available.</param>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._OpenConfigDirectoryButtonState">
+            <summary>
+            The state of the OpenConfigDirectoryButton button which is on the Sidebar
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.OpenConfigDirectoryButton_Click">
+            <summary>
+            Event handler for the Sidebar button to open the user config directory
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
         </member>
         <member name="M:AppControlManager.ViewModels.MDEAHPolicyCreationVM.CalculateColumnWidths">
             <summary>

@@ -114,7 +114,7 @@
 
 
         <ListView x:Name="FileIdentitiesListView"
-           ItemsSource="{x:Bind ViewModel.filesAndFoldersScanResults, Mode=OneWay}"
+           ItemsSource="{x:Bind ViewModel.FilesAndFoldersScanResults, Mode=OneWay}"
            Grid.Row="2"
            SelectionMode="Extended"
            ScrollViewer.HorizontalScrollMode="Enabled"
@@ -314,10 +314,6 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <!-- Use standard Binding with ElementName to refer back to the page's properties
-                            because in here the Data Context is set to FileIdentity so we cannot use x.Bind
-                            since a single FileIdentity item can't have the ColumnWidth properties of all of the columns
-                            And static properties wouldn't work since more than 1 ListViews might be assigning values to the static values at the same time -->
                             <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders1, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders2, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ParentViewModelCreateSupplementalPolicyVM.ColumnWidthFilesAndFolders3, Mode=OneWay}" />

@@ -349,7 +349,8 @@
 
                                 <HyperlinkButton HorizontalAlignment="Center" ToolTipService.ToolTip="Sidebar usage guide on GitHub wiki" Content="Sidebar Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
 
-                                <Button HorizontalAlignment="Center" x:Name="OpenConfigDirectoryButton" x:Uid="OpenConfigDirectoryButton" Click="OpenConfigDirectoryButton_Click">
+                                <Button HorizontalAlignment="Center" x:Uid="OpenConfigDirectoryButton"
+                                        IsEnabled="{x:Bind ViewModel.OpenConfigDirectoryButtonState, Mode=OneWay}" Click="{x:Bind ViewModel.OpenConfigDirectoryButton_Click}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">

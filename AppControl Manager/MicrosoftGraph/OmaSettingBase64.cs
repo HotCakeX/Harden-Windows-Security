@@ -15,20 +15,37 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-using System.Security.Cryptography.Pkcs;
-using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 
-namespace AppControlManager.Others;
+namespace AppControlManager.MicrosoftGraph;
 
-internal sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
- List<ChainElement>? intermediatecertificates,
-  ChainElement? leafcertificate)
+/// <summary>
+/// Represents a configuration setting with properties for OData type, display name, description, URI, file name, and
+/// value.
+/// </summary>
+internal sealed class OmaSettingBase64
 {
-	internal X509Chain CertificateChain { get; set; } = certificatechain;
-	internal SignedCms SignedCms { get; set; } = signedcms;
-	internal ChainElement RootCertificate { get; set; } = rootcertificate;
-	internal List<ChainElement>? IntermediateCertificates { get; set; } = intermediatecertificates;
-	internal ChainElement? LeafCertificate { get; set; } = leafcertificate;
-}
+	[JsonInclude]
+	[JsonPropertyName("@odata.type")]
+	internal string? ODataType { get; set; }
 
+	[JsonInclude]
+	[JsonPropertyName("displayName")]
+	internal string? DisplayName { get; set; }
+
+	[JsonInclude]
+	[JsonPropertyName("description")]
+	internal string? Description { get; set; }
+
+	[JsonInclude]
+	[JsonPropertyName("omaUri")]
+	internal string? OmaUri { get; set; }
+
+	[JsonInclude]
+	[JsonPropertyName("fileName")]
+	internal string? FileName { get; set; }
+
+	[JsonInclude]
+	[JsonPropertyName("value")]
+	internal string? Value { get; set; }
+}

@@ -90,7 +90,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
 		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, ViewModel.filesAndFoldersScanResultsList, ViewModel.filesAndFoldersScanResults);
+		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, ViewModel.filesAndFoldersScanResultsList, ViewModel.FilesAndFoldersScanResults);
 	}
 
 
@@ -109,7 +109,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	{
 		ListViewHelper.ApplyFilters(
 			allFileIdentities: ViewModel.filesAndFoldersScanResultsList.AsEnumerable(),
-			filteredCollection: ViewModel.filesAndFoldersScanResults,
+			filteredCollection: ViewModel.FilesAndFoldersScanResults,
 			searchTextBox: SearchBox,
 			datePicker: null
 		);
@@ -123,7 +123,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	/// <param name="e"></param>
 	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
 	{
-		ViewModel.filesAndFoldersScanResults.Clear();
+		ViewModel.FilesAndFoldersScanResults.Clear();
 		ViewModel.filesAndFoldersScanResultsList.Clear();
 
 		ViewModel.UpdateTotalFilesFilesAndFolders(true);
@@ -136,7 +136,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	/// <param name="e"></param>
 	private void SelectAll_Click(object sender, RoutedEventArgs e)
 	{
-		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.filesAndFoldersScanResults);
+		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FilesAndFoldersScanResults);
 	}
 
 	/// <summary>

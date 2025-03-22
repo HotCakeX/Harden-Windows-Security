@@ -176,10 +176,6 @@ public sealed partial class CreateDenyPolicy : Page
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
-			// Clear variables responsible for the ListView
-			ViewModel.filesAndFoldersScanResultsList.Clear();
-			ViewModel.filesAndFoldersScanResults.Clear();
-
 			double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
 
 			ScalabilityRadialGauge.IsEnabled = false;
@@ -197,18 +193,18 @@ public sealed partial class CreateDenyPolicy : Page
 				// Convert user selected file paths that are strings to FileInfo objects
 				selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
 
-				HashSet<FileIdentity> LocalFilesResults = [];
+				IEnumerable<FileIdentity> LocalFilesResults = [];
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (!usingWildCardFilePathRules)
 				{
 
 					// Collect all of the AppControl compatible files from user selected directories and files
-					List<FileInfo> DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
+					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
 
 
 					// Make sure there are AppControl compatible files
-					if (DetectedFilesInSelectedDirectories.Count is 0)
+					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
@@ -224,7 +220,7 @@ public sealed partial class CreateDenyPolicy : Page
 						return;
 					}
 
-					string msg2 = GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Count + GlobalVars.Rizz.GetString("AppControlCompatibleFiles");
+					string msg2 = GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + GlobalVars.Rizz.GetString("AppControlCompatibleFiles");
 					Logger.Write(msg2);
 
 					_ = DispatcherQueue.TryEnqueue(() =>
@@ -233,20 +229,23 @@ public sealed partial class CreateDenyPolicy : Page
 					});
 
 					// Scan all of the detected files from the user selected directories
-					LocalFilesResults = LocalFilesScan.Scan(DetectedFilesInSelectedDirectories, (ushort)radialGaugeValue, FilesAndFoldersProgressRing);
+					// Add the reference to the ViewModel class to the item so we can use it for navigation from the XAML
+					LocalFilesResults = LocalFilesScan.Scan(
+						DetectedFilesInSelectedDirectories,
+						(ushort)radialGaugeValue,
+						FilesAndFoldersProgressRing,
+						ViewModel,
+						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm);
 
+
+					ViewModel.filesAndFoldersScanResultsList.Clear();
 
 					ViewModel.filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
 
 					await DispatcherQueue.EnqueueAsync(() =>
 					{
 						// Add the results of the directories scans to the ListView
-						foreach (FileIdentity item in LocalFilesResults)
-						{
-							// Add the reference to the ViewModel class to the item so we can use it for navigation from the XAML
-							item.ParentViewModelCreateDenyPolicyVM = ViewModel;
-							ViewModel.filesAndFoldersScanResults.Add(item);
-						}
+						ViewModel.FilesAndFoldersScanResults = new(LocalFilesResults);
 
 						ViewModel.CalculateColumnWidths();
 

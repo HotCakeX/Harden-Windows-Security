@@ -85,6 +85,7 @@ public partial class App : Application
 			_ = services.AddSingleton<ViewModels.SimulationVM>();
 			_ = services.AddSingleton<ViewModels.MDEAHPolicyCreationVM>();
 			_ = services.AddSingleton<ViewModels.ViewFileCertificatesVM>();
+			_ = services.AddSingleton<ViewModels.MainWindowVM>();
 		})
 		.Build();
 
@@ -227,7 +228,10 @@ public partial class App : Application
 
 	private Window? m_window;
 
-	// Adding this public property to expose the window
+	/// <summary>
+	/// Exposes the main application window as a static property. It retrieves the window from the current application
+	/// instance.
+	/// </summary>
 	internal static Window? MainWindow => ((App)Current).m_window;
 
 	/// <summary>

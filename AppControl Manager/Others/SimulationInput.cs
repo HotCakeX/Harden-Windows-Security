@@ -21,13 +21,16 @@ using System.IO;
 namespace AppControlManager.Others;
 
 /// <summary>
-/// Used by App Control Simulations
+/// Represents input for a simulation, encapsulating file information and associated signer details.
 /// </summary>
+/// <param name="filePath">Specifies the file associated with the simulation input.</param>
+/// <param name="allFileSigners">Contains a list of all signers related to the file.</param>
+/// <param name="signerInfo">Holds detailed information about the signers involved.</param>
+/// <param name="ekuOids">Lists the Extended Key Usage Object Identifiers relevant to the simulation.</param>
 internal sealed class SimulationInput(FileInfo filePath, List<ChainPackage> allFileSigners, List<SignerX> signerInfo, List<string> ekuOids)
 {
-	// Adding public getters and setters for the properties
-	internal FileInfo FilePath { get; set; } = filePath;
-	internal List<ChainPackage> AllFileSigners { get; set; } = allFileSigners;
-	internal List<SignerX> SignerInfo { get; set; } = signerInfo;
-	internal List<string> EKUOIDs { get; set; } = ekuOids;
+	internal FileInfo FilePath { get; } = filePath;
+	internal List<ChainPackage> AllFileSigners { get; } = allFileSigners;
+	internal List<SignerX> SignerInfo { get; } = signerInfo;
+	internal List<string> EKUOIDs { get; } = ekuOids;
 }

@@ -44,7 +44,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	private bool VerificationRunning;
 
 	// To store the selectable Certificate common names
-	private HashSet<string> CertCommonNames = [];
+	private IEnumerable<string> CertCommonNames = [];
 
 	// To save the policy IDs of the currently deployed base policies coming from the calling method
 	private readonly List<string?> basePolicyIDs;
@@ -99,7 +99,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 			string query = sender.Text.ToLowerInvariant();
 
 			// Filter menu items based on the search query
-			List<string> suggestions = [.. CertCommonNames.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase))];
+			List<string> suggestions = new(CertCommonNames.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
 
 			// Set the filtered items as suggestions in the AutoSuggestBox
 			sender.ItemsSource = suggestions;

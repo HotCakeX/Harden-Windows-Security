@@ -121,11 +121,9 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}" Click="BackgroundComboBoxSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
-                            <ComboBox x:Name="BackgroundComboBox">
-                                <x:String>MicaAlt</x:String>
-                                <x:String>Mica</x:String>
-                                <x:String>Acrylic</x:String>
-                            </ComboBox>
+                            <ComboBox x:Name="BackgroundComboBox"
+                                ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
+                                SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         </controls:SettingsCard>
 

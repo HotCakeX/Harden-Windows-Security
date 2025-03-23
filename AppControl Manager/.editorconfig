@@ -193,7 +193,7 @@ dotnet_diagnostic.IDE0100.severity = error
 dotnet_diagnostic.IDE0041.severity = error
 
 # IDE0028: Simplify collection initialization
-# When using [.. ], it doesn't use the correct special constructor of the collections and significantly degrades performance. 
+# When using [.. ], it doesn't use the correct special constructor of the collections and significantly degrades performance.
 # Using ToList() or ToArray() is preferred over [.. ] spread operator for performance reasons.
 dotnet_diagnostic.IDE0028.severity = silent
 dotnet_diagnostic.IDE0306.severity = silent

@@ -36,7 +36,7 @@ public sealed partial class MergePolicies : Page
 {
 
 #pragma warning disable CA1822
-	internal MergePoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MergePoliciesVM>();
+	private MergePoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MergePoliciesVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

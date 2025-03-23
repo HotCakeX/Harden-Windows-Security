@@ -36,7 +36,8 @@ public sealed partial class Settings : Page
 {
 
 #pragma warning disable CA1822
-	internal SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
+	private SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
+	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -47,7 +48,8 @@ public sealed partial class Settings : Page
 	{
 		this.InitializeComponent();
 
-		this.DataContext = ViewModel;
+		// Making both View Models available to the page's XAML
+		this.DataContext = this;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
@@ -61,15 +63,6 @@ public sealed partial class Settings : Page
 		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.ListViewsVerticalCentering);
 
 		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.CacheSecurityCatalogsScanResults);
-
-		BackgroundComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.BackDropBackground)) switch
-		{
-			"MicaAlt" => 0,
-			"Mica" => 1,
-			"Acrylic" => 2,
-			_ => 0
-		};
-
 
 		ThemeComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.AppTheme)) switch
 		{
@@ -96,7 +89,6 @@ public sealed partial class Settings : Page
 		// Since queries for saved settings already happen in the Main Window, App and other respective places
 		// This also Prevents a dark flash when using brighter theme because of triggering events twice unnecessarily.
 		NavigationViewBackgroundToggle.Toggled += NavigationViewBackground_Toggled;
-		BackgroundComboBox.SelectionChanged += BackgroundComboBox_SelectionChanged;
 		ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
 		NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
 		SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
@@ -119,31 +111,11 @@ public sealed partial class Settings : Page
 		// Get the selected item from the ComboBox
 		string selectedIconsStyle = (string)comboBox.SelectedItem;
 
-		// Raise the global BackgroundChanged event
-		IconsStyleManager.OnIconsStylesChanged(selectedIconsStyle);
+		ViewModelMainWindow.OnIconsStylesChanged(selectedIconsStyle);
 
 		SaveSetting(SettingKeys.IconsStyle, selectedIconsStyle);
 	}
 
-
-	/// <summary>
-	/// Event handler for the Background ComboBox selection change event.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BackgroundComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		// Get the ComboBox that triggered the event
-		ComboBox comboBox = (ComboBox)sender;
-
-		// Get the selected item from the ComboBox (x:String)
-		string selectedBackdrop = (string)comboBox.SelectedItem;
-
-		// Raise the global BackgroundChanged event
-		ThemeManager.OnBackgroundChanged(selectedBackdrop);
-
-		SaveSetting(SettingKeys.BackDropBackground, selectedBackdrop);
-	}
 
 	/// <summary>
 	/// Event handler for the NavigationViewLocation ComboBox selection change event.
@@ -220,8 +192,17 @@ public sealed partial class Settings : Page
 		// Get the state of the toggle switch (on or off)
 		bool isSoundOn = toggleSwitch.IsOn;
 
-		// Raise the event to notify the app of the sound setting change
-		SoundManager.OnSoundSettingChanged(isSoundOn);
+		// Set the global sound state based on the event
+		if (isSoundOn)
+		{
+			ElementSoundPlayer.State = ElementSoundPlayerState.On;
+			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
+		}
+		else
+		{
+			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
+		}
 
 		// Save the setting to the local app settings
 		SaveSetting(SettingKeys.SoundSetting, isSoundOn);

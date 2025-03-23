@@ -33,7 +33,7 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// Used to store the scan results and as the source for the results ListViews
 	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];

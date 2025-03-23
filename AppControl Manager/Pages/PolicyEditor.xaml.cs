@@ -35,7 +35,7 @@ public sealed partial class PolicyEditor : Page
 {
 
 #pragma warning disable CA1822
-	internal PolicyEditorVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
+	private PolicyEditorVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

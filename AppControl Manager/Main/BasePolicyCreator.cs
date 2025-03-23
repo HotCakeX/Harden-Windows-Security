@@ -26,12 +26,17 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AppControlManager.Main;
 
 internal static partial class BasePolicyCreator
 {
+
+	private static MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+
 	/// <summary>
 	/// Creates scheduled task that keeps the Microsoft recommended driver block rules up to date on the system
 	/// </summary>
@@ -479,7 +484,7 @@ internal static partial class BasePolicyCreator
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 		// Assign the created policy path to the Sidebar if condition is met
-		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
+		ViewModel.AssignToSidebar(finalPolicyPath);
 	}
 
 
@@ -567,7 +572,7 @@ internal static partial class BasePolicyCreator
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 		// Assign the created policy path to the Sidebar if condition is met
-		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
+		ViewModel.AssignToSidebar(finalPolicyPath);
 	}
 
 
@@ -756,7 +761,7 @@ internal static partial class BasePolicyCreator
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 		// Assign the created policy path to the Sidebar if condition is met
-		MainWindow.Instance.AssignToSidebar(finalPolicyPath);
+		ViewModel.AssignToSidebar(finalPolicyPath);
 	}
 
 

@@ -32,7 +32,7 @@ internal sealed partial class ViewFileCertificatesVM : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// Main collection assigned to the ListView
 	internal readonly ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
@@ -44,9 +44,6 @@ internal sealed partial class ViewFileCertificatesVM : INotifyPropertyChanged
 	#region UI-Bound Properties
 
 	#endregion
-
-
-
 
 
 

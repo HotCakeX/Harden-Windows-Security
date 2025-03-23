@@ -33,7 +33,7 @@ internal sealed partial class SettingsVM : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	//	private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	//private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// To store the selectable Certificate common names
 	internal readonly ObservableCollection<string> CertCommonNames = [];

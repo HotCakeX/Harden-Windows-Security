@@ -56,7 +56,7 @@
                             IsIconVisible="True"
                             IsOpen="{x:Bind ViewModel.PolicyMergerInfoBarIsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.PolicyMergerInfoBarMessage, Mode=OneWay}"
-                            IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"                           
+                            IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.PolicyMergerInfoBarSeverity, Mode=OneWay}">
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>

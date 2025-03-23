@@ -48,7 +48,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	// DispatcherQueue instance to run tasks on the UI thread
-	private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// To store the policies displayed on the ListView
 	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];

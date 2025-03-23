@@ -67,7 +67,7 @@ internal sealed class FileRuleRuleComparer : IEqualityComparer<FileRuleRule>
 	public int GetHashCode(FileRuleRule obj)
 	{
 		FileRule fileRule = obj.FileRuleElement;
-		long hash = 17; // Starting prime for hash code calculation.		
+		long hash = 17; // Starting prime for hash code calculation.
 
 		// Rule 1: Use PackageFamilyName (if available).
 		if (!string.IsNullOrWhiteSpace(fileRule.PackageFamilyName))

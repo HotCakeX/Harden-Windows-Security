@@ -91,7 +91,7 @@
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>
-                
+
                 <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
             </controls:WrapPanel>

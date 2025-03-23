@@ -36,7 +36,7 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 {
 
 #pragma warning disable CA1822
-	internal CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
+	private CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

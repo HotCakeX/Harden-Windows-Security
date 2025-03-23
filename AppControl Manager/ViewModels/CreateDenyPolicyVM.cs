@@ -33,7 +33,7 @@ internal sealed partial class CreateDenyPolicyVM : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 
 	// Used to store the scan results and as the source for the results ListViews

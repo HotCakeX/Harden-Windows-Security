@@ -44,7 +44,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	private string? SelectedFilePath;
 
 #pragma warning disable CA1822
-	internal ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
+	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

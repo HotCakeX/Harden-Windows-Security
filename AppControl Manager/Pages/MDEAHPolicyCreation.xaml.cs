@@ -46,7 +46,7 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 {
 
 #pragma warning disable CA1822
-	internal MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
+	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -293,6 +293,7 @@ DeviceEvents
 			// Store all of the data in the ObservableCollection
 			foreach (FileIdentity item in Output)
 			{
+				// Add a reference to the ViewModel class instance to every item so we can use it for navigation in the XAML
 				item.ParentViewModelMDEAHPolicyCreationVM = ViewModel;
 				ViewModel.FileIdentities.Add(item);
 			}

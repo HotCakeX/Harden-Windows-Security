@@ -37,7 +37,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 {
 
 #pragma warning disable CA1822
-	internal AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
+	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

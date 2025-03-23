@@ -46,7 +46,7 @@ public sealed partial class ViewFileCertificates : Page
 {
 
 #pragma warning disable CA1822
-	internal ViewFileCertificatesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
+	private ViewFileCertificatesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

@@ -36,7 +36,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 {
 
 #pragma warning disable CA1822
-	internal CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
+	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

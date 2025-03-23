@@ -402,7 +402,7 @@
         </Border>
 
         <ListView x:Name="FileIdentitiesListView"
-             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"     
+             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
              Grid.Row="4"
              SelectionMode="Extended"
              ScrollViewer.HorizontalScrollMode="Enabled"

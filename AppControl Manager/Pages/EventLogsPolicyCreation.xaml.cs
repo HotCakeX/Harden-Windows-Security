@@ -42,7 +42,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 {
 
 #pragma warning disable CA1822
-	internal EventLogsPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<EventLogsPolicyCreationVM>();
+	private EventLogsPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<EventLogsPolicyCreationVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -177,6 +177,9 @@ public sealed partial class EventLogsPolicyCreation : Page
 
 			// Store all of the data in the List
 			ViewModel.AllFileIdentities.AddRange(Output);
+
+			// Clear the ObservableCollection before adding the new data
+			ViewModel.FileIdentities.Clear();
 
 			foreach (FileIdentity item in Output)
 			{

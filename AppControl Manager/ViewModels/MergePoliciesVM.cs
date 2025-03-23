@@ -35,7 +35,7 @@ internal sealed partial class MergePoliciesVM : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 #pragma warning disable CA1822 // Mark members as static
 	internal bool IsElevated => App.IsElevated;
@@ -142,7 +142,7 @@ internal sealed partial class MergePoliciesVM : INotifyPropertyChanged
 
 	/// <summary>
 	/// Event handler for the main Merge button
-	/// </summary>	
+	/// </summary>
 	internal async void MergeButton_Click()
 	{
 

@@ -45,7 +45,7 @@ public sealed partial class Simulation : Page
 {
 
 #pragma warning disable CA1822
-	internal SimulationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SimulationVM>();
+	private SimulationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SimulationVM>();
 #pragma warning restore CA1822
 
 	/// <summary>

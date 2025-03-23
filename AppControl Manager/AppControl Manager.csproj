@@ -175,6 +175,7 @@
     <AnalysisModeDocumentation>All</AnalysisModeDocumentation>
     <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
     <AnalysisModePerformance>All</AnalysisModePerformance>
+    <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
 
 
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
@@ -254,7 +255,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.6.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />

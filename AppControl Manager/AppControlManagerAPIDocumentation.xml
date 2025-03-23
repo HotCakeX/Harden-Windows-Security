@@ -1193,13 +1193,6 @@
             executed, and as such is the logical equivalent of main() or WinMain().
             </summary>
         </member>
-        <member name="M:AppControlManager.App.OnSoundSettingChanged(System.Object,AppControlManager.AppSettings.SoundSettingChangedEventArgs)">
-            <summary>
-            Event handler for when the sound setting is changed.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.App.TaskScheduler_UnobservedTaskException(System.Object,System.Threading.Tasks.UnobservedTaskExceptionEventArgs)">
             <summary>
             Event handler for UnobservedTaskException events.
@@ -2181,13 +2174,6 @@
             Event handler to run at Window launch to restore its size to the one before closing
             </summary>
         </member>
-        <member name="M:AppControlManager.MainWindow.OnIconsStylesChanged(System.Object,AppControlManager.AppSettings.IconsStyleChangedEventArgs)">
-            <summary>
-            Event handler for the global Icons Style change event
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.MainWindow.OnNavigationViewLocationChanged(System.Object,AppControlManager.AppSettings.NavigationViewLocationChangedEventArgs)">
             <summary>
             Event handler for the global NavigationView location change event
@@ -2200,13 +2186,6 @@
             Note: Keeping it transparent would probably not be good for accessibility.
             Changing it during runtime is not possible without trigger a theme change: Light/Dark.
             Application.RequestedTheme is read-only, so we us RootGrid which is the origin of all other elements.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.OnBackgroundChanged(System.Object,AppControlManager.AppSettings.BackgroundChangedEventArgs)">
-            <summary>
-            Event handler for the global BackgroundChanged event. When user selects a different background for the app, this will be triggered.
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -2252,26 +2231,10 @@
             <param name="transitionInfo"></param>
             <param name="navItemName"></param>
         </member>
-        <member name="M:AppControlManager.MainWindow.SidebarButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the main Sidebar button click
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.BackButtonTitleBar_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.MainWindow.BackButtonTitleBar_Click">
             <summary>
             Event handler for when the back button is pressed
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.HamburgerMenuButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the hamburger/main menu button click
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.MainWindow.MainWindow_SizeChanged(System.Object,Microsoft.UI.Xaml.WindowSizeChangedEventArgs)">
             <summary>
@@ -2279,13 +2242,6 @@
             </summary>
             <param name="sender"></param>
             <param name="args"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.SidebarBasePolicyBrowseButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the sidebar base policy browse button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.MainWindow.AffectPagesAnimatedIconsVisibilities(System.Boolean)">
             <summary>
@@ -2299,44 +2255,9 @@
             This method is called via the methods responsible for Navigations.
             </summary>
         </member>
-        <member name="M:AppControlManager.MainWindow.SidebarBasePolicyClearButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the clear button in the sidebar for unsigned policy path
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.RootGrid_Loaded(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for when the RootGrid of the window is loaded
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.MainWindow.SidebarOnUnsignedPolicyChanged(System.Object,AppControlManager.Sidebar.Events.UnsignedPolicyInUserConfigChangedEventArgs)">
             <summary>
             Event handler for when the event that changes unsigned policy path in user configurations is fired
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AssignToSidebar(System.String)">
-            <summary>
-            Method used by other methods that create base policies so they can assign the path to the sidebar after creation
-            If the toggle switch for automatic assignment is on
-            </summary>
-            <param name="unsignedPolicyPath"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AutomaticAssignmentSidebarSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for sidebar settings cards for auto assignment
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AutomaticAssignmentSidebarToggleSwitch_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the sidebar toggle button for auto assignment
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -5615,13 +5536,6 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.Settings.BackgroundComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
-            <summary>
-            Event handler for the Background ComboBox selection change event.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.Pages.Settings.NavigationViewLocationComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
             Event handler for the NavigationViewLocation ComboBox selection change event.
@@ -6488,7 +6402,7 @@
         </member>
         <member name="T:AppControlManager.SiPolicyIntel.UpdatePolicySignerRule">
             <summary>
-            Represents a rule for updating a policy signer with a required signer element and an update policy signer. 
+            Represents a rule for updating a policy signer with a required signer element and an update policy signer.
             </summary>
         </member>
         <member name="T:AppControlManager.SiPolicyIntel.UpdatePolicySignerRuleComparer">
@@ -7695,9 +7609,32 @@
         </member>
         <member name="T:AppControlManager.ViewModels.MainWindowVM">
             <summary>
-            ViewModel for the MainWindow, responsible for managing UI properties and
-            handling updates to the InfoBadge visibility when an application update is available.
-            Implements INotifyPropertyChanged to support data binding to UI elements.
+            ViewModel for the MainWindow
+            </summary>
+        </member>
+        <member name="T:AppControlManager.ViewModels.MainWindowVM.BackDropComboBoxItems">
+            <summary>
+            Values for back drop combo box in the settings page
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.BackDropOptions">
+            <summary>
+            ItemsSource of the ComboBox in the Settings page
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.#ctor">
+            <summary>
+            Constructor initializes the ViewModel and subscribes to various events, sets initial values of some variables.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._BackDropComboBoxSelectedIndex">
+            <summary>
+            Sets the initial value of the back drop. if it's null, Mica Alt will be used.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._SystemBackDropStyle">
+            <summary>
+            Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
             </summary>
         </member>
         <member name="F:AppControlManager.ViewModels.MainWindowVM._infoBadgeOpacity">
@@ -7708,9 +7645,149 @@
             When set to 0, the badge is hidden.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.MainWindowVM.#ctor">
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._OpenConfigDirectoryButtonState">
             <summary>
-            Constructor initializes the ViewModel and subscribes to the update notification event.
+            The state of the OpenConfigDirectoryButton button which is on the Sidebar
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._SidebarPaneIsOpen">
+            <summary>
+            Whether the sidebar pane is open or closed
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._AutomaticAssignmentSidebarToggleSwitchToggledState">
+            <summary>
+            Indicates whether the automatic assignment sidebar toggle switch is in a toggled state. It stores a boolean value.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._SidebarBasePolicyPathTextBoxText">
+            <summary>
+            The text in the SidebarBasePolicyPathTextBox
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._BorderTranslation">
+            <summary>
+             Adjust the elevation of the border to achieve the shadow effect
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._MainNavigationIsPaneOpen">
+            <summary>
+            Whether the main NavigationView's pane is open or closed
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM._TitleColumnWidth">
+            <summary>
+            The width of the TitleColumn in the main window's custom title bar
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.CreatePolicyIcon">
+            <summary>
+            Icon for the Create Policy navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.CreateSupplementalPolicyIcon">
+            <summary>
+            Icon for the Create Supplemental Policy navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.CreateDenyPolicyIcon">
+            <summary>
+            Icon for the Create Deny Policy navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.BuildNewCertificateIcon">
+            <summary>
+            Icon for the Build New Certificate navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.ViewFileCertificatesIcon">
+            <summary>
+            Icon for the View File Certificates navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.CreatePolicyFromEventLogsIcon">
+            <summary>
+            Icon for the Create Policy from Event Logs navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.CreatePolicyFromMDEAHIcon">
+            <summary>
+            Icon for the MDE Advanced Hunting navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.AllowNewAppsIcon">
+            <summary>
+            Icon for the Allow New Apps navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.PolicyEditorIcon">
+            <summary>
+            Icon for the Policy Editor navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.SimulationIcon">
+            <summary>
+            Icon for the Simulation navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.SystemInformationIcon">
+            <summary>
+            Icon for the System Information navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.GetCodeIntegrityHashesIcon">
+            <summary>
+            Icon for the Get Code Integrity Hashes navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.GetSecurePolicySettingsIcon">
+            <summary>
+            Icon for the Get Secure Policy Settings navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.ConfigurePolicyRuleOptionsIcon">
+            <summary>
+            Icon for the Configure Policy Rule Options navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.MergePoliciesIcon">
+            <summary>
+            Icon for the Merge Policies navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.DeploymentIcon">
+            <summary>
+            Icon for the Deployment navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.ValidatePoliciesIcon">
+            <summary>
+            Icon for the Validate Policies navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.GitHubDocsIcon">
+            <summary>
+            Icon for the GitHub Documentation navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.MSFTDocsIcon">
+            <summary>
+            Icon for the Microsoft Documentation navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.LogsIcon">
+            <summary>
+            Icon for the Logs navigation item.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.UpdateIcon">
+            <summary>
+            Icon for the Update navigation item in the footer.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.SidebarButton_Click">
+            <summary>
+            Event handler for the main Sidebar button click
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.MainWindowVM.OnUpdateAvailable(System.Object,AppControlManager.Others.UpdateAvailableEventArgs)">
@@ -7721,14 +7798,52 @@
             <param name="sender">Sender of the event, in this case, AppUpdate class.</param>
             <param name="e">Boolean indicating whether an update is available.</param>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._OpenConfigDirectoryButtonState">
-            <summary>
-            The state of the OpenConfigDirectoryButton button which is on the Sidebar
-            </summary>
-        </member>
         <member name="M:AppControlManager.ViewModels.MainWindowVM.OpenConfigDirectoryButton_Click">
             <summary>
             Event handler for the Sidebar button to open the user config directory
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.AutomaticAssignmentSidebarToggleSwitch_Toggled">
+            <summary>
+            Event handler for the sidebar toggle button for auto assignment
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.AutomaticAssignmentSidebarSettingsCard_Click">
+            <summary>
+            Event handler for sidebar settings cards for auto assignment
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.AssignToSidebar(System.String)">
+            <summary>
+            Method used by other methods that create base policies so they can assign the path to the sidebar after creation
+            If the toggle switch for automatic assignment is on
+            </summary>
+            <param name="unsignedPolicyPath"></param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyBrowseButton_Click">
+            <summary>
+            Event handler for the sidebar base policy browse button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyClearButton_Click">
+            <summary>
+            Event handler for the clear button in the sidebar for unsigned policy path
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.HamburgerMenuButton_Click">
+            <summary>
+            Event handler for the hamburger/main menu button click
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.OnIconsStylesChanged(System.String)">
+            <summary>
+            Event handler for the global Icons Style change event
+            </summary>
+            <param name="style"></param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MainWindowVM.UpdateSystemBackDrop">
+            <summary>
+            Event handler for the Background ComboBox selection change event in the Settings page.
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.MainWindowVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
@@ -7766,7 +7881,7 @@
         <member name="M:AppControlManager.ViewModels.MergePoliciesVM.MergeButton_Click">
             <summary>
             Event handler for the main Merge button
-            </summary>	
+            </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.MergePoliciesVM.MainPolicyBrowseButton_Click">
             <summary>

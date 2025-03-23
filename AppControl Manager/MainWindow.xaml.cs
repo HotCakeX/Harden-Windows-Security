@@ -20,17 +20,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 using AnimatedVisuals;
 using AppControlManager.AppSettings;
-using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Sidebar;
 using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
-using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -52,17 +49,17 @@ public sealed partial class MainWindow : Window
 {
 
 #pragma warning disable CA1822
-	internal MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+	private MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
 #pragma warning restore CA1822
 
 	private readonly AppWindow m_AppWindow;
 
-	internal readonly Frame AppFrame;
+	internal readonly Grid RootGridPub;
 
 	/// <summary>
 	/// Used for the BreadCrumBar's data to define valid navigational paths in the app
 	/// </summary>
-	internal sealed class PageTitleMap
+	private sealed class PageTitleMap
 	{
 		internal required List<string> Titles { get; set; }
 		internal required List<Type> Pages { get; set; }
@@ -85,8 +82,7 @@ public sealed partial class MainWindow : Window
 		typeof(Pages.PolicyEditor),
 		typeof(Pages.MergePolicies),
 		typeof(Pages.Settings),
-		typeof(Pages.ConfigurePolicyRuleOptions),
-		typeof(Pages.MDEAHPolicyCreation)
+		typeof(Pages.ConfigurePolicyRuleOptions)
 		];
 
 
@@ -232,7 +228,8 @@ public sealed partial class MainWindow : Window
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	private readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy))];
+	private readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy))] :
+		[new Crumb(GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor))];
 
 	/// <summary>
 	/// Event handler for the BreadCrumbBar's ItemClicked event
@@ -292,7 +289,7 @@ public sealed partial class MainWindow : Window
 		// Assign this instance to the static field
 		_instance = this;
 
-		AppFrame = ContentFrame;
+		this.RootGridPub = RootGrid;
 
 		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
 		GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -315,9 +312,6 @@ public sealed partial class MainWindow : Window
 
 		// Set the TitleBar title text to the app's display name
 		TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
-
-		// Subscribe to the global BackDrop change event
-		ThemeManager.BackDropChanged += OnBackgroundChanged;
 
 		// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.settitlebar
 		// This is required. Without it, the page that has the TabView would make the App Window's TitleBar non-draggable.
@@ -344,9 +338,6 @@ public sealed partial class MainWindow : Window
 
 		// Subscribe to the global App theme change event
 		AppThemeManager.AppThemeChanged += OnAppThemeChanged;
-
-		// Subscribe to the global Icons Styles change event
-		IconsStyleManager.IconsStyleChanged += OnIconsStylesChanged;
 
 		#region
 
@@ -411,14 +402,8 @@ public sealed partial class MainWindow : Window
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.NavViewBackground)));
 
-		// Set the initial BackDrop setting based on the user's settings
-		OnBackgroundChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.BackDropBackground)));
-
 		// Set the initial App Theme based on the user's settings
 		OnAppThemeChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.AppTheme)));
-
-		// Set the initial Icons styles abased on the user's settings
-		OnIconsStylesChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle)));
 
 		// Restore window size on startup
 		RestoreWindowSize();
@@ -426,9 +411,11 @@ public sealed partial class MainWindow : Window
 		// Subscribe to Closed event of the main Window
 		this.Closed += MainWindow_Closed;
 
-
 		// Subscribing to the event that is fired when User Configuration changes for Unsigned policy path to that the Sidebar can be updated accordingly
 		Events.UnsignedPolicyManager.UnsignedPolicyInUserConfigChanged += SidebarOnUnsignedPolicyChanged;
+
+		// Set the initial Icons styles abased on the user's settings
+		ViewModel.OnIconsStylesChanged(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle));
 	}
 
 
@@ -630,484 +617,6 @@ public sealed partial class MainWindow : Window
 	}
 	*/
 
-	/// <summary>
-	/// Event handler for the global Icons Style change event
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OnIconsStylesChanged(object? sender, IconsStyleChangedEventArgs e)
-	{
-
-		// Get the current theme
-		ElementTheme currentTheme = RootGrid.ActualTheme;
-
-		// Set the Icons Style
-		switch (e.NewIconsStyle)
-		{
-			case "Animated":
-				{
-					// Create Policy
-					CreatePolicyNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(-10, -35, -35, -35),
-						Source = new Blueprint()
-					};
-
-					// System Information
-					SystemInformationNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -6, -6, -6),
-						Source = new View()
-					};
-
-					// Configure Policy Rule Options
-					ConfigurePolicyRuleOptionsNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Configure()
-					};
-
-					// Simulation
-					SimulationNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Simulation()
-					};
-
-					// Allow New Apps
-					if (currentTheme is ElementTheme.Dark)
-					{
-						AllowNewAppsNavItem.Icon = new AnimatedIcon
-						{
-							Margin = new Thickness(0, -6, -6, -6),
-							Source = new StarYellow()
-						};
-					}
-					else
-					{
-						AllowNewAppsNavItem.Icon = new AnimatedIcon
-						{
-							Margin = new Thickness(0, -6, -6, -6),
-							Source = new StarBlack()
-
-						};
-					}
-
-					// Create Policy from Event Logs
-					CreatePolicyFromEventLogsNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Scan()
-					};
-
-					// MDE Advanced Hunting
-					CreatePolicyFromMDEAHNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new MDE()
-					};
-
-					// Get Code Integrity Hashes
-					GetCodeIntegrityHashesNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Hash()
-					};
-
-					// Get Secure Policy Settings
-					GetSecurePolicySettingsNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -6, -6, -6),
-						Source = new Shield()
-					};
-
-					// Logs
-					LogsNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new AnimatedVisuals.Timeline()
-					};
-
-					// GitHub Documentation
-					GitHubDocsNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -11, -11, -11),
-						Source = new GitHub()
-					};
-
-					// Microsoft Documentation
-					MSFTDocsNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -9, -9, -9),
-						Source = new Document()
-					};
-
-					// Update
-					if (currentTheme is ElementTheme.Dark)
-					{
-						UpdateNavItem.Icon = new AnimatedIcon
-						{
-							Margin = new Thickness(0, -5, -5, -5),
-							Source = new Heart()
-						};
-					}
-					else
-					{
-						UpdateNavItem.Icon = new AnimatedIcon
-						{
-							Margin = new Thickness(0, -25, -25, -25),
-							Source = new HeartPulse()
-						};
-					}
-
-					// Build New Certificate
-					BuildNewCertificateNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Certificate()
-					};
-
-					// Deployment
-					DeploymentNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -8, -8, -8),
-						Source = new Deployment()
-					};
-
-					// Create Supplemental Policy
-					CreateSupplementalPolicyNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(-5, -28, -28, -28),
-						Source = new SupplementalPolicy()
-					};
-
-					// Merge App Control Policies
-					MergePoliciesNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -9, -9, -9),
-						Source = new Merge()
-					};
-
-					// Create Deny Policy
-					CreateDenyPolicyNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -9, -9, -9),
-						Source = new Deny()
-					};
-
-					// Validate Policies
-					ValidatePoliciesNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -9, -9, -9),
-						Source = new Validate()
-					};
-
-					// View File Certificates
-					ViewFileCertificatesNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -9, -9, -9),
-						Source = new ViewAllCertificates()
-					};
-
-					// Policy Editor
-					PolicyEditorNavItem.Icon = new AnimatedIcon
-					{
-						Margin = new Thickness(0, -11, -11, -11),
-						Source = new Honeymoon()
-					};
-
-					break;
-				}
-			case "Windows Accent":
-				{
-					// Get the accent color brush
-					Brush accentBrush = (Brush)Application.Current.Resources["SystemControlHighlightAccentBrush"];
-
-					// Create Policy
-					CreatePolicyNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE83D",
-						Foreground = accentBrush
-					};
-
-					// System Information
-					SystemInformationNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE7C1",
-						Foreground = accentBrush
-					};
-
-					// Configure Policy Rule Options
-					ConfigurePolicyRuleOptionsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEEA3",
-						Foreground = accentBrush
-					};
-
-					// Simulation
-					SimulationNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE835",
-						Foreground = accentBrush
-					};
-
-					// Allow New Apps
-					AllowNewAppsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uED35",
-						Foreground = accentBrush
-					};
-
-					// Create Policy from Event Logs
-					CreatePolicyFromEventLogsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEA18",
-						Foreground = accentBrush
-					};
-
-					// MDE Advanced Hunting
-					CreatePolicyFromMDEAHNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEB44",
-						Foreground = accentBrush
-					};
-
-					// Get Code Integrity Hashes
-					GetCodeIntegrityHashesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE950",
-						Foreground = accentBrush
-					};
-
-					// Get Secure Policy Settings
-					GetSecurePolicySettingsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEEA3",
-						Foreground = accentBrush
-					};
-
-					// Logs
-					LogsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uF5A0",
-						Foreground = accentBrush
-					};
-
-					// GitHub Documentation
-					GitHubDocsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8A5",
-						Foreground = accentBrush
-					};
-
-					// Microsoft Documentation
-					MSFTDocsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8A5",
-						Foreground = accentBrush
-					};
-
-					// Update
-					UpdateNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEB52",
-						Foreground = accentBrush
-					};
-
-					// Build New Certificate
-					BuildNewCertificateNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEB95",
-						Foreground = accentBrush
-					};
-
-					// Deployment
-					DeploymentNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uF32A",
-						Foreground = accentBrush
-					};
-
-					// Create Supplemental Policy
-					CreateSupplementalPolicyNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8F9",
-						Foreground = accentBrush
-					};
-
-					// Merge App Control Policies
-					MergePoliciesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEE49",
-						Foreground = accentBrush
-					};
-
-					// Create Deny Policy
-					CreateDenyPolicyNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8D0",
-						Foreground = accentBrush
-					};
-
-					// Validate Policies
-					ValidatePoliciesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uED5E",
-						Foreground = accentBrush
-					};
-
-					// View File Certificates
-					ViewFileCertificatesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEBD2",
-						Foreground = accentBrush
-					};
-
-					// Policy Editor
-					PolicyEditorNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE70F",
-						Foreground = accentBrush
-					};
-
-					break;
-				}
-
-			// The default behavior and when user selects Monochromatic style
-			case "Monochromatic":
-			default:
-				{
-
-					// Create Policy
-					CreatePolicyNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE83D"
-					};
-
-					// System Information
-					SystemInformationNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE7C1"
-					};
-
-					// Configure Policy Rule Options
-					ConfigurePolicyRuleOptionsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEEA3"
-					};
-
-					// Simulation
-					SimulationNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE835"
-					};
-
-					// Allow New Apps
-					AllowNewAppsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uED35"
-					};
-
-					// Create Policy from Event Logs
-					CreatePolicyFromEventLogsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEA18"
-					};
-
-					// MDE Advanced Hunting
-					CreatePolicyFromMDEAHNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEB44"
-					};
-
-					// Get Code Integrity Hashes
-					GetCodeIntegrityHashesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE950"
-					};
-
-					// Get Secure Policy Settings
-					GetSecurePolicySettingsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEEA3"
-					};
-
-					// Logs
-					LogsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uF5A0"
-					};
-
-					// GitHub Documentation
-					GitHubDocsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8A5"
-					};
-
-					// Microsoft Documentation
-					MSFTDocsNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8A5"
-					};
-
-					// Update
-					UpdateNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEB52"
-					};
-
-					// Build New Certificate
-					BuildNewCertificateNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEB95"
-					};
-
-					// Deployment
-					DeploymentNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uF32A"
-					};
-
-					// Create Supplemental Policy
-					CreateSupplementalPolicyNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8F9"
-					};
-
-					// Merge App Control Policies
-					MergePoliciesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEE49"
-					};
-
-					// Create Deny Policy
-					CreateDenyPolicyNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE8D0"
-					};
-
-					// Validate Policies
-					ValidatePoliciesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uED5E"
-					};
-
-					// View File Certificates
-					ViewFileCertificatesNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uEBD2"
-					};
-
-					// Policy Editor
-					PolicyEditorNavItem.Icon = new FontIcon
-					{
-						Glyph = "\uE70F"
-					};
-
-					break;
-				}
-		}
-	}
 
 
 	/// <summary>
@@ -1193,33 +702,6 @@ public sealed partial class MainWindow : Window
 
 
 	/// <summary>
-	/// Event handler for the global BackgroundChanged event. When user selects a different background for the app, this will be triggered.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OnBackgroundChanged(object? sender, BackgroundChangedEventArgs e)
-	{
-
-		// Update the SystemBackdrop based on the selected background
-		// The Default is set in the XAML
-		switch (e.NewBackground)
-		{
-			case "MicaAlt":
-				this.SystemBackdrop = new MicaBackdrop { Kind = MicaKind.BaseAlt };
-				break;
-			case "Mica":
-				this.SystemBackdrop = new MicaBackdrop { Kind = MicaKind.Base };
-				break;
-			case "Acrylic":
-				this.SystemBackdrop = new DesktopAcrylicBackdrop();
-				break;
-			default:
-				break;
-		}
-	}
-
-
-	/// <summary>
 	/// Event handler for the global AppThemeChanged event
 	/// Also changes the AnimatedIcons based on the theme to maintain their accessibility
 	/// </summary>
@@ -1255,14 +737,14 @@ public sealed partial class MainWindow : Window
 					if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 
-						AllowNewAppsNavItem.Icon = new AnimatedIcon
+						ViewModel.AllowNewAppsIcon = new AnimatedIcon
 						{
 							Margin = new Thickness(0, -6, -6, -6),
 							Source = new StarBlack()
 
 						};
 
-						UpdateNavItem.Icon = new AnimatedIcon
+						ViewModel.UpdateIcon = new AnimatedIcon
 						{
 							Margin = new Thickness(0, -25, -25, -25),
 							Source = new HeartPulse()
@@ -1280,13 +762,13 @@ public sealed partial class MainWindow : Window
 					if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 
-						AllowNewAppsNavItem.Icon = new AnimatedIcon
+						ViewModel.AllowNewAppsIcon = new AnimatedIcon
 						{
 							Margin = new Thickness(0, -6, -6, -6),
 							Source = new StarYellow()
 						};
 
-						UpdateNavItem.Icon = new AnimatedIcon
+						ViewModel.UpdateIcon = new AnimatedIcon
 						{
 							Margin = new Thickness(0, -5, -5, -5),
 							Source = new Heart()
@@ -1309,13 +791,13 @@ public sealed partial class MainWindow : Window
 						if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 
-							AllowNewAppsNavItem.Icon = new AnimatedIcon
+							ViewModel.AllowNewAppsIcon = new AnimatedIcon
 							{
 								Margin = new Thickness(0, -6, -6, -6),
 								Source = new StarYellow()
 							};
 
-							UpdateNavItem.Icon = new AnimatedIcon
+							ViewModel.UpdateIcon = new AnimatedIcon
 							{
 								Margin = new Thickness(0, -5, -5, -5),
 								Source = new Heart()
@@ -1330,14 +812,14 @@ public sealed partial class MainWindow : Window
 						if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 
-							AllowNewAppsNavItem.Icon = new AnimatedIcon
+							ViewModel.AllowNewAppsIcon = new AnimatedIcon
 							{
 								Margin = new Thickness(0, -6, -6, -6),
 								Source = new StarBlack()
 
 							};
 
-							UpdateNavItem.Icon = new AnimatedIcon
+							ViewModel.UpdateIcon = new AnimatedIcon
 							{
 								Margin = new Thickness(0, -25, -25, -25),
 								Source = new HeartPulse()
@@ -1584,26 +1066,9 @@ public sealed partial class MainWindow : Window
 
 
 	/// <summary>
-	/// Event handler for the main Sidebar button click
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SidebarButton_Click(object sender, RoutedEventArgs e)
-	{
-		// Get the current state of the sidebar closed/open
-		bool sidePaneStat = MainSidebar.IsPaneOpen;
-
-		// Set the close/open state of the sidebar to the opposite state
-		MainSidebar.IsPaneOpen = !sidePaneStat;
-	}
-
-
-	/// <summary>
 	/// Event handler for when the back button is pressed
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BackButtonTitleBar_Click(object sender, RoutedEventArgs e)
+	private void BackButtonTitleBar_Click()
 	{
 		if (ContentFrame.CanGoBack)
 		{
@@ -1658,17 +1123,6 @@ public sealed partial class MainWindow : Window
 
 
 	/// <summary>
-	/// Event handler for the hamburger/main menu button click
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void HamburgerMenuButton_Click(object sender, RoutedEventArgs e)
-	{
-		MainNavigation.IsPaneOpen = !MainNavigation.IsPaneOpen;
-	}
-
-
-	/// <summary>
 	/// Event handler for when the main app window's size changes
 	/// </summary>
 	/// <param name="sender"></param>
@@ -1679,32 +1133,11 @@ public sealed partial class MainWindow : Window
 
 		if (mainWindowWidth < 750)
 		{
-			TitleColumn.Width = new GridLength(0); // Hide TitleColumn if width is less than 200
+			ViewModel.TitleColumnWidth = new GridLength(0); // Hide TitleColumn if width is less than 200
 		}
 		else
 		{
-			TitleColumn.Width = GridLength.Auto; // Restore the TitleColumn if width is 200 or more
-		}
-	}
-
-
-	/// <summary>
-	/// Event handler for the sidebar base policy browse button
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SidebarBasePolicyBrowseButton_Click(object sender, RoutedEventArgs e)
-	{
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			SidebarBasePolicyPathTextBox.Text = selectedFile;
-
-			// Show the animated icons on the currently visible page
-			AffectPagesAnimatedIconsVisibilities(true);
+			ViewModel.TitleColumnWidth = GridLength.Auto; // Restore the TitleColumn if width is 200 or more
 		}
 	}
 
@@ -1714,7 +1147,7 @@ public sealed partial class MainWindow : Window
 	/// It is called by the Sidebar's Browse/Clear buttons' event handlers
 	/// </summary>
 	/// <param name="on"></param>
-	private void AffectPagesAnimatedIconsVisibilities(bool on)
+	internal void AffectPagesAnimatedIconsVisibilities(bool on)
 	{
 
 		// Decide the visibility to set the animated icons to based on the parameter
@@ -1722,7 +1155,7 @@ public sealed partial class MainWindow : Window
 
 		if (ContentFrame.Content is IAnimatedIconsManager currentPage)
 		{
-			currentPage.SetVisibility(visibility, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
+			currentPage.SetVisibility(visibility, ViewModel.SidebarBasePolicyPathTextBoxText, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
 
 			// Set the visibility of the AnimatedIcon on Sidebar's Select button for Unsigned policy
 			SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = visibility;
@@ -1737,7 +1170,7 @@ public sealed partial class MainWindow : Window
 	internal void AffectPagesAnimatedIconsVisibilities(Frame contentFrame)
 	{
 		// Check the unsigned base policy path on the Sidebar's textbox
-		bool isUnsignedBasePolicyPathAvailable = !string.IsNullOrWhiteSpace(SidebarBasePolicyPathTextBox.Text);
+		bool isUnsignedBasePolicyPathAvailable = !string.IsNullOrWhiteSpace(ViewModel.SidebarBasePolicyPathTextBoxText);
 
 		// Unsubscribe all the event handlers from the sidebar's select buttons for unsigned policies
 		// This way the new page that user navigates to can set unique event handler to them if it implements the interface
@@ -1777,12 +1210,12 @@ public sealed partial class MainWindow : Window
 		{
 			if (isUnsignedBasePolicyPathAvailable)
 			{
-				currentPage.SetVisibility(Visibility.Visible, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
+				currentPage.SetVisibility(Visibility.Visible, ViewModel.SidebarBasePolicyPathTextBoxText, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
 				SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = Visibility.Visible;
 			}
 			else
 			{
-				currentPage.SetVisibility(Visibility.Collapsed, SidebarBasePolicyPathTextBox.Text, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
+				currentPage.SetVisibility(Visibility.Collapsed, ViewModel.SidebarBasePolicyPathTextBoxText, SidebarUnsignedBasePolicyConnect1, SidebarUnsignedBasePolicyConnect2, SidebarUnsignedBasePolicyConnect3, SidebarUnsignedBasePolicyConnect4, SidebarUnsignedBasePolicyConnect5);
 				SidebarBasePolicySelectButtonLightAnimatedIcon.Visibility = Visibility.Collapsed;
 			}
 		}
@@ -1794,94 +1227,13 @@ public sealed partial class MainWindow : Window
 
 
 	/// <summary>
-	/// Event handler for the clear button in the sidebar for unsigned policy path
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SidebarBasePolicyClearButton_Click(object sender, RoutedEventArgs e)
-	{
-		// Clear the Sidebar text box
-		SidebarBasePolicyPathTextBox.Text = null;
-
-		// Hide the animated icons on the currently visible page
-		AffectPagesAnimatedIconsVisibilities(false);
-	}
-
-
-	/// <summary>
-	/// Event handler for when the RootGrid of the window is loaded
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void RootGrid_Loaded(object sender, RoutedEventArgs e)
-	{
-		// Adjust the elevation of the border to achieve the shadow effect
-		Border1.Translation += new Vector3(0, 0, 500);
-
-		if (App.IsElevated)
-			// Get the user configuration for unsigned policy path and fill in the text box for sidebar
-			SidebarBasePolicyPathTextBox.Text = UserConfiguration.Get().UnsignedPolicyPath;
-
-		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
-		AutomaticAssignmentSidebarToggleSwitch.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar) ?? true;
-
-		// Enables Security catalogs caching by default. If the value doesn't exist in the settings then it will be null and assigned to true. If it's false it will remain false.
-		bool? CacheSecurityCatalogResultsStatus = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.CacheSecurityCatalogsScanResults);
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.CacheSecurityCatalogsScanResults, CacheSecurityCatalogResultsStatus ?? true);
-	}
-
-
-	/// <summary>
 	/// Event handler for when the event that changes unsigned policy path in user configurations is fired
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
 	private void SidebarOnUnsignedPolicyChanged(object? sender, Events.UnsignedPolicyInUserConfigChangedEventArgs e)
 	{
-		SidebarBasePolicyPathTextBox.Text = e.UnsignedPolicyInUserConfig;
-	}
-
-
-	/// <summary>
-	/// Method used by other methods that create base policies so they can assign the path to the sidebar after creation
-	/// If the toggle switch for automatic assignment is on
-	/// </summary>
-	/// <param name="unsignedPolicyPath"></param>
-	internal void AssignToSidebar(string unsignedPolicyPath)
-	{
-		_ = DispatcherQueue.TryEnqueue(() =>
-			{
-				if (AutomaticAssignmentSidebarToggleSwitch.IsOn)
-				{
-					SidebarBasePolicyPathTextBox.Text = unsignedPolicyPath;
-				}
-			});
-	}
-
-
-	/// <summary>
-	/// Event handler for sidebar settings cards for auto assignment
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AutomaticAssignmentSidebarSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		AutomaticAssignmentSidebarToggleSwitch.IsOn = !AutomaticAssignmentSidebarToggleSwitch.IsOn;
-
-		// Save the status in app settings
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
-	}
-
-
-	/// <summary>
-	/// Event handler for the sidebar toggle button for auto assignment
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AutomaticAssignmentSidebarToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-	{
-		// Save the status in app settings
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitch.IsOn);
+		ViewModel.SidebarBasePolicyPathTextBoxText = e.UnsignedPolicyInUserConfig;
 	}
 
 }

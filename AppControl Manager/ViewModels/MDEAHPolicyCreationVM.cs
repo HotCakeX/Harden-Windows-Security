@@ -33,7 +33,7 @@ internal sealed partial class MDEAHPolicyCreationVM : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
@@ -45,7 +45,7 @@ internal sealed partial class MDEAHPolicyCreationVM : INotifyPropertyChanged
 	internal readonly List<FileIdentity> AllFileIdentities = [];
 
 
-	#region UI-Bound Properties	
+	#region UI-Bound Properties
 
 
 	#endregion

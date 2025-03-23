@@ -12,14 +12,10 @@
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     mc:Ignorable="d"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
     Title="AppControl Manager">
 
-    <!-- For the MicaAlt BackDrop which is the default BackDrop -->
-    <Window.SystemBackdrop>
-        <MicaBackdrop Kind="BaseAlt"/>
-    </Window.SystemBackdrop>
-
-    <Grid x:Name="RootGrid" Loaded="RootGrid_Loaded">
+    <Grid x:Name="RootGrid">
 
         <Grid.RowDefinitions>
             <!-- Titlebar Row -->
@@ -85,7 +81,7 @@
                 <ColumnDefinition x:Name="BackButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="HamburgerMenuButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="TitleColumn" Width="Auto"/>
+                <ColumnDefinition Width="{x:Bind ViewModel.TitleColumnWidth, Mode=OneWay}" />
                 <ColumnDefinition x:Name="LeftDragColumn" Width="*"/>
                 <ColumnDefinition x:Name="SearchColumn" Width="3*"/>
                 <ColumnDefinition x:Name="RightDragColumn" Width="*" />
@@ -94,10 +90,10 @@
             </Grid.ColumnDefinitions>
 
             <!-- Back button style, mimics the same NavigationView back button's style. If the style isn't set here, we can use the built-in animated icon for the back button -->
-            <Button x:Name="BackButtonTitleBar" Style="{StaticResource NavigationBackButtonNormalStyle}" Grid.Column="1" Click="BackButtonTitleBar_Click" />
+            <Button x:Name="BackButtonTitleBar" Style="{StaticResource NavigationBackButtonNormalStyle}" Grid.Column="1" Click="{x:Bind BackButtonTitleBar_Click}" />
 
             <!-- Menu button style, mimics the same NavigationView menu (hamburger) button's style. If the style isn't set here, we can use the built-in animated icon for the menu (hamburger) button -->
-            <Button VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="HamburgerMenuButton" Grid.Column="2" Style="{StaticResource PaneToggleButtonStyle}" Margin="10,0,0,0" Click="HamburgerMenuButton_Click" />
+            <Button VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="HamburgerMenuButton" Grid.Column="2" Style="{StaticResource PaneToggleButtonStyle}" Margin="10,0,0,0" Click="{x:Bind ViewModel.HamburgerMenuButton_Click}" />
 
             <!-- App icon -->
             <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
@@ -120,7 +116,7 @@
                             x:Uid="MainSearchAutoSuggestBox" Margin="0"/>
 
             <!-- Sidebar access point -->
-            <Button x:Name="SidebarButton" Click="SidebarButton_Click" Grid.Column="8"
+            <Button x:Name="SidebarButton" Click="{x:Bind ViewModel.SidebarButton_Click}" Grid.Column="8"
                     Height="32" Margin="5,0,30,0" Background="Transparent" BorderThickness="0">
 
                 <Button.Content>
@@ -142,6 +138,7 @@
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
+                    IsPaneOpen="{x:Bind ViewModel.MainNavigationIsPaneOpen, Mode=TwoWay}"
                     ItemInvoked="MainNavigation_ItemInvoked"
                     IsBackButtonVisible="Collapsed"
                     IsBackEnabled="False"
@@ -179,73 +176,69 @@
             -->
 
             <NavigationView.MenuItems>
-
+                <!-- Creation Group -->
                 <NavigationViewItemHeader Content="Creation"/>
+                <NavigationViewItem x:Uid="CreatePolicyNavItem" Icon="{x:Bind ViewModel.CreatePolicyIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="CreateSupplementalPolicyNavItem" Icon="{x:Bind ViewModel.CreateSupplementalPolicyIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="CreateDenyPolicyNavItem" Icon="{x:Bind ViewModel.CreateDenyPolicyIcon, Mode=OneWay}" />
 
-                <NavigationViewItem x:Name="CreatePolicyNavItem" x:Uid="CreatePolicyNavItem"/>
-                <NavigationViewItem x:Name="CreateSupplementalPolicyNavItem" x:Uid="CreateSupplementalPolicyNavItem"/>
-                <NavigationViewItem x:Name="CreateDenyPolicyNavItem" x:Uid="CreateDenyPolicyNavItem"/>
-
+                <!-- Certificates Group -->
                 <NavigationViewItemHeader Content="Certificates"/>
+                <NavigationViewItem x:Uid="BuildNewCertificateNavItem" Icon="{x:Bind ViewModel.BuildNewCertificateIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="ViewFileCertificatesNavItem" Icon="{x:Bind ViewModel.ViewFileCertificatesIcon, Mode=OneWay}" />
 
-                <NavigationViewItem x:Name="BuildNewCertificateNavItem" x:Uid="BuildNewCertificateNavItem"/>
-                <NavigationViewItem x:Name="ViewFileCertificatesNavItem" x:Uid="ViewFileCertificatesNavItem"/>
-
+                <!-- Logs Processing Group -->
                 <NavigationViewItemHeader Content="Logs Processing"/>
+                <NavigationViewItem x:Uid="CreatePolicyFromEventLogsNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromEventLogsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="CreatePolicyFromMDEAHNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromMDEAHIcon, Mode=OneWay}" />
 
-                <NavigationViewItem x:Name="CreatePolicyFromEventLogsNavItem" x:Uid="CreatePolicyFromEventLogsNavItem"/>
-                <NavigationViewItem x:Name="CreatePolicyFromMDEAHNavItem" x:Uid="CreatePolicyFromMDEAHNavItem"/>
-
+                <!-- Tactical Group -->
                 <NavigationViewItemHeader Content="Tactical"/>
+                <NavigationViewItem x:Uid="AllowNewAppsNavItem" Icon="{x:Bind ViewModel.AllowNewAppsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="PolicyEditorNavItem" Icon="{x:Bind ViewModel.PolicyEditorIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="SimulationNavItem" Icon="{x:Bind ViewModel.SimulationIcon, Mode=OneWay}" />
 
-                <NavigationViewItem x:Name="AllowNewAppsNavItem" x:Uid="AllowNewAppsNavItem"/>
-                <NavigationViewItem x:Name="PolicyEditorNavItem" x:Uid="PolicyEditorNavItem"/>
-                <NavigationViewItem x:Name="SimulationNavItem" x:Uid="SimulationNavItem"/>
-
+                <!-- Info Gathering Group -->
                 <NavigationViewItemHeader Content="Info Gathering"/>
+                <NavigationViewItem x:Uid="SystemInformationNavItem" Icon="{x:Bind ViewModel.SystemInformationIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="GetCodeIntegrityHashesNavItem" Icon="{x:Bind ViewModel.GetCodeIntegrityHashesIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="GetSecurePolicySettingsNavItem" Icon="{x:Bind ViewModel.GetSecurePolicySettingsIcon, Mode=OneWay}" />
 
-                <NavigationViewItem x:Name="SystemInformationNavItem" x:Uid="SystemInformationNavItem"/>
-                <NavigationViewItem x:Name="GetCodeIntegrityHashesNavItem" x:Uid="GetCodeIntegrityHashesNavItem"/>
-                <NavigationViewItem x:Name="GetSecurePolicySettingsNavItem" x:Uid="GetSecurePolicySettingsNavItem"/>
-
+                <!-- Policy Management Group -->
                 <NavigationViewItemHeader Content="Policy Management"/>
+                <NavigationViewItem x:Uid="ConfigurePolicyRuleOptionsNavItem" Icon="{x:Bind ViewModel.ConfigurePolicyRuleOptionsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="MergePoliciesNavItem" Icon="{x:Bind ViewModel.MergePoliciesIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="DeploymentNavItem" Icon="{x:Bind ViewModel.DeploymentIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="ValidatePoliciesNavItem" Icon="{x:Bind ViewModel.ValidatePoliciesIcon, Mode=OneWay}" />
 
-                <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" x:Uid="ConfigurePolicyRuleOptionsNavItem"/>
-                <NavigationViewItem x:Name="MergePoliciesNavItem" x:Uid="MergePoliciesNavItem"/>
-                <NavigationViewItem x:Name="DeploymentNavItem" x:Uid="DeploymentNavItem"/>
-                <NavigationViewItem x:Name="ValidatePoliciesNavItem" x:Uid="ValidatePoliciesNavItem"/>
-
+                <!-- Documentation Group -->
                 <NavigationViewItemHeader Content="Documentation"/>
-
-                <NavigationViewItem x:Name="GitHubDocsNavItem" x:Uid="GitHubDocsNavItem"/>
-                <NavigationViewItem x:Name="MSFTDocsNavItem" x:Uid="MSFTDocsNavItem"/>
+                <NavigationViewItem x:Uid="GitHubDocsNavItem" Icon="{x:Bind ViewModel.GitHubDocsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="MSFTDocsNavItem" Icon="{x:Bind ViewModel.MSFTDocsIcon, Mode=OneWay}" />
 
                 <NavigationViewItemSeparator/>
 
-                <NavigationViewItem x:Name="LogsNavItem" x:Uid="LogsNavItem"/>
-
+                <NavigationViewItem x:Uid="LogsNavItem" Icon="{x:Bind ViewModel.LogsIcon, Mode=OneWay}" />
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-
-                <NavigationViewItem x:Name="UpdateNavItem" x:Uid="UpdateNavItem">
+                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}">
                     <NavigationViewItem.InfoBadge>
-                        <InfoBadge x:Name="AvailableUpdateInfoBadge"
-                                   Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
-                                   Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                        <InfoBadge Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
+                               Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>
                             </InfoBadge.IconSource>
                         </InfoBadge>
                     </NavigationViewItem.InfoBadge>
                 </NavigationViewItem>
-
             </NavigationView.FooterMenuItems>
 
             <!-- Split view to create the sidebar -->
-            <SplitView x:Name="MainSidebar" PaneBackground="Transparent"
-                 IsPaneOpen="False" OpenPaneLength="256"
+            <SplitView PaneBackground="Transparent"
+                 IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}" OpenPaneLength="256"
                  CompactPaneLength="48" DisplayMode="Inline" PanePlacement="Right">
+
                 <SplitView.Pane>
                     <Border BorderThickness="1"
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -260,7 +253,7 @@
 
                                 <TextBlock Text="Use the sidebar to select XML file paths and reuse them in different parts of the AppControl Manager." Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
-                                <Border x:Name="Border1" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
+                                <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
 
                                     <Border.BorderBrush>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -284,10 +277,10 @@
                                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
 
                                         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"
-                                        x:Name="SidebarBasePolicyPathTextBox" PlaceholderText="Base Policy Path" TextWrapping="Wrap"
+                                        Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}" PlaceholderText="Base Policy Path" TextWrapping="Wrap"
                                         Width="150" />
 
-                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Browse for an XML policy file" x:Name="SidebarBasePolicyBrowseButton" Click="SidebarBasePolicyBrowseButton_Click" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Browse for an XML policy file" Click="{x:Bind ViewModel.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -298,7 +291,7 @@
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Clear the selected XML file path text box" x:Name="SidebarBasePolicyClearButton" Click="SidebarBasePolicyClearButton_Click" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Clear the selected XML file path text box" Click="{x:Bind ViewModel.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -309,7 +302,7 @@
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" ToolTipService.ToolTip="Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page" x:Name="SidebarBasePolicySelectButton" HorizontalAlignment="Center">
+                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" ToolTipService.ToolTip="Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page" HorizontalAlignment="Center">
                                             <Button.Content>
                                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -341,10 +334,10 @@
 
                                 </Border>
 
-                                <controls:SettingsCard HorizontalContentAlignment="Center" x:Name="AutomaticAssignmentSidebarSettingsCard"
-                               Description="Automatically save the path to the base policies you create in the Sidebar." Click="AutomaticAssignmentSidebarSettingsCard_Click"
+                                <controls:SettingsCard HorizontalContentAlignment="Center"
+                               Description="Automatically save the path to the base policies you create in the Sidebar." Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
                                Header="Automatic Assignment" HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
-                                    <ToggleSwitch Toggled="AutomaticAssignmentSidebarToggleSwitch_Toggled" x:Name="AutomaticAssignmentSidebarToggleSwitch"/>
+                                    <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}" IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
                                 </controls:SettingsCard>
 
                                 <HyperlinkButton HorizontalAlignment="Center" ToolTipService.ToolTip="Sidebar usage guide on GitHub wiki" Content="Sidebar Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
@@ -377,7 +370,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- BreadCrumBar that that also acts as a sticky header -->
-                    <BreadcrumbBar x:Name="BreadcrumbBar" VerticalAlignment="Top"
+                    <BreadcrumbBar VerticalAlignment="Top"
                         Grid.Row="0"
                         Padding="10"
                         Margin="20,10,0,10"
@@ -389,6 +382,7 @@
                                 <TextBlock Text="{x:Bind Label}" TextWrapping="Wrap" Style="{StaticResource TitleTextBlockStyle}" />
                             </DataTemplate>
                         </BreadcrumbBar.ItemTemplate>
+
                     </BreadcrumbBar>
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->

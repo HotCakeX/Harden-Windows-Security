@@ -49,7 +49,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 {
 
 #pragma warning disable CA1822
-	internal AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
+	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
 #pragma warning restore CA1822
 
 
@@ -920,20 +920,20 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 
 
 			// Check if there are items for the local file scans ListView
-			if (ViewModel.LocalFilesFileIdentities.Count > 0)
+			if (ViewModel.LocalFilesAllFileIdentities.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
-				foreach (FileIdentity item in ViewModel.LocalFilesFileIdentities)
+				foreach (FileIdentity item in ViewModel.LocalFilesAllFileIdentities)
 				{
 					_ = fileIdentities.Add(item);
 				}
 			}
 
 			// Check if there are selected items for the Event Logs scan ListView
-			if (ViewModel.EventLogsFileIdentities.Count > 0)
+			if (ViewModel.EventLogsAllFileIdentities.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
-				foreach (FileIdentity item in ViewModel.EventLogsFileIdentities)
+				foreach (FileIdentity item in ViewModel.EventLogsAllFileIdentities)
 				{
 					_ = fileIdentities.Add(item);
 				}

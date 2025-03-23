@@ -32,7 +32,7 @@ internal sealed partial class SimulationVM : INotifyPropertyChanged
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	// private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	internal readonly ObservableCollection<SimulationOutput> SimulationOutputs = [];
 

@@ -37,7 +37,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private static readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
+	private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 
 	#region Column Widths
@@ -1167,22 +1167,22 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 	#region Custom HashSet comparers so that when processing FilePublisher and WHQLFilePublisher rules, we don't add duplicate signers to the policy.
 	/*
-	 
+
 		Because each FileAttrib in the <FileRules> node can be associated with more than 1 signer.
 
 		Longer description of the problem and why the custom HashSet comparers are necessary:
 
 		ProcessData() splits a single FilePublisherSignerRule into multiple FileBasedRulesForListView items (one per FileAttribElement) for UI display, all pointing to the same Source object.
-		
+
 		SaveChanges() iterates over FileRulesCollection and naively adds the AllowedSignerElement/DeniedSignerElement for each item, duplicating it if the signer has multiple file attributes.
-		
+
 		Example:
 		Original FilePublisherSignerRule: 1 DeniedSigner (SignerId = "ID_SIGNER_A_XYZ") with 3 FileAttribElements.
-		
+
 		FileRulesCollection: 3 items, each with Source = same FilePublisherSignerRule.
-		
+
 		SaveChanges(): Adds the same DeniedSignerElement 3 times to userModeDeniedSigners.
-		
+
 		Result: userModeDeniedSigners contains duplicate DeniedSigner objects with the same SignerId.
 	*/
 

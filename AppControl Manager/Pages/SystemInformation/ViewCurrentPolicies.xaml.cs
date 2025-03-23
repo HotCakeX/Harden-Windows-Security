@@ -34,7 +34,7 @@ public sealed partial class ViewCurrentPolicies : Page
 {
 
 #pragma warning disable CA1822
-	internal ViewCurrentPoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewCurrentPoliciesVM>();
+	private ViewCurrentPoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewCurrentPoliciesVM>();
 #pragma warning restore CA1822
 
 	internal ListView DeployedPoliciesListView { get; }

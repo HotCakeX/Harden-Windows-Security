@@ -137,33 +137,10 @@ public partial class App : Application
 			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
 		}
 
-		// Subscribe to the SoundSettingChanged event to listen for changes globally
-		SoundManager.SoundSettingChanged += OnSoundSettingChanged;
-
 		#endregion
 
 	}
 
-
-	/// <summary>
-	/// Event handler for when the sound setting is changed.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OnSoundSettingChanged(object? sender, SoundSettingChangedEventArgs e)
-	{
-		// Set the global sound state based on the event
-		if (e.IsSoundOn)
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.On;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
-		}
-		else
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
-		}
-	}
 
 
 	/*
@@ -342,7 +319,7 @@ public partial class App : Application
 
 			Logger.Write(@"Moving the user config directory to the new location at 'Program Files\AppControl Manager");
 
-			// Step 1: Recreate the directory structure 
+			// Step 1: Recreate the directory structure
 
 			// Get all subdirectories (recursively) from the old config directory
 			string[] directories = Directory.GetDirectories(OldUserConfigDir, "*", SearchOption.AllDirectories);

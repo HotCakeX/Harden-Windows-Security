@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -89,13 +88,6 @@ public sealed partial class Logs : Page
 		}
 	}
 
-	/// <summary>
-	/// Refreshes the list of log files.
-	/// </summary>
-	private void RefreshButton_Click(object sender, RoutedEventArgs e)
-	{
-		LoadLogFiles();
-	}
 
 	/// <summary>
 	/// Loads the selected log file’s content.
@@ -139,14 +131,6 @@ public sealed partial class Logs : Page
 		}
 	}
 
-	/// <summary>
-	/// Called when the search text changes.
-	/// Filters the log lines based on the search term.
-	/// </summary>
-	private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		UpdateLogDisplay();
-	}
 
 	/// <summary>
 	/// Updates the ItemsRepeater with the current log lines.

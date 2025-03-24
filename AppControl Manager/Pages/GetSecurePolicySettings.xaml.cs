@@ -18,7 +18,6 @@
 using System.Globalization;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -42,8 +41,10 @@ public sealed partial class GetSecurePolicySettings : Page
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
-	// Event handler for the Fetch button
-	private void InvokeButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for the Fetch button
+	/// </summary>
+	private void InvokeButton_Click()
 	{
 		// Retrieve input values
 		string provider = ProviderTextBox.Text;

@@ -46,9 +46,7 @@ public sealed partial class GetCIHashes : Page
 	/// <summary>
 	/// Event handler for the browse button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void PickFile_Click(object sender, RoutedEventArgs e)
+	private async void PickFile_Click()
 	{
 		try
 		{

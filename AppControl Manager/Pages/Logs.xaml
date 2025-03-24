@@ -33,15 +33,14 @@
             <ComboBox x:Name="LogFileComboBox" SelectionChanged="LogFileComboBox_SelectionChanged" />
 
             <!-- Button to refresh the logs -->
-            <Button x:Name="RefreshButton"
-            x:Uid="RefreshLogFilesButton"
-            Click="RefreshButton_Click"
+            <Button x:Uid="RefreshLogFilesButton"
+            Click="{x:Bind LoadLogFiles}"
             Style="{StaticResource AccentButtonStyle}" />
 
             <!-- Search TextBox -->
             <TextBox x:Name="SearchTextBox"
             PlaceholderText="Search in the logs..."
-            MinWidth="300" TextChanged="SearchTextBox_TextChanged"/>
+            MinWidth="300" TextChanged="{x:Bind UpdateLogDisplay}"/>
 
         </controls:WrapPanel>
 

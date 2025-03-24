@@ -155,9 +155,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Deploy unsigned XML files button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void DeployUnsignedXMLButton_Click(object sender, RoutedEventArgs e)
+	private async void DeployUnsignedXMLButton_Click()
 	{
 		if (XMLFiles.Count is 0)
 		{
@@ -275,9 +273,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Deploy Signed XML files button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void DeploySignedXMLButton_Click(object sender, RoutedEventArgs e)
+	private async void DeploySignedXMLButton_Click()
 	{
 
 		if (SignedXMLFiles.Count is 0)
@@ -451,9 +447,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Deploy CIP files button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void DeployCIPButton_Click(object sender, RoutedEventArgs e)
+	private async void DeployCIPButton_Click()
 	{
 		if (CIPFiles.Count is 0)
 		{
@@ -540,9 +534,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for browse button - Unsigned XML files
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForXMLPolicyFilesButton_Click(object sender, RoutedEventArgs e)
+	private void BrowseForXMLPolicyFilesButton_Click()
 	{
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -564,9 +556,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for Browser button - CIP files
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForCIPBinaryFilesButton_Click(object sender, RoutedEventArgs e)
+	private void BrowseForCIPBinaryFilesButton_Click()
 	{
 		string filter = "CIP file|*.cip";
 
@@ -589,9 +579,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Clear button for the CIP files deployment button flyout
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForCIPBinaryFilesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void BrowseForCIPBinaryFilesButton_Flyout_Clear_Click()
 	{
 		BrowseForCIPBinaryFilesButton_SelectedFilesTextBox.Text = null;
 		CIPFiles.Clear();
@@ -601,9 +589,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Clear button for the unsigned files deployment button flyout
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForXMLPolicyFilesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void BrowseForXMLPolicyFilesButton_Flyout_Clear_Click()
 	{
 		BrowseForXMLPolicyFilesButton_SelectedFilesTextBox.Text = null;
 		XMLFiles.Clear();
@@ -613,9 +599,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Clear button for the Signed files deployment button flyout
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click()
 	{
 		BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox.Text = null;
 		SignedXMLFiles.Clear();
@@ -625,9 +609,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for browse button - Signed XML files
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForSignedXMLPolicyFilesButton_Click(object sender, RoutedEventArgs e)
+	private void BrowseForSignedXMLPolicyFilesButton_Click()
 	{
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -649,9 +631,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for the SignIn button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void IntuneSignInButton_Click(object sender, RoutedEventArgs e)
+	private async void IntuneSignInButton_Click()
 	{
 
 		bool signInSuccessful = false;
@@ -717,8 +697,10 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 
 	}
 
-
-	private async void IntuneSignOutButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Signs out of the tenant
+	/// </summary>
+	private async void IntuneSignOutButton_Click()
 	{
 
 		bool signOutSuccessful = false;
@@ -768,8 +750,11 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 		}
 	}
 
-
-	private async void RefreshIntuneGroupsButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
+	/// the ComboBox with group names.
+	/// </summary>
+	private async void RefreshIntuneGroupsButton_Click()
 	{
 		await MicrosoftGraph.Main.FetchGroups();
 		Dictionary<string, string> groups = MicrosoftGraph.Main.GetGroups();
@@ -780,6 +765,13 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
+	/// <summary>
+	/// Deploys a specified file to Intune using a given policy ID and optionally an XML file for additional settings.
+	/// </summary>
+	/// <param name="file">Specifies the file to be uploaded to Intune.</param>
+	/// <param name="policyID">Identifies the policy under which the file will be deployed.</param>
+	/// <param name="xmlFile">Provides an optional XML file that may contain additional configuration settings.</param>
+	/// <returns>This method does not return a value.</returns>
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
 		string? groupID = null;
@@ -817,17 +809,18 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
+#pragma warning disable CA1822
 	/// <summary>
 	/// Event handler for the Cancel Sign In button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void IntuneCancelSignInButton_Click(object sender, RoutedEventArgs e)
+	private void IntuneCancelSignInButton_Click()
 	{
 		MicrosoftGraph.Main.CancelSignIn();
 	}
+#pragma warning restore CA1822
 
-	private void BrowseForXMLPolicyFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+
+	private void BrowseForXMLPolicyFilesButton_RightTapped()
 	{
 		if (!BrowseForXMLPolicyFilesButton_Flyout.IsOpen)
 			BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
@@ -872,9 +865,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for the button to convert XML files to CIP binary files
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForXMLPolicesButton_Click(object sender, RoutedEventArgs e)
+	private void BrowseForXMLPolicesButton_Click()
 	{
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -908,7 +899,10 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
-	private async void ConvertXMLToCIPButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Handles the click event for converting XML files to CIP format.
+	/// </summary>
+	private async void ConvertXMLToCIPButton_Click()
 	{
 
 		ConvertXMLToCIPButtonTeachingTip.IsOpen = false;
@@ -985,9 +979,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler to clear the list of XML files that are only converted to CIP files
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForXMLPolicesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void BrowseForXMLPolicesButton_Flyout_Clear_Click()
 	{
 		XMLFilesToConvertToCIP.Clear();
 	}
@@ -996,9 +988,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for the settings card to toggle the button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SignOnlyNoDeploySettingsCard_Click(object sender, RoutedEventArgs e)
+	private void SignOnlyNoDeploySettingsCard_Click()
 	{
 		SignOnlyNoDeployToggleSwitch.IsOn = !SignOnlyNoDeployToggleSwitch.IsOn;
 
@@ -1010,9 +1000,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// <summary>
 	/// Event handler for the toggle button that determines whether policies should be signed + deployed or signed only
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SignOnlyNoDeployToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	private void SignOnlyNoDeployToggleSwitch_Toggled()
 	{
 		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? "Sign Only" : "Deploy";
 

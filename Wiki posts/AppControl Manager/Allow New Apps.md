@@ -10,11 +10,13 @@
 
 <br>
 
-This page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) is designed as a practical hub for managing App Control on your system. Consider it your centralized solution for effortlessly overseeing your app-related policies and allowing new apps.
+## Description
 
-When you need to install a new application, this page provides an intuitive way to temporarily enable Audit mode in your existing base policy. This allows the installation of the app while ensuring the base policy automatically reverts to Enforced mode immediately afterward.
+Use this page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) on a system where Application Control policies are already deployed.
 
-During Audit mode, AppControl Manager captures all relevant Code Integrity and AppLocker events, analyzes them, and presents detailed insights in an organized view. You can also navigate to the specific folder paths where the application was installed, enabling the tool to scan and display the contents on a separate page.
+When you need to install a new application, this page provides an intuitive way to temporarily enable Audit mode in your existing deployed base policy. This allows the installation of the app while ensuring the base policy automatically reverts to Enforced mode immediately afterward.
+
+During Audit mode, AppControl Manager captures all relevant Code Integrity and AppLocker events, analyzes them, and presents detailed insights in an organized view. You can also navigate to the specific folder path(s) where the application was installed, enabling the app to scan and display the contents on a separate page.
 
 The compiled data, scanned files and recorded events, are presented for you to review, filter, sort, and manage. Once you're satisfied, you can seamlessly convert these into a single Supplemental policy ready for deployment.
 
@@ -29,6 +31,32 @@ If something like a power outage occurs during the audit mode phase, on the next
 
 > [!TIP]\
 > You can use both Signed and Unsigned App Control policies. The app will automatically detect the signing status of the XML policy file that you select and prompt for any additional information required.
+
+<br>
+
+## Other Use Cases
+
+You can also use this page to create supplemental policies for every program you wish to deploy to your endpoints. For example, if your company needs to allow the employees to use 20 programs such as Photoshop, AutoDesk, Visual Studio etc., you can follow these steps:
+
+1. Prepare a clean VM (Virtual Machine such as Hyper-V) by installing the latest OS version on it and updating it. After update and restart of the guest OS in the VM, Install the **AppControl Manager** on it and shut it down. Now create a Hyper-V checkpoint. You will use this checkpoint to return back to this clean state.
+
+2. Use AppControl Manager to [deploy a base policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) such as `Allow Microsoft`.
+
+3. Use the `Allow New Apps` feature to browse for the base policy and enter the name of the program you wish to create a supplemental policy for.
+
+4. In `Step 2`, the Audit mode is enabled, so start installing your program. After installation is completed, run the program, use it a bit and close it.
+
+5. Browse for the installation directories of the installed program and go to `Step 3`.
+
+6. The AppControl Manager will begin redeploying the base policy in enforced mode and starts scanning the directories you selected and any audit events that were generated.
+
+7. The detected and captured data will be presented to you in 2 different pages. Review them, search through them and remove any of them that you don't want to be included in the supplemental policy.
+
+8. Once you're done reviewing, create the supplemental policy and deploy it on the system. Use the FilePublisher level which will create maintainable supplemental policies and will use signature(s) of the signed files and hashes of the unsigned files.
+
+9. After the policy is deployed, try starting your program again and make sure it 100% works and all of its features are usable.
+
+10. If one of the files of the program still gets blocked, that means you didn't browse for the directory where that file is located or you didn't use the program's feature that would trigger audit logs to be generated for its files. AppControl Manager offers multiple features that you can use to generate supplemental policies and then [merge them all](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies) into one. For example, you can [create a supplemental policy just from the event logs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs).
 
 <br>
 

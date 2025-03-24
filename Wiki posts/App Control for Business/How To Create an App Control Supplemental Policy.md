@@ -1,6 +1,8 @@
 # How To Create an App Control Supplemental Policy
 
-Base policies that have the `Enabled:Allow Supplemental Policies` [rule option](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options) can be extended with supplemental policies. Supplemental policies can be used to expand the scope of a base policy without modifying the base policy itself. This allows you to create a base policy that is shared across multiple devices and then create supplemental policies that are specific to individual devices or groups of devices.
+On a system where Application Control is enforced, it is common to have a single main base policy and multiple supplemental policies. The base policy contains the core rules that are needed to allow the system to function properly. Base policies that have the `Enabled:Allow Supplemental Policies` [rule option](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options) can be extended with supplemental policies.
+
+The supplemental policies are used to add additional rules that are specific to certain applications or scenarios. Supplemental policies can be used to expand the scope of a base policy without modifying the base policy itself. This allows you to create a base policy that is shared across multiple devices and then create supplemental policies that are specific to individual devices or groups of devices.
 
 You can have as many supplemental policies as you need, but each supplemental policy can only be associated with one base policy.
 
@@ -22,9 +24,9 @@ When it comes to signing, if the base policy is signed, then the supplemental po
 
 Assuming you've already deployed a base policy, you can create a supplemental policy by navigating to the [**Create Supplemental Policy Page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy).
 
-In the **Files and Folders section**, browse for your base policy's XML file. Enter a descriptive name for the supplemental policy that will be created and browse for files and/or folder to scan. If you select folders, they will be scanned recursively, meaning any file in the sub-folders will also be included in the scan.
+In the **Files and Folders section**, browse for your base policy's XML file. Enter a descriptive name for the supplemental policy that will be created and browse for files and/or folder to scan. If you select folders, they will be scanned recursively, meaning any file(s) in the sub-folder(s) will also be included in the scan.
 
-The default [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) is set to `File Publisher` but you can change it to another level that meets your needs.
+The default [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) is set to `File Publisher` but you can change it to another level that meets your needs. This level will create signature-based rules for signed files and hash based rules for unsigned files.
 
 <br>
 
@@ -48,7 +50,7 @@ You can customize the XML file further using different pages and features of the
 
 Packaged apps are modern, they use MSIX packages and are easy to manage and authorize in App Control policies because all of the files in a packaged app share the same signing certificate and Package Family Name.
 
-Use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create supplemental policies for packaged apps. The policy that you create will not need any changes when the apps are updated since the authorization is based on the `PackageFamilyName` aka `PFN`.
+Use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to create supplemental policies for packaged apps. The policy that you create will not need any changes when the apps are updated since the authorization is based on the `PackageFamilyName`, aka `PFN`.
 
 In the [**Create Supplemental Policy Page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy), navigate to the **Package Family Name** section.
 

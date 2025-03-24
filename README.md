@@ -1652,7 +1652,6 @@ This repository uses effective methods that make it easy to verify:
 * [![Dependabot Updates](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependabot/dependabot-updates)
 * [![Markdown Link Validator](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Markdown%20Link%20Validator.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Markdown%20Link%20Validator.yml)
 * [![Dependency review](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependency-review.yml)
-* [![OSV-Scanner](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/osv-scanner.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/osv-scanner.yml)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

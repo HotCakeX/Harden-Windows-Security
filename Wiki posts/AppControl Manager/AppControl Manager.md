@@ -184,6 +184,8 @@ The installation process for AppControl Manager is uniquely streamlined. When yo
 
 Here is the complete list of all of the URLs the AppControl Manager application connects to ***(or is mentioned in the User Interface)*** with proper justification for each of them.
 
+* **[Privacy Policy for the AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Privacy-Policy-for-the-AppControl-Manager)**
+
 <br>
 
 <div align="center">

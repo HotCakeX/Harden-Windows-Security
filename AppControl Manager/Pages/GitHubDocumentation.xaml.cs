@@ -18,7 +18,6 @@
 using System;
 using AppControlManager.Others;
 using Microsoft.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -48,8 +47,10 @@ public sealed partial class GitHubDocumentation : Page
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
-	// Event handler for Back button
-	private void BackButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for Back button
+	/// </summary>
+	private void BackButton_Click()
 	{
 		if (GitHubDocumentationWebView2.CanGoBack)
 		{
@@ -57,8 +58,10 @@ public sealed partial class GitHubDocumentation : Page
 		}
 	}
 
-	// Event handler for Forward button
-	private void ForwardButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for Forward button
+	/// </summary>
+	private void ForwardButton_Click()
 	{
 		if (GitHubDocumentationWebView2.CanGoForward)
 		{
@@ -66,14 +69,18 @@ public sealed partial class GitHubDocumentation : Page
 		}
 	}
 
-	// Event handler for Reload button
-	private void ReloadButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for Reload button
+	/// </summary>
+	private void ReloadButton_Click()
 	{
 		GitHubDocumentationWebView2.Reload();
 	}
 
-	// Event handler for Home button
-	private void HomeButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for Home button
+	/// </summary>
+	private void HomeButton_Click()
 	{
 		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction");
 	}

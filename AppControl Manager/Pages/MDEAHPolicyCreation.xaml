@@ -85,7 +85,7 @@
                     </Button.Content>
                 </Button>
 
-                <Button x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="BrowseForLogs_Click"
+                <Button x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="{x:Bind BrowseForLogs_Click}"
                         Holding="BrowseForLogs_Holding" RightTapped="BrowseForLogs_RightTapped">
 
                     <Button.Flyout>
@@ -208,7 +208,7 @@
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
 
-                <SplitButton x:Name="CreatePolicyButton" ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs" Click="CreatePolicyButton_Click">
+                <SplitButton x:Name="CreatePolicyButton" ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs" Click="{x:Bind CreatePolicyButton_Click}">
 
                     <SplitButton.Content>
                         <StackPanel Orientation="Horizontal">
@@ -261,7 +261,7 @@
                                                 <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="AddToPolicyButton_Click" />
+                                            <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind AddToPolicyButton_Click}" />
 
                                         </StackPanel>
                                     </controls:Case>
@@ -276,7 +276,7 @@
                                                     policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="BasePolicyFileButton_Click" />
+                                            <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BasePolicyFileButton_Click}" />
 
 
                                         </StackPanel>
@@ -306,19 +306,19 @@
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="SelectAll_Click">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind SelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="DeSelectAll_Click">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind DeSelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>

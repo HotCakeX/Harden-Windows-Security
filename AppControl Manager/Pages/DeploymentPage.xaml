@@ -69,11 +69,11 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button Content="Sign In" x:Name="IntuneSignInButton" Click="IntuneSignInButton_Click"/>
+                                <Button Content="Sign In" x:Name="IntuneSignInButton" Click="{x:Bind IntuneSignInButton_Click}"/>
 
-                                <Button Content="Sign Out" IsEnabled="False" x:Name="IntuneSignOutButton" Click="IntuneSignOutButton_Click"/>
+                                <Button Content="Sign Out" IsEnabled="False" x:Name="IntuneSignOutButton" Click="{x:Bind IntuneSignOutButton_Click}"/>
 
-                                <Button Content="Cancel Sign In" x:Name="IntuneCancelSignInButton" IsEnabled="False" Click="IntuneCancelSignInButton_Click"/>
+                                <Button Content="Cancel Sign In" x:Name="IntuneCancelSignInButton" IsEnabled="False" Click="{x:Bind IntuneCancelSignInButton_Click}"/>
 
                             </controls:WrapPanel>
 
@@ -86,7 +86,7 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button IsEnabled="False" x:Name="RefreshIntuneGroupsButton" Content="Refresh" Click="RefreshIntuneGroupsButton_Click" />
+                                <Button IsEnabled="False" x:Name="RefreshIntuneGroupsButton" Content="Refresh" Click="{x:Bind RefreshIntuneGroupsButton_Click}" />
 
                                 <ComboBox IsEnabled="False" x:Name="IntuneGroupsComboBox" />
 
@@ -105,8 +105,8 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForXMLPolicyFilesButton" Click="BrowseForXMLPolicyFilesButton_Click"
-                                RightTapped="BrowseForXMLPolicyFilesButton_RightTapped" Holding="BrowseForXMLPolicyFilesButton_Holding">
+                        <Button x:Name="BrowseForXMLPolicyFilesButton" Click="{x:Bind BrowseForXMLPolicyFilesButton_Click}"
+                                RightTapped="{x:Bind BrowseForXMLPolicyFilesButton_RightTapped}" Holding="BrowseForXMLPolicyFilesButton_Holding">
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -126,7 +126,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="BrowseForXMLPolicyFilesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -142,7 +142,7 @@
                         </Button>
 
                         <Button HorizontalAlignment="Center" x:Name="DeployUnsignedXMLButton"
-                        HorizontalContentAlignment="Center" Click="DeployUnsignedXMLButton_Click">
+                        HorizontalContentAlignment="Center" Click="{x:Bind DeployUnsignedXMLButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -172,7 +172,7 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="BrowseForSignedXMLPolicyFilesButton_Click"
+                        <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="{x:Bind BrowseForSignedXMLPolicyFilesButton_Click}"
                             RightTapped="BrowseForSignedXMLPolicyFilesButton_RightTapped" Holding="BrowseForSignedXMLPolicyFilesButton_Holding">
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
@@ -193,7 +193,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -209,7 +209,7 @@
                         </Button>
 
                         <Button HorizontalAlignment="Center" x:Name="DeploySignedXMLButton"
-                            HorizontalContentAlignment="Center" Click="DeploySignedXMLButton_Click">
+                            HorizontalContentAlignment="Center" Click="{x:Bind DeploySignedXMLButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -234,10 +234,10 @@
                         <controls:SettingsCard
                              x:Name="SignOnlyNoDeploySettingsCard"
                              Description="Only creates signed CIP file(s) in the user config directory without deploying them. Toggle this if you want to deploy them on another system."
-                             Header="Sign Only - No Deployment" Click="SignOnlyNoDeploySettingsCard_Click"
+                             Header="Sign Only - No Deployment" Click="{x:Bind SignOnlyNoDeploySettingsCard_Click}"
                              HeaderIcon="{ui:FontIcon Glyph=&#xF572;}" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <ToggleSwitch x:Name="SignOnlyNoDeployToggleSwitch" Toggled="SignOnlyNoDeployToggleSwitch_Toggled" />
+                            <ToggleSwitch x:Name="SignOnlyNoDeployToggleSwitch" Toggled="{x:Bind SignOnlyNoDeployToggleSwitch_Toggled}" />
 
                         </controls:SettingsCard>
 
@@ -254,7 +254,7 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForCIPBinaryFilesButton" x:Uid="FileBrowseButton" Click="BrowseForCIPBinaryFilesButton_Click"
+                        <Button x:Name="BrowseForCIPBinaryFilesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForCIPBinaryFilesButton_Click}"
                                 Holding="BrowseForCIPBinaryFilesButton_Holding" RightTapped="BrowseForCIPBinaryFilesButton_RightTapped">
 
                             <Button.Flyout>
@@ -262,7 +262,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="BrowseForCIPBinaryFilesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock Text="View the CIP files you selected." TextWrapping="WrapWholeWords" />
 
@@ -278,7 +278,7 @@
                         </Button>
 
                         <Button HorizontalAlignment="Center" x:Name="DeployCIPButton"
-                            HorizontalContentAlignment="Center" Click="DeployCIPButton_Click">
+                            HorizontalContentAlignment="Center" Click="{x:Bind DeployCIPButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
 
@@ -310,7 +310,7 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForXMLPolicesButton" x:Uid="FileBrowseButton" Click="BrowseForXMLPolicesButton_Click"
+                        <Button x:Name="BrowseForXMLPolicesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForXMLPolicesButton_Click}"
                             Holding="BrowseForXMLPolicesButton_Holding" RightTapped="BrowseForXMLPolicesButton_RightTapped">
 
                             <Button.Flyout>
@@ -318,7 +318,7 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="BrowseForXMLPolicesButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForXMLPolicesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
 
@@ -334,7 +334,7 @@
                         </Button>
 
                         <Button HorizontalAlignment="Center" x:Name="ConvertXMLToCIPButton"
-                                HorizontalContentAlignment="Center" Click="ConvertXMLToCIPButton_Click">
+                                HorizontalContentAlignment="Center" Click="{x:Bind ConvertXMLToCIPButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
 

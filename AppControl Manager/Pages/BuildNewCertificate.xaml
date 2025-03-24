@@ -33,7 +33,7 @@
             </controls:WrapPanel>
 
             <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="BuildCertificateButton"
-                    HorizontalContentAlignment="Center" Margin="15" Click="BuildCertificateButton_Click"
+                    HorizontalContentAlignment="Center" Margin="15" Click="{x:Bind BuildCertificateButton_Click}"
                     ToolTipService.ToolTip="Build the certificate based on the configurations displayed below">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
@@ -55,7 +55,7 @@
                 Severity="Informational"
                 Grid.Row="2">
                 <InfoBar.ActionButton>
-                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" Click="CopyInfoBarToClipboardButton_Click" Content="Copy ThumbPrint To Clipboard" />
+                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" Click="{x:Bind CopyInfoBarToClipboardButton_Click}" Content="Copy ThumbPrint To Clipboard" />
                 </InfoBar.ActionButton>
 
             </InfoBar>
@@ -68,7 +68,7 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Name="KeySizeSettingsCard" Click="KeySizeSettingsCard_Click"
+                <controls:SettingsCard x:Name="KeySizeSettingsCard" Click="{x:Bind KeySizeSettingsCard_Click}"
                 Description="The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate."
                 Header="Key Size" HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
 
@@ -83,7 +83,7 @@
                 Header="Common Name"
                 HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
 
-                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name"  TextChanged="CommonNameTextBox_TextChanged" MinWidth="200"/>
+                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name"  TextChanged="{x:Bind CheckFieldContents}" MinWidth="200"/>
 
                 </controls:SettingsCard>
 
@@ -104,7 +104,7 @@
 
                     <StackPanel Orientation="Horizontal">
 
-                        <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="PFXEncryptionPasswordBox_PasswordChanged"
+                        <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="{x:Bind CheckFieldContents}"
                         MinWidth="250" PasswordChar="#" PasswordRevealMode="Peek" PlaceholderText="Type a password..." />
 
                     </StackPanel>

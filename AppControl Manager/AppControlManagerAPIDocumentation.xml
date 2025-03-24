@@ -1243,21 +1243,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.App.GetXamlType(System.Type)">
-            <summary>
-            GetXamlType(Type)
-            </summary>
-        </member>
-        <member name="M:AppControlManager.App.GetXamlType(System.String)">
-            <summary>
-            GetXamlType(String)
-            </summary>
-        </member>
-        <member name="M:AppControlManager.App.GetXmlnsDefinitions">
-            <summary>
-            GetXmlnsDefinitions()
-            </summary>
-        </member>
         <member name="M:AppControlManager.AppSettings.AppSettingsCls.SaveSetting(AppControlManager.AppSettings.AppSettingsCls.SettingKeys,System.Object)">
             <summary>
             Save setting to local storage with a specific key and value
@@ -1301,16 +1286,6 @@
         <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.CustomUIElements.MenuFlyoutV2">
@@ -1436,16 +1411,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.CertificateCNAutoSuggestBox_TextChanged(Microsoft.UI.Xaml.Controls.AutoSuggestBox,Microsoft.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs)">
             <summary>
             Event handler for AutoSuggestBox
@@ -1533,16 +1498,6 @@
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="M:AppControlManager.IntelGathering.CatRootScanner.Scan(System.Collections.Generic.List{System.String},System.UInt16)">
@@ -2265,16 +2220,6 @@
         <member name="M:AppControlManager.MainWindow.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.MainWindow.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.MainWindow.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="M:AppControlManager.Main.AppControlSimulation.Invoke(System.Collections.Generic.List{System.String},System.String,System.Boolean)">
@@ -3555,16 +3500,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewApps.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewApps.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid">
             <summary>
             Represents a data grid for displaying event logs with functionalities for copying, sorting, filtering, and selecting
@@ -3641,16 +3576,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid">
             <summary>
             Represents a page for managing local files with functionalities like copying, selecting, and deleting
@@ -3718,16 +3643,6 @@
         <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsStart">
@@ -3876,16 +3791,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.BuildNewCertificate">
             <summary>
             BuildNewCertificate is a page for generating a new certificate. It manages user input, validates fields, and handles
@@ -3898,38 +3803,24 @@
             contents.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.KeySizeSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.BuildNewCertificate.KeySizeSettingsCard_Click">
             <summary>
             Handle the open/close style of the ComboBox via SettingsCard touch/click event
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.BuildNewCertificate.CheckFieldContents">
             <summary>
             Method to ensure all the required fields are filled with content before the build button will be enabled
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.BuildCertificateButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.BuildNewCertificate.BuildCertificateButton_Click">
             <summary>
             Event handler for the main build button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.BuildNewCertificate.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ConfigurePolicyRuleOptions">
@@ -4029,16 +3920,6 @@
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.CreateDenyPolicy">
@@ -4206,16 +4087,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults">
             <summary>
             Represents a page for creating deny policy scan results, managing navigation state and data context. Handles user
@@ -4283,16 +4154,6 @@
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.CreatePolicy">
@@ -4364,16 +4225,6 @@
         <member name="M:AppControlManager.Pages.CreatePolicy.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.CreateSupplementalPolicy">
@@ -4655,16 +4506,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults">
             <summary>
             Represents a page for creating supplemental policy files and folders scan results, managing data display and user
@@ -4734,16 +4575,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.DeploymentPage">
             <summary>
             DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
@@ -4776,124 +4607,109 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.DeployUnsignedXMLButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.DeployUnsignedXMLButton_Click">
             <summary>
             Deploy unsigned XML files button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.DeploySignedXMLButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.DeploySignedXMLButton_Click">
             <summary>
             Deploy Signed XML files button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.DeployCIPButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.DeployCIPButton_Click">
             <summary>
             Deploy CIP files button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicyFilesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicyFilesButton_Click">
             <summary>
             Event handler for browse button - Unsigned XML files
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForCIPBinaryFilesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForCIPBinaryFilesButton_Click">
             <summary>
             Event handler for Browser button - CIP files
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click">
             <summary>
             Clear button for the CIP files deployment button flyout
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click">
             <summary>
             Clear button for the unsigned files deployment button flyout
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click">
             <summary>
             Clear button for the Signed files deployment button flyout
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForSignedXMLPolicyFilesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForSignedXMLPolicyFilesButton_Click">
             <summary>
             Event handler for browse button - Signed XML files
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneSignInButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneSignInButton_Click">
             <summary>
             Event handler for the SignIn button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneCancelSignInButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneSignOutButton_Click">
+            <summary>
+            Signs out of the tenant
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.RefreshIntuneGroupsButton_Click">
+            <summary>
+            Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
+            the ComboBox with group names.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.DeployToIntunePrivate(System.String,System.String,System.String)">
+            <summary>
+            Deploys a specified file to Intune using a given policy ID and optionally an XML file for additional settings.
+            </summary>
+            <param name="file">Specifies the file to be uploaded to Intune.</param>
+            <param name="policyID">Identifies the policy under which the file will be deployed.</param>
+            <param name="xmlFile">Provides an optional XML file that may contain additional configuration settings.</param>
+            <returns>This method does not return a value.</returns>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneCancelSignInButton_Click">
             <summary>
             Event handler for the Cancel Sign In button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicesButton_Click">
             <summary>
             Event handler for the button to convert XML files to CIP binary files
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicesButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.ConvertXMLToCIPButton_Click">
+            <summary>
+            Handles the click event for converting XML files to CIP format.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicesButton_Flyout_Clear_Click">
             <summary>
             Event handler to clear the list of XML files that are only converted to CIP files
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.SignOnlyNoDeploySettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.SignOnlyNoDeploySettingsCard_Click">
             <summary>
             Event handler for the settings card to toggle the button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.SignOnlyNoDeployToggleSwitch_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.SignOnlyNoDeployToggleSwitch_Toggled">
             <summary>
             Event handler for the toggle button that determines whether policies should be signed + deployed or signed only
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.EventLogsPolicyCreation">
@@ -5047,16 +4863,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.GetCIHashes">
             <summary>
             Handles the file selection and computes various cryptographic hashes for the selected file. Displays the results in
@@ -5068,26 +4874,14 @@
             Initializes the component and sets the navigation cache mode to required for the GetCIHashes class.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.GetCIHashes.PickFile_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.GetCIHashes.PickFile_Click">
             <summary>
             Event handler for the browse button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.GetCIHashes.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GetCIHashes.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GetCIHashes.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.GetSecurePolicySettings">
@@ -5102,19 +4896,14 @@
             during navigation.
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.GetSecurePolicySettings.InvokeButton_Click">
+            <summary>
+            Event handler for the Fetch button
+            </summary>
+        </member>
         <member name="M:AppControlManager.Pages.GetSecurePolicySettings.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GetSecurePolicySettings.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GetSecurePolicySettings.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.GitHubDocumentation">
@@ -5129,19 +4918,29 @@
             events. Maintains page state during navigation.
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.GitHubDocumentation.BackButton_Click">
+            <summary>
+            Event handler for Back button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GitHubDocumentation.ForwardButton_Click">
+            <summary>
+            Event handler for Forward button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GitHubDocumentation.ReloadButton_Click">
+            <summary>
+            Event handler for Reload button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GitHubDocumentation.HomeButton_Click">
+            <summary>
+            Event handler for Home button
+            </summary>
+        </member>
         <member name="M:AppControlManager.Pages.GitHubDocumentation.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GitHubDocumentation.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GitHubDocumentation.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.Logs">
@@ -5174,11 +4973,6 @@
             Only files matching the name pattern are included.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.Logs.RefreshButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Refreshes the list of log files.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.Logs.LogFileComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
             Loads the selected log file’s content.
@@ -5191,12 +4985,6 @@
             The file content is then split into lines and the ItemsRepeater updated.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.Logs.SearchTextBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Called when the search text changes.
-            Filters the log lines based on the search term.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.Logs.UpdateLogDisplay">
             <summary>
             Updates the ItemsRepeater with the current log lines.
@@ -5206,16 +4994,6 @@
         <member name="M:AppControlManager.Pages.Logs.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Logs.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Logs.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.LogLine">
@@ -5281,33 +5059,25 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.BrowseForLogs_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.BrowseForLogs_Click">
             <summary>
             Event handler for the select Code Integrity EVTX file path button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.ClearDataButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.ClearDataButton_Click">
             <summary>
             Event handler for the Clear Data button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.SelectAll_Click">
             <summary>
             Selects all of the displayed rows on the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.DeSelectAll_Click">
             <summary>
             De-selects all of the displayed rows on the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.ListViewFlyoutMenuDelete_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5321,19 +5091,15 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.AddToPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.AddToPolicyButton_Click">
             <summary>
             The button that browses for XML file the logs will be added to
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.BasePolicyFileButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.BasePolicyFileButton_Click">
             <summary>
             The button to browse for the XML file the supplemental policy that will be created will belong to
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.BaseGUIDSubmitButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5343,12 +5109,10 @@
             <param name="e"></param>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.CreatePolicyButton_Click(Microsoft.UI.Xaml.Controls.SplitButton,Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.CreatePolicyButton_Click">
             <summary>
             When the main button responsible for creating policy is pressed
             </summary>
-            <param name="sender"></param>
-            <param name="args"></param>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.ScanLevelComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
@@ -5412,16 +5176,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.MergePolicies">
             <summary>
             Represents a page for managing merge policies with a view model for data binding. It handles user interactions for
@@ -5439,16 +5193,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.MergePolicies.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MergePolicies.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.MicrosoftDocumentation">
             <summary>
             Represents a page for Microsoft documentation with navigation controls. It manages WebView2 state and handles back,
@@ -5464,16 +5208,6 @@
         <member name="M:AppControlManager.Pages.MicrosoftDocumentation.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MicrosoftDocumentation.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MicrosoftDocumentation.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.PolicyEditor">
@@ -5505,16 +5239,6 @@
         <member name="M:AppControlManager.Pages.PolicyEditor.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.PolicyEditor.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.PolicyEditor.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.Settings">
@@ -5567,16 +5291,6 @@
         <member name="M:AppControlManager.Pages.Settings.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.Simulation">
@@ -5635,16 +5349,6 @@
         <member name="M:AppControlManager.Pages.Simulation.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Simulation.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Simulation.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.StrictKernelPolicyScanResults">
@@ -5730,16 +5434,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.CodeIntegrityInfo">
             <summary>
             Initializes the CodeIntegrityInfo class and sets the navigation cache mode. Retrieves and displays code integrity
@@ -5770,16 +5464,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.SystemInformation">
             <summary>
             SystemInformation page
@@ -5794,16 +5478,6 @@
         <member name="M:AppControlManager.Pages.SystemInformation.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.SystemInformation.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.SystemInformation.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ViewCurrentPolicies">
@@ -5828,16 +5502,6 @@
         <member name="M:AppControlManager.Pages.ViewCurrentPolicies.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewCurrentPolicies.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewCurrentPolicies.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.UpdatePage">
@@ -5928,16 +5592,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.UpdatePageCustomMSIXPath">
             <summary>
             Handles the selection and confirmation of a custom MSIX file path for updates. Updates UI elements based on user
@@ -5960,16 +5614,6 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:AppControlManager.Pages.ValidatePolicy">
             <summary>
             Validates an XML policy file selected by the user and displays the result in an info bar. It handles errors and
@@ -5984,16 +5628,6 @@
         <member name="M:AppControlManager.Pages.ValidatePolicy.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ValidatePolicy.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ValidatePolicy.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ViewFileCertificates">
@@ -6087,16 +5721,6 @@
         <member name="M:AppControlManager.Pages.ViewFileCertificates.InitializeComponent">
             <summary>
             InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.PolicyEditor.FileBasedRulesForListView">
@@ -7440,6 +7064,108 @@
         <member name="F:AppControlManager.SiPolicy.PolicyType.AppIDTaggingPolicy">
             <remarks/>
         </member>
+        <member name="T:AppControlManager.Taskbar.ITaskbarList3">
+            <summary>
+            Defining the COM interface, since we're manually wrapping we don't need [GeneratedComInterface]
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Taskbar.ITaskbarList3.HrInit">
+            <summary>
+            Initializes the taskbar list.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Taskbar.ITaskbarList3.SetProgressValue(System.IntPtr,System.UInt64,System.UInt64)">
+            <summary>
+            Sets the progress value on the taskbar for a specified window handle.
+            </summary>
+            <param name="hwnd">the handle (HWND) to the window whose taskbar icon should display progress.</param>
+            <param name="completed">the current progress value.</param>
+            <param name="total">the total or maximum progress value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:AppControlManager.Taskbar.TaskbarListWrapper">
+            <summary>
+            A manual COM wrapper for ITaskbarList3.
+            This class wraps the native COM pointer and invokes methods via the COM vtable.
+            </summary>
+            <param name="pCom"></param>
+        </member>
+        <member name="M:AppControlManager.Taskbar.TaskbarListWrapper.#ctor(System.Void*)">
+            <summary>
+            A manual COM wrapper for ITaskbarList3.
+            This class wraps the native COM pointer and invokes methods via the COM vtable.
+            </summary>
+            <param name="pCom"></param>
+        </member>
+        <member name="F:AppControlManager.Taskbar.TaskbarListWrapper._pCom">
+            <summary>
+            Pointer to the native COM object, allowing interaction with COM components. It is used for managing native
+            resources.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Taskbar.TaskbarListWrapper._vtbl">
+            <summary>
+            Holds a pointer to the COM object's virtual function table (vtable). This enables calling native methods associated
+            with the COM object.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Taskbar.TaskbarListWrapper.AppControlManager#Taskbar#ITaskbarList3#HrInit">
+            <summary>
+            Initializes the taskbar list by calling the HrInit method from the vtable (located at vtable slot index 3).
+            </summary>
+            <returns>Returns an integer indicating the success or failure of the initialization.</returns>
+        </member>
+        <member name="M:AppControlManager.Taskbar.TaskbarListWrapper.AppControlManager#Taskbar#ITaskbarList3#SetProgressValue(System.IntPtr,System.UInt64,System.UInt64)">
+            <summary>
+            Calls the SetProgressValue method (located at vtable slot index 9) to update the taskbar progress.
+            </summary>
+            <param name="hwnd">Specifies the handle to the window for which the progress is being updated.</param>
+            <param name="completed">Indicates the amount of work that has been completed.</param>
+            <param name="total">Represents the total amount of work to be done.</param>
+            <returns>Returns an integer value indicating the result of the operation.</returns>
+        </member>
+        <member name="M:AppControlManager.Taskbar.TaskbarListWrapper.System#IDisposable#Dispose">
+            <summary>
+            Releases the native COM pointer by calling Release on the vtable.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Taskbar.TaskBarProgress">
+            <summary>
+            A static class that provides methods to create and update taskbar progress.
+            This class encapsulates the process of creating the COM object and updating its progress value.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Taskbar.TaskBarProgress.CLSCTX_INPROC_SERVER">
+            <summary>
+            Represents the flag for an in-process server in COM (Component Object Model) programming. It indicates that the
+            server runs in the same process as the client.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Taskbar.TaskBarProgress.CLSID_TaskbarList">
+            <summary>
+            Represents the CLSID for the TaskbarList COM object, used for interacting with the Windows taskbar.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Taskbar.TaskBarProgress._updateLock">
+            <summary>
+            A static object used to synchronize access to the UpdateTaskbarProgress method.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Taskbar.TaskBarProgress.CreateTaskbarList">
+            <summary>
+            Creates an instance of ITaskbarList3 wrapped in our manual COM wrapper.
+            </summary>
+            <returns>an object that implements ITaskbarList3, which lets us set the taskbar progress.</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.Taskbar.TaskBarProgress.UpdateTaskbarProgress(System.IntPtr,System.UInt64,System.UInt64)">
+            <summary>
+            Updates the taskbar progress for a specified window using completion and total values.
+            </summary>
+            <param name="hwnd">The handle of the window for which the taskbar progress is being updated.</param>
+            <param name="completed">Represents the amount of work completed towards the total task.</param>
+            <param name="total">Indicates the total amount of work to be completed.</param>
+        </member>
         <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._EventLogsMenuItemState">
             <summary>
             Holds the state of the Event Logs menu item, indicating whether it is enabled or disabled.
@@ -8410,26 +8136,6 @@
         <member name="T:AppControlManager.Program">
             <summary>
             Program class
-            </summary>
-        </member>
-        <member name="T:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider">
-            <summary>
-            Main class for providing metadata for the app or library
-            </summary>
-        </member>
-        <member name="M:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
-            <summary>
-            GetXamlType(Type)
-            </summary>
-        </member>
-        <member name="M:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
-            <summary>
-            GetXamlType(String)
-            </summary>
-        </member>
-        <member name="M:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
-            <summary>
-            GetXmlnsDefinitions()
             </summary>
         </member>
         <member name="T:Windows.Win32.PInvoke">

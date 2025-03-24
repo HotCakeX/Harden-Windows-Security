@@ -1,4 +1,4 @@
-﻿CoCreateInstance
+CoCreateInstance
 SHCreateItemFromParsingName
 IFileOpenDialog
 FileOpenDialog

@@ -33,7 +33,7 @@
             <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="1">
 
                 <!-- Button to trigger file picker -->
-                <Button x:Name="PickFileButton" Click="PickFile_Click"
+                <Button x:Name="PickFileButton" Click="{x:Bind PickFile_Click}"
             HorizontalAlignment="Center"
             x:Uid="FileBrowseButton"
             Style="{StaticResource AccentButtonStyle}"/>

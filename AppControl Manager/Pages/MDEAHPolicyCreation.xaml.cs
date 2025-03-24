@@ -321,9 +321,7 @@ DeviceEvents
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BrowseForLogs_Click(object sender, RoutedEventArgs e)
+	private void BrowseForLogs_Click()
 	{
 		string filter = "CSV file|*.csv";
 
@@ -346,9 +344,7 @@ DeviceEvents
 	/// <summary>
 	/// Event handler for the Clear Data button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
+	private void ClearDataButton_Click()
 	{
 		ViewModel.FileIdentities.Clear();
 		ViewModel.AllFileIdentities.Clear();
@@ -360,9 +356,7 @@ DeviceEvents
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
+	private void SelectAll_Click()
 	{
 		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FileIdentities);
 	}
@@ -371,9 +365,7 @@ DeviceEvents
 	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeSelectAll_Click(object sender, RoutedEventArgs e)
+	private void DeSelectAll_Click()
 	{
 		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
 	}
@@ -416,9 +408,7 @@ DeviceEvents
 	/// <summary>
 	/// The button that browses for XML file the logs will be added to
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
+	private void AddToPolicyButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -434,9 +424,7 @@ DeviceEvents
 	/// <summary>
 	/// The button to browse for the XML file the supplemental policy that will be created will belong to
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
+	private void BasePolicyFileButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -470,10 +458,10 @@ DeviceEvents
 	/// <summary>
 	/// When the main button responsible for creating policy is pressed
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private async void CreatePolicyButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
+	private async void CreatePolicyButton_Click()
 	{
+
+		bool Error = false;
 
 		try
 		{
@@ -497,6 +485,12 @@ DeviceEvents
 			{
 				throw new InvalidOperationException("You must select an option from the policy creation list");
 			}
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = $"Creating Supplemental policy for {ViewModel.FileIdentities.Count} files.";
+			MainInfoBar.Severity = InfoBarSeverity.Informational;
+			MainInfoBar.IsClosable = false;
 
 			// Create a policy name if it wasn't provided
 			DateTime now = DateTime.Now;
@@ -674,6 +668,12 @@ DeviceEvents
 				}
 			});
 		}
+		catch
+		{
+			Error = true;
+
+			throw;
+		}
 		finally
 		{
 			// Enable the policy creator button again
@@ -685,6 +685,21 @@ DeviceEvents
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
+
+			if (Error)
+			{
+				MainInfoBar.Message = "There was an error creating the Supplemental policy.";
+				MainInfoBar.Severity = InfoBarSeverity.Error;
+			}
+			else
+			{
+				MainInfoBar.Message = "Successfully created the Supplemental policy.";
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+			}
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 

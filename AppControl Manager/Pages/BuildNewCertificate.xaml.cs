@@ -51,9 +51,7 @@ public sealed partial class BuildNewCertificate : Page
 	/// <summary>
 	/// Handle the open/close style of the ComboBox via SettingsCard touch/click event
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void KeySizeSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void KeySizeSettingsCard_Click()
 	{
 		KeySizeComboBox.IsDropDownOpen = !KeySizeComboBox.IsDropDownOpen;
 	}
@@ -76,9 +74,7 @@ public sealed partial class BuildNewCertificate : Page
 	/// <summary>
 	/// Event handler for the main build button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void BuildCertificateButton_Click(object sender, RoutedEventArgs e)
+	private async void BuildCertificateButton_Click()
 	{
 		// Track whether errors occurred
 		bool ErrorsOccurred = false;
@@ -158,17 +154,8 @@ public sealed partial class BuildNewCertificate : Page
 		}
 	}
 
-	private void CommonNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		CheckFieldContents();
-	}
 
-	private void PFXEncryptionPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-	{
-		CheckFieldContents();
-	}
-
-	private void CopyInfoBarToClipboardButton_Click(object sender, RoutedEventArgs e)
+	private void CopyInfoBarToClipboardButton_Click()
 	{
 		// Create a new data package
 		DataPackage dataPackage = new();

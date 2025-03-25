@@ -23,7 +23,7 @@
 
             <Button x:Name="RetrieveCodeIntegrityInfo"
                 Content="Retrieve Code Integrity Info"
-                Click="RetrieveCodeIntegrityInfo_Click"
+                Click="{x:Bind RetrieveCodeIntegrityInfo_Click}"
                 ToolTipService.ToolTip="Retrieve the latest effective Code Integrity information from the current system"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"

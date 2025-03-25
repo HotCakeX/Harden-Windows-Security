@@ -25,7 +25,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.AppSettings;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
@@ -43,7 +42,7 @@ namespace AppControlManager.Pages;
 /// UpdatePage manages the update process for the AppControl Manager, including checking for updates, downloading
 /// packages, and signing them.
 /// </summary>
-public sealed partial class UpdatePage : Page
+internal sealed partial class UpdatePage : Page
 {
 	// Pattern for finding ASR rules that belong to the AppControl Manager
 	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
@@ -68,7 +67,7 @@ public sealed partial class UpdatePage : Page
 	/// <summary>
 	/// Initializes a new instance of the UpdatePage class. Caches the page for improved performance during navigation.
 	/// </summary>
-	public UpdatePage()
+	internal UpdatePage()
 	{
 		this.InitializeComponent();
 
@@ -84,8 +83,10 @@ public sealed partial class UpdatePage : Page
 	/// </summary>
 	public static UpdatePage Instance => _instance ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("UpdateNotInitialized"));
 
-	// Event handler for check for update button
-	private async void CheckForUpdateButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for check for update button
+	/// </summary>
+	private async void CheckForUpdateButton_Click()
 	{
 
 		try
@@ -469,11 +470,9 @@ public sealed partial class UpdatePage : Page
 	/// <summary>
 	/// Event handler for the Auto Update Check Toggle Button to modify the app settings
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AutoUpdateCheckToggle_Toggled(object sender, RoutedEventArgs e)
+	private void AutoUpdateCheckToggle_Toggled()
 	{
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
+		App.Settings.AutoCheckForUpdateAtStartup = AutoUpdateCheckToggle.IsOn;
 	}
 
 	/// <summary>
@@ -488,7 +487,7 @@ public sealed partial class UpdatePage : Page
 		base.OnNavigatedTo(e);
 
 		// Set the toggle for Auto Update Check based on app settings
-		AutoUpdateCheckToggle.IsOn = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true;
+		AutoUpdateCheckToggle.IsOn = App.Settings.AutoCheckForUpdateAtStartup;
 
 		// Grab the latest text for the CheckForUpdateButton button
 		CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
@@ -507,34 +506,33 @@ public sealed partial class UpdatePage : Page
 	/// <summary>
 	/// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AutoUpdateCheckToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void AutoUpdateCheckToggleSettingsCard_Click()
 	{
 		AutoUpdateCheckToggle.IsOn = !AutoUpdateCheckToggle.IsOn;
 
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup, AutoUpdateCheckToggle.IsOn);
+		App.Settings.AutoCheckForUpdateAtStartup = AutoUpdateCheckToggle.IsOn;
 	}
 
 	/// <summary>
 	/// Event handler for the Settings card click that will act as click/tap on the toggle switch itself
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void HardenedUpdateProcedureToggleSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void HardenedUpdateProcedureToggleSettingsCard_Click()
 	{
 		useHardenedUpdateProcedure = HardenedUpdateProcedureToggle.IsOn;
 
 		HardenedUpdateProcedureToggle.IsOn = !HardenedUpdateProcedureToggle.IsOn;
 	}
 
+#pragma warning disable CA1822
+
 	/// <summary>
 	/// Navigate to the extra sub-page
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CheckForUpdate_Click(object sender, RoutedEventArgs e)
+	private void CheckForUpdate_Click()
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(UpdatePageCustomMSIXPath), null);
 	}
+
+#pragma warning restore CA1822
+
 }

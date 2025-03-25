@@ -24,7 +24,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using static AppControlManager.AppSettings.AppSettingsCls;
 
 namespace AppControlManager.Pages;
 
@@ -32,7 +31,7 @@ namespace AppControlManager.Pages;
 /// The Settings class manages user configurations and UI elements for a settings page. It initializes settings, handles
 /// events, and updates the UI.
 /// </summary>
-public sealed partial class Settings : Page
+internal sealed partial class Settings : Page
 {
 
 #pragma warning disable CA1822
@@ -44,7 +43,7 @@ public sealed partial class Settings : Page
 	/// Initializes the settings page, loading user configurations into UI elements and setting up event handlers for user
 	/// interactions.
 	/// </summary>
-	public Settings()
+	internal Settings()
 	{
 		this.InitializeComponent();
 
@@ -56,15 +55,17 @@ public sealed partial class Settings : Page
 
 		#region Load the user configurations in the UI elements
 
-		NavigationViewBackgroundToggle.IsOn = GetSetting<bool>(SettingKeys.NavViewBackground);
+		NavigationViewBackgroundToggle.IsOn = App.Settings.NavViewBackground;
 
-		SoundToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.SoundSetting);
+		SoundToggleSwitch.IsOn = App.Settings.SoundSetting;
 
-		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.ListViewsVerticalCentering);
+		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = App.Settings.ListViewsVerticalCentering;
 
-		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = GetSetting<bool>(SettingKeys.CacheSecurityCatalogsScanResults);
+		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = App.Settings.CacheSecurityCatalogsScanResults;
 
-		ThemeComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.AppTheme)) switch
+		PromptForElevationToggleSwitch.IsOn = App.Settings.PromptForElevationOnStartup;
+
+		ThemeComboBox.SelectedIndex = (App.Settings.AppTheme) switch
 		{
 			"Use System Setting" => 0,
 			"Dark" => 1,
@@ -73,7 +74,7 @@ public sealed partial class Settings : Page
 		};
 
 
-		IconsStyleComboBox.SelectedIndex = (GetSetting<string>(SettingKeys.IconsStyle)) switch
+		IconsStyleComboBox.SelectedIndex = (App.Settings.IconsStyle) switch
 		{
 			"Animated" => 0,
 			"Windows Accent" => 1,
@@ -95,6 +96,7 @@ public sealed partial class Settings : Page
 		IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
 		ListViewsCenterVerticallyUponSelectionToggleSwitch.Toggled += ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled;
 		CacheSecurityCatalogsScanResultsToggleSwitch.Toggled += CacheSecurityCatalogsScanResultsToggleSwitch_Toggled;
+		PromptForElevationToggleSwitch.Toggled += PromptForElevationToggleSwitch_Toggled;
 	}
 
 
@@ -113,7 +115,7 @@ public sealed partial class Settings : Page
 
 		ViewModelMainWindow.OnIconsStylesChanged(selectedIconsStyle);
 
-		SaveSetting(SettingKeys.IconsStyle, selectedIconsStyle);
+		App.Settings.IconsStyle = selectedIconsStyle;
 	}
 
 
@@ -155,7 +157,7 @@ public sealed partial class Settings : Page
 		// Raise the global BackgroundChanged event
 		AppThemeManager.OnAppThemeChanged(selectedTheme);
 
-		SaveSetting(SettingKeys.AppTheme, selectedTheme);
+		App.Settings.AppTheme = selectedTheme;
 	}
 
 
@@ -175,7 +177,7 @@ public sealed partial class Settings : Page
 		// Notify NavigationBackgroundManager when the toggle switch is changed
 		NavigationBackgroundManager.OnNavigationBackgroundChanged(isBackgroundOn);
 
-		SaveSetting(SettingKeys.NavViewBackground, isBackgroundOn);
+		App.Settings.NavViewBackground = isBackgroundOn;
 	}
 
 
@@ -205,7 +207,7 @@ public sealed partial class Settings : Page
 		}
 
 		// Save the setting to the local app settings
-		SaveSetting(SettingKeys.SoundSetting, isSoundOn);
+		App.Settings.SoundSetting = isSoundOn;
 	}
 
 
@@ -335,7 +337,7 @@ public sealed partial class Settings : Page
 		bool IsOn = toggleSwitch.IsOn;
 
 		// Save the setting to the local app settings
-		SaveSetting(SettingKeys.ListViewsVerticalCentering, IsOn);
+		App.Settings.ListViewsVerticalCentering = IsOn;
 	}
 
 
@@ -348,7 +350,20 @@ public sealed partial class Settings : Page
 		bool IsOn = toggleSwitch.IsOn;
 
 		// Save the setting to the local app settings
-		SaveSetting(SettingKeys.CacheSecurityCatalogsScanResults, IsOn);
+		App.Settings.CacheSecurityCatalogsScanResults = IsOn;
+	}
+
+
+	private void PromptForElevationToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		// Get the ToggleSwitch that triggered the event
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
+
+		// Get the state of the toggle switch (on or off)
+		bool IsOn = toggleSwitch.IsOn;
+
+		// Save the setting to the local app settings
+		App.Settings.PromptForElevationOnStartup = IsOn;
 	}
 
 
@@ -397,6 +412,12 @@ public sealed partial class Settings : Page
 	{
 		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = !CacheSecurityCatalogsScanResultsToggleSwitch.IsOn;
 		CacheSecurityCatalogsScanResultsToggleSwitch_Toggled(CacheSecurityCatalogsScanResultsToggleSwitch, new RoutedEventArgs());
+	}
+
+	private void PromptForElevationSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		PromptForElevationToggleSwitch.IsOn = !PromptForElevationToggleSwitch.IsOn;
+		PromptForElevationToggleSwitch_Toggled(PromptForElevationToggleSwitch, new RoutedEventArgs());
 	}
 
 	#endregion

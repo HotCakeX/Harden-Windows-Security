@@ -38,7 +38,7 @@ namespace AppControlManager.Pages;
 /// Handles the creation and management of event logs policies, including scanning logs, filtering, and clipboard
 /// operations.
 /// </summary>
-public sealed partial class EventLogsPolicyCreation : Page
+internal sealed partial class EventLogsPolicyCreation : Page
 {
 
 #pragma warning disable CA1822
@@ -49,7 +49,7 @@ public sealed partial class EventLogsPolicyCreation : Page
 	/// Initializes the EventLogsPolicyCreation component, sets navigation cache mode, and binds the DataContext to the
 	/// ViewModel. Also adds a DateChanged event handler.
 	/// </summary>
-	public EventLogsPolicyCreation()
+	internal EventLogsPolicyCreation()
 	{
 		this.InitializeComponent();
 

@@ -222,7 +222,8 @@
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}">
+                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}"
+                                    Visibility="{x:Bind ViewModel.UpdatePageNavItemVisibility}">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
                                Style="{ThemeResource AttentionIconInfoBadgeStyle}">

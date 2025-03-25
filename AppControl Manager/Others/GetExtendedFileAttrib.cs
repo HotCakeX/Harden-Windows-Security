@@ -25,9 +25,11 @@ namespace AppControlManager.Others;
 /// Represents extended file information, including properties like original file name, internal name, product name, and
 /// version.
 /// </summary>
-public sealed partial class ExFileInfo
+internal static partial class GetExtendedFileAttrib
 {
-	// Constants used for encoding fallback and error handling
+	/// <summary>
+	/// Constants used for encoding fallback and error handling
+	/// </summary>
 	private const string UnicodeFallbackCode = "04B0";
 	private const string Cp1252FallbackCode = "04E4";
 
@@ -35,41 +37,12 @@ public sealed partial class ExFileInfo
 	/// Constant representing the neutral file version, set to 2. Used for identifying a specific version in file
 	/// operations.
 	/// </summary>
-	public const int FILE_VER_GET_NEUTRAL = 2;
+	private const int FILE_VER_GET_NEUTRAL = 2;
 
 	/// <summary>
 	/// Represents an error code indicating that a specified resource type could not be found. The value is -2147023083.
 	/// </summary>
-	public const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
-
-	// Properties to hold file information
-
-	/// <summary>
-	/// Holds the original name of the file. It can be null if no name is provided.
-	/// </summary>
-	public string? OriginalFileName { get; set; }
-
-	/// <summary>
-	/// Represents the internal name of an entity, which can be null. It is a string property that can be accessed and
-	/// modified.
-	/// </summary>
-	public string? InternalName { get; set; }
-
-	/// <summary>
-	/// Represents the name of a product. It can be null, indicating that the product name is not specified.
-	/// </summary>
-	public string? ProductName { get; set; }
-
-	/// <summary>
-	/// Represents the version of an object, allowing for nullable values. It can be used to track or specify the
-	/// versioning of data.
-	/// </summary>
-	public Version? Version { get; set; }
-
-	/// <summary>
-	/// Represents an optional description of a file. It can hold a string value or be null.
-	/// </summary>
-	public string? FileDescription { get; set; }
+	private const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
 
 	// Importing external functions from Version.dll to work with file version info
 	// https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
@@ -89,31 +62,32 @@ public sealed partial class ExFileInfo
 	[return: MarshalAs(UnmanagedType.Bool)]
 	private static partial bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, [Out] byte[] data);
 
-	// Private constructor to prevent direct instantiation
-	private ExFileInfo() { }
-
 	/// <summary>
 	/// Retrieves extended file information, including version, original file name, internal name, file description, and
 	/// product name.
 	/// </summary>
 	/// <param name="filePath">Specifies the path to the file for which extended information is being retrieved.</param>
 	/// <returns>Returns an object containing the extended file information, with properties set to null in case of an error.</returns>
-	public static ExFileInfo GetExtendedFileInfo(string filePath)
+	internal static ExFileInfo Get(string filePath)
 	{
-		ExFileInfo ExFileInfo = new();
+		// Obj to return with everything set to null when there is an error/problem
+		ExFileInfo BadCaseReturnVal = new(null, null, null, null, null);
 
 		// Get the size of the version information block
 		int versionInfoSize = GetFileVersionInfoSizeEx(FILE_VER_GET_NEUTRAL, filePath, out int handle);
 
 		if (versionInfoSize == 0)
 		{
-			return ExFileInfo;
+			return BadCaseReturnVal;
 		}
 
 		// Allocate array for version data and retrieve it
 		byte[] versionData = new byte[versionInfoSize];
+
 		if (!GetFileVersionInfoEx(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
-			return ExFileInfo;
+		{
+			return BadCaseReturnVal;
+		}
 
 		try
 		{
@@ -121,33 +95,38 @@ public sealed partial class ExFileInfo
 
 			// Extract version from the version data
 			if (!TryGetVersion(spanData, out Version? version))
+			{
 				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
-
-			ExFileInfo.Version = version; // Set the Version property
+			}
 
 			// Extract locale and encoding information
 			if (!TryGetLocaleAndEncoding(spanData, out string? locale, out string? encoding))
+			{
 				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
+			}
 
-			// Retrieve various file information based on locale and encoding
-			ExFileInfo.OriginalFileName = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\OriginalFileName"));
-			ExFileInfo.InternalName = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\InternalName"));
-			ExFileInfo.FileDescription = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\FileDescription"));
-			ExFileInfo.ProductName = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\ProductName"));
+			// Retrieve various file information based on locale and encoding and return the result
+			return new ExFileInfo(
+				version: version,
+				originalFileName: CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\OriginalFileName")),
+				internalName: CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\InternalName")),
+				fileDescription: CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\FileDescription")),
+				productName: CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\ProductName"))
+			);
 		}
 		catch
 		{
-			// In case of an error, set all properties to null
-			ExFileInfo.Version = null;
-			ExFileInfo.OriginalFileName = null;
-			ExFileInfo.InternalName = null;
-			ExFileInfo.FileDescription = null;
-			ExFileInfo.ProductName = null;
+			return BadCaseReturnVal;
 		}
-		return ExFileInfo;
 	}
 
-	// Extract the version from the data
+
+	/// <summary>
+	/// Extracts version information from a byte array and outputs it as a Version object.
+	/// </summary>
+	/// <param name="data">The byte array containing version information to be extracted.</param>
+	/// <param name="version">Outputs the extracted version information as a Version object.</param>
+	/// <returns>Returns true if the version was successfully extracted, otherwise false.</returns>
 	private static bool TryGetVersion(Span<byte> data, out Version? version)
 	{
 		version = null;
@@ -168,7 +147,14 @@ public sealed partial class ExFileInfo
 		return true;
 	}
 
-	// Extract locale and encoding information from the data
+
+	/// <summary>
+	/// Extracts locale and encoding information from a byte span.
+	/// </summary>
+	/// <param name="data">The byte span containing data from which locale and encoding are extracted.</param>
+	/// <param name="locale">Outputs the locale information derived from the data.</param>
+	/// <param name="encoding">Outputs the encoding information derived from the data.</param>
+	/// <returns>Returns a boolean indicating the success of the extraction process.</returns>
 	private static bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding)
 	{
 		locale = null;
@@ -187,7 +173,14 @@ public sealed partial class ExFileInfo
 		return true;
 	}
 
-	// Get localized resource string based on encoding and locale
+	/// <summary>
+	/// Retrieves a localized resource string using specified encoding and locale from a version block.
+	/// </summary>
+	/// <param name="versionBlock">This parameter provides the binary data containing version information.</param>
+	/// <param name="encoding">Specifies the character encoding to be used for interpreting the resource string.</param>
+	/// <param name="locale">Indicates the locale for which the resource string is being requested.</param>
+	/// <param name="resource">Identifies the specific resource string to retrieve from the version information.</param>
+	/// <returns>Returns the localized resource string or null if not found.</returns>
 	private static string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
 	{
 		string[] encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
@@ -206,28 +199,35 @@ public sealed partial class ExFileInfo
 		return null;
 	}
 
-	// Check if a string is null or whitespace and return null if it is
+
+	/// <summary>
+	/// Check if a string is null or whitespace and return null if it is
+	/// </summary>
+	/// <param name="value"></param>
+	/// <returns></returns>
 	private static string? CheckAndSetNull(string? value)
 	{
 		return string.IsNullOrWhiteSpace(value) ? null : value;
 	}
 
-	// Structure to hold file version information
+	/// <summary>
+	/// Structure to hold file version information
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	private struct FileVersionInfo
 	{
-		public uint dwSignature;
-		public uint dwStrucVersion;
-		public uint dwFileVersionMS;
-		public uint dwFileVersionLS;
-		public uint dwProductVersionMS;
-		public uint dwProductVersionLS;
-		public uint dwFileFlagsMask;
-		public uint dwFileFlags;
-		public uint dwFileOS;
-		public uint dwFileType;
-		public uint dwFileSubtype;
-		public uint dwFileDateMS;
-		public uint dwFileDateLS;
+		internal uint dwSignature;
+		internal uint dwStrucVersion;
+		internal uint dwFileVersionMS;
+		internal uint dwFileVersionLS;
+		internal uint dwProductVersionMS;
+		internal uint dwProductVersionLS;
+		internal uint dwFileFlagsMask;
+		internal uint dwFileFlags;
+		internal uint dwFileOS;
+		internal uint dwFileType;
+		internal uint dwFileSubtype;
+		internal uint dwFileDateMS;
+		internal uint dwFileDateLS;
 	}
 }

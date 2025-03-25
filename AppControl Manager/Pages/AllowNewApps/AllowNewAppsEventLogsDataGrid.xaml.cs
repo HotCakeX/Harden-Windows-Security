@@ -33,7 +33,7 @@ namespace AppControlManager.Pages;
 /// Represents a data grid for displaying event logs with functionalities for copying, sorting, filtering, and selecting
 /// items.
 /// </summary>
-public sealed partial class AllowNewAppsEventLogsDataGrid : Page
+internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 {
 
 #pragma warning disable CA1822
@@ -44,7 +44,7 @@ public sealed partial class AllowNewAppsEventLogsDataGrid : Page
 	/// Initializes the AllowNewAppsEventLogsDataGrid component. Sets the navigation cache mode to enabled and assigns the
 	/// ViewModel as the data context.
 	/// </summary>
-	public AllowNewAppsEventLogsDataGrid()
+	internal AllowNewAppsEventLogsDataGrid()
 	{
 		this.InitializeComponent();
 

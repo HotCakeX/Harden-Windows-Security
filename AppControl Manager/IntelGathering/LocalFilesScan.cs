@@ -76,15 +76,18 @@ internal static class LocalFilesScan
 				// Calculate the percentage complete
 				int currentPercentage = (int)(current / AllFilesCount * 100);
 
+				// Cap the percentage at 100
+				int percentageToUse = Math.Min(currentPercentage, 100);
+
 				// Update the UI element
 				_ = UIProgressRing.DispatcherQueue.TryEnqueue(() =>
 				{
-					// The value is set to the calculated percentage, but capped at 100 using Math.Min.
-					UIProgressRing.Value = Math.Min(currentPercentage, 100);
-
-					// Update the taskbar progress
-					Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)Math.Min(currentPercentage, 100), 100);
+					// The value is set to the calculated percentage
+					UIProgressRing.Value = percentageToUse;
 				});
+
+				// Update the taskbar progress
+				Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
 
 			}, null, 0, 2000);
 
@@ -121,7 +124,7 @@ internal static class LocalFilesScan
 							CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(fileString);
 
 							// Get the extended file attributes
-							ExFileInfo ExtendedFileInfo = ExFileInfo.GetExtendedFileInfo(fileString);
+							ExFileInfo ExtendedFileInfo = GetExtendedFileAttrib.Get(fileString);
 
 
 							// To store all certificates of the file

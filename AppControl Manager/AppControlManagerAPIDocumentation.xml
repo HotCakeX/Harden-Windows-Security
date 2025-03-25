@@ -1187,6 +1187,50 @@
             Provides application-specific behavior to supplement the default Application class.
             </summary>
         </member>
+        <member name="F:AppControlManager.App.PackageSource">
+            <summary>
+            Detects the source of the application.
+            GitHub => 0
+            Microsoft Store => 1
+            Unknown => 2
+            </summary>
+        </member>
+        <member name="P:AppControlManager.App.Settings">
+            <summary>
+            The application settings for AppControl Manager
+            </summary>
+        </member>
+        <member name="F:AppControlManager.App.packageVersion">
+            <summary>
+            Get the current app's version
+            </summary>
+        </member>
+        <member name="F:AppControlManager.App.currentAppVersion">
+            <summary>
+            Convert it to a normal Version object
+            </summary>
+        </member>
+        <member name="F:AppControlManager.App.IsUniqueAppInstance">
+            <summary>
+            Check if another instance of AppControl Manager is running
+            </summary>
+        </member>
+        <member name="F:AppControlManager.App.IsElevated">
+            <summary>
+            To determine whether the app has Administrator privileges
+            </summary>
+        </member>
+        <member name="F:AppControlManager.App.LogsDirectory">
+            <summary>
+            The directory where the logs will be stored
+            </summary>
+        </member>
+        <member name="P:AppControlManager.App.AppHost">
+            <summary>
+            Provides a static host for the dependency injection container used throughout the application. It configures and
+            registers various view models as singletons.
+            </summary>
+        </member>
         <member name="M:AppControlManager.App.#ctor">
             <summary>
             Initializes the singleton application object. This is the first line of authored code
@@ -1243,29 +1287,112 @@
             InitializeComponent()
             </summary>
         </member>
-        <member name="M:AppControlManager.AppSettings.AppSettingsCls.SaveSetting(AppControlManager.AppSettings.AppSettingsCls.SettingKeys,System.Object)">
+        <member name="M:AppControlManager.App.GetXamlType(System.Type)">
             <summary>
-            Save setting to local storage with a specific key and value
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:AppControlManager.App.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:AppControlManager.App.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
+            </summary>
+        </member>
+        <member name="T:AppControlManager.AppSettings.Main">
+            <summary>
+            A thread-safe, unified settings manager for the application.
+            Properties are strongly typed and any change is immediately persisted to local storage.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.AppSettings.Main.ReadValue``1(System.String,``0)">
+            <summary>
+            Generic helper method to read a value from local storage.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="defaultValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.AppSettings.Main.SaveValue(System.String,System.Object)">
+            <summary>
+            Helper method to immediately persist the new value to local storage.
             </summary>
             <param name="key"></param>
             <param name="value"></param>
         </member>
-        <member name="M:AppControlManager.AppSettings.AppSettingsCls.GetSetting``1(AppControlManager.AppSettings.AppSettingsCls.SettingKeys)">
+        <member name="P:AppControlManager.AppSettings.Main.SoundSetting">
             <summary>
-            Retrieve setting from local storage with a specific key
+            Whether the app emits sounds during navigation or not
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="key"></param>
-            <returns></returns>
         </member>
-        <member name="M:AppControlManager.AppSettings.AppSettingsCls.TryGetSetting``1(AppControlManager.AppSettings.AppSettingsCls.SettingKeys)">
+        <member name="P:AppControlManager.AppSettings.Main.NavViewBackground">
             <summary>
-            Retrieve setting from local storage with a specific key and returns null if the value doesn't exist.
-            Used by settings that need to set a default app configuration to true/on unless there is a user-defined configuration.
+            If on, the extra layer is removed from the NavigationView's background, giving the entire app a darker look.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="key"></param>
-            <returns></returns>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.NavViewPaneDisplayMode">
+            <summary>
+            The display mode of the main NavigationView, whether it's on top or on the left side
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.AppTheme">
+            <summary>
+            Light, Dark or System
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.BackDropBackground">
+            <summary>
+            Mica, MicaAlt or Acrylic
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.IconsStyle">
+            <summary>
+            MonoChrome, Animated or accent based
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.MainWindowWidth">
+            <summary>
+            Width of the main window
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.MainWindowHeight">
+            <summary>
+            Height of the main window
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.MainWindowIsMaximized">
+            <summary>
+            Whether the main window is maximized prior to closing the app.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.ListViewsVerticalCentering">
+            <summary>
+            Whether clicks/taps on ListView items will cause the selected row to be vertically centered.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.CacheSecurityCatalogsScanResults">
+            <summary>
+            Cache the security catalog scan results to speed up various components of the app that use them.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.PromptForElevationOnStartup">
+            <summary>
+            Whether the app will prompt for elevation and display a UAC on startup.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.AutomaticAssignmentSidebar">
+            <summary>
+            Automatically assign the generated base policies to the Sidebar's selected policy field for easy usage in pages that support the augmentation.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.AutoCheckForUpdateAtStartup">
+            <summary>
+            Automatically check for updates on app startup.
+            </summary>
         </member>
         <member name="T:AppControlManager.Crumb">
             <summary>
@@ -1286,6 +1413,16 @@
         <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.CustomUIElements.MenuFlyoutV2">
@@ -1411,6 +1548,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.CertificateCNAutoSuggestBox_TextChanged(Microsoft.UI.Xaml.Controls.AutoSuggestBox,Microsoft.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs)">
             <summary>
             Event handler for AutoSuggestBox
@@ -1500,6 +1647,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="M:AppControlManager.IntelGathering.CatRootScanner.Scan(System.Collections.Generic.List{System.String},System.UInt16)">
             <summary>
             Scans the CatRoot directory for security catalogs.
@@ -1522,6 +1679,11 @@
             </summary>
             <returns>A list of DriveMapping objects containing drive information</returns>
             <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="T:AppControlManager.IntelGathering.EventAction">
+            <summary>
+            Defines the action type of Code Integrity and AppLocker event logs.
+            </summary>
         </member>
         <member name="T:AppControlManager.IntelGathering.FileIdentityComparer">
             <summary>
@@ -1766,6 +1928,33 @@
             <summary>
             Returns null if the string is null, empty or whitespaces
             </summary>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.GetEventLogsData.GetLongValue(System.Xml.XmlDocument,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Retrieves a long integer value from an XML document based on a specified XPath expression.
+            </summary>
+            <param name="xmlDoc">The XML document from which the value is extracted.</param>
+            <param name="nsManager">Manages the namespaces used in the XPath query.</param>
+            <param name="xpath">The XPath expression used to locate the desired node in the XML document.</param>
+            <returns>Returns the long integer value if found and valid, otherwise returns null.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.GetEventLogsData.GetGuidValue(System.Xml.XmlDocument,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Retrieves a GUID value from an XML document based on a specified XPath expression.
+            </summary>
+            <param name="xmlDoc">The XML document from which the GUID value is extracted.</param>
+            <param name="nsManager">Manages the namespaces used in the XPath query.</param>
+            <param name="xpath">The XPath expression used to locate the desired node in the XML document.</param>
+            <returns>Returns the extracted GUID if found and valid, otherwise returns null.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.GetEventLogsData.GetBooleanValue(System.Xml.XmlDocument,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Retrieves a boolean value from an XML document based on a specified XPath expression.
+            </summary>
+            <param name="xmlDoc">The XML document from which the boolean value is extracted.</param>
+            <param name="nsManager">Manages the namespaces used in the XPath expression for accurate node selection.</param>
+            <param name="xpath">The XPath expression used to locate the desired node within the XML document.</param>
+            <returns>Returns the boolean value found at the specified node or null if not found or not a valid boolean.</returns>
         </member>
         <member name="M:AppControlManager.IntelGathering.GetEventLogsData.GetValidatedRequestedSigningLevel(System.Nullable{System.Int32})">
             <summary>
@@ -2095,7 +2284,7 @@
         </member>
         <member name="P:AppControlManager.MainWindow.Instance">
             <summary>
-            Public property to access the singleton instance from other classes
+            internal property to access the singleton instance from other classes
             </summary>
         </member>
         <member name="M:AppControlManager.MainWindow.AppTitleBar_Loaded(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
@@ -2220,6 +2409,16 @@
         <member name="M:AppControlManager.MainWindow.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MainWindow.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MainWindow.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="M:AppControlManager.Main.AppControlSimulation.Invoke(System.Collections.Generic.List{System.String},System.String,System.Boolean)">
@@ -2807,6 +3006,32 @@
             <returns></returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
+        <member name="T:AppControlManager.Others.CertificateType">
+            <summary>
+            Defines an enumeration for different types of certificates: Root, Intermediate, and Leaf. Each type is associated
+            with a unique integer value.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Others.ChainPackage">
+            <summary>
+            The full chain package of a signed file, includes all of the signature information
+            </summary>
+            <param name="certificatechain"></param>
+            <param name="signedcms"></param>
+            <param name="rootcertificate"></param>
+            <param name="intermediatecertificates"></param>
+            <param name="leafcertificate"></param>
+        </member>
+        <member name="M:AppControlManager.Others.ChainPackage.#ctor(System.Security.Cryptography.X509Certificates.X509Chain,System.Security.Cryptography.Pkcs.SignedCms,AppControlManager.Others.ChainElement,System.Collections.Generic.List{AppControlManager.Others.ChainElement},AppControlManager.Others.ChainElement)">
+            <summary>
+            The full chain package of a signed file, includes all of the signature information
+            </summary>
+            <param name="certificatechain"></param>
+            <param name="signedcms"></param>
+            <param name="rootcertificate"></param>
+            <param name="intermediatecertificates"></param>
+            <param name="leafcertificate"></param>
+        </member>
         <member name="T:AppControlManager.Others.CiPolicyInfo">
             <summary>
             Represents a policy with various attributes
@@ -2944,6 +3169,53 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:AppControlManager.Others.ExFileInfo.OriginalFileName">
+            <summary>
+            Holds the original name of the file. It can be null if no name is provided.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.ExFileInfo.InternalName">
+            <summary>
+            Represents the internal name of an entity, which can be null. It is a string property that can be accessed and
+            modified.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.ExFileInfo.ProductName">
+            <summary>
+            Represents the name of a product. It can be null, indicating that the product name is not specified.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.ExFileInfo.Version">
+            <summary>
+            Represents the version of an object, allowing for nullable values. It can be used to track or specify the
+            versioning of data.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.ExFileInfo.FileDescription">
+            <summary>
+            Represents an optional description of a file. It can hold a string value or be null.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Others.FileBasedInfoPackage">
+            <summary>
+            Used by the BuildSignerAndHashObjects method to store and return the output
+            </summary>
+            <param name="filepublishersigners">Data to create FilePublisher level rules for.</param>
+            <param name="publishersigners">Data to create Publisher level rules for.</param>
+            <param name="completehashes">Data to create Hash rules for.</param>
+            <param name="filePaths">Data to create File path rules for.</param>
+            <param name="pfnRules">Data to create PFN (Package Family Name) rules for.</param>
+        </member>
+        <member name="M:AppControlManager.Others.FileBasedInfoPackage.#ctor(System.Collections.Generic.List{AppControlManager.Others.FilePublisherSignerCreator},System.Collections.Generic.List{AppControlManager.Others.PublisherSignerCreator},System.Collections.Generic.List{AppControlManager.Others.HashCreator},System.Collections.Generic.List{AppControlManager.Others.FilePathCreator},System.Collections.Generic.List{AppControlManager.Others.PFNRuleCreator})">
+            <summary>
+            Used by the BuildSignerAndHashObjects method to store and return the output
+            </summary>
+            <param name="filepublishersigners">Data to create FilePublisher level rules for.</param>
+            <param name="publishersigners">Data to create Publisher level rules for.</param>
+            <param name="completehashes">Data to create Hash rules for.</param>
+            <param name="filePaths">Data to create File path rules for.</param>
+            <param name="pfnRules">Data to create PFN (Package Family Name) rules for.</param>
+        </member>
         <member name="T:AppControlManager.Others.FileCertificateInfoCol">
             <summary>
             A class that represents each certificate in a chain
@@ -2985,63 +3257,112 @@
             </summary>
             <returns>A list of selected directory paths or null if cancelled.</returns>
         </member>
+        <member name="T:AppControlManager.Others.FilePublisherSignerCreator">
+            <summary>
+            Used to create FilePublisher rule for a file.
+            </summary>
+            <param name="certificateDetails"></param>
+            <param name="fileVersion"></param>
+            <param name="fileDescription"></param>
+            <param name="internalName"></param>
+            <param name="originalFileName"></param>
+            <param name="packageFamilyName"></param>
+            <param name="productName"></param>
+            <param name="fileName"></param>
+            <param name="authenticodeSHA256"></param>
+            <param name="authenticodeSHA1"></param>
+            <param name="siSigningScenario"></param>
+        </member>
+        <member name="M:AppControlManager.Others.FilePublisherSignerCreator.#ctor(System.Collections.Generic.List{AppControlManager.Others.CertificateDetailsCreator},System.Version,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Used to create FilePublisher rule for a file.
+            </summary>
+            <param name="certificateDetails"></param>
+            <param name="fileVersion"></param>
+            <param name="fileDescription"></param>
+            <param name="internalName"></param>
+            <param name="originalFileName"></param>
+            <param name="packageFamilyName"></param>
+            <param name="productName"></param>
+            <param name="fileName"></param>
+            <param name="authenticodeSHA256"></param>
+            <param name="authenticodeSHA1"></param>
+            <param name="siSigningScenario"></param>
+        </member>
         <member name="M:AppControlManager.Others.GetAppsList.Get">
             <summary>
             Gets the list of all installed Packaged Apps
             </summary>
             <returns></returns>
         </member>
-        <member name="T:AppControlManager.Others.ExFileInfo">
+        <member name="T:AppControlManager.Others.GetExtendedFileAttrib">
             <summary>
             Represents extended file information, including properties like original file name, internal name, product name, and
             version.
             </summary>
         </member>
-        <member name="F:AppControlManager.Others.ExFileInfo.FILE_VER_GET_NEUTRAL">
+        <member name="F:AppControlManager.Others.GetExtendedFileAttrib.UnicodeFallbackCode">
+            <summary>
+            Constants used for encoding fallback and error handling
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.GetExtendedFileAttrib.FILE_VER_GET_NEUTRAL">
             <summary>
             Constant representing the neutral file version, set to 2. Used for identifying a specific version in file
             operations.
             </summary>
         </member>
-        <member name="F:AppControlManager.Others.ExFileInfo.HR_ERROR_RESOURCE_TYPE_NOT_FOUND">
+        <member name="F:AppControlManager.Others.GetExtendedFileAttrib.HR_ERROR_RESOURCE_TYPE_NOT_FOUND">
             <summary>
             Represents an error code indicating that a specified resource type could not be found. The value is -2147023083.
             </summary>
         </member>
-        <member name="P:AppControlManager.Others.ExFileInfo.OriginalFileName">
-            <summary>
-            Holds the original name of the file. It can be null if no name is provided.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.ExFileInfo.InternalName">
-            <summary>
-            Represents the internal name of an entity, which can be null. It is a string property that can be accessed and
-            modified.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.ExFileInfo.ProductName">
-            <summary>
-            Represents the name of a product. It can be null, indicating that the product name is not specified.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.ExFileInfo.Version">
-            <summary>
-            Represents the version of an object, allowing for nullable values. It can be used to track or specify the
-            versioning of data.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Others.ExFileInfo.FileDescription">
-            <summary>
-            Represents an optional description of a file. It can hold a string value or be null.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Others.ExFileInfo.GetExtendedFileInfo(System.String)">
+        <member name="M:AppControlManager.Others.GetExtendedFileAttrib.Get(System.String)">
             <summary>
             Retrieves extended file information, including version, original file name, internal name, file description, and
             product name.
             </summary>
             <param name="filePath">Specifies the path to the file for which extended information is being retrieved.</param>
             <returns>Returns an object containing the extended file information, with properties set to null in case of an error.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.GetExtendedFileAttrib.TryGetVersion(System.Span{System.Byte},System.Version@)">
+            <summary>
+            Extracts version information from a byte array and outputs it as a Version object.
+            </summary>
+            <param name="data">The byte array containing version information to be extracted.</param>
+            <param name="version">Outputs the extracted version information as a Version object.</param>
+            <returns>Returns true if the version was successfully extracted, otherwise false.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.GetExtendedFileAttrib.TryGetLocaleAndEncoding(System.Span{System.Byte},System.String@,System.String@)">
+            <summary>
+            Extracts locale and encoding information from a byte span.
+            </summary>
+            <param name="data">The byte span containing data from which locale and encoding are extracted.</param>
+            <param name="locale">Outputs the locale information derived from the data.</param>
+            <param name="encoding">Outputs the encoding information derived from the data.</param>
+            <returns>Returns a boolean indicating the success of the extraction process.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.GetExtendedFileAttrib.GetLocalizedResource(System.Span{System.Byte},System.String,System.String,System.String)">
+            <summary>
+            Retrieves a localized resource string using specified encoding and locale from a version block.
+            </summary>
+            <param name="versionBlock">This parameter provides the binary data containing version information.</param>
+            <param name="encoding">Specifies the character encoding to be used for interpreting the resource string.</param>
+            <param name="locale">Indicates the locale for which the resource string is being requested.</param>
+            <param name="resource">Identifies the specific resource string to retrieve from the version information.</param>
+            <returns>Returns the localized resource string or null if not found.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.GetExtendedFileAttrib.CheckAndSetNull(System.String)">
+            <summary>
+            Check if a string is null or whitespace and return null if it is
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AppControlManager.Others.GetExtendedFileAttrib.FileVersionInfo">
+            <summary>
+            Structure to hold file version information
+            </summary>
         </member>
         <member name="T:AppControlManager.Others.FileUtility.FileInfoComparer">
             <summary>
@@ -3078,9 +3399,41 @@
             a class to throw a custom exception when the certificate has HashMismatch
             </summary>
         </member>
+        <member name="M:AppControlManager.Others.HashMismatchInCertificateException.#ctor">
+            <summary>
+            Initializes a new instance of the HashMismatchInCertificateException class. This constructor does not take any
+            parameters.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.HashMismatchInCertificateException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the HashMismatchInCertificateException class with a specified error message.
+            </summary>
+            <param name="message">The error message that describes the reason for the exception.</param>
+        </member>
+        <member name="M:AppControlManager.Others.HashMismatchInCertificateException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the HashMismatchInCertificateException class with a message and function name.
+            </summary>
+            <param name="message">Provides details about the error encountered.</param>
+            <param name="functionName">Indicates the name of the function where the error occurred.</param>
+        </member>
+        <member name="M:AppControlManager.Others.HashMismatchInCertificateException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the HashMismatchInCertificateException class with a specified error message and an
+            inner exception.
+            </summary>
+            <param name="message">Provides a description of the error that occurred.</param>
+            <param name="innerException">Holds the exception that is the cause of the current exception.</param>
+        </member>
         <member name="T:AppControlManager.Others.ListViewHelper">
             <summary>
             This class includes methods that are helpers for the custom ListView implementations in this application.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.ListViewHelper.tb">
+            <summary>
+            An offscreen TextBlock for measurement
             </summary>
         </member>
         <member name="M:AppControlManager.Others.ListViewHelper.MeasureTextWidth(System.String)">
@@ -3193,6 +3546,22 @@
             necessary logics for Page hash calculation
             </summary>
         </member>
+        <member name="T:AppControlManager.Others.PFNRuleCreator">
+            <summary>
+            Defines a class for creating rules based on package family name.
+            </summary>
+            <param name="packageFamilyName">Specifies the name of the package family for which the rule is created.</param>
+            <param name="minimumFileVersion">Indicates the minimum file version required for the rule to apply.</param>
+            <param name="siSigningScenario">Represents the signing scenario associated with the rule.</param>
+        </member>
+        <member name="M:AppControlManager.Others.PFNRuleCreator.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Defines a class for creating rules based on package family name.
+            </summary>
+            <param name="packageFamilyName">Specifies the name of the package family for which the rule is created.</param>
+            <param name="minimumFileVersion">Indicates the minimum file version required for the rule to apply.</param>
+            <param name="siSigningScenario">Represents the signing scenario associated with the rule.</param>
+        </member>
         <member name="M:AppControlManager.Others.PolicyFileSigningStatusDetection.Check(System.String)">
             <summary>
             Check the signing status of an App Control policy file
@@ -3224,6 +3593,26 @@
             <param name="arguments"></param>
             <returns>Standard output of the executed command</returns>
             <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:AppControlManager.Others.PublisherSignerCreator">
+            <summary>
+            Used to create Publisher signer rule for a file
+            </summary>
+            <param name="certificateDetails"></param>
+            <param name="fileName"></param>
+            <param name="authenticodeSHA256"></param>
+            <param name="authenticodeSHA1"></param>
+            <param name="siSigningScenario"></param>
+        </member>
+        <member name="M:AppControlManager.Others.PublisherSignerCreator.#ctor(System.Collections.Generic.List{AppControlManager.Others.CertificateDetailsCreator},System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Used to create Publisher signer rule for a file
+            </summary>
+            <param name="certificateDetails"></param>
+            <param name="fileName"></param>
+            <param name="authenticodeSHA256"></param>
+            <param name="authenticodeSHA1"></param>
+            <param name="siSigningScenario"></param>
         </member>
         <member name="M:AppControlManager.Others.CiPolicyHandler.RemoveSupplementalSigners(System.String)">
             <summary>
@@ -3352,6 +3741,91 @@
             This class holds the details of the current file in the App Control Simulation comparer
             </summary>
         </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.Path">
+            <summary>
+            The name of the file, which is a truncated version of its path
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.Source">
+            <summary>
+            Source from the Comparer function is always 'Signer'
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.IsAuthorized">
+            <summary>
+            Whether the file is authorized or not
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SignerID">
+            <summary>
+            Gathered from the GetSignerInfo method
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SignerName">
+            <summary>
+            Gathered from the GetSignerInfo method
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SignerCertRoot">
+            <summary>
+            Gathered from the GetSignerInfo method
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SignerCertPublisher">
+            <summary>
+            Gathered from the GetSignerInfo method
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SignerScope">
+            <summary>
+            Gathered from the GetSignerInfo method
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SignerFileAttributeIDs">
+            <summary>
+            Gathered from the GetSignerInfo method
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.MatchCriteria">
+            <summary>
+            The main level based on which the file is authorized
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.SpecificFileNameLevelMatchCriteria">
+            <summary>
+            Only those eligible for FilePublisher, WHQLFilePublisher, or SignedVersion levels assign this value, otherwise it stays null
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.CertSubjectCN">
+            <summary>
+            Subject CN of the signer that allows the file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.CertIssuerCN">
+            <summary>
+            Issuer CN of the signer that allows the file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.CertNotAfter">
+            <summary>
+            NotAfter date of the signer that allows the file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.CertTBSValue">
+            <summary>
+            TBS value of the signer that allows the file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.FilePath">
+            <summary>
+            Full path of the file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.SimulationOutput.ParentViewModelSimulationVM">
+            <summary>
+            Reference for the ViewModel's class
+            </summary>
+        </member>
         <member name="M:AppControlManager.Others.SnapBackGuarantee.Create(System.String)">
             <summary>
             A method that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.
@@ -3429,6 +3903,24 @@
             Represents an object that is the response of an update check for the AppControl Manager app
             </summary>
         </member>
+        <member name="T:AppControlManager.Others.WLDP_SECURE_SETTING_VALUE_TYPE">
+            <summary>
+            Defines different types of secure setting values used in WLDP. Types include Boolean, Integer, None, String, and
+            Flag.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Others.UNICODE_STRING">
+            <summary>
+            Represents a Unicode string with a specified length and a pointer to the string's buffer. It includes fields for the
+            string's current length and maximum length.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Others.WldpQuerySecurityPolicyWrapper">
+            <summary>
+            Queries the security policy for a specified provider and key, returning the value type and size.
+            Initializes a UNICODE_STRING structure from a given string.
+            </summary>
+        </member>
         <member name="M:AppControlManager.Others.XmlFilePathExtractor.GetFilePaths(System.String)">
             <summary>
             Extracts all the file paths from the Allow rules in an App Control policy
@@ -3498,6 +3990,16 @@
         <member name="M:AppControlManager.Pages.AllowNewApps.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewApps.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewApps.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid">
@@ -3576,6 +4078,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid">
             <summary>
             Represents a page for managing local files with functionalities like copying, selecting, and deleting
@@ -3643,6 +4155,16 @@
         <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsStart">
@@ -3791,6 +4313,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.BuildNewCertificate">
             <summary>
             BuildNewCertificate is a page for generating a new certificate. It manages user input, validates fields, and handles
@@ -3821,6 +4353,16 @@
         <member name="M:AppControlManager.Pages.BuildNewCertificate.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.BuildNewCertificate.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.BuildNewCertificate.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ConfigurePolicyRuleOptions">
@@ -3859,12 +4401,10 @@
             Method to dynamically create SettingsCards based on the dictionary keys
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.PickPolicyFileButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.PickPolicyFileButton_Click">
             <summary>
             Event handler for the browse button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.LoadPolicyOptionsFromXML(System.String)">
             <summary>
@@ -3872,12 +4412,10 @@
             </summary>
             <param name="filePath"></param>
         </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.ApplyTheChangesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.ApplyTheChangesButton_Click">
             <summary>
             Event handler for when the Apply button is pressed
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.SetPolicyTemplate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -3910,16 +4448,24 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.RefreshRuleOptionsState_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.RefreshRuleOptionsState_Click">
             <summary>
             Event handlers to retrieve latest policy rule option details from the XML file and check/uncheck UI boxes
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.CreateDenyPolicy">
@@ -4087,6 +4633,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults">
             <summary>
             Represents a page for creating deny policy scan results, managing navigation state and data context. Handles user
@@ -4154,6 +4710,16 @@
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.CreatePolicy">
@@ -4225,6 +4791,16 @@
         <member name="M:AppControlManager.Pages.CreatePolicy.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.CreateSupplementalPolicy">
@@ -4506,6 +5082,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults">
             <summary>
             Represents a page for creating supplemental policy files and folders scan results, managing data display and user
@@ -4573,6 +5159,16 @@
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.DeploymentPage">
@@ -4710,6 +5306,16 @@
         <member name="M:AppControlManager.Pages.DeploymentPage.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.EventLogsPolicyCreation">
@@ -4863,6 +5469,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.GetCIHashes">
             <summary>
             Handles the file selection and computes various cryptographic hashes for the selected file. Displays the results in
@@ -4882,6 +5498,16 @@
         <member name="M:AppControlManager.Pages.GetCIHashes.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GetCIHashes.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GetCIHashes.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.GetSecurePolicySettings">
@@ -4904,6 +5530,16 @@
         <member name="M:AppControlManager.Pages.GetSecurePolicySettings.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GetSecurePolicySettings.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GetSecurePolicySettings.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.GitHubDocumentation">
@@ -4941,6 +5577,16 @@
         <member name="M:AppControlManager.Pages.GitHubDocumentation.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GitHubDocumentation.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.GitHubDocumentation.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.Logs">
@@ -4994,6 +5640,16 @@
         <member name="M:AppControlManager.Pages.Logs.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Logs.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Logs.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.LogLine">
@@ -5176,6 +5832,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.MergePolicies">
             <summary>
             Represents a page for managing merge policies with a view model for data binding. It handles user interactions for
@@ -5193,6 +5859,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.MergePolicies.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.MergePolicies.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.MicrosoftDocumentation">
             <summary>
             Represents a page for Microsoft documentation with navigation controls. It manages WebView2 state and handles back,
@@ -5208,6 +5884,16 @@
         <member name="M:AppControlManager.Pages.MicrosoftDocumentation.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.MicrosoftDocumentation.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.MicrosoftDocumentation.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.PolicyEditor">
@@ -5239,6 +5925,16 @@
         <member name="M:AppControlManager.Pages.PolicyEditor.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.PolicyEditor.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.PolicyEditor.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.Settings">
@@ -5293,6 +5989,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.Settings.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Settings.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.Simulation">
             <summary>
             Represents a simulation page that initializes components, manages file paths, and handles user interactions for
@@ -5332,6 +6038,31 @@
             <typeparam name="T"></typeparam>
             <param name="keySelector"></param>
         </member>
+        <member name="M:AppControlManager.Pages.Simulation.BeginSimulationButton_Click">
+            <summary>
+            Event handler for the Begin Simulation button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Simulation.SelectXmlFileButton_Click">
+            <summary>
+            Event handler for the Select XML File button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Simulation.SelectFilesButton_Click">
+            <summary>
+            Event handler for the Select Files button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Simulation.SelectFoldersButton_Click">
+            <summary>
+            Event handler for the Select Folders button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Simulation.CatRootPathsButton_Click">
+            <summary>
+            Event handler for the Cat Root Paths button
+            </summary>
+        </member>
         <member name="M:AppControlManager.Pages.Simulation.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
             <summary>
             Event handler for the SearchBox text change
@@ -5349,6 +6080,16 @@
         <member name="M:AppControlManager.Pages.Simulation.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Simulation.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.Simulation.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.StrictKernelPolicyScanResults">
@@ -5434,6 +6175,16 @@
             InitializeComponent()
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
         <member name="T:AppControlManager.Pages.CodeIntegrityInfo">
             <summary>
             Initializes the CodeIntegrityInfo class and sets the navigation cache mode. Retrieves and displays code integrity
@@ -5452,16 +6203,24 @@
             <param name="status"></param>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.RetrieveCodeIntegrityInfo_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.RetrieveCodeIntegrityInfo_Click">
             <summary>
             Event handler for the retrieve code integrity information button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CodeIntegrityInfo.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.SystemInformation">
@@ -5478,6 +6237,16 @@
         <member name="M:AppControlManager.Pages.SystemInformation.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.SystemInformation.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.SystemInformation.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ViewCurrentPolicies">
@@ -5502,6 +6271,16 @@
         <member name="M:AppControlManager.Pages.ViewCurrentPolicies.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewCurrentPolicies.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewCurrentPolicies.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.UpdatePage">
@@ -5544,12 +6323,15 @@
             Public property to access the singleton instance from other classes
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.AutoUpdateCheckToggle_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.UpdatePage.CheckForUpdateButton_Click">
+            <summary>
+            Event handler for check for update button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.UpdatePage.AutoUpdateCheckToggle_Toggled">
             <summary>
             Event handler for the Auto Update Check Toggle Button to modify the app settings
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.UpdatePage.OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs)">
             <summary>
@@ -5566,30 +6348,34 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.AutoUpdateCheckToggleSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.UpdatePage.AutoUpdateCheckToggleSettingsCard_Click">
             <summary>
             Event handler for the Settings card click that will act as click/tap on the toggle switch itself
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.HardenedUpdateProcedureToggleSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.UpdatePage.HardenedUpdateProcedureToggleSettingsCard_Click">
             <summary>
             Event handler for the Settings card click that will act as click/tap on the toggle switch itself
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.CheckForUpdate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.UpdatePage.CheckForUpdate_Click">
             <summary>
             Navigate to the extra sub-page
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.UpdatePage.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.UpdatePage.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.UpdatePage.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.UpdatePageCustomMSIXPath">
@@ -5604,6 +6390,12 @@
             Navigation cache mode is set to required.
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.BrowseForCustomMSIXPathButton_Click">
+            <summary>
+            Opens a file picker to select an MSIX file path. Updates the path on the main page and enables confirmation
+            settings if valid.
+            </summary>
+        </member>
         <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.SetConfirmToggleSwitchState">
             <summary>
             Set the initial state of the toggle switch based on whether a custom MSIX file path is selected or not
@@ -5612,6 +6404,16 @@
         <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ValidatePolicy">
@@ -5625,9 +6427,24 @@
             Initializes a new instance of the ValidatePolicy class. Sets the navigation cache mode to required.
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.ValidatePolicy.ValidateXML">
+            <summary>
+            Validates an App Control XML policy file by allowing the user to select a file and checking its validity.
+            </summary>
+        </member>
         <member name="M:AppControlManager.Pages.ValidatePolicy.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ValidatePolicy.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ValidatePolicy.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.Pages.ViewFileCertificates">
@@ -5669,12 +6486,10 @@
             <typeparam name="T"></typeparam>
             <param name="keySelector"></param>
         </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesButton_Click">
             <summary>
             Event handler for the Browse button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5721,6 +6536,16 @@
         <member name="M:AppControlManager.Pages.ViewFileCertificates.InitializeComponent">
             <summary>
             InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewFileCertificates.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewFileCertificates.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:AppControlManager.PolicyEditor.FileBasedRulesForListView">
@@ -5936,6 +6761,15 @@
             <param name="allowedSignerKMCIDictionary"></param>
             <param name="deniedSignerKMCIDictionary"></param>
             <param name="fileAttribIdsToRemove"></param>
+        </member>
+        <member name="M:AppControlManager.SiPolicyIntel.FileAttribDeDuplication.CompareVersions(System.String,System.String)">
+            <summary>
+            Compares two version strings using the System.Version class.
+            Returns -1 if v1 is lower than v2, 1 if v1 is higher than v2, or 0 if they are equal or unparsable.
+            </summary>
+            <param name="v1"></param>
+            <param name="v2"></param>
+            <returns></returns>
         </member>
         <member name="T:AppControlManager.SiPolicyIntel.FilePublisherSignerRuleComparer">
              <summary>
@@ -7353,6 +8187,12 @@
             Constructor initializes the ViewModel and subscribes to various events, sets initial values of some variables.
             </summary>
         </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM.UpdatePageNavItemVisibility">
+            <summary>
+            The visibility of the Update page in the main NavigationView.
+            Only make it visible if the app is installed from the GitHub source.
+            </summary>	
+        </member>
         <member name="F:AppControlManager.ViewModels.MainWindowVM._BackDropComboBoxSelectedIndex">
             <summary>
             Sets the initial value of the back drop. if it's null, Mica Alt will be used.
@@ -8136,6 +8976,26 @@
         <member name="T:AppControlManager.Program">
             <summary>
             Program class
+            </summary>
+        </member>
+        <member name="T:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider">
+            <summary>
+            Main class for providing metadata for the app or library
+            </summary>
+        </member>
+        <member name="M:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
+            <summary>
+            GetXamlType(Type)
+            </summary>
+        </member>
+        <member name="M:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
+            <summary>
+            GetXamlType(String)
+            </summary>
+        </member>
+        <member name="M:AppControlManager.AppControl_Manager_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
+            <summary>
+            GetXmlnsDefinitions()
             </summary>
         </member>
         <member name="T:Windows.Win32.PInvoke">

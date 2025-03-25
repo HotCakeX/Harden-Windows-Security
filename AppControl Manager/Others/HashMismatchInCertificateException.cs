@@ -24,24 +24,39 @@ namespace AppControlManager.Others;
 /// </summary>
 internal sealed class HashMismatchInCertificateException : Exception
 {
-	// Constructor with no parameters
+	/// <summary>
+	/// Initializes a new instance of the HashMismatchInCertificateException class. This constructor does not take any
+	/// parameters.
+	/// </summary>
 	internal HashMismatchInCertificateException()
 	{
 	}
 
-	// Constructor with a message parameter
+	/// <summary>
+	/// Initializes a new instance of the HashMismatchInCertificateException class with a specified error message.
+	/// </summary>
+	/// <param name="message">The error message that describes the reason for the exception.</param>
 	internal HashMismatchInCertificateException(string message)
 		: base(message)
 	{
 	}
 
-	// Constructor with message and functionName, calling the base constructor
+	/// <summary>
+	/// Initializes a new instance of the HashMismatchInCertificateException class with a message and function name.
+	/// </summary>
+	/// <param name="message">Provides details about the error encountered.</param>
+	/// <param name="functionName">Indicates the name of the function where the error occurred.</param>
 	internal HashMismatchInCertificateException(string message, string functionName)
 		: base($"{functionName}: {message}")
 	{
 	}
 
-	// Constructor with message and inner exception, calling the base constructor
+	/// <summary>
+	/// Initializes a new instance of the HashMismatchInCertificateException class with a specified error message and an
+	/// inner exception.
+	/// </summary>
+	/// <param name="message">Provides a description of the error that occurred.</param>
+	/// <param name="innerException">Holds the exception that is the cause of the current exception.</param>
 	internal HashMismatchInCertificateException(string message, Exception innerException)
 		: base(message, innerException)
 	{

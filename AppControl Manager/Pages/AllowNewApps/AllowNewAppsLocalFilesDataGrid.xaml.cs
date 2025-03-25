@@ -33,7 +33,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for managing local files with functionalities like copying, selecting, and deleting
 /// items.
 /// </summary>
-public sealed partial class AllowNewAppsLocalFilesDataGrid : Page
+internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 {
 
 #pragma warning disable CA1822
@@ -44,7 +44,7 @@ public sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 	/// Constructor for AllowNewAppsLocalFilesDataGrid that initializes the component and sets the navigation cache mode to
 	/// enabled. It also assigns the DataContext to the ViewModel.
 	/// </summary>
-	public AllowNewAppsLocalFilesDataGrid()
+	internal AllowNewAppsLocalFilesDataGrid()
 	{
 		this.InitializeComponent();
 

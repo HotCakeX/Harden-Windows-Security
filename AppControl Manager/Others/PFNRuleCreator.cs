@@ -17,6 +17,12 @@
 
 namespace AppControlManager.Others;
 
+/// <summary>
+/// Defines a class for creating rules based on package family name.
+/// </summary>
+/// <param name="packageFamilyName">Specifies the name of the package family for which the rule is created.</param>
+/// <param name="minimumFileVersion">Indicates the minimum file version required for the rule to apply.</param>
+/// <param name="siSigningScenario">Represents the signing scenario associated with the rule.</param>
 internal sealed class PFNRuleCreator(string packageFamilyName, string minimumFileVersion, int siSigningScenario)
 {
 	internal string PackageFamilyName => packageFamilyName;

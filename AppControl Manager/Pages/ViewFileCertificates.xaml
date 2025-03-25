@@ -44,7 +44,7 @@
             <controls:SettingsCard x:Uid="BrowseForFilesSettingsCard" x:Name="BrowseForFilesSettingsCard"
             Click="BrowseForFilesSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
 
-                <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="BrowseForFilesButton_Click"  />
+                <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="{x:Bind BrowseForFilesButton_Click}"  />
 
             </controls:SettingsCard>
 

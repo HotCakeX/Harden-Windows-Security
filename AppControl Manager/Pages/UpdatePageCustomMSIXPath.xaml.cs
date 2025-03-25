@@ -17,7 +17,6 @@
 
 using System.IO;
 using AppControlManager.Others;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -27,13 +26,13 @@ namespace AppControlManager.Pages;
 /// Handles the selection and confirmation of a custom MSIX file path for updates. Updates UI elements based on user
 /// interactions.
 /// </summary>
-public sealed partial class UpdatePageCustomMSIXPath : Page
+internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
 	/// <summary>
 	/// Initializes the UpdatePageCustomMSIXPath component and sets the initial state of the confirm toggle switch.
 	/// Navigation cache mode is set to required.
 	/// </summary>
-	public UpdatePageCustomMSIXPath()
+	internal UpdatePageCustomMSIXPath()
 	{
 		this.InitializeComponent();
 
@@ -44,7 +43,11 @@ public sealed partial class UpdatePageCustomMSIXPath : Page
 	}
 
 
-	private void BrowseForCustomMSIXPathButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Opens a file picker to select an MSIX file path. Updates the path on the main page and enables confirmation
+	/// settings if valid.
+	/// </summary>
+	private void BrowseForCustomMSIXPathButton_Click()
 	{
 		// Offer file picker to select MSIX file path
 		string? MSIXPath = FileDialogHelper.ShowFilePickerDialog("MSIXBundle file|*.msixbundle");
@@ -69,7 +72,7 @@ public sealed partial class UpdatePageCustomMSIXPath : Page
 	}
 
 
-	private void ConfirmUseOfCustomMSIXPath_Click(object sender, RoutedEventArgs e)
+	private void ConfirmUseOfCustomMSIXPath_Click()
 	{
 		ConfirmUseOfCustomMSIXPath.IsOn = !ConfirmUseOfCustomMSIXPath.IsOn;
 

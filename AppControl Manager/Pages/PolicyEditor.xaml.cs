@@ -31,7 +31,7 @@ namespace AppControlManager.Pages;
 /// The PolicyEditor class manages the UI for editing policies, including handling item deletions and enhancing ListView
 /// interactions.
 /// </summary>
-public sealed partial class PolicyEditor : Page
+internal sealed partial class PolicyEditor : Page
 {
 
 #pragma warning disable CA1822
@@ -42,7 +42,7 @@ public sealed partial class PolicyEditor : Page
 	/// Initializes a new instance of the PolicyEditor class. Sets up the component, enables navigation caching, and
 	/// assigns the data context.
 	/// </summary>
-	public PolicyEditor()
+	internal PolicyEditor()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;

@@ -28,13 +28,13 @@ namespace AppControlManager.Pages;
 /// Represents a page for Microsoft documentation with navigation controls. It manages WebView2 state and handles back,
 /// forward, reload, and home actions.
 /// </summary>
-public sealed partial class MicrosoftDocumentation : Page
+internal sealed partial class MicrosoftDocumentation : Page
 {
 	/// <summary>
 	/// Initializes the MicrosoftDocumentation component, sets the background color of WebView2 to transparent, and handles
 	/// navigation events.
 	/// </summary>
-	public MicrosoftDocumentation()
+	internal MicrosoftDocumentation()
 	{
 		this.InitializeComponent();
 		// Set background color of WebView2 while content is loading

@@ -16,10 +16,10 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.AppSettings;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
@@ -36,31 +36,61 @@ using Windows.ApplicationModel;
 
 namespace AppControlManager;
 
+#pragma warning disable CA1515 // App class cannot be set to internal
+
 /// <summary>
 /// Provides application-specific behavior to supplement the default Application class.
 /// </summary>
 public partial class App : Application
 {
+
+#pragma warning restore CA1515
+
+
+	/// <summary>
+	/// Detects the source of the application.
+	/// GitHub => 0
+	/// Microsoft Store => 1
+	/// Unknown => 2
+	/// </summary>
+	internal static readonly int PackageSource = string.Equals(Package.Current.Id.FamilyName, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ? 0 : (string.Equals(Package.Current.Id.FamilyName, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) ? 1 : 2);
+
+
+	/// <summary>
+	/// The application settings for AppControl Manager
+	/// </summary>
+	internal static AppSettings.Main Settings { get; } = new AppSettings.Main();
+
 	// Semaphore to ensure only one error dialog is shown at a time
 	// Exceptions will stack up and wait in line to be shown to the user
 	private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
 
-	// Get the current app's version
+	/// <summary>
+	/// Get the current app's version
+	/// </summary>
 	private static readonly PackageVersion packageVersion = Package.Current.Id.Version;
 
-	// Convert it to a normal Version object
+	/// <summary>
+	/// Convert it to a normal Version object
+	/// </summary>
 	internal static readonly Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
 
-	// Check if another instance of AppControl Manager is running
+	/// <summary>
+	/// Check if another instance of AppControl Manager is running
+	/// </summary>
 	private static bool IsUniqueAppInstance;
 
 	private static Mutex? _mutex;
 	private const string MutexName = "AppControlManagerRunning";
 
-	// To determine whether the app has Administrator privileges
+	/// <summary>
+	/// To determine whether the app has Administrator privileges
+	/// </summary>
 	internal static readonly bool IsElevated = Environment.IsPrivilegedProcess;
 
-	// The directory where the logs will be stored
+	/// <summary>
+	/// The directory where the logs will be stored
+	/// </summary>
 	internal static readonly string LogsDirectory = IsElevated ?
 		Path.Combine(GlobalVars.UserConfigDir, "Logs") :
 		Path.Combine(Path.GetTempPath(), "AppControlManagerLogs");
@@ -69,7 +99,10 @@ public partial class App : Application
 	// to this variable before using ShowAsync() method to display it.
 	internal static ContentDialog? CurrentlyOpenContentDialog;
 
-	// Host for dependency injection container to be used across the app
+	/// <summary>
+	/// Provides a static host for the dependency injection container used throughout the application. It configures and
+	/// registers various view models as singletons.
+	/// </summary>
 	internal static IHost AppHost { get; } = Host.CreateDefaultBuilder()
 		.ConfigureServices((context, services) =>
 		{
@@ -93,8 +126,43 @@ public partial class App : Application
 	/// Initializes the singleton application object. This is the first line of authored code
 	/// executed, and as such is the logical equivalent of main() or WinMain().
 	/// </summary>
-	public App()
+	internal App()
 	{
+		// If the current session is not elevated and user configured the app to ask for elevation on startup
+		if (!IsElevated && Settings.PromptForElevationOnStartup)
+		{
+
+			ProcessStartInfo processInfo = new()
+			{
+				FileName = Environment.ProcessPath,
+				Verb = "runas",
+				UseShellExecute = true
+			};
+
+			Process? processStartResult = null;
+
+			try
+			{
+				processStartResult = Process.Start(processInfo);
+			}
+
+			// Error code 1223: The operation was canceled by the user.
+			catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+			{
+				// Do nothing if the user cancels the UAC prompt.
+				Logger.Write("User canceled the UAC prompt.");
+			}
+
+			// Explicitly exit the current instance only after launching the elevated instance
+			if (processStartResult is not null)
+			{
+				// Current.Exit(); doesn't work here
+
+				// Exit the process
+				Environment.Exit(0);
+			}
+		}
+
 		this.InitializeComponent();
 
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
@@ -124,9 +192,7 @@ public partial class App : Application
 		#region
 
 		// Check for the SoundSetting in the local settings
-		bool soundSetting = AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.SoundSetting);
-
-		if (soundSetting)
+		if (Settings.SoundSetting)
 		{
 			ElementSoundPlayer.State = ElementSoundPlayerState.On;
 			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;

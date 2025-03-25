@@ -17,6 +17,9 @@
 
 namespace AppControlManager.IntelGathering;
 
+/// <summary>
+/// Defines the action type of Code Integrity and AppLocker event logs.
+/// </summary>
 internal enum EventAction
 {
 	Audit,

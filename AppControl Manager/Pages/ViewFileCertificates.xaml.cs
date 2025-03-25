@@ -42,7 +42,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for viewing file certificates, managing their display, and facilitating clipboard
 /// operations.
 /// </summary>
-public sealed partial class ViewFileCertificates : Page
+internal sealed partial class ViewFileCertificates : Page
 {
 
 #pragma warning disable CA1822
@@ -53,7 +53,7 @@ public sealed partial class ViewFileCertificates : Page
 	/// Constructor for the ViewFileCertificates class. Initializes components, sets navigation cache mode, and assigns the
 	/// data context.
 	/// </summary>
-	public ViewFileCertificates()
+	internal ViewFileCertificates()
 	{
 		this.InitializeComponent();
 
@@ -239,9 +239,7 @@ public sealed partial class ViewFileCertificates : Page
 	/// <summary>
 	/// Event handler for the Browse button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void BrowseForFilesButton_Click(object sender, RoutedEventArgs e)
+	private async void BrowseForFilesButton_Click()
 	{
 
 		try

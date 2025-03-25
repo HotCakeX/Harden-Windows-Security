@@ -41,7 +41,7 @@ namespace AppControlManager.Pages;
 /// Represents a simulation page that initializes components, manages file paths, and handles user interactions for
 /// simulations.
 /// </summary>
-public sealed partial class Simulation : Page
+internal sealed partial class Simulation : Page
 {
 
 #pragma warning disable CA1822
@@ -52,7 +52,7 @@ public sealed partial class Simulation : Page
 	/// Initializes a new instance of the Simulation class. Sets up the component, navigation cache mode, data context, and
 	/// initializes file and folder path arrays.
 	/// </summary>
-	public Simulation()
+	internal Simulation()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Required;
@@ -269,15 +269,17 @@ public sealed partial class Simulation : Page
 	private List<string> catRootPaths; // For selected Cat Root paths
 
 
-	// Event handler for the Begin Simulation button
-	private async void BeginSimulationButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for the Begin Simulation button
+	/// </summary>
+	private async void BeginSimulationButton_Click()
 	{
 		try
 		{
 			// Collect values from UI elements
-			bool noCatRootScanning = (NoCatRootScanningToggle.IsChecked);
+			bool noCatRootScanning = NoCatRootScanningToggle.IsChecked;
 			double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
-			bool CSVOutput = (CSVOutputToggle.IsChecked);
+			bool CSVOutput = CSVOutputToggle.IsChecked;
 
 			BeginSimulationButton.IsEnabled = false;
 			ScalabilityRadialGauge.IsEnabled = false;
@@ -326,8 +328,11 @@ public sealed partial class Simulation : Page
 		}
 	}
 
-	// Event handler for the Select XML File button
-	private void SelectXmlFileButton_Click(object sender, RoutedEventArgs e)
+
+	/// <summary>
+	/// Event handler for the Select XML File button
+	/// </summary>
+	private void SelectXmlFileButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -341,8 +346,10 @@ public sealed partial class Simulation : Page
 		}
 	}
 
-	// Event handler for the Select Files button
-	private void SelectFilesButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for the Select Files button
+	/// </summary>
+	private void SelectFilesButton_Click()
 	{
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
@@ -357,8 +364,10 @@ public sealed partial class Simulation : Page
 		}
 	}
 
-	// Event handler for the Select Folders button
-	private void SelectFoldersButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for the Select Folders button
+	/// </summary>
+	private void SelectFoldersButton_Click()
 	{
 		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
@@ -374,8 +383,10 @@ public sealed partial class Simulation : Page
 	}
 
 
-	// Event handler for the Cat Root Paths button
-	private void CatRootPathsButton_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Event handler for the Cat Root Paths button
+	/// </summary>
+	private void CatRootPathsButton_Click()
 	{
 		List<string>? selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 

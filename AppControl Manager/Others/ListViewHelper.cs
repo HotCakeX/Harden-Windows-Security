@@ -31,7 +31,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using static AppControlManager.AppSettings.AppSettingsCls;
 
 namespace AppControlManager.Others;
 
@@ -40,7 +39,9 @@ namespace AppControlManager.Others;
 /// </summary>
 internal static class ListViewHelper
 {
-	// An offscreen TextBlock for measurement
+	/// <summary>
+	/// An offscreen TextBlock for measurement
+	/// </summary>
 	private static readonly TextBlock tb = new()
 	{
 		// It's important to make sure this matches the header text style so column texts will be aligned properly
@@ -362,7 +363,7 @@ internal static class ListViewHelper
 	{
 
 		// Only perform the scroll if the setting is enabled
-		if (!GetSetting<bool>(SettingKeys.ListViewsVerticalCentering))
+		if (!App.Settings.ListViewsVerticalCentering)
 		{
 			return;
 		}

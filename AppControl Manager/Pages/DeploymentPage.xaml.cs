@@ -38,7 +38,7 @@ namespace AppControlManager.Pages;
 /// DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
 /// user interactions for file selection and deployment status updates.
 /// </summary>
-public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 {
 	// HashSets to store user input selected files
 	private readonly HashSet<string> XMLFiles = [];
@@ -52,7 +52,7 @@ public sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
 	/// Initializes a new instance of the DeploymentPage class. Disables the DeploySignedXMLButton if the system is older
 	/// than Windows 11 24H2.
 	/// </summary>
-	public DeploymentPage()
+	internal DeploymentPage()
 	{
 		this.InitializeComponent();
 

@@ -38,7 +38,7 @@ namespace AppControlManager.Pages;
 /// Configures policy rules and manages UI interactions for policy templates. Initializes components, handles file
 /// selection, and updates settings dynamically.
 /// </summary>
-public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimatedIconsManager
 {
 	// To store the selected policy path
 	private string? SelectedFilePath;
@@ -51,7 +51,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// Initializes the ConfigurePolicyRuleOptions class, sets up navigation caching, binds the data context, and generates
 	/// settings cards.
 	/// </summary>
-	public ConfigurePolicyRuleOptions()
+	internal ConfigurePolicyRuleOptions()
 	{
 		this.InitializeComponent();
 
@@ -207,9 +207,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// <summary>
 	/// Event handler for the browse button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void PickPolicyFileButton_Click(object sender, RoutedEventArgs e)
+	private async void PickPolicyFileButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -269,9 +267,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// <summary>
 	/// Event handler for when the Apply button is pressed
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void ApplyTheChangesButton_Click(object sender, RoutedEventArgs e)
+	private async void ApplyTheChangesButton_Click()
 	{
 
 		try
@@ -455,9 +451,7 @@ public sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimated
 	/// <summary>
 	/// Event handlers to retrieve latest policy rule option details from the XML file and check/uncheck UI boxes
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void RefreshRuleOptionsState_Click(object sender, RoutedEventArgs e)
+	private async void RefreshRuleOptionsState_Click()
 	{
 		try
 		{

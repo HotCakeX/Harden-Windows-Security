@@ -69,7 +69,7 @@
                 <controls:SettingsCard x:Name="CheckForUpdate"
                            Description="Once the updates are downloaded and installed, the next time you open the AppControl Manager you will use the new version."
                            Header="Check for AppControl Manager update"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" Click="CheckForUpdate_Click">
+                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" Click="{x:Bind CheckForUpdate_Click}">
 
                     <controls:WrapPanel Orientation="Horizontal">
 
@@ -77,7 +77,7 @@
 
                         <Button x:Name="CheckForUpdateButton"
                                 Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                                Click="CheckForUpdateButton_Click"
+                                Click="{x:Bind CheckForUpdateButton_Click}"
                                 ToolTipService.ToolTip="Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approxmitate download size is 85 MB."/>
 
                     </controls:WrapPanel>
@@ -85,12 +85,12 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it."
-                    Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="AutoUpdateCheckToggleSettingsCard_Click" IsActionIconVisible="False">
-                    <ToggleSwitch x:Name="AutoUpdateCheckToggle" Toggled="AutoUpdateCheckToggle_Toggled"/>
+                    Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="{x:Bind AutoUpdateCheckToggleSettingsCard_Click}" IsActionIconVisible="False">
+                    <ToggleSwitch x:Name="AutoUpdateCheckToggle" Toggled="{x:Bind AutoUpdateCheckToggle_Toggled}"/>
                 </controls:SettingsCard>
 
                 <controls:SettingsCard Description="When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user's account, requiring confirmation of prompts before it can be used for signing."
-                    Header="Hardened Update Procedure" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" IsClickEnabled="True" IsActionIconVisible="False" Click="HardenedUpdateProcedureToggleSettingsCard_Click">
+                    Header="Hardened Update Procedure" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind HardenedUpdateProcedureToggleSettingsCard_Click}">
                     <ToggleSwitch x:Name="HardenedUpdateProcedureToggle" Toggled="HardenedUpdateProcedureToggle_Toggled" />
                 </controls:SettingsCard>
 

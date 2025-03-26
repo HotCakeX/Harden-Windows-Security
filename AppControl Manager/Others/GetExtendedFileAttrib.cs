@@ -114,8 +114,10 @@ internal static partial class GetExtendedFileAttrib
 				productName: CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\ProductName"))
 			);
 		}
-		catch
+		catch (Exception ex)
 		{
+			Logger.Write($"Could not get the ExFileInfo of the file: {filePath} - Error: {ex.Message}");
+
 			return BadCaseReturnVal;
 		}
 	}

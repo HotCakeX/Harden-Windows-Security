@@ -22,7 +22,6 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using AnimatedVisuals;
-using AppControlManager.AppSettings;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -75,15 +74,11 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
 
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
-		AutomaticAssignmentSidebarToggleSwitchToggledState = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar) ?? true;
+		AutomaticAssignmentSidebarToggleSwitchToggledState = App.Settings.AutomaticAssignmentSidebar;
 
 		if (App.IsElevated)
 			// Get the user configuration for unsigned policy path and fill in the text box for sidebar
 			SidebarBasePolicyPathTextBoxText = UserConfiguration.Get().UnsignedPolicyPath;
-
-		// Enables Security catalogs caching by default. If the value doesn't exist in the settings then it will be null and assigned to true. If it's false it will remain false.
-		bool? CacheSecurityCatalogResultsStatus = AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.CacheSecurityCatalogsScanResults);
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.CacheSecurityCatalogsScanResults, CacheSecurityCatalogResultsStatus ?? true);
 
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
@@ -94,9 +89,15 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 	#region UI-Bound Properties
 
 	/// <summary>
+	/// The visibility of the Update page in the main NavigationView.
+	/// Only make it visible if the app is installed from the GitHub source.
+	/// </summary>	
+	internal Visibility UpdatePageNavItemVisibility = App.PackageSource is 0 ? Visibility.Visible : Visibility.Collapsed;
+
+	/// <summary>
 	/// Sets the initial value of the back drop. if it's null, Mica Alt will be used.
 	/// </summary>
-	private int _BackDropComboBoxSelectedIndex = (int)Enum.Parse<BackDropComboBoxItems>((AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.BackDropBackground) ?? "MicaAlt"));
+	private int _BackDropComboBoxSelectedIndex = (int)Enum.Parse<BackDropComboBoxItems>(App.Settings.BackDropBackground);
 	internal int BackDropComboBoxSelectedIndex
 	{
 		get => _BackDropComboBoxSelectedIndex;
@@ -466,7 +467,7 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 	internal void AutomaticAssignmentSidebarToggleSwitch_Toggled()
 	{
 		// Save the status in app settings
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitchToggledState);
+		App.Settings.AutomaticAssignmentSidebar = AutomaticAssignmentSidebarToggleSwitchToggledState;
 	}
 
 
@@ -478,7 +479,7 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 		AutomaticAssignmentSidebarToggleSwitchToggledState = !AutomaticAssignmentSidebarToggleSwitchToggledState;
 
 		// Save the status in app settings
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.AutomaticAssignmentSidebar, AutomaticAssignmentSidebarToggleSwitchToggledState);
+		App.Settings.AutomaticAssignmentSidebar = AutomaticAssignmentSidebarToggleSwitchToggledState;
 	}
 
 
@@ -889,7 +890,7 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 		}
 
 		// Save the selected option (using the enum's name)
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.BackDropBackground, selection.ToString());
+		App.Settings.BackDropBackground = selection.ToString();
 	}
 
 

@@ -312,8 +312,36 @@ internal static class FileAttribDeDuplication
 			List<FileAttrib> fileAttribList = partition.Value;
 			if (fileAttribList.Count > 1)
 			{
-				// Choose the first FileAttrib as the one to keep.
-				FileAttrib kept = fileAttribList.First();
+				// Choose the FileAttrib to keep based on version criteria.
+				// If the FileAttribs have MinimumFileVersion values, choose the one with the lowest version.
+				// Otherwise, if they have MaximumFileVersion values, choose the one with the highest version.
+				FileAttrib kept = fileAttribList[0];
+
+				// If the FileAttribs use MinimumFileVersion, choose the one with the lowest version.
+				if (!string.IsNullOrWhiteSpace(kept.MinimumFileVersion))
+				{
+					foreach (FileAttrib fa in fileAttribList)
+					{
+						if (!string.IsNullOrWhiteSpace(fa.MinimumFileVersion) &&
+							CompareVersions(fa.MinimumFileVersion, kept.MinimumFileVersion) < 0)
+						{
+							kept = fa;
+						}
+					}
+				}
+				// Else if they use MaximumFileVersion, choose the one with the highest version.
+				else if (!string.IsNullOrWhiteSpace(kept.MaximumFileVersion))
+				{
+					foreach (FileAttrib fa in fileAttribList)
+					{
+						if (!string.IsNullOrWhiteSpace(fa.MaximumFileVersion) &&
+							CompareVersions(fa.MaximumFileVersion, kept.MaximumFileVersion) > 0)
+						{
+							kept = fa;
+						}
+					}
+				}
+
 				foreach (FileAttrib duplicate in fileAttribList.Where(fa => fa.ID != kept.ID))
 				{
 					// For each duplicate, update the FileAttribRefs in the affected signer dictionary.
@@ -349,4 +377,22 @@ internal static class FileAttribDeDuplication
 			}
 		}
 	}
+
+	/// <summary>
+	/// Compares two version strings using the System.Version class.
+	/// Returns -1 if v1 is lower than v2, 1 if v1 is higher than v2, or 0 if they are equal or unparsable.
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="v2"></param>
+	/// <returns></returns>
+	private static int CompareVersions(string v1, string v2)
+	{
+		if (Version.TryParse(v1, out Version? version1) && Version.TryParse(v2, out Version? version2))
+		{
+			return version1.CompareTo(version2);
+		}
+		// Fallback: treat unparsable strings as equal.
+		return 0;
+	}
+
 }

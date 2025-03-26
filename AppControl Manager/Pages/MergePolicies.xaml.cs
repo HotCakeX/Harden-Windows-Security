@@ -32,7 +32,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for managing merge policies with a view model for data binding. It handles user interactions for
 /// selecting files and displaying flyouts.
 /// </summary>
-public sealed partial class MergePolicies : Page
+internal sealed partial class MergePolicies : Page
 {
 
 #pragma warning disable CA1822
@@ -43,7 +43,7 @@ public sealed partial class MergePolicies : Page
 	/// Initializes a new instance of the MergePolicies class. Sets up the navigation cache mode and binds the data context
 	/// to the ViewModel.
 	/// </summary>
-	public MergePolicies()
+	internal MergePolicies()
 	{
 		this.InitializeComponent();
 

@@ -27,13 +27,13 @@ namespace AppControlManager.Pages;
 /// Initializes the page component and sets the navigation cache mode to required. Handles the Fetch button click event
 /// to retrieve and display secure policy settings.
 /// </summary>
-public sealed partial class GetSecurePolicySettings : Page
+internal sealed partial class GetSecurePolicySettings : Page
 {
 	/// <summary>
 	/// Initializes the component and sets the navigation cache mode to required, ensuring the page maintains its state
 	/// during navigation.
 	/// </summary>
-	public GetSecurePolicySettings()
+	internal GetSecurePolicySettings()
 	{
 		this.InitializeComponent();
 

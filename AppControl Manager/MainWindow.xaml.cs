@@ -45,7 +45,7 @@ namespace AppControlManager;
 /// MainWindow is a sealed class that represents the main application window, managing navigation, UI elements, and
 /// event handling.
 /// </summary>
-public sealed partial class MainWindow : Window
+internal sealed partial class MainWindow : Window
 {
 
 #pragma warning disable CA1822
@@ -258,7 +258,6 @@ public sealed partial class MainWindow : Window
 		{ GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content"), typeof(Pages.ConfigurePolicyRuleOptions) },
 		{ GlobalVars.Rizz.GetString("LogsNavItem/Content"), typeof(Pages.Logs) },
 		{ GlobalVars.Rizz.GetString("SimulationNavItem/Content"), typeof(Pages.Simulation) },
-		{ GlobalVars.Rizz.GetString("UpdateNavItem/Content"), typeof(Pages.UpdatePage) },
 		{ GlobalVars.Rizz.GetString("DeploymentNavItem/Content"), typeof(Pages.DeploymentPage) },
 		{ GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content"), typeof(Pages.EventLogsPolicyCreation) },
 		{ GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content"), typeof(Pages.MDEAHPolicyCreation) },
@@ -282,8 +281,14 @@ public sealed partial class MainWindow : Window
 	/// Initializes the main window, sets up event handlers, and configures UI elements like the title bar and navigation
 	/// items.
 	/// </summary>
-	public MainWindow()
+	internal MainWindow()
 	{
+		// Only make the update page available through search if the app was installed from GitHub source
+		if (App.PackageSource is 0)
+		{
+			NavigationPageToItemContentMap[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
+		}
+
 		this.InitializeComponent();
 
 		// Assign this instance to the static field
@@ -344,39 +349,42 @@ public sealed partial class MainWindow : Window
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = ViewModel;
 
-		_ = Task.Run(() =>
+		if (App.PackageSource is 0)
 		{
-			try
+			_ = Task.Run(() =>
 			{
-
-				// If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
-				// If a new version is available.
-				// Will also check for update if it's null meaning user hasn't configured the auto update check yet
-				if (AppSettingsCls.TryGetSetting<bool?>(AppSettingsCls.SettingKeys.AutoCheckForUpdateAtStartup) ?? true)
+				try
 				{
 
-					Logger.Write("Checking for update on startup");
-
-					// Start the update check
-					UpdateCheckResponse updateCheckResponse = AppUpdate.Check();
-
-					// If a new version is available
-					if (updateCheckResponse.IsNewVersionAvailable)
+					// If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
+					// If a new version is available.
+					// Will also check for update if it's null meaning user hasn't configured the auto update check yet
+					if (App.Settings.AutoCheckForUpdateAtStartup)
 					{
-						// Set the text for the button in the update page
-						GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
-					}
-					else
-					{
-						Logger.Write("No new version of the AppControl Manager is available.");
+
+						Logger.Write("Checking for update on startup");
+
+						// Start the update check
+						UpdateCheckResponse updateCheckResponse = AppUpdate.Check();
+
+						// If a new version is available
+						if (updateCheckResponse.IsNewVersionAvailable)
+						{
+							// Set the text for the button in the update page
+							GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
+						}
+						else
+						{
+							Logger.Write("No new version of the AppControl Manager is available.");
+						}
 					}
 				}
-			}
-			catch (Exception ex)
-			{
-				Logger.Write("Error checking for update on startup: " + ex.Message);
-			}
-		});
+				catch (Exception ex)
+				{
+					Logger.Write("Error checking for update on startup: " + ex.Message);
+				}
+			});
+		}
 
 		#endregion
 
@@ -400,10 +408,10 @@ public sealed partial class MainWindow : Window
 
 
 		// Set the initial background setting based on the user's settings
-		OnNavigationBackgroundChanged(null, new(AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.NavViewBackground)));
+		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));
 
 		// Set the initial App Theme based on the user's settings
-		OnAppThemeChanged(null, new(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.AppTheme)));
+		OnAppThemeChanged(null, new(App.Settings.AppTheme));
 
 		// Restore window size on startup
 		RestoreWindowSize();
@@ -415,14 +423,14 @@ public sealed partial class MainWindow : Window
 		Events.UnsignedPolicyManager.UnsignedPolicyInUserConfigChanged += SidebarOnUnsignedPolicyChanged;
 
 		// Set the initial Icons styles abased on the user's settings
-		ViewModel.OnIconsStylesChanged(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle));
+		ViewModel.OnIconsStylesChanged(App.Settings.IconsStyle);
 	}
 
 
 	/// <summary>
-	/// Public property to access the singleton instance from other classes
+	/// internal property to access the singleton instance from other classes
 	/// </summary>
-	public static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
+	internal static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
 
 
 	/// <summary>
@@ -551,8 +559,8 @@ public sealed partial class MainWindow : Window
 		SizeInt32 size = m_AppWindow.Size;
 
 		// Save to window width and height to the app settings
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowWidth, size.Width);
-		AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowHeight, size.Height);
+		App.Settings.MainWindowWidth = size.Width;
+		App.Settings.MainWindowHeight = size.Height;
 
 		Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
 
@@ -560,14 +568,7 @@ public sealed partial class MainWindow : Window
 		_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
 
 		// Save the maximized status of the window before closing to the app settings
-		if (windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED)
-		{
-			AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowIsMaximized, true);
-		}
-		else
-		{
-			AppSettingsCls.SaveSetting(AppSettingsCls.SettingKeys.MainWindowIsMaximized, false);
-		}
+		App.Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
 	}
 
 
@@ -578,7 +579,7 @@ public sealed partial class MainWindow : Window
 	{
 
 		// If the window was last maximized then restore it to maximized
-		if (AppSettingsCls.GetSetting<bool>(AppSettingsCls.SettingKeys.MainWindowIsMaximized))
+		if (App.Settings.MainWindowIsMaximized)
 		{
 
 			Logger.Write("Window was maximized when the app closed last time, setting it to maximized now");
@@ -593,17 +594,14 @@ public sealed partial class MainWindow : Window
 		// Else set its size to its previous size before closing
 		else
 		{
-			// Retrieve stored values
-			int width = AppSettingsCls.GetSetting<int>(AppSettingsCls.SettingKeys.MainWindowWidth);
-			int height = AppSettingsCls.GetSetting<int>(AppSettingsCls.SettingKeys.MainWindowHeight);
-
-			Logger.Write($"Setting the window size back to what it was when the app was closed. Height: {height} - Width: {width}");
-
 			// If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
-			if (width > 200 && height > 200)
+			if (App.Settings.MainWindowWidth > 200 && App.Settings.MainWindowHeight > 200)
 			{
+
+				Logger.Write($"Setting the window size back to what it was when the app was closed. Height: {App.Settings.MainWindowHeight} - Width: {App.Settings.MainWindowWidth}");
+
 				// Apply to the current AppWindow
-				m_AppWindow?.Resize(new SizeInt32(width, height));
+				m_AppWindow?.Resize(new SizeInt32(App.Settings.MainWindowWidth, App.Settings.MainWindowHeight));
 			}
 		}
 	}
@@ -734,7 +732,7 @@ public sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Light;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -759,7 +757,7 @@ public sealed partial class MainWindow : Window
 					RootGrid.RequestedTheme = ElementTheme.Dark;
 
 					// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-					if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 					{
 
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -788,7 +786,7 @@ public sealed partial class MainWindow : Window
 					if (currentColorMode is ElementTheme.Dark)
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -809,7 +807,7 @@ public sealed partial class MainWindow : Window
 					else
 					{
 						// Change the navigation icons based on dark/light theme only if "Animated" is the current icons style in use
-						if (string.Equals(AppSettingsCls.GetSetting<string>(AppSettingsCls.SettingKeys.IconsStyle), "Animated", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(App.Settings.IconsStyle, "Animated", StringComparison.OrdinalIgnoreCase))
 						{
 
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
@@ -950,14 +948,33 @@ public sealed partial class MainWindow : Window
 		{
 			if (!UnelevatedPages.Contains(nextNavPageType))
 			{
-				// Create and display a ContentDialog with styled TextBlock
+				// a StackPanel to hold the text and checkbox.
+				StackPanel panel = new();
+
+				// a TextBlock for the informational text.
+				TextBlock infoText = new()
+				{
+					Text = "Please launch AppControl Manager as Administrator to access this page",
+					TextWrapping = TextWrapping.Wrap
+				};
+				panel.Children.Add(infoText);
+
+				// a CheckBox for the extra input.
+				CheckBox extraInfoCheckBox = new()
+				{
+					Content = "Always prompt for elevation on app startup",
+					Margin = new Thickness(0, 12, 0, 0)
+				};
+				panel.Children.Add(extraInfoCheckBox);
+
+				// Create and configure the ContentDialog.
 				ContentDialog dialog = new()
 				{
 					Title = "Administrator privileges required",
-					Content = "Please launch AppControl Manager as Administrator to access this page",
+					Content = panel,
 					CloseButtonText = "Cancel",
-					BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 					SecondaryButtonText = "Relaunch as Admin",
+					BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 					BorderThickness = new Thickness(1),
 					XamlRoot = this.Content.XamlRoot
 				};
@@ -970,6 +987,13 @@ public sealed partial class MainWindow : Window
 				// If user chose to elevate to Admin
 				if (result is ContentDialogResult.Secondary)
 				{
+					bool isChecked = extraInfoCheckBox.IsChecked ?? false;
+
+					if (isChecked)
+					{
+						App.Settings.PromptForElevationOnStartup = true;
+					}
+
 					ProcessStartInfo processInfo = new()
 					{
 						FileName = Environment.ProcessPath,

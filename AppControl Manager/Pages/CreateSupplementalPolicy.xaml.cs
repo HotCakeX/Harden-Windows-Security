@@ -43,7 +43,7 @@ namespace AppControlManager.Pages;
 /// <summary>
 /// Represents a page for creating supplemental policies, managing data display and user interactions.
 /// </summary>
-public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIconsManager
 {
 
 #pragma warning disable CA1822
@@ -54,7 +54,7 @@ public sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIc
 	/// Constructor for the CreateSupplementalPolicy class. Initializes components, sets navigation cache mode, and assigns
 	/// the data context.
 	/// </summary>
-	public CreateSupplementalPolicy()
+	internal CreateSupplementalPolicy()
 	{
 		this.InitializeComponent();
 

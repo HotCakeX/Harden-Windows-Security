@@ -113,7 +113,7 @@ internal static partial class WinTrust
 	#region This section is related to the AllCertificatesGrabber class and its operations
 
 	// Enum defining WinVerifyTrust results
-	public enum WinVerifyTrustResult : uint
+	internal enum WinVerifyTrustResult : uint
 	{
 		Success = 0, // It's Success
 		SubjectCertificateRevoked = 2148204812, // Subject's certificate was revoked. (CERT_E_REVOKED)

@@ -29,7 +29,7 @@ namespace AppControlManager.Pages;
 /// BuildNewCertificate is a page for generating a new certificate. It manages user input, validates fields, and handles
 /// the certificate creation process.
 /// </summary>
-public sealed partial class BuildNewCertificate : Page
+internal sealed partial class BuildNewCertificate : Page
 {
 
 	// To save the generated certificate's thumb print
@@ -39,7 +39,7 @@ public sealed partial class BuildNewCertificate : Page
 	/// Initializes a new instance of the BuildNewCertificate class. Sets the navigation cache mode and checks field
 	/// contents.
 	/// </summary>
-	public BuildNewCertificate()
+	internal BuildNewCertificate()
 	{
 		this.InitializeComponent();
 

@@ -33,7 +33,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for displaying strict kernel policy scan results with functionalities for copying, sorting,
 /// filtering, and managing data.
 /// </summary>
-public sealed partial class StrictKernelPolicyScanResults : Page
+internal sealed partial class StrictKernelPolicyScanResults : Page
 {
 
 #pragma warning disable CA1822
@@ -44,7 +44,7 @@ public sealed partial class StrictKernelPolicyScanResults : Page
 	/// Initializes a new instance of the StrictKernelPolicyScanResults class, setting up navigation caching and data
 	/// context for the view model.
 	/// </summary>
-	public StrictKernelPolicyScanResults()
+	internal StrictKernelPolicyScanResults()
 	{
 		this.InitializeComponent();
 

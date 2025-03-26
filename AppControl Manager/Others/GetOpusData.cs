@@ -26,7 +26,7 @@ namespace AppControlManager.Others;
 /// <summary>
 /// For retrieving Opus data from files
 /// </summary>
-public static partial class Opus
+internal static partial class Opus
 {
 	internal static partial class Crypt32
 	{
@@ -38,7 +38,7 @@ public static partial class Opus
 		internal static partial bool CryptDecodeObject(
 			uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
 			IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
-			[In] byte[] pbEncoded,           // Pointer to a buffer that contains the encoded structure
+			[In] byte[] pbEncoded,          // Pointer to a buffer that contains the encoded structure
 			uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
 			uint dwFlags,                   // Flags that modify the behavior of the function
 			IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure
@@ -49,13 +49,13 @@ public static partial class Opus
 	/// <summary>
 	/// More info about this at the end of the code
 	/// </summary>
-	public const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
+	private const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
 
 
 	/// <summary>
 	/// for the SpcSpOpusInfo structure
 	/// </summary>
-	public const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
+	private const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
 
 	// Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
 	// https://learn.microsoft.com/en-us/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file

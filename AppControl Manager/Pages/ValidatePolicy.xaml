@@ -50,9 +50,9 @@
 
                 <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"
                    x:Name="BrowseForXMLSettingsCard"
-                   IsClickEnabled="True" Click="BrowseForXMLSettingsCard_Click" IsActionIconVisible="False">
+                   IsClickEnabled="True" Click="{x:Bind ValidateXML}" IsActionIconVisible="False">
 
-                    <Button x:Uid="BrowseButton" x:Name="BrowseForXMLButton" Click="BrowseForXMLButton_Click" />
+                    <Button x:Uid="BrowseButton" x:Name="BrowseForXMLButton" Click="{x:Bind ValidateXML}" />
 
                 </controls:SettingsCard>
 

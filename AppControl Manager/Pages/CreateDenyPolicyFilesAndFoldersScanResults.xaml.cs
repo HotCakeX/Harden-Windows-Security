@@ -32,7 +32,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for creating deny policy scan results, managing navigation state and data context. Handles user
 /// interactions like copying, filtering, and selecting items.
 /// </summary>
-public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
+internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 {
 
 #pragma warning disable CA1822
@@ -43,7 +43,7 @@ public sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 	/// Constructor for the CreateDenyPolicyFilesAndFoldersScanResults class. Initializes components, maintains navigation
 	/// state, and sets the DataContext.
 	/// </summary>
-	public CreateDenyPolicyFilesAndFoldersScanResults()
+	internal CreateDenyPolicyFilesAndFoldersScanResults()
 	{
 		this.InitializeComponent();
 

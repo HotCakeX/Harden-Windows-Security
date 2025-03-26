@@ -29,7 +29,7 @@ namespace AppControlManager.Pages;
 /// The Logs class manages log files, allowing users to view and filter log content. It initializes with navigation
 /// cache disabled.
 /// </summary>
-public sealed partial class Logs : Page
+internal sealed partial class Logs : Page
 {
 	/// <summary>
 	/// Holds all lines from the currently loaded log file.
@@ -40,7 +40,7 @@ public sealed partial class Logs : Page
 	/// Initializes the Logs component and sets the navigation cache mode to disabled. This ensures the page reloads when
 	/// visited.
 	/// </summary>
-	public Logs()
+	internal Logs()
 	{
 		this.InitializeComponent();
 

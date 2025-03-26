@@ -32,7 +32,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for creating supplemental policy files and folders scan results, managing data display and user
 /// interactions.
 /// </summary>
-public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page
+internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page
 {
 
 #pragma warning disable CA1822
@@ -43,7 +43,7 @@ public sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults :
 	/// Constructor for the CreateSupplementalPolicyFilesAndFoldersScanResults class. Initializes components, maintains
 	/// navigation state, and sets the DataContext.
 	/// </summary>
-	public CreateSupplementalPolicyFilesAndFoldersScanResults()
+	internal CreateSupplementalPolicyFilesAndFoldersScanResults()
 	{
 		this.InitializeComponent();
 

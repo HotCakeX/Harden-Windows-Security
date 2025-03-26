@@ -20,6 +20,10 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
+/// <summary>
+/// Defines different types of secure setting values used in WLDP. Types include Boolean, Integer, None, String, and
+/// Flag.
+/// </summary>
 internal enum WLDP_SECURE_SETTING_VALUE_TYPE
 {
 	WldpBoolean = 0,
@@ -29,6 +33,10 @@ internal enum WLDP_SECURE_SETTING_VALUE_TYPE
 	WldpFlag = 4
 }
 
+/// <summary>
+/// Represents a Unicode string with a specified length and a pointer to the string's buffer. It includes fields for the
+/// string's current length and maximum length.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 internal struct UNICODE_STRING
 {
@@ -37,6 +45,10 @@ internal struct UNICODE_STRING
 	internal IntPtr Buffer;
 }
 
+/// <summary>
+/// Queries the security policy for a specified provider and key, returning the value type and size.
+/// Initializes a UNICODE_STRING structure from a given string.
+/// </summary>
 internal static partial class WldpQuerySecurityPolicyWrapper
 {
 	[LibraryImport("Wldp.dll")]

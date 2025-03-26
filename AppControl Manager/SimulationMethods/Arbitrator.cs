@@ -41,7 +41,7 @@ internal static class Arbitrator
 	internal static SimulationOutput Compare(SimulationInput simulationInput)
 	{
 		// Get the extended file attributes
-		ExFileInfo ExtendedFileInfo = ExFileInfo.GetExtendedFileInfo(simulationInput.FilePath.FullName);
+		ExFileInfo ExtendedFileInfo = GetExtendedFileAttrib.Get(simulationInput.FilePath.FullName);
 
 		// Create a dictionary out of the ExtendedFileInfo so we can perform high performance lookups later on in the loops without resorting to reflection
 		Dictionary<string, string> ExtendedFileInfoDict = [];
@@ -343,114 +343,72 @@ internal static class Arbitrator
 				}
 			}
 
-
 			// Loop through each certificate chain
 			foreach (ChainPackage chain in simulationInput.AllFileSigners)
 			{
 
-				if (chain.IntermediateCertificates is null)
-				{
-					continue;
-				}
-
-				// Loop over each intermediate certificate in the chain
-				foreach (ChainElement IntermediateCert in chain.IntermediateCertificates)
+				// If the file has any intermediate certificates
+				if (chain.IntermediateCertificates is not null)
 				{
 
-					/*
-                        ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
-
-                        CRITERIA:
-                        1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
-                        2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
-                        3) The signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the current chain's leaf certificate's SubjectCN
-                        */
-
-					if (string.Equals(signer.CertRoot, IntermediateCert.TBSValue, StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(signer.Name, IntermediateCert.SubjectCN, StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(signer.CertPublisher, chain.LeafCertificate?.SubjectCN, StringComparison.OrdinalIgnoreCase))
+					// Loop over each intermediate certificate in the chain
+					foreach (ChainElement IntermediateCert in chain.IntermediateCertificates)
 					{
 
-						// Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
-						if (signer.FileAttrib.Count > 0)
+						/*
+							ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
+
+							CRITERIA:
+							1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
+							2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
+							3) The signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the current chain's leaf certificate's SubjectCN
+							*/
+
+						if (string.Equals(signer.CertRoot, IntermediateCert.TBSValue, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(signer.Name, IntermediateCert.SubjectCN, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(signer.CertPublisher, chain.LeafCertificate?.SubjectCN, StringComparison.OrdinalIgnoreCase))
 						{
 
-							// Loop over each <FileAttrib> in the <FileRules> nodes, only those that belong to the Signer
-							// Which we retrieved based on the <FileAttribRef> elements under the Signer
-							// And only keep those <FileAttrib> where the current file being examined has an equal or higher version than the version in those <FileAttrib> elements
-
-							List<Dictionary<string, string>> CandidateFileAttrib = [];
-
-							foreach (KeyValuePair<string, Dictionary<string, string>> Attrib in signer.FileAttrib)
+							// Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
+							if (signer.FileAttrib.Count > 0)
 							{
 
-								_ = Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion);
+								// Loop over each <FileAttrib> in the <FileRules> nodes, only those that belong to the Signer
+								// Which we retrieved based on the <FileAttribRef> elements under the Signer
+								// And only keep those <FileAttrib> where the current file being examined has an equal or higher version than the version in those <FileAttrib> elements
 
-								if (MinimumFileVersion is null)
+								List<Dictionary<string, string>> CandidateFileAttrib = [];
+
+								foreach (KeyValuePair<string, Dictionary<string, string>> Attrib in signer.FileAttrib)
 								{
-									Logger.Write("MinimumFileVersion is null, skipping");
-									continue;
-								}
 
-								Version tempVer = new(MinimumFileVersion);
+									_ = Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion);
 
-								if (ExtendedFileInfo.Version >= tempVer)
-								{
-									CandidateFileAttrib.Add(Attrib.Value);
-								}
-							}
-
-							// If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
-							// These signers have only 1 FileAttribRef and only point to a single FileAttrib
-							// Note: If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
-
-							if (CandidateFileAttrib.Count > 0)
-							{
-								// This loop is potentially unnecessary because of the comments above but keeping it for now
-								foreach (Dictionary<string, string> dict in CandidateFileAttrib)
-								{
-									if (dict.TryGetValue("OriginalFileName", out string? originalFileName) && string.Equals(originalFileName, "*", StringComparison.OrdinalIgnoreCase))
+									if (MinimumFileVersion is null)
 									{
-										return new SimulationOutput(
-										Path.GetFileName(simulationInput.FilePath.ToString()),
-										"Signer",
-										true,
-										signer.ID,
-										signer.Name,
-										signer.CertRoot,
-										signer.CertPublisher,
-										signer.SignerScope,
-										signer.FileAttribRef,
-										"SignedVersion",
-										"Version",
-										IntermediateCert.SubjectCN,
-										IntermediateCert.IssuerCN,
-										IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
-										IntermediateCert.TBSValue,
-										simulationInput.FilePath.ToString()
-										);
+										Logger.Write("MinimumFileVersion is null, skipping");
+										continue;
+									}
+
+									Version tempVer = new(MinimumFileVersion);
+
+									if (ExtendedFileInfo.Version >= tempVer)
+									{
+										CandidateFileAttrib.Add(Attrib.Value);
 									}
 								}
-							}
 
-							// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
-							if (CandidateFileAttrib.Count > 0)
-							{
+								// If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
+								// These signers have only 1 FileAttribRef and only point to a single FileAttrib
+								// Note: If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
 
-								foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
+								if (CandidateFileAttrib.Count > 0)
 								{
-									// Loop over each SpecificFileName
-									foreach (string keyItem in specificFileNames)
+									// This loop is potentially unnecessary because of the comments above but keeping it for now
+									foreach (Dictionary<string, string> dict in CandidateFileAttrib)
 									{
-										if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
-										 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
-										 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
+										if (dict.TryGetValue("OriginalFileName", out string? originalFileName) && string.Equals(originalFileName, "*", StringComparison.OrdinalIgnoreCase))
 										{
-											Logger.Write($"The SpecificFileNameLevel is {keyItem}");
-
-
-											// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-											// And break out of the loop by validating the signer as suitable for FilePublisher level
 											return new SimulationOutput(
 											Path.GetFileName(simulationInput.FilePath.ToString()),
 											"Signer",
@@ -461,8 +419,8 @@ internal static class Arbitrator
 											signer.CertPublisher,
 											signer.SignerScope,
 											signer.FileAttribRef,
-											"FilePublisher",
-											keyItem,
+											"SignedVersion",
+											"Version",
 											IntermediateCert.SubjectCN,
 											IntermediateCert.IssuerCN,
 											IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
@@ -472,11 +430,90 @@ internal static class Arbitrator
 										}
 									}
 								}
+
+								// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+								if (CandidateFileAttrib.Count > 0)
+								{
+
+									foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
+									{
+										// Loop over each SpecificFileName
+										foreach (string keyItem in specificFileNames)
+										{
+											if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
+											 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
+											 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
+											{
+												Logger.Write($"The SpecificFileNameLevel is {keyItem}");
+
+
+												// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
+												// And break out of the loop by validating the signer as suitable for FilePublisher level
+												return new SimulationOutput(
+												Path.GetFileName(simulationInput.FilePath.ToString()),
+												"Signer",
+												true,
+												signer.ID,
+												signer.Name,
+												signer.CertRoot,
+												signer.CertPublisher,
+												signer.SignerScope,
+												signer.FileAttribRef,
+												"FilePublisher",
+												keyItem,
+												IntermediateCert.SubjectCN,
+												IntermediateCert.IssuerCN,
+												IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
+												IntermediateCert.TBSValue,
+												simulationInput.FilePath.ToString()
+												);
+											}
+										}
+									}
+								}
+							}
+
+							// If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
+							else
+							{
+
+								// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+								if (signer.FileAttribRef.Count > 0)
+								{
+									continue;
+								}
+
+								return new SimulationOutput(
+									 Path.GetFileName(simulationInput.FilePath.ToString()),
+									 "Signer",
+									 true,
+									 signer.ID,
+									 signer.Name,
+									 signer.CertRoot,
+									 signer.CertPublisher,
+									 signer.SignerScope,
+									 signer.FileAttribRef,
+									 "Publisher",
+									 null,
+									 IntermediateCert.SubjectCN,
+									 IntermediateCert.IssuerCN,
+									 IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
+									 IntermediateCert.TBSValue,
+									 simulationInput.FilePath.ToString()
+									 );
 							}
 						}
 
-						// If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
-						else
+						/*
+							ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate
+
+							CRITERIA:
+							1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
+							2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
+							*/
+
+						else if (string.Equals(signer.CertRoot, IntermediateCert.TBSValue, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(signer.Name, IntermediateCert.SubjectCN, StringComparison.OrdinalIgnoreCase))
 						{
 
 							// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
@@ -486,65 +523,27 @@ internal static class Arbitrator
 							}
 
 							return new SimulationOutput(
-								 Path.GetFileName(simulationInput.FilePath.ToString()),
-								 "Signer",
-								 true,
-								 signer.ID,
-								 signer.Name,
-								 signer.CertRoot,
-								 signer.CertPublisher,
-								 signer.SignerScope,
-								 signer.FileAttribRef,
-								 "Publisher",
-								 null,
-								 IntermediateCert.SubjectCN,
-								 IntermediateCert.IssuerCN,
-								 IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
-								 IntermediateCert.TBSValue,
-								 simulationInput.FilePath.ToString()
-								 );
+									Path.GetFileName(simulationInput.FilePath.ToString()),
+									"Signer",
+									true,
+									signer.ID,
+									signer.Name,
+									signer.CertRoot,
+									signer.CertPublisher,
+									signer.SignerScope,
+									signer.FileAttribRef,
+									"PcaCertificate/RootCertificate",
+									null,
+									IntermediateCert.SubjectCN,
+									IntermediateCert.IssuerCN,
+									IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
+									IntermediateCert.TBSValue,
+									simulationInput.FilePath.ToString()
+									);
 						}
 					}
 
-					/*
-                        ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate
-
-                        CRITERIA:
-                        1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
-                        2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
-                        */
-
-					else if (string.Equals(signer.CertRoot, IntermediateCert.TBSValue, StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(signer.Name, IntermediateCert.SubjectCN, StringComparison.OrdinalIgnoreCase))
-					{
-
-						// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
-						if (signer.FileAttribRef.Count > 0)
-						{
-							continue;
-						}
-
-						return new SimulationOutput(
-								Path.GetFileName(simulationInput.FilePath.ToString()),
-								"Signer",
-								true,
-								signer.ID,
-								signer.Name,
-								signer.CertRoot,
-								signer.CertPublisher,
-								signer.SignerScope,
-								signer.FileAttribRef,
-								"PcaCertificate/RootCertificate",
-								null,
-								IntermediateCert.SubjectCN,
-								IntermediateCert.IssuerCN,
-								IntermediateCert.NotAfter.ToString(CultureInfo.InvariantCulture),
-								IntermediateCert.TBSValue,
-								simulationInput.FilePath.ToString()
-								);
-					}
 				}
-
 
 				/*
                     ELIGIBILITY CHECK FOR LEVELS: LeafCertificate

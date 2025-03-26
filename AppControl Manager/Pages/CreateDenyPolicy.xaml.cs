@@ -42,7 +42,7 @@ namespace AppControlManager.Pages;
 /// CreateDenyPolicy is a page for creating deny policies for files and folders. It initializes components and manages
 /// user interactions.
 /// </summary>
-public sealed partial class CreateDenyPolicy : Page
+internal sealed partial class CreateDenyPolicy : Page
 {
 
 #pragma warning disable CA1822
@@ -53,7 +53,7 @@ public sealed partial class CreateDenyPolicy : Page
 	/// Constructor for the CreateDenyPolicy class. Initializes components, sets navigation cache mode, and assigns the
 	/// data context.
 	/// </summary>
-	public CreateDenyPolicy()
+	internal CreateDenyPolicy()
 	{
 		this.InitializeComponent();
 

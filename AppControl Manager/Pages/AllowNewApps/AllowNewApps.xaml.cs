@@ -29,7 +29,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for managing app permissions with navigation capabilities. It initializes the view model and
 /// handles navigation events.
 /// </summary>
-public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 {
 
 #pragma warning disable CA1822
@@ -40,7 +40,7 @@ public sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	/// Initializes the AllowNewApps page, sets up navigation caching, binds the data context, and navigates to the
 	/// AllowNewAppsStart page.
 	/// </summary>
-	public AllowNewApps()
+	internal AllowNewApps()
 	{
 		this.InitializeComponent();
 

@@ -1465,4 +1465,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="PolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Edit App Control policies, view and remove individual rules and modify other details.</value>
   </data>
+  <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
+    <value>If this is enabled, AppControl Manager will prompt for elevation to run with Administrator privileges on startup.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.Header" xml:space="preserve">
+    <value>Prompt For Elevation On Startup</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>If this is enabled, AppControl Manager will prompt for elevation to run with Administrator privileges on startup.</value>
+  </data>
 </root>

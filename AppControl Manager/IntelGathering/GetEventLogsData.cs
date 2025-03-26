@@ -962,18 +962,39 @@ internal static class GetEventLogsData
 		return string.IsNullOrWhiteSpace(node?.InnerText) ? null : node?.InnerText;
 	}
 
+	/// <summary>
+	/// Retrieves a long integer value from an XML document based on a specified XPath expression.
+	/// </summary>
+	/// <param name="xmlDoc">The XML document from which the value is extracted.</param>
+	/// <param name="nsManager">Manages the namespaces used in the XPath query.</param>
+	/// <param name="xpath">The XPath expression used to locate the desired node in the XML document.</param>
+	/// <returns>Returns the long integer value if found and valid, otherwise returns null.</returns>
 	private static long? GetLongValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
 	{
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
 		return node is not null && long.TryParse(node.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture, out long result) ? result : null;
 	}
 
+	/// <summary>
+	/// Retrieves a GUID value from an XML document based on a specified XPath expression.
+	/// </summary>
+	/// <param name="xmlDoc">The XML document from which the GUID value is extracted.</param>
+	/// <param name="nsManager">Manages the namespaces used in the XPath query.</param>
+	/// <param name="xpath">The XPath expression used to locate the desired node in the XML document.</param>
+	/// <returns>Returns the extracted GUID if found and valid, otherwise returns null.</returns>
 	private static Guid? GetGuidValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
 	{
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
 		return node is not null && Guid.TryParse(node.InnerText, out Guid guid) ? guid : null;
 	}
 
+	/// <summary>
+	/// Retrieves a boolean value from an XML document based on a specified XPath expression.
+	/// </summary>
+	/// <param name="xmlDoc">The XML document from which the boolean value is extracted.</param>
+	/// <param name="nsManager">Manages the namespaces used in the XPath expression for accurate node selection.</param>
+	/// <param name="xpath">The XPath expression used to locate the desired node within the XML document.</param>
+	/// <returns>Returns the boolean value found at the specified node or null if not found or not a valid boolean.</returns>
 	private static bool? GetBooleanValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
 	{
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);

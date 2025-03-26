@@ -164,6 +164,9 @@
                         <controls:SettingsCard x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}" IsClickEnabled="True" IsActionIconVisible="False" Click="CacheSecurityCatalogsScanResultsSettingsCard_Click">
                             <ToggleSwitch x:Name="CacheSecurityCatalogsScanResultsToggleSwitch" />
                         </controls:SettingsCard>
+                        <controls:SettingsCard x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}" IsClickEnabled="True" IsActionIconVisible="False" Click="PromptForElevationSettingsCard_Click">
+                            <ToggleSwitch x:Name="PromptForElevationToggleSwitch" />
+                        </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

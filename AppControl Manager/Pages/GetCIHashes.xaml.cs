@@ -31,13 +31,13 @@ namespace AppControlManager.Pages;
 /// Handles the file selection and computes various cryptographic hashes for the selected file. Displays the results in
 /// the UI.
 /// </summary>
-public sealed partial class GetCIHashes : Page
+internal sealed partial class GetCIHashes : Page
 {
 
 	/// <summary>
 	/// Initializes the component and sets the navigation cache mode to required for the GetCIHashes class.
 	/// </summary>
-	public GetCIHashes()
+	internal GetCIHashes()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Required;

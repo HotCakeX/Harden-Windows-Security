@@ -251,8 +251,19 @@ internal static class SignerAndHashBuilder
 		foreach (FileIdentity signedData in signedFilePublisherData)
 		{
 			// Create a new FilePublisherSignerCreator object
-			FilePublisherSignerCreator currentFilePublisherSigner = new();
-
+			FilePublisherSignerCreator currentFilePublisherSigner = new(
+				fileVersion: signedData.FileVersion,
+				fileDescription: signedData.FileDescription,
+				internalName: signedData.InternalName,
+				originalFileName: signedData.OriginalFileName,
+				productName: signedData.ProductName,
+				fileName: signedData.FilePath,
+				authenticodeSHA256: signedData.SHA256Hash,
+				authenticodeSHA1: signedData.SHA1Hash,
+				siSigningScenario: signedData.SISigningScenario,
+				packageFamilyName: signedData.PackageFamilyName,
+				certificateDetails: new List<CertificateDetailsCreator>()
+				);
 
 			// Loop through each correlated event and process the certificate details
 			foreach (FileSignerInfo corDataValue in signedData.FileSignerInfos)
@@ -296,21 +307,6 @@ internal static class SignerAndHashBuilder
 
 			}
 
-			#region Initialize properties
-
-			currentFilePublisherSigner.FileVersion = signedData.FileVersion;
-			currentFilePublisherSigner.FileDescription = signedData.FileDescription;
-			currentFilePublisherSigner.InternalName = signedData.InternalName;
-			currentFilePublisherSigner.OriginalFileName = signedData.OriginalFileName;
-			currentFilePublisherSigner.ProductName = signedData.ProductName;
-			currentFilePublisherSigner.FileName = signedData.FilePath;
-			currentFilePublisherSigner.AuthenticodeSHA256 = signedData.SHA256Hash;
-			currentFilePublisherSigner.AuthenticodeSHA1 = signedData.SHA1Hash;
-
-			currentFilePublisherSigner.SiSigningScenario = signedData.SISigningScenario;
-			#endregion
-
-
 			// Add the completed FilePublisherSigner to the list
 			filePublisherSigners.Add(currentFilePublisherSigner);
 		}
@@ -320,8 +316,15 @@ internal static class SignerAndHashBuilder
 
 		foreach (FileIdentity signedData in signedPublisherData)
 		{
+
 			// Create a new PublisherSignerCreator object
-			PublisherSignerCreator currentPublisherSigner = new();
+			PublisherSignerCreator currentPublisherSigner = new(
+				fileName: signedData.FilePath,
+				authenticodeSHA1: signedData.SHA1Hash,
+				authenticodeSHA256: signedData.SHA256Hash,
+				siSigningScenario: signedData.SISigningScenario,
+				certificateDetails: new List<CertificateDetailsCreator>()
+				);
 
 			// Process each correlated event
 			foreach (FileSignerInfo corDataValue in signedData.FileSignerInfos)
@@ -360,13 +363,6 @@ internal static class SignerAndHashBuilder
 				// Add the Certificate details to the CurrentPublisherSigner's CertificateDetails property
 				currentPublisherSigner.CertificateDetails.Add(currentCorData);
 			}
-
-
-			currentPublisherSigner.FileName = signedData.FilePath;
-			currentPublisherSigner.AuthenticodeSHA256 = signedData.SHA256Hash;
-			currentPublisherSigner.AuthenticodeSHA1 = signedData.SHA1Hash;
-			currentPublisherSigner.SiSigningScenario = signedData.SISigningScenario;
-
 
 			// Add the completed PublisherSigner to the list
 			publisherSigners.Add(currentPublisherSigner);

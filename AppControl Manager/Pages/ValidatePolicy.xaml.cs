@@ -19,7 +19,6 @@ using System;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -29,29 +28,22 @@ namespace AppControlManager.Pages;
 /// Validates an XML policy file selected by the user and displays the result in an info bar. It handles errors and
 /// updates UI elements accordingly.
 /// </summary>
-public sealed partial class ValidatePolicy : Page
+internal sealed partial class ValidatePolicy : Page
 {
 	/// <summary>
 	/// Initializes a new instance of the ValidatePolicy class. Sets the navigation cache mode to required.
 	/// </summary>
-	public ValidatePolicy()
+	internal ValidatePolicy()
 	{
 		this.InitializeComponent();
 
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 	}
 
-	private async void BrowseForXMLSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		await ValidateXML();
-	}
-
-	private async void BrowseForXMLButton_Click(object sender, RoutedEventArgs e)
-	{
-		await ValidateXML();
-	}
-
-	private async Task ValidateXML()
+	/// <summary>
+	/// Validates an App Control XML policy file by allowing the user to select a file and checking its validity.
+	/// </summary>
+	private async void ValidateXML()
 	{
 
 		try

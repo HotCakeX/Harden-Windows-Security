@@ -21,14 +21,25 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager.Others;
 
-internal sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
- List<ChainElement>? intermediatecertificates,
-  ChainElement? leafcertificate)
+/// <summary>
+/// The full chain package of a signed file, includes all of the signature information
+/// </summary>
+/// <param name="certificatechain"></param>
+/// <param name="signedcms"></param>
+/// <param name="rootcertificate"></param>
+/// <param name="intermediatecertificates"></param>
+/// <param name="leafcertificate"></param>
+internal sealed class ChainPackage(
+	X509Chain certificatechain,
+	SignedCms signedcms,
+	ChainElement rootcertificate,
+	List<ChainElement>? intermediatecertificates,
+	ChainElement? leafcertificate)
 {
-	internal X509Chain CertificateChain { get; set; } = certificatechain;
-	internal SignedCms SignedCms { get; set; } = signedcms;
-	internal ChainElement RootCertificate { get; set; } = rootcertificate;
-	internal List<ChainElement>? IntermediateCertificates { get; set; } = intermediatecertificates;
-	internal ChainElement? LeafCertificate { get; set; } = leafcertificate;
+	internal X509Chain CertificateChain { get; } = certificatechain;
+	internal SignedCms SignedCms { get; } = signedcms;
+	internal ChainElement RootCertificate { get; } = rootcertificate;
+	internal List<ChainElement>? IntermediateCertificates { get; } = intermediatecertificates;
+	internal ChainElement? LeafCertificate { get; } = leafcertificate;
 }
 

@@ -43,54 +43,88 @@ internal sealed class SimulationOutput(
 	string? filePath
 )
 {
-	// The name of the file, which is a truncated version of its path
-	internal string? Path { get; set; } = path;
+	/// <summary>
+	/// The name of the file, which is a truncated version of its path
+	/// </summary>
+	internal string? Path { get; } = path;
 
-	// Source from the Comparer function is always 'Signer'
-	internal string Source { get; set; } = source;
+	/// <summary>
+	/// Source from the Comparer function is always 'Signer'
+	/// </summary>
+	internal string Source { get; } = source;
 
-	// Whether the file is authorized or not
-	internal bool IsAuthorized { get; set; } = isAuthorized;
+	/// <summary>
+	/// Whether the file is authorized or not
+	/// </summary>
+	internal bool IsAuthorized { get; } = isAuthorized;
 
-	// Gathered from the GetSignerInfo method
-	internal string? SignerID { get; set; } = signerID;
+	/// <summary>
+	/// Gathered from the GetSignerInfo method
+	/// </summary>
+	internal string? SignerID { get; } = signerID;
 
-	// Gathered from the GetSignerInfo method
-	internal string? SignerName { get; set; } = signerName;
+	/// <summary>
+	/// Gathered from the GetSignerInfo method
+	/// </summary>
+	internal string? SignerName { get; } = signerName;
 
-	// Gathered from the GetSignerInfo method
-	internal string? SignerCertRoot { get; set; } = signerCertRoot;
+	/// <summary>
+	/// Gathered from the GetSignerInfo method
+	/// </summary>
+	internal string? SignerCertRoot { get; } = signerCertRoot;
 
-	// Gathered from the GetSignerInfo method
-	internal string? SignerCertPublisher { get; set; } = signerCertPublisher;
+	/// <summary>
+	/// Gathered from the GetSignerInfo method
+	/// </summary>
+	internal string? SignerCertPublisher { get; } = signerCertPublisher;
 
-	// Gathered from the GetSignerInfo method
-	internal string? SignerScope { get; set; } = signerScope;
+	/// <summary>
+	/// Gathered from the GetSignerInfo method
+	/// </summary>
+	internal string? SignerScope { get; } = signerScope;
 
-	// Gathered from the GetSignerInfo method
-	internal List<string>? SignerFileAttributeIDs { get; set; } = signerFileAttributeIDs;
+	/// <summary>
+	/// Gathered from the GetSignerInfo method
+	/// </summary>
+	internal List<string>? SignerFileAttributeIDs { get; } = signerFileAttributeIDs;
 
-	// The main level based on which the file is authorized
-	internal string? MatchCriteria { get; set; } = matchCriteria;
+	/// <summary>
+	/// The main level based on which the file is authorized
+	/// </summary>
+	internal string? MatchCriteria { get; } = matchCriteria;
 
-	// Only those eligible for FilePublisher, WHQLFilePublisher, or SignedVersion levels assign this value, otherwise it stays null
-	internal string? SpecificFileNameLevelMatchCriteria { get; set; } = specificFileNameLevelMatchCriteria;
+	/// <summary>
+	/// Only those eligible for FilePublisher, WHQLFilePublisher, or SignedVersion levels assign this value, otherwise it stays null
+	/// </summary>
+	internal string? SpecificFileNameLevelMatchCriteria { get; } = specificFileNameLevelMatchCriteria;
 
-	// Subject CN of the signer that allows the file
-	internal string? CertSubjectCN { get; set; } = certSubjectCN;
+	/// <summary>
+	/// Subject CN of the signer that allows the file
+	/// </summary>
+	internal string? CertSubjectCN { get; } = certSubjectCN;
 
-	// Issuer CN of the signer that allows the file
-	internal string? CertIssuerCN { get; set; } = certIssuerCN;
+	/// <summary>
+	/// Issuer CN of the signer that allows the file
+	/// </summary>
+	internal string? CertIssuerCN { get; } = certIssuerCN;
 
-	// NotAfter date of the signer that allows the file
-	internal string? CertNotAfter { get; set; } = certNotAfter;
+	/// <summary>
+	/// NotAfter date of the signer that allows the file
+	/// </summary>
+	internal string? CertNotAfter { get; } = certNotAfter;
 
-	// TBS value of the signer that allows the file
-	internal string? CertTBSValue { get; set; } = certTBSValue;
+	/// <summary>
+	/// TBS value of the signer that allows the file
+	/// </summary>
+	internal string? CertTBSValue { get; } = certTBSValue;
 
-	// Full path of the file
-	internal string? FilePath { get; set; } = filePath;
+	/// <summary>
+	/// Full path of the file
+	/// </summary>
+	internal string? FilePath { get; } = filePath;
 
-	// Reference for the ViewModel's class
+	/// <summary>
+	/// Reference for the ViewModel's class
+	/// </summary>
 	internal SimulationVM? ParentViewModelSimulationVM { get; set; }
 }

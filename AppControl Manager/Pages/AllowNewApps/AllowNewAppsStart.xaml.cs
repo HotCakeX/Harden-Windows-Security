@@ -45,7 +45,7 @@ namespace AppControlManager.Pages;
 /// AllowNewAppsStart is a page that manages the process of allowing new applications through policy management. It
 /// handles user interactions for selecting policies, scanning directories, and creating supplemental policies.
 /// </summary>
-public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
 {
 
 #pragma warning disable CA1822
@@ -106,7 +106,7 @@ public sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMana
 	/// also retrieves the shared shadow resource and configures initial states for UI components.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown if the sharedShadow resource cannot be found in the XAML.</exception>
-	public AllowNewAppsStart()
+	internal AllowNewAppsStart()
 	{
 		this.InitializeComponent();
 

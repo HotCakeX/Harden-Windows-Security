@@ -44,7 +44,7 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
                 <!-- Begin Simulation Button -->
-                <Button x:Name="BeginSimulationButton" ToolTipService.ToolTip="Start the Simulation using the selected configurations" Style="{StaticResource AccentButtonStyle}" Click="BeginSimulationButton_Click">
+                <Button x:Name="BeginSimulationButton" ToolTipService.ToolTip="Start the Simulation using the selected configurations" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BeginSimulationButton_Click}">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Play" />
                         <TextBlock Text="Begin Simulation" Margin="5,0,0,0"/>
@@ -52,7 +52,7 @@
                 </Button>
 
                 <!-- Select XML File Button -->
-                <Button Click="SelectXmlFileButton_Click" x:Name="SelectXmlFileButton"
+                <Button Click="{x:Bind SelectXmlFileButton_Click}" x:Name="SelectXmlFileButton"
                  Holding="SelectXmlFileButton_Holding" RightTapped="SelectXmlFileButton_RightTapped" ToolTipService.ToolTip="Browse for the App Control policy XML file">
 
                     <Button.Flyout>
@@ -82,7 +82,7 @@
                 </Button>
 
                 <!-- Select Files Button -->
-                <Button Click="SelectFilesButton_Click" x:Name="SelectFilesButton" RightTapped="SelectFilesButton_RightTapped" Holding="SelectFilesButton_Holding" ToolTipService.ToolTip="Browse for files to include in the simulation">
+                <Button Click="{x:Bind SelectFilesButton_Click}" x:Name="SelectFilesButton" RightTapped="SelectFilesButton_RightTapped" Holding="SelectFilesButton_Holding" ToolTipService.ToolTip="Browse for files to include in the simulation">
 
                     <Button.Flyout>
                         <Flyout x:Name="SelectFilesButton_Flyout">
@@ -112,7 +112,7 @@
                 </Button>
 
                 <!-- Select Folders Button -->
-                <Button Click="SelectFoldersButton_Click" x:Name="SelectFoldersButton"
+                <Button Click="{x:Bind SelectFoldersButton_Click}" x:Name="SelectFoldersButton"
                  Holding="SelectFoldersButton_Holding" RightTapped="SelectFoldersButton_RightTapped" ToolTipService.ToolTip="Browse for a folder to include in the simulation">
 
                     <Button.Flyout>
@@ -149,7 +149,7 @@
                         <MenuFlyout Placement="Bottom">
 
                             <!-- Cat Root Paths Button -->
-                            <MenuFlyoutItem Text="Cat Root Paths" Click="CatRootPathsButton_Click" ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
+                            <MenuFlyoutItem Text="Cat Root Paths" Click="{x:Bind CatRootPathsButton_Click}" ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xED25;"/>
                                 </MenuFlyoutItem.Icon>
@@ -158,7 +158,7 @@
                             <MenuFlyoutSeparator/>
 
                             <!-- Toggle Button for No Cat Root Scanning -->
-                            <ToggleMenuFlyoutItem IsChecked="True" x:Name="NoCatRootScanningToggle" Text="No Cat Root Scanning" Click="ClearDataButton_Click"  ToolTipService.ToolTip="Will not scan the security catalogs on the system">
+                            <ToggleMenuFlyoutItem IsChecked="True" x:Name="NoCatRootScanningToggle" Text="No Cat Root Scanning" ToolTipService.ToolTip="Will not scan the security catalogs on the system">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEB95;" />
                                 </MenuFlyoutItem.Icon>

@@ -17,7 +17,6 @@
 
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -27,12 +26,12 @@ namespace AppControlManager.Pages;
 /// Initializes the CodeIntegrityInfo class and sets the navigation cache mode. Retrieves and displays code integrity
 /// information.
 /// </summary>
-public sealed partial class CodeIntegrityInfo : Page
+internal sealed partial class CodeIntegrityInfo : Page
 {
 	/// <summary>
 	/// Initializes a new instance of the CodeIntegrityInfo class. Sets the navigation cache mode to required.
 	/// </summary>
-	public CodeIntegrityInfo()
+	internal CodeIntegrityInfo()
 	{
 		this.InitializeComponent();
 
@@ -55,9 +54,7 @@ public sealed partial class CodeIntegrityInfo : Page
 	/// <summary>
 	/// Event handler for the retrieve code integrity information button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void RetrieveCodeIntegrityInfo_Click(object sender, RoutedEventArgs e)
+	private async void RetrieveCodeIntegrityInfo_Click()
 	{
 		// Get the system code integrity information
 		CodeIntegrity.SystemCodeIntegrityInfo codeIntegrityInfoResult = await Task.Run(CodeIntegrity.DetailsRetrieval.Get);

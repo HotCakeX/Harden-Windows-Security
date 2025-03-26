@@ -42,7 +42,7 @@ namespace AppControlManager.Pages;
 /// MDEAHPolicyCreation is a page for managing MDE Advanced Hunting policies, including scanning logs, filtering data,
 /// and creating policies.
 /// </summary>
-public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
+internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 {
 
 #pragma warning disable CA1822
@@ -61,7 +61,7 @@ public sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	/// Initializes the MDEAHPolicyCreation component, sets default selections, maintains navigation state, and adds a date
 	/// change event handler.
 	/// </summary>
-	public MDEAHPolicyCreation()
+	internal MDEAHPolicyCreation()
 	{
 		this.InitializeComponent();
 

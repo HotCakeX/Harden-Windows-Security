@@ -30,7 +30,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for viewing current policies with data binding and navigation state management. It includes event
 /// handlers for menu and list interactions.
 /// </summary>
-public sealed partial class ViewCurrentPolicies : Page
+internal sealed partial class ViewCurrentPolicies : Page
 {
 
 #pragma warning disable CA1822
@@ -46,7 +46,7 @@ public sealed partial class ViewCurrentPolicies : Page
 	/// Initializes the component and sets the DataContext for data binding in XAML. Ensures navigation maintains the
 	/// page's state.
 	/// </summary>
-	public ViewCurrentPolicies()
+	internal ViewCurrentPolicies()
 	{
 		this.InitializeComponent();
 

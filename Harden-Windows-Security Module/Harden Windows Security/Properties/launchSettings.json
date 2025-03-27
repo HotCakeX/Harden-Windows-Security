@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Harden Windows Security (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Harden Windows Security (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

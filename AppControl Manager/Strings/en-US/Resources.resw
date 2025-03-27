@@ -122,11 +122,18 @@
   <data name="CreateDenyPolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create Deny App Control Policies</value>
   </data>
+  <data name="CreateDenyPolicyNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create Deny App Control Policies</value>
+  </data>
   <data name="CreatePolicyNavItem.Content" xml:space="preserve">
     <value>Create Policy</value>
     <comment>Main Navigation</comment>
   </data>
   <data name="CreatePolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create AppControl Policies with different characteristics</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="CreatePolicyNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create AppControl Policies with different characteristics</value>
     <comment>Main Navigation</comment>
   </data>
@@ -136,10 +143,16 @@
   <data name="CreateSupplementalPolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create Supplemental AppControl Policies</value>
   </data>
+  <data name="CreateSupplementalPolicyNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create Supplemental AppControl Policies</value>
+  </data>
   <data name="BuildNewCertificateNavItem.Content" xml:space="preserve">
     <value>Build New Certificate</value>
   </data>
   <data name="BuildNewCertificateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generate Certificates that are suitable for signing App Control Policies</value>
+  </data>
+  <data name="BuildNewCertificateNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Generate Certificates that are suitable for signing App Control Policies</value>
   </data>
   <data name="ViewFileCertificatesNavItem.Content" xml:space="preserve">
@@ -148,10 +161,16 @@
   <data name="ViewFileCertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>View advanced and highly detailed information about all certificates of signed files</value>
   </data>
+  <data name="ViewFileCertificatesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View advanced and highly detailed information about all certificates of signed files</value>
+  </data>
   <data name="CreatePolicyFromEventLogsNavItem.Content" xml:space="preserve">
     <value>Create policy from Event Logs</value>
   </data>
   <data name="CreatePolicyFromEventLogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create App Control policy either from the local event logs or EVTX files</value>
+  </data>
+  <data name="CreatePolicyFromEventLogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create App Control policy either from the local event logs or EVTX files</value>
   </data>
   <data name="CreatePolicyFromMDEAHNavItem.Content" xml:space="preserve">
@@ -160,10 +179,16 @@
   <data name="CreatePolicyFromMDEAHNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs</value>
   </data>
+  <data name="CreatePolicyFromMDEAHNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create App Control policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs</value>
+  </data>
   <data name="SimulationNavItem.Content" xml:space="preserve">
     <value>Simulation</value>
   </data>
   <data name="SimulationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Simulate deployment of App Control policies</value>
+  </data>
+  <data name="SimulationNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Simulate deployment of App Control policies</value>
   </data>
   <data name="AllowNewAppsNavItem.Content" xml:space="preserve">
@@ -172,10 +197,16 @@
   <data name="AllowNewAppsNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running.</value>
   </data>
+  <data name="AllowNewAppsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running.</value>
+  </data>
   <data name="SystemInformationNavItem.Content" xml:space="preserve">
     <value>System Information</value>
   </data>
   <data name="SystemInformationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View information about the system</value>
+  </data>
+  <data name="SystemInformationNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>View information about the system</value>
   </data>
   <data name="GetCodeIntegrityHashesNavItem.Content" xml:space="preserve">
@@ -184,10 +215,16 @@
   <data name="GetCodeIntegrityHashesNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Get Code Integrity Hashes of files</value>
   </data>
+  <data name="GetCodeIntegrityHashesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Get Code Integrity Hashes of files</value>
+  </data>
   <data name="GetSecurePolicySettingsNavItem.Content" xml:space="preserve">
     <value>Get Secure Policy Settings</value>
   </data>
   <data name="GetSecurePolicySettingsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get the secure policy settings among the deployed policies</value>
+  </data>
+  <data name="GetSecurePolicySettingsNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Get the secure policy settings among the deployed policies</value>
   </data>
   <data name="ConfigurePolicyRuleOptionsNavItem.Content" xml:space="preserve">
@@ -196,10 +233,16 @@
   <data name="ConfigurePolicyRuleOptionsNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Configure Policy Rule Options</value>
   </data>
+  <data name="ConfigurePolicyRuleOptionsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configure Policy Rule Options</value>
+  </data>
   <data name="MergePoliciesNavItem.Content" xml:space="preserve">
     <value>Merge App Control Policies</value>
   </data>
   <data name="MergePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Merge 2 App Control policies together or deduplicate a single policy</value>
+  </data>
+  <data name="MergePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Merge 2 App Control policies together or deduplicate a single policy</value>
   </data>
   <data name="DeploymentNavItem.Content" xml:space="preserve">
@@ -208,10 +251,16 @@
   <data name="DeploymentNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Deploy signed or unsigned AppControl policies on the system</value>
   </data>
+  <data name="DeploymentNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deploy signed or unsigned AppControl policies on the system</value>
+  </data>
   <data name="ValidatePoliciesNavItem.Content" xml:space="preserve">
     <value>Validate Policies</value>
   </data>
   <data name="ValidatePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Validate App Control Policies</value>
+  </data>
+  <data name="ValidatePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Validate App Control Policies</value>
   </data>
   <data name="GitHubDocsNavItem.Content" xml:space="preserve">
@@ -220,10 +269,16 @@
   <data name="GitHubDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Get online documentation from GitHub about how to use the application</value>
   </data>
+  <data name="GitHubDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Get online documentation from GitHub about how to use the application</value>
+  </data>
   <data name="MSFTDocsNavItem.Content" xml:space="preserve">
     <value>Microsoft Documentation</value>
   </data>
   <data name="MSFTDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Get online documentation from Microsoft about App Control for Business policies</value>
+  </data>
+  <data name="MSFTDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Get online documentation from Microsoft about App Control for Business policies</value>
   </data>
   <data name="LogsNavItem.Content" xml:space="preserve">
@@ -233,6 +288,9 @@
     <value>Settings</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View the application logs in real time</value>
+  </data>
+  <data name="LogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>View the application logs in real time</value>
   </data>
   <data name="ScanResults" xml:space="preserve">
@@ -250,10 +308,16 @@
   <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click/Tap to visit the full Guide for this page on GitHub</value>
   </data>
+  <data name="GuideButtonAtTop.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click/Tap to visit the full Guide for this page on GitHub</value>
+  </data>
   <data name="DeployAfterCreationButton.Content" xml:space="preserve">
     <value>Deploy after Creation</value>
   </data>
   <data name="DeployAfterCreationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+  </data>
+  <data name="DeployAfterCreationButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
   </data>
   <data name="CreateSupplementalPolicyButton.Content" xml:space="preserve">
@@ -262,10 +326,16 @@
   <data name="CreateSupplementalPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create the Supplemental policy based on the configurations you selected</value>
   </data>
+  <data name="CreateSupplementalPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Supplemental policy based on the configurations you selected</value>
+  </data>
   <data name="CreateDenyPolicyButton.Content" xml:space="preserve">
     <value>Create Deny Policy</value>
   </data>
   <data name="CreateDenyPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Deny policy based on the configurations you selected</value>
+  </data>
+  <data name="CreateDenyPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create the Deny policy based on the configurations you selected</value>
   </data>
   <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.Description" xml:space="preserve">
@@ -277,6 +347,9 @@
   <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create Deny policy by scanning files and folders</value>
   </data>
+  <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create Deny policy by scanning files and folders</value>
+  </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Description" xml:space="preserve">
     <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
   </data>
@@ -284,6 +357,9 @@
     <value>Package Family Name</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+  </data>
+  <data name="CreateDenyPolicyPFNSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.Description" xml:space="preserve">
@@ -295,6 +371,9 @@
   <data name="AuditRuleOptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files.</value>
   </data>
+  <data name="AuditRuleOptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files.</value>
+  </data>
   <data name="RequireEVSignersRuleOption.Description" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run.</value>
   </data>
@@ -302,6 +381,9 @@
     <value>Require EVSigners</value>
   </data>
   <data name="RequireEVSignersRuleOption.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run.</value>
+  </data>
+  <data name="RequireEVSignersRuleOption.AutomationProperties.HelpText" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Require EV Signers) policy rule option which will only allow kernel-mode drivers signed with an EV certificate to run.</value>
   </data>
   <data name="EnableScriptEnforcementRuleOption.Description" xml:space="preserve">
@@ -313,6 +395,9 @@
   <data name="EnableScriptEnforcementRuleOption.ToolTipService.ToolTip" xml:space="preserve">
     <value>Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run.</value>
   </data>
+  <data name="EnableScriptEnforcementRuleOption.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enables script enforcement for the policy which will severely limit the attack surface of PowerShell by requiring only scripts/modules signed and allowed in the Code Integrity policy to run.</value>
+  </data>
   <data name="TestModeRuleOption.Description" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons.</value>
   </data>
@@ -322,10 +407,16 @@
   <data name="TestModeRuleOption.ToolTipService.ToolTip" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons.</value>
   </data>
+  <data name="TestModeRuleOption.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Indicates that the created/deployed policy will have (Enabled:Boot Audit on Failure) and (Enabled:Advanced Boot Options Menu) policy rule options. Useful for testing the policy and having recovery options available when something goes wrong. Not recommended to be used in the final production-ready policy due to security reasons.</value>
+  </data>
   <data name="FileBrowseButton.Content" xml:space="preserve">
     <value>Browse</value>
   </data>
   <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the File picker dialog allowing you select file(s)</value>
+  </data>
+  <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Opens the File picker dialog allowing you select file(s)</value>
   </data>
   <data name="FolderBrowseButton.Content" xml:space="preserve">
@@ -334,16 +425,25 @@
   <data name="FolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Opens the Folder picker dialog allowing you select folder(s)</value>
   </data>
+  <data name="FolderBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the Folder picker dialog allowing you select folder(s)</value>
+  </data>
   <data name="SupplementalPolicyNameTextBox.PlaceholderText" xml:space="preserve">
     <value>Supplemental Policy Name</value>
   </data>
   <data name="SupplementalPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Enter a name for the Supplemental policy that will be created.</value>
   </data>
+  <data name="SupplementalPolicyNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter a name for the Supplemental policy that will be created.</value>
+  </data>
   <data name="SupplementalPolicyNameSettingsCard.Description" xml:space="preserve">
     <value>The name of the Supplemental policy that is going to be created.</value>
   </data>
   <data name="SupplementalPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The name of the Supplemental policy that is going to be created.</value>
+  </data>
+  <data name="SupplementalPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>The name of the Supplemental policy that is going to be created.</value>
   </data>
   <data name="SupplementalPolicyNameSettingsCard.Header" xml:space="preserve">
@@ -358,13 +458,22 @@
   <data name="SupplementalFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Create Supplemental policy by scanning files and folders</value>
   </data>
+  <data name="SupplementalFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create Supplemental policy by scanning files and folders</value>
+  </data>
   <data name="ClearButton.Content" xml:space="preserve">
     <value>Clear</value>
   </data>
   <data name="ClearButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Clear</value>
+  </data>
   <data name="ReviewEventLogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Review the Event Logs that were collected during the Audit mode phase</value>
+  </data>
+  <data name="ReviewEventLogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Review the Event Logs that were collected during the Audit mode phase</value>
   </data>
   <data name="ReviewEventLogsNavItem.Content" xml:space="preserve">
@@ -376,10 +485,16 @@
   <data name="ReviewLocalFilesNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Review the Local Files. These are the files that were found in the directories you browsed for.</value>
   </data>
+  <data name="ReviewLocalFilesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Review the Local Files. These are the files that were found in the directories you browsed for.</value>
+  </data>
   <data name="AllowNewAppsInternalMainNavItem.Content" xml:space="preserve">
     <value>Start allowing apps or files</value>
   </data>
   <data name="AllowNewAppsInternalMainNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start allowing apps or files by either running them or browsing for their directories during the Audit mode phase.</value>
+  </data>
+  <data name="AllowNewAppsInternalMainNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Start allowing apps or files by either running them or browsing for their directories during the Audit mode phase.</value>
   </data>
   <data name="ExtraActionsDropDownButton.Content" xml:space="preserve">
@@ -388,10 +503,16 @@
   <data name="ExtraActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Offers multiple different actions to take on the displayed data</value>
   </data>
+  <data name="ExtraActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Offers multiple different actions to take on the displayed data</value>
+  </data>
   <data name="ClearDataMenuFlyoutItem.Text" xml:space="preserve">
     <value>Clear Data</value>
   </data>
   <data name="ClearDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear all of the displayed data</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear all of the displayed data</value>
   </data>
   <data name="DeployAfterCreationMenuFlyoutItem.Text" xml:space="preserve">
@@ -400,10 +521,16 @@
   <data name="DeployAfterCreationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
   </data>
+  <data name="DeployAfterCreationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+  </data>
   <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Search the data...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Search among the displayed data</value>
+  </data>
+  <data name="SearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Search among the displayed data</value>
   </data>
   <data name="DeSelectAllMenuFlyoutItem.Text" xml:space="preserve">
@@ -412,10 +539,16 @@
   <data name="DeSelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>De-select any selected data</value>
   </data>
+  <data name="DeSelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>De-select any selected data</value>
+  </data>
   <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
     <value>Select All</value>
   </data>
   <data name="SelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select all of the displayed data</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Select all of the displayed data</value>
   </data>
   <data name="SelectAllButton.Content" xml:space="preserve">
@@ -424,10 +557,16 @@
   <data name="SelectAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Select all</value>
   </data>
+  <data name="SelectAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select all</value>
+  </data>
   <data name="RefreshButton.Content" xml:space="preserve">
     <value>Refresh</value>
   </data>
   <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Refresh</value>
   </data>
   <data name="RemoveSelectionsButton.Content" xml:space="preserve">
@@ -436,10 +575,16 @@
   <data name="RemoveSelectionsButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Remove Selections</value>
   </data>
+  <data name="RemoveSelectionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove Selections</value>
+  </data>
   <data name="SelectedAppsTextBlock.Text" xml:space="preserve">
     <value>Selected Apps: 0</value>
   </data>
   <data name="SelectedAppsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The total number of the selected Apps</value>
+  </data>
+  <data name="SelectedAppsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
     <value>The total number of the selected Apps</value>
   </data>
   <data name="BrowseForFoldersDenyPolicySettingsCard.Description" xml:space="preserve">
@@ -451,6 +596,9 @@
   <data name="BrowseForFoldersDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
   </data>
+  <data name="BrowseForFoldersDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
+  </data>
   <data name="BrowseForFilesDenyPolicySettingsCard.Description" xml:space="preserve">
     <value>Browse for file paths to scan and include in the Deny policy.</value>
   </data>
@@ -460,6 +608,9 @@
   <data name="BrowseForFilesDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Browse for file paths to scan and include in the Deny policy.</value>
   </data>
+  <data name="BrowseForFilesDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for file paths to scan and include in the Deny policy.</value>
+  </data>
   <data name="DenyPolicyNameSettingsCard.Description" xml:space="preserve">
     <value>The name of the Deny policy that is going to be created.</value>
   </data>
@@ -467,6 +618,9 @@
     <value>Policy Name</value>
   </data>
   <data name="DenyPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The name of the Deny policy that is going to be created.</value>
+  </data>
+  <data name="DenyPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>The name of the Deny policy that is going to be created.</value>
   </data>
   <data name="ViewSelectedBasePolicyTextBlock.Text" xml:space="preserve">
@@ -484,10 +638,16 @@
   <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
     <value>The total number of the logs</value>
   </data>
+  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The total number of the logs</value>
+  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>Refresh The Logs</value>
   </data>
   <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the latest logs for the current session by reading them from the log file in the user configurations directory</value>
+  </data>
+  <data name="RefreshLogFilesButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Retrieve the latest logs for the current session by reading them from the log file in the user configurations directory</value>
   </data>
   <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
@@ -496,7 +656,13 @@
   <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Enter menu item names to find them quickly</value>
   </data>
+  <data name="MainSearchAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter menu item names to find them quickly</value>
+  </data>
   <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="UpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Check for updates</value>
   </data>
   <data name="UpdateNavItem.Content" xml:space="preserve">
@@ -505,10 +671,16 @@
   <data name="OpenConfigDirectoryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Open the directory where user configurations and user generated files are stored</value>
   </data>
+  <data name="OpenConfigDirectoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the directory where user configurations and user generated files are stored</value>
+  </data>
   <data name="OpenConfigDirectoryButtonText.Text" xml:space="preserve">
     <value>Open User Config Directory</value>
   </data>
   <data name="ResetStepsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode.</value>
+  </data>
+  <data name="ResetStepsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode.</value>
   </data>
   <data name="ResetStepsButton.Content" xml:space="preserve">
@@ -526,10 +698,16 @@
   <data name="AllowNewAppsCreatePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Start creating the policy with the logs and files you selected</value>
   </data>
+  <data name="AllowNewAppsCreatePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start creating the policy with the logs and files you selected</value>
+  </data>
   <data name="AllowNewAppsCreatePolicyButton.Content" xml:space="preserve">
     <value>Create Policy</value>
   </data>
   <data name="LogSizeNumberBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This is the Maximum Capacity of the Code Integrity Operational Log Size</value>
+  </data>
+  <data name="LogSizeNumberBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>This is the Maximum Capacity of the Code Integrity Operational Log Size</value>
   </data>
   <data name="LogSizeNumberBox.Header" xml:space="preserve">
@@ -547,7 +725,13 @@
   <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Click/Tap to choose a XML policy file from your device</value>
   </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Click/Tap to choose a XML policy file from your device</value>
+  </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a level based on which the Files/Logs will be scanned</value>
+  </data>
+  <data name="ScanLevelComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pick a level based on which the Files/Logs will be scanned</value>
   </data>
   <data name="WebViewBackButton.Text" xml:space="preserve">
@@ -574,10 +758,16 @@
   <data name="SaveAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="SaveAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="BrowseAppBarButton.Label" xml:space="preserve">
     <value>Browse</value>
   </data>
   <data name="BrowseAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="BrowseAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Browse</value>
   </data>
   <data name="ClearAppBarButton.Label" xml:space="preserve">
@@ -586,10 +776,16 @@
   <data name="ClearAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="ClearAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Clear</value>
+  </data>
   <data name="RefreshAppBarButton.Label" xml:space="preserve">
     <value>Refresh</value>
   </data>
   <data name="RefreshAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fetches the latest certificate common names from the User&apos;s personal certificate store</value>
+  </data>
+  <data name="RefreshAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Fetches the latest certificate common names from the User&apos;s personal certificate store</value>
   </data>
   <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
@@ -601,6 +797,9 @@
   <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>This is the backdrop of the AppControl Manager. The changes will be visible in the background.</value>
   </data>
+  <data name="BackgroundStyleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This is the backdrop of the AppControl Manager. The changes will be visible in the background.</value>
+  </data>
   <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
     <value>Choose a style for the main navigation icons</value>
   </data>
@@ -608,6 +807,9 @@
     <value>Icons Style</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a style for the main navigation&apos;s icons.</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Pick a style for the main navigation&apos;s icons.</value>
   </data>
   <data name="AppThemeSettingsCard.Description" xml:space="preserve">
@@ -619,6 +821,9 @@
   <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Select a theme for the AppControl Manager</value>
   </data>
+  <data name="AppThemeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select a theme for the AppControl Manager</value>
+  </data>
   <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
     <value>Customize the Navigation Menu location</value>
   </data>
@@ -626,6 +831,9 @@
     <value>Navigation Menu</value>
   </data>
   <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a location for the navigation menu</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Select a location for the navigation menu</value>
   </data>
   <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
@@ -637,6 +845,9 @@
   <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Hear audio feedback when using different elements of the AppControl Manager</value>
   </data>
+  <data name="AppSoundSettingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Hear audio feedback when using different elements of the AppControl Manager</value>
+  </data>
   <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
     <value>Mostly suitable when using MicaAlt as the background.</value>
   </data>
@@ -644,6 +855,9 @@
     <value>Darker Background</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager&apos;s appearance.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager&apos;s appearance.</value>
   </data>
   <data name="UserConfigurations.Text" xml:space="preserve">
@@ -683,6 +897,9 @@
     <value>Scan Logs</value>
   </data>
   <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scan the system or the selected EVTX files for Code Integrity/AppLocker logs</value>
+  </data>
+  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Scan the system or the selected EVTX files for Code Integrity/AppLocker logs</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
@@ -1372,6 +1589,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Use this section to enter a custom pattern-based file rule to add to the supplemental policy.</value>
   </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Use this section to enter a custom pattern-based file rule to add to the supplemental policy.</value>
+  </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Header" xml:space="preserve">
     <value>Custom Pattern-based File Rule</value>
   </data>
@@ -1379,6 +1599,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Click/Tap here to see more information about the patterns you can use</value>
   </data>
   <data name="CustomPatternBasedFileRuleInfoSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Click/Tap here to see more information about the patterns you can use</value>
+  </data>
+  <data name="CustomPatternBasedFileRuleInfoSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Click/Tap here to see more information about the patterns you can use</value>
   </data>
   <data name="CustomPatternBasedFileRuleInfoSettingsCard.Header" xml:space="preserve">
@@ -1390,10 +1613,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Enter a custom matching pattern for file rules. All of the file paths that match this pattern will be allowed by the Supplemental policy.</value>
   </data>
+  <data name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter a custom matching pattern for file rules. All of the file paths that match this pattern will be allowed by the Supplemental policy.</value>
+  </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
     <value>Create a supplemental policy that uses custom pattern-based file rule.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a supplemental policy that uses custom pattern-based file rule.</value>
+  </data>
+  <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create a supplemental policy that uses custom pattern-based file rule.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
@@ -1405,6 +1634,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Use this section to enter a custom pattern-based file rule to add to the Deny policy.</value>
   </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Use this section to enter a custom pattern-based file rule to add to the Deny policy.</value>
+  </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Header" xml:space="preserve">
     <value>Custom Pattern-based File Rule</value>
   </data>
@@ -1414,10 +1646,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DenyPolicyCustomPatternBasedCustomPatternTextBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Enter a custom matching pattern for file rules. All of the file paths that match this pattern will be denied by the Deny policy.</value>
   </data>
+  <data name="DenyPolicyCustomPatternBasedCustomPatternTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter a custom matching pattern for file rules. All of the file paths that match this pattern will be denied by the Deny policy.</value>
+  </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
     <value>Create a Deny policy that uses custom pattern-based file rule.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a Deny policy that uses custom pattern-based file rule.</value>
+  </data>
+  <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create a Deny policy that uses custom pattern-based file rule.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
@@ -1432,6 +1670,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoMSRecommendedBlockRules.ToolTipService.ToolTip" xml:space="preserve">
     <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
   </data>
+  <data name="NoMSRecommendedBlockRules.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Using this option means the Microsoft Recommended (User-Mode) Block Rules will not be created/deployed along with the base policy. (Not Recommended)</value>
+  </data>
   <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
     <value>Change the behavior of the AppControl Manager and various elements inside of it</value>
   </data>
@@ -1439,6 +1680,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Behavior</value>
   </data>
   <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Change the behavior of the AppControl Manager and various elements inside of it</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Change the behavior of the AppControl Manager and various elements inside of it</value>
   </data>
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
@@ -1450,6 +1694,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Whenever you select an item in a List View, center that item vertically on the screen.</value>
   </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Whenever you select an item in a List View, center that item vertically on the screen.</value>
+  </data>
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.Description" xml:space="preserve">
     <value>Cache the results of the security catalogs scan for 5 minutes before scanning them again. This can improve scan performance within the app.</value>
   </data>
@@ -1459,10 +1706,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>Cache the results of the security catalogs scan for 5 minutes before scanning them again. This can improve scan performance within the app.</value>
   </data>
+  <data name="CacheSecurityCatalogsScanResultsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cache the results of the security catalogs scan for 5 minutes before scanning them again. This can improve scan performance within the app.</value>
+  </data>
   <data name="PolicyEditorNavItem.Content" xml:space="preserve">
     <value>Policy Editor</value>
   </data>
   <data name="PolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Edit App Control policies, view and remove individual rules and modify other details.</value>
+  </data>
+  <data name="PolicyEditorNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Edit App Control policies, view and remove individual rules and modify other details.</value>
   </data>
   <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
@@ -1473,5 +1726,26 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>If this is enabled, AppControl Manager will prompt for elevation to run with Administrator privileges on startup.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>If this is enabled, AppControl Manager will prompt for elevation to run with Administrator privileges on startup.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>Open In The Policy Editor</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
+  <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
+    <value>Only Use Selected Items</value>
+  </data>
+  <data name="OnlyIncludeSelectedItemsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Only include the selected items in the supplemental policy. You can select one or more items in the ListView and if this option is enabled, only those will be included in the supplemental policy. If this is disabled, everything will be included in the supplemental policy. If you use this option and nothing is selected in the ListView, everything will be included in the supplemental policy.</value>
+  </data>
+  <data name="OnlyIncludeSelectedItemsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Only include the selected items in the supplemental policy. You can select one or more items in the ListView and if this option is enabled, only those will be included in the supplemental policy. If this is disabled, everything will be included in the supplemental policy. If you use this option and nothing is selected in the ListView, everything will be included in the supplemental policy.</value>
   </data>
 </root>

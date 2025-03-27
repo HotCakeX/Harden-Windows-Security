@@ -453,7 +453,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 				{
 					case 0: // Default Windows
 						{
-							BasePolicyCreator.BuildDefaultWindows(
+							_ = BasePolicyCreator.BuildDefaultWindows(
 							StagingArea: stagingArea,
 							IsAudit: false,
 							LogSize: null,
@@ -470,7 +470,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 						}
 					case 1: // Allow Microsoft
 						{
-							BasePolicyCreator.BuildAllowMSFT(
+							_ = BasePolicyCreator.BuildAllowMSFT(
 							StagingArea: stagingArea,
 							IsAudit: false,
 							LogSize: null,
@@ -487,7 +487,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 						}
 					case 2: // Signed and Reputable
 						{
-							BasePolicyCreator.BuildSignedAndReputable(
+							_ = BasePolicyCreator.BuildSignedAndReputable(
 							StagingArea: stagingArea,
 							IsAudit: false,
 							LogSize: null,
@@ -504,7 +504,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 						}
 					case 3: // Strict Kernel-Mode
 						{
-							BasePolicyCreator.BuildStrictKernelMode(
+							_ = BasePolicyCreator.BuildStrictKernelMode(
 								StagingArea: stagingArea,
 								IsAudit: false,
 								NoFlightRoots: false,
@@ -515,7 +515,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 						}
 					case 4: // Strict Kernel-Mode(No Flight Roots)
 						{
-							BasePolicyCreator.BuildStrictKernelMode(
+							_ = BasePolicyCreator.BuildStrictKernelMode(
 								StagingArea: stagingArea,
 								IsAudit: false,
 								NoFlightRoots: true,

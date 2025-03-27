@@ -119,6 +119,7 @@ public partial class App : Application
 			_ = services.AddSingleton<ViewModels.MDEAHPolicyCreationVM>();
 			_ = services.AddSingleton<ViewModels.ViewFileCertificatesVM>();
 			_ = services.AddSingleton<ViewModels.MainWindowVM>();
+			_ = services.AddSingleton<ViewModels.CreatePolicyVM>();
 		})
 		.Build();
 

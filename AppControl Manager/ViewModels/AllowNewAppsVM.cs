@@ -64,6 +64,13 @@ internal sealed partial class AllowNewAppsVM : INotifyPropertyChanged
 
 	#region UI-Bound Properties
 
+	private Visibility _OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
+	{
+		get => _OpenInPolicyEditorInfoBarActionButtonVisibility;
+		set => SetProperty(_OpenInPolicyEditorInfoBarActionButtonVisibility, value, newValue => _OpenInPolicyEditorInfoBarActionButtonVisibility = newValue);
+	}
+
 	/// <summary>
 	/// Holds the state of the Event Logs menu item, indicating whether it is enabled or disabled.
 	/// </summary>

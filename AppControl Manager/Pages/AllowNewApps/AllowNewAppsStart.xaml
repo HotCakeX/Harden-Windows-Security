@@ -36,7 +36,7 @@
                 <HyperlinkButton Margin="0,-8,0,8" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 
                 <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
-                    <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Style="{StaticResource AccentButtonStyle}" x:Uid="ResetStepsButton" />
+                    <Button x:Name="ResetStepsButton" Click="{x:Bind ResetStepsButton_Click}" Style="{StaticResource AccentButtonStyle}" x:Uid="ResetStepsButton" />
                     <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
                 </StackPanel>
 
@@ -64,7 +64,7 @@
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="15" HorizontalSpacing="15">
 
                         <TextBox x:Name="SupplementalPolicyNameTextBox" Header="Supplemental Policy Name" PlaceholderText="Enter a name for the Supplemental Policy" />
-                        <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0"
+                        <Button x:Name="BrowseForXMLPolicyButton" Click="{x:Bind BrowseForXMLPolicyButton_Click}" Margin="0,27,0,0"
                                RightTapped="BrowseForXMLPolicyButton_RightTapped" Holding="BrowseForXMLPolicyButton_Holding" ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
 
                             <Button.Flyout>
@@ -107,7 +107,7 @@
                             SmallChange="1"
                             LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_ValueChanged" />
 
-                        <Button x:Name="GoToStep2Button" Click="GoToStep2Button_Click" Margin="0,27,0,0" Content="Go to step 2" ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button x:Name="GoToStep2Button" Click="{x:Bind GoToStep2Button_Click}" Margin="0,27,0,0" Content="Go to step 2" ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2" Style="{StaticResource AccentButtonStyle}"/>
 
                     </controls:WrapPanel>
 
@@ -138,14 +138,14 @@
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
 
                         <Button x:Name="BrowseForFoldersButton" RightTapped="BrowseForFoldersButton_RightTapped"
-                               Holding="BrowseForFoldersButton_Holding" Click="BrowseForFoldersButton_Click" Content="Browse for folders" ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
+                               Holding="BrowseForFoldersButton_Holding" Click="{x:Bind BrowseForFoldersButton_Click}" Content="Browse for folders" ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
 
                             <Button.Flyout>
                                 <Flyout x:Name="BrowseForFoldersButton_FlyOut">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="ClearSelectedDirectoriesButton_Click" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ClearSelectedDirectoriesButton_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" Width="400" />
 
@@ -160,7 +160,7 @@
 
                         </Button>
 
-                        <Button x:Name="GoToStep3Button" Click="GoToStep3Button_Click" Content="Go to step 3" ToolTipService.ToolTip="Start scanning the event logs and the selected directories (if any) and go to step 3" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button x:Name="GoToStep3Button" Click="{x:Bind GoToStep3Button_Click}" Content="Go to step 3" ToolTipService.ToolTip="Start scanning the event logs and the selected directories (if any) and go to step 3" Style="{StaticResource AccentButtonStyle}"/>
 
                     </controls:WrapPanel>
 
@@ -198,9 +198,13 @@
                             <x:String>Hash</x:String>
                         </ComboBox>
 
-                        <Button x:Name="CreatePolicyButton" Click="CreatePolicyButton_Click" x:Uid="AllowNewAppsCreatePolicyButton" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button x:Name="CreatePolicyButton" Click="{x:Bind CreatePolicyButton_Click}" x:Uid="AllowNewAppsCreatePolicyButton" Style="{StaticResource AccentButtonStyle}"/>
                     </controls:WrapPanel>
-                    <InfoBar x:Name="Step3InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
+                    <InfoBar x:Name="Step3InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2">
+                        <InfoBar.ActionButton>
+                            <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
+                        </InfoBar.ActionButton>
+                    </InfoBar>
                 </Grid>
             </Border>
 

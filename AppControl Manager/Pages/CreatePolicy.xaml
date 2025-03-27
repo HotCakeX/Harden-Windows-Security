@@ -55,13 +55,16 @@
                              IsOpen="False"
                              IsClosable="False"
                              Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_AllowMicrosoft}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="AllowMicrosoftCreate" Content="Create" ToolTipService.ToolTip="Create the Allow Microsoft base policy"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="AllowMicrosoftCreate_Click" />
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind AllowMicrosoftCreate_Click}" />
 
                         <ToggleButton x:Name="AllowMicrosoftCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
@@ -85,7 +88,7 @@
                                     IsEnabled="False"
                                     LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
 
-                                <ToggleSwitch x:Name="AllowMicrosoftLogSizeInputEnabled" IsEnabled="False" Toggled="AllowMicrosoftLogSizeInputEnabled_Toggled" />
+                                <ToggleSwitch x:Name="AllowMicrosoftLogSizeInputEnabled" IsEnabled="False" Toggled="{x:Bind AllowMicrosoftLogSizeInputEnabled_Toggled}" />
 
                             </controls:WrapPanel>
 
@@ -125,13 +128,16 @@
                              IsOpen="False"
                              IsClosable="False"
                              Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_DefaultWindows}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="DefaultWindowsCreate" Content="Create" ToolTipService.ToolTip="Create the Default Windows base policy"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="DefaultWindowsCreate_Click" />
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind DefaultWindowsCreate_Click}" />
 
                         <ToggleButton x:Name="DefaultWindowsCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
@@ -155,7 +161,7 @@
                                     SmallChange="1"
                                     LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
 
-                                <ToggleSwitch x:Name="DefaultWindowsLogSizeInputEnabled" IsEnabled="False" Toggled="DefaultWindowsLogSizeInputEnabled_Toggled" />
+                                <ToggleSwitch x:Name="DefaultWindowsLogSizeInputEnabled" IsEnabled="False" Toggled="{x:Bind DefaultWindowsLogSizeInputEnabled_Toggled}" />
 
                             </controls:WrapPanel>
 
@@ -195,13 +201,16 @@
                              IsOpen="False"
                              IsClosable="False"
                              Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_SignedAndReputable}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="SignedAndReputableCreate" Content="Create" ToolTipService.ToolTip="Create the Signed and Reputable base policy"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="SignedAndReputableCreate_Click" />
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind SignedAndReputableCreate_Click}" />
 
                         <ToggleButton x:Name="SignedAndReputableCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
@@ -225,7 +234,7 @@
                                     SmallChange="1"
                                     LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
 
-                                <ToggleSwitch x:Name="SignedAndReputableLogSizeInputEnabled" IsEnabled="False" Toggled="SignedAndReputableLogSizeInputEnabled_Toggled" />
+                                <ToggleSwitch x:Name="SignedAndReputableLogSizeInputEnabled" IsEnabled="False" Toggled="{x:Bind SignedAndReputableLogSizeInputEnabled_Toggled}" />
 
                             </controls:WrapPanel>
 
@@ -265,18 +274,21 @@
                             IsOpen="False"
                             IsClosable="False"
                             Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_RecommendedDriverBlockRules}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="RecommendedDriverBlockRulesCreate" Content="Create" ToolTipService.ToolTip="Create the Microsoft Recommended Drivers Block List policy"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedDriverBlockRulesCreate_Click" />
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind RecommendedDriverBlockRulesCreate_Click}" />
 
                         <ToggleButton x:Name="RecommendedDriverBlockRulesCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                         <Button x:Name="RecommendedDriverBlockRulesScheduledAutoUpdate" Content="Auto Update" ToolTipService.ToolTip="Configures the Microsoft Recommended Drivers Block List to be automatically updated using a scheduled task"
-                            Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesScheduledAutoUpdate_Click" Margin="0,0,15,0" />
+                            Style="{StaticResource AccentButtonStyle}" Click="{x:Bind RecommendedDriverBlockRulesScheduledAutoUpdate_Click}" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
@@ -299,7 +311,7 @@
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="RecommendedUserModeBlockRulesCreate" Content="Create" ToolTipService.ToolTip="Create the Microsoft recommended user-mode block rules policy"
-                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedUserModeBlockRulesCreate_Click" />
+                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind RecommendedUserModeBlockRulesCreate_Click}" />
 
                         <ToggleButton x:Name="RecommendedUserModeBlockRulesCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
@@ -322,12 +334,15 @@
                         IsOpen="False"
                         IsClosable="False"
                         Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_StrictKernelModePolicy}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="StrictKernelModePolicyCreateButton" Content="Create" Click="StrictKernelModePolicyCreateButton_Click"
+                        <Button x:Name="StrictKernelModePolicyCreateButton" Content="Create" Click="{x:Bind StrictKernelModePolicyCreateButton_Click}"
                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" ToolTipService.ToolTip="Create the Strict Kernel-mode base policy"  />
 
                         <ToggleButton x:Name="StrictKernelModePolicyToggleButtonForDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
@@ -337,14 +352,14 @@
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard Description="Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files."
-                                Header="Audit" IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModePolicyAuditSettingsCard_Click">
+                                Header="Audit" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind StrictKernelModePolicyAuditSettingsCard_Click}">
                             <ToggleSwitch x:Name="StrictKernelModePolicyAudit" />
 
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard" Description="Do not allow flight root certificates"
                              Header="No flight root certificates"
-                             IsClickEnabled="True" IsActionIconVisible="False" Click="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click">
+                             IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click}">
 
                             <ToggleSwitch x:Name="StrictKernelModePolicyUseNoFlightRootsToggleSwitch" />
 

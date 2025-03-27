@@ -50,6 +50,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 
 #pragma warning disable CA1822
 	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 #pragma warning restore CA1822
 
 
@@ -276,10 +277,8 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// <summary>
 	/// Step 1 validation
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	/// <exception cref="InvalidOperationException"></exception>
-	private async void GoToStep2Button_Click(object sender, RoutedEventArgs e)
+	private async void GoToStep2Button_Click()
 	{
 		bool errorOccurred = false;
 
@@ -490,9 +489,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// <summary>
 	/// Step 2 validation
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void GoToStep3Button_Click(object sender, RoutedEventArgs e)
+	private async void GoToStep3Button_Click()
 	{
 
 		bool errorsOccurred = false;
@@ -677,9 +674,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// <summary>
 	/// Steps Reset
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void ResetStepsButton_Click(object sender, RoutedEventArgs e)
+	private async void ResetStepsButton_Click()
 	{
 		try
 		{
@@ -691,6 +686,12 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 			DisableStep1();
 			DisableStep2();
 			DisableStep3();
+
+			// Hide the action button for InfoBar in Step 3 that offers to open the supplemental policy in the Policy Editor
+			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			// Clear the path to the supplemental policy
+			finalSupplementalPolicyPath = null;
 
 			// Clear the ListViews and their respective search/filter-related lists
 			ViewModel.LocalFilesFileIdentities.Clear();
@@ -765,9 +766,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// <summary>
 	/// Clears the text box and the list of selected directories when the button is clicked.
 	/// </summary>
-	/// <param name="sender">Represents the source of the event that triggered the button click.</param>
-	/// <param name="e">Contains event data related to the button click action.</param>
-	private void ClearSelectedDirectoriesButton_Click(object sender, RoutedEventArgs e)
+	private void ClearSelectedDirectoriesButton_Click()
 	{
 		// Clear the text box on the UI
 		SelectedDirectoriesTextBox.Text = string.Empty;
@@ -798,9 +797,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// Handles the click event for a button to browse and select multiple folders. Selected folders are added to a
 	/// collection and displayed in the UI.
 	/// </summary>
-	/// <param name="sender">Represents the source of the click event, typically the button that was clicked.</param>
-	/// <param name="e">Contains event data related to the click event, providing additional information about the action.</param>
-	private void BrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
+	private void BrowseForFoldersButton_Click()
 	{
 		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
@@ -823,10 +820,8 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// <summary>
 	/// Handles the click event for a button to browse and select an XML policy file.
 	/// </summary>
-	/// <param name="sender">Represents the source of the click event.</param>
-	/// <param name="e">Contains event data related to the click event.</param>
 	/// <exception cref="InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
-	private void BrowseForXMLPolicyButton_Click(object sender, RoutedEventArgs e)
+	private void BrowseForXMLPolicyButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -903,9 +898,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// <summary>
 	/// Event handler for the Create Policy button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void CreatePolicyButton_Click(object sender, RoutedEventArgs e)
+	private async void CreatePolicyButton_Click()
 	{
 		try
 		{
@@ -913,6 +906,8 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 			CreatePolicyButton.IsEnabled = false;
 
 			ResetStepsButton.IsEnabled = false;
+
+			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			Step3InfoBar.IsOpen = true;
 			Step3InfoBar.Severity = InfoBarSeverity.Informational;
@@ -999,6 +994,9 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 				// Convert the XML file to CIP
 				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
 
+				// Add the supplemental policy path to the class variable
+				finalSupplementalPolicyPath = OutputPath;
+
 				if (_IsSignedPolicy)
 				{
 					// Sign the CIP
@@ -1038,6 +1036,8 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 		{
 			CreatePolicyButton.IsEnabled = true;
 			ResetStepsButton.IsEnabled = true;
+
+			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 
 			// Clear the private variable after the policy is created. This allows the user to remove some items from the logs and recreate the policy with less data if needed.
 			fileIdentities.FileIdentitiesInternal.Clear();
@@ -1130,4 +1130,20 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 			if (!BrowseForFoldersButton_FlyOut.IsOpen)
 				BrowseForFoldersButton_FlyOut.ShowAt(BrowseForFoldersButton);
 	}
+
+
+	/// <summary>
+	/// Path of the Supplemental policy that is created
+	/// </summary>
+	private string? finalSupplementalPolicyPath;
+
+
+	/// <summary>
+	/// Event handler to open the supplemental policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	}
+
 }

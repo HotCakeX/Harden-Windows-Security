@@ -2472,6 +2472,7 @@
             And creates a valid Code Integrity XML policy file from it.
             </summary>
             <param name="StagingArea">The directory where the XML file will be saved to.</param>
+            <returns>the path to the Microsoft recommended driver block rules base policy path</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.BuildAllowMSFT(System.String,System.Boolean,System.Nullable{System.UInt64},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
@@ -2487,6 +2488,7 @@
             <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
             <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
             <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
+            <returns>Returns the path to the created policy</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.BuildDefaultWindows(System.String,System.Boolean,System.Nullable{System.UInt64},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
@@ -2503,6 +2505,7 @@
             <param name="deployAppControlSupplementalPolicy">Specifies if a supplemental policy should be deployed alongside the main policy.</param>
             <param name="PolicyIDToUse">Allows the use of a specific policy ID instead of generating a new one.</param>
             <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
+            <returns>Returns the path to the created Default Windows base policy</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.GetBlockRules(System.String,System.Boolean)">
             <summary>
@@ -2528,6 +2531,7 @@
             <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
             <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
             <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to retrieve and deploy Microsoft recommended block rules.</param>
+            <returns>Returns the signed and reputable base policy file path</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.BuildStrictKernelMode(System.String,System.Boolean,System.Boolean,System.Boolean,System.String)">
             <summary>
@@ -2539,6 +2543,7 @@
             <param name="NoFlightRoots">Determines the filename variant used for the policy based on flight root settings.</param>
             <param name="deploy">Indicates whether the policy should be deployed after creation.</param>
             <param name="PolicyIDToUse">Specifies an optional policy ID to associate with the created policy.</param>
+            <returns>the path to the Strict Kernel-mode base policy path</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.MyRegex">
             <remarks>
@@ -4205,34 +4210,26 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep2Button_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep2Button_Click">
             <summary>
             Step 1 validation
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep3Button_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep3Button_Click">
             <summary>
             Step 2 validation
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.ResetStepsButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.ResetStepsButton_Click">
             <summary>
             Steps Reset
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.ClearSelectedDirectoriesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.ClearSelectedDirectoriesButton_Click">
             <summary>
             Clears the text box and the list of selected directories when the button is clicked.
             </summary>
-            <param name="sender">Represents the source of the event that triggered the button click.</param>
-            <param name="e">Contains event data related to the button click action.</param>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.ScanLevelComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
@@ -4241,28 +4238,22 @@
             <param name="sender">Represents the source of the event, allowing access to the ComboBox that triggered the selection change.</param>
             <param name="e">Contains event data related to the selection change, providing information about the new selection.</param>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForFoldersButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForFoldersButton_Click">
             <summary>
             Handles the click event for a button to browse and select multiple folders. Selected folders are added to a
             collection and displayed in the UI.
             </summary>
-            <param name="sender">Represents the source of the click event, typically the button that was clicked.</param>
-            <param name="e">Contains event data related to the click event, providing additional information about the action.</param>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Click">
             <summary>
             Handles the click event for a button to browse and select an XML policy file.
             </summary>
-            <param name="sender">Represents the source of the click event.</param>
-            <param name="e">Contains event data related to the click event.</param>
             <exception cref="T:System.InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.CreatePolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.CreatePolicyButton_Click">
             <summary>
             Event handler for the Create Policy button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.LogSizeNumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox,Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs)">
             <summary>
@@ -4307,6 +4298,16 @@
             </summary>
             <param name="sender">Represents the source of the event, typically the button being held.</param>
             <param name="e">Contains data related to the holding gesture, including its current state.</param>
+        </member>
+        <member name="F:AppControlManager.Pages.AllowNewAppsStart.finalSupplementalPolicyPath">
+            <summary>
+            Path of the Supplemental policy that is created
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.OpenInPolicyEditor">
+            <summary>
+            Event handler to open the supplemental policy in the Policy Editor
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.InitializeComponent">
             <summary>
@@ -4733,26 +4734,50 @@
             Initializes the CreatePolicy component and sets various log size inputs to disabled. Maintains navigation state.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.AllowMicrosoftCreate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.AllowMicrosoftCreate_Click">
             <summary>
             Event handler for creating/deploying AllowMicrosoft policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.DefaultWindowsCreate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.AllowMicrosoftLogSizeInputEnabled_Toggled">
+            <summary>
+            Event handler for the ToggleSwitch to enable/disable the log size input
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_AllowMicrosoft">
+            <summary>
+            Event handler to open the created Allow Microsoft policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.DefaultWindowsCreate_Click">
             <summary>
             Event handler for creating/deploying DefaultWindows policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.SignedAndReputableCreate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.DefaultWindowsLogSizeInputEnabled_Toggled">
+            <summary>
+            Event handler for the ToggleSwitch to enable/disable the log size input
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_DefaultWindows">
+            <summary>
+            Event handler to open the created Default Windows policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.SignedAndReputableCreate_Click">
             <summary>
             Event handler for creating/deploying SignedAndReputable policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.SignedAndReputableLogSizeInputEnabled_Toggled">
+            <summary>
+            Event handler for the ToggleSwitch to enable/disable the log size input
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_SignedAndReputable">
+            <summary>
+            Event handler to open the created Signed and Reputable policy in the Policy Editor
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreatePolicy.AddDriverBlockRulesInfo">
             <summary>
@@ -4760,33 +4785,35 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesCreate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesCreate_Click">
             <summary>
             Event handler for creating/deploying Microsoft recommended driver block rules policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesScheduledAutoUpdate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesScheduledAutoUpdate_Click">
             <summary>
             Event handler for Auto Update button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedUserModeBlockRulesCreate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_RecommendedDriverBlockRules">
+            <summary>
+            Event handler to open the created Microsoft Recommended driver block rules policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedUserModeBlockRulesCreate_Click">
             <summary>
             Event handler for creating/deploying Microsoft recommended user-mode block rules policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.StrictKernelModePolicyCreateButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreatePolicy.StrictKernelModePolicyCreateButton_Click">
             <summary>
             Event handler to prepare the system for Strict Kernel-mode policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
+        </member>
+        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_StrictKernelModePolicy">
+            <summary>
+            Event handler to open the created Strict Kernel-mode policy in the Policy Editor
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreatePolicy.InitializeComponent">
             <summary>
@@ -5349,22 +5376,15 @@
             Event handler for the CalendarDatePicker date changed event
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ApplyFilters">
             <summary>
             Applies the date and search filters to the data grid
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ScanLogs_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ScanLogs_Click">
             <summary>
             Event handler for the ScanLogs click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SelectCodeIntegrityEVTXFiles_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5373,33 +5393,30 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SelectAppLockerEVTXFiles_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SelectAppLockerEVTXFiles_Click">
             <summary>
             Event handler for the select AppLocker EVTX file path button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ClearDataButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SelectedAppLockerEVTXFilesFlyout_Clear_Click">
+            <summary>
+            Clears the selected AppLocker EVTX file paths
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ClearDataButton_Click">
             <summary>
             Event handler for the Clear Data button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.SelectAll_Click">
             <summary>
             Selects all of the displayed rows on the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.DeSelectAll_Click">
             <summary>
             De-selects all of the displayed rows on the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ListViewFlyoutMenuDelete_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5413,34 +5430,26 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.AddToPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.AddToPolicyButton_Click">
             <summary>
             The button that browses for XML file the logs will be added to
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.BasePolicyFileButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.BasePolicyFileButton_Click">
             <summary>
             The button to browse for the XML file the supplemental policy that will be created will belong to
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.BaseGUIDSubmitButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.BaseGUIDSubmitButton_Click">
             <summary>
             The button to submit a base policy GUID that will be used to set the base policy ID in the Supplemental policy file that will be created.
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.CreatePolicyButton_Click(Microsoft.UI.Xaml.Controls.SplitButton,Microsoft.UI.Xaml.Controls.SplitButtonClickEventArgs)">
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.CreatePolicyButton_Click">
             <summary>
             When the main button responsible for creating policy is pressed
             </summary>
-            <param name="sender"></param>
-            <param name="args"></param>
         </member>
         <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.ScanLevelComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
@@ -5463,6 +5472,16 @@
             </summary>
             <param name="sender"></param>
             <param name="args"></param>
+        </member>
+        <member name="F:AppControlManager.Pages.EventLogsPolicyCreation.finalSupplementalPolicyPath">
+            <summary>
+            Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.OpenInPolicyEditor">
+            <summary>
+            Event handler to open the supplemental policy in the Policy Editor
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.InitializeComponent">
             <summary>
@@ -5778,40 +5797,30 @@
             <param name="e"></param>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphCancelSignInButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphCancelSignInButton_Click">
             <summary>
             Event handler for the Cancel Sign In button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphSignInButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphSignInButton_Click">
             <summary>
             Event handler for the SignIn button for Microsoft Graph
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphSignOutButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphSignOutButton_Click">
             <summary>
             Event handler for signing out of Microsoft Graph
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.RetrieveTheLogsButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.RetrieveTheLogsButton_Click">
             <summary>
             Event handler for the button that retrieves the logs
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.SegmentedControl_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.SegmentedControl_SelectionChanged">
             <summary>
             Event handler for for the segmented button's selection change
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.CopyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5826,6 +5835,16 @@
             </summary>
             <param name="sender"></param>
             <param name="args"></param>
+        </member>
+        <member name="F:AppControlManager.Pages.MDEAHPolicyCreation.finalSupplementalPolicyPath">
+            <summary>
+            Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.OpenInPolicyEditor">
+            <summary>
+            Event handler to open the supplemental policy in the Policy Editor
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.InitializeComponent">
             <summary>
@@ -8109,6 +8128,18 @@
             <param name="propertyName"></param>
             <returns></returns>
         </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -8568,6 +8599,12 @@
             <summary>
             Event handler to open the Policy HVCI Option/Level ComboBox's dropdown menu when its parent settings card is clicked on
             </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.PolicyEditorVM.OpenInPolicyEditor(System.String)">
+            <summary>
+            Used by various methods internally to open a created/modified policy in the Policy Editor
+            </summary>
+            <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
         </member>
         <member name="M:AppControlManager.ViewModels.PolicyEditorVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
             <summary>

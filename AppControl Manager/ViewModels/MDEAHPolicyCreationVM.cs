@@ -47,6 +47,12 @@ internal sealed partial class MDEAHPolicyCreationVM : INotifyPropertyChanged
 
 	#region UI-Bound Properties
 
+	private Visibility _OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
+	{
+		get => _OpenInPolicyEditorInfoBarActionButtonVisibility;
+		set => SetProperty(_OpenInPolicyEditorInfoBarActionButtonVisibility, value, newValue => _OpenInPolicyEditorInfoBarActionButtonVisibility = newValue);
+	}
 
 	#endregion
 

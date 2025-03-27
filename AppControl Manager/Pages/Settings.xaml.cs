@@ -139,6 +139,8 @@ internal sealed partial class Settings : Page
 
 		// Raise the global OnNavigationViewLocationChanged event
 		NavigationViewLocationManager.OnNavigationViewLocationChanged(selectedLocation);
+
+		App.Settings.NavViewPaneDisplayMode = selectedLocation;
 	}
 
 	/// <summary>

@@ -350,7 +350,8 @@ internal static partial class BasePolicyCreator
 	/// And creates a valid Code Integrity XML policy file from it.
 	/// </summary>
 	/// <param name="StagingArea">The directory where the XML file will be saved to.</param>
-	internal static void GetDriversBlockRules(string StagingArea)
+	/// <returns>the path to the Microsoft recommended driver block rules base policy path</returns>
+	internal static string GetDriversBlockRules(string StagingArea)
 	{
 		string name = "Microsoft Recommended Driver Block Rules";
 
@@ -399,6 +400,8 @@ internal static partial class BasePolicyCreator
 		File.Copy(xmlPath, savePathLocation, true);
 
 		Logger.Write($"The policy file was created and saved to {savePathLocation}");
+
+		return savePathLocation;
 	}
 
 
@@ -415,7 +418,8 @@ internal static partial class BasePolicyCreator
 	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
 	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
-	internal static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	/// <returns>Returns the path to the created policy</returns>
+	internal static string BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -485,6 +489,8 @@ internal static partial class BasePolicyCreator
 
 		// Assign the created policy path to the Sidebar if condition is met
 		ViewModel.AssignToSidebar(finalPolicyPath);
+
+		return finalPolicyPath;
 	}
 
 
@@ -502,7 +508,8 @@ internal static partial class BasePolicyCreator
 	/// <param name="deployAppControlSupplementalPolicy">Specifies if a supplemental policy should be deployed alongside the main policy.</param>
 	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID instead of generating a new one.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
-	internal static void BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	/// <returns>Returns the path to the created Default Windows base policy</returns>
+	internal static string BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -573,6 +580,8 @@ internal static partial class BasePolicyCreator
 
 		// Assign the created policy path to the Sidebar if condition is met
 		ViewModel.AssignToSidebar(finalPolicyPath);
+
+		return finalPolicyPath;
 	}
 
 
@@ -687,7 +696,8 @@ internal static partial class BasePolicyCreator
 	/// <param name="deployAppControlSupplementalPolicy">Indicates if a supplemental policy should be deployed alongside the main policy.</param>
 	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to retrieve and deploy Microsoft recommended block rules.</param>
-	internal static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	/// <returns>Returns the signed and reputable base policy file path</returns>
+	internal static string BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -762,6 +772,8 @@ internal static partial class BasePolicyCreator
 
 		// Assign the created policy path to the Sidebar if condition is met
 		ViewModel.AssignToSidebar(finalPolicyPath);
+
+		return finalPolicyPath;
 	}
 
 
@@ -775,7 +787,8 @@ internal static partial class BasePolicyCreator
 	/// <param name="NoFlightRoots">Determines the filename variant used for the policy based on flight root settings.</param>
 	/// <param name="deploy">Indicates whether the policy should be deployed after creation.</param>
 	/// <param name="PolicyIDToUse">Specifies an optional policy ID to associate with the created policy.</param>
-	internal static void BuildStrictKernelMode(string StagingArea, bool IsAudit, bool NoFlightRoots, bool deploy, string? PolicyIDToUse = null)
+	/// <returns>the path to the Strict Kernel-mode base policy path</returns>
+	internal static string BuildStrictKernelMode(string StagingArea, bool IsAudit, bool NoFlightRoots, bool deploy, string? PolicyIDToUse = null)
 	{
 
 		string fileName = NoFlightRoots ? "StrictKernelMode_NoFlightRoots" : "StrictKernelMode";
@@ -827,6 +840,8 @@ internal static partial class BasePolicyCreator
 			// Deploy the CiP file
 			CiToolHelper.UpdatePolicy(cipPath);
 		}
+
+		return finalPolicyPath;
 	}
 
 

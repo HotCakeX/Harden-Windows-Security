@@ -43,6 +43,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 #pragma warning disable CA1822
 	private EventLogsPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<EventLogsPolicyCreationVM>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -125,15 +126,6 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 
 	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		ApplyFilters();
-	}
-
-
-	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
 	private void ApplyFilters()
@@ -151,13 +143,20 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// Event handler for the ScanLogs click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void ScanLogs_Click(object sender, RoutedEventArgs e)
+	private async void ScanLogs_Click()
 	{
+
+		bool error = false;
 
 		try
 		{
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = "Scanning the event logs...";
+			MainInfoBar.Severity = InfoBarSeverity.Informational;
+			MainInfoBar.IsClosable = false;
+
 			// Disable the scan button initially
 			ScanLogs.IsEnabled = false;
 
@@ -193,6 +192,18 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			ViewModel.CalculateColumnWidths();
 		}
+		catch (Exception ex)
+		{
+			error = true;
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = $"There was an error during logs scan: {ex.Message}";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
+			MainInfoBar.IsClosable = true;
+
+			throw;
+		}
 		finally
 		{
 			// Enable the button again
@@ -208,6 +219,15 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			// Enable the Policy creator button again
 			CreatePolicyButton.IsEnabled = true;
+
+			if (!error)
+			{
+				MainInfoBar.Visibility = Visibility.Visible;
+				MainInfoBar.IsOpen = true;
+				MainInfoBar.Message = $"Scan complete. {ViewModel.AllFileIdentities.Count} logs were found.";
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+				MainInfoBar.IsClosable = true;
+			}
 		}
 	}
 
@@ -245,9 +265,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// Event handler for the select AppLocker EVTX file path button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAppLockerEVTXFiles_Click(object sender, RoutedEventArgs e)
+	private void SelectAppLockerEVTXFiles_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
 
@@ -265,7 +283,10 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	}
 
 
-	private void SelectedAppLockerEVTXFilesFlyout_Clear_Click(object sender, RoutedEventArgs e)
+	/// <summary>
+	/// Clears the selected AppLocker EVTX file paths
+	/// </summary>
+	private void SelectedAppLockerEVTXFilesFlyout_Clear_Click()
 	{
 		SelectedAppLockerEVTXFilesFlyout_TextBox.Text = null;
 		AppLockerEVTX = null;
@@ -275,9 +296,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// Event handler for the Clear Data button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
+	private void ClearDataButton_Click()
 	{
 		ViewModel.FileIdentities.Clear();
 		ViewModel.AllFileIdentities.Clear();
@@ -288,9 +307,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
+	private void SelectAll_Click()
 	{
 		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FileIdentities);
 	}
@@ -298,9 +315,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeSelectAll_Click(object sender, RoutedEventArgs e)
+	private void DeSelectAll_Click()
 	{
 		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
 	}
@@ -344,9 +359,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// The button that browses for XML file the logs will be added to
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AddToPolicyButton_Click(object sender, RoutedEventArgs e)
+	private void AddToPolicyButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -363,9 +376,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// The button to browse for the XML file the supplemental policy that will be created will belong to
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void BasePolicyFileButton_Click(object sender, RoutedEventArgs e)
+	private void BasePolicyFileButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
@@ -382,10 +393,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// The button to submit a base policy GUID that will be used to set the base policy ID in the Supplemental policy file that will be created.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	/// <exception cref="ArgumentException"></exception>
-	private void BaseGUIDSubmitButton_Click(object sender, RoutedEventArgs e)
+	private void BaseGUIDSubmitButton_Click()
 	{
 		if (Guid.TryParse(BaseGUIDTextBox.Text, out Guid guid))
 		{
@@ -400,10 +409,10 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// <summary>
 	/// When the main button responsible for creating policy is pressed
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private async void CreatePolicyButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
+	private async void CreatePolicyButton_Click()
 	{
+
+		bool error = false;
 
 		try
 		{
@@ -417,6 +426,14 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
+
+			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = "Processing the logs...";
+			MainInfoBar.Severity = InfoBarSeverity.Informational;
+			MainInfoBar.IsClosable = false;
 
 
 			if (ViewModel.FileIdentities.Count is 0)
@@ -444,12 +461,19 @@ internal sealed partial class EventLogsPolicyCreation : Page
 				policyName = $"Supplemental policy from event logs - {formattedDate}";
 			}
 
+			// If user selected to deploy the policy
+			// Need to retrieve it while we're still at the UI thread
+			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
+
+			// See which section of the Segmented control is selected for policy creation
+			int selectedCreationMethod = segmentedControl.SelectedIndex;
+
 
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
 
-			// Check if there are selected items in the ListView
-			if (FileIdentitiesListView.SelectedItems.Count > 0)
+			// Check if there are selected items in the ListView and user chose to use them only in the policy
+			if ((OnlyIncludeSelectedItemsToggleButton.IsChecked ?? false) && FileIdentitiesListView.SelectedItems.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
 				foreach (var item in FileIdentitiesListView.SelectedItems)
@@ -460,18 +484,11 @@ internal sealed partial class EventLogsPolicyCreation : Page
 					}
 				}
 			}
-			// If no item was selected from the ListView, use everything in the ObservableCollection
+			// If no item was selected from the ListView and user didn't choose to only use the selected items, then use everything in the ObservableCollection
 			else
 			{
-				SelectedLogs = [.. ViewModel.FileIdentities];
+				SelectedLogs = ViewModel.AllFileIdentities;
 			}
-
-			// If user selected to deploy the policy
-			// Need to retrieve it while we're still at the UI thread
-			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
-
-			// See which section of the Segmented control is selected for policy creation
-			int selectedCreationMethod = segmentedControl.SelectedIndex;
 
 			await Task.Run(() =>
 			{
@@ -505,6 +522,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
 								UpdateHvciOptions.Update(PolicyToAddLogsTo);
+
+								finalSupplementalPolicyPath = PolicyToAddLogsTo;
 
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
@@ -544,6 +563,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								// Copying the policy file to the User Config directory - outside of the temporary staging area
 								File.Copy(EmptyPolicyPath, OutputPath, true);
 
+								finalSupplementalPolicyPath = OutputPath;
+
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
@@ -580,6 +601,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								// Copying the policy file to the User Config directory - outside of the temporary staging area
 								File.Copy(EmptyPolicyPath, OutputPath, true);
 
+								finalSupplementalPolicyPath = OutputPath;
+
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
@@ -605,7 +628,18 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			});
 		}
+		catch (Exception ex)
+		{
+			error = true;
 
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = $"There was an error while processing the logs: {ex.Message}.";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
+			MainInfoBar.IsClosable = true;
+
+			throw;
+		}
 		finally
 		{
 			// Enable the policy creator button again
@@ -617,6 +651,17 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
+
+			if (!error)
+			{
+				MainInfoBar.Visibility = Visibility.Visible;
+				MainInfoBar.IsOpen = true;
+				MainInfoBar.Message = "Successfully processed the logs and included them in the policy.";
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+				MainInfoBar.IsClosable = true;
+
+				ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
+			}
 		}
 
 	}
@@ -750,4 +795,20 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 	}
+
+
+	/// <summary>
+	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+	/// </summary>
+	private string? finalSupplementalPolicyPath;
+
+
+	/// <summary>
+	/// Event handler to open the supplemental policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	}
+
 }

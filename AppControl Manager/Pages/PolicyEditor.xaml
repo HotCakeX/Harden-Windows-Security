@@ -44,6 +44,8 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
+                <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}" />
+
                 <Button x:Name="BrowseForPolicyButton" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
                     VerticalAlignment="Center" HorizontalAlignment="Center" RightTapped="{x:Bind BrowseForPolicyButton_RightTappedOrHolding}" Holding="{x:Bind BrowseForPolicyButton_RightTappedOrHolding}"
                         ToolTipService.ToolTip="Browse for an App Control XML policy file">

@@ -26,6 +26,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 
@@ -241,6 +242,13 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 
 	#region UI-Bound Properties
+
+	private Visibility _ProgressBarVisibility = Visibility.Collapsed;
+	internal Visibility ProgressBarVisibility
+	{
+		get => _ProgressBarVisibility;
+		set => SetProperty(_ProgressBarVisibility, value, newValue => _ProgressBarVisibility = newValue);
+	}
 
 	private bool _UIElementsEnabledState = true;
 	internal bool UIElementsEnabledState
@@ -636,32 +644,42 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 	internal async void ProcessData()
 	{
 
+		if (SelectedPolicyFile is null)
+			return;
+
 		try
 		{
 
-			MainTeachingTipIsOpen = false;
-
-			UIElementsEnabledState = false;
-
-			if (SelectedPolicyFile is null)
+			await Dispatch.EnqueueAsync(() =>
 			{
-				MainTeachingTitle = "No policy file selected";
-				MainTeachingSubTitle = "Please select a policy file to view its contents.";
-				MainTeachingTipIsOpen = true;
 
-				return;
-			}
+				ProgressBarVisibility = Visibility.Visible;
 
-			// Clear the class variables
-			PolicyObj = null;
-			ekusToUse = [];
-			SignerCollectionCol = null;
+				MainTeachingTipIsOpen = false;
 
-			// Clear the ListView collections and their backing Lists before inserting new data into them
-			FileRulesCollection.Clear();
-			FileRulesCollectionList.Clear();
-			SignatureRulesCollection.Clear();
-			SignatureRulesCollectionList.Clear();
+				UIElementsEnabledState = false;
+
+				if (SelectedPolicyFile is null)
+				{
+					MainTeachingTitle = "No policy file selected";
+					MainTeachingSubTitle = "Please select a policy file to view its contents.";
+					MainTeachingTipIsOpen = true;
+
+					return;
+				}
+
+				// Clear the class variables
+				PolicyObj = null;
+				ekusToUse = [];
+				SignerCollectionCol = null;
+
+				// Clear the ListView collections and their backing Lists before inserting new data into them
+				FileRulesCollection.Clear();
+				FileRulesCollectionList.Clear();
+				SignatureRulesCollection.Clear();
+				SignatureRulesCollectionList.Clear();
+
+			});
 
 			// Collections to deserialize the policy object into
 			IEnumerable<object> fileRulesNode = [];
@@ -776,307 +794,318 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 					ref userModeFileRulesRefs);
 			});
 
-			// Process the Allow rules
 
-			uint _AllowRulesCount = 0;
-
-			foreach (AllowRule allowRule in allowRules)
+			await Dispatch.EnqueueAsync(() =>
 			{
 
-				_AllowRulesCount++;
+				// Process the Allow rules
+
+				uint _AllowRulesCount = 0;
+
+				foreach (AllowRule allowRule in allowRules)
+				{
+
+					_AllowRulesCount++;
 
 
-				PolicyEditor.FileBasedRulesForListView temp1 = new
-				(
-					id: allowRule.AllowElement.ID,
-					friendlyName: allowRule.AllowElement.FriendlyName,
-					fileName: allowRule.AllowElement.FileName,
-					internalName: allowRule.AllowElement.InternalName,
-					fileDescription: allowRule.AllowElement.FileDescription,
-					productName: allowRule.AllowElement.ProductName,
-					packageFamilyName: allowRule.AllowElement.PackageFamilyName,
-					packageVersion: allowRule.AllowElement.PackageVersion,
-					minimumFileVersion: allowRule.AllowElement.MinimumFileVersion,
-					maximumFileVersion: allowRule.AllowElement.MaximumFileVersion,
-					hash: CustomSerialization.ConvertByteArrayToHex(allowRule.AllowElement.Hash),
-					appIDs: allowRule.AllowElement.AppIDs,
-					filePath: allowRule.AllowElement.FilePath,
-					type: null,
-					sourceType: PolicyEditor.FileBasedRuleType.Allow,
-					source: allowRule,
-					parentViewModel: this
-				);
+					PolicyEditor.FileBasedRulesForListView temp1 = new
+					(
+						id: allowRule.AllowElement.ID,
+						friendlyName: allowRule.AllowElement.FriendlyName,
+						fileName: allowRule.AllowElement.FileName,
+						internalName: allowRule.AllowElement.InternalName,
+						fileDescription: allowRule.AllowElement.FileDescription,
+						productName: allowRule.AllowElement.ProductName,
+						packageFamilyName: allowRule.AllowElement.PackageFamilyName,
+						packageVersion: allowRule.AllowElement.PackageVersion,
+						minimumFileVersion: allowRule.AllowElement.MinimumFileVersion,
+						maximumFileVersion: allowRule.AllowElement.MaximumFileVersion,
+						hash: CustomSerialization.ConvertByteArrayToHex(allowRule.AllowElement.Hash),
+						appIDs: allowRule.AllowElement.AppIDs,
+						filePath: allowRule.AllowElement.FilePath,
+						type: null,
+						sourceType: PolicyEditor.FileBasedRuleType.Allow,
+						source: allowRule,
+						parentViewModel: this
+					);
 
 
-				FileRulesCollection.Add(temp1);
-				FileRulesCollectionList.Add(temp1);
-			}
+					FileRulesCollection.Add(temp1);
+					FileRulesCollectionList.Add(temp1);
+				}
 
-			AllowRulesCount = $"• Allow Rules count: {_AllowRulesCount}";
+				AllowRulesCount = $"• Allow Rules count: {_AllowRulesCount}";
 
-			// Process the Deny rules
+				// Process the Deny rules
 
-			uint _DenyRulesCount = 0;
+				uint _DenyRulesCount = 0;
 
-			foreach (DenyRule denyRule in denyRules)
-			{
+				foreach (DenyRule denyRule in denyRules)
+				{
 
-				_DenyRulesCount++;
+					_DenyRulesCount++;
 
-				PolicyEditor.FileBasedRulesForListView temp2 = new
-				(
-					id: denyRule.DenyElement.ID,
-					friendlyName: denyRule.DenyElement.FriendlyName,
-					fileName: denyRule.DenyElement.FileName,
-					internalName: denyRule.DenyElement.InternalName,
-					fileDescription: denyRule.DenyElement.FileDescription,
-					productName: denyRule.DenyElement.ProductName,
-					packageFamilyName: denyRule.DenyElement.PackageFamilyName,
-					packageVersion: denyRule.DenyElement.PackageVersion,
-					minimumFileVersion: denyRule.DenyElement.MinimumFileVersion,
-					maximumFileVersion: denyRule.DenyElement.MaximumFileVersion,
-					hash: CustomSerialization.ConvertByteArrayToHex(denyRule.DenyElement.Hash),
-					appIDs: denyRule.DenyElement.AppIDs,
-					filePath: denyRule.DenyElement.FilePath,
-					type: null,
-					sourceType: PolicyEditor.FileBasedRuleType.Deny,
-					source: denyRule,
-					parentViewModel: this
-				);
-
-
-				FileRulesCollection.Add(temp2);
-				FileRulesCollectionList.Add(temp2);
-			}
-
-			DenyRulesCount = $"• Deny Rules count: {_DenyRulesCount}";
-
-			// Process the File rules
-
-			uint _FileRulesCount = 0;
-
-			foreach (FileRuleRule fileRule in fileRules)
-			{
-
-				_FileRulesCount++;
-
-				PolicyEditor.FileBasedRulesForListView temp3 = new
-				(
-					id: fileRule.FileRuleElement.ID,
-					friendlyName: fileRule.FileRuleElement.FriendlyName,
-					fileName: fileRule.FileRuleElement.FileName,
-					internalName: fileRule.FileRuleElement.InternalName,
-					fileDescription: fileRule.FileRuleElement.FileDescription,
-					productName: fileRule.FileRuleElement.ProductName,
-					packageFamilyName: fileRule.FileRuleElement.PackageFamilyName,
-					packageVersion: fileRule.FileRuleElement.PackageVersion,
-					minimumFileVersion: fileRule.FileRuleElement.MinimumFileVersion,
-					maximumFileVersion: fileRule.FileRuleElement.MaximumFileVersion,
-					hash: CustomSerialization.ConvertByteArrayToHex(fileRule.FileRuleElement.Hash),
-					appIDs: fileRule.FileRuleElement.AppIDs,
-					filePath: fileRule.FileRuleElement.FilePath,
-					type: fileRule.FileRuleElement.Type.ToString(),
-					sourceType: PolicyEditor.FileBasedRuleType.FileRule,
-					source: fileRule,
-					parentViewModel: this
-				);
+					PolicyEditor.FileBasedRulesForListView temp2 = new
+					(
+						id: denyRule.DenyElement.ID,
+						friendlyName: denyRule.DenyElement.FriendlyName,
+						fileName: denyRule.DenyElement.FileName,
+						internalName: denyRule.DenyElement.InternalName,
+						fileDescription: denyRule.DenyElement.FileDescription,
+						productName: denyRule.DenyElement.ProductName,
+						packageFamilyName: denyRule.DenyElement.PackageFamilyName,
+						packageVersion: denyRule.DenyElement.PackageVersion,
+						minimumFileVersion: denyRule.DenyElement.MinimumFileVersion,
+						maximumFileVersion: denyRule.DenyElement.MaximumFileVersion,
+						hash: CustomSerialization.ConvertByteArrayToHex(denyRule.DenyElement.Hash),
+						appIDs: denyRule.DenyElement.AppIDs,
+						filePath: denyRule.DenyElement.FilePath,
+						type: null,
+						sourceType: PolicyEditor.FileBasedRuleType.Deny,
+						source: denyRule,
+						parentViewModel: this
+					);
 
 
-				FileRulesCollection.Add(temp3);
-				FileRulesCollectionList.Add(temp3);
-			}
+					FileRulesCollection.Add(temp2);
+					FileRulesCollectionList.Add(temp2);
+				}
 
-			FileRulesCount = $"• File Rules count: {_FileRulesCount}";
+				DenyRulesCount = $"• Deny Rules count: {_DenyRulesCount}";
 
-			#region FileAttribs processing
+				// Process the File rules
 
-			// a list of file attributes in the <FileRules> node
-			List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
+				uint _FileRulesCount = 0;
 
-			FileAttributesCount = $"• File Attributes count: {fileAttribs.Count}";
+				foreach (FileRuleRule fileRule in fileRules)
+				{
 
-			// Add each FileAttrib to the ListView
-			foreach (FileAttrib item in fileAttribs)
-			{
-				PolicyEditor.FileBasedRulesForListView temp4 = new
+					_FileRulesCount++;
+
+					PolicyEditor.FileBasedRulesForListView temp3 = new
+					(
+						id: fileRule.FileRuleElement.ID,
+						friendlyName: fileRule.FileRuleElement.FriendlyName,
+						fileName: fileRule.FileRuleElement.FileName,
+						internalName: fileRule.FileRuleElement.InternalName,
+						fileDescription: fileRule.FileRuleElement.FileDescription,
+						productName: fileRule.FileRuleElement.ProductName,
+						packageFamilyName: fileRule.FileRuleElement.PackageFamilyName,
+						packageVersion: fileRule.FileRuleElement.PackageVersion,
+						minimumFileVersion: fileRule.FileRuleElement.MinimumFileVersion,
+						maximumFileVersion: fileRule.FileRuleElement.MaximumFileVersion,
+						hash: CustomSerialization.ConvertByteArrayToHex(fileRule.FileRuleElement.Hash),
+						appIDs: fileRule.FileRuleElement.AppIDs,
+						filePath: fileRule.FileRuleElement.FilePath,
+						type: fileRule.FileRuleElement.Type.ToString(),
+						sourceType: PolicyEditor.FileBasedRuleType.FileRule,
+						source: fileRule,
+						parentViewModel: this
+					);
+
+
+					FileRulesCollection.Add(temp3);
+					FileRulesCollectionList.Add(temp3);
+				}
+
+				FileRulesCount = $"• File Rules count: {_FileRulesCount}";
+
+				#region FileAttribs processing
+
+				// a list of file attributes in the <FileRules> node
+				List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
+
+				FileAttributesCount = $"• File Attributes count: {fileAttribs.Count}";
+
+				// Add each FileAttrib to the ListView
+				foreach (FileAttrib item in fileAttribs)
+				{
+					PolicyEditor.FileBasedRulesForListView temp4 = new
+								(
+									id: item.ID,
+									friendlyName: item.FriendlyName,
+									fileName: item.FileName,
+									internalName: item.InternalName,
+									fileDescription: item.FileDescription,
+									productName: item.ProductName,
+									packageFamilyName: item.PackageFamilyName,
+									packageVersion: item.PackageVersion,
+									minimumFileVersion: item.MinimumFileVersion,
+									maximumFileVersion: item.MaximumFileVersion,
+									hash: CustomSerialization.ConvertByteArrayToHex(item.Hash),
+									appIDs: item.AppIDs,
+									filePath: item.FilePath,
+									type: null,
+									sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
+									source: item,
+									parentViewModel: this
+								);
+
+					FileRulesCollection.Add(temp4);
+					FileRulesCollectionList.Add(temp4);
+				}
+
+
+				// Count the number of WHQLFilePublisher and FilePublisher signer types
+				uint _FilePublisherRulesCount = 0;
+				uint _WHQLFilePublisherRulesCount = 0;
+
+				if (SignerCollectionCol is not null)
+				{
+					_FilePublisherRulesCount = (uint)SignerCollectionCol.FilePublisherSigners.Count;
+
+					FilePublishersCount = $"  ⚬ File Publisher Rules count: {_FilePublisherRulesCount}";
+
+					_WHQLFilePublisherRulesCount = (uint)SignerCollectionCol.WHQLFilePublishers.Count;
+
+					WHQLFilePublishersCount = $"  ⚬ WHQL File Publisher Rules count: {_WHQLFilePublisherRulesCount}";
+				}
+
+				#endregion
+
+
+				// Calculate the column widths for File Based rules after processing them
+				CalculateFileBasedListViewColumnWidths();
+
+
+				if (SignerCollectionCol is not null)
+				{
+
+					// Process the Generic signer rules for levels: Publisher, PCA Certificate, Leaf Certificate, Root Certificate
+
+					uint _GenericSignerRulesCount = 0;
+
+					foreach (SignerRule sig in SignerCollectionCol.SignerRules)
+					{
+
+						_GenericSignerRulesCount++;
+
+
+						PolicyEditor.SignatureBasedRulesForListView temp6 = new
 							(
-								id: item.ID,
-								friendlyName: item.FriendlyName,
-								fileName: item.FileName,
-								internalName: item.InternalName,
-								fileDescription: item.FileDescription,
-								productName: item.ProductName,
-								packageFamilyName: item.PackageFamilyName,
-								packageVersion: item.PackageVersion,
-								minimumFileVersion: item.MinimumFileVersion,
-								maximumFileVersion: item.MaximumFileVersion,
-								hash: CustomSerialization.ConvertByteArrayToHex(item.Hash),
-								appIDs: item.AppIDs,
-								filePath: item.FilePath,
-								type: null,
-								sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
-								source: item,
-								parentViewModel: this
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
+							certIssuer: sig.SignerElement.CertIssuer?.Value,
+							certPublisher: sig.SignerElement.CertPublisher?.Value,
+							certOemID: sig.SignerElement.CertOemID?.Value,
+							name: sig.SignerElement.Name,
+							id: sig.SignerElement.ID,
+							sourceType: PolicyEditor.SignatureBasedRuleType.Signer,
+							source: sig,
+							parentViewModel: this
 							);
 
-				FileRulesCollection.Add(temp4);
-				FileRulesCollectionList.Add(temp4);
-			}
+						SignatureRulesCollection.Add(temp6);
+						SignatureRulesCollectionList.Add(temp6);
+					}
+
+					GenericSignersCount = $"• Generic Signer Rules count: {_GenericSignerRulesCount}";
+
+					// Process WHQLPublisher rules
+
+					uint _WHQLPublisherRulesCount = 0;
+
+					foreach (WHQLPublisher sig in SignerCollectionCol.WHQLPublishers)
+					{
+
+						_WHQLPublisherRulesCount++;
 
 
-			// Count the number of WHQLFilePublisher and FilePublisher signer types
-			uint _FilePublisherRulesCount = 0;
-			uint _WHQLFilePublisherRulesCount = 0;
-
-			if (SignerCollectionCol is not null)
-			{
-				_FilePublisherRulesCount = (uint)SignerCollectionCol.FilePublisherSigners.Count;
-
-				FilePublishersCount = $"  ⚬ File Publisher Rules count: {_FilePublisherRulesCount}";
-
-				_WHQLFilePublisherRulesCount = (uint)SignerCollectionCol.WHQLFilePublishers.Count;
-
-				WHQLFilePublishersCount = $"  ⚬ WHQL File Publisher Rules count: {_WHQLFilePublisherRulesCount}";
-			}
-
-			#endregion
+						PolicyEditor.SignatureBasedRulesForListView temp7 = new
+							(
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
+							certIssuer: sig.SignerElement.CertIssuer?.Value,
+							certPublisher: sig.SignerElement.CertPublisher?.Value,
+							certOemID: sig.SignerElement.CertOemID?.Value,
+							name: sig.SignerElement.Name,
+							id: sig.SignerElement.ID,
+							sourceType: PolicyEditor.SignatureBasedRuleType.WHQLPublisher,
+							source: sig,
+							parentViewModel: this
+							);
 
 
-			// Calculate the column widths for File Based rules after processing them
-			CalculateFileBasedListViewColumnWidths();
+						SignatureRulesCollection.Add(temp7);
+						SignatureRulesCollectionList.Add(temp7);
+					}
+
+					WHQLPublishersCount = $"• WHQL Publisher Rules count: {_WHQLPublisherRulesCount}";
+
+					// Process the UpdatePolicySigner rules
+
+					uint _UpdatePolicySignersCount = 0;
+
+					foreach (UpdatePolicySignerRule sig in SignerCollectionCol.UpdatePolicySigners)
+					{
+
+						_UpdatePolicySignersCount++;
 
 
-			if (SignerCollectionCol is not null)
-			{
+						PolicyEditor.SignatureBasedRulesForListView temp8 = new
+							(
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
+							certIssuer: sig.SignerElement.CertIssuer?.Value,
+							certPublisher: sig.SignerElement.CertPublisher?.Value,
+							certOemID: sig.SignerElement.CertOemID?.Value,
+							name: sig.SignerElement.Name,
+							id: sig.SignerElement.ID,
+							sourceType: PolicyEditor.SignatureBasedRuleType.UpdatePolicySigner,
+							source: sig,
+							parentViewModel: this
+							);
 
-				// Process the Generic signer rules for levels: Publisher, PCA Certificate, Leaf Certificate, Root Certificate
 
-				uint _GenericSignerRulesCount = 0;
+						SignatureRulesCollection.Add(temp8);
+						SignatureRulesCollectionList.Add(temp8);
+					}
 
-				foreach (SignerRule sig in SignerCollectionCol.SignerRules)
-				{
+					UpdatePolicySignersCount = $"• Update Policy Signer Rules count: {_UpdatePolicySignersCount}";
 
-					_GenericSignerRulesCount++;
+					// Process the SupplementalPolicySigner rules
 
+					uint _SupplementalPolicySignersCount = 0;
 
-					PolicyEditor.SignatureBasedRulesForListView temp6 = new
-						(
-						certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
-						certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
-						certIssuer: sig.SignerElement.CertIssuer?.Value,
-						certPublisher: sig.SignerElement.CertPublisher?.Value,
-						certOemID: sig.SignerElement.CertOemID?.Value,
-						name: sig.SignerElement.Name,
-						id: sig.SignerElement.ID,
-						sourceType: PolicyEditor.SignatureBasedRuleType.Signer,
-						source: sig,
-						parentViewModel: this
-						);
+					foreach (SupplementalPolicySignerRule sig in SignerCollectionCol.SupplementalPolicySigners)
+					{
 
-					SignatureRulesCollection.Add(temp6);
-					SignatureRulesCollectionList.Add(temp6);
+						_SupplementalPolicySignersCount++;
+
+						SignatureRulesCollection.Add(new PolicyEditor.SignatureBasedRulesForListView
+							(
+							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
+							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
+							certIssuer: sig.SignerElement.CertIssuer?.Value,
+							certPublisher: sig.SignerElement.CertPublisher?.Value,
+							certOemID: sig.SignerElement.CertOemID?.Value,
+							name: sig.SignerElement.Name,
+							id: sig.SignerElement.ID,
+							sourceType: PolicyEditor.SignatureBasedRuleType.SupplementalPolicySigner,
+							source: sig,
+							parentViewModel: this
+							));
+					}
+
+					SupplementalPolicySignersCount = $"• Supplemental Policy Signer Rules count: {_SupplementalPolicySignersCount}";
+
+					// Calculate the column widths for Signature Based rules after processing them
+					CalculateSignatureBasedListViewColumnWidths();
 				}
 
-				GenericSignersCount = $"• Generic Signer Rules count: {_GenericSignerRulesCount}";
-
-				// Process WHQLPublisher rules
-
-				uint _WHQLPublisherRulesCount = 0;
-
-				foreach (WHQLPublisher sig in SignerCollectionCol.WHQLPublishers)
-				{
-
-					_WHQLPublisherRulesCount++;
-
-
-					PolicyEditor.SignatureBasedRulesForListView temp7 = new
-						(
-						certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
-						certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
-						certIssuer: sig.SignerElement.CertIssuer?.Value,
-						certPublisher: sig.SignerElement.CertPublisher?.Value,
-						certOemID: sig.SignerElement.CertOemID?.Value,
-						name: sig.SignerElement.Name,
-						id: sig.SignerElement.ID,
-						sourceType: PolicyEditor.SignatureBasedRuleType.WHQLPublisher,
-						source: sig,
-						parentViewModel: this
-						);
-
-
-					SignatureRulesCollection.Add(temp7);
-					SignatureRulesCollectionList.Add(temp7);
-				}
-
-				WHQLPublishersCount = $"• WHQL Publisher Rules count: {_WHQLPublisherRulesCount}";
-
-				// Process the UpdatePolicySigner rules
-
-				uint _UpdatePolicySignersCount = 0;
-
-				foreach (UpdatePolicySignerRule sig in SignerCollectionCol.UpdatePolicySigners)
-				{
-
-					_UpdatePolicySignersCount++;
-
-
-					PolicyEditor.SignatureBasedRulesForListView temp8 = new
-						(
-						certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
-						certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
-						certIssuer: sig.SignerElement.CertIssuer?.Value,
-						certPublisher: sig.SignerElement.CertPublisher?.Value,
-						certOemID: sig.SignerElement.CertOemID?.Value,
-						name: sig.SignerElement.Name,
-						id: sig.SignerElement.ID,
-						sourceType: PolicyEditor.SignatureBasedRuleType.UpdatePolicySigner,
-						source: sig,
-						parentViewModel: this
-						);
-
-
-					SignatureRulesCollection.Add(temp8);
-					SignatureRulesCollectionList.Add(temp8);
-				}
-
-				UpdatePolicySignersCount = $"• Update Policy Signer Rules count: {_UpdatePolicySignersCount}";
-
-				// Process the SupplementalPolicySigner rules
-
-				uint _SupplementalPolicySignersCount = 0;
-
-				foreach (SupplementalPolicySignerRule sig in SignerCollectionCol.SupplementalPolicySigners)
-				{
-
-					_SupplementalPolicySignersCount++;
-
-					SignatureRulesCollection.Add(new PolicyEditor.SignatureBasedRulesForListView
-						(
-						certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
-						certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
-						certIssuer: sig.SignerElement.CertIssuer?.Value,
-						certPublisher: sig.SignerElement.CertPublisher?.Value,
-						certOemID: sig.SignerElement.CertOemID?.Value,
-						name: sig.SignerElement.Name,
-						id: sig.SignerElement.ID,
-						sourceType: PolicyEditor.SignatureBasedRuleType.SupplementalPolicySigner,
-						source: sig,
-						parentViewModel: this
-						));
-				}
-
-				SupplementalPolicySignersCount = $"• Supplemental Policy Signer Rules count: {_SupplementalPolicySignersCount}";
-
-				// Calculate the column widths for Signature Based rules after processing them
-				CalculateSignatureBasedListViewColumnWidths();
-			}
+			});
 		}
 		finally
 		{
-			UIElementsEnabledState = true;
+			await Dispatch.EnqueueAsync(() =>
+			{
+				UIElementsEnabledState = true;
 
-			UpdateFileBasedCollectionsCount();
-			UpdateSignatureBasedCollectionsCount();
+				UpdateFileBasedCollectionsCount();
+				UpdateSignatureBasedCollectionsCount();
+
+				ProgressBarVisibility = Visibility.Collapsed;
+			});
 		}
 	}
 
@@ -1799,6 +1828,24 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 	{
 		PolicyHVCIOptionsComboBoxOpenState = true;
 	}
+
+
+#pragma warning disable CA1822
+	/// <summary>
+	/// Used by various methods internally to open a created/modified policy in the Policy Editor
+	/// </summary>
+	/// <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
+	internal async Task OpenInPolicyEditor(string? policyFile)
+	{
+		// Navigate to the policy editor page
+		MainWindow.Instance.NavView_Navigate(typeof(Pages.PolicyEditor), null);
+
+		// Assign the policy file path to the local variable
+		SelectedPolicyFile = policyFile;
+
+		await Task.Run(ProcessData);
+	}
+#pragma warning restore CA1822
 
 
 	/// <summary>

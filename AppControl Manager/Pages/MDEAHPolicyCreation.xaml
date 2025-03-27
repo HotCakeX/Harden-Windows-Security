@@ -42,7 +42,11 @@
 
         </controls:WrapPanel>
 
-        <InfoBar x:Name="MainInfoBar" Grid.Row="1" Visibility="Collapsed" />
+        <InfoBar x:Name="MainInfoBar" Grid.Row="1" Visibility="Collapsed">
+            <InfoBar.ActionButton>
+                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
+            </InfoBar.ActionButton>
+        </InfoBar>
 
         <controls:WrapPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -124,11 +128,11 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <Button Content="Sign In" x:Name="MSGraphSignInButton" Click="MSGraphSignInButton_Click" ToolTipService.ToolTip="Sign into your tenant"/>
+                <Button Content="Sign In" x:Name="MSGraphSignInButton" Click="{x:Bind MSGraphSignInButton_Click}" ToolTipService.ToolTip="Sign into your tenant"/>
 
-                <Button Content="Sign Out" IsEnabled="False" x:Name="MSGraphSignOutButton" Click="MSGraphSignOutButton_Click" ToolTipService.ToolTip="Sign out of your tenant and discard any saved authentication tokens"/>
+                <Button Content="Sign Out" IsEnabled="False" x:Name="MSGraphSignOutButton" Click="{x:Bind MSGraphSignOutButton_Click}" ToolTipService.ToolTip="Sign out of your tenant and discard any saved authentication tokens"/>
 
-                <Button Content="Cancel Sign In" x:Name="MSGraphCancelSignInButton" IsEnabled="False" Click="MSGraphCancelSignInButton_Click" ToolTipService.ToolTip="Cancel the sign in process"/>
+                <Button Content="Cancel Sign In" x:Name="MSGraphCancelSignInButton" IsEnabled="False" Click="{x:Bind MSGraphCancelSignInButton_Click}" ToolTipService.ToolTip="Cancel the sign in process"/>
 
                 <Button Content="Device Name" x:Name="MSGraphDeviceNameButton" ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
                     <Button.Flyout>
@@ -148,7 +152,7 @@
                 </Button>
 
 
-                <Button Content="Retrieve The Logs" x:Name="RetrieveTheLogsButton" IsEnabled="False" Click="RetrieveTheLogsButton_Click" ToolTipService.ToolTip="Retrieve the logs by submitting an Advanced Hunting query to MDE"/>
+                <Button Content="Retrieve The Logs" x:Name="RetrieveTheLogsButton" IsEnabled="False" Click="{x:Bind RetrieveTheLogsButton_Click}" ToolTipService.ToolTip="Retrieve the logs by submitting an Advanced Hunting query to MDE"/>
 
                 <Button Content="Query Examples" ToolTipService.ToolTip="You can copy the following queries and use them in the MDE Advanced Hunting portal to generate standard logs that are compatible with the AppControl Manager, or you can use the built-in functionality of the application to automatically retrieve the logs and process them">
                     <Button.Flyout>
@@ -242,7 +246,7 @@
                                 Spacing="8">
                                 <controls:Segmented x:Name="segmentedControl"
                                     HorizontalAlignment="Stretch"
-                                    SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">
+                                    SelectedIndex="1" SelectionChanged="{x:Bind SegmentedControl_SelectionChanged}">
                                     <controls:SegmentedItem Content="Add To Policy"
                                             Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
                                     <controls:SegmentedItem Content="Base Policy File"
@@ -396,6 +400,8 @@
                     <x:String>Publisher</x:String>
                     <x:String>Hash</x:String>
                 </ComboBox>
+
+                <ToggleButton x:Name="OnlyIncludeSelectedItemsToggleButton" x:Uid="OnlyIncludeSelectedItemsToggleButton" />
 
             </controls:WrapPanel>
 

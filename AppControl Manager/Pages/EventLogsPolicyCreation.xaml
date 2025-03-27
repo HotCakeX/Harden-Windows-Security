@@ -27,6 +27,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -52,7 +53,7 @@
 
                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                    <Button x:Uid="ClearButton" Click="SelectedAppLockerEVTXFilesFlyout_Clear_Click" />
+                    <Button x:Uid="ClearButton" Click="{x:Bind SelectedAppLockerEVTXFilesFlyout_Clear_Click}" />
 
                     <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
 
@@ -85,7 +86,13 @@
 
         </controls:WrapPanel>
 
-        <Border Grid.Row="1" Margin="0,10,0,10"
+        <InfoBar x:Name="MainInfoBar" Grid.Row="1" Visibility="Collapsed">
+            <InfoBar.ActionButton>
+                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
+            </InfoBar.ActionButton>
+        </InfoBar>
+
+        <Border Grid.Row="2" Margin="0,10,0,10"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
@@ -93,7 +100,7 @@
                 <ProgressRing x:Name="ScanLogsProgressRing" Visibility="Collapsed" IsActive="False" />
 
                 <!-- Scan button -->
-                <Button x:Name="ScanLogs" x:Uid="ScanLogsButton" Style="{StaticResource AccentButtonStyle}" Click="ScanLogs_Click" >
+                <Button x:Name="ScanLogs" x:Uid="ScanLogsButton" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind ScanLogs_Click}" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEE6F;" />
@@ -102,7 +109,7 @@
                     </Button.Content>
                 </Button>
 
-                <SplitButton x:Name="CreatePolicyButton" ToolTipService.ToolTip="Create the supplemental policy" Click="CreatePolicyButton_Click">
+                <SplitButton x:Name="CreatePolicyButton" ToolTipService.ToolTip="Create the supplemental policy" Click="{x:Bind CreatePolicyButton_Click}">
 
                     <SplitButton.Content>
                         <StackPanel Orientation="Horizontal">
@@ -152,7 +159,7 @@
                                                 <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="AddToPolicyButton_Click" />
+                                            <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind AddToPolicyButton_Click}" />
 
                                         </StackPanel>
                                     </controls:Case>
@@ -168,7 +175,7 @@
                                                     policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="BasePolicyFileButton_Click" />
+                                            <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BasePolicyFileButton_Click}" />
                                         </StackPanel>
                                     </controls:Case>
 
@@ -179,7 +186,7 @@
 
                                             <TextBox x:Name="BaseGUIDTextBox" PlaceholderText="Enter a Base policy GUID" Width="300" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
 
-                                            <Button Margin="5" x:Name="BaseGUIDSubmitButton" Content="Submit" ToolTipService.ToolTip="Submit the GUID" Style="{StaticResource AccentButtonStyle}" Click="BaseGUIDSubmitButton_Click" />
+                                            <Button Margin="5" x:Name="BaseGUIDSubmitButton" Content="Submit" ToolTipService.ToolTip="Submit the GUID" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BaseGUIDSubmitButton_Click}" />
                                         </StackPanel>
                                     </controls:Case>
                                 </controls:SwitchPresenter>
@@ -200,7 +207,7 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Name="BrowseForAppLockerEVTXFilesButton" RightTapped="BrowseForAppLockerEVTXFilesButton_RightTapped" Holding="BrowseForAppLockerEVTXFilesButton_Holding" Text="Select AppLocker EVTX Files" Click="SelectAppLockerEVTXFiles_Click" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
+                            <MenuFlyoutItem x:Name="BrowseForAppLockerEVTXFilesButton" RightTapped="BrowseForAppLockerEVTXFilesButton_RightTapped" Holding="BrowseForAppLockerEVTXFilesButton_Holding" Text="Select AppLocker EVTX Files" Click="{x:Bind SelectAppLockerEVTXFiles_Click}" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC50;" />
                                 </MenuFlyoutItem.Icon>
@@ -216,19 +223,19 @@
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="SelectAll_Click">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind SelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="DeSelectAll_Click">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind DeSelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -254,7 +261,7 @@
                  VerticalAlignment="Center"
                  VerticalContentAlignment="Center"/>
 
-                <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="{x:Bind ApplyFilters}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
                 <Button Content="Policy Name">
                     <Button.Flyout>
@@ -280,6 +287,8 @@
                     <x:String>Publisher</x:String>
                     <x:String>Hash</x:String>
                 </ComboBox>
+
+                <ToggleButton x:Name="OnlyIncludeSelectedItemsToggleButton" x:Uid="OnlyIncludeSelectedItemsToggleButton" />
 
                 <Button>
                     <Button.Content>
@@ -326,7 +335,7 @@
         </Border>
 
         <ListView x:Name="FileIdentitiesListView"
-            Grid.Row="2"
+            Grid.Row="3"
             SelectionMode="Extended"
             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
             ScrollViewer.HorizontalScrollMode="Enabled"

@@ -20,7 +20,9 @@ using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -37,12 +39,20 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class CreatePolicy : Page
 {
+
+#pragma warning disable CA1822
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
+	private CreatePolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreatePolicyVM>();
+#pragma warning restore CA1822
+
 	/// <summary>
 	/// Initializes the CreatePolicy component and sets various log size inputs to disabled. Maintains navigation state.
 	/// </summary>
 	internal CreatePolicy()
 	{
 		this.InitializeComponent();
+
+		this.DataContext = ViewModel;
 
 		// Initially set it to disabled until the switch is toggled
 		AllowMicrosoftLogSizeInput.IsEnabled = false;
@@ -59,13 +69,12 @@ internal sealed partial class CreatePolicy : Page
 
 	#region For Allow Microsoft Policy
 
+	private string? _policyPathAllowMicrosoft;
 
 	/// <summary>
 	/// Event handler for creating/deploying AllowMicrosoft policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void AllowMicrosoftCreate_Click(object sender, RoutedEventArgs e)
+	private async void AllowMicrosoftCreate_Click()
 	{
 		bool Error = false;
 
@@ -79,6 +88,8 @@ internal sealed partial class CreatePolicy : Page
 
 		try
 		{
+
+			ViewModel.AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			AllowMicrosoftSettingsInfoBar.IsOpen = true;
 			AllowMicrosoftSettingsInfoBar.IsClosable = false;
@@ -108,9 +119,9 @@ internal sealed partial class CreatePolicy : Page
 			#endregion
 
 			// Run background work using captured values
-			await Task.Run(() =>
+			_policyPathAllowMicrosoft = await Task.Run(() =>
 			{
-				BasePolicyCreator.BuildAllowMSFT(
+				return BasePolicyCreator.BuildAllowMSFT(
 				StagingArea: stagingArea,
 				IsAudit: auditEnabled,
 				LogSize: logSize,
@@ -137,6 +148,8 @@ internal sealed partial class CreatePolicy : Page
 
 			AllowMicrosoftSettingsInfoBar.IsClosable = true;
 
+			ViewModel.AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
+
 			if (!Error)
 			{
 				AllowMicrosoftSettingsInfoBar.Severity = InfoBarSeverity.Success;
@@ -150,8 +163,11 @@ internal sealed partial class CreatePolicy : Page
 		}
 	}
 
-	// Event handler for the ToggleSwitch to enable/disable the log size input
-	private void AllowMicrosoftLogSizeInputEnabled_Toggled(object sender, RoutedEventArgs e)
+
+	/// <summary>
+	/// Event handler for the ToggleSwitch to enable/disable the log size input
+	/// </summary>
+	private void AllowMicrosoftLogSizeInputEnabled_Toggled()
 	{
 		if (AllowMicrosoftLogSizeInputEnabled.IsOn)
 		{
@@ -170,20 +186,30 @@ internal sealed partial class CreatePolicy : Page
 		AllowMicrosoftLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
 	}
 
+	/// <summary>
+	/// Event handler to open the created Allow Microsoft policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor_AllowMicrosoft()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathAllowMicrosoft);
+	}
+
 	#endregion
 
 
 	#region For Default Windows Policy
 
+	private string? _policyPathDefaultWindows;
+
 	/// <summary>
 	/// Event handler for creating/deploying DefaultWindows policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void DefaultWindowsCreate_Click(object sender, RoutedEventArgs e)
+	private async void DefaultWindowsCreate_Click()
 	{
 
 		bool Error = false;
+
+		ViewModel.DefaultWindowsInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		// Capture UI values
 		bool auditEnabled = DefaultWindowsAudit.IsOn;
@@ -224,9 +250,9 @@ internal sealed partial class CreatePolicy : Page
 			#endregion
 
 			// Run background work using captured values
-			await Task.Run(() =>
+			_policyPathDefaultWindows = await Task.Run(() =>
 			{
-				BasePolicyCreator.BuildDefaultWindows(
+				return BasePolicyCreator.BuildDefaultWindows(
 				StagingArea: stagingArea,
 				IsAudit: auditEnabled,
 				LogSize: logSize,
@@ -252,6 +278,8 @@ internal sealed partial class CreatePolicy : Page
 			// Re-enable the buttons once the work is done
 			DefaultWindowsCreate.IsEnabled = true;
 
+			ViewModel.DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
+
 			DefaultWindowsSettingsInfoBar.IsClosable = true;
 
 			if (!Error)
@@ -267,8 +295,11 @@ internal sealed partial class CreatePolicy : Page
 		}
 	}
 
-	// Event handler for the ToggleSwitch to enable/disable the log size input
-	private void DefaultWindowsLogSizeInputEnabled_Toggled(object sender, RoutedEventArgs e)
+
+	/// <summary>
+	/// Event handler for the ToggleSwitch to enable/disable the log size input
+	/// </summary>
+	private void DefaultWindowsLogSizeInputEnabled_Toggled()
 	{
 		if (DefaultWindowsLogSizeInputEnabled.IsOn)
 		{
@@ -287,21 +318,31 @@ internal sealed partial class CreatePolicy : Page
 		DefaultWindowsLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
 	}
 
+
+	/// <summary>
+	/// Event handler to open the created Default Windows policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor_DefaultWindows()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathDefaultWindows);
+	}
+
 	#endregion
 
 
 	#region For Signed and Reputable Policy
 
+	private string? _policyPathSignedAndReputable;
 
 	/// <summary>
 	/// Event handler for creating/deploying SignedAndReputable policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void SignedAndReputableCreate_Click(object sender, RoutedEventArgs e)
+	private async void SignedAndReputableCreate_Click()
 	{
 
 		bool Error = false;
+
+		ViewModel.SignedAndReputableInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		// Capture the values from UI
 		bool auditEnabled = SignedAndReputableAudit.IsOn;
@@ -341,9 +382,9 @@ internal sealed partial class CreatePolicy : Page
 			}
 			#endregion
 
-			await Task.Run(() =>
+			_policyPathSignedAndReputable = await Task.Run(() =>
 			{
-				BasePolicyCreator.BuildSignedAndReputable(
+				return BasePolicyCreator.BuildSignedAndReputable(
 				StagingArea: stagingArea,
 				IsAudit: auditEnabled,
 				LogSize: logSize,
@@ -369,6 +410,8 @@ internal sealed partial class CreatePolicy : Page
 
 			SignedAndReputableSettingsInfoBar.IsClosable = true;
 
+			ViewModel.SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
+
 			if (!Error)
 			{
 				SignedAndReputableSettingsInfoBar.Severity = InfoBarSeverity.Success;
@@ -382,8 +425,11 @@ internal sealed partial class CreatePolicy : Page
 		}
 	}
 
-	// Event handler for the ToggleSwitch to enable/disable the log size input
-	private void SignedAndReputableLogSizeInputEnabled_Toggled(object sender, RoutedEventArgs e)
+
+	/// <summary>
+	/// Event handler for the ToggleSwitch to enable/disable the log size input
+	/// </summary>
+	private void SignedAndReputableLogSizeInputEnabled_Toggled()
 	{
 		if (SignedAndReputableLogSizeInputEnabled.IsOn)
 		{
@@ -402,10 +448,22 @@ internal sealed partial class CreatePolicy : Page
 		SignedAndReputableLogSizeInputEnabled.IsEnabled = ((ToggleSwitch)sender).IsOn;
 	}
 
+
+	/// <summary>
+	/// Event handler to open the created Signed and Reputable policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor_SignedAndReputable()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathSignedAndReputable);
+	}
+
+
 	#endregion
 
 
-	#region For Microsoft Recommended Drivers Block Rules
+	#region For Microsoft Recommended Driver Block Rules
+
+	private string? _policyPathMSFTRecommendedDriverBlockRules;
 
 	/// <summary>
 	/// Method to dynamically add a TextBlock with formatted content
@@ -472,17 +530,27 @@ internal sealed partial class CreatePolicy : Page
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended driver block rules policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void RecommendedDriverBlockRulesCreate_Click(object sender, RoutedEventArgs e)
+	private async void RecommendedDriverBlockRulesCreate_Click()
 	{
+
+		bool shouldDeploy = RecommendedDriverBlockRulesCreateAndDeploy.IsChecked ?? false;
+
+		bool error = false;
+
+		RecommendedDriverBlockRulesSettings.IsExpanded = true;
+
 		try
 		{
 
 			// Disable the buttons
 			RecommendedDriverBlockRulesCreate.IsEnabled = false;
 
-			bool shouldDeploy = RecommendedDriverBlockRulesCreateAndDeploy.IsChecked ?? false;
+			ViewModel.MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			RecommendedDriverBlockRulesInfoBar.IsClosable = false;
+			RecommendedDriverBlockRulesInfoBar.IsOpen = true;
+			RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Informational;
+			RecommendedDriverBlockRulesInfoBar.Message = "Creating the Microsoft Recommended Driver Block Rules policy";
 
 			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
 
@@ -495,7 +563,7 @@ internal sealed partial class CreatePolicy : Page
 				}
 				else
 				{
-					BasePolicyCreator.GetDriversBlockRules(stagingArea);
+					_policyPathMSFTRecommendedDriverBlockRules = BasePolicyCreator.GetDriversBlockRules(stagingArea);
 				}
 			});
 
@@ -503,11 +571,36 @@ internal sealed partial class CreatePolicy : Page
 			// Can remove await and the info will populate after policy is created which is fine too
 			await AddDriverBlockRulesInfo();
 		}
+		catch (Exception ex)
+		{
+			error = true;
 
+			RecommendedDriverBlockRulesInfoBar.IsClosable = true;
+			RecommendedDriverBlockRulesInfoBar.IsOpen = true;
+			RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Error;
+			RecommendedDriverBlockRulesInfoBar.Message = $"There was a problem creating the Microsoft Recommended Driver Block Rules policy: {ex.Message}";
+
+			throw;
+		}
 		finally
 		{
+
+			if (!error)
+			{
+
+				RecommendedDriverBlockRulesInfoBar.IsClosable = true;
+				RecommendedDriverBlockRulesInfoBar.IsOpen = true;
+				RecommendedDriverBlockRulesInfoBar.Severity = InfoBarSeverity.Success;
+				RecommendedDriverBlockRulesInfoBar.Message = "Successfully created the Microsoft Recommended Driver Block Rules policy";
+			}
+
 			// Re-enable buttons
 			RecommendedDriverBlockRulesCreate.IsEnabled = true;
+
+			if (!shouldDeploy && !error)
+			{
+				ViewModel.MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
+			}
 		}
 	}
 
@@ -515,9 +608,7 @@ internal sealed partial class CreatePolicy : Page
 	/// <summary>
 	/// Event handler for Auto Update button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void RecommendedDriverBlockRulesScheduledAutoUpdate_Click(object sender, RoutedEventArgs e)
+	private async void RecommendedDriverBlockRulesScheduledAutoUpdate_Click()
 	{
 
 		bool errorsOccurred = false;
@@ -560,6 +651,15 @@ internal sealed partial class CreatePolicy : Page
 		}
 	}
 
+
+	/// <summary>
+	/// Event handler to open the created Microsoft Recommended driver block rules policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor_RecommendedDriverBlockRules()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathMSFTRecommendedDriverBlockRules);
+	}
+
 	#endregion
 
 
@@ -568,9 +668,7 @@ internal sealed partial class CreatePolicy : Page
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void RecommendedUserModeBlockRulesCreate_Click(object sender, RoutedEventArgs e)
+	private async void RecommendedUserModeBlockRulesCreate_Click()
 	{
 		try
 		{
@@ -600,18 +698,20 @@ internal sealed partial class CreatePolicy : Page
 
 	#region For Strict Kernel-mode policy
 
+	private string? _policyPathStrictKernelMode;
+
 	/// <summary>
 	/// Event handler to prepare the system for Strict Kernel-mode policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void StrictKernelModePolicyCreateButton_Click(object sender, RoutedEventArgs e)
+	private async void StrictKernelModePolicyCreateButton_Click()
 	{
 		StrictKernelModePolicyCreateButton.IsEnabled = false;
 		StrictKernelModePolicyToggleButtonForDeploy.IsEnabled = false;
 		StrictKernelModePolicyInfoBar.IsClosable = false;
 		StrictKernelModePolicyInfoBar.IsOpen = true;
 		StrictKernelModePolicySection.IsExpanded = true;
+
+		ViewModel.StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		bool useNoFlightRoots = StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
 		bool deploy = StrictKernelModePolicyToggleButtonForDeploy.IsChecked ?? false;
@@ -624,11 +724,11 @@ internal sealed partial class CreatePolicy : Page
 			Logger.Write(GlobalVars.Rizz.GetString("CreatingPolicy"));
 			StrictKernelModePolicyInfoBar.Severity = InfoBarSeverity.Informational;
 
-			await Task.Run(() =>
+			_policyPathStrictKernelMode = await Task.Run(() =>
 			{
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Strict Kernel-Mode policy Prepare");
 
-				BasePolicyCreator.BuildStrictKernelMode(stagingArea.FullName, audit, useNoFlightRoots, deploy);
+				return BasePolicyCreator.BuildStrictKernelMode(stagingArea.FullName, audit, useNoFlightRoots, deploy);
 			});
 		}
 		catch (Exception ex)
@@ -653,18 +753,29 @@ internal sealed partial class CreatePolicy : Page
 			StrictKernelModePolicyInfoBar.IsClosable = true;
 			StrictKernelModePolicyCreateButton.IsEnabled = true;
 			StrictKernelModePolicyToggleButtonForDeploy.IsEnabled = true;
+
+			ViewModel.StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
 		}
 	}
 
-	private void StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click()
 	{
 		StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn = !StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
 	}
 
 
-	private void StrictKernelModePolicyAuditSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void StrictKernelModePolicyAuditSettingsCard_Click()
 	{
 		StrictKernelModePolicyAudit.IsOn = !StrictKernelModePolicyAudit.IsOn;
+	}
+
+
+	/// <summary>
+	/// Event handler to open the created Strict Kernel-mode policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor_StrictKernelModePolicy()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathStrictKernelMode);
 	}
 
 	#endregion

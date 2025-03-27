@@ -47,6 +47,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 #pragma warning disable CA1822
 	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -241,6 +242,7 @@ DeviceEvents
 	/// <param name="e"></param>
 	private async void ScanLogs_Click(object sender, RoutedEventArgs e)
 	{
+		bool error = false;
 
 		try
 		{
@@ -250,6 +252,12 @@ DeviceEvents
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = "Scanning the selected MDE Advanced Hunting CSV Logs";
+			MainInfoBar.Severity = InfoBarSeverity.Informational;
+			MainInfoBar.IsClosable = false;
 
 
 			// Disable the Policy creator button while scan is being performed
@@ -302,7 +310,18 @@ DeviceEvents
 
 			ViewModel.CalculateColumnWidths();
 		}
+		catch (Exception ex)
+		{
+			error = true;
 
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.Message = $"There was an error while scanning the selected MDE Advanced Hunting CSV Logs: {ex.Message}";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
+			MainInfoBar.IsClosable = false;
+
+			throw;
+		}
 		finally
 		{
 			// Enable the button again
@@ -314,6 +333,15 @@ DeviceEvents
 
 			// Enable the Policy creator button again
 			CreatePolicyButton.IsEnabled = true;
+
+			if (!error)
+			{
+				MainInfoBar.Visibility = Visibility.Visible;
+				MainInfoBar.IsOpen = true;
+				MainInfoBar.Message = "Successfully completed scanning the selected MDE Advanced Hunting CSV Logs.";
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+				MainInfoBar.IsClosable = false;
+			}
 		}
 	}
 
@@ -463,6 +491,9 @@ DeviceEvents
 
 		bool Error = false;
 
+		// Empty the class variable that stores the policy file path
+		finalSupplementalPolicyPath = null;
+
 		try
 		{
 
@@ -476,6 +507,8 @@ DeviceEvents
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
+			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
 			if (ViewModel.FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException("There are no logs. Use the scan button first or adjust the filters.");
@@ -488,7 +521,6 @@ DeviceEvents
 
 			MainInfoBar.Visibility = Visibility.Visible;
 			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = $"Creating Supplemental policy for {ViewModel.FileIdentities.Count} files.";
 			MainInfoBar.Severity = InfoBarSeverity.Informational;
 			MainInfoBar.IsClosable = false;
 
@@ -506,12 +538,22 @@ DeviceEvents
 				policyName = $"Supplemental policy from MDE Advanced Hunting logs - {formattedDate}";
 			}
 
+			// If user selected to deploy the policy
+			// Need to retrieve it while we're still at the UI thread
+			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
+
+			// See which section of the Segmented control is selected for policy creation
+			int selectedCreationMethod = segmentedControl.SelectedIndex;
+
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
 
-			// Check if there are selected items in the ListView
-			if (FileIdentitiesListView.SelectedItems.Count > 0)
+			// Check if there are selected items in the ListView and user chose to use them only in the policy
+			if ((OnlyIncludeSelectedItemsToggleButton.IsChecked ?? false) && FileIdentitiesListView.SelectedItems.Count > 0)
 			{
+
+				MainInfoBar.Message = $"Creating Supplemental policy for {FileIdentitiesListView.SelectedItems.Count} files.";
+
 				// convert every selected item to FileIdentity and store it in the list
 				foreach (var item in FileIdentitiesListView.SelectedItems)
 				{
@@ -522,18 +564,13 @@ DeviceEvents
 				}
 			}
 
-			// If no item was selected from the ListView, use everything in the ObservableCollection
+			// If no item was selected from the ListView and user didn't choose to only use the selected items, then use everything in the ObservableCollection
 			else
 			{
-				SelectedLogs = [.. ViewModel.FileIdentities];
+				SelectedLogs = ViewModel.AllFileIdentities;
+
+				MainInfoBar.Message = $"Creating Supplemental policy for {ViewModel.AllFileIdentities.Count} files.";
 			}
-
-			// If user selected to deploy the policy
-			// Need to retrieve it while we're still at the UI thread
-			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
-
-			// See which section of the Segmented control is selected for policy creation
-			int selectedCreationMethod = segmentedControl.SelectedIndex;
 
 			await Task.Run(() =>
 			{
@@ -566,6 +603,9 @@ DeviceEvents
 								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 
 								UpdateHvciOptions.Update(PolicyToAddLogsTo);
+
+								// Add the supplemental policy path to the class variable
+								finalSupplementalPolicyPath = PolicyToAddLogsTo;
 
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
@@ -605,6 +645,9 @@ DeviceEvents
 								// Copying the policy file to the User Config directory - outside of the temporary staging area
 								File.Copy(EmptyPolicyPath, OutputPath, true);
 
+								// Add the supplemental policy path to the class variable
+								finalSupplementalPolicyPath = OutputPath;
+
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
@@ -643,6 +686,9 @@ DeviceEvents
 								// Copying the policy file to the User Config directory - outside of the temporary staging area
 								File.Copy(EmptyPolicyPath, OutputPath, true);
 
+								// Add the supplemental policy path to the class variable
+								finalSupplementalPolicyPath = OutputPath;
+
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
@@ -668,9 +714,15 @@ DeviceEvents
 				}
 			});
 		}
-		catch
+		catch (Exception ex)
 		{
 			Error = true;
+
+			MainInfoBar.Visibility = Visibility.Visible;
+			MainInfoBar.IsOpen = true;
+			MainInfoBar.IsClosable = true;
+			MainInfoBar.Message = $"There was an error creating the Supplemental policy: {ex.Message}";
+			MainInfoBar.Severity = InfoBarSeverity.Error;
 
 			throw;
 		}
@@ -686,20 +738,16 @@ DeviceEvents
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
 
-			if (Error)
-			{
-				MainInfoBar.Message = "There was an error creating the Supplemental policy.";
-				MainInfoBar.Severity = InfoBarSeverity.Error;
-			}
-			else
+			if (!Error)
 			{
 				MainInfoBar.Message = "Successfully created the Supplemental policy.";
 				MainInfoBar.Severity = InfoBarSeverity.Success;
-			}
+				MainInfoBar.Visibility = Visibility.Visible;
+				MainInfoBar.IsOpen = true;
+				MainInfoBar.IsClosable = true;
 
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.IsClosable = true;
+				ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
+			}
 		}
 	}
 
@@ -741,23 +789,21 @@ DeviceEvents
 	}
 
 
+#pragma warning disable CA1822
 	/// <summary>
 	/// Event handler for the Cancel Sign In button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void MSGraphCancelSignInButton_Click(object sender, RoutedEventArgs e)
+	private void MSGraphCancelSignInButton_Click()
 	{
 		MicrosoftGraph.Main.CancelSignIn();
 	}
+#pragma warning restore CA1822
 
 
 	/// <summary>
 	/// Event handler for the SignIn button for Microsoft Graph
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void MSGraphSignInButton_Click(object sender, RoutedEventArgs e)
+	private async void MSGraphSignInButton_Click()
 	{
 
 		bool signInSuccessful = false;
@@ -822,9 +868,7 @@ DeviceEvents
 	/// <summary>
 	/// Event handler for signing out of Microsoft Graph
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void MSGraphSignOutButton_Click(object sender, RoutedEventArgs e)
+	private async void MSGraphSignOutButton_Click()
 	{
 
 		bool signOutSuccessful = false;
@@ -876,9 +920,7 @@ DeviceEvents
 	/// <summary>
 	/// Event handler for the button that retrieves the logs
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void RetrieveTheLogsButton_Click(object sender, RoutedEventArgs e)
+	private async void RetrieveTheLogsButton_Click()
 	{
 		MainInfoBar.Visibility = Visibility.Visible;
 		MainInfoBar.IsOpen = true;
@@ -967,9 +1009,7 @@ DeviceEvents
 	/// <summary>
 	/// Event handler for for the segmented button's selection change
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SegmentedControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	private void SegmentedControl_SelectionChanged()
 	{
 		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
 		{
@@ -1111,11 +1151,27 @@ DeviceEvents
 
 		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 	}
+
+
+	/// <summary>
+	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+	/// </summary>
+	private string? finalSupplementalPolicyPath;
+
+
+	/// <summary>
+	/// Event handler to open the supplemental policy in the Policy Editor
+	/// </summary>
+	private async void OpenInPolicyEditor()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	}
+
 }
 
 
 internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
 {
-	internal string? QueryTitle { get; set; }
-	internal string? Query { get; set; }
+	internal string? QueryTitle { get; init; }
+	internal string? Query { get; init; }
 }

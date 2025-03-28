@@ -15,8 +15,7 @@ AppControl Manager is a modern secure app that provides easy to use graphical us
 
 ### Use The Microsoft Store
 
-AppControl Manager is available on [the Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8). **This is easiest and recommended way to install it.** You will use Microsoft Store to receive future updates.
-
+AppControl Manager is available on [the Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8). **This is the easiest and recommended way to install it.** You will use Microsoft Store to receive future updates.
 <a href="https://apps.microsoft.com/detail/9PNG1JDDTGP8"><img src="https://raw.githubusercontent.com/HotCakeX/.github/117cde2f2d06bef9969bf4e5b157708d798d770c/Pictures/SVG/Microsoft-store.svg" alt="Microsoft Store link for AppControl Manager" width="50"></a>
 
 <br>

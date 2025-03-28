@@ -114,8 +114,7 @@ Unprotect-WindowsSecurity # CLI Mode
 * [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
 * [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
-AppControl Manager is available on [the Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8). This is easiest and recommended way to install it. [Click here to open the Store app](ms-windows-store://pdp/?productid=9PNG1JDDTGP8)
-
+AppControl Manager is available on [the Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8). This is the easiest and recommended way to install it. [Click here to open the Store app](ms-windows-store://pdp/?productid=9PNG1JDDTGP8)
 <br>
 
 <div align="center">

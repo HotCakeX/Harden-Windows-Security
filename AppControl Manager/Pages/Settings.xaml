@@ -194,6 +194,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton Content="GitHub repository" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
                                     <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
+                                    <HyperlinkButton Content="Microsoft Store page" NavigateUri="https://apps.microsoft.com/detail/9PNG1JDDTGP8" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Vertical">

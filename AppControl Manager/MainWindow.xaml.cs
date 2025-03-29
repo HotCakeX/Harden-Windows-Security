@@ -555,20 +555,28 @@ internal sealed partial class MainWindow : Window
 	/// <param name="args"></param>
 	private void MainWindow_Closed(object sender, WindowEventArgs args)
 	{
-		// Get the current size of the window
-		SizeInt32 size = m_AppWindow.Size;
 
-		// Save to window width and height to the app settings
-		App.Settings.MainWindowWidth = size.Width;
-		App.Settings.MainWindowHeight = size.Height;
+		try
+		{
+			// Get the current size of the window
+			SizeInt32 size = m_AppWindow.Size;
 
-		Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
+			// Save to window width and height to the app settings
+			App.Settings.MainWindowWidth = size.Width;
+			App.Settings.MainWindowHeight = size.Height;
 
-		// Check if the window is maximized
-		_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+			Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
 
-		// Save the maximized status of the window before closing to the app settings
-		App.Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
+			// Check if the window is maximized
+			_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+
+			// Save the maximized status of the window before closing to the app settings
+			App.Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"There was a program saving the window size when closing the app: {ex.Message}");
+		}
 	}
 
 
@@ -1018,7 +1026,8 @@ internal sealed partial class MainWindow : Window
 					// Explicitly exit the current instance only after launching the elevated instance
 					if (processStartResult is not null)
 					{
-						Application.Current.Exit();
+						// Application.Current.Exit();
+						Environment.Exit(0);
 					}
 
 					return;

@@ -54,7 +54,7 @@ internal static class KernelModeDrivers
 	private static IntPtr OpenFile(string path, out int error)
 	{
 		error = 0;
-		IntPtr fileHandle = PlatformInvocations.CreateFileW(path, 2147483648U, 1U, IntPtr.Zero, 3U, 33554432U, IntPtr.Zero);
+		IntPtr fileHandle = NativeMethods.CreateFileW(path, 2147483648U, 1U, IntPtr.Zero, 3U, 33554432U, IntPtr.Zero);
 		IntPtr invalidHandleValue = INVALID_HANDLE_VALUE;
 
 		if (fileHandle != invalidHandleValue)
@@ -116,7 +116,7 @@ internal static class KernelModeDrivers
 				};
 			}
 
-			hasSIP = PlatformInvocations.CryptSIPRetrieveSubjectGuid(filePath, fileHandle, out Guid pgActionID);
+			hasSIP = NativeMethods.CryptSIPRetrieveSubjectGuid(filePath, fileHandle, out Guid pgActionID);
 
 			if (!hasSIP)
 			{
@@ -155,7 +155,7 @@ internal static class KernelModeDrivers
 				};
 			}
 
-			uint fileSize = PlatformInvocations.GetFileSize(fileHandle, ref localPointerFileSizeHigh);
+			uint fileSize = NativeMethods.GetFileSize(fileHandle, ref localPointerFileSizeHigh);
 
 			if (fileSize == uint.MaxValue || localPointerFileSizeHigh != 0U)
 			{
@@ -192,7 +192,7 @@ internal static class KernelModeDrivers
 			// - 2U: Map as read-write (PAGE_READWRITE).
 			// - lpFileSizeHigh, fileSize: High and low 32-bit file size for large files.
 			// - localPointerName: Unique name derived from the GUID to prevent name collisions in the global namespace.
-			fileMappingHandle = PlatformInvocations.CreateFileMapping(fileHandle,
+			fileMappingHandle = NativeMethods.CreateFileMapping(fileHandle,
 				IntPtr.Zero,
 				2U,
 				localPointerFileSizeHigh,
@@ -234,7 +234,7 @@ internal static class KernelModeDrivers
 			// - 4U: Map the view with read-only access (PAGE_READONLY).
 			// - 0U, 0U: Offsets within the file to map the view from (start at the beginning of the file).
 			// - IntPtr.Zero: Specifies the desired view size; passing IntPtr.Zero means the entire file is mapped.
-			fileMappingView = PlatformInvocations.MapViewOfFile(fileMappingHandle,
+			fileMappingView = NativeMethods.MapViewOfFile(fileMappingHandle,
 				4U,
 				0U,
 				0U,
@@ -257,7 +257,7 @@ internal static class KernelModeDrivers
 				};
 			}
 
-			IntPtr ntHeaders = PlatformInvocations.ImageNtHeader(fileMappingView);
+			IntPtr ntHeaders = NativeMethods.ImageNtHeader(fileMappingView);
 
 			if (ntHeaders == IntPtr.Zero)
 			{
@@ -294,7 +294,7 @@ internal static class KernelModeDrivers
 			// - 1: The type of data being accessed (1 indicates the Data Directory in PE format).
 			// - ref size: A reference to the variable that will hold the size of the retrieved data.
 			// - ref foundHeader: A reference to the variable that will store the header information of the directory entry.
-			IntPtr dataEx = PlatformInvocations.ImageDirectoryEntryToDataEx(fileMappingView, 0, 1, ref size, ref foundHeader);
+			IntPtr dataEx = NativeMethods.ImageDirectoryEntryToDataEx(fileMappingView, 0, 1, ref size, ref foundHeader);
 
 			if (dataEx == IntPtr.Zero)
 			{
@@ -339,7 +339,7 @@ internal static class KernelModeDrivers
 				}
 
 				// Get the RVA for the import name
-				IntPtr importNamePtr = PlatformInvocations.ImageRvaToVa(ntHeaders, fileMappingView, importDescriptor.Name, IntPtr.Zero);
+				IntPtr importNamePtr = NativeMethods.ImageRvaToVa(ntHeaders, fileMappingView, importDescriptor.Name, IntPtr.Zero);
 
 				// Marshal the string from the unmanaged memory
 				string? importName = Marshal.PtrToStringAnsi(importNamePtr);
@@ -378,7 +378,7 @@ internal static class KernelModeDrivers
 		{
 			if (fileMappingView != IntPtr.Zero)
 			{
-				if (PlatformInvocations.UnmapViewOfFile(fileMappingView) == 0)
+				if (NativeMethods.UnmapViewOfFile(fileMappingView) == 0)
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
@@ -387,7 +387,7 @@ internal static class KernelModeDrivers
 			}
 			if (fileMappingHandle != IntPtr.Zero && fileMappingHandle != INVALID_HANDLE_VALUE)
 			{
-				if (!PlatformInvocations.CloseHandle(fileMappingHandle))
+				if (!NativeMethods.CloseHandle(fileMappingHandle))
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
@@ -397,7 +397,7 @@ internal static class KernelModeDrivers
 			}
 			if (fileHandle != IntPtr.Zero && fileHandle != INVALID_HANDLE_VALUE)
 			{
-				if (!PlatformInvocations.CloseHandle(fileHandle))
+				if (!NativeMethods.CloseHandle(fileHandle))
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 

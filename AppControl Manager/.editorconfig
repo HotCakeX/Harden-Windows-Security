@@ -1136,3 +1136,6 @@ dotnet_diagnostic.CA1815.severity = error
 
 # CA1515: Consider making public types internal
 dotnet_diagnostic.CA1515.severity = error
+
+# CA1060: Move pinvokes to native methods class
+dotnet_diagnostic.CA1060.severity = error

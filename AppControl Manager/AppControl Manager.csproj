@@ -145,15 +145,11 @@
      -->
     <StackTraceSupport>true</StackTraceSupport>
 
-
     <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
-
 
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
-
     <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
-
 
     <PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
 
@@ -168,7 +164,6 @@
       <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     -->
 
-
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
@@ -176,7 +171,6 @@
     <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
     <AnalysisModePerformance>All</AnalysisModePerformance>
     <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
-
 
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
     <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>

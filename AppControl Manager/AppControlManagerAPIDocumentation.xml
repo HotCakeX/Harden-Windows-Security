@@ -1672,6 +1672,22 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
+        <member name="T:AppControlManager.IntelGathering.DriveLetterMapper.DriveMapping">
+            <summary>
+            Class to store drive mapping information
+            </summary>
+            <param name="driveLetter">Property to store drive letter</param>
+            <param name="volumeName">Property to store volume name</param>
+            <param name="devicePath">Property to store device path</param>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.DriveLetterMapper.DriveMapping.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Class to store drive mapping information
+            </summary>
+            <param name="driveLetter">Property to store drive letter</param>
+            <param name="volumeName">Property to store volume name</param>
+            <param name="devicePath">Property to store device path</param>
+        </member>
         <member name="M:AppControlManager.IntelGathering.DriveLetterMapper.GetGlobalRootDrives">
             <summary>
             A method that gets the DriveLetter mappings in the global root namespace
@@ -2994,6 +3010,11 @@
             <param name="subjectName"></param>
             <param name="storeLocation"></param>
         </member>
+        <member name="M:AppControlManager.Others.CertificateHelper.ComputeMd2(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Computes the MD2 hash of the given data using CryptoAPI.
+            </summary>
+        </member>
         <member name="M:AppControlManager.Others.CertificateHelper.GetTBSCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2)">
             <summary>
             Calculates the TBS value of a certificate
@@ -3116,6 +3137,18 @@
             <param name="element">The JSON element containing the policy options.</param>
             <returns>A list of policy options as strings. Returns an empty list if no options are found
             or if the element is not formatted correctly.</returns>
+        </member>
+        <member name="F:AppControlManager.Others.DetailsRetrieval.codeIntegrityFlags">
+            <summary>
+            Define a dictionary to map option flags to their corresponding descriptions
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.DetailsRetrieval.Get">
+            <summary>
+            Gets the system code integrity information
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:AppControlManager.Others.CodeIntegrityPolicy.EnsureSigningScenario(System.UInt32,System.String)">
             <summary>
@@ -3932,13 +3965,6 @@
             </summary>
             <param name="xmlFilePath"></param>
             <returns></returns>
-        </member>
-        <member name="M:AppControlManager.CodeIntegrity.DetailsRetrieval.Get">
-            <summary>
-            Gets the system code integrity information
-            </summary>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="T:AppControlManager.Pages.AllowNewApps">
             <summary>

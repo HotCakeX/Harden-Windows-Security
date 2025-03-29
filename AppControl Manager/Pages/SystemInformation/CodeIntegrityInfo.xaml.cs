@@ -57,7 +57,7 @@ internal sealed partial class CodeIntegrityInfo : Page
 	private async void RetrieveCodeIntegrityInfo_Click()
 	{
 		// Get the system code integrity information
-		CodeIntegrity.SystemCodeIntegrityInfo codeIntegrityInfoResult = await Task.Run(CodeIntegrity.DetailsRetrieval.Get);
+		SystemCodeIntegrityInfo codeIntegrityInfoResult = await Task.Run(DetailsRetrieval.Get);
 
 		// Bind the CodeIntegrityDetails (List<CodeIntegrityOption>) to the ListView
 		CodeIntegrityInfoListView.ItemsSource = codeIntegrityInfoResult.CodeIntegrityDetails;

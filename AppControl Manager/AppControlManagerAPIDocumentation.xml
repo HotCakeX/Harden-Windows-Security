@@ -1672,6 +1672,22 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
+        <member name="T:AppControlManager.IntelGathering.DriveLetterMapper.DriveMapping">
+            <summary>
+            Class to store drive mapping information
+            </summary>
+            <param name="driveLetter">Property to store drive letter</param>
+            <param name="volumeName">Property to store volume name</param>
+            <param name="devicePath">Property to store device path</param>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.DriveLetterMapper.DriveMapping.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Class to store drive mapping information
+            </summary>
+            <param name="driveLetter">Property to store drive letter</param>
+            <param name="volumeName">Property to store volume name</param>
+            <param name="devicePath">Property to store device path</param>
+        </member>
         <member name="M:AppControlManager.IntelGathering.DriveLetterMapper.GetGlobalRootDrives">
             <summary>
             A method that gets the DriveLetter mappings in the global root namespace
@@ -2993,6 +3009,11 @@
             </summary>
             <param name="subjectName"></param>
             <param name="storeLocation"></param>
+        </member>
+        <member name="M:AppControlManager.Others.CertificateHelper.ComputeMd2(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Computes the MD2 hash of the given data using CryptoAPI.
+            </summary>
         </member>
         <member name="M:AppControlManager.Others.CertificateHelper.GetTBSCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2)">
             <summary>

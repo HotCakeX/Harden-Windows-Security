@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace AppControlManager.CodeIntegrity;
+namespace AppControlManager.Others;
 
 
-internal sealed class CodeIntegrityOption
+internal sealed class CodeIntegrityOption(string name, string description)
 {
-	internal required string Name { get; set; }
-	internal required string Description { get; set; }
+	internal string Name { get; } = name;
+	internal string Description { get; } = description;
 }
 
 internal sealed class SystemCodeIntegrityInfo
@@ -45,23 +45,11 @@ internal static partial class DetailsRetrieval
 		internal uint CodeIntegrityOptions;
 	}
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_codeintegrity_information
-	[LibraryImport("ntdll.dll", SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	private static partial int NtQuerySystemInformation(
-	int SystemInformationClass,
-	IntPtr SystemInformation,
-	int SystemInformationLength,
-	ref int ReturnLength
-	);
 
-
-	private static List<CodeIntegrityOption> GetCodeIntegrityDetails(uint options)
-	{
-		List<CodeIntegrityOption> details = [];
-
-		// Define a dictionary to map option flags to their corresponding descriptions
-		Dictionary<uint, (string Name, string Description)> codeIntegrityFlags = new()
+	/// <summary>
+	/// Define a dictionary to map option flags to their corresponding descriptions
+	/// </summary>
+	private static readonly Dictionary<uint, (string Name, string Description)> codeIntegrityFlags = new()
 		{
 			{ 0x00000001, ("CODEINTEGRITY_OPTION_ENABLED", "Enforcement of kernel mode Code Integrity is enabled.") },
 			{ 0x00000002, ("CODEINTEGRITY_OPTION_TESTSIGN", "Test signed content is allowed by Code Integrity.") },
@@ -79,16 +67,21 @@ internal static partial class DetailsRetrieval
 			{ 0x00002000, ("CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED", "Hypervisor enforced Code Integrity with Isolated User Mode component signing.") }
 		};
 
+
+	private static List<CodeIntegrityOption> GetCodeIntegrityDetails(uint options)
+	{
+		List<CodeIntegrityOption> details = [];
+
 		// Loop through the dictionary and check if each flag is set in the options
 		foreach (KeyValuePair<uint, (string Name, string Description)> flag in codeIntegrityFlags)
 		{
 			if ((options & flag.Key) != 0)
 			{
 				details.Add(new CodeIntegrityOption
-				{
-					Name = flag.Value.Name,
-					Description = flag.Value.Description
-				});
+				(
+					name: flag.Value.Name,
+					description: flag.Value.Description
+				));
 			}
 		}
 
@@ -109,14 +102,14 @@ internal static partial class DetailsRetrieval
 			Length = (uint)Marshal.SizeOf<SYSTEM_CODEINTEGRITY_INFORMATION>()
 		};
 
-		IntPtr buffer = Marshal.AllocHGlobal((int)sci.Length);
+		nint buffer = Marshal.AllocHGlobal((int)sci.Length);
 		Marshal.StructureToPtr(sci, buffer, false);
 
 		try
 		{
 			int length = 0;
 
-			int result = NtQuerySystemInformation(SystemCodeIntegrityInformation, buffer, (int)sci.Length, ref length);
+			int result = NativeMethods.NtQuerySystemInformation(SystemCodeIntegrityInformation, buffer, (int)sci.Length, ref length);
 
 			if (result != 0)
 				throw new InvalidOperationException("NtQuerySystemInformation failed with status: " + result);

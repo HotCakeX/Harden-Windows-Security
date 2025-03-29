@@ -3138,6 +3138,18 @@
             <returns>A list of policy options as strings. Returns an empty list if no options are found
             or if the element is not formatted correctly.</returns>
         </member>
+        <member name="F:AppControlManager.Others.DetailsRetrieval.codeIntegrityFlags">
+            <summary>
+            Define a dictionary to map option flags to their corresponding descriptions
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.DetailsRetrieval.Get">
+            <summary>
+            Gets the system code integrity information
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
         <member name="M:AppControlManager.Others.CodeIntegrityPolicy.EnsureSigningScenario(System.UInt32,System.String)">
             <summary>
             Creates the Signing Scenarios node or each Signing Scenario and their respective Product Signers
@@ -3953,13 +3965,6 @@
             </summary>
             <param name="xmlFilePath"></param>
             <returns></returns>
-        </member>
-        <member name="M:AppControlManager.CodeIntegrity.DetailsRetrieval.Get">
-            <summary>
-            Gets the system code integrity information
-            </summary>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="T:AppControlManager.Pages.AllowNewApps">
             <summary>

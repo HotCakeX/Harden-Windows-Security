@@ -13,6 +13,18 @@ AppControl Manager is a modern secure app that provides easy to use graphical us
 
 ## How To Install or Update The App
 
+### Use The Microsoft Store
+
+<a href="https://apps.microsoft.com/detail/9png1jddtgp8?mode=direct">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="install AppControl Manager from Microsoft Store"/>
+</a>
+
+AppControl Manager is available on [**the Microsoft Store**](https://apps.microsoft.com/detail/9PNG1JDDTGP8). **This is the easiest and recommended way to install it.** You will use Microsoft Store to receive future updates.
+
+<br>
+
+### Use GitHub Packages
+
 Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) as Admin, it will automatically download the latest MSIXBundle file from this repository's release page and install it for you.
 
 ```powershell
@@ -21,6 +33,16 @@ Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Window
 
 > [!TIP]\
 > [AppControl Manager supports auto-update and has built-in updater.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update)
+
+<br>
+
+### Use Winget
+
+You can utilize Winget to automate the installation of the AppControl Manager. It will use the Microsoft Store source.
+
+```powershell
+winget install --id 9PNG1JDDTGP8 --exact --accept-package-agreements --accept-source-agreements --force --source msstore
+```
 
 <br>
 
@@ -164,6 +186,9 @@ Everything the AppControl Manager creates/generates will be saved in that direct
 
 ## About the Installation Process
 
+> [!NOTE]\
+> The following description is only for the GitHub installation method. If you choose to install the AppControl Manager from the [Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8) then the following steps are not necessary and will not be used.
+
 The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
 
 * The latest version of the AppControl Manager MSIXBundle package is securely downloaded from the GitHub release page, where it is built publicly with full artifact attestation and SBOMs.
@@ -231,20 +256,6 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 ```powershell
 AppControl -MSIXBundlePath "Path To the MSIXBundle" -SignTool "Path to signtool.exe" -Verbose
 ```
-
-<br>
-
-## FAQs
-
-* Q: Why isn't AppControl Manager on Microsoft Store?
-* A: Because Microsoft Store currently does not accept apps that require Administrator privileges to run [(i.e., MediumIL)](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control).
-
-<br>
-
-* Q: Why isn't the MSIXBundle pre-signed?
-* A: Because I haven't started paying for a code-signing certificate yet. [Read more about signing](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Rethinking-Trust:-Advanced-Security-Measures-for-High%E2%80%90Stakes-Systems).
-
-   * To truly trust an application, you should review its code and bless it yourself.
 
 <br>
 

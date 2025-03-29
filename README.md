@@ -110,16 +110,16 @@ Unprotect-WindowsSecurity # CLI Mode
 
 <br>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/65086755cd831ab6bbb4eddf10b7b716cee12a48/Pictures/AppControl%20Manager%20Icons/Icon%20smaller.png" alt="GitHub logo pink SVG"> [Install the AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/65086755cd831ab6bbb4eddf10b7b716cee12a48/Pictures/AppControl%20Manager%20Icons/Icon%20smaller.png" alt="GitHub logo pink SVG"> [Install the AppControl Manager From Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8)
+
+<a href="https://apps.microsoft.com/detail/9png1jddtgp8?mode=direct">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="install AppControl Manager from Microsoft Store"/>
+</a>
 
 * [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
 * [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
-**Use the following PowerShell command as Admin**
-
-```powershell
-(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
-```
+AppControl Manager is available on [the Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8). **This is the easiest and recommended way to install it.**
 
 <br>
 

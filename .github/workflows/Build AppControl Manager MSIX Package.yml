@@ -593,17 +593,19 @@ jobs:
 
           [string]$Note = @"
 
-          # What's New
+          # Installation
+
+          <a href="https://apps.microsoft.com/detail/9png1jddtgp8?mode=direct">
+          	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="install AppControl Manager from Microsoft Store"/>
+          </a>
+
+          **Install it from the Microsoft Store: https://apps.microsoft.com/detail/9png1jddtgp8**
+
+          ## What's New
 
           <br>
 
-          > [!IMPORTANT]\
-          > **How To Install: Copy and Paste this command in a PowerShell window as Admin. ([Technical explanation available here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#how-to-install-or-update-the-app))**
-          > ``````powershell
-          > (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl'|iex
-          > ``````
-
-          <br>
+          <!-- Main Content -->
 
           <br>
 
@@ -619,16 +621,14 @@ jobs:
           winget install --id GitHub.cli
           ``````
 
-          <br>
-
-          > [!NOTE]\
-          > As mentioned at the top, please **[refer to this page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#how-to-install-or-update-the-app)** for installation instructions.
-
-          <br>
+          <br>        
 
           "@
 
-          $Payload = @{ body = $Note } | ConvertTo-Json
+          $Payload = @{
+           body = $Note
+           tag_name = $DraftTag
+          } | ConvertTo-Json
           $Url = "https://api.github.com/repos/$Repo/releases/$ReleaseId"
           Invoke-RestMethod -Uri $Url -Method Patch -Headers @{
             "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"

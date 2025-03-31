@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AnimatedVisuals;
@@ -555,21 +554,29 @@ internal sealed partial class MainWindow : Window
 	/// <param name="args"></param>
 	private void MainWindow_Closed(object sender, WindowEventArgs args)
 	{
-		// Get the current size of the window
-		SizeInt32 size = m_AppWindow.Size;
+		try
+		{
+			// Get the current size of the window
+			SizeInt32 size = m_AppWindow.Size;
 
-		// Save to window width and height to the app settings
-		App.Settings.MainWindowWidth = size.Width;
-		App.Settings.MainWindowHeight = size.Height;
+			// Save to window width and height to the app settings
+			App.Settings.MainWindowWidth = size.Width;
+			App.Settings.MainWindowHeight = size.Height;
 
-		Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
+			Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
 
-		// Check if the window is maximized
-		_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+			// Check if the window is maximized
+			_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
 
-		// Save the maximized status of the window before closing to the app settings
-		App.Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
+			// Save the maximized status of the window before closing to the app settings
+			App.Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"There was a program saving the window size when closing the app: {ex.Message}");
+		}
 	}
+
 
 
 	/// <summary>
@@ -845,7 +852,7 @@ internal sealed partial class MainWindow : Window
 		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
 		{
 			// Get the text user entered in the search box
-			string query = sender.Text.ToLowerInvariant().Trim();
+			string query = sender.Text.Trim();
 
 			// Filter menu items based on the search query
 			List<string> suggestions = new(NavigationPageToItemContentMap.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
@@ -994,6 +1001,7 @@ internal sealed partial class MainWindow : Window
 						App.Settings.PromptForElevationOnStartup = true;
 					}
 
+					/*
 					ProcessStartInfo processInfo = new()
 					{
 						FileName = Environment.ProcessPath,
@@ -1017,6 +1025,15 @@ internal sealed partial class MainWindow : Window
 
 					// Explicitly exit the current instance only after launching the elevated instance
 					if (processStartResult is not null)
+					{
+						Application.Current.Exit();
+					}
+
+					return;
+
+					*/
+
+					if (ReLaunch.Action())
 					{
 						Application.Current.Exit();
 					}

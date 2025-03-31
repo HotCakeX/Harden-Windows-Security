@@ -1187,6 +1187,17 @@
             Provides application-specific behavior to supplement the default Application class.
             </summary>
         </member>
+        <member name="F:AppControlManager.App.PFN">
+            <summary>
+            Package Family Name of the application
+            </summary>
+        </member>
+        <member name="F:AppControlManager.App.AUMID">
+            <summary>
+            The App User Model ID which is in the format of PackageFamilyName!App
+            The "App" is what's defined in the Package.appxmanifest file for ID in Application Id="App"
+            </summary>
+        </member>
         <member name="F:AppControlManager.App.PackageSource">
             <summary>
             Detects the source of the application.
@@ -3651,6 +3662,28 @@
             <param name="authenticodeSHA256"></param>
             <param name="authenticodeSHA1"></param>
             <param name="siSigningScenario"></param>
+        </member>
+        <member name="F:AppControlManager.Others.ReLaunch.CLSCTX_LOCAL_SERVER">
+            <summary>
+            CLSCTX_LOCAL_SERVER (0x4) is used for out-of-process COM objects.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.ReLaunch.clsidApplicationActivationManager">
+            <summary>
+            The CLSID of the Application Activation Manager.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.ReLaunch.arguments">
+            <summary>
+            The command-line arguments to pass to the application.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.ReLaunch.Action">
+            <summary>
+            Relaunches the application with Administrator privileges
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:AppControlManager.Others.CiPolicyHandler.RemoveSupplementalSigners(System.String)">
             <summary>
@@ -9305,6 +9338,15 @@
         <member name="M:Windows.Win32.UI_Shell_IFileOpenDialog_Extensions.SetClientGuid(Windows.Win32.UI.Shell.IFileOpenDialog.Interface,System.Guid@)">
             <inheritdoc cref="M:Windows.Win32.UI.Shell.IFileOpenDialog.Interface.SetClientGuid(System.Guid*)"/>
         </member>
+        <member name="M:Windows.Win32.UI_Shell_IApplicationActivationManager_Extensions.ActivateApplication(Windows.Win32.UI.Shell.IApplicationActivationManager.Interface,System.String,System.String,Windows.Win32.UI.Shell.ACTIVATEOPTIONS,System.UInt32@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.Interface.ActivateApplication(Windows.Win32.Foundation.PCWSTR,Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.ACTIVATEOPTIONS,System.UInt32*)"/>
+        </member>
+        <member name="M:Windows.Win32.UI_Shell_IApplicationActivationManager_Extensions.ActivateForFile(Windows.Win32.UI.Shell.IApplicationActivationManager.Interface,System.String,Windows.Win32.UI.Shell.IShellItemArray*,System.String,System.UInt32@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.Interface.ActivateForFile(Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.IShellItemArray*,Windows.Win32.Foundation.PCWSTR,System.UInt32*)"/>
+        </member>
+        <member name="M:Windows.Win32.UI_Shell_IApplicationActivationManager_Extensions.ActivateForProtocol(Windows.Win32.UI.Shell.IApplicationActivationManager.Interface,System.String,Windows.Win32.UI.Shell.IShellItemArray*,System.UInt32@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.Interface.ActivateForProtocol(Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.IShellItemArray*,System.UInt32*)"/>
+        </member>
         <member name="T:Windows.Win32.Foundation.HRESULT">
             <remarks>
             <para>The **HRESULT** data type is the same as the [SCODE](scode.md) data type. An **HRESULT** value consists of the following fields: - A 1-bit code indicating severity, where zero represents success and 1 represents failure. - A 4-bit reserved value. - An 11-bit code indicating responsibility for the error or warning, also known as a facility code. - A 16-bit code describing the error or warning. Most MAPI interface methods and functions return **HRESULT** values to provide detailed cause formation. **HRESULT** values are also used widely in OLE interface methods. OLE provides several macros for converting between **HRESULT** values and **SCODE** values, another common data type for error handling. > [!NOTE] > In 64-bit MAPI, **HRESULT** is still a 32-bit value. For information about the OLE use of **HRESULT** values, see the  *OLE Programmer's Reference*. For more information about the use of these values in MAPI, see [Error Handling](error-handling-in-mapi.md) and any of the following interface methods: [IABLogon::GetLastError](iablogon-getlasterror.md) [IMAPISupport::GetLastError](imapisupport-getlasterror.md) [IMAPIControl::GetLastError](imapicontrol-getlasterror.md) [IMAPITable::GetLastError](imapitable-getlasterror.md) [IMAPIProp::GetLastError](imapiprop-getlasterror.md) [IMAPIViewAdviseSink::OnPrint](imapiviewadvisesink-onprint.md)</para>
@@ -11417,6 +11459,44 @@
         <member name="F:Windows.Win32.UI.Shell.IFileOpenDialog.IID_Guid">
             <summary>The IID guid for this interface.</summary>
             <value>{d57c7288-d4ad-4768-be02-9d969532d960}</value>
+        </member>
+        <member name="M:Windows.Win32.UI.Shell.IApplicationActivationManager.QueryInterface(System.Guid@,System.Void*@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.QueryInterface(System.Guid*,System.Void**)"/>
+        </member>
+        <member name="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateApplication(System.String,System.String,Windows.Win32.UI.Shell.ACTIVATEOPTIONS,System.UInt32@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateApplication(Windows.Win32.Foundation.PCWSTR,Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.ACTIVATEOPTIONS,System.UInt32*)"/>
+        </member>
+        <member name="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateApplication(Windows.Win32.Foundation.PCWSTR,Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.ACTIVATEOPTIONS,System.UInt32*)">
+            <summary>Activates the specified Windows Store app for the generic launch contract (Windows.Launch) in the current session.</summary>
+            <param name="appUserModelId">The application user model ID of the Windows Store app.</param>
+            <param name="arguments">A pointer to an optional, app-specific, argument string.</param>
+            <param name="options">One or more of the following flags used to support design mode, debugging, and testing scenarios.</param>
+            <param name="processId">A pointer to a value that, when this method returns successfully, receives the process ID of the app instance that fulfills this contract.</param>
+            <returns>If this method succeeds, it returns <b>S_OK</b>. Otherwise, it returns an <b>HRESULT</b> error code.</returns>
+            <remarks>
+            <para><see href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-iapplicationactivationmanager-activateapplication">Learn more about this API from docs.microsoft.com</see>.</para>
+            </remarks>
+        </member>
+        <member name="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateForFile(System.String,Windows.Win32.UI.Shell.IShellItemArray*,System.String,System.UInt32@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateForFile(Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.IShellItemArray*,Windows.Win32.Foundation.PCWSTR,System.UInt32*)"/>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateForFile(Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.IShellItemArray*,Windows.Win32.Foundation.PCWSTR,System.UInt32*)" -->
+        <member name="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateForProtocol(System.String,Windows.Win32.UI.Shell.IShellItemArray*,System.UInt32@)">
+            <inheritdoc cref="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateForProtocol(Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.IShellItemArray*,System.UInt32*)"/>
+        </member>
+        <member name="M:Windows.Win32.UI.Shell.IApplicationActivationManager.ActivateForProtocol(Windows.Win32.Foundation.PCWSTR,Windows.Win32.UI.Shell.IShellItemArray*,System.UInt32*)">
+            <summary>Activates the specified Windows Store app for the protocol contract (Windows.Protocol).</summary>
+            <param name="appUserModelId">The application user model ID of the Windows Store app.</param>
+            <param name="itemArray">A pointer to an array of a single Shell item. The first item in the array is converted into a Uri object that is passed to the app through <a href="https://docs.microsoft.com/uwp/api/windows.applicationmodel.activation.protocolactivatedeventargs">ProtocolActivatedEventArgs</a>. Any items in the array except for the first element are ignored.</param>
+            <param name="processId">A pointer to a value that, when this method returns successfully, receives the process ID of the app instance that fulfills this contract.</param>
+            <returns>If this method succeeds, it returns <b>S_OK</b>. Otherwise, it returns an <b>HRESULT</b> error code.</returns>
+            <remarks>
+            <para><see href="https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-iapplicationactivationmanager-activateforprotocol">Learn more about this API from docs.microsoft.com</see>.</para>
+            </remarks>
+        </member>
+        <member name="F:Windows.Win32.UI.Shell.IApplicationActivationManager.IID_Guid">
+            <summary>The IID guid for this interface.</summary>
+            <value>{2e941141-7f97-4756-ba1d-9decde894a3d}</value>
         </member>
         <member name="T:Windows.Win32.UI.Shell.PropertiesSystem.GETPROPERTYSTOREFLAGS">
             <summary>Indicates flags that modify the property store object retrieved by methods that create a property store, such as IShellItem2::GetPropertyStore or IPropertyStoreFactory::GetPropertyStore.</summary>

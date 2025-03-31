@@ -2,3 +2,4 @@ CoCreateInstance
 SHCreateItemFromParsingName
 IFileOpenDialog
 FileOpenDialog
+IApplicationActivationManager

@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,12 +47,23 @@ public partial class App : Application
 
 
 	/// <summary>
+	/// Package Family Name of the application
+	/// </summary>
+	private static readonly string PFN = Package.Current.Id.FamilyName;
+
+	/// <summary>
+	/// The App User Model ID which is in the format of PackageFamilyName!App
+	/// The "App" is what's defined in the Package.appxmanifest file for ID in Application Id="App"
+	/// </summary>
+	internal static readonly string AUMID = AppInfo.Current.AppUserModelId;
+
+	/// <summary>
 	/// Detects the source of the application.
 	/// GitHub => 0
 	/// Microsoft Store => 1
 	/// Unknown => 2
 	/// </summary>
-	internal static readonly int PackageSource = string.Equals(Package.Current.Id.FamilyName, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ? 0 : (string.Equals(Package.Current.Id.FamilyName, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) ? 1 : 2);
+	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ? 0 : (string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) ? 1 : 2);
 
 
 	/// <summary>
@@ -129,10 +139,11 @@ public partial class App : Application
 	/// </summary>
 	internal App()
 	{
+
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		if (!IsElevated && Settings.PromptForElevationOnStartup)
 		{
-
+			/*
 			ProcessStartInfo processInfo = new()
 			{
 				FileName = Environment.ProcessPath,
@@ -153,6 +164,19 @@ public partial class App : Application
 				// Do nothing if the user cancels the UAC prompt.
 				Logger.Write("User canceled the UAC prompt.");
 			}
+			catch (System.ComponentModel.Win32Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write($"Win32Exception.NativeErrorCode: {ex.NativeErrorCode}");
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+			}
+			finally
+			{
+				processStartResult?.Dispose();
+			}
 
 			// Explicitly exit the current instance only after launching the elevated instance
 			if (processStartResult is not null)
@@ -162,6 +186,15 @@ public partial class App : Application
 				// Exit the process
 				Environment.Exit(0);
 			}
+
+			*/
+
+			if (ReLaunch.Action())
+			{
+				// Exit the process
+				Environment.Exit(0);
+			}
+
 		}
 
 		this.InitializeComponent();

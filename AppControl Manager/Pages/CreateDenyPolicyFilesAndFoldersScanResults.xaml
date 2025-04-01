@@ -10,6 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
@@ -22,11 +23,7 @@
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,0,6,10">
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                <Span>
-                    View the detected files that were used to create the <Run Foreground="{ThemeResource SystemAccentColor}">Deny</Run> policy.
-                </Span>
-            </TextBlock>
+            <TextBlock x:Uid="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
         </controls:WrapPanel>
 
@@ -41,13 +38,13 @@
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="SelectAll_Click">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind SelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="DeSelectAll_Click">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind DeSelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
@@ -182,7 +179,7 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -191,7 +188,7 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutSubItem.Icon>

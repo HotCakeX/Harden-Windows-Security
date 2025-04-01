@@ -12,6 +12,10 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
 
@@ -26,23 +30,18 @@
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,0">
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                <Span>
-                    Leverage <Italic>Microsoft Defender for Endpoint</Italic>
-                        <Run Foreground="{ThemeResource SystemAccentColor}">Advanced Hunting</Run>
-                    exported logs to build Application Control Policies.
-                    Begin by browsing for the MDE AH CSV logs, then click the
-                    <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
-                    Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
-                    to define output configuration and generate the XML policy file.
-                </Span>
-            </TextBlock>
+            <TextBlock x:Uid="MDEAHPolicyCreationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
             <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
 
         </controls:WrapPanel>
 
-        <InfoBar x:Name="MainInfoBar" Grid.Row="1" Visibility="Collapsed">
+        <InfoBar Grid.Row="1"
+                 Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
+                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=OneWay}"
+                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
             <InfoBar.ActionButton>
                 <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
             </InfoBar.ActionButton>
@@ -128,11 +127,315 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <Button Content="Sign In" x:Name="MSGraphSignInButton" Click="{x:Bind MSGraphSignInButton_Click}" ToolTipService.ToolTip="Sign into your tenant"/>
+                <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 
-                <Button Content="Sign Out" IsEnabled="False" x:Name="MSGraphSignOutButton" Click="{x:Bind MSGraphSignOutButton_Click}" ToolTipService.ToolTip="Sign out of your tenant and discard any saved authentication tokens"/>
+                    <Button.Resources>
+                        <!-- https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/CommonStyles/Button_themeresources.xaml#L13-L16 -->
+                        <ResourceDictionary>
+                            <LinearGradientBrush x:Key="ButtonBorderBrush" StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="HotPink" Offset="0.0"/>
+                                <GradientStop Color="#D1C4E9" Offset="0.3"/>
+                                <GradientStop Color="#BBDEFB" Offset="0.6"/>
+                                <GradientStop Color="MediumPurple" Offset="1.0"/>
+                            </LinearGradientBrush>
 
-                <Button Content="Cancel Sign In" x:Name="MSGraphCancelSignInButton" IsEnabled="False" Click="{x:Bind MSGraphCancelSignInButton_Click}" ToolTipService.ToolTip="Cancel the sign in process"/>
+                            <LinearGradientBrush x:Key="ButtonBorderBrushPointerOver" StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="HotPink" Offset="0.0"/>
+                                <GradientStop Color="#D1C4E9" Offset="0.3"/>
+                                <GradientStop Color="#BBDEFB" Offset="0.6"/>
+                                <GradientStop Color="MediumPurple" Offset="1.0"/>
+                            </LinearGradientBrush>
+
+                            <LinearGradientBrush x:Key="ButtonBorderBrushPressed" StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="HotPink" Offset="0.0"/>
+                                <GradientStop Color="#D1C4E9" Offset="0.3"/>
+                                <GradientStop Color="#BBDEFB" Offset="0.6"/>
+                                <GradientStop Color="MediumPurple" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </ResourceDictionary>
+                    </Button.Resources>
+
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:MicrosoftCloud/>
+                                </AnimatedIcon.Source>
+                            </AnimatedIcon>
+                            <TextBlock Text="Microsoft Graph" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+
+                                    <Setter Property="Padding" Value="5,5,5,0"/>
+
+                                    <!-- Same corner radius as the one in PanelStyle  -->
+                                    <Setter Property="CornerRadius" Value="8" />
+
+                                    <!--
+                                        Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
+                                        Width does not override MaxWidth
+                                        https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
+                                        -->
+                                    <Setter Property="MaxWidth" Value="1234" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+
+                            <StackPanel Width="500"
+                                    VerticalAlignment="Top"
+                                    Orientation="Vertical"
+                                    Spacing="8">
+
+                                <controls:Segmented x:Name="segmentedControl1"
+                                     HorizontalAlignment="Stretch"
+                                     SelectedIndex="0">
+                                    <controls:SegmentedItem Content="Active Account"                                        
+                                            Tag="Active">
+                                        <controls:SegmentedItem.Icon>
+                                            <IconSourceElement>
+                                                <BitmapIconSource UriSource="/Assets/External/Bottle.png" ShowAsMonochrome="False" />
+                                            </IconSourceElement>
+                                        </controls:SegmentedItem.Icon>
+
+                                    </controls:SegmentedItem>
+
+                                    <controls:SegmentedItem Content="Sign In"                                   
+                                            Tag="Authentication" >
+                                        <controls:SegmentedItem.Icon>
+                                            <IconSourceElement>
+                                                <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
+                                            </IconSourceElement>
+                                        </controls:SegmentedItem.Icon>
+                                    </controls:SegmentedItem>
+
+                                    <controls:SegmentedItem Content="Signed In Accounts"                                    
+                                            Tag="SignedIn">
+                                        <controls:SegmentedItem.Icon>
+                                            <IconSourceElement>
+                                                <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
+                                            </IconSourceElement>
+                                        </controls:SegmentedItem.Icon>
+                                    </controls:SegmentedItem>
+                                </controls:Segmented>
+
+                                <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl1}" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                                    <controls:Case Value="Active">
+                                        <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
+                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="10" Padding="10">
+
+                                            <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
+
+                                                <TextBlock Text="Details of the account that's currently in use" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+
+                                                <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
+                                                <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+                                                <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountAccountIdentifier" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountAccountIdentifier, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+                                                <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+
+                                            </controls:WrapPanel>
+
+                                        </StackPanel>
+
+                                    </controls:Case>
+
+                                    <controls:Case Value="Authentication">
+                                        <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
+                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="10" Padding="10">
+
+                                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+
+                                                <Button IsEnabled="{x:Bind AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
+                                                        x:Uid="SignInButton" Click="{x:Bind AuthCompanionCLS.SignIn}">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                                <AnimatedIcon.Source>
+                                                                    <animatedvisuals:SignIn/>
+                                                                </AnimatedIcon.Source>
+                                                            </AnimatedIcon>
+                                                            <TextBlock Text="Sign In" Margin="5,0,0,0" />
+                                                        </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+
+                                                <Button IsEnabled="{x:Bind AuthCompanionCLS.SignOutButtonState, Mode=OneWay}"
+                                                        x:Uid="CancelSigningInButton" Click="{x:Bind AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                                <AnimatedIcon.Source>
+                                                                    <animatedvisuals:Cancel/>
+                                                                </AnimatedIcon.Source>
+                                                            </AnimatedIcon>
+                                                            <TextBlock Text="Cancel Signing In" Margin="5,0,0,0" />
+                                                        </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+
+                                            </StackPanel>
+
+                                            <ComboBox
+                                                ItemsSource="{x:Bind AuthCompanionCLS.SignInMethodsComboBoxSource}"
+                                                Margin="0,5,0,0"
+                                                HorizontalAlignment="Center"
+                                                x:Uid="SignInMethodsComboBox"
+                                                SelectedItem="{x:Bind AuthCompanionCLS.SignInMethodsComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <!-- To center the header text -->
+                                                <ComboBox.HeaderTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}"
+                                                            HorizontalAlignment="Center"
+                                                            TextAlignment="Center" />
+                                                    </DataTemplate>
+                                                </ComboBox.HeaderTemplate>
+                                            </ComboBox>
+
+
+                                            <ComboBox
+                                                ItemsSource="{x:Bind AuthCompanionCLS.AuthenticationContextComboBoxSource}"
+                                                Margin="0,5,0,0"
+                                                HorizontalAlignment="Center"
+                                                x:Uid="AuthenticationContextComboBox"
+                                                SelectedItem="{x:Bind AuthCompanionCLS.AuthenticationContextComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <!-- To center the header text -->
+                                                <ComboBox.HeaderTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding}"
+                                                            HorizontalAlignment="Center"
+                                                            TextAlignment="Center" />
+                                                    </DataTemplate>
+                                                </ComboBox.HeaderTemplate>
+                                            </ComboBox>
+
+                                        </StackPanel>
+                                    </controls:Case>
+
+
+                                    <controls:Case Value="SignedIn">
+
+                                        <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
+                                                 animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                 Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
+
+                                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Top">
+
+                                                <Button HorizontalAlignment="Center" VerticalAlignment="Top" x:Uid="RemoveAccountButton" Click="{x:Bind AuthCompanionCLS.LogOutOfSelectedAccount}">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                                <AnimatedIcon.Source>
+                                                                    <animatedvisuals:Logout/>
+                                                                </AnimatedIcon.Source>
+                                                            </AnimatedIcon>
+                                                            <TextBlock Text="Remove" Margin="5,0,0,0" />
+                                                        </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+
+
+                                                <Button HorizontalAlignment="Center" x:Uid="SetAccountAsActiveButton" VerticalAlignment="Top" Click="{x:Bind AuthCompanionCLS.SetActiveFromListView}">
+                                                    <Button.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                                                <AnimatedIcon.Source>
+                                                                    <animatedvisuals:Select/>
+                                                                </AnimatedIcon.Source>
+                                                            </AnimatedIcon>
+                                                            <TextBlock Text="Set as Active" Margin="5,0,0,0" />
+                                                        </StackPanel>
+                                                    </Button.Content>
+                                                </Button>
+
+                                            </StackPanel>
+
+
+                                            <!-- Shimmer -->
+
+                                            <StackPanel Margin="0,10,0,0"
+                                                    Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"    
+                                                    Width="450"
+                                                    Height="255"
+                                                    Padding="16"
+                                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4"
+                                                    Spacing="12">
+
+                                                <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                                    <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                </Grid>
+
+                                                <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                                    <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                </Grid>
+
+                                                <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                                    <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                </Grid>
+
+                                                <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                                    <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                </Grid>
+
+                                            </StackPanel>
+
+
+                                            <ListView HorizontalAlignment="Center"
+                                                    Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
+                                                    x:Name="AuthenticatedAccountsListView"
+                                                    BorderThickness="0"
+                                                    CornerRadius="5"
+                                                    ItemsSource="{x:Bind ViewModelMSGraph.AuthenticatedAccounts, Mode=OneWay}"
+                                                    SelectedItem="{x:Bind AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    Height="300"                                               
+                                                    SelectionMode="Single">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate x:DataType="MSGraph:AuthenticatedAccounts">
+                                                        <Grid Padding="2,10,2,10">
+                                                            <Grid.Resources>
+                                                                <ResourceDictionary 
+                                                     Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
+                                                            </Grid.Resources>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="*"/>
+                                                                <RowDefinition Height="*"/>
+                                                                <RowDefinition Height="*"/>
+                                                                <RowDefinition Height="*"/>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <TextBox IsReadOnly="True" Header="UserName" Text="{x:Bind Username}" Grid.Column="0" Grid.Row="0"/>
+                                                            <TextBox IsReadOnly="True" Header="Tenant ID" Text="{x:Bind TenantID}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="1"/>
+                                                            <TextBox IsReadOnly="True" Header="Account Identifier" Text="{x:Bind AccountIdentifier}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="2"/>
+                                                            <TextBox IsReadOnly="True" Header="Permissions" Text="{x:Bind Permissions}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="3"/>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+
+                                            </ListView>
+
+                                        </StackPanel>
+
+                                    </controls:Case>
+                                </controls:SwitchPresenter>
+
+                            </StackPanel>
+
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
 
                 <Button Content="Device Name" x:Name="MSGraphDeviceNameButton" ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
                     <Button.Flyout>
@@ -477,13 +780,13 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Delete Row" Click="ListViewFlyoutMenuDelete_Click">
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="ListViewFlyoutMenuDelete_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -492,7 +795,7 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutSubItem.Icon>

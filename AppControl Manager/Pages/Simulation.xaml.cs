@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
@@ -46,6 +47,7 @@ internal sealed partial class Simulation : Page
 
 #pragma warning disable CA1822
 	private SimulationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SimulationVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -233,32 +235,32 @@ internal sealed partial class Simulation : Page
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="keySelector"></param>
-	private void SortColumn<T>(Func<SimulationOutput, T> keySelector)
+	private async void SortColumn<T>(Func<SimulationOutput, T> keySelector)
 	{
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
-		// Use either the full list (AllSimulationOutputs) or the current display list.
-		List<SimulationOutput> collectionToSort = isSearchEmpty ? ViewModel.AllSimulationOutputs : [.. ViewModel.SimulationOutputs];
 
-		ViewModel.SimulationOutputs.Clear();
+		// If no search is active, use the full list (AllSimulationOutputs); otherwise, use a copy of the currently displayed list.
+		List<SimulationOutput> collectionToSort = isSearchEmpty
+			? ViewModel.AllSimulationOutputs
+			: ViewModel.SimulationOutputs.ToList();
 
-		if (SortingDirectionToggle.IsChecked)
+		// Prepare the sorted data in a temporary list.
+		List<SimulationOutput> sortedData = SortingDirectionToggle.IsChecked
+			? collectionToSort.OrderByDescending(keySelector).ToList()
+			: collectionToSort.OrderBy(keySelector).ToList();
+
+		// Clear the displayed collection and add the sorted items.
+		await DispatcherQueue.EnqueueAsync(() =>
 		{
-			// Sort in descending order
-			foreach (SimulationOutput item in collectionToSort.OrderByDescending(keySelector))
+			ViewModel.SimulationOutputs.Clear();
+			foreach (SimulationOutput item in sortedData)
 			{
 				ViewModel.SimulationOutputs.Add(item);
 			}
-		}
-		else
-		{
-			// Sort in ascending order
-			foreach (SimulationOutput item in collectionToSort.OrderBy(keySelector))
-			{
-				ViewModel.SimulationOutputs.Add(item);
-			}
-		}
+		});
 	}
+
 
 	#endregion
 

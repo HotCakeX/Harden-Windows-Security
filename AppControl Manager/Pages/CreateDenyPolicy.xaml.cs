@@ -38,6 +38,8 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
+#pragma warning disable CA1822
+
 /// <summary>
 /// CreateDenyPolicy is a page for creating deny policies for files and folders. It initializes components and manages
 /// user interactions.
@@ -45,9 +47,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateDenyPolicy : Page
 {
 
-#pragma warning disable CA1822
 	private CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
-#pragma warning restore CA1822
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
 	/// <summary>
 	/// Constructor for the CreateDenyPolicy class. Initializes components, sets navigation cache mode, and assigns the
@@ -87,13 +89,13 @@ internal sealed partial class CreateDenyPolicy : Page
 				FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
 	}
 
-	private void FilesAndFoldersBrowseForFilesSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFilesSettingsCard_RightTapped()
 	{
 		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
 			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
 	}
 
-	private void FilesAndFoldersBrowseForFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFilesButton_RightTapped()
 	{
 		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
 			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
@@ -107,13 +109,13 @@ internal sealed partial class CreateDenyPolicy : Page
 				FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
 	}
 
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped()
 	{
 		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
 			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
 	}
 
-	private void FilesAndFoldersBrowseForFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFoldersButton_RightTapped()
 	{
 		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
 			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersButton);
@@ -123,14 +125,14 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Main button's event handler for files and folder Deny policy creation
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void CreateFilesAndFoldersDenyPolicyButton_Click(object sender, RoutedEventArgs e)
+	private async void CreateFilesAndFoldersDenyPolicyButton_Click()
 	{
 
 		// Close the teaching tip if it's open when user presses the button
 		// it will be opened again if necessary
 		CreateDenyPolicyTeachingTip.IsOpen = false;
+
+		ViewModel.FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		// Reset the progress ring from previous runs or in case an error occurred
 		FilesAndFoldersProgressRing.Value = 0;
@@ -153,6 +155,8 @@ internal sealed partial class CreateDenyPolicy : Page
 			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ProvidePolicyName");
 			return;
 		}
+
+		_FilesAndFoldersSupplementalPolicyPath = null;
 
 		bool errorsOccurred = false;
 
@@ -287,6 +291,8 @@ internal sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				_FilesAndFoldersSupplementalPolicyPath = OutputPath;
+
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
 
 				// Convert the XML file to CIP and save it in the defined path
@@ -330,6 +336,8 @@ internal sealed partial class CreateDenyPolicy : Page
 			{
 				FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Success;
 				FilesAndFoldersInfoBar.Message = GlobalVars.Rizz.GetString("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'";
+
+				ViewModel.FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 
 			FilesAndFoldersInfoBar.IsClosable = true;
@@ -361,9 +369,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Browse for Files - Settings Card Click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FilesAndFoldersBrowseForFilesSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFilesSettingsCard_Click()
 	{
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
@@ -385,9 +391,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Browse for Files - Button Click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FilesAndFoldersBrowseForFilesButton_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFilesButton_Click()
 	{
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
@@ -406,9 +410,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Browse for Folders - Settings Card Click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFoldersSettingsCard_Click()
 	{
 
 		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
@@ -431,9 +433,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Browse for Folders - Button Click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FilesAndFoldersBrowseForFoldersButton_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFoldersButton_Click()
 	{
 		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
@@ -466,7 +466,7 @@ internal sealed partial class CreateDenyPolicy : Page
 		ScalabilityButton.Content = GlobalVars.Rizz.GetString("Scalability") + ((RadialGauge)sender).Value;
 	}
 
-	private void FilesAndFoldersViewFileDetailsSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersViewFileDetailsSettingsCard_Click()
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(CreateDenyPolicyFilesAndFoldersScanResults), null);
 	}
@@ -509,9 +509,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ScanLevelComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
+	private void ScanLevelComboBoxSettingsCard_Click()
 	{
 		ScanLevelComboBox.IsDropDownOpen = !ScanLevelComboBox.IsDropDownOpen;
 	}
@@ -520,9 +518,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Button to clear the list of selected folder paths
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click()
 	{
 		filesAndFoldersFolderPaths.Clear();
 		FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text = null;
@@ -532,13 +528,27 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Button to clear the list of selected file paths
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click()
 	{
 		filesAndFoldersFilePaths.Clear();
 		FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text = null;
 	}
+
+
+	/// <summary>
+	/// Path to the Files and Folders Supplemental policy XML file
+	/// </summary>
+	private string? _FilesAndFoldersSupplementalPolicyPath;
+
+
+	/// <summary>
+	/// Opens a policy editor for files and folders using a specified supplemental policy path.
+	/// </summary>
+	private async void OpenInPolicyEditor_FilesAndFolders()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
+	}
+
 
 	#endregion
 
@@ -548,9 +558,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void PFNRefreshAppsListButton_Click(object sender, RoutedEventArgs e)
+	private async void PFNRefreshAppsListButton_Click()
 	{
 		try
 		{
@@ -595,7 +603,7 @@ internal sealed partial class CreateDenyPolicy : Page
 		}
 	}
 
-	private void PFNPackagedAppsListView_PointerExited(object sender, PointerRoutedEventArgs e)
+	private void PFNPackagedAppsListView_PointerExited()
 	{
 		// Re-enable vertical scrolling for the outer ScrollView
 		MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
@@ -614,9 +622,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler to select all apps in the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void PFNSelectAllAppsListButton_Click(object sender, RoutedEventArgs e)
+	private void PFNSelectAllAppsListButton_Click()
 	{
 		// Ensure the ListView has items
 		if (PFNPackagedAppsListView.ItemsSource is IEnumerable<object> items)
@@ -633,9 +639,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler to remove all selections of apps in the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void PFNRemoveSelectionAppsListButton_Click(object sender, RoutedEventArgs e)
+	private void PFNRemoveSelectionAppsListButton_Click()
 	{
 		PFNPackagedAppsListView.SelectedItems.Clear(); // Clear all selected items
 	}
@@ -644,9 +648,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler to display the selected apps count on the UI TextBlock
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void PFNPackagedAppsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	private void PFNPackagedAppsListView_SelectionChanged()
 	{
 		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
 		PFNSelectedItemsCount.Text = GlobalVars.Rizz.GetString("SelectedApps") + selectedCount;
@@ -661,9 +663,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler for when the search box of apps list changes
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void PFNAppFilteringTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	private void PFNAppFilteringTextBox_TextChanged()
 	{
 		// Store the original collection if it hasn't been saved yet
 		_originalContacts ??= (ObservableCollection<GroupInfoListForPackagedAppView>)PackagedAppsCollectionViewSource.Source;
@@ -697,9 +697,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler to happen only once when the section is expanded and apps list is loaded
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void PFNSettingsCard_Expanded(object sender, EventArgs e)
+	private async void PFNSettingsCard_Expanded()
 	{
 		if (!packagesLoadedOnExpand)
 		{
@@ -722,14 +720,14 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Main button's event handler - Create Deny policy based on PFNs
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void CreatePFNDenyPolicyButton_Click(object sender, RoutedEventArgs e)
+	private async void CreatePFNDenyPolicyButton_Click()
 	{
 
 		string? PFNBasedDenyPolicyName = PFNPolicyNameTextBox.Text;
 
 		bool shouldDeploy = PFNPolicyDeployToggleButton.IsChecked ?? false;
+
+		ViewModel.PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		// Close the teaching tip if it's open when user presses the button
 		// it will be opened again if necessary
@@ -752,6 +750,8 @@ internal sealed partial class CreateDenyPolicy : Page
 		}
 
 		bool ErrorsOccurred = false;
+
+		_PFNSupplementalPolicyPath = null;
 
 		try
 		{
@@ -808,6 +808,8 @@ internal sealed partial class CreateDenyPolicy : Page
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
+				_PFNSupplementalPolicyPath = OutputPath;
+
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{PFNBasedDenyPolicyName}.cip");
 
 				// Convert the XML file to CIP and save it in the defined path
@@ -852,6 +854,8 @@ internal sealed partial class CreateDenyPolicy : Page
 			{
 				PFNInfoBar.Severity = InfoBarSeverity.Success;
 				PFNInfoBar.Message = GlobalVars.Rizz.GetString("DenyPolicyCreated");
+
+				ViewModel.PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 
 			CreatePFNDenyPolicyButton.IsEnabled = true;
@@ -861,6 +865,22 @@ internal sealed partial class CreateDenyPolicy : Page
 			PFNInfoBar.IsClosable = true;
 		}
 	}
+
+
+	/// <summary>
+	/// Path to the PFN Supplemental policy XML file
+	/// </summary>
+	private string? _PFNSupplementalPolicyPath;
+
+
+	/// <summary>
+	/// Opens a policy editor for PFN using a specified supplemental policy path.
+	/// </summary>
+	private async void OpenInPolicyEditor_PFN()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
+	}
+
 
 	#endregion
 
@@ -885,12 +905,12 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler for the main button - to create Deny pattern based File path policy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click(object sender, RoutedEventArgs e)
+	private async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click()
 	{
 
 		bool errorsOccurred = false;
+
+		ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		if (string.IsNullOrWhiteSpace(DenyPolicyCustomPatternBasedCustomPatternTextBox.Text))
 		{
@@ -907,6 +927,8 @@ internal sealed partial class CreateDenyPolicy : Page
 			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a name for the Deny policy.";
 			return;
 		}
+
+		_CustomPatternBasedFileRuleSupplementalPolicyPath = null;
 
 		try
 		{
@@ -949,6 +971,8 @@ internal sealed partial class CreateDenyPolicy : Page
 
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+				_CustomPatternBasedFileRuleSupplementalPolicyPath = OutputPath;
 
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.cip");
 
@@ -997,6 +1021,8 @@ internal sealed partial class CreateDenyPolicy : Page
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
 				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Deny policy.";
+
+				ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 
 			CreateCustomPatternBasedFileRuleDenyPolicyButton.IsEnabled = true;
@@ -1011,9 +1037,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	/// <summary>
 	/// Event handler to display the content dialog for more info about patterns
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click(object sender, RoutedEventArgs e)
+	private async void DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click()
 	{
 		// Instantiate the Content Dialog
 		CustomUIElements.CustomPatternBasedFilePath customDialog = new();
@@ -1023,6 +1047,23 @@ internal sealed partial class CreateDenyPolicy : Page
 		// Show the dialog
 		_ = await customDialog.ShowAsync();
 	}
+
+
+
+	/// <summary>
+	/// Path to the CustomPatternBasedFileRule Supplemental policy XML file
+	/// </summary>
+	private string? _CustomPatternBasedFileRuleSupplementalPolicyPath;
+
+
+	/// <summary>
+	/// Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
+	/// </summary>
+	private async void OpenInPolicyEditor_CustomPatternBasedFileRule()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+	}
+
 
 	#endregion
 

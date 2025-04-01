@@ -874,49 +874,21 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
 
-		// Use either the full list (AllPoliciesOutput) or the current display list.
+		// if no search is active, use AllPoliciesOutput; otherwise, sort the currently displayed list.
+		List<CiPolicyInfo> sourceData = isSearchEmpty ? AllPoliciesOutput : AllPolicies.ToList();
+
+		// Prepare the sorted data in a temporary list.
+		List<CiPolicyInfo> sortedData = SortingDirectionToggleStatus
+			? sourceData.OrderByDescending(keySelector).ToList()
+			: sourceData.OrderBy(keySelector).ToList();
+
+		// clear the ObservableCollection and add the sorted items.
 		await Dispatch.EnqueueAsync(() =>
 		{
-			// Clear the ObservableCollection
 			AllPolicies.Clear();
-
-			if (SortingDirectionToggleStatus)
+			foreach (CiPolicyInfo item in sortedData)
 			{
-				if (isSearchEmpty)
-				{
-					// Sort in descending order.
-					foreach (CiPolicyInfo item in AllPoliciesOutput.OrderByDescending(keySelector))
-					{
-						AllPolicies.Add(item);
-					}
-				}
-				else
-				{
-					// Sort in descending order.
-					foreach (CiPolicyInfo item in AllPolicies.OrderByDescending(keySelector))
-					{
-						AllPolicies.Add(item);
-					}
-				}
-			}
-			else
-			{
-				if (isSearchEmpty)
-				{
-					// Sort in ascending order.
-					foreach (CiPolicyInfo item in AllPoliciesOutput.OrderBy(keySelector))
-					{
-						AllPolicies.Add(item);
-					}
-				}
-				else
-				{
-					// Sort in ascending order.
-					foreach (CiPolicyInfo item in AllPolicies.OrderBy(keySelector))
-					{
-						AllPolicies.Add(item);
-					}
-				}
+				AllPolicies.Add(item);
 			}
 		});
 	}

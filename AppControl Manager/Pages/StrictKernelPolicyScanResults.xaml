@@ -10,6 +10,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
@@ -22,11 +23,7 @@
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                <Span>
-                    View the detected Kernel-mode files that will be used to create the <Run Foreground="{ThemeResource SystemAccentColor}">enforced mode</Run> policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.
-                </Span>
-            </TextBlock>
+            <TextBlock x:Uid="StrictKernelModePolicyScanResultsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
         </controls:WrapPanel>
 
@@ -182,13 +179,13 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Delete Row" Click="ListViewFlyoutMenuDelete_Click">
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="ListViewFlyoutMenuDelete_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -197,7 +194,7 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutSubItem.Icon>

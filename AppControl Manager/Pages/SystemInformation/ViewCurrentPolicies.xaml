@@ -15,6 +15,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid>
@@ -207,7 +208,7 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Copy Row" Click="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -216,7 +217,7 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutSubItem.Icon>

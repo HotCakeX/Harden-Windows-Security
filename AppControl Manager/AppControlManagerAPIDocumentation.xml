@@ -42,6 +42,44 @@
             exists.
             </summary>
         </member>
+        <member name="P:AnimatedVisuals.Cancel.FrameCount">
+            <summary>
+            Gets the number of frames in the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Cancel.Framerate">
+            <summary>
+            Gets the frame rate of the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Cancel.Duration">
+            <summary>
+            Gets the duration of the animation.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Cancel.FrameToProgress(System.Double)">
+            <summary>
+            Converts a zero-based frame number to the corresponding progress value denoting the
+            start of the frame.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Cancel.Markers">
+            <summary>
+            Returns a map from marker names to corresponding progress values.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Cancel.SetColorProperty(System.String,Windows.UI.Color)">
+            <summary>
+            Sets the color property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Cancel.SetScalarProperty(System.String,System.Double)">
+            <summary>
+            Sets the scalar property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
         <member name="P:AnimatedVisuals.Certificate.FrameCount">
             <summary>
             Gets the number of frames in the animation.
@@ -574,6 +612,44 @@
             exists.
             </summary>
         </member>
+        <member name="P:AnimatedVisuals.Logout.FrameCount">
+            <summary>
+            Gets the number of frames in the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Logout.Framerate">
+            <summary>
+            Gets the frame rate of the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Logout.Duration">
+            <summary>
+            Gets the duration of the animation.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Logout.FrameToProgress(System.Double)">
+            <summary>
+            Converts a zero-based frame number to the corresponding progress value denoting the
+            start of the frame.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Logout.Markers">
+            <summary>
+            Returns a map from marker names to corresponding progress values.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Logout.SetColorProperty(System.String,Windows.UI.Color)">
+            <summary>
+            Sets the color property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Logout.SetScalarProperty(System.String,System.Double)">
+            <summary>
+            Sets the scalar property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
         <member name="P:AnimatedVisuals.MDE.FrameCount">
             <summary>
             Gets the number of frames in the animation.
@@ -645,6 +721,44 @@
             </summary>
         </member>
         <member name="M:AnimatedVisuals.Merge.SetScalarProperty(System.String,System.Double)">
+            <summary>
+            Sets the scalar property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.MicrosoftCloud.FrameCount">
+            <summary>
+            Gets the number of frames in the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.MicrosoftCloud.Framerate">
+            <summary>
+            Gets the frame rate of the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.MicrosoftCloud.Duration">
+            <summary>
+            Gets the duration of the animation.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.MicrosoftCloud.FrameToProgress(System.Double)">
+            <summary>
+            Converts a zero-based frame number to the corresponding progress value denoting the
+            start of the frame.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.MicrosoftCloud.Markers">
+            <summary>
+            Returns a map from marker names to corresponding progress values.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.MicrosoftCloud.SetColorProperty(System.String,Windows.UI.Color)">
+            <summary>
+            Sets the color property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.MicrosoftCloud.SetScalarProperty(System.String,System.Double)">
             <summary>
             Sets the scalar property with the given name, or does nothing if no such property
             exists.
@@ -726,6 +840,44 @@
             exists.
             </summary>
         </member>
+        <member name="P:AnimatedVisuals.Select.FrameCount">
+            <summary>
+            Gets the number of frames in the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Select.Framerate">
+            <summary>
+            Gets the frame rate of the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Select.Duration">
+            <summary>
+            Gets the duration of the animation.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Select.FrameToProgress(System.Double)">
+            <summary>
+            Converts a zero-based frame number to the corresponding progress value denoting the
+            start of the frame.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.Select.Markers">
+            <summary>
+            Returns a map from marker names to corresponding progress values.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Select.SetColorProperty(System.String,Windows.UI.Color)">
+            <summary>
+            Sets the color property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.Select.SetScalarProperty(System.String,System.Double)">
+            <summary>
+            Sets the scalar property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
         <member name="P:AnimatedVisuals.Shield.FrameCount">
             <summary>
             Gets the number of frames in the animation.
@@ -797,6 +949,44 @@
             </summary>
         </member>
         <member name="M:AnimatedVisuals.Sidebar.SetScalarProperty(System.String,System.Double)">
+            <summary>
+            Sets the scalar property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.SignIn.FrameCount">
+            <summary>
+            Gets the number of frames in the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.SignIn.Framerate">
+            <summary>
+            Gets the frame rate of the animation.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.SignIn.Duration">
+            <summary>
+            Gets the duration of the animation.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.SignIn.FrameToProgress(System.Double)">
+            <summary>
+            Converts a zero-based frame number to the corresponding progress value denoting the
+            start of the frame.
+            </summary>
+        </member>
+        <member name="P:AnimatedVisuals.SignIn.Markers">
+            <summary>
+            Returns a map from marker names to corresponding progress values.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.SignIn.SetColorProperty(System.String,Windows.UI.Color)">
+            <summary>
+            Sets the color property with the given name, or does nothing if no such property
+            exists.
+            </summary>
+        </member>
+        <member name="M:AnimatedVisuals.SignIn.SetScalarProperty(System.String,System.Double)">
             <summary>
             Sets the scalar property with the given name, or does nothing if no such property
             exists.
@@ -1405,6 +1595,16 @@
             Automatically check for updates on app startup.
             </summary>
         </member>
+        <member name="P:AppControlManager.AppSettings.Main.ApplicationGlobalLanguage">
+            <summary>
+            Selected language for the application
+            </summary>	
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.ApplicationGlobalFlowDirection">
+            <summary>
+            Whether the User Interface flow direction is Left-to-Right or Right-to-Left
+            </summary>
+        </member>
         <member name="T:AppControlManager.Crumb">
             <summary>
             https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
@@ -1510,12 +1710,10 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.AutoAcquireSignTool_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.AutoAcquireSignTool_Toggled">
             <summary>
             Event handler for the toggle switch to automatically download SignTool.exe from the Microsoft servers
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.DisableUIElements">
             <summary>
@@ -1533,26 +1731,20 @@
             </summary>
             <param name="message"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.VerifyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.VerifyButton_Click">
             <summary>
             Event handler for the Verify button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.SignToolBrowseButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.SignToolBrowseButton_Click">
             <summary>
             Event handler for SignTool.exe browse button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.CertFileBrowseButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.CertFileBrowseButton_Click">
             <summary>
             Event handler for browse for certificate .cer file button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.InitializeComponent">
             <summary>
@@ -1588,12 +1780,10 @@
             Get all of the common names of the certificates in the user/my certificate store over time
             </summary>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.OpenAppSettingsButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.OpenAppSettingsButton_Click">
             <summary>
             Event handler for the button that navigates to the Settings page
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.OnPrimaryButtonClick(Microsoft.UI.Xaml.Controls.ContentDialog,Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs)">
             <summary>
@@ -1602,12 +1792,10 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.AutoAcquireSignTool_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.AutoAcquireSignTool_Toggled">
             <summary>
             Event handler for the toggle switch to automatically download SignTool.exe from the Microsoft servers
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.DisableUIElements">
             <summary>
@@ -1625,33 +1813,25 @@
             </summary>
             <param name="message"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.VerifyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.VerifyButton_Click">
             <summary>
             Event handler for the Verify button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.SignToolBrowseButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.SignToolBrowseButton_Click">
             <summary>
             Event handler for SignTool.exe browse button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.CertFileBrowseButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.CertFileBrowseButton_Click">
             <summary>
             Event handler for browse for certificate .cer file button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.XMLPolicyFileBrowseButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.XMLPolicyFileBrowseButton_Click">
             <summary>
             Event handler for the XML policy file browse button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialogForRemoval.InitializeComponent">
             <summary>
@@ -1711,6 +1891,62 @@
             <summary>
             Defines the action type of Code Integrity and AppLocker event logs.
             </summary>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object.
+            Two <see cref="T:AppControlManager.IntelGathering.FileIdentity"/> instances are considered equal if each non-null property (excluding the parent view models and computed properties)
+            is equal. String comparisons are done using ordinal ignore case.
+            </summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.GetHashCode">
+            <summary>
+            Serves as the default hash function.
+            </summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.CompareStrings(System.String,System.String)">
+            <summary>
+            Compares two strings using ordinal ignore case.
+            If both strings are null, they are considered equal.
+            </summary>
+            <param name="s1">First string.</param>
+            <param name="s2">Second string.</param>
+            <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.CompareHashSets(System.Collections.Generic.HashSet{AppControlManager.IntelGathering.FileSignerInfo},System.Collections.Generic.HashSet{AppControlManager.IntelGathering.FileSignerInfo})">
+            <summary>
+            Compares two hash sets of FileSignerInfo for equality.
+            Two sets are considered equal if they contain the same elements.
+            </summary>
+            <param name="set1">First hash set.</param>
+            <param name="set2">Second hash set.</param>
+            <returns><c>true</c> if the sets are equal, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.CompareStringSets(System.Collections.Generic.HashSet{System.String},System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            Compares two hash sets of strings for equality using ordinal ignore case.
+            Two sets are considered equal if they contain the same elements.
+            </summary>
+            <param name="set1">First hash set.</param>
+            <param name="set2">Second hash set.</param>
+            <returns><c>true</c> if the sets are equal, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.GetHashCodeForHashSet(System.Collections.Generic.HashSet{AppControlManager.IntelGathering.FileSignerInfo})">
+            <summary>
+            Computes an order-independent hash code for a hash set of FileSignerInfo.
+            </summary>
+            <param name="set">The hash set to compute the hash code for.</param>
+            <returns>The computed hash code.</returns>
+        </member>
+        <member name="M:AppControlManager.IntelGathering.FileIdentity.GetHashCodeForStringSet(System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            Computes an order-independent hash code for a hash set of strings using ordinal ignore case.
+            </summary>
+            <param name="set">The hash set to compute the hash code for.</param>
+            <returns>The computed hash code.</returns>
         </member>
         <member name="T:AppControlManager.IntelGathering.FileIdentityComparer">
             <summary>
@@ -2298,6 +2534,19 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
+        <member name="F:AppControlManager.MainWindow.NavigationPageToItemContentMap">
+            <summary>
+            Dictionary of all the main pages in the app, used for the main navigation.
+            Keys are the Navigation Item tags (non-localized) and values are the page types.
+            Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MainWindow.NavigationPageToItemContentMapForSearch">
+            <summary>
+            Dictionary of all the main pages in the app, used for the search bar.
+            Keys are page contents which are localized and values are page types.
+            </summary>
+        </member>
         <member name="F:AppControlManager.MainWindow._instance">
             <summary>
             A static instance of the MainWindow class which will hold the single, shared instance of it
@@ -2400,7 +2649,7 @@
             </summary>
             <param name="navPageType"></param>
             <param name="transitionInfo"></param>
-            <param name="navItemName"></param>
+            <param name="navItemTag"></param>
         </member>
         <member name="M:AppControlManager.MainWindow.BackButtonTitleBar_Click">
             <summary>
@@ -2781,132 +3030,324 @@
             to object values.
             </summary>
         </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AssignmentPayload.#ctor(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Represents a payload for assignments containing a dictionary of target properties. The dictionary maps string keys
+            to object values.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.AssignmentPayload.Target">
+            <summary>
+            The target properties dictionary.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.AuthenticationCompanion">
+            <summary>
+            Encapsulates the logic shared among the pages and ViewModels that implement Microsoft Graph functionality
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.#ctor(System.Action{System.Boolean},AppControlManager.Others.InfoBarSettings,AppControlManager.MicrosoftGraph.AuthenticationContext)">
+            <summary>
+            The constructor needs methods to run when the Active Account is updated
+            </summary>
+            <param name="updateButtons"></param>
+            <param name="infoBar"></param>
+            <param name="authContext"></param>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.AuthenticatedAccounts_CollectionChanged(System.Object,System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <summary>
+            To subscribe to the Saved Accounts Observable Collection's events to update the local instances automatically
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.ShimmerListViewVisibilityConfig">
+            <summary>
+            To determine the visibility of the Shimmer/ListView based on the availability of elements in the AuthenticatedAccounts ObservableCollection
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._AuthenticatedAccountsListViewVisibility">
+            <summary>
+            Visibility of the ListView that contains the list of the Authenticated Accounts
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._AuthenticatedAccountsShimmerVisibility">
+            <summary>
+            Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts 
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.UpdateAccountDetails">
+            <summary>
+            Helper method to update computed properties when CurrentActiveAccount changes.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountUsername">
+            <summary>
+            Computed property for Username.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountTenantID">
+            <summary>
+            Computed property for TenantID.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountAccountIdentifier">
+            <summary>
+            Computed property for Account Identifier.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountPermissions">
+            <summary>
+            Computed property for Permissions.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion.cancellationTokenSource">
+            <summary>
+            To save the cancellation token source for sign in operation
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.MSGraphCancelSignInButton_Click">
+            <summary>
+            Event handler for the Cancel Sign In button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.LogOutOfSelectedAccount">
+            <summary>
+            Logs out of the currently selected account.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.SetActiveFromListView">
+            <summary>
+            Set the selected item in the ListView as active account to use
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.ManageButtonsStates(System.Boolean)">
+            <summary>
+            Enable or Disable button states
+            </summary>
+            <param name="on">True will enable and False will disable UI buttons when an operation is ongoing</param>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion.SignInMethodsComboBoxSource">
+            <summary>
+            Sign In methods ComboBox source
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._SignInMethodsComboBoxSelectedItem">
+            <summary>
+            Bound to the ComboBox's SelectedItem property with the default value
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion.AuthenticationContextComboBoxSource">
+            <summary>
+            Authentication context ComboBox source
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._AuthenticationContextComboBoxSelectedItem">
+            <summary>
+            Bound to the ComboBox's SelectedItem property.
+            Default value is supplied via the class constructor.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.SignIn">
+            <summary>
+            Signs into the Microsoft tenant
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
         <member name="T:AppControlManager.MicrosoftGraph.AuthenticationContext">
             <summary>
             Used to determine which scope to use
             </summary>
         </member>
-        <member name="T:AppControlManager.MicrosoftGraph.IntuneJsonContext">
+        <member name="T:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy">
             <summary>
-            Defines a context for JSON serialization with specific options for formatting and ignoring null values. It includes
-            serialization support for various types.
+            Represents a single device configuration policy.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.AssignmentPayload">
+        <member name="M:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.#ctor(System.String,System.String,System.Nullable{System.DateTimeOffset},System.Collections.Generic.List{System.String},System.Boolean,System.String,System.String,System.String,System.Nullable{System.DateTimeOffset},System.String,System.String,System.Int32,System.Collections.Generic.List{AppControlManager.MicrosoftGraph.OmaSettingBase64})">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Represents a single device configuration policy.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.OmaSettingBase64">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.ODataType">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Represents the OData type.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.QueryPayload">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.Id">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Unique identifier for the policy.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.Windows10CustomConfiguration">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.LastModifiedDateTime">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Date and time when the policy was last modified.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.DictionaryStringObject">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.RoleScopeTagIds">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            List of role scope tag identifiers.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.ListOmaSettingBase64">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.SupportsScopeTags">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Indicates whether the policy supports scope tags.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.ListString">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.DeviceManagementApplicabilityRuleOsEdition">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            OS edition rule for device management applicability.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.JsonElement">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.DeviceManagementApplicabilityRuleOsVersion">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            OS version rule for device management applicability.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.Object">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.DeviceManagementApplicabilityRuleDeviceMode">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Device mode rule for device management applicability.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.String">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.CreatedDateTime">
             <summary>
-            Defines the source generated JSON serialization contract metadata for a given type.
+            Date and time when the policy was created.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.Default">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.Description">
             <summary>
-            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            Description of the policy.
             </summary>
         </member>
-        <member name="P:AppControlManager.MicrosoftGraph.IntuneJsonContext.GeneratedSerializerOptions">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.DisplayName">
             <summary>
-            The source-generated options associated with this context.
+            Display name of the policy.
             </summary>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.IntuneJsonContext.#ctor">
-            <inheritdoc/>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.IntuneJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
-            <inheritdoc/>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.IntuneJsonContext.GetTypeInfo(System.Type)">
-            <inheritdoc/>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(System.String)">
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.Version">
             <summary>
-            Perform an Advanced Hunting query using Microsoft Defender for Endpoint
+            Version of the policy.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy.OmaSettings">
+            <summary>
+            List of OMA settings.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.DeviceConfigurationPoliciesResponse">
+            <summary>
+            Represents the response from the Graph API that contains a list of device configuration policies.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.DeviceConfigurationPoliciesResponse.#ctor(System.String,System.String,System.Collections.Generic.List{AppControlManager.MicrosoftGraph.DeviceConfigurationPolicy})">
+            <summary>
+            Represents the response from the Graph API that contains a list of device configuration policies.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPoliciesResponse.ODataContext">
+            <summary>
+            OData context information.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPoliciesResponse.MicrosoftGraphTips">
+            <summary>
+            Additional Microsoft Graph tips.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.DeviceConfigurationPoliciesResponse.Value">
+            <summary>
+            The list of device configuration policies.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.Main.ClientId">
+            <summary>
+            For Microsoft Graph Command Line Tools
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.Main.DeviceConfigurationsURL">
+            <summary>
+            URL for Intune related operations
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.Main.GroupsUrl">
+            <summary>
+            URL for M365 Groups
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.Main.MDEAH">
+            <summary>
+            URL for Microsoft Defender for Endpoint Advanced Hunting queries
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.Main.App">
+            <summary>
+            Initialize the Public Client Application
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.GetWindowHandle">
+            <summary>
+            Helper method for WithParentActivityOrWindow that returns the window handle.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.Main.Scopes">
+            <summary>
+            The correlation between scopes and required permissions
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.Main.IRestrictedAuthenticatedAccounts">
+            <summary>
+            Interface to restrict access to the following two properties only within the Main class.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(System.String,AppControlManager.MicrosoftGraph.AuthenticatedAccounts)">
+            <summary>
+            Performs an Advanced Hunting query using Microsoft Defender for Endpoint
             Accepts a device name as an optional parameter for filtering
             </summary>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.FetchGroups">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.FetchGroups(AppControlManager.MicrosoftGraph.AuthenticatedAccounts)">
             <summary>
-            Fetches the security groups
+            Fetches the M365 security groups
             </summary>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.GetGroups">
-            <summary>
-            Returns the Groups dictionary
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.SignIn(AppControlManager.MicrosoftGraph.AuthenticationContext)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.SignIn(AppControlManager.MicrosoftGraph.AuthenticationContext,AppControlManager.MicrosoftGraph.SignInMethods)">
             <summary>
             Signs into a tenant
             </summary>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.CancelSignIn">
-            <summary>
-            Cancels the current sign-in operation
-            </summary>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.SignOut(AppControlManager.MicrosoftGraph.AuthenticationContext)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.SignOut(AppControlManager.MicrosoftGraph.AuthenticatedAccounts)">
             <summary>
             Signs out the user
             </summary>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.UploadPolicyToIntune(System.String,System.String,System.String,System.String)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.UploadPolicyToIntune(AppControlManager.MicrosoftGraph.AuthenticatedAccounts,System.String,System.String,System.String,System.String,System.String)">
             <summary>
             Grabs the path to a CIP file and upload it to Intune.
             </summary>
             <param name="policyPath"></param>
-            <param name="groupName"></param>
+            <param name="groupId"></param>
             <param name="policyName"></param>
             <param name="policyID"></param>
+            <param name="descriptionText"></param>
+            <param name="account"></param>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
@@ -2920,7 +3361,7 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.CreateCustomIntunePolicy(System.String,System.String,System.String,System.String)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.CreateCustomIntunePolicy(System.String,System.String,System.String,System.String,System.String)">
             <summary>
             https://learn.microsoft.com/en-us/mem/intune/configuration/custom-settings-windows-10
             </summary>
@@ -2928,6 +3369,7 @@
             <param name="policyData"></param>
             <param name="policyID"></param>
             <param name="policyName"></param>
+            <param name="descriptionText"></param>
             <returns></returns>
         </member>
         <member name="M:AppControlManager.MicrosoftGraph.Main.ConvertBinFileToBase64(System.String,System.Int32)">
@@ -2939,10 +3381,182 @@
             <returns>Returns the Base64 encoded string of the file's contents.</returns>
             <exception cref="T:System.InvalidOperationException">Thrown when the file size exceeds the specified maximum limit.</exception>
         </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.RetrieveDeviceConfigurations(AppControlManager.MicrosoftGraph.AuthenticatedAccounts)">
+            <summary>
+            Retrieves the custom policies available in Intune
+            </summary>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Main.DeletePolicy(AppControlManager.MicrosoftGraph.AuthenticatedAccounts,System.String)">
+            <summary>
+            Deletes a custom Intune policy identified by the given policy ID.
+            </summary>
+            <param name="policyId">The ID of the policy to delete.</param>
+            <param name="account"></param>
+            <returns>A task that represents the asynchronous delete operation.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when the user is not authenticated or the deletion fails.</exception>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.MSGraphJsonContext">
+            <summary>
+            Defines a context for JSON serialization with specific options for formatting and ignoring null values. It includes
+            serialization support for various types.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Boolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.AssignmentPayload">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.DeviceConfigurationPoliciesResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.DeviceConfigurationPolicy">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.OmaSettingBase64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.QueryPayload">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Windows10CustomConfiguration">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.CiPolicyInfo">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.DictionaryStringObject">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.ListDeviceConfigurationPolicy">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.ListOmaSettingBase64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.ListString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.DateTimeOffset">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.NullableDateTimeOffset">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.JsonElement">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Version">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.MSGraphJsonContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.MSGraphJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.MSGraphJsonContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
         <member name="T:AppControlManager.MicrosoftGraph.OmaSettingBase64">
             <summary>
             Represents a configuration setting with properties for OData type, display name, description, URI, file name, and
             value.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.OmaSettingBase64.#ctor(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Represents a configuration setting with properties for OData type, display name, description, URI, file name, and
+            value.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.OmaSettingBase64.ODataType">
+            <summary>
+            The OData type of the setting.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.OmaSettingBase64.DisplayName">
+            <summary>
+            The display name of the setting.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.OmaSettingBase64.Description">
+            <summary>
+            The description of the setting.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.OmaSettingBase64.OmaUri">
+            <summary>
+            The OMA URI for the setting.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.OmaSettingBase64.FileName">
+            <summary>
+            The file name associated with the setting.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.OmaSettingBase64.Value">
+            <summary>
+            The value of the setting.
             </summary>
         </member>
         <member name="T:AppControlManager.MicrosoftGraph.QueryPayload">
@@ -2950,9 +3564,71 @@
             Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
             </summary>
         </member>
+        <member name="M:AppControlManager.MicrosoftGraph.QueryPayload.#ctor(System.String)">
+            <summary>
+            Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.QueryPayload.Query">
+            <summary>
+            The query string.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.MicrosoftGraph.SignInMethods">
+            <summary>
+            Different methods for the sign in process
+            </summary>
+        </member>
+        <member name="F:AppControlManager.MicrosoftGraph.ViewModel.AuthenticatedAccounts">
+            <summary>
+            Collection bound to the ListViews that display the authenticated accounts in every page
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.ViewModel.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
         <member name="T:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration">
             <summary>
             Define the class structure for the custom policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration.#ctor(System.String,System.String,System.String,System.Collections.Generic.List{AppControlManager.MicrosoftGraph.OmaSettingBase64},System.Collections.Generic.List{System.String})">
+            <summary>
+            Define the class structure for the custom policy
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration.ODataType">
+            <summary>
+            Represents the OData type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration.DisplayName">
+            <summary>
+            The display name of the custom configuration.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration.Description">
+            <summary>
+            The description of the custom configuration.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration.OmaSettings">
+            <summary>
+            The OMA settings associated with the configuration.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration.Platforms">
+            <summary>
+            The platforms applicable to the configuration.
             </summary>
         </member>
         <member name="T:AppControlManager.Others.AllFileSigners">
@@ -3071,8 +3747,136 @@
         </member>
         <member name="T:AppControlManager.Others.CiPolicyInfo">
             <summary>
-            Represents a policy with various attributes
+            Represents a policy with various attributes.
             </summary>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.#ctor(System.String,System.String,System.String,System.Version,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String})">
+            <summary>
+            Represents a policy with various attributes.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.PolicyID">
+            <summary>
+            Unique identifier for the policy.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.BasePolicyID">
+            <summary>
+            Identifier for the base policy.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.FriendlyName">
+            <summary>
+            Human-readable name of the policy.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.Version">
+            <summary>
+            Version object representing the policy version.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.VersionString">
+            <summary>
+            Original version string from the policy data.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.IsSystemPolicy">
+            <summary>
+            Indicates if it's a system policy.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.IsSignedPolicy">
+            <summary>
+            Indicates if the policy is signed.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.IsOnDisk">
+            <summary>
+            Indicates if the policy is present on disk.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.IsEnforced">
+            <summary>
+            Indicates if the policy is enforced.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.IsAuthorized">
+            <summary>
+            Indicates if the policy is authorized.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.PolicyOptions">
+            <summary>
+            List of options or settings related to the policy.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.PolicyOptionsDisplay">
+            <summary>
+            Gets a comma-separated string representation of the policy options.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.IntunePolicyObjectID">
+            <summary>
+            Intune Configuration policy ID
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.ParentViewModel">
+            <summary>
+            A reference to the parent view model for accessing compiled binding in XAML.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.CiPolicyInfo.OnlineParentViewModel">
+            <summary>
+            A reference to the parent view model for accessing compiled binding in XAML.
+            For Online policies.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.ToJson(AppControlManager.Others.CiPolicyInfo)">
+            <summary>
+            Serializes the given <see cref="T:AppControlManager.Others.CiPolicyInfo"/> instance to a JSON string using source-generated JSON.
+            </summary>
+            <param name="policy">The policy instance to serialize.</param>
+            <returns>A JSON string representation of the policy.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.FromJson(System.String)">
+            <summary>
+            Deserializes a JSON string into a <see cref="T:AppControlManager.Others.CiPolicyInfo"/> instance using source-generated JSON.
+            </summary>
+            <param name="json">The JSON string to deserialize.</param>
+            <returns>A <see cref="T:AppControlManager.Others.CiPolicyInfo"/> instance, or null if deserialization fails.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object.
+            Two <see cref="T:AppControlManager.Others.CiPolicyInfo"/> instances are considered equal if each non-null property is equal.
+            String comparisons are done using ordinal ignore case.
+            </summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.GetHashCode">
+            <summary>
+            Serves as the default hash function.
+            </summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.CompareStrings(System.String,System.String)">
+            <summary>
+            Compares two strings using ordinal ignore case.
+            If both strings are null, they are considered equal.
+            </summary>
+            <param name="s1">First string.</param>
+            <param name="s2">Second string.</param>
+            <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:AppControlManager.Others.CiPolicyInfo.CompareStringLists(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Compares two lists of strings for equality.
+            Two lists are equal if both are null, or if they have the same count and each corresponding element is equal using ordinal ignore case.
+            </summary>
+            <param name="list1">First list.</param>
+            <param name="list2">Second list.</param>
+            <returns><c>true</c> if the lists are equal, <c>false</c> otherwise.</returns>
         </member>
         <member name="M:AppControlManager.Others.CiToolHelper.Measure(System.String)">
             <summary>
@@ -3474,6 +4278,38 @@
             </summary>
             <param name="message">Provides a description of the error that occurred.</param>
             <param name="innerException">Holds the exception that is the cause of the current exception.</param>
+        </member>
+        <member name="T:AppControlManager.Others.InfoBarSettings">
+            <summary>
+            Used to pass ViewModel based properties of an InfoBar element to a class constructor
+            in a way that the receiver will be able to modify the original objects.
+            </summary>
+            <param name="getVisibility"></param>
+            <param name="setVisibility"></param>
+            <param name="getIsOpen"></param>
+            <param name="setIsOpen"></param>
+            <param name="getMessage"></param>
+            <param name="setMessage"></param>
+            <param name="getSeverity"></param>
+            <param name="setSeverity"></param>
+            <param name="getIsClosable"></param>
+            <param name="setIsClosable"></param>
+        </member>
+        <member name="M:AppControlManager.Others.InfoBarSettings.#ctor(System.Func{Microsoft.UI.Xaml.Visibility},System.Action{Microsoft.UI.Xaml.Visibility},System.Func{System.Boolean},System.Action{System.Boolean},System.Func{System.String},System.Action{System.String},System.Func{Microsoft.UI.Xaml.Controls.InfoBarSeverity},System.Action{Microsoft.UI.Xaml.Controls.InfoBarSeverity},System.Func{System.Boolean},System.Action{System.Boolean})">
+            <summary>
+            Used to pass ViewModel based properties of an InfoBar element to a class constructor
+            in a way that the receiver will be able to modify the original objects.
+            </summary>
+            <param name="getVisibility"></param>
+            <param name="setVisibility"></param>
+            <param name="getIsOpen"></param>
+            <param name="setIsOpen"></param>
+            <param name="getMessage"></param>
+            <param name="setMessage"></param>
+            <param name="getSeverity"></param>
+            <param name="setSeverity"></param>
+            <param name="getIsClosable"></param>
+            <param name="setIsClosable"></param>
         </member>
         <member name="T:AppControlManager.Others.ListViewHelper">
             <summary>
@@ -4540,12 +5376,10 @@
             data context.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreateFilesAndFoldersDenyPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreateFilesAndFoldersDenyPolicyButton_Click">
             <summary>
             Main button's event handler for files and folder Deny policy creation
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -4554,33 +5388,25 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesSettingsCard_Click">
             <summary>
             Browse for Files - Settings Card Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Click">
             <summary>
             Browse for Files - Button Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersSettingsCard_Click">
             <summary>
             Browse for Folders - Settings Card Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Click">
             <summary>
             Browse for Folders - Button Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersPolicyNameTextBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
             <summary>
@@ -4597,33 +5423,35 @@
             <param name="e"></param>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.ScanLevelComboBoxSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.ScanLevelComboBoxSettingsCard_Click">
             <summary>
             File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
             <summary>
             Button to clear the list of selected folder paths
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click">
             <summary>
             Button to clear the list of selected file paths
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRefreshAppsListButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="F:AppControlManager.Pages.CreateDenyPolicy._FilesAndFoldersSupplementalPolicyPath">
+            <summary>
+            Path to the Files and Folders Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.OpenInPolicyEditor_FilesAndFolders">
+            <summary>
+            Opens a policy editor for files and folders using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRefreshAppsListButton_Click">
             <summary>
             Event handler for the Refresh button to get the apps list
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer,Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs)">
             <summary>
@@ -4632,61 +5460,65 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNSelectAllAppsListButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNSelectAllAppsListButton_Click">
             <summary>
             Event handler to select all apps in the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRemoveSelectionAppsListButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRemoveSelectionAppsListButton_Click">
             <summary>
             Event handler to remove all selections of apps in the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNPackagedAppsListView_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNPackagedAppsListView_SelectionChanged">
             <summary>
             Event handler to display the selected apps count on the UI TextBlock
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNAppFilteringTextBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNAppFilteringTextBox_TextChanged">
             <summary>
             Event handler for when the search box of apps list changes
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNSettingsCard_Expanded(System.Object,System.EventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNSettingsCard_Expanded">
             <summary>
             Event handler to happen only once when the section is expanded and apps list is loaded
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreatePFNDenyPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreatePFNDenyPolicyButton_Click">
             <summary>
             Main button's event handler - Create Deny policy based on PFNs
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreateCustomPatternBasedFileRuleDenyPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="F:AppControlManager.Pages.CreateDenyPolicy._PFNSupplementalPolicyPath">
+            <summary>
+            Path to the PFN Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.OpenInPolicyEditor_PFN">
+            <summary>
+            Opens a policy editor for PFN using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreateCustomPatternBasedFileRuleDenyPolicyButton_Click">
             <summary>
             Event handler for the main button - to create Deny pattern based File path policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click">
             <summary>
             Event handler to display the content dialog for more info about patterns
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
+        </member>
+        <member name="F:AppControlManager.Pages.CreateDenyPolicy._CustomPatternBasedFileRuleSupplementalPolicyPath">
+            <summary>
+            Path to the CustomPatternBasedFileRule Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicy.OpenInPolicyEditor_CustomPatternBasedFileRule">
+            <summary>
+            Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.InitializeComponent">
             <summary>
@@ -4729,6 +5561,13 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
+        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.ColumnSortingButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Event handler for all sort buttons
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
             <summary>
             Event handler for the SearchBox text change
@@ -4746,19 +5585,15 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.SelectAll_Click">
             <summary>
             Selects all of the displayed rows on the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.DeSelectAll_Click">
             <summary>
             De-selects all of the displayed rows on the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.CtrlC_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator,Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs)">
             <summary>
@@ -4919,61 +5754,45 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesSettingsCard_Click">
             <summary>
             Browse for Files - Settings Card Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Click">
             <summary>
             Browse for Files - Button Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersSettingsCard_Click">
             <summary>
             Browse for Folders - Settings Card Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Click">
             <summary>
             Browse for Folders - Button Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicySettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicySettingsCard_Click">
             <summary>
             Browse for Base Policy - Settings Card Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Click">
             <summary>
             Browse for Base Policy - Button Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersViewFileDetailsSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersViewFileDetailsSettingsCard_Click">
             <summary>
             Link to the page that shows scanned file details
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.ScanLevelComboBoxSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.ScanLevelComboBoxSettingsCard_Click">
             <summary>
             File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -4997,33 +5816,35 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click">
             <summary>
             Button to clear the list of selected file paths
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
             <summary>
             Button to clear the list of selected folder paths
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateFilesAndFoldersSupplementalPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateFilesAndFoldersSupplementalPolicyButton_Click">
             <summary>
             Main button's event handler for files and folder Supplemental policy creation
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click">
             <summary>
             Event handler for the clear button for the text box of selected Base policy path
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
+        </member>
+        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._FilesAndFoldersSupplementalPolicyPath">
+            <summary>
+            Path to the Files and Folders Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_FilesAndFolders">
+            <summary>
+            Opens a policy editor for files and folders using a specified supplemental policy path.
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CertificatesPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -5032,73 +5853,80 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateCertificatesSupplementalPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateCertificatesSupplementalPolicyButton_Click">
             <summary>
             Main Button - Creates the Certificates-based Supplemental policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click">
             <summary>
             Event handler for the clear button for the text box of selected Base policy path
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateISGSupplementalPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._CertificatesSupplementalPolicyPath">
+            <summary>
+            Path to the Certificates Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_Certificates">
+            <summary>
+            Opens a policy editor for Certificates using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateISGSupplementalPolicyButton_Click">
             <summary>
             Event handler for the main button - to create Supplemental ISG based policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicySettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._ISGSupplementalPolicyPath">
+            <summary>
+            Path to the ISG Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_ISG">
+            <summary>
+            Opens a policy editor for ISG using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicySettingsCard_Click">
             <summary>
             Browse for Base Policy - Settings Card Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Click">
             <summary>
             Browse for Base Policy - Button Click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click">
             <summary>
             Event handler for the clear button for the text box of selected Base policy path
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeCreateButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeCreateButton_Click">
             <summary>
             Event handler for the create button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeAutoDetectAllDriversButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the button that auto detects system drivers
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.DriverAutoDetector">
             <summary>
             Detects the kernel-mode drivers from the system and scans them
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRefreshAppsListButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._StrictKernelModeSupplementalPolicyPath">
+            <summary>
+            Path to the StrictKernelMode Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_StrictKernelMode">
+            <summary>
+            Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRefreshAppsListButton_Click">
             <summary>
             Event handler for the Refresh button to get the apps list
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer,Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs)">
             <summary>
@@ -5107,61 +5935,65 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNSelectAllAppsListButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNSelectAllAppsListButton_Click">
             <summary>
             Event handler to select all apps in the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRemoveSelectionAppsListButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRemoveSelectionAppsListButton_Click">
             <summary>
             Event handler to remove all selections of apps in the ListView
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNPackagedAppsListView_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNPackagedAppsListView_SelectionChanged">
             <summary>
             Event handler to display the selected apps count on the UI TextBlock
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNAppFilteringTextBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNAppFilteringTextBox_TextChanged">
             <summary>
             Event handler for when the search box of apps list changes
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNSettingsCard_Expanded(System.Object,System.EventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNSettingsCard_Expanded">
             <summary>
             Event handler to happen only once when the section is expanded and apps list is loaded
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreatePFNSupplementalPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreatePFNSupplementalPolicyButton_Click">
             <summary>
             Main button's event handler - Create Supplemental policy based on PFNs
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._PFNSupplementalPolicyPath">
+            <summary>
+            Path to the PFN Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_PFN">
+            <summary>
+            Opens a policy editor for PFN using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click">
             <summary>
             Event handler for the main button - to create Supplemental pattern based File path policy
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click">
             <summary>
             Event handler to display the content dialog for more info about patterns
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
+        </member>
+        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._CustomPatternBasedFileRuleSupplementalPolicyPath">
+            <summary>
+            Path to the CustomPatternBasedFileRule Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_CustomPatternBasedFileRule">
+            <summary>
+            Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
+            </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.InitializeComponent">
             <summary>
@@ -5334,14 +6166,9 @@
             Event handler for browse button - Signed XML files
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneSignInButton_Click">
+        <member name="F:AppControlManager.Pages.DeploymentPage.Groups">
             <summary>
-            Event handler for the SignIn button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneSignOutButton_Click">
-            <summary>
-            Signs out of the tenant
+            To hold the Intune Groups Name/IDs
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.RefreshIntuneGroupsButton_Click">
@@ -5358,11 +6185,6 @@
             <param name="policyID">Identifies the policy under which the file will be deployed.</param>
             <param name="xmlFile">Provides an optional XML file that may contain additional configuration settings.</param>
             <returns>This method does not return a value.</returns>
-        </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.IntuneCancelSignInButton_Click">
-            <summary>
-            Event handler for the Cancel Sign In button
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.BrowseForXMLPolicesButton_Click">
             <summary>
@@ -5388,6 +6210,18 @@
             <summary>
             Event handler for the toggle button that determines whether policies should be signed + deployed or signed only
             </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.InitializeComponent">
             <summary>
@@ -5855,21 +6689,6 @@
             <param name="sender"></param>
             <param name="e"></param>
             <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphCancelSignInButton_Click">
-            <summary>
-            Event handler for the Cancel Sign In button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphSignInButton_Click">
-            <summary>
-            Event handler for the SignIn button for Microsoft Graph
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.MSGraphSignOutButton_Click">
-            <summary>
-            Event handler for signing out of Microsoft Graph
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.RetrieveTheLogsButton_Click">
             <summary>
@@ -6357,6 +7176,21 @@
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.ViewCurrentPolicies.GetBindingConnector(System.Int32,System.Object)">
+            <summary>
+            GetBindingConnector(int connectionId, object target)
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewOnlinePolicies.InitializeComponent">
+            <summary>
+            InitializeComponent()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewOnlinePolicies.Connect(System.Int32,System.Object)">
+            <summary>
+            Connect()
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Pages.ViewOnlinePolicies.GetBindingConnector(System.Int32,System.Object)">
             <summary>
             GetBindingConnector(int connectionId, object target)
             </summary>
@@ -8237,6 +9071,18 @@
             <param name="propertyName"></param>
             <returns></returns>
         </member>
+        <member name="M:AppControlManager.ViewModels.DeploymentVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
         <member name="M:AppControlManager.ViewModels.EventLogsPolicyCreationVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -8815,6 +9661,81 @@
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="F:AppControlManager.ViewModels.ViewOnlinePoliciesVM._ViewModelMSGraph">
+            <summary>
+            To store the view model of the MS Graph that is retrieved from the constructor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.#ctor(AppControlManager.MicrosoftGraph.ViewModel)">
+            <summary>
+            Automatically provided via constructor injection by the DI container during build.
+            </summary>
+            <param name="GraphVM">The view model instance used to manage data and state related to Microsoft Graph.</param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.CalculateColumnWidths">
+            <summary>
+            Calculates the maximum required width for each column (including header text)
+            and assigns the value (with a little extra padding) to the corresponding property.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.GetOnlinePolicies">
+            <summary>
+            Retrieves the online Intune policies
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.ManageButtonsStates(System.Boolean)">
+            <summary>
+            Enable or Disable button states
+            </summary>
+            <param name="on">True will enable and False will disable UI buttons when an operation is ongoing</param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SortColumn``1(System.Func{AppControlManager.Others.CiPolicyInfo,``0})">
+            <summary>
+            Performs data sorting
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="keySelector"></param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SearchBox_TextChanged">
+            <summary>
+            Event handler for the search box text change
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.RemovePolicy_Click">
+            <summary>
+            Event handler for the RemovePolicyButton click
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.ConvertRowToText(AppControlManager.Others.CiPolicyInfo)">
+            <summary>
+            Converts the properties of a CiPolicyInfo row into a labeled, formatted string for copying to clipboard.
+            </summary>
+            <param name="row">The selected CiPolicyInfo row from the ListView.</param>
+            <returns>A formatted string of the row's properties with labels.</returns>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.ListViewFlyoutMenuCopy_Click">
+            <summary>
+            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.CopyToClipboard(System.Func{AppControlManager.Others.CiPolicyInfo,System.String})">
+            <summary>
+            Helper method to copy a specified property to clipboard without reflection
+            </summary>
+            <param name="getProperty">Function that retrieves the desired property value as a string</param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
             <summary>
             Sets the property and raises the PropertyChanged event if the value has changed.
             This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.

@@ -17,6 +17,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -27,6 +28,10 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class SystemInformation : Page
 {
+#pragma warning disable CA1822
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+#pragma warning restore CA1822
+
 	/// <summary>
 	/// Initializes the SystemInformation page, maintains its navigation state, and navigates to the ViewCurrentPolicies
 	/// page on load.
@@ -59,6 +64,9 @@ internal sealed partial class SystemInformation : Page
 			{
 				case "ViewCurrentPolicies":
 					_ = ContentFrame.Navigate(typeof(ViewCurrentPolicies));
+					break;
+				case "ViewOnlinePolicies":
+					_ = ContentFrame.Navigate(typeof(ViewOnlinePolicies));
 					break;
 				case "CodeIntegrityInfo":
 					_ = ContentFrame.Navigate(typeof(CodeIntegrityInfo));

@@ -24,6 +24,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
+using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
@@ -48,6 +49,8 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 #pragma warning disable CA1822
 	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
 	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
+	private ViewModel ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModel>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -55,8 +58,24 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	/// </summary>
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private void OnPropertyChanged(string propertyName) =>
+	private void OnPropertyChanged(string? propertyName)
+	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
+
+
+	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+
+	private void UpdateButtonsStates(bool on)
+	{
+		// Enable the retrieve button if the a valid value is set as Active Account
+		RetrieveTheLogsButton.IsEnabled = on;
+	}
+
+	internal readonly AuthenticationCompanion AuthCompanionCLS;
+
+	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️	
+
 
 	/// <summary>
 	/// Initializes the MDEAHPolicyCreation component, sets default selections, maintains navigation state, and adds a date
@@ -72,12 +91,20 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 
-		this.DataContext = ViewModel;
+		this.DataContext = this;
+
+		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
+			() => ViewModel.MainInfoBarVisibility, value => ViewModel.MainInfoBarVisibility = value,
+			() => ViewModel.MainInfoBarIsOpen, value => ViewModel.MainInfoBarIsOpen = value,
+			() => ViewModel.MainInfoBarMessage, value => ViewModel.MainInfoBarMessage = value,
+			() => ViewModel.MainInfoBarSeverity, value => ViewModel.MainInfoBarSeverity = value,
+			() => ViewModel.MainInfoBarIsClosable, value => ViewModel.MainInfoBarIsClosable = value), AuthenticationContext.MDEAdvancedHunting);
+
+		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 
 		// Add the DateChanged event handler
 		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
 	}
-
 
 
 	#region For the toolbar menu's Selector Bar
@@ -253,11 +280,12 @@ DeviceEvents
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = "Scanning the selected MDE Advanced Hunting CSV Logs";
-			MainInfoBar.Severity = InfoBarSeverity.Informational;
-			MainInfoBar.IsClosable = false;
+
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = "Scanning the selected MDE Advanced Hunting CSV Logs";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBarIsClosable = false;
 
 
 			// Disable the Policy creator button while scan is being performed
@@ -314,11 +342,11 @@ DeviceEvents
 		{
 			error = true;
 
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = $"There was an error while scanning the selected MDE Advanced Hunting CSV Logs: {ex.Message}";
-			MainInfoBar.Severity = InfoBarSeverity.Error;
-			MainInfoBar.IsClosable = false;
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = $"There was an error while scanning the selected MDE Advanced Hunting CSV Logs: {ex.Message}";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarIsClosable = false;
 
 			throw;
 		}
@@ -336,11 +364,11 @@ DeviceEvents
 
 			if (!error)
 			{
-				MainInfoBar.Visibility = Visibility.Visible;
-				MainInfoBar.IsOpen = true;
-				MainInfoBar.Message = "Successfully completed scanning the selected MDE Advanced Hunting CSV Logs.";
-				MainInfoBar.Severity = InfoBarSeverity.Success;
-				MainInfoBar.IsClosable = false;
+				ViewModel.MainInfoBarVisibility = Visibility.Visible;
+				ViewModel.MainInfoBarIsOpen = true;
+				ViewModel.MainInfoBarMessage = "Successfully completed scanning the selected MDE Advanced Hunting CSV Logs.";
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarIsClosable = false;
 			}
 		}
 	}
@@ -519,10 +547,10 @@ DeviceEvents
 				throw new InvalidOperationException("You must select an option from the policy creation list");
 			}
 
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Severity = InfoBarSeverity.Informational;
-			MainInfoBar.IsClosable = false;
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBarIsClosable = false;
 
 			// Create a policy name if it wasn't provided
 			DateTime now = DateTime.Now;
@@ -552,7 +580,7 @@ DeviceEvents
 			if ((OnlyIncludeSelectedItemsToggleButton.IsChecked ?? false) && FileIdentitiesListView.SelectedItems.Count > 0)
 			{
 
-				MainInfoBar.Message = $"Creating Supplemental policy for {FileIdentitiesListView.SelectedItems.Count} files.";
+				ViewModel.MainInfoBarMessage = $"Creating Supplemental policy for {FileIdentitiesListView.SelectedItems.Count} files.";
 
 				// convert every selected item to FileIdentity and store it in the list
 				foreach (var item in FileIdentitiesListView.SelectedItems)
@@ -569,7 +597,7 @@ DeviceEvents
 			{
 				SelectedLogs = ViewModel.AllFileIdentities;
 
-				MainInfoBar.Message = $"Creating Supplemental policy for {ViewModel.AllFileIdentities.Count} files.";
+				ViewModel.MainInfoBarMessage = $"Creating Supplemental policy for {ViewModel.AllFileIdentities.Count} files.";
 			}
 
 			await Task.Run(() =>
@@ -718,11 +746,11 @@ DeviceEvents
 		{
 			Error = true;
 
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.IsClosable = true;
-			MainInfoBar.Message = $"There was an error creating the Supplemental policy: {ex.Message}";
-			MainInfoBar.Severity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarIsClosable = true;
+			ViewModel.MainInfoBarMessage = $"There was an error creating the Supplemental policy: {ex.Message}";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
 
 			throw;
 		}
@@ -740,11 +768,11 @@ DeviceEvents
 
 			if (!Error)
 			{
-				MainInfoBar.Message = "Successfully created the Supplemental policy.";
-				MainInfoBar.Severity = InfoBarSeverity.Success;
-				MainInfoBar.Visibility = Visibility.Visible;
-				MainInfoBar.IsOpen = true;
-				MainInfoBar.IsClosable = true;
+				ViewModel.MainInfoBarMessage = "Successfully created the Supplemental policy.";
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarVisibility = Visibility.Visible;
+				ViewModel.MainInfoBarIsOpen = true;
+				ViewModel.MainInfoBarIsClosable = true;
 
 				ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -789,144 +817,16 @@ DeviceEvents
 	}
 
 
-#pragma warning disable CA1822
-	/// <summary>
-	/// Event handler for the Cancel Sign In button
-	/// </summary>
-	private void MSGraphCancelSignInButton_Click()
-	{
-		MicrosoftGraph.Main.CancelSignIn();
-	}
-#pragma warning restore CA1822
-
-
-	/// <summary>
-	/// Event handler for the SignIn button for Microsoft Graph
-	/// </summary>
-	private async void MSGraphSignInButton_Click()
-	{
-
-		bool signInSuccessful = false;
-
-		try
-		{
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = "Signing into MSGraph";
-			MainInfoBar.Severity = InfoBarSeverity.Informational;
-			MainInfoBar.IsClosable = false;
-
-			MSGraphCancelSignInButton.IsEnabled = true;
-
-			MSGraphSignInButton.IsEnabled = false;
-
-			await MicrosoftGraph.Main.SignIn(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
-
-			MainInfoBar.Message = "Successfully signed into MSGraph";
-			MainInfoBar.Severity = InfoBarSeverity.Success;
-
-			// Enable the sign out button
-			MSGraphSignOutButton.IsEnabled = true;
-
-			// Enable the retrieve the logs button
-			RetrieveTheLogsButton.IsEnabled = true;
-
-			signInSuccessful = true;
-		}
-
-		catch (OperationCanceledException)
-		{
-			signInSuccessful = false;
-			Logger.Write("Sign in to MSGraph was cancelled by the user");
-			MainInfoBar.Message = "Sign in to MSGraph was cancelled by the user";
-			MainInfoBar.Severity = InfoBarSeverity.Warning;
-		}
-
-		catch (Exception ex)
-		{
-			MainInfoBar.Message = $"There was an error signing into MSGraph: {ex.Message}";
-			MainInfoBar.Severity = InfoBarSeverity.Error;
-
-			throw;
-		}
-
-		finally
-		{
-			// If sign in wasn't successful, keep the button enabled
-			if (!signInSuccessful)
-			{
-				MSGraphSignInButton.IsEnabled = true;
-			}
-
-			MainInfoBar.IsClosable = true;
-
-			MSGraphCancelSignInButton.IsEnabled = false;
-		}
-	}
-
-
-	/// <summary>
-	/// Event handler for signing out of Microsoft Graph
-	/// </summary>
-	private async void MSGraphSignOutButton_Click()
-	{
-
-		bool signOutSuccessful = false;
-
-		try
-		{
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = "Signing out of MSGraph";
-			MainInfoBar.Severity = InfoBarSeverity.Informational;
-			MainInfoBar.IsClosable = false;
-
-			MSGraphSignOutButton.IsEnabled = false;
-
-			RetrieveTheLogsButton.IsEnabled = false;
-
-			await MicrosoftGraph.Main.SignOut(MicrosoftGraph.AuthenticationContext.MDEAdvancedHunting);
-
-			signOutSuccessful = true;
-
-			// Enable the Sign in button
-			MSGraphSignInButton.IsEnabled = true;
-
-			MainInfoBar.Message = "Successfully signed out of MSGraph";
-			MainInfoBar.Severity = InfoBarSeverity.Success;
-
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.Message = $"There was an error signing out of MSGraph: {ex.Message}";
-			MainInfoBar.Severity = InfoBarSeverity.Error;
-
-			throw;
-		}
-		finally
-		{
-			// If sign out wasn't successful, keep the button enabled
-			if (!signOutSuccessful)
-			{
-				MSGraphSignOutButton.IsEnabled = true;
-			}
-
-			MainInfoBar.IsClosable = true;
-		}
-
-	}
-
-
 	/// <summary>
 	/// Event handler for the button that retrieves the logs
 	/// </summary>
 	private async void RetrieveTheLogsButton_Click()
 	{
-		MainInfoBar.Visibility = Visibility.Visible;
-		MainInfoBar.IsOpen = true;
-		MainInfoBar.Message = "Retrieving the Microsoft Defender for Endpoint Advanced Hunting data";
-		MainInfoBar.Severity = InfoBarSeverity.Informational;
-		MainInfoBar.IsClosable = false;
+		ViewModel.MainInfoBarVisibility = Visibility.Visible;
+		ViewModel.MainInfoBarIsOpen = true;
+		ViewModel.MainInfoBarMessage = "Retrieving the Microsoft Defender for Endpoint Advanced Hunting data";
+		ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+		ViewModel.MainInfoBarIsClosable = false;
 
 		MDEAdvancedHuntingDataRootObject? root = null;
 
@@ -936,7 +836,7 @@ DeviceEvents
 			MSGraphDeviceNameButton.IsEnabled = false;
 
 			// Retrieve the MDE Advanced Hunting data as a JSON string
-			string? result = await MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text);
+			string? result = await MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text, AuthCompanionCLS.CurrentActiveAccount);
 
 			// If there were results
 			if (result is not null)
@@ -946,20 +846,20 @@ DeviceEvents
 
 				if (root is null)
 				{
-					MainInfoBar.Message = "There were no logs to be retrieved";
-					MainInfoBar.Severity = InfoBarSeverity.Warning;
+					ViewModel.MainInfoBarMessage = "There were no logs to be retrieved";
+					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 					return;
 				}
 
 				if (root.Results.Count is 0)
 				{
-					MainInfoBar.Message = "0 logs were retrieved";
-					MainInfoBar.Severity = InfoBarSeverity.Warning;
+					ViewModel.MainInfoBarMessage = "0 logs were retrieved";
+					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 					return;
 				}
 
-				MainInfoBar.Message = $"Successfully retrieved {root.Results.Count} logs from the cloud";
-				MainInfoBar.Severity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarMessage = $"Successfully retrieved {root.Results.Count} logs from the cloud";
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
 
 				Logger.Write("Deserialization complete. Number of records: " + root.Results.Count);
 
@@ -968,8 +868,8 @@ DeviceEvents
 
 				if (Output.Count is 0)
 				{
-					MainInfoBar.Message = "No actionable logs were found among the retrieved data to create a Supplemental policy with.";
-					MainInfoBar.Severity = InfoBarSeverity.Warning;
+					ViewModel.MainInfoBarMessage = "No actionable logs were found among the retrieved data to create a Supplemental policy with.";
+					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 				}
 
 				ViewModel.AllFileIdentities.Clear();
@@ -992,8 +892,8 @@ DeviceEvents
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.Message = $"There was an error retrieving the MDE Advanced Hunting logs from MSGraph: {ex.Message}";
-			MainInfoBar.Severity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarMessage = $"There was an error retrieving the MDE Advanced Hunting logs from MSGraph: {ex.Message}";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
 			throw;
 		}
 		finally
@@ -1001,7 +901,7 @@ DeviceEvents
 			RetrieveTheLogsButton.IsEnabled = true;
 			MSGraphDeviceNameButton.IsEnabled = true;
 
-			MainInfoBar.IsClosable = true;
+			ViewModel.MainInfoBarIsClosable = true;
 		}
 	}
 

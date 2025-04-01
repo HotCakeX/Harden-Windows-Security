@@ -1748,4 +1748,553 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="OnlyIncludeSelectedItemsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Only include the selected items in the supplemental policy. You can select one or more items in the ListView and if this option is enabled, only those will be included in the supplemental policy. If this is disabled, everything will be included in the supplemental policy. If you use this option and nothing is selected in the ListView, everything will be included in the supplemental policy.</value>
   </data>
+  <data name="SignInMethodsComboBox.Header" xml:space="preserve">
+    <value>Sign In Method</value>
+  </data>
+  <data name="SignInMethodsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choose a method of sign in based on your preference</value>
+  </data>
+  <data name="SignInMethodsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Choose a method of sign in based on your preference</value>
+  </data>
+  <data name="MicrosoftGraphButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Centralize your Microsoft tenants authentications with ease. From this section, you can choose the account you wish to use on the current page, review all signed-in accounts, log out as needed, and much more.</value>
+  </data>
+  <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Centralize your Microsoft tenants authentications with ease. From this section, you can choose the account you wish to use on the current page, review all signed-in accounts, log out as needed, and much more.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
+    <value>UserName</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Username of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Username of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
+    <value>The selected account&apos;s Username will appear here</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
+    <value>Tenant ID</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Tenant ID of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Tenant ID of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
+    <value>The selected account&apos;s Tenant ID will appear here</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
+    <value>Account Identifier</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Account Identifier of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Account Identifier of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
+    <value>The selected account&apos;s Identifier will appear here</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Permissions of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Permissions of the account that is currently selected to perform the tasks in this page.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
+    <value>The selected account&apos;s Permissions will appear here</value>
+  </data>
+  <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sign into your Microsoft tenant. After successful sign in, the account&apos;s information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
+  </data>
+  <data name="SignInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sign into your Microsoft tenant. After successful sign in, the account&apos;s information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
+  </data>
+  <data name="CancelSigningInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cancel the current sign in process that is in progress.</value>
+  </data>
+  <data name="CancelSigningInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cancel the current sign in process that is in progress.</value>
+  </data>
+  <data name="AuthenticationContextComboBox.Header" xml:space="preserve">
+    <value>Authentication Context</value>
+  </data>
+  <data name="AuthenticationContextComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select the authentication context to use for the Sign in operation. Each context is a set of Microsoft Graph permissions required to successfully complete the tasks offered in the AppControl Manager.</value>
+  </data>
+  <data name="AuthenticationContextComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select the authentication context to use for the Sign in operation. Each context is a set of Microsoft Graph permissions required to successfully complete the tasks offered in the AppControl Manager.</value>
+  </data>
+  <data name="RemoveAccountButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove the account from the list. It will be completely removed from the app&apos;s memory and the Microsoft Authentication Library&apos;s cache.</value>
+  </data>
+  <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove the account from the list. It will be completely removed from the app&apos;s memory and the Microsoft Authentication Library&apos;s cache.</value>
+  </data>
+  <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Set the currently selected account as the Active Account to be used for the Online operations in the current page.</value>
+  </data>
+  <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Set the currently selected account as the Active Account to be used for the Online operations in the current page.</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the Online policies available on the Intune</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the Online policies available on the Intune</value>
+  </data>
+  <data name="ScalabilitySettingsCard.Header" xml:space="preserve">
+    <value>Scalability</value>
+  </data>
+  <data name="ScalabilitySettingsCard.Description" xml:space="preserve">
+    <value>The higher this number, the faster the scan completes and the more system resources will be consumed.</value>
+  </data>
+  <data name="ScalabilitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The higher this number, the faster the scan completes and the more system resources will be consumed.</value>
+  </data>
+  <data name="ScalabilitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The higher this number, the faster the scan completes and the more system resources will be consumed.</value>
+  </data>
+  <data name="ScalabilityButton.Content" xml:space="preserve">
+    <value>Scalability</value>
+  </data>
+  <data name="ScalabilityButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.</value>
+  </data>
+  <data name="ScalabilityButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.</value>
+  </data>
+  <data name="CurrentlyDeployedPoliciesNavigationItem.Content" xml:space="preserve">
+    <value>Currently Deployed Policies</value>
+  </data>
+  <data name="CurrentlyDeployedPoliciesNavigationItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View the currently deployed policies on the system</value>
+  </data>
+  <data name="CurrentlyDeployedPoliciesNavigationItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View the currently deployed policies on the system</value>
+  </data>
+  <data name="OnlinePoliciesNavigationItem.Content" xml:space="preserve">
+    <value>Online Policies</value>
+  </data>
+  <data name="OnlinePoliciesNavigationItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View policies deployed to remote machines</value>
+  </data>
+  <data name="OnlinePoliciesNavigationItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View policies deployed to remote machines</value>
+  </data>
+  <data name="CodeIntegrityInformationNavigationItem.Content" xml:space="preserve">
+    <value>Code Integrity Information</value>
+  </data>
+  <data name="CodeIntegrityInformationNavigationItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View Code Integrity information of the system</value>
+  </data>
+  <data name="CodeIntegrityInformationNavigationItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View Code Integrity information of the system</value>
+  </data>
+  <data name="RetrieveCodeIntegrityInfoButton.Content" xml:space="preserve">
+    <value>Retrieve Code Integrity Info</value>
+  </data>
+  <data name="RetrieveCodeIntegrityInfoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the latest effective Code Integrity information from the current system</value>
+  </data>
+  <data name="RetrieveCodeIntegrityInfoButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the latest effective Code Integrity information from the current system</value>
+  </data>
+  <data name="KeySizeSettingsCard.Header" xml:space="preserve">
+    <value>Key Size</value>
+  </data>
+  <data name="KeySizeSettingsCard.Description" xml:space="preserve">
+    <value>The cryptographic key&apos;s length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
+  </data>
+  <data name="KeySizeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The cryptographic key&apos;s length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
+  </data>
+  <data name="KeySizeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The cryptographic key&apos;s length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
+  </data>
+  <data name="CommonNameSettingsCard.Header" xml:space="preserve">
+    <value>Common Name</value>
+  </data>
+  <data name="CommonNameSettingsCard.Description" xml:space="preserve">
+    <value>The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for.</value>
+  </data>
+  <data name="CommonNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for.</value>
+  </data>
+  <data name="CommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for.</value>
+  </data>
+  <data name="ValiditySettingsCard.Header" xml:space="preserve">
+    <value>Validity</value>
+  </data>
+  <data name="ValiditySettingsCard.Description" xml:space="preserve">
+    <value>The time period (in years) during which a certificate is considered valid and trusted.</value>
+  </data>
+  <data name="ValiditySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The time period (in years) during which a certificate is considered valid and trusted.</value>
+  </data>
+  <data name="ValiditySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The time period (in years) during which a certificate is considered valid and trusted.</value>
+  </data>
+  <data name="PFXPasswordSettingsCard.Header" xml:space="preserve">
+    <value>PFX Encryption Password</value>
+  </data>
+  <data name="PFXPasswordSettingsCard.Description" xml:space="preserve">
+    <value>A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file.</value>
+  </data>
+  <data name="PFXPasswordSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file.</value>
+  </data>
+  <data name="PFXPasswordSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file.</value>
+  </data>
+  <data name="PolicyRuleExpander.Header" xml:space="preserve">
+    <value>Policy Rule Options</value>
+  </data>
+  <data name="PolicyRuleExpander.Description" xml:space="preserve">
+    <value>Select policy rule options to add to or remove from the selected XML policy file</value>
+  </data>
+  <data name="PolicyRuleExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select policy rule options to add to or remove from the selected XML policy file</value>
+  </data>
+  <data name="PolicyRuleExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select policy rule options to add to or remove from the selected XML policy file</value>
+  </data>
+  <data name="PolicyTemplateSettingCard.Header" xml:space="preserve">
+    <value>Policy Template</value>
+  </data>
+  <data name="PolicyTemplateSettingCard.Description" xml:space="preserve">
+    <value>Select a template to apply to the selected policy file. Templates are predefined lists of policy rule options.</value>
+  </data>
+  <data name="PolicyTemplateSettingCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a template to apply to the selected policy file. Templates are predefined lists of policy rule options.</value>
+  </data>
+  <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select a template to apply to the selected policy file. Templates are predefined lists of policy rule options.</value>
+  </data>
+  <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
+    <value>Create App Control for Business policies based on different templates and policy rule options. Signed And Reputable is great for new users. Allow Microsoft only allows files signed by Microsoft&apos;s certificates. Default Windows only allows files that come by default with the Windows OS.</value>
+  </data>
+  <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
+    <value>Create a Supplemental policy that will expand the scope of a base policy. Supplemental policies can only allow files, they cannot have deny rules in them.</value>
+  </data>
+  <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+    <value>View the detected files that were used to create the Supplemental policy.</value>
+  </data>
+  <data name="DeploymentPageTitle.Text" xml:space="preserve">
+    <value>Deploy any type of App Control Policy locally or remotely to the cloud managed PCs.</value>
+  </data>
+  <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
+    <value>Leverage the local system logs or EVTX log files to create Application Control Policies. Only Code Integrity Operational and AppLocker logs are required. Use the Scan button to populate the data grid. Once populated, use the Create Policy button to define output configuration and generate the XML policy file.</value>
+  </data>
+  <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
+    <value>Calculate the Code Integrity and other types of hashes of files.</value>
+  </data>
+  <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
+    <value>Retrieve and query the Secure Settings on the system.</value>
+  </data>
+  <data name="LogsPageTitle.Text" xml:space="preserve">
+    <value>The following are the logs that the AppControl Manager automatically generates and stores in the &quot;AppControl Manager&quot; folder in Program Files (if running elevated, otherwise they will be saved in the TEMP directory). The total size of the logs folder will never exceed 1GB.</value>
+  </data>
+  <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
+    <value>Leverage the Microsoft Defender for Endpoint Advanced Hunting logs to build Application Control Policies. You can either browser for exported log files or retrieve them from the cloud by signing into your Microsoft account.</value>
+  </data>
+  <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
+    <value>Merge App Control for Business policies and deduplicate them. You can select the same policy twice in order to deduplicate its rules.</value>
+  </data>
+  <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
+    <value>Edit App Control for Business Policies. Easily browse for a policy XML file and load its details using the Load button. Once loaded, you can review the number of each rule within the policy, remove specific rules, and modify various other policy settings.</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>Customize your app settings here. Your preferences will be saved so they&apos;re ready for you every time you start the AppControl Manager.</value>
+  </data>
+  <data name="SimulationPageTitle.Text" xml:space="preserve">
+    <value>Perform App Control for Business Simulation by selecting files or folders, and a XML policy file, then use the Begin Simulation button to populate the data grid. The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were running.</value>
+  </data>
+  <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
+    <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don&apos;t want to be included in the final Strict Kernel-mode policy from the list.</value>
+  </data>
+  <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <value>Check for updates in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available. This page is only available when the AppControl Manager is installed from the GitHub source.</value>
+  </data>
+  <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
+    <value>Validate App Control Policies to ensure they are compliant with the official schema. If you manually modified XML policy files and want to ensure your modifications are correct, use this feature to validate them.</value>
+  </data>
+  <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
+    <value>View Comprehensive information about the certificates used to sign any file. Details that are typically unavailable in File Explorer properties or PowerShell cmdlets are presented here in full.</value>
+  </data>
+  <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
+    <value>View the detected files that were used to create the Deny policy.</value>
+  </data>
+  <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
+    <value>Create a Deny Base policy that will explicitly deny files or applications. Keep in mind that Application Control is fundamentally based on allow-listing, which means anything that is not allowed by a policy is already automatically denied.</value>
+  </data>
+  <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
+    <value>Configure App Control for Business policy rule options. Detailed info is provided next to each rule and you can use the Guide button or open a discussion on GitHub if you need more information.</value>
+  </data>
+  <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
+    <value>Securely Build Code Signing Certificates that are suitable for signing App Control polices.</value>
+  </data>
+  <data name="SystemInformationPageTitle.Text" xml:space="preserve">
+    <value>View detailed information about the Deployed policies and Code Integrity on the local or remote systems.</value>
+  </data>
+  <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
+    <value>Use this page to Allow new or already installed apps or files to run on the system.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Switch between different supported user interface languages and layouts.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Switch between different supported user interface languages and layouts.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Switch between different supported user interface languages and layouts.</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Select a different language from the list</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Language Selection</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a different language from the list</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select a different language from the list</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.Description" xml:space="preserve">
+    <value>Switch between Right-to-Left and Left-to-Right flow directions for the user interface elements.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.Header" xml:space="preserve">
+    <value>Flow Direction</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Switch between Right-to-Left and Left-to-Right flow directions for the user interface elements.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Switch between Right-to-Left and Left-to-Right flow directions for the user interface elements.</value>
+  </data>
+  <data name="AppElevationNotice.Main" xml:space="preserve">
+    <value>Please launch AppControl Manager as Administrator to access this page</value>
+  </data>
+  <data name="AppElevationNotice.Title" xml:space="preserve">
+    <value>Administrator privileges required</value>
+  </data>
+  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+    <value>Always prompt for elevation on app startup</value>
+  </data>
+  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+    <value>Relaunch as Admin</value>
+  </data>
+  <data name="WindowMaximizedMsg" xml:space="preserve">
+    <value>Window was maximized when the app closed last time, setting it to maximized now</value>
+  </data>
+  <data name="AllowMicrosoftCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="AllowMicrosoftCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Allow Microsoft base policy</value>
+  </data>
+  <data name="AllowMicrosoftCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Allow Microsoft base policy</value>
+  </data>
+  <data name="DefaultWindowsCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="DefaultWindowsCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Default Windows base policy</value>
+  </data>
+  <data name="DefaultWindowsCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Default Windows base policy</value>
+  </data>
+  <data name="SignedAndReputableCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="SignedAndReputableCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Signed and Reputable base policy</value>
+  </data>
+  <data name="SignedAndReputableCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Signed and Reputable base policy</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Microsoft Recommended Drivers Block List policy</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Microsoft Recommended Drivers Block List policy</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Microsoft recommended user-mode block rules policy</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Microsoft recommended user-mode block rules policy</value>
+  </data>
+  <data name="StrictKernelModePolicyCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="StrictKernelModePolicyCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Strict Kernel-mode base policy</value>
+  </data>
+  <data name="StrictKernelModePolicyCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Strict Kernel-mode base policy</value>
+  </data>
+  <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.Header" xml:space="preserve">
+    <value>No flight root certificates</value>
+  </data>
+  <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.Description" xml:space="preserve">
+    <value>Do not allow flight root certificates</value>
+  </data>
+  <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Do not allow flight root certificates</value>
+  </data>
+  <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Do not allow flight root certificates</value>
+  </data>
+  <data name="StrictKernelModePolicySection.Header" xml:space="preserve">
+    <value>Create Strict Kernel-mode Policy</value>
+  </data>
+  <data name="StrictKernelModePolicySection.Description" xml:space="preserve">
+    <value>This policy will only enforce Kernel-mode files and has no effect on user-mode files</value>
+  </data>
+  <data name="StrictKernelModePolicySection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy will only enforce Kernel-mode files and has no effect on user-mode files</value>
+  </data>
+  <data name="StrictKernelModePolicySection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy will only enforce Kernel-mode files and has no effect on user-mode files</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesSettings.Header" xml:space="preserve">
+    <value>Create Microsoft Recommended User Mode Block Rules</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesSettings.Description" xml:space="preserve">
+    <value>This policy will create the Microsoft Recommended User Mode Block Rules.</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy will create the Microsoft Recommended User Mode Block Rules.</value>
+  </data>
+  <data name="RecommendedUserModeBlockRulesSettings.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy will create the Microsoft Recommended User Mode Block Rules.</value>
+  </data>
+  <data name="DriversBlockRulesLittleSettingsCard.Header" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="DriversBlockRulesLittleSettingsCard.Description" xml:space="preserve">
+    <value>Information about the latest Microsoft Recommended Drivers Block Rules</value>
+  </data>
+  <data name="DriversBlockRulesLittleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Information about the latest Microsoft Recommended Drivers Block Rules</value>
+  </data>
+  <data name="DriversBlockRulesLittleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Information about the latest Microsoft Recommended Drivers Block Rules</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesScheduledAutoUpdate.Content" xml:space="preserve">
+    <value>Auto Update</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesScheduledAutoUpdate.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configures the Microsoft Recommended Drivers Block List to be automatically updated using a scheduled task</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesScheduledAutoUpdate.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configures the Microsoft Recommended Drivers Block List to be automatically updated using a scheduled task</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesSettings.Header" xml:space="preserve">
+    <value>Create Microsoft Recommended Driver Block Rules</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesSettings.Description" xml:space="preserve">
+    <value>This policy will create the Microsoft Recommended Driver Block Rules.</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy will create the Microsoft Recommended Driver Block Rules.</value>
+  </data>
+  <data name="RecommendedDriverBlockRulesSettings.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy will create the Microsoft Recommended Driver Block Rules.</value>
+  </data>
+  <data name="LogSizeConfigSettingsCard.Header" xml:space="preserve">
+    <value>Log Size</value>
+  </data>
+  <data name="LogSizeConfigSettingsCard.Description" xml:space="preserve">
+    <value>Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events.</value>
+  </data>
+  <data name="LogSizeConfigSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events.</value>
+  </data>
+  <data name="LogSizeConfigSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events.</value>
+  </data>
+  <data name="SignedAndReputableSettings.Header" xml:space="preserve">
+    <value>Create Signed And Reputable Policy</value>
+  </data>
+  <data name="SignedAndReputableSettings.Description" xml:space="preserve">
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft&apos;s Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
+  </data>
+  <data name="SignedAndReputableSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft&apos;s Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
+  </data>
+  <data name="SignedAndReputableSettings.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft&apos;s Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
+  </data>
+  <data name="DefaultWindowsSettings.Header" xml:space="preserve">
+    <value>Create Default Windows Policy</value>
+  </data>
+  <data name="DefaultWindowsSettings.Description" xml:space="preserve">
+    <value>This policy will allow files that come by default with Windows OS to run (including Office products) and everything else will be blocked.</value>
+  </data>
+  <data name="DefaultWindowsSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy will allow files that come by default with Windows OS to run (including Office products) and everything else will be blocked.</value>
+  </data>
+  <data name="DefaultWindowsSettings.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy will allow files that come by default with Windows OS to run (including Office products) and everything else will be blocked.</value>
+  </data>
+  <data name="AllowMicrosoftSettings.Header" xml:space="preserve">
+    <value>Create Allow Microsoft Policy</value>
+  </data>
+  <data name="AllowMicrosoftSettings.Description" xml:space="preserve">
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run and everything else will be blocked.</value>
+  </data>
+  <data name="AllowMicrosoftSettings.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run and everything else will be blocked.</value>
+  </data>
+  <data name="AllowMicrosoftSettings.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run and everything else will be blocked.</value>
+  </data>
+  <data name="CopyRow.Text" xml:space="preserve">
+    <value>Copy Row</value>
+  </data>
+  <data name="CopyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copy the currently selected row(s) to the clipboard as texts in order to paste them into any text editor.</value>
+  </data>
+  <data name="CopyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copy the currently selected row(s) to the clipboard as texts in order to paste them into any text editor.</value>
+  </data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>Delete Row</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete the currently selected row(s). Their associated data will be removed.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete the currently selected row(s). Their associated data will be removed.</value>
+  </data>
+  <data name="CopyIndividualItems.Text" xml:space="preserve">
+    <value>Copy Individual Items</value>
+  </data>
+  <data name="CopyIndividualItems.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expands a submenu on hover or touch so you will have the option to copy individual items in each row.</value>
+  </data>
+  <data name="CopyIndividualItems.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expands a submenu on hover or touch so you will have the option to copy individual items in each row.</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>AppControl Manager allows you to manage App Control policies and Code Integrity in Windows with ease, including but not limited to: creation, simulation, removal, deployment and signing.</value>
+  </data>
 </root>

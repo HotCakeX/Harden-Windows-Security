@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid>
@@ -18,13 +19,7 @@
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,0,6,10">
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                <Span>
-                    The following are the logs that the
-                        <Run Foreground="{ThemeResource SystemAccentColor}">AppControl Manager</Run>
-                    automatically generates and stores in the <Underline>AppControl Manager</Underline> folder in Program Files. The total size of the logs folder will never exceed 1GB.
-                </Span>
-            </TextBlock>
+            <TextBlock x:Uid="LogsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
         </controls:WrapPanel>
 

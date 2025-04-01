@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Management.Deployment;
+using Microsoft.Extensions.DependencyInjection;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
@@ -44,6 +45,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class UpdatePage : Page
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
 	// Pattern for finding ASR rules that belong to the AppControl Manager
 	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
 	private static partial Regex MyRegex1();

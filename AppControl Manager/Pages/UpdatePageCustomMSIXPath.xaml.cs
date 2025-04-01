@@ -19,6 +19,7 @@ using System.IO;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AppControlManager.Pages;
 
@@ -28,6 +29,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
 	/// <summary>
 	/// Initializes the UpdatePageCustomMSIXPath component and sets the initial state of the confirm toggle switch.
 	/// Navigation cache mode is set to required.

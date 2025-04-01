@@ -29,6 +29,7 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using AppControlManager.ViewModels;
+using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -47,6 +48,7 @@ internal sealed partial class ViewFileCertificates : Page
 
 #pragma warning disable CA1822
 	private ViewFileCertificatesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -207,33 +209,32 @@ internal sealed partial class ViewFileCertificates : Page
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="keySelector"></param>
-	private void SortColumn<T>(Func<FileCertificateInfoCol, T> keySelector)
+	private async void SortColumn<T>(Func<FileCertificateInfoCol, T> keySelector)
 	{
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
 
-		// Use either the full list (FilteredCertificates) or the current display list.
-		List<FileCertificateInfoCol> collectionToSort = isSearchEmpty ? ViewModel.FilteredCertificates : [.. ViewModel.FileCertificates];
+		// If no search is active, use the full list (FilteredCertificates); otherwise, use a copy of the currently displayed list.
+		List<FileCertificateInfoCol> collectionToSort = isSearchEmpty
+			? ViewModel.FilteredCertificates
+			: ViewModel.FileCertificates.ToList();
 
-		ViewModel.FileCertificates.Clear();
+		// Prepare the sorted data in a temporary list.
+		List<FileCertificateInfoCol> sortedData = SortingDirectionToggle.IsChecked
+			? collectionToSort.OrderByDescending(keySelector).ToList()
+			: collectionToSort.OrderBy(keySelector).ToList();
 
-		if (SortingDirectionToggle.IsChecked)
+		// Clear the displayed collection and add the sorted items.
+		await DispatcherQueue.EnqueueAsync(() =>
 		{
-			// Sort in descending order.
-			foreach (FileCertificateInfoCol item in collectionToSort.OrderByDescending(keySelector))
+			ViewModel.FileCertificates.Clear();
+			foreach (FileCertificateInfoCol item in sortedData)
 			{
 				ViewModel.FileCertificates.Add(item);
 			}
-		}
-		else
-		{
-			// Sort in ascending order.
-			foreach (FileCertificateInfoCol item in collectionToSort.OrderBy(keySelector))
-			{
-				ViewModel.FileCertificates.Add(item);
-			}
-		}
+		});
 	}
+
 
 
 	/// <summary>

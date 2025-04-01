@@ -68,7 +68,7 @@
 
                     <controls:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
 
-                        <Button x:Name="CertFileBrowseButton" HorizontalAlignment="Center" Click="CertFileBrowseButton_Click" x:Uid="FileBrowseButton"/>
+                        <Button x:Name="CertFileBrowseButton" HorizontalAlignment="Center" Click="{x:Bind CertFileBrowseButton_Click}" x:Uid="FileBrowseButton"/>
                         <TextBox MaxWidth="700" x:Name="CertFilePathTextBox" TextWrapping="Wrap" PlaceholderText=".cer file path" />
 
                     </controls:WrapPanel>
@@ -100,11 +100,11 @@
                     <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,0,0,5" ToolTipService.ToolTip="Automatically downloads the signtool.exe from Microsoft servers">
-                            <ToggleSwitch x:Name="AutoAcquireSignTool" Toggled="AutoAcquireSignTool_Toggled" />
+                            <ToggleSwitch x:Name="AutoAcquireSignTool" Toggled="{x:Bind AutoAcquireSignTool_Toggled}" />
                             <TextBlock Text="Auto Acquire" Margin="0,8.7,0,0" />
                         </StackPanel>
 
-                        <Button x:Name="SignToolBrowseButton" Click="SignToolBrowseButton_Click" HorizontalAlignment="Center" x:Uid="FileBrowseButton"/>
+                        <Button x:Name="SignToolBrowseButton" Click="{x:Bind SignToolBrowseButton_Click}" HorizontalAlignment="Center" x:Uid="FileBrowseButton"/>
                         <TextBox MaxWidth="700" x:Name="SignToolPathTextBox" PlaceholderText="SignTool.exe Path" TextWrapping="Wrap"/>
 
                     </controls:WrapPanel>
@@ -118,7 +118,7 @@
             <controls:WrapPanel Grid.Row="3" Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10" Margin="10,15,10,0" HorizontalAlignment="Center">
 
                 <Button HorizontalAlignment="Center" ToolTipService.ToolTip="Verify the settings before submitting them"
-            Click="VerifyButton_Click"
+            Click="{x:Bind VerifyButton_Click}"
             x:Name="VerifyButton">
 
                     <Button.Content>

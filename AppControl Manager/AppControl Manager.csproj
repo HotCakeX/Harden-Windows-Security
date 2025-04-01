@@ -11,7 +11,7 @@
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
-    <EnablePackageValidation>true</EnablePackageValidation>
+    <EnablePackageValidation Condition="'$(Configuration)' != 'Debug'">true</EnablePackageValidation>
     <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
     <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
 
@@ -87,7 +87,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.0.0</FileVersion>
+    <FileVersion>2.0.1.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -107,9 +107,18 @@
     <Copyright>© 2024-Present</Copyright>
     <Title>AppControl Manager</Title>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+
+    <NuGetAudit Condition="'$(Configuration)' != 'Debug'">true</NuGetAudit>
+    <NuGetAudit Condition="'$(Configuration)' == 'Debug'">false</NuGetAudit>
+
     <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+
+
     <RepositoryType>GitHub</RepositoryType>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Debug'">false</TreatWarningsAsErrors>
 
     <!-- There should be absolutely no trim warnings before this can be enabled
     Otherwise there is no guarantee that the app will work as expected at all times -->
@@ -147,13 +156,13 @@
 
     <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
 
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GenerateDocumentationFile Condition="'$(Configuration)' != 'Debug'">True</GenerateDocumentationFile>
 
-    <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
+    <DocumentationFile Condition="'$(Configuration)' != 'Debug'">AppControlManagerAPIDocumentation.xml</DocumentationFile>
 
-    <PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
+    <PackageReadmeFile Condition="'$(Configuration)' != 'Debug'">AppControl Manager.md</PackageReadmeFile>
 
-    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+    <GenerateTemporaryStoreCertificate Condition="'$(Configuration)' != 'Debug'">True</GenerateTemporaryStoreCertificate>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc -->
     <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/background-gc -->
@@ -174,6 +183,9 @@
 
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
     <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
+
+    <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
+    <NoWarn>IL3000</NoWarn>
 
   </PropertyGroup>
 
@@ -224,17 +236,19 @@
   <ItemGroup>
 
     <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
-    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250319-build.2093" />
+    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
-    <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.70.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.70.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.70.1" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -243,11 +257,11 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250228001" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.3" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.3" />
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
 
     <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
     <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.7.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
@@ -259,7 +273,8 @@
     <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.18.1" />
 
   </ItemGroup>
 
@@ -317,6 +332,7 @@
     <None Remove="Pages\StrictKernelPolicyScanResults.xaml" />
     <None Remove="Pages\SystemInformation\CodeIntegrityInfo.xaml" />
     <None Remove="Pages\SystemInformation\SystemInformation.xaml" />
+    <None Remove="Pages\SystemInformation\ViewOnlinePolicies.xaml" />
     <None Remove="Pages\ValidatePolicy.xaml" />
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
     <None Remove="Pages\ViewFileCertificates.xaml" />
@@ -479,6 +495,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\SystemInformation\ViewOnlinePolicies.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\PolicyEditor.xaml">

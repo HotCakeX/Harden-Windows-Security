@@ -15,6 +15,7 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid>
@@ -27,12 +28,7 @@
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-        <Span>
-          <Bold>Edit App Control for Business Policies. </Bold>
-            Easily browse for a policy XML file and load its details using the Load button. Once loaded, you can review the number of each rule within the policy, remove specific rules, and modify various other policy settings.
-        </Span>
-            </TextBlock>
+            <TextBlock x:Uid="PolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
             <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor" />
 
@@ -274,7 +270,7 @@
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem Text="Delete Row" Click="FileBasedRulesListView_DeleteItems">
+                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="FileBasedRulesListView_DeleteItems">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE74D;" />
                                                     </MenuFlyoutItem.Icon>
@@ -389,7 +385,7 @@
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem Text="Delete Row" Click="SignatureBasedRulesListView_DeleteItems">
+                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="SignatureBasedRulesListView_DeleteItems">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE74D;" />
                                                     </MenuFlyoutItem.Icon>

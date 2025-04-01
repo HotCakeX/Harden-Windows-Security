@@ -15,10 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Runtime.CompilerServices;
+
 namespace AppControlManager.SiPolicyIntel;
 
 internal static class BytesArrayComparer
 {
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool AreByteArraysEqual(byte[]? a, byte[]? b)
 	{
 		if (a is null || b is null)

@@ -24,9 +24,14 @@ namespace AppControlManager.MicrosoftGraph;
 /// Represents a payload for assignments containing a dictionary of target properties. The dictionary maps string keys
 /// to object values.
 /// </summary>
-internal sealed class AssignmentPayload
+internal sealed class AssignmentPayload(
+	Dictionary<string, object>? target
+)
 {
+	/// <summary>
+	/// The target properties dictionary.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("target")]
-	internal Dictionary<string, object>? Target { get; set; }
+	internal Dictionary<string, object>? Target { get; } = target;
 }

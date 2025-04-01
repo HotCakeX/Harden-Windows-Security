@@ -18,6 +18,7 @@
 using System.Globalization;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -29,6 +30,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class GetSecurePolicySettings : Page
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
 	/// <summary>
 	/// Initializes the component and sets the navigation cache mode to required, ensuring the page maintains its state
 	/// during navigation.

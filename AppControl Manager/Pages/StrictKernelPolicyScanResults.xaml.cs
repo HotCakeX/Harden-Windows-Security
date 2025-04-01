@@ -38,6 +38,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 
 #pragma warning disable CA1822
 	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	/// <summary>

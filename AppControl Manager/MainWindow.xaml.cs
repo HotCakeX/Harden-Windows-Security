@@ -49,6 +49,7 @@ internal sealed partial class MainWindow : Window
 
 #pragma warning disable CA1822
 	private MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	private readonly AppWindow m_AppWindow;
@@ -243,9 +244,43 @@ internal sealed partial class MainWindow : Window
 	}
 
 
-	// Dictionary of all the main pages in the app, used by the search bar
-	// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized
+	/// <summary>
+	/// Dictionary of all the main pages in the app, used for the main navigation.
+	/// Keys are the Navigation Item tags (non-localized) and values are the page types.
+	/// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
+	/// </summary>
 	private static readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
+	{
+		{ "CreatePolicy", typeof(Pages.CreatePolicy) },
+		{ "GetCodeIntegrityHashes", typeof(Pages.GetCIHashes) },
+		{ "GitHubDocs", typeof(Pages.GitHubDocumentation) },
+		{ "MSFTDocs", typeof(Pages.MicrosoftDocumentation) },
+		{ "GetSecurePolicySettings", typeof(Pages.GetSecurePolicySettings) },
+		{ "Settings", typeof(Pages.Settings) },
+		{ "SystemInformation", typeof(Pages.SystemInformation) },
+		{ "ConfigurePolicyRuleOptions", typeof(Pages.ConfigurePolicyRuleOptions) },
+		{ "Logs", typeof(Pages.Logs) },
+		{ "Simulation", typeof(Pages.Simulation) },
+		{ "Deployment", typeof(Pages.DeploymentPage) },
+		{ "CreatePolicyFromEventLogs", typeof(Pages.EventLogsPolicyCreation) },
+		{ "CreatePolicyFromMDEAH", typeof(Pages.MDEAHPolicyCreation) },
+		{ "AllowNewApps", typeof(Pages.AllowNewApps) },
+		{ "BuildNewCertificate", typeof(Pages.BuildNewCertificate) },
+		{ "CreateSupplementalPolicy", typeof(Pages.CreateSupplementalPolicy) },
+		{ "MergePolicies", typeof(Pages.MergePolicies) },
+		{ "CreateDenyPolicy", typeof(Pages.CreateDenyPolicy) },
+		{ "ValidatePolicies", typeof(Pages.ValidatePolicy) },
+		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
+		{ "PolicyEditor", typeof(Pages.PolicyEditor) },
+		{ "Update", typeof(Pages.UpdatePage) }
+	};
+
+
+	/// <summary>
+	/// Dictionary of all the main pages in the app, used for the search bar.
+	/// Keys are page contents which are localized and values are page types.
+	/// </summary>
+	private static readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = new()
 	{
 		{ GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy) },
 		{ GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content"), typeof(Pages.GetCIHashes) },
@@ -285,7 +320,7 @@ internal sealed partial class MainWindow : Window
 		// Only make the update page available through search if the app was installed from GitHub source
 		if (App.PackageSource is 0)
 		{
-			NavigationPageToItemContentMap[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
+			NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
 		}
 
 		this.InitializeComponent();
@@ -394,7 +429,7 @@ internal sealed partial class MainWindow : Window
 
 			// Set the "Create Policy" item as selected in the NavigationView
 			MainNavigation.SelectedItem = allNavigationItems
-				.First(item => string.Equals(item.Content.ToString(), "Create Policy", StringComparison.OrdinalIgnoreCase));
+				.First(item => string.Equals(item.Tag.ToString(), "CreatePolicy", StringComparison.OrdinalIgnoreCase));
 		}
 		else
 		{
@@ -402,7 +437,7 @@ internal sealed partial class MainWindow : Window
 
 			// Set the "Policy Editor" item as selected in the NavigationView
 			MainNavigation.SelectedItem = allNavigationItems
-				.First(item => string.Equals(item.Content.ToString(), "Policy Editor", StringComparison.OrdinalIgnoreCase));
+				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
 		}
 
 
@@ -589,7 +624,7 @@ internal sealed partial class MainWindow : Window
 		if (App.Settings.MainWindowIsMaximized)
 		{
 
-			Logger.Write("Window was maximized when the app closed last time, setting it to maximized now");
+			Logger.Write(GlobalVars.Rizz.GetString("WindowMaximizedMsg"));
 
 			// Using .As<>() instead of direct cast because in NAOT mode direct cast would throw error for invalid cast operation. This is a bug in CsWinRT
 			OverlappedPresenter presenter = m_AppWindow.Presenter.As<OverlappedPresenter>();
@@ -855,7 +890,7 @@ internal sealed partial class MainWindow : Window
 			string query = sender.Text.Trim();
 
 			// Filter menu items based on the search query
-			List<string> suggestions = new(NavigationPageToItemContentMap.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
+			List<string> suggestions = new(NavigationPageToItemContentMapForSearch.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
 
 			// Set the filtered items as suggestions in the AutoSuggestBox
 			sender.ItemsSource = suggestions;
@@ -875,7 +910,7 @@ internal sealed partial class MainWindow : Window
 		// Get the selected item's name and find the corresponding NavigationViewItem
 		string? chosenItemName = args.SelectedItem?.ToString();
 
-		if (chosenItemName is not null && NavigationPageToItemContentMap.TryGetValue(chosenItemName, out Type? selectedItem))
+		if (chosenItemName is not null && NavigationPageToItemContentMapForSearch.TryGetValue(chosenItemName, out Type? selectedItem))
 		{
 			NavView_Navigate(selectedItem, null);
 		}
@@ -905,7 +940,7 @@ internal sealed partial class MainWindow : Window
 			}
 			else
 			{
-				NavView_Navigate(null, args?.RecommendedNavigationTransitionInfo, args?.InvokedItemContainer.Content.ToString());
+				NavView_Navigate(null, args?.RecommendedNavigationTransitionInfo, args?.InvokedItemContainer.Tag.ToString());
 			}
 		}
 	}
@@ -917,8 +952,8 @@ internal sealed partial class MainWindow : Window
 	/// </summary>
 	/// <param name="navPageType"></param>
 	/// <param name="transitionInfo"></param>
-	/// <param name="navItemName"></param>
-	internal async void NavView_Navigate(Type? navPageType, NavigationTransitionInfo? transitionInfo = null, string? navItemName = null)
+	/// <param name="navItemTag"></param>
+	internal async void NavView_Navigate(Type? navPageType, NavigationTransitionInfo? transitionInfo = null, string? navItemTag = null)
 	{
 		// Get the page's type before navigation so we can prevent duplicate entries in the BackStack
 		// This will prevent reloading the same page if we're already on it and works with sub-pages to navigate back to the main page
@@ -935,7 +970,7 @@ internal sealed partial class MainWindow : Window
 		// Check if the method was called by a page's NavigationViewItem's content and it's not the same page as the current page - Used by the search bar
 		// Others calls this method by supplying page's type instead
 		// The dictionary used to find the page's type doesn't contain sub-pages for the reasons explained on dictionary definition.
-		else if (navItemName is not null && NavigationPageToItemContentMap.TryGetValue(navItemName, out Type? page) && !Equals(page, preNavPageType))
+		else if (navItemTag is not null && NavigationPageToItemContentMap.TryGetValue(navItemTag, out Type? page) && !Equals(page, preNavPageType))
 		{
 			nextNavPageType = page;
 		}
@@ -961,7 +996,7 @@ internal sealed partial class MainWindow : Window
 				// a TextBlock for the informational text.
 				TextBlock infoText = new()
 				{
-					Text = "Please launch AppControl Manager as Administrator to access this page",
+					Text = GlobalVars.Rizz.GetString("AppElevationNotice/Main"),
 					TextWrapping = TextWrapping.Wrap
 				};
 				panel.Children.Add(infoText);
@@ -969,7 +1004,7 @@ internal sealed partial class MainWindow : Window
 				// a CheckBox for the extra input.
 				CheckBox extraInfoCheckBox = new()
 				{
-					Content = "Always prompt for elevation on app startup",
+					Content = GlobalVars.Rizz.GetString("AppElevationNotice/ExtraPrompt"),
 					Margin = new Thickness(0, 12, 0, 0)
 				};
 				panel.Children.Add(extraInfoCheckBox);
@@ -977,10 +1012,10 @@ internal sealed partial class MainWindow : Window
 				// Create and configure the ContentDialog.
 				ContentDialog dialog = new()
 				{
-					Title = "Administrator privileges required",
+					Title = GlobalVars.Rizz.GetString("AppElevationNotice/Title"),
 					Content = panel,
-					CloseButtonText = "Cancel",
-					SecondaryButtonText = "Relaunch as Admin",
+					CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
+					SecondaryButtonText = GlobalVars.Rizz.GetString("AppElevationNotice/Relaunch"),
 					BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 					BorderThickness = new Thickness(1),
 					XamlRoot = this.Content.XamlRoot
@@ -1052,7 +1087,7 @@ internal sealed partial class MainWindow : Window
 					{
 						// The SelectedItem is automatically set to the page that is unavailable
 						// But here we set it back to the last available page to make it a smooth experience
-						MainNavigation.SelectedItem = allNavigationItems.FirstOrDefault(x => string.Equals(x.Content.ToString(), NavigationPageToItemContentMap.FirstOrDefault(x => Equals(x.Value, preNavPageType)).Key, StringComparison.OrdinalIgnoreCase));
+						MainNavigation.SelectedItem = allNavigationItems.FirstOrDefault(x => string.Equals(x.Tag.ToString(), NavigationPageToItemContentMap.FirstOrDefault(x => Equals(x.Value, preNavPageType)).Key, StringComparison.OrdinalIgnoreCase));
 					}
 					return;
 				}

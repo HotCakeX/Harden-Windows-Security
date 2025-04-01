@@ -24,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.Globalization;
 
 namespace AppControlManager.Pages;
 
@@ -37,7 +38,9 @@ internal sealed partial class Settings : Page
 #pragma warning disable CA1822
 	private SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
 	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
+
 
 	/// <summary>
 	/// Initializes the settings page, loading user configurations into UI elements and setting up event handlers for user
@@ -65,12 +68,21 @@ internal sealed partial class Settings : Page
 
 		PromptForElevationToggleSwitch.IsOn = App.Settings.PromptForElevationOnStartup;
 
+		UIFlowDirectionToggleSwitch.IsOn = string.Equals(App.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase);
+
+		LanguageSelectionComboBox.SelectedIndex = (App.Settings.ApplicationGlobalLanguage) switch
+		{
+			"en-US" => 0,
+			"he" => 1,
+			_ => throw new InvalidOperationException("Wrong language selected!")
+		};
+
 		ThemeComboBox.SelectedIndex = (App.Settings.AppTheme) switch
 		{
 			"Use System Setting" => 0,
 			"Dark" => 1,
 			"Light" => 2,
-			_ => 0
+			_ => throw new InvalidOperationException("Wrong theme selected!")
 		};
 
 
@@ -79,7 +91,7 @@ internal sealed partial class Settings : Page
 			"Animated" => 0,
 			"Windows Accent" => 1,
 			"Monochromatic" => 2,
-			_ => 2
+			_ => throw new InvalidOperationException("Wrong Icons Style selected!")
 		};
 
 		#endregion
@@ -97,6 +109,8 @@ internal sealed partial class Settings : Page
 		ListViewsCenterVerticallyUponSelectionToggleSwitch.Toggled += ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled;
 		CacheSecurityCatalogsScanResultsToggleSwitch.Toggled += CacheSecurityCatalogsScanResultsToggleSwitch_Toggled;
 		PromptForElevationToggleSwitch.Toggled += PromptForElevationToggleSwitch_Toggled;
+		UIFlowDirectionToggleSwitch.Toggled += UIFlowDirectionToggleSwitch_Toggled;
+		LanguageSelectionComboBox.SelectionChanged += LanguageSelectionComboBox_SelectionChanged;
 	}
 
 
@@ -116,6 +130,33 @@ internal sealed partial class Settings : Page
 		ViewModelMainWindow.OnIconsStylesChanged(selectedIconsStyle);
 
 		App.Settings.IconsStyle = selectedIconsStyle;
+	}
+
+
+	private void LanguageSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+
+		// Get the ComboBox that triggered the event
+		ComboBox comboBox = (ComboBox)sender;
+
+		// Get the selected item from the ComboBox
+		string selectedLanguage = (string)comboBox.SelectedItem;
+
+		switch (selectedLanguage)
+		{
+			case "English":
+				ApplicationLanguages.PrimaryLanguageOverride = "en-US";
+				App.Settings.ApplicationGlobalLanguage = "en-US";
+				break;
+			case "Hebrew":
+				ApplicationLanguages.PrimaryLanguageOverride = "he";
+				App.Settings.ApplicationGlobalLanguage = "he";
+				break;
+			default:
+				break;
+		}
+
+		LanguageSectionSettingsExpanderInfoBar.IsOpen = true;
 	}
 
 
@@ -369,6 +410,19 @@ internal sealed partial class Settings : Page
 	}
 
 
+	private void UIFlowDirectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		// Get the ToggleSwitch that triggered the event
+		ToggleSwitch toggleSwitch = (ToggleSwitch)sender;
+
+		// Get the state of the toggle switch (on or off)
+		bool IsOn = toggleSwitch.IsOn;
+
+		// Save the setting to the local app settings
+		App.Settings.ApplicationGlobalFlowDirection = IsOn ? "LeftToRight" : "RightToLeft";
+	}
+
+
 	#region Settings cards clicks event handlers
 
 	private void BackgroundComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
@@ -420,6 +474,17 @@ internal sealed partial class Settings : Page
 	{
 		PromptForElevationToggleSwitch.IsOn = !PromptForElevationToggleSwitch.IsOn;
 		PromptForElevationToggleSwitch_Toggled(PromptForElevationToggleSwitch, new RoutedEventArgs());
+	}
+
+	private void LanguageSelectionSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		LanguageSelectionComboBox.IsDropDownOpen = true;
+	}
+
+	private void UIFlowDirectionSettingsCard_Click(object sender, RoutedEventArgs e)
+	{
+		UIFlowDirectionToggleSwitch.IsOn = !UIFlowDirectionToggleSwitch.IsOn;
+		UIFlowDirectionToggleSwitch_Toggled(UIFlowDirectionToggleSwitch, new RoutedEventArgs());
 	}
 
 	#endregion

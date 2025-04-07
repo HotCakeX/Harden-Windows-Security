@@ -481,8 +481,6 @@ internal sealed partial class Main : INotifyPropertyChanged
 	}
 
 
-
-
 	/// <summary>
 	/// Selected language for the application
 	/// </summary>	
@@ -508,6 +506,7 @@ internal sealed partial class Main : INotifyPropertyChanged
 			}
 		}
 	}
+
 
 	/// <summary>
 	/// Whether the User Interface flow direction is Left-to-Right or Right-to-Left

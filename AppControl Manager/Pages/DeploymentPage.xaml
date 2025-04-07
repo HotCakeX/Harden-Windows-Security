@@ -60,7 +60,7 @@
                      Header="Use Intune Deployment" IsExpanded="True"
                      HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
 
-                    <TextBlock x:Name="LocalIntuneStatusTextBox" Text="Local Deployment is Currently Active" TextWrapping="Wrap" />
+                    <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}" TextWrapping="Wrap" />
 
                     <controls:SettingsExpander.Items>
 
@@ -380,7 +380,7 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard
-                        Description="Select one of the security groups to assign to the policy in Intune"
+                        Description="Select the security group(s) to assign to the policy in Intune"
                         Header="Group Assignment (Optional)"
                         HeaderIcon="{ui:FontIcon Glyph=&#xF0B9;}" IsClickEnabled="False" IsActionIconVisible="False">
 
@@ -388,7 +388,22 @@
 
                                 <Button IsEnabled="False" x:Name="RefreshIntuneGroupsButton" Content="Refresh" Click="{x:Bind RefreshIntuneGroupsButton_Click}" />
 
-                                <ComboBox IsEnabled="False" x:Name="IntuneGroupsComboBox" />
+                                <ListView SelectionMode="Multiple"
+                                          ItemsSource="{x:Bind ViewModel.GroupNamesCollection, Mode=OneWay}"
+                                          MaxHeight="400"
+                                          MaxWidth="400"
+                                          ScrollViewer.HorizontalScrollMode="Enabled"
+                                          ScrollViewer.IsHorizontalRailEnabled="True"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                          ShowsScrollingPlaceholders="True"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          x:Name="IntuneGroupsListView">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="MSGraph:IntuneGroupItemListView">
+                                            <TextBlock Text="{x:Bind GroupName}" TextWrapping="Wrap" Margin="5" MaxWidth="380" />
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
 
                             </controls:WrapPanel>
 

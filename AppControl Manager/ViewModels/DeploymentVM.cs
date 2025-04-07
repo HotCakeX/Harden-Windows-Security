@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
@@ -70,6 +71,20 @@ internal sealed partial class DeploymentVM : INotifyPropertyChanged
 		get => _MainInfoBarIsClosable;
 		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
 	}
+
+
+	private string _LocalOnlineStatusText = "Local Deployment is Currently Active";
+	internal string LocalOnlineStatusText
+	{
+		get => _LocalOnlineStatusText;
+		set => SetProperty(_LocalOnlineStatusText, value, newValue => _LocalOnlineStatusText = newValue);
+	}
+
+
+	/// <summary>
+	/// Bound to the UI ListView and holds the Intune group Names/IDs
+	/// </summary>
+	internal readonly ObservableCollection<MicrosoftGraph.IntuneGroupItemListView> GroupNamesCollection = [];
 
 	#endregion
 

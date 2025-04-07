@@ -3270,6 +3270,20 @@
             The list of device configuration policies.
             </summary>
         </member>
+        <member name="T:AppControlManager.MicrosoftGraph.IntuneGroupItemListView">
+            <summary>
+            Used to store Intune group Names/ID and is served as a DataType for ListViews that show them
+            </summary>
+            <param name="groupName"></param>
+            <param name="groupID"></param>
+        </member>
+        <member name="M:AppControlManager.MicrosoftGraph.IntuneGroupItemListView.#ctor(System.String,System.String)">
+            <summary>
+            Used to store Intune group Names/ID and is served as a DataType for ListViews that show them
+            </summary>
+            <param name="groupName"></param>
+            <param name="groupID"></param>
+        </member>
         <member name="F:AppControlManager.MicrosoftGraph.Main.ClientId">
             <summary>
             For Microsoft Graph Command Line Tools
@@ -3338,12 +3352,12 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.UploadPolicyToIntune(AppControlManager.MicrosoftGraph.AuthenticatedAccounts,System.String,System.String,System.String,System.String,System.String)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.UploadPolicyToIntune(AppControlManager.MicrosoftGraph.AuthenticatedAccounts,System.String,System.Collections.Generic.List{System.String},System.String,System.String,System.String)">
             <summary>
             Grabs the path to a CIP file and upload it to Intune.
             </summary>
             <param name="policyPath"></param>
-            <param name="groupId"></param>
+            <param name="groupIds"></param>
             <param name="policyName"></param>
             <param name="policyID"></param>
             <param name="descriptionText"></param>
@@ -3351,15 +3365,15 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.AssignIntunePolicyToGroup(System.String,System.String,System.String)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.AssignIntunePolicyToGroup(System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Assigns a group to the created Intune policy
+            Assigns a group to the created Intune policy for multiple groups.
             </summary>
-            <param name="policyId"></param>
-            <param name="accessToken"></param>
-            <param name="groupID"></param>
-            <returns></returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
+            <param name="policyId">The ID of the policy to assign.</param>
+            <param name="accessToken">The access token used for authentication.</param>
+            <param name="groupIds">An enumerable collection of group IDs to which the policy will be assigned.</param>
+            <returns>A task that represents the asynchronous assignment operation.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when the assignment fails for any of the groups.</exception>
         </member>
         <member name="M:AppControlManager.MicrosoftGraph.Main.CreateCustomIntunePolicy(System.String,System.String,System.String,System.String,System.String)">
             <summary>
@@ -6095,6 +6109,12 @@
             user interactions for file selection and deployment status updates.
             </summary>
         </member>
+        <member name="M:AppControlManager.Pages.DeploymentPage.UpdateButtonsStates(System.Boolean)">
+            <summary>
+            When online features are enabled, this method will enable the relevant buttons and performs extra necessary actions
+            </summary>
+            <param name="on"></param>
+        </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.#ctor">
             <summary>
             Initializes a new instance of the DeploymentPage class. Disables the DeploySignedXMLButton if the system is older
@@ -6166,15 +6186,10 @@
             Event handler for browse button - Signed XML files
             </summary>
         </member>
-        <member name="F:AppControlManager.Pages.DeploymentPage.Groups">
-            <summary>
-            To hold the Intune Groups Name/IDs
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.RefreshIntuneGroupsButton_Click">
             <summary>
             Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
-            the ComboBox with group names.
+            the ListView with group names.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.DeployToIntunePrivate(System.String,System.String,System.String)">
@@ -9070,6 +9085,11 @@
             <param name="setter"></param>
             <param name="propertyName"></param>
             <returns></returns>
+        </member>
+        <member name="F:AppControlManager.ViewModels.DeploymentVM.GroupNamesCollection">
+            <summary>
+            Bound to the UI ListView and holds the Intune group Names/IDs
+            </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.DeploymentVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
             <summary>

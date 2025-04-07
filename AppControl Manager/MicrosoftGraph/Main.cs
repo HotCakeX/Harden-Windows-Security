@@ -354,14 +354,14 @@ DeviceEvents
 	/// Grabs the path to a CIP file and upload it to Intune.
 	/// </summary>
 	/// <param name="policyPath"></param>
-	/// <param name="groupId"></param>
+	/// <param name="groupIds"></param>
 	/// <param name="policyName"></param>
 	/// <param name="policyID"></param>
 	/// <param name="descriptionText"></param>
 	/// <param name="account"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts? account, string policyPath, string? groupId, string? policyName, string policyID, string descriptionText)
+	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts? account, string policyPath, List<string> groupIds, string? policyName, string policyID, string descriptionText)
 	{
 
 		if (account is null)
@@ -381,9 +381,9 @@ DeviceEvents
 
 		Logger.Write($"{policyId} is the ID of the policy that was created");
 
-		if (!string.IsNullOrWhiteSpace(groupId) && policyId is not null)
+		if (groupIds.Count > 0 && policyId is not null)
 		{
-			await AssignIntunePolicyToGroup(policyId, ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken, groupId);
+			await AssignIntunePolicyToGroup(policyId, ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken, groupIds);
 		}
 
 		// await GetPoliciesAndAssignments(result.AccessToken);
@@ -391,55 +391,59 @@ DeviceEvents
 
 
 	/// <summary>
-	/// Assigns a group to the created Intune policy
+	/// Assigns a group to the created Intune policy for multiple groups.
 	/// </summary>
-	/// <param name="policyId"></param>
-	/// <param name="accessToken"></param>
-	/// <param name="groupID"></param>
-	/// <returns></returns>
-	/// <exception cref="InvalidOperationException"></exception>
-	private static async Task AssignIntunePolicyToGroup(string policyId, string accessToken, string groupID)
+	/// <param name="policyId">The ID of the policy to assign.</param>
+	/// <param name="accessToken">The access token used for authentication.</param>
+	/// <param name="groupIds">An enumerable collection of group IDs to which the policy will be assigned.</param>
+	/// <returns>A task that represents the asynchronous assignment operation.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when the assignment fails for any of the groups.</exception>
+	private static async Task AssignIntunePolicyToGroup(string policyId, string accessToken, IEnumerable<string> groupIds)
 	{
 		using SecHttpClient httpClient = new();
 
-		// Set up the HTTP headers
+		// Set up the HTTP headers.
 		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-		// Create the payload with a Dictionary to handle special characters like @odata.type
-		AssignmentPayload assignmentPayload = new(
-			target: new Dictionary<string, object>
-			{
+		foreach (string groupId in groupIds)
+		{
+			// Create the payload for each group.
+			AssignmentPayload assignmentPayload = new(
+				target: new Dictionary<string, object>
+				{
 				{ "@odata.type", "#microsoft.graph.groupAssignmentTarget" },
-				{ "groupId", groupID }
+				{ "groupId", groupId }
+				}
+			);
+
+			// Serialize the assignment payload to JSON.
+			string jsonPayload = JsonSerializer.Serialize(assignmentPayload, MSGraphJsonContext.Default.AssignmentPayload);
+
+			using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
+
+			// Send the POST request to assign the policy to the group.
+			HttpResponseMessage response = await httpClient.PostAsync(
+				new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"),
+				content
+			);
+
+			// Process the response for the current group.
+			if (response.IsSuccessStatusCode)
+			{
+				string responseContent = await response.Content.ReadAsStringAsync();
+				Logger.Write($"Policy assigned successfully to group: {groupId}");
+				Logger.Write(responseContent);
 			}
-		);
-
-		// Serialize the assignment payload to JSON
-		string jsonPayload = JsonSerializer.Serialize(assignmentPayload, MSGraphJsonContext.Default.AssignmentPayload);
-
-		using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
-
-		// Send the POST request to assign the policy to the group
-		HttpResponseMessage response = await httpClient.PostAsync(
-			new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"),
-			content
-		);
-
-		// Process the response
-		if (response.IsSuccessStatusCode)
-		{
-			string responseContent = await response.Content.ReadAsStringAsync();
-			Logger.Write("Policy assigned successfully:");
-			Logger.Write(responseContent);
-		}
-		else
-		{
-			Logger.Write($"Failed to assign policy. Status code: {response.StatusCode}");
-			string errorContent = await response.Content.ReadAsStringAsync();
-			throw new InvalidOperationException($"Error details: {errorContent}");
+			else
+			{
+				string errorContent = await response.Content.ReadAsStringAsync();
+				Logger.Write($"Failed to assign policy to group: {groupId}. Status code: {response.StatusCode}");
+				throw new InvalidOperationException($"Error details for group {groupId}: {errorContent}");
+			}
 		}
 	}
+
 
 
 	/// <summary>

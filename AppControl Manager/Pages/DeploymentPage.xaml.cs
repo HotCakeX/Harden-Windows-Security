@@ -55,12 +55,24 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
 
+
+	/// <summary>
+	/// When online features are enabled, this method will enable the relevant buttons and performs extra necessary actions
+	/// </summary>
+	/// <param name="on"></param>
 	private void UpdateButtonsStates(bool on)
 	{
 		// Enable the options of a valid value is set as Active Account
 		deployToIntune = on;
-		IntuneGroupsComboBox.IsEnabled = on;
+		IntuneGroupsListView.IsEnabled = on;
 		RefreshIntuneGroupsButton.IsEnabled = on;
+		ViewModel.LocalOnlineStatusText = on ? "Cloud Deployment is Currently Active" : "Local Deployment is Currently Active";
+
+		// If online features are turned off, clear the list of Intune groups
+		if (!on)
+		{
+			ViewModel.GroupNamesCollection.Clear();
+		}
 	}
 
 	internal readonly AuthenticationCompanion AuthCompanionCLS;
@@ -670,24 +682,31 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 	}
 
 
-	/// <summary>
-	/// To hold the Intune Groups Name/IDs
-	/// </summary>
-	private Dictionary<string, string> Groups = [];
-
 
 	/// <summary>
 	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
-	/// the ComboBox with group names.
+	/// the ListView with group names.
 	/// </summary>
 	private async void RefreshIntuneGroupsButton_Click()
 	{
-		Groups = await MicrosoftGraph.Main.FetchGroups(AuthCompanionCLS.CurrentActiveAccount);
+		try
+		{
+			RefreshIntuneGroupsButton.IsEnabled = false;
 
+			Dictionary<string, string> groups = await MicrosoftGraph.Main.FetchGroups(AuthCompanionCLS.CurrentActiveAccount);
 
-		// Update the ComboBox with group names
-		IntuneGroupsComboBox.ItemsSource = Groups.Keys;
-		IntuneGroupsComboBox.SelectedIndex = 0;
+			ViewModel.GroupNamesCollection.Clear();
+
+			// Update the ListView with group names
+			foreach (KeyValuePair<string, string> item in groups)
+			{
+				ViewModel.GroupNamesCollection.Add(new IntuneGroupItemListView(item.Key, item.Value));
+			}
+		}
+		finally
+		{
+			RefreshIntuneGroupsButton.IsEnabled = true;
+		}
 	}
 
 
@@ -700,13 +719,18 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 	/// <returns>This method does not return a value.</returns>
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
-		string? groupName = null;
-		string? groupID = null;
+		// ID(s) of the groups to assign the policy to
+		List<string> groupIDs = [];
 
 		await DispatcherQueue.EnqueueAsync(() =>
 		{
-			groupName = IntuneGroupsComboBox.SelectedItem as string;
+			foreach (var item in IntuneGroupsListView.SelectedItems)
+			{
+				// Get the group name
+				IntuneGroupItemListView _item = (IntuneGroupItemListView)item;
 
+				groupIDs.Add(_item.GroupID);
+			}
 		});
 
 		// Name of the policy that will be uploaded
@@ -754,12 +778,9 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 			}
 
-			// Try to get the group ID for the selected Group name
-			if (groupName is not null)
-				_ = Groups.TryGetValue(groupName, out groupID);
 		});
 
-		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupID, policyName, policyID, descriptionText);
+		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupIDs, policyName, policyID, descriptionText);
 	}
 
 

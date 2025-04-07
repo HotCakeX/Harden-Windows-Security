@@ -37,6 +37,7 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 
 #pragma warning disable CA1822
 	private CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -83,7 +84,11 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 		}
 	}
 
-	// Event handler for all sort buttons
+	/// <summary>
+	/// Event handler for all sort buttons
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
 	private void ColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
@@ -127,29 +132,21 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 		ViewModel.UpdateTotalFiles(true);
 	}
 
-
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
+	private void SelectAll_Click()
 	{
 		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FilesAndFoldersScanResults);
 	}
 
-
 	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeSelectAll_Click(object sender, RoutedEventArgs e)
+	private void DeSelectAll_Click()
 	{
-		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+		FileIdentitiesListView.SelectedItems.Clear();
 	}
-
-
 
 
 	#region Ensuring right-click on rows behaves better and normally on ListView

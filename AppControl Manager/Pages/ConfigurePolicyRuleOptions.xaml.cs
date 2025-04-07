@@ -45,6 +45,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimat
 
 #pragma warning disable CA1822
 	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
 	/// <summary>

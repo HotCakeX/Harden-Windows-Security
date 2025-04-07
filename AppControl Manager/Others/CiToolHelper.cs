@@ -124,20 +124,19 @@ internal static class CiToolHelper
 			foreach (JsonElement policyElement in policiesElement.EnumerateArray())
 			{
 				// Create a new Policy object and populate its properties from the JSON data
-				CiPolicyInfo? policy = new()
-				{
-					PolicyID = policyElement.GetPropertyOrDefault("PolicyID", string.Empty),
-					BasePolicyID = policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
-					FriendlyName = policyElement.GetPropertyOrDefault("FriendlyName", string.Empty),
-					Version = Measure(policyElement.GetProperty("Version").GetUInt64().ToString(CultureInfo.InvariantCulture)),
-					VersionString = policyElement.GetPropertyOrDefault("VersionString", string.Empty),
-					IsSystemPolicy = policyElement.GetPropertyOrDefault("IsSystemPolicy", false),
-					IsSignedPolicy = policyElement.GetPropertyOrDefault("IsSignedPolicy", false),
-					IsOnDisk = policyElement.GetPropertyOrDefault("IsOnDisk", false),
-					IsEnforced = policyElement.GetPropertyOrDefault("IsEnforced", false),
-					IsAuthorized = policyElement.GetPropertyOrDefault("IsAuthorized", false),
-					PolicyOptions = policyElement.GetPolicyOptionsOrDefault()
-				};
+				CiPolicyInfo? policy = new(
+					policyID: policyElement.GetPropertyOrDefault("PolicyID", string.Empty),
+					basePolicyID: policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
+					friendlyName: policyElement.GetPropertyOrDefault("FriendlyName", string.Empty),
+					version: Measure(policyElement.GetProperty("Version").GetUInt64().ToString(CultureInfo.InvariantCulture)),
+					versionString: policyElement.GetPropertyOrDefault("VersionString", string.Empty),
+					isSystemPolicy: policyElement.GetPropertyOrDefault("IsSystemPolicy", false),
+					isSignedPolicy: policyElement.GetPropertyOrDefault("IsSignedPolicy", false),
+					isOnDisk: policyElement.GetPropertyOrDefault("IsOnDisk", false),
+					isEnforced: policyElement.GetPropertyOrDefault("IsEnforced", false),
+					isAuthorized: policyElement.GetPropertyOrDefault("IsAuthorized", false),
+					policyOptions: policyElement.GetPolicyOptionsOrDefault()
+				);
 
 				// Add the policy to the list based on filtering options
 

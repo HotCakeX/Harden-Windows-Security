@@ -51,10 +51,12 @@ internal sealed partial class Main : INotifyPropertyChanged
 	private bool _promptForElevationOnStartup;
 	private bool _automaticAssignmentSidebar = true;
 	private bool _autoCheckForUpdateAtStartup = true;
+	private string _ApplicationGlobalLanguage = "en-US";
+	private string _ApplicationGlobalFlowDirection = "LeftToRight";
 
-	internal Main()
+	internal Main(ApplicationDataContainer LocalSettings)
 	{
-		_localSettings = ApplicationData.Current.LocalSettings;
+		_localSettings = LocalSettings;
 
 		// Load each setting from App storage (if present) or use the default value.
 		_soundSetting = ReadValue(nameof(SoundSetting), _soundSetting);
@@ -71,6 +73,8 @@ internal sealed partial class Main : INotifyPropertyChanged
 		_promptForElevationOnStartup = ReadValue(nameof(PromptForElevationOnStartup), _promptForElevationOnStartup);
 		_automaticAssignmentSidebar = ReadValue(nameof(AutomaticAssignmentSidebar), _automaticAssignmentSidebar);
 		_autoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), _autoCheckForUpdateAtStartup);
+		_ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), _ApplicationGlobalLanguage);
+		_ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), _ApplicationGlobalFlowDirection);
 	}
 
 
@@ -471,6 +475,61 @@ internal sealed partial class Main : INotifyPropertyChanged
 					_autoCheckForUpdateAtStartup = value;
 					SaveValue(nameof(AutoCheckForUpdateAtStartup), value);
 					OnPropertyChanged(nameof(AutoCheckForUpdateAtStartup));
+				}
+			}
+		}
+	}
+
+
+
+
+	/// <summary>
+	/// Selected language for the application
+	/// </summary>	
+	internal string ApplicationGlobalLanguage
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return _ApplicationGlobalLanguage;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (_ApplicationGlobalLanguage != value)
+				{
+					_ApplicationGlobalLanguage = value;
+					SaveValue(nameof(ApplicationGlobalLanguage), value);
+					OnPropertyChanged(nameof(ApplicationGlobalLanguage));
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the User Interface flow direction is Left-to-Right or Right-to-Left
+	/// </summary>
+	internal string ApplicationGlobalFlowDirection
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return _ApplicationGlobalFlowDirection;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (_ApplicationGlobalFlowDirection != value)
+				{
+					_ApplicationGlobalFlowDirection = value;
+					SaveValue(nameof(ApplicationGlobalFlowDirection), value);
+					OnPropertyChanged(nameof(ApplicationGlobalFlowDirection));
 				}
 			}
 		}

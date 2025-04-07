@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollView>
@@ -26,12 +27,7 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,5">
 
-                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                    <Span>
-                        Use this page to <Run Foreground="{ThemeResource SystemAccentColor}">Allow</Run>
-                        new or already installed apps or files to run on the system.
-                    </Span>
-                </TextBlock>
+                <TextBlock x:Uid="AllowNewAppsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
                 <HyperlinkButton Margin="0,-8,0,8" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 

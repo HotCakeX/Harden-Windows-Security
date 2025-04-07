@@ -20,7 +20,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Main;
+using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +31,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.ApplicationModel;
+using Windows.Globalization;
+using Windows.Storage;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
@@ -65,11 +69,10 @@ public partial class App : Application
 	/// </summary>
 	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ? 0 : (string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) ? 1 : 2);
 
-
 	/// <summary>
 	/// The application settings for AppControl Manager
 	/// </summary>
-	internal static AppSettings.Main Settings { get; } = new AppSettings.Main();
+	internal static AppSettings.Main Settings { get; private set; } = null!;
 
 	// Semaphore to ensure only one error dialog is shown at a time
 	// Exceptions will stack up and wait in line to be shown to the user
@@ -113,25 +116,7 @@ public partial class App : Application
 	/// Provides a static host for the dependency injection container used throughout the application. It configures and
 	/// registers various view models as singletons.
 	/// </summary>
-	internal static IHost AppHost { get; } = Host.CreateDefaultBuilder()
-		.ConfigureServices((context, services) =>
-		{
-			_ = services.AddSingleton<ViewModels.ViewCurrentPoliciesVM>();
-			_ = services.AddSingleton<ViewModels.PolicyEditorVM>();
-			_ = services.AddSingleton<ViewModels.SettingsVM>();
-			_ = services.AddSingleton<ViewModels.MergePoliciesVM>();
-			_ = services.AddSingleton<ViewModels.ConfigurePolicyRuleOptionsVM>();
-			_ = services.AddSingleton<ViewModels.AllowNewAppsVM>();
-			_ = services.AddSingleton<ViewModels.CreateDenyPolicyVM>();
-			_ = services.AddSingleton<ViewModels.CreateSupplementalPolicyVM>();
-			_ = services.AddSingleton<ViewModels.EventLogsPolicyCreationVM>();
-			_ = services.AddSingleton<ViewModels.SimulationVM>();
-			_ = services.AddSingleton<ViewModels.MDEAHPolicyCreationVM>();
-			_ = services.AddSingleton<ViewModels.ViewFileCertificatesVM>();
-			_ = services.AddSingleton<ViewModels.MainWindowVM>();
-			_ = services.AddSingleton<ViewModels.CreatePolicyVM>();
-		})
-		.Build();
+	internal static IHost AppHost { get; private set; } = null!;
 
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
@@ -139,9 +124,11 @@ public partial class App : Application
 	/// </summary>
 	internal App()
 	{
+		// Retrieve the app settings early on to check for elevation at startup and to pass it to DI container for the constructor of the Main app settings class
+		ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
-		if (!IsElevated && Settings.PromptForElevationOnStartup)
+		if (!IsElevated && _localSettings.Values.TryGetValue("PromptForElevationOnStartup", out object? value) && value is bool typedValue && typedValue)
 		{
 			/*
 			ProcessStartInfo processInfo = new()
@@ -186,7 +173,6 @@ public partial class App : Application
 				// Exit the process
 				Environment.Exit(0);
 			}
-
 			*/
 
 			if (ReLaunch.Action())
@@ -198,6 +184,48 @@ public partial class App : Application
 		}
 
 		this.InitializeComponent();
+
+
+		// Delaying the dependency injection container build only after the app has been relaunched with Admin privileges
+		// So we don't unnecessarily do this twice if the unelevated app instance is just going to be terminated.
+		AppHost = Host.CreateDefaultBuilder()
+		.ConfigureServices((context, services) =>
+		{
+			// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda when it takes parameters
+			_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
+			_ = services.AddSingleton<ViewCurrentPoliciesVM>();
+			_ = services.AddSingleton<PolicyEditorVM>();
+			_ = services.AddSingleton<SettingsVM>();
+			_ = services.AddSingleton<MergePoliciesVM>();
+			_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
+			_ = services.AddSingleton<AllowNewAppsVM>();
+			_ = services.AddSingleton<CreateDenyPolicyVM>();
+			_ = services.AddSingleton<CreateSupplementalPolicyVM>();
+			_ = services.AddSingleton<EventLogsPolicyCreationVM>();
+			_ = services.AddSingleton<SimulationVM>();
+			_ = services.AddSingleton<MDEAHPolicyCreationVM>();
+			_ = services.AddSingleton<ViewFileCertificatesVM>();
+			_ = services.AddSingleton<MainWindowVM>();
+			_ = services.AddSingleton<CreatePolicyVM>();
+			_ = services.AddSingleton<DeploymentVM>();
+
+			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
+			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
+			_ = services.AddSingleton(provider =>
+			{
+				ViewModel graphVM = provider.GetRequiredService<ViewModel>();
+				return new ViewOnlinePoliciesVM(graphVM);
+			});
+
+			_ = services.AddSingleton<ViewModel>();
+		})
+		.Build();
+
+
+		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
+
+		// Set the language of the application to the user's preferred language
+		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
 
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
 		_ = Directory.CreateDirectory(LogsDirectory);
@@ -295,7 +323,7 @@ public partial class App : Application
 
 		if (!IsUniqueAppInstance)
 		{
-			Logger.Write("There is another instance of the AppControl Manager running!");
+			Logger.Write("There is another instance of the AppControl Manager running. This is just an informational log.");
 		}
 
 		m_window = new MainWindow();
@@ -332,14 +360,10 @@ public partial class App : Application
 	/// </summary>
 	private void Window_Closed(object sender, WindowEventArgs e)
 	{
-		if (IsElevated)
+		// Clean up the staging area
+		if (IsElevated && Directory.Exists(GlobalVars.StagingArea))
 		{
-			// Clean up the staging area only if there are no other instance of the AppControl Manager running
-			// Don't want to disrupt their workflow
-			if (Directory.Exists(GlobalVars.StagingArea) && IsUniqueAppInstance)
-			{
-				Directory.Delete(GlobalVars.StagingArea, true);
-			}
+			Directory.Delete(GlobalVars.StagingArea, true);
 		}
 
 		// Release the Mutex

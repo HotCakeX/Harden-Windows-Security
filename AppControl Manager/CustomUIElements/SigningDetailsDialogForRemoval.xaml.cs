@@ -134,9 +134,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <summary>
 	/// Event handler for the button that navigates to the Settings page
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OpenAppSettingsButton_Click(object sender, RoutedEventArgs e)
+	private void OpenAppSettingsButton_Click()
 	{
 		// Hide the dialog box
 		this.Hide();
@@ -164,9 +162,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <summary>
 	/// Event handler for the toggle switch to automatically download SignTool.exe from the Microsoft servers
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AutoAcquireSignTool_Toggled(object sender, RoutedEventArgs e)
+	private void AutoAcquireSignTool_Toggled()
 	{
 		if (AutoAcquireSignTool.IsOn)
 		{
@@ -226,9 +222,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <summary>
 	/// Event handler for the Verify button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void VerifyButton_Click(object sender, RoutedEventArgs e)
+	private async void VerifyButton_Click()
 	{
 
 		if (VerificationRunning)
@@ -468,9 +462,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <summary>
 	/// Event handler for SignTool.exe browse button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SignToolBrowseButton_Click(object sender, RoutedEventArgs e)
+	private void SignToolBrowseButton_Click()
 	{
 		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
 
@@ -485,9 +477,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <summary>
 	/// Event handler for browse for certificate .cer file button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CertFileBrowseButton_Click(object sender, RoutedEventArgs e)
+	private void CertFileBrowseButton_Click()
 	{
 		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
@@ -502,9 +492,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	/// <summary>
 	/// Event handler for the XML policy file browse button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void XMLPolicyFileBrowseButton_Click(object sender, RoutedEventArgs e)
+	private void XMLPolicyFileBrowseButton_Click()
 	{
 		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 

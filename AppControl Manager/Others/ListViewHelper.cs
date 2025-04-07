@@ -199,54 +199,30 @@ internal static class ListViewHelper
 	/// <param name="originalList">The full list to sort if no filter is active.</param>
 	/// <param name="observableCollection">The ObservableCollection to update with sorted data.</param>
 	internal static void SortColumn<T>(
-		Func<FileIdentity, T> keySelector,
-		TextBox searchBox,
-		ToggleMenuFlyoutItem sortingToggle,
-		List<FileIdentity> originalList,
-		ObservableCollection<FileIdentity> observableCollection)
+	Func<FileIdentity, T> keySelector,
+	TextBox searchBox,
+	ToggleMenuFlyoutItem sortingToggle,
+	List<FileIdentity> originalList,
+	ObservableCollection<FileIdentity> observableCollection)
 	{
 		// Determine if a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBox.Text);
 
-		// Clear the ObservableCollection
-		observableCollection.Clear();
+		// Choose the data source based on whether a search is active.
+		List<FileIdentity> sourceData = isSearchEmpty
+			? originalList
+			: observableCollection.ToList();
 
-		// Sort based on toggle state.
-		// Use either the full list or the current display list (ObservableCollection).
-		if (sortingToggle.IsChecked)
+		// Prepare the sorted data in a temporary list.
+		List<FileIdentity> sortedData = sortingToggle.IsChecked
+			? sourceData.OrderByDescending(keySelector).ToList()
+			: sourceData.OrderBy(keySelector).ToList();
+
+		// Clear the ObservableCollection and add the sorted items.
+		observableCollection.Clear();
+		foreach (FileIdentity item in sortedData)
 		{
-			if (isSearchEmpty)
-			{
-				// Add each item to the ObservableCollection
-				foreach (FileIdentity item in originalList.OrderByDescending(keySelector))
-				{
-					observableCollection.Add(item);
-				}
-			}
-			else
-			{
-				foreach (FileIdentity item in observableCollection.OrderByDescending(keySelector))
-				{
-					observableCollection.Add(item);
-				}
-			}
-		}
-		else
-		{
-			if (isSearchEmpty)
-			{
-				foreach (FileIdentity item in originalList.OrderBy(keySelector))
-				{
-					observableCollection.Add(item);
-				}
-			}
-			else
-			{
-				foreach (FileIdentity item in observableCollection.OrderBy(keySelector))
-				{
-					observableCollection.Add(item);
-				}
-			}
+			observableCollection.Add(item);
 		}
 	}
 

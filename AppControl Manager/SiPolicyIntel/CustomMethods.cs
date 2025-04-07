@@ -15,10 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Runtime.CompilerServices;
+
 namespace AppControlManager.SiPolicyIntel;
 
 internal static class CustomMethods
 {
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static int GetByteArrayHashCode(byte[] data)
 	{
 		int hash = 17;

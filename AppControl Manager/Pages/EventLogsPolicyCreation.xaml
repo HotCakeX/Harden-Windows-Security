@@ -12,6 +12,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <!--
@@ -70,17 +71,7 @@
 
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
-            <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-
-            <Span>
-                Leverage <Run Foreground="{ThemeResource SystemAccentColor}">the local system logs or EVTX log files</Run>
-                 to create <Italic>Application Control Policies.</Italic>
-                Only Code Integrity Operational and AppLocker logs are required. Use the
-                <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
-                Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
-                to define output configuration and generate the XML policy file.
-            </Span>
-            </TextBlock>
+            <TextBlock x:Uid="EventLogsPolicyCreationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
             <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs" />
 
@@ -410,13 +401,13 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Delete Row" Click="ListViewFlyoutMenuDelete_Click">
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="ListViewFlyoutMenuDelete_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem Text="Copy Row" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -425,7 +416,7 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutSubItem.Icon>

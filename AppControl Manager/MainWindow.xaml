@@ -137,6 +137,7 @@
 
         <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
+                    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
                     IsTabStop="True"
                     IsPaneOpen="{x:Bind ViewModel.MainNavigationIsPaneOpen, Mode=TwoWay}"
                     ItemInvoked="MainNavigation_ItemInvoked"
@@ -177,52 +178,52 @@
 
             <NavigationView.MenuItems>
                 <!-- Creation Group -->
-                <NavigationViewItemHeader Content="Creation"/>
-                <NavigationViewItem x:Uid="CreatePolicyNavItem" Icon="{x:Bind ViewModel.CreatePolicyIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="CreateSupplementalPolicyNavItem" Icon="{x:Bind ViewModel.CreateSupplementalPolicyIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="CreateDenyPolicyNavItem" Icon="{x:Bind ViewModel.CreateDenyPolicyIcon, Mode=OneWay}" />
+                <NavigationViewItemHeader Content="Creation" />
+                <NavigationViewItem x:Uid="CreatePolicyNavItem" Icon="{x:Bind ViewModel.CreatePolicyIcon, Mode=OneWay}" Tag="CreatePolicy" />
+                <NavigationViewItem x:Uid="CreateSupplementalPolicyNavItem" Icon="{x:Bind ViewModel.CreateSupplementalPolicyIcon, Mode=OneWay}" Tag="CreateSupplementalPolicy" />
+                <NavigationViewItem x:Uid="CreateDenyPolicyNavItem" Icon="{x:Bind ViewModel.CreateDenyPolicyIcon, Mode=OneWay}" Tag="CreateDenyPolicy" />
 
                 <!-- Certificates Group -->
                 <NavigationViewItemHeader Content="Certificates"/>
-                <NavigationViewItem x:Uid="BuildNewCertificateNavItem" Icon="{x:Bind ViewModel.BuildNewCertificateIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="ViewFileCertificatesNavItem" Icon="{x:Bind ViewModel.ViewFileCertificatesIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="BuildNewCertificateNavItem" Icon="{x:Bind ViewModel.BuildNewCertificateIcon, Mode=OneWay}" Tag="BuildNewCertificate" />
+                <NavigationViewItem x:Uid="ViewFileCertificatesNavItem" Icon="{x:Bind ViewModel.ViewFileCertificatesIcon, Mode=OneWay}" Tag="ViewFileCertificates" />
 
                 <!-- Logs Processing Group -->
                 <NavigationViewItemHeader Content="Logs Processing"/>
-                <NavigationViewItem x:Uid="CreatePolicyFromEventLogsNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromEventLogsIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="CreatePolicyFromMDEAHNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromMDEAHIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="CreatePolicyFromEventLogsNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromEventLogsIcon, Mode=OneWay}" Tag="CreatePolicyFromEventLogs" />
+                <NavigationViewItem x:Uid="CreatePolicyFromMDEAHNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromMDEAHIcon, Mode=OneWay}" Tag="CreatePolicyFromMDEAH" />
 
                 <!-- Tactical Group -->
                 <NavigationViewItemHeader Content="Tactical"/>
-                <NavigationViewItem x:Uid="AllowNewAppsNavItem" Icon="{x:Bind ViewModel.AllowNewAppsIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="PolicyEditorNavItem" Icon="{x:Bind ViewModel.PolicyEditorIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="SimulationNavItem" Icon="{x:Bind ViewModel.SimulationIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="AllowNewAppsNavItem" Icon="{x:Bind ViewModel.AllowNewAppsIcon, Mode=OneWay}" Tag="AllowNewApps" />
+                <NavigationViewItem x:Uid="PolicyEditorNavItem" Icon="{x:Bind ViewModel.PolicyEditorIcon, Mode=OneWay}" Tag="PolicyEditor" />
+                <NavigationViewItem x:Uid="SimulationNavItem" Icon="{x:Bind ViewModel.SimulationIcon, Mode=OneWay}" Tag="Simulation" />
 
                 <!-- Info Gathering Group -->
                 <NavigationViewItemHeader Content="Info Gathering"/>
-                <NavigationViewItem x:Uid="SystemInformationNavItem" Icon="{x:Bind ViewModel.SystemInformationIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="GetCodeIntegrityHashesNavItem" Icon="{x:Bind ViewModel.GetCodeIntegrityHashesIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="GetSecurePolicySettingsNavItem" Icon="{x:Bind ViewModel.GetSecurePolicySettingsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="SystemInformationNavItem" Icon="{x:Bind ViewModel.SystemInformationIcon, Mode=OneWay}" Tag="SystemInformation" />
+                <NavigationViewItem x:Uid="GetCodeIntegrityHashesNavItem" Icon="{x:Bind ViewModel.GetCodeIntegrityHashesIcon, Mode=OneWay}" Tag="GetCodeIntegrityHashes" />
+                <NavigationViewItem x:Uid="GetSecurePolicySettingsNavItem" Icon="{x:Bind ViewModel.GetSecurePolicySettingsIcon, Mode=OneWay}" Tag="GetSecurePolicySettings" />
 
                 <!-- Policy Management Group -->
                 <NavigationViewItemHeader Content="Policy Management"/>
-                <NavigationViewItem x:Uid="ConfigurePolicyRuleOptionsNavItem" Icon="{x:Bind ViewModel.ConfigurePolicyRuleOptionsIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="MergePoliciesNavItem" Icon="{x:Bind ViewModel.MergePoliciesIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="DeploymentNavItem" Icon="{x:Bind ViewModel.DeploymentIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="ValidatePoliciesNavItem" Icon="{x:Bind ViewModel.ValidatePoliciesIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="ConfigurePolicyRuleOptionsNavItem" Icon="{x:Bind ViewModel.ConfigurePolicyRuleOptionsIcon, Mode=OneWay}" Tag="ConfigurePolicyRuleOptions" />
+                <NavigationViewItem x:Uid="MergePoliciesNavItem" Icon="{x:Bind ViewModel.MergePoliciesIcon, Mode=OneWay}" Tag="MergePolicies" />
+                <NavigationViewItem x:Uid="DeploymentNavItem" Icon="{x:Bind ViewModel.DeploymentIcon, Mode=OneWay}" Tag="Deployment" />
+                <NavigationViewItem x:Uid="ValidatePoliciesNavItem" Icon="{x:Bind ViewModel.ValidatePoliciesIcon, Mode=OneWay}" Tag="ValidatePolicies" />
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader Content="Documentation"/>
-                <NavigationViewItem x:Uid="GitHubDocsNavItem" Icon="{x:Bind ViewModel.GitHubDocsIcon, Mode=OneWay}" />
-                <NavigationViewItem x:Uid="MSFTDocsNavItem" Icon="{x:Bind ViewModel.MSFTDocsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="GitHubDocsNavItem" Icon="{x:Bind ViewModel.GitHubDocsIcon, Mode=OneWay}" Tag="GitHubDocs" />
+                <NavigationViewItem x:Uid="MSFTDocsNavItem" Icon="{x:Bind ViewModel.MSFTDocsIcon, Mode=OneWay}" Tag="MSFTDocs" />
 
                 <NavigationViewItemSeparator/>
 
-                <NavigationViewItem x:Uid="LogsNavItem" Icon="{x:Bind ViewModel.LogsIcon, Mode=OneWay}" />
+                <NavigationViewItem x:Uid="LogsNavItem" Icon="{x:Bind ViewModel.LogsIcon, Mode=OneWay}" Tag="Logs" />
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}"
+                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}" Tag="Update"
                                     Visibility="{x:Bind ViewModel.UpdatePageNavItemVisibility}">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"

@@ -9,6 +9,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollViewer>
@@ -22,11 +23,7 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
-                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                    <Span>
-                        Build <Bold>Code Signing</Bold> Certificates that are suitable for signing <Run Foreground="{ThemeResource SystemAccentColor}">App Control</Run> Policies.
-                    </Span>
-                </TextBlock>
+                <TextBlock x:Uid="BuildNewCertificatePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
                 <HyperlinkButton Margin="0,-6,0,0" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate" />
 
@@ -69,8 +66,8 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsCard x:Name="KeySizeSettingsCard" Click="{x:Bind KeySizeSettingsCard_Click}"
-                Description="The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate."
-                Header="Key Size" HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
+                x:Uid="KeySizeSettingsCard"
+                HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
 
                     <ComboBox SelectedIndex="0" x:Name="KeySizeComboBox">
                         <x:String>4096</x:String>
@@ -79,8 +76,7 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard x:Name="CommonNameSettingsCard"
-                Description="The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for."
-                Header="Common Name"
+                x:Uid="CommonNameSettingsCard"              
                 HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
 
                     <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name"  TextChanged="{x:Bind CheckFieldContents}" MinWidth="200"/>
@@ -88,8 +84,7 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard x:Name="ValiditySettingsCard"
-                Description="The time period (in years) during which a certificate is considered valid and trusted."
-                Header="Validity"
+                x:Uid="ValiditySettingsCard"         
                 HeaderIcon="{ui:FontIcon Glyph=&#xE787;}" IsClickEnabled="False" IsActionIconVisible="False">
 
                     <NumberBox x:Name="ValidityNumberBox" Value="100" SpinButtonPlacementMode="Inline"
@@ -98,8 +93,7 @@
                 </controls:SettingsCard>
 
                 <controls:SettingsCard x:Name="PFXPasswordSettingsCard"
-                Description="A secure passphrase used to encrypt and protect access to the private key and certificate data within a PFX (Personal Information Exchange) file."
-                Header="PFX Encryption Password"
+                x:Uid="PFXPasswordSettingsCard"
                 HeaderIcon="{ui:FontIcon Glyph=&#xF78D;}" IsClickEnabled="False" IsActionIconVisible="False">
 
                     <StackPanel Orientation="Horizontal">

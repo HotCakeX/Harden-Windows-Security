@@ -19,6 +19,7 @@ using System;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -30,6 +31,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class ValidatePolicy : Page
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
 	/// <summary>
 	/// Initializes a new instance of the ValidatePolicy class. Sets the navigation cache mode to required.
 	/// </summary>

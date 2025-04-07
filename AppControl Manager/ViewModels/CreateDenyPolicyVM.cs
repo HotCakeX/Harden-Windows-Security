@@ -49,6 +49,28 @@ internal sealed partial class CreateDenyPolicyVM : INotifyPropertyChanged
 
 	#region UI-Bound Properties
 
+	private Visibility _FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility
+	{
+		get => _FilesAndFoldersInfoBarActionButtonVisibility;
+		set => SetProperty(_FilesAndFoldersInfoBarActionButtonVisibility, value, newValue => _FilesAndFoldersInfoBarActionButtonVisibility = newValue);
+	}
+
+	private Visibility _PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility PFNInfoBarActionButtonVisibility
+	{
+		get => _PFNInfoBarActionButtonVisibility;
+		set => SetProperty(_PFNInfoBarActionButtonVisibility, value, newValue => _PFNInfoBarActionButtonVisibility = newValue);
+	}
+
+	private Visibility _CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility
+	{
+		get => _CustomFilePathRulesInfoBarActionButtonVisibility;
+		set => SetProperty(_CustomFilePathRulesInfoBarActionButtonVisibility, value, newValue => _CustomFilePathRulesInfoBarActionButtonVisibility = newValue);
+	}
+
+
 	private string _TotalCountOfTheFilesTextBox = "Total files: 0";
 	internal string TotalCountOfTheFilesTextBox
 	{

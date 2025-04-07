@@ -19,7 +19,7 @@
   <Identity
     Name="AppControlManager"
     Publisher="CN=SelfSignedCertForAppControlManager"
-    Version="2.0.0.0" />
+    Version="2.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="199a23ec-7cb6-4ab5-ab50-8baca348bc79" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -40,9 +40,16 @@
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26100.0" />
   </Dependencies>
 
+  <!-- https://learn.microsoft.com/en-us/windows/apps/winui/winui3/localize-winui3-app -->
   <Resources>
     <Resource Language="en-US"/>
+    <Resource Language="he-IL"/>
   </Resources>
+
+<!-- 
+https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/localizable-manifest-items-win10
+https://learn.microsoft.com/en-us/windows/uwp/app-resources/localize-strings-ui-manifest#refer-to-a-string-resource-identifier-from-your-app-package-manifest
+-->
 
   <Applications>
     <Application Id="App"
@@ -50,7 +57,7 @@
       EntryPoint="$targetentrypoint$" uap18:TrustLevel="mediumIL" uap18:RuntimeBehavior="windowsApp">
       <uap:VisualElements
         DisplayName="AppControl Manager"
-        Description="AppControl Manager allows you to manage App Control policies and Code Integrity in Windows with ease, including but not limited to: creation, simulation, removal, deployment and signing."
+        Description="ms-resource:AppDescription"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
@@ -69,6 +76,7 @@
   </Applications>
 
   <Capabilities>
+    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="allowElevation" />
   </Capabilities>

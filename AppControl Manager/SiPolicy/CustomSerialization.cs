@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using AppControlManager.Others;
 
@@ -935,6 +936,7 @@ internal static class CustomSerialization
 	*/
 
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static unsafe string ConvertByteArrayToHex(byte[]? data)
 	{
 		// If the input data is null or has no elements,

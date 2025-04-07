@@ -23,25 +23,46 @@ namespace AppControlManager.MicrosoftGraph;
 /// <summary>
 /// Define the class structure for the custom policy
 /// </summary>
-internal sealed class Windows10CustomConfiguration
+internal sealed class Windows10CustomConfiguration(
+	string? oDataType,
+	string? displayName,
+	string? description,
+	List<OmaSettingBase64>? omaSettings,
+	List<string>? platforms
+)
 {
+	/// <summary>
+	/// Represents the OData type.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("@odata.type")]
-	internal string? ODataType { get; set; }
+	internal string? ODataType { get; } = oDataType;
 
+	/// <summary>
+	/// The display name of the custom configuration.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("displayName")]
-	internal string? DisplayName { get; set; }
+	internal string? DisplayName { get; } = displayName;
 
+	/// <summary>
+	/// The description of the custom configuration.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("description")]
-	internal string? Description { get; set; }
+	internal string? Description { get; } = description;
 
+	/// <summary>
+	/// The OMA settings associated with the configuration.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("omaSettings")]
-	internal List<OmaSettingBase64>? OmaSettings { get; set; }
+	internal List<OmaSettingBase64>? OmaSettings { get; } = omaSettings;
 
+	/// <summary>
+	/// The platforms applicable to the configuration.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("platforms")]
-	internal List<string>? Platforms { get; set; }
+	internal List<string>? Platforms { get; } = platforms;
 }

@@ -17,15 +17,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
+using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
+using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,8 +43,31 @@ namespace AppControlManager.Pages;
 /// DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
 /// user interactions for file selection and deployment status updates.
 /// </summary>
-internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager, INotifyPropertyChanged
 {
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	private ViewModel ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModel>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private DeploymentVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<DeploymentVM>();
+
+
+	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+
+	private void UpdateButtonsStates(bool on)
+	{
+		// Enable the options of a valid value is set as Active Account
+		deployToIntune = on;
+		IntuneGroupsComboBox.IsEnabled = on;
+		RefreshIntuneGroupsButton.IsEnabled = on;
+	}
+
+	internal readonly AuthenticationCompanion AuthCompanionCLS;
+
+	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+
+
 	// HashSets to store user input selected files
 	private readonly HashSet<string> XMLFiles = [];
 	private readonly HashSet<string> SignedXMLFiles = [];
@@ -63,6 +91,18 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeploySignedXMLButton.IsEnabled = false;
 			DeploySignedXMLButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("RequiresWindows1124H2");
 		}
+
+		this.DataContext = this;
+
+		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
+			() => ViewModel.MainInfoBarVisibility, value => ViewModel.MainInfoBarVisibility = value,
+			() => ViewModel.MainInfoBarIsOpen, value => ViewModel.MainInfoBarIsOpen = value,
+			() => ViewModel.MainInfoBarMessage, value => ViewModel.MainInfoBarMessage = value,
+			() => ViewModel.MainInfoBarSeverity, value => ViewModel.MainInfoBarSeverity = value,
+			() => ViewModel.MainInfoBarIsClosable, value => ViewModel.MainInfoBarIsClosable = value), AuthenticationContext.Intune);
+
+
+		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 	}
 
 
@@ -174,11 +214,13 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			StatusInfoBar.Visibility = Visibility.Visible;
-			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.Rizz.GetString("UnsignedXMLFiles");
-			StatusInfoBar.Severity = InfoBarSeverity.Informational;
-			StatusInfoBar.IsClosable = false;
+
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.Rizz.GetString("UnsignedXMLFiles");
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBarIsClosable = false;
+
 
 			MainProgressRing.Visibility = Visibility.Visible;
 
@@ -208,7 +250,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'";
+						ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'";
 					});
 
 					// Convert the XML file to CIP
@@ -241,8 +283,8 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			errorsOccurred = true;
 
-			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentError");
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentError");
 
 			throw;
 		}
@@ -250,8 +292,8 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			if (!errorsOccurred)
 			{
-				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentSuccess");
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentSuccess");
 
 				// Clear the lists at the end if no errors occurred
 				XMLFiles.Clear();
@@ -265,7 +307,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeploySignedXMLButton.IsEnabled = true;
 
 			MainProgressRing.Visibility = Visibility.Collapsed;
-			StatusInfoBar.IsClosable = true;
+			ViewModel.MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -326,11 +368,11 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			StatusInfoBar.Visibility = Visibility.Visible;
-			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingSignedXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
-			StatusInfoBar.Severity = InfoBarSeverity.Informational;
-			StatusInfoBar.IsClosable = false;
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingSignedXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBarIsClosable = false;
 
 			MainProgressRing.Visibility = Visibility.Visible;
 
@@ -346,7 +388,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = (SignOnlyNoDeployToggleSwitchStatus ? "Currently Signing XML file:" : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'";
+						ViewModel.MainInfoBarMessage = (SignOnlyNoDeployToggleSwitchStatus ? "Currently Signing XML file:" : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'";
 					});
 
 
@@ -415,8 +457,8 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			errorsOccurred = true;
 
-			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentError");
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentError");
 
 			throw;
 		}
@@ -424,8 +466,8 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			if (!errorsOccurred)
 			{
-				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = SignOnlyNoDeployToggleSwitchStatus ? "Successfully created signed CIP files for all of the selected XML files." : GlobalVars.Rizz.GetString("SignedDeploymentSuccess");
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarMessage = SignOnlyNoDeployToggleSwitchStatus ? "Successfully created signed CIP files for all of the selected XML files." : GlobalVars.Rizz.GetString("SignedDeploymentSuccess");
 
 				// Clear the lists at the end if no errors occurred
 				SignedXMLFiles.Clear();
@@ -439,7 +481,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeploySignedXMLButton.IsEnabled = true;
 
 			MainProgressRing.Visibility = Visibility.Collapsed;
-			StatusInfoBar.IsClosable = true;
+			ViewModel.MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -465,11 +507,11 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			StatusInfoBar.Visibility = Visibility.Visible;
-			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingCIPFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
-			StatusInfoBar.Severity = InfoBarSeverity.Informational;
-			StatusInfoBar.IsClosable = false;
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingCIPFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBarIsClosable = false;
 
 			MainProgressRing.Visibility = Visibility.Visible;
 
@@ -480,7 +522,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 				{
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeployingCIPFile") + file + "'";
+						ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingCIPFile") + file + "'";
 					});
 
 					string randomPolicyID = Guid.CreateVersion7().ToString().ToUpperInvariant();
@@ -503,8 +545,8 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			errorsOccurred = true;
 
-			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("DeploymentError");
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentError");
 
 			throw;
 		}
@@ -512,8 +554,8 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			if (!errorsOccurred)
 			{
-				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = GlobalVars.Rizz.GetString("CIPDeploymentSuccess");
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("CIPDeploymentSuccess");
 
 				// Clear the list at the end if no errors occurred
 				CIPFiles.Clear();
@@ -526,7 +568,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			DeploySignedXMLButton.IsEnabled = true;
 
 			MainProgressRing.Visibility = Visibility.Collapsed;
-			StatusInfoBar.IsClosable = true;
+			ViewModel.MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -629,126 +671,10 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 
 	/// <summary>
-	/// Event handler for the SignIn button
+	/// To hold the Intune Groups Name/IDs
 	/// </summary>
-	private async void IntuneSignInButton_Click()
-	{
+	private Dictionary<string, string> Groups = [];
 
-		bool signInSuccessful = false;
-
-		try
-		{
-			StatusInfoBar.Visibility = Visibility.Visible;
-			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("SigningIntoIntune");
-			StatusInfoBar.Severity = InfoBarSeverity.Informational;
-			StatusInfoBar.IsClosable = false;
-
-			IntuneCancelSignInButton.IsEnabled = true;
-
-			IntuneSignInButton.IsEnabled = false;
-
-			await MicrosoftGraph.Main.SignIn(MicrosoftGraph.AuthenticationContext.Intune);
-
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInSuccess");
-			StatusInfoBar.Severity = InfoBarSeverity.Success;
-
-			deployToIntune = true;
-
-			LocalIntuneStatusTextBox.Text = GlobalVars.Rizz.GetString("CloudDeploymentActive");
-
-			// Enable the sign out button
-			IntuneSignOutButton.IsEnabled = true;
-
-			signInSuccessful = true;
-
-			IntuneGroupsComboBox.IsEnabled = true;
-			RefreshIntuneGroupsButton.IsEnabled = true;
-		}
-
-		catch (OperationCanceledException)
-		{
-			signInSuccessful = false;
-			Logger.Write(GlobalVars.Rizz.GetString("IntuneSignInCancelled"));
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInCancelledMessage");
-			StatusInfoBar.Severity = InfoBarSeverity.Warning;
-		}
-
-		catch (Exception ex)
-		{
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignInError") + ex.Message;
-			StatusInfoBar.Severity = InfoBarSeverity.Error;
-
-			throw;
-		}
-
-		finally
-		{
-			// If sign in wasn't successful, keep the button enabled
-			if (!signInSuccessful)
-			{
-				IntuneSignInButton.IsEnabled = true;
-			}
-
-			StatusInfoBar.IsClosable = true;
-
-			IntuneCancelSignInButton.IsEnabled = false;
-		}
-
-	}
-
-	/// <summary>
-	/// Signs out of the tenant
-	/// </summary>
-	private async void IntuneSignOutButton_Click()
-	{
-
-		bool signOutSuccessful = false;
-
-		try
-		{
-			StatusInfoBar.Visibility = Visibility.Visible;
-			StatusInfoBar.IsOpen = true;
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("SigningOutOfIntune");
-			StatusInfoBar.Severity = InfoBarSeverity.Informational;
-			StatusInfoBar.IsClosable = false;
-
-			IntuneSignOutButton.IsEnabled = false;
-
-			await MicrosoftGraph.Main.SignOut(MicrosoftGraph.AuthenticationContext.Intune);
-
-			signOutSuccessful = true;
-
-			// Enable the Sign in button
-			IntuneSignInButton.IsEnabled = true;
-
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignOutSuccess");
-			StatusInfoBar.Severity = InfoBarSeverity.Success;
-
-			deployToIntune = false;
-			IntuneGroupsComboBox.IsEnabled = false;
-			RefreshIntuneGroupsButton.IsEnabled = false;
-
-			LocalIntuneStatusTextBox.Text = GlobalVars.Rizz.GetString("LocalDeploymentActive");
-		}
-		catch (Exception ex)
-		{
-			StatusInfoBar.Message = GlobalVars.Rizz.GetString("IntuneSignOutError") + ex.Message;
-			StatusInfoBar.Severity = InfoBarSeverity.Error;
-
-			throw;
-		}
-		finally
-		{
-			// If sign out wasn't successful, keep the button enabled
-			if (!signOutSuccessful)
-			{
-				IntuneSignOutButton.IsEnabled = true;
-			}
-
-			StatusInfoBar.IsClosable = true;
-		}
-	}
 
 	/// <summary>
 	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
@@ -756,11 +682,11 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 	/// </summary>
 	private async void RefreshIntuneGroupsButton_Click()
 	{
-		await MicrosoftGraph.Main.FetchGroups();
-		Dictionary<string, string> groups = MicrosoftGraph.Main.GetGroups();
+		Groups = await MicrosoftGraph.Main.FetchGroups(AuthCompanionCLS.CurrentActiveAccount);
+
 
 		// Update the ComboBox with group names
-		IntuneGroupsComboBox.ItemsSource = groups.Keys;
+		IntuneGroupsComboBox.ItemsSource = Groups.Keys;
 		IntuneGroupsComboBox.SelectedIndex = 0;
 	}
 
@@ -774,15 +700,21 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 	/// <returns>This method does not return a value.</returns>
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
+		string? groupName = null;
 		string? groupID = null;
 
 		await DispatcherQueue.EnqueueAsync(() =>
 		{
-			groupID = IntuneGroupsComboBox.SelectedItem as string;
+			groupName = IntuneGroupsComboBox.SelectedItem as string;
 
 		});
 
+		// Name of the policy that will be uploaded
 		string? policyName = null;
+
+		// The description text for the Intune portal
+		// It will contain all of the information related to the policy
+		string descriptionText = null!;
 
 		await Task.Run(() =>
 		{
@@ -801,23 +733,35 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 				{
 					policyName = nameSetting.Value.Item.ToString();
 				}
+
+
+				// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
+				CiPolicyInfo policy = new(
+					policyID: policyObj.PolicyID,
+					basePolicyID: policyObj.BasePolicyID,
+					friendlyName: policyName,
+					version: null,
+					versionString: policyObj.VersionEx,
+					isSystemPolicy: false,
+					isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
+					isOnDisk: false,
+					isEnforced: true,
+					isAuthorized: true,
+					policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
+				);
+
+				descriptionText = CiPolicyInfo.ToJson(policy);
+
 			}
 
+			// Try to get the group ID for the selected Group name
+			if (groupName is not null)
+				_ = Groups.TryGetValue(groupName, out groupID);
 		});
 
-		await MicrosoftGraph.Main.UploadPolicyToIntune(file, groupID, policyName, policyID);
+		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupID, policyName, policyID, descriptionText);
 	}
 
-
-#pragma warning disable CA1822
-	/// <summary>
-	/// Event handler for the Cancel Sign In button
-	/// </summary>
-	private void IntuneCancelSignInButton_Click()
-	{
-		MicrosoftGraph.Main.CancelSignIn();
-	}
-#pragma warning restore CA1822
 
 
 	private void BrowseForXMLPolicyFilesButton_RightTapped()
@@ -930,11 +874,11 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						StatusInfoBar.Visibility = Visibility.Visible;
-						StatusInfoBar.IsOpen = true;
-						StatusInfoBar.Message = $"Converting {file} to XML";
-						StatusInfoBar.Severity = InfoBarSeverity.Informational;
-						StatusInfoBar.IsClosable = false;
+						ViewModel.MainInfoBarVisibility = Visibility.Visible;
+						ViewModel.MainInfoBarIsOpen = true;
+						ViewModel.MainInfoBarMessage = $"Converting {file} to XML";
+						ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+						ViewModel.MainInfoBarIsClosable = false;
 						MainProgressRing.Visibility = Visibility.Visible;
 					});
 
@@ -954,18 +898,18 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		{
 			ErrorsOccurred = true;
 
-			StatusInfoBar.Severity = InfoBarSeverity.Error;
-			StatusInfoBar.Message = $"There was a problem converting the XML files to CIP: {ex.Message}";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarMessage = $"There was a problem converting the XML files to CIP: {ex.Message}";
 		}
 		finally
 		{
 			if (!ErrorsOccurred)
 			{
-				StatusInfoBar.Severity = InfoBarSeverity.Success;
-				StatusInfoBar.Message = "Successfully converted all of the selected XML files to CIP binaries";
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarMessage = "Successfully converted all of the selected XML files to CIP binaries";
 			}
 
-			StatusInfoBar.IsClosable = true;
+			ViewModel.MainInfoBarIsClosable = true;
 			MainProgressRing.Visibility = Visibility.Collapsed;
 
 			DeployUnsignedXMLPolicyFilesSettingsCard.IsEnabled = true;
@@ -1007,4 +951,31 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
 	}
 
+
+
+
+	/// <summary>
+	/// Sets the property and raises the PropertyChanged event if the value has changed.
+	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="currentValue"></param>
+	/// <param name="newValue"></param>
+	/// <param name="setter"></param>
+	/// <param name="propertyName"></param>
+	/// <returns></returns>
+	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
+	{
+		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
+			return false;
+		setter(newValue);
+		OnPropertyChanged(propertyName);
+		return true;
+	}
+
+
+	private void OnPropertyChanged(string? propertyName)
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	}
 }

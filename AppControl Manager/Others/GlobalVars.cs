@@ -45,7 +45,8 @@ internal static class GlobalVars
 	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
 	// Storing the path to the StagingArea folder in the AppControl Manager folder in the Program Files
-	internal static readonly string StagingArea = Path.Combine(UserConfigDir, "StagingArea");
+	// Each instance of the App (in case there are more than one at a time) has a unique staging area
+	internal static readonly string StagingArea = Path.Combine(UserConfigDir, $"StagingArea-{DateTime.UtcNow:yyyyMMddHHmmssfffffff}");
 
 	// The link to the file that contains the download link for the latest version of the AppControl Manager
 	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt");
@@ -102,7 +103,6 @@ internal static class GlobalVars
 
 	static GlobalVars()
 	{
-
 		if (!App.IsElevated)
 			return;
 

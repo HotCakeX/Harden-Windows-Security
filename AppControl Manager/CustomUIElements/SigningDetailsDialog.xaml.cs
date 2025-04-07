@@ -158,9 +158,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// <summary>
 	/// Event handler for the toggle switch to automatically download SignTool.exe from the Microsoft servers
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void AutoAcquireSignTool_Toggled(object sender, RoutedEventArgs e)
+	private void AutoAcquireSignTool_Toggled()
 	{
 		if (AutoAcquireSignTool.IsOn)
 		{
@@ -218,9 +216,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// <summary>
 	/// Event handler for the Verify button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void VerifyButton_Click(object sender, RoutedEventArgs e)
+	private async void VerifyButton_Click()
 	{
 
 		if (VerificationRunning)
@@ -396,9 +392,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// <summary>
 	/// Event handler for SignTool.exe browse button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SignToolBrowseButton_Click(object sender, RoutedEventArgs e)
+	private void SignToolBrowseButton_Click()
 	{
 		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
 
@@ -413,9 +407,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// <summary>
 	/// Event handler for browse for certificate .cer file button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CertFileBrowseButton_Click(object sender, RoutedEventArgs e)
+	private void CertFileBrowseButton_Click()
 	{
 		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.CertificatePickerFilter);
 

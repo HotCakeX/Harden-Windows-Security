@@ -10,6 +10,7 @@
     xmlns:others="using:AppControlManager.Others"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollView x:Name="MainScrollView" PointerPressed="MainScrollView_PointerPressed">
@@ -69,11 +70,7 @@
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
-                <TextBlock TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}">
-                    <Span>
-                        Create a <Bold>Deny</Bold> <Underline>base</Underline> policy that will <Run Foreground="{ThemeResource SystemAccentColor}">explicitly deny</Run> files or applications. Keep in mind that Application Control is fundamentally based on allow-listing, which means anything that is not allowed by a policy is <Bold>already automatically denied.</Bold>
-                    </Span>
-                </TextBlock>
+                <TextBlock x:Uid="CreateDenyPolicyPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
                 <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy" />
 
@@ -102,6 +99,9 @@
                               IsOpen="False"
                               IsClosable="False"
                               Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_FilesAndFolders}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
@@ -109,7 +109,7 @@
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <Button x:Name="CreateFilesAndFoldersDenyPolicyButton" x:Uid="CreateDenyPolicyButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="CreateFilesAndFoldersDenyPolicyButton_Click" />
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind CreateFilesAndFoldersDenyPolicyButton_Click}" />
 
                         <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
@@ -121,18 +121,18 @@
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" x:Uid="BrowseForFilesDenyPolicySettingsCard"
-                               Holding="FilesAndFoldersBrowseForFilesSettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForFilesSettingsCard_RightTapped"
-                               IsClickEnabled="True" IsActionIconVisible="False" Click="FilesAndFoldersBrowseForFilesSettingsCard_Click">
+                               Holding="FilesAndFoldersBrowseForFilesSettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForFilesSettingsCard_RightTapped}"
+                               IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind FilesAndFoldersBrowseForFilesSettingsCard_Click}">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" RightTapped="FilesAndFoldersBrowseForFilesButton_RightTapped"
-                                    x:Uid="FileBrowseButton" Click="FilesAndFoldersBrowseForFilesButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" RightTapped="{x:Bind FilesAndFoldersBrowseForFilesButton_RightTapped}"
+                                    x:Uid="FileBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFilesButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFilesButton_Flyout">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -149,17 +149,17 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BrowseForFoldersDenyPolicySettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="FilesAndFoldersBrowseForFoldersSettingsCard_Click"
-                                Holding="FilesAndFoldersBrowseForFoldersSettingsCard_Holding" RightTapped="FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped" IsClickEnabled="True" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="BrowseForFoldersDenyPolicySettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_Click}"
+                                Holding="FilesAndFoldersBrowseForFoldersSettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped}" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" RightTapped="FilesAndFoldersBrowseForFoldersButton_RightTapped" x:Uid="FolderBrowseButton" Click="FilesAndFoldersBrowseForFoldersButton_Click">
+                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" RightTapped="{x:Bind FilesAndFoldersBrowseForFoldersButton_RightTapped}" x:Uid="FolderBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -181,7 +181,7 @@
                         </controls:SettingsCard>
 
                         <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
-                        Header="Select Scan Level" Click="ScanLevelComboBoxSettingsCard_Click" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
+                        Header="Select Scan Level" Click="{x:Bind ScanLevelComboBoxSettingsCard_Click}" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
 
                             <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
                                   SelectedIndex="0">
@@ -194,15 +194,14 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="The higher this number, the faster the scan completes and the more system resources will be consumed."
-                        Header="Scalability" IsClickEnabled="False" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="ScalabilitySettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
                                 <ProgressRing x:Name="FilesAndFoldersProgressRing" IsIndeterminate="False" Value="0" ToolTipService.ToolTip="The Deny policy creation progress" />
 
                                 <!-- Scalability Button with RadialGauge Flyout -->
-                                <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when scanning files. By default it uses 2 parallel tasks.">
+                                <Button x:Name="ScalabilityButton" x:Uid="ScalabilityButton">
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel>
@@ -236,7 +235,7 @@
                                            IsClickEnabled="True" IsActionIconVisible="True"
                                            IsEnabled="False"
                                            x:Name="FilesAndFoldersViewFileDetailsSettingsCard"
-                                           Click="FilesAndFoldersViewFileDetailsSettingsCard_Click">
+                                           Click="{x:Bind FilesAndFoldersViewFileDetailsSettingsCard_Click}">
 
                         </controls:SettingsCard>
 
@@ -248,7 +247,7 @@
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Name="PFNSettingsCard"
                     x:Uid="CreateDenyPolicyPFNSettingsExpander"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}" Expanded="PFNSettingsCard_Expanded">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}" Expanded="{x:Bind PFNSettingsCard_Expanded}">
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="PFNInfoBar"
@@ -259,12 +258,15 @@
                             IsOpen="False"
                             IsClosable="False"
                             Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.PFNInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_PFN}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreatePFNDenyPolicyButton" Click="CreatePFNDenyPolicyButton_Click" x:Uid="CreateDenyPolicyButton"
+                        <Button x:Name="CreatePFNDenyPolicyButton" Click="{x:Bind CreatePFNDenyPolicyButton_Click}" x:Uid="CreateDenyPolicyButton"
                                 Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"/>
 
                         <ToggleButton x:Name="PFNPolicyDeployToggleButton" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
@@ -286,12 +288,12 @@
 
                                 <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
 
-                                    <TextBox x:Name="PFNAppFilteringTextBox" TextChanged="PFNAppFilteringTextBox_TextChanged" PlaceholderText="Search among the apps"/>
+                                    <TextBox x:Name="PFNAppFilteringTextBox" TextChanged="{x:Bind PFNAppFilteringTextBox_TextChanged}" PlaceholderText="Search among the apps"/>
 
                                     <TextBlock x:Uid="SelectedAppsTextBlock" x:Name="PFNSelectedItemsCount" HorizontalAlignment="Center"/>
-                                    <Button x:Uid="RefreshButton" HorizontalAlignment="Center" x:Name="PFNRefreshAppsListButton" Click="PFNRefreshAppsListButton_Click" />
-                                    <Button x:Uid="SelectAllButton" HorizontalAlignment="Center" x:Name="PFNSelectAllAppsListButton" Click="PFNSelectAllAppsListButton_Click" />
-                                    <Button x:Uid="RemoveSelectionsButton" HorizontalAlignment="Center" x:Name="PFNRemoveSelectionAppsListButton" Click="PFNRemoveSelectionAppsListButton_Click" />
+                                    <Button x:Uid="RefreshButton" HorizontalAlignment="Center" x:Name="PFNRefreshAppsListButton" Click="{x:Bind PFNRefreshAppsListButton_Click}" />
+                                    <Button x:Uid="SelectAllButton" HorizontalAlignment="Center" x:Name="PFNSelectAllAppsListButton" Click="{x:Bind PFNSelectAllAppsListButton_Click}" />
+                                    <Button x:Uid="RemoveSelectionsButton" HorizontalAlignment="Center" x:Name="PFNRemoveSelectionAppsListButton" Click="{x:Bind PFNRemoveSelectionAppsListButton_Click}" />
 
                                 </controls:WrapPanel>
 
@@ -308,8 +310,8 @@
                                         HorizontalAlignment="Left"
                                         SelectionMode="Multiple"
                                         PointerEntered="PFNPackagedAppsListView_PointerEntered"
-                                        PointerExited="PFNPackagedAppsListView_PointerExited"
-                                        SelectionChanged="PFNPackagedAppsListView_SelectionChanged"
+                                        PointerExited="{x:Bind PFNPackagedAppsListView_PointerExited}"
+                                        SelectionChanged="{x:Bind PFNPackagedAppsListView_SelectionChanged}"
                                         ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
 
                                         <ListView.ItemsPanel>
@@ -356,12 +358,15 @@
                             IsOpen="False"
                             IsClosable="False"
                             Severity="Informational">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_CustomPatternBasedFileRule}" />
+                            </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreateCustomPatternBasedFileRuleDenyPolicyButton" Click="CreateCustomPatternBasedFileRuleDenyPolicyButton_Click" x:Uid="CreateDenyPolicyButton"
+                        <Button x:Name="CreateCustomPatternBasedFileRuleDenyPolicyButton" Click="{x:Bind CreateCustomPatternBasedFileRuleDenyPolicyButton_Click}" x:Uid="CreateDenyPolicyButton"
                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                         <ToggleButton x:Name="CustomPatternBasedFileRulePolicyDeployToggleButton" Click="CustomPatternBasedFileRulePolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
@@ -380,7 +385,7 @@
                             <TextBox x:Name="DenyPolicyCustomPatternBasedCustomPatternTextBox" x:Uid="DenyPolicyCustomPatternBasedCustomPatternTextBox" TextWrapping="Wrap" MaxWidth="400"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard" IsClickEnabled="True" Click="DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click" IsActionIconVisible="True"/>
+                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard" IsClickEnabled="True" Click="{x:Bind DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click}" IsActionIconVisible="True"/>
 
                     </controls:SettingsExpander.Items>
 

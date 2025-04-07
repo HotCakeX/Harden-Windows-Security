@@ -59,6 +59,51 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 
 	#region UI-Bound Properties
 
+
+	private Visibility _FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility
+	{
+		get => _FilesAndFoldersInfoBarActionButtonVisibility;
+		set => SetProperty(_FilesAndFoldersInfoBarActionButtonVisibility, value, newValue => _FilesAndFoldersInfoBarActionButtonVisibility = newValue);
+	}
+
+
+	private Visibility _CertificatesInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility CertificatesInfoBarActionButtonVisibility
+	{
+		get => _CertificatesInfoBarActionButtonVisibility;
+		set => SetProperty(_CertificatesInfoBarActionButtonVisibility, value, newValue => _CertificatesInfoBarActionButtonVisibility = newValue);
+	}
+
+	private Visibility _ISGInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility ISGInfoBarActionButtonVisibility
+	{
+		get => _ISGInfoBarActionButtonVisibility;
+		set => SetProperty(_ISGInfoBarActionButtonVisibility, value, newValue => _ISGInfoBarActionButtonVisibility = newValue);
+	}
+
+	private Visibility _StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility StrictKernelModeInfoBarActionButtonVisibility
+	{
+		get => _StrictKernelModeInfoBarActionButtonVisibility;
+		set => SetProperty(_StrictKernelModeInfoBarActionButtonVisibility, value, newValue => _StrictKernelModeInfoBarActionButtonVisibility = newValue);
+	}
+
+	private Visibility _PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility PFNInfoBarActionButtonVisibility
+	{
+		get => _PFNInfoBarActionButtonVisibility;
+		set => SetProperty(_PFNInfoBarActionButtonVisibility, value, newValue => _PFNInfoBarActionButtonVisibility = newValue);
+	}
+
+	private Visibility _CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility
+	{
+		get => _CustomFilePathRulesInfoBarActionButtonVisibility;
+		set => SetProperty(_CustomFilePathRulesInfoBarActionButtonVisibility, value, newValue => _CustomFilePathRulesInfoBarActionButtonVisibility = newValue);
+	}
+
+
 	private string _TotalCountOfTheFilesTextBox = "Total files: 0";
 	internal string TotalCountOfTheFilesTextBox
 	{

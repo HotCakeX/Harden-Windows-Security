@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -31,6 +32,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class Logs : Page
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
 	/// <summary>
 	/// Holds all lines from the currently loaded log file.
 	/// </summary>

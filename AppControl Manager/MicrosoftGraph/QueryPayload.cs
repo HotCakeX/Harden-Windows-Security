@@ -22,9 +22,14 @@ namespace AppControlManager.MicrosoftGraph;
 /// <summary>
 /// Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
 /// </summary>
-internal sealed class QueryPayload
+internal sealed class QueryPayload(
+	string? query
+)
 {
+	/// <summary>
+	/// The query string.
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("Query")]
-	internal string? Query { get; set; }
+	internal string? Query { get; } = query;
 }

@@ -18,6 +18,7 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -31,6 +32,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class BuildNewCertificate : Page
 {
+#pragma warning disable CA1822
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+#pragma warning restore CA1822
 
 	// To save the generated certificate's thumb print
 	private string? generatedCertThumbPrint;

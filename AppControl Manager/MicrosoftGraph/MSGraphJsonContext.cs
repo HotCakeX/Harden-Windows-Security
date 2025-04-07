@@ -30,6 +30,9 @@ namespace AppControlManager.MicrosoftGraph;
 [JsonSerializable(typeof(QueryPayload))]
 [JsonSerializable(typeof(Windows10CustomConfiguration))]
 [JsonSerializable(typeof(OmaSettingBase64))]
-internal sealed partial class IntuneJsonContext : JsonSerializerContext
+[JsonSerializable(typeof(DeviceConfigurationPolicy))]
+[JsonSerializable(typeof(DeviceConfigurationPoliciesResponse))]
+[JsonSerializable(typeof(Others.CiPolicyInfo))]
+internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {
 }

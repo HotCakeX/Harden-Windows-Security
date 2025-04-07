@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollViewer>
@@ -22,9 +23,8 @@
             </Grid.RowDefinitions>
 
             <Button x:Name="RetrieveCodeIntegrityInfo"
-                Content="Retrieve Code Integrity Info"
-                Click="{x:Bind RetrieveCodeIntegrityInfo_Click}"
-                ToolTipService.ToolTip="Retrieve the latest effective Code Integrity information from the current system"
+                x:Uid="RetrieveCodeIntegrityInfoButton"
+                Click="{x:Bind RetrieveCodeIntegrityInfo_Click}"                
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Style="{StaticResource AccentButtonStyle}"

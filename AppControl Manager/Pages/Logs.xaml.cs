@@ -38,7 +38,7 @@ internal sealed partial class Logs : Page
 	/// <summary>
 	/// Holds all lines from the currently loaded log file.
 	/// </summary>
-	private List<string> _allLogLines = [];
+	private string[] _allLogLines = [];
 
 	/// <summary>
 	/// Initializes the Logs component and sets the navigation cache mode to disabled. This ensures the page reloads when
@@ -72,9 +72,9 @@ internal sealed partial class Logs : Page
 	private void LoadLogFiles()
 	{
 		// Get files matching the pattern;
-		List<FileInfo> logFiles = [.. Directory.GetFiles(App.LogsDirectory, "AppControlManager_Logs_*.txt")
+		FileInfo[] logFiles = Directory.GetFiles(App.LogsDirectory, "AppControlManager_Logs_*.txt")
 			.Select(f => new FileInfo(f))
-			.OrderByDescending(f => f.CreationTime)];
+			.OrderByDescending(f => f.CreationTime).ToArray();
 
 		// Clear and fill the ComboBox with full file paths.
 		LogFileComboBox.Items.Clear();
@@ -85,7 +85,7 @@ internal sealed partial class Logs : Page
 		}
 
 		// If files were found, select the first one and display its content.
-		if (logFiles.Count is not 0)
+		if (logFiles.Length > 0)
 		{
 			LogFileComboBox.SelectedIndex = 0;
 			_ = DisplayLogContentAsync(logFiles[0].FullName);
@@ -128,7 +128,7 @@ internal sealed partial class Logs : Page
 			string content = await reader.ReadToEndAsync();
 
 			// Split file content into individual lines.
-			_allLogLines = [.. content.Split(["\r\n", "\n"], StringSplitOptions.None)];
+			_allLogLines = content.Split(["\r\n", "\n"], StringSplitOptions.None);
 
 			// Update the displayed log lines (filtered by search text if applicable).
 			UpdateLogDisplay();

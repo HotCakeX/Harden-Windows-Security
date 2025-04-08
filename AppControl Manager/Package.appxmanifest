@@ -19,7 +19,7 @@
   <Identity
     Name="AppControlManager"
     Publisher="CN=SelfSignedCertForAppControlManager"
-    Version="2.0.1.0" />
+    Version="2.0.11.0" />
 
   <mp:PhoneIdentity PhoneProductId="199a23ec-7cb6-4ab5-ab50-8baca348bc79" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -79,5 +79,6 @@ https://learn.microsoft.com/en-us/windows/uwp/app-resources/localize-strings-ui-
     <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="allowElevation" />
+    <rescap:Capability Name="packageQuery" />
   </Capabilities>
 </Package>

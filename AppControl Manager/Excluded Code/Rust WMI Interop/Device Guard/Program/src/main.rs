@@ -78,8 +78,8 @@ impl DeviceGuard {
     /// Updates the DeviceGuard struct with a property value based on the property's name
     /// and its corresponding VARIANT value.
     ///
-    /// For string types (VT_BSTR), the helper `bstr_to_option` is used.
-    /// For arrays of 16-bit integers (VT_ARRAY|VT_I2), the custom decoder `decode_i16_array` is employed.
+    /// For string types (VT_BSTR), the helper bstr_to_option is used.
+    /// For arrays of 16-bit integers (VT_ARRAY|VT_I2), the custom decoder decode_i16_array is employed.
     ///
     unsafe fn set_property(&mut self, name: &str, var: &VARIANT) {
         match name {
@@ -395,10 +395,21 @@ fn query_device_guard() -> DeviceGuard {
     }
 }
 
-fn main() -> Result<()> {
-    let dg = query_device_guard();
-    let json_result = serde_json::to_string_pretty(&dg)
-        .unwrap_or_else(|e| format!("{{\"error\": \"JSON serialization failed: {}\"}}", e));
-    println!("{}", json_result);
-    Ok(())
+fn main() {
+    // Wrapping the original main body within a panic catcher so that any errors,
+    // including panics from .expect() calls, are caught and printed in full detail.
+    let result = std::panic::catch_unwind(|| {
+        let dg = query_device_guard();
+        let json_result = serde_json::to_string_pretty(&dg)
+            .unwrap_or_else(|e| format!("{{\"error\": \"JSON serialization failed: {}\"}}", e));
+        println!("{}", json_result);
+    });
+    match result {
+        Ok(_) => std::process::exit(0),
+        Err(err) => {
+            // Print the detailed error message as JSON.
+            println!("{{\"error\": \"{:?}\"}}", err);
+            std::process::exit(1);
+        }
+    }
 }

@@ -6,11 +6,6 @@ AppControl Manager is a modern secure app that provides easy to use graphical us
 
 <br>
 
-> [!IMPORTANT]\
-> The AppControl Manager application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/.github/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
-
-<br>
-
 ## How To Install or Update The App
 
 ### Use The Microsoft Store
@@ -122,6 +117,9 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ## Security
 
+> [!IMPORTANT]\
+> The AppControl Manager application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/.github/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
+
 Security is paramount when selecting any application designed to safeguard your systems. The last thing you want is a security-focused tool that inadvertently expands your attack surface or one that doesn't prioritize security at its core.
 
 AppControl Manager is engineered with a security-first approach from the ground up. It's crafted specifically for defense teams, yet its design has been rigorously shaped with a keen awareness of potential offensive strategies, ensuring resilience against emerging threats.
@@ -140,7 +138,7 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 <br>
 
-### Why Does AppControl Manager Require Administrator Privileges?
+### Why Do Certain Features of The AppControl Manager Require Administrator Privileges?
 
 * AppControl Manager operates exclusively within the "AppControl Manager" directory located in the `Program Files` directory for all read and write operations. No data is accessed or modified outside this directory. This design ensures that non-elevated processes, unauthorized software, or unprivileged malware on the system cannot alter the policies you create, the certificates you generate, or the CIP binary files you deploy.
 
@@ -150,17 +148,19 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * Deploying, removing, modifying, or checking the status of policies also necessitates Administrator privileges to ensure secure and reliable execution of these operations.
 
+* Creating scheduled tasks that run as SYSTEM account requires Administrator privilege. This feature is used in places such as [Creating auto-update task for Microsoft Recommended driver block rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy) or when [Allowing new apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps).
+
 <br>
 
 ### Where Are The Temporary Files Saved To?
 
-The temporary files are stored in the following directory
+Every new instance of the app that is launched creates a new `StagingArea` directory in the location below (if needed) with the Date and Time of that moment appended to it:
 
 ```
-C:\Program Files\AppControl Manager\StagingArea
+C:\Program Files\AppControl Manager\StagingArea[+ current Date Time]
 ```
 
-Each applicable feature of the AppControl Manager that you start using will generate a uniquely named subdirectory within the `StagingArea` to store its temporary files (if needed). Upon closing the application, the entire StagingArea directory, along with its contents, will be automatically deleted. These files are utilized by the application for tasks such as creating policies, storing temporary scan results, and other related functions.
+Additionally, each applicable feature of the AppControl Manager that you start using will generate a uniquely named subdirectory within the `StagingArea` to store its temporary files (if needed). Upon closing the application, the entire StagingArea directory, along with its contents, will be automatically deleted. These files are utilized by the application for tasks such as creating policies, storing temporary scan results, and other related functions.
 
 <br>
 
@@ -181,27 +181,6 @@ Everything the AppControl Manager creates/generates will be saved in that direct
 * Logs
 * User Configurations JSON file
 * Temporary files (Staging Areas)
-
-<br>
-
-## About the Installation Process
-
-> [!NOTE]\
-> The following description is only for the GitHub installation method. If you choose to install the AppControl Manager from the [Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8) then the following steps are not necessary and will not be used.
-
-The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
-
-* The latest version of the AppControl Manager MSIXBundle package is securely downloaded from the GitHub release page, where it is built publicly with full artifact attestation and SBOMs.
-
-* The `SignTool.exe` utility is sourced directly from Microsoft by retrieving the associated [Nuget package](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/), ensuring a trusted origin.
-
-* A secure, on-device code-signing certificate is then generated. This certificate, managed by the Microsoft-signed `SignTool.exe`, is used to sign the [MSIXBundle package](https://learn.microsoft.com/en-us/windows/msix/packaging-tool/bundle-msix-packages) obtained from GitHub.
-
-* The private key of the certificate is non-exportable, never written on the disk and is securely discarded once signing is complete, leaving only the public key on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
-
-* The entire process is designed to leave no residual files. Each time the script runs, any certificates from previous executions are detected and removed, ensuring a clean system.
-
-* Finally, the `AppControlManager.dll` and `AppControlManager.exe` files are added to the Attack Surface Reduction (ASR) exclusions to prevent ASR rules from blocking these newly released binaries. Previous version exclusions are also removed from the ASRs exclusions list to maintain a clean, streamlined setup for the user.
 
 <br>
 
@@ -256,6 +235,27 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 ```powershell
 AppControl -MSIXBundlePath "Path To the MSIXBundle" -SignTool "Path to signtool.exe" -Verbose
 ```
+
+<br>
+
+## About the GitHub Packages Installation Process
+
+> [!Warning]\
+> The following only happens during GitHub installation method, when you run the one-liner script to install the AppControl Manager then the steps described below will automatically run. **However, if you choose to install the AppControl Manager from the [Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8) then the following steps are not necessary and will not be used.**
+
+The installation process for AppControl Manager is uniquely streamlined. When you execute the PowerShell one-liner command mentioned above, it initiates [a file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) containing the `AppControl` function, which serves as the bootstrapper script. This script is thoroughly documented, with detailed explanations and justifications for each step, as outlined below:
+
+* The latest version of the AppControl Manager MSIXBundle package is securely downloaded from the GitHub release page, where it is built publicly with full artifact attestation and SBOMs.
+
+* The `SignTool.exe` utility is sourced directly from Microsoft by retrieving the associated [Nuget package](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/), ensuring a trusted origin.
+
+* A secure, on-device code-signing certificate is then generated. This certificate, managed by the Microsoft-signed `SignTool.exe`, is used to sign the [MSIXBundle package](https://learn.microsoft.com/en-us/windows/msix/packaging-tool/bundle-msix-packages) obtained from GitHub.
+
+* The private key of the certificate is non-exportable, never written on the disk and is securely discarded once signing is complete, leaving only the public key on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
+
+* The entire process is designed to leave no residual files. Each time the script runs, any certificates from previous executions are detected and removed, ensuring a clean system.
+
+* Finally, the `AppControlManager.dll` and `AppControlManager.exe` files are added to the Attack Surface Reduction (ASR) exclusions to prevent ASR rules from blocking these newly released binaries. Previous version exclusions are also removed from the ASRs exclusions list to maintain a clean, streamlined setup for the user.
 
 <br>
 

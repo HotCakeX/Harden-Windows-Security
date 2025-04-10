@@ -222,12 +222,19 @@ internal static class DeviceGuardInfo
 			throw new InvalidOperationException("No JSON details were found for DeviceGuardWMIRetriever.exe");
 		}
 
-		DeviceGuardInteropClass? deviceGuardResult = JsonSerializer.Deserialize(jsonResult, DeviceGuardJsonContext.Default.DeviceGuardInteropClass);
+		try
+		{
+			Logger.Write($"Attempting to deserialize JSON result: {jsonResult}");
+			DeviceGuardInteropClass? deviceGuardResult = JsonSerializer.Deserialize(jsonResult, DeviceGuardJsonContext.Default.DeviceGuardInteropClass);
 
-		return deviceGuardResult is null
-				? throw new InvalidOperationException("Device Guard JSON deserialization failed.")
-				: deviceGuardResult;
-
+			return deviceGuardResult is null
+					? throw new InvalidOperationException($"Device Guard JSON deserialization failed. Raw JSON: {jsonResult}")
+					: deviceGuardResult;
+		}
+		catch (JsonException ex)
+		{
+			throw new InvalidOperationException($"Device Guard JSON deserialization failed. Raw JSON: {jsonResult}", ex);
+		}
 		/*
 
 		// Create a ManagementScope object for the WMI namespace

@@ -18,9 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Marshalling;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -235,6 +232,8 @@ internal static class DeviceGuardInfo
 		{
 			throw new InvalidOperationException($"Device Guard JSON deserialization failed. Raw JSON: {jsonResult}", ex);
 		}
+
+
 		/*
 
 		// Create a ManagementScope object for the WMI namespace

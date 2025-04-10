@@ -48,7 +48,7 @@ internal sealed partial class CodeIntegrityInfo : Page
 	/// </summary>
 	/// <param name="status"></param>
 	/// <returns></returns>
-	private static string? GetPolicyStatus(uint? status) => status switch
+	private static string? GetPolicyStatus(int? status) => status switch
 	{
 		0 => "Disabled/Not Running",
 		1 => "Audit Mode",
@@ -67,10 +67,13 @@ internal sealed partial class CodeIntegrityInfo : Page
 		// Bind the CodeIntegrityDetails (List<CodeIntegrityOption>) to the ListView
 		CodeIntegrityInfoListView.ItemsSource = codeIntegrityInfoResult.CodeIntegrityDetails;
 
-		// Get the Application Control Status
-		DeviceGuardStatus? DGStatus = await Task.Run(DeviceGuardInfo.GetDeviceGuardStatus);
+		UMCI.Text = null;
+		KMCI.Text = null;
 
-		UMCI.Text = GetPolicyStatus(DGStatus?.UsermodeCodeIntegrityPolicyEnforcementStatus);
-		KMCI.Text = GetPolicyStatus(DGStatus?.CodeIntegrityPolicyEnforcementStatus);
+		// Get the Application Control Status
+		DeviceGuardInteropClass? DGStatus = await Task.Run(DeviceGuardInfo.GetDeviceGuardStatus);
+
+		UMCI.Text = GetPolicyStatus(DGStatus.UsermodeCodeIntegrityPolicyEnforcementStatus);
+		KMCI.Text = GetPolicyStatus(DGStatus.CodeIntegrityPolicyEnforcementStatus);
 	}
 }

@@ -15,12 +15,160 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+#pragma warning disable IDE1006
+
 namespace AppControlManager.Others;
 
-internal readonly struct DeviceGuardStatus(uint? usermodeCodeIntegrityPolicyEnforcementStatus, uint? codeIntegrityPolicyEnforcementStatus)
+internal sealed class DeviceGuardInteropClass(
+	string? __path,
+	string? __nAMESPACE,
+	string? __sERVER,
+	string? __dERIVATION,
+	int? __pROPERTY_COUNT,
+	string? __rELPATH,
+	string? __dYNASTY,
+	string? __sUPERCLASS,
+	int? __gENUS,
+	List<string>? availableSecurityProperties,
+	int? codeIntegrityPolicyEnforcementStatus,
+	string? instanceIdentifier,
+	List<string>? requiredSecurityProperties,
+	List<string>? securityFeaturesEnabled,
+	List<string>? securityServicesConfigured,
+	List<string>? securityServicesRunning,
+	byte? smmIsolationLevel,
+	int? usermodeCodeIntegrityPolicyEnforcementStatus,
+	string? version,
+	int? virtualizationBasedSecurityStatus,
+	bool? virtualMachineIsolation,
+	List<string>? virtualMachineIsolationProperties
+	)
 {
-	internal readonly uint? UsermodeCodeIntegrityPolicyEnforcementStatus => usermodeCodeIntegrityPolicyEnforcementStatus;
-	internal readonly uint? CodeIntegrityPolicyEnforcementStatus => codeIntegrityPolicyEnforcementStatus;
+	[JsonInclude]
+	[JsonPropertyOrder(0)]
+	[JsonPropertyName("__PATH")]
+	internal string? __PATH { get; } = __path;
+
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
+	[JsonPropertyName("__NAMESPACE")]
+	internal string? __NAMESPACE { get; } = __nAMESPACE;
+
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
+	[JsonPropertyName("__SERVER")]
+	internal string? __SERVER { get; } = __sERVER;
+
+	[JsonInclude]
+	[JsonPropertyOrder(3)]
+	[JsonPropertyName("__DERIVATION")]
+	internal string? __DERIVATION { get; } = __dERIVATION;
+
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
+	[JsonPropertyName("__PROPERTY_COUNT")]
+	internal int? __PROPERTY_COUNT { get; } = __pROPERTY_COUNT;
+
+	[JsonInclude]
+	[JsonPropertyOrder(5)]
+	[JsonPropertyName("__RELPATH")]
+	internal string? __RELPATH { get; } = __rELPATH;
+
+	[JsonInclude]
+	[JsonPropertyOrder(6)]
+	[JsonPropertyName("__DYNASTY")]
+	internal string? __DYNASTY { get; } = __dYNASTY;
+
+	[JsonInclude]
+	[JsonPropertyOrder(7)]
+	[JsonPropertyName("__SUPERCLASS")]
+	internal string? __SUPERCLASS { get; } = __sUPERCLASS;
+
+	[JsonInclude]
+	[JsonPropertyOrder(8)]
+	[JsonPropertyName("__GENUS")]
+	internal int? __GENUS { get; } = __gENUS;
+
+	[JsonInclude]
+	[JsonPropertyOrder(9)]
+	[JsonPropertyName("AvailableSecurityProperties")]
+	internal List<string>? AvailableSecurityProperties { get; } = availableSecurityProperties;
+
+	[JsonInclude]
+	[JsonPropertyOrder(10)]
+	[JsonPropertyName("CodeIntegrityPolicyEnforcementStatus")]
+	internal int? CodeIntegrityPolicyEnforcementStatus { get; } = codeIntegrityPolicyEnforcementStatus;
+
+	[JsonInclude]
+	[JsonPropertyOrder(11)]
+	[JsonPropertyName("InstanceIdentifier")]
+	internal string? InstanceIdentifier { get; } = instanceIdentifier;
+
+	[JsonInclude]
+	[JsonPropertyOrder(12)]
+	[JsonPropertyName("RequiredSecurityProperties")]
+	internal List<string>? RequiredSecurityProperties { get; } = requiredSecurityProperties;
+
+	[JsonInclude]
+	[JsonPropertyOrder(13)]
+	[JsonPropertyName("SecurityFeaturesEnabled")]
+	internal List<string>? SecurityFeaturesEnabled { get; } = securityFeaturesEnabled;
+
+	[JsonInclude]
+	[JsonPropertyOrder(14)]
+	[JsonPropertyName("SecurityServicesConfigured")]
+	internal List<string>? SecurityServicesConfigured { get; } = securityServicesConfigured;
+
+	[JsonInclude]
+	[JsonPropertyOrder(15)]
+	[JsonPropertyName("SecurityServicesRunning")]
+	internal List<string>? SecurityServicesRunning { get; } = securityServicesRunning;
+
+	[JsonInclude]
+	[JsonPropertyOrder(16)]
+	[JsonPropertyName("SmmIsolationLevel")]
+	internal byte? SmmIsolationLevel { get; } = smmIsolationLevel;
+
+	[JsonInclude]
+	[JsonPropertyOrder(17)]
+	[JsonPropertyName("UsermodeCodeIntegrityPolicyEnforcementStatus")]
+	internal int? UsermodeCodeIntegrityPolicyEnforcementStatus { get; } = usermodeCodeIntegrityPolicyEnforcementStatus;
+
+	[JsonInclude]
+	[JsonPropertyOrder(18)]
+	[JsonPropertyName("Version")]
+	internal string? Version { get; } = version;
+
+	[JsonInclude]
+	[JsonPropertyOrder(19)]
+	[JsonPropertyName("VirtualizationBasedSecurityStatus")]
+	internal int? VirtualizationBasedSecurityStatus { get; } = virtualizationBasedSecurityStatus;
+
+	[JsonInclude]
+	[JsonPropertyOrder(20)]
+	[JsonPropertyName("VirtualMachineIsolation")]
+	internal bool? VirtualMachineIsolation { get; } = virtualMachineIsolation;
+
+	[JsonInclude]
+	[JsonPropertyOrder(21)]
+	[JsonPropertyName("VirtualMachineIsolationProperties")]
+	internal List<string>? VirtualMachineIsolationProperties { get; } = virtualMachineIsolationProperties;
+}
+
+[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSerializable(typeof(DeviceGuardInteropClass))]
+internal sealed partial class DeviceGuardJsonContext : JsonSerializerContext
+{
 }
 
 internal static class DeviceGuardInfo
@@ -32,13 +180,53 @@ internal static class DeviceGuardInfo
 	// Define the scope (namespace) for the query
 	// private const string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
 
-
 	/// <summary>
 	/// Get the Device Guard status information from the Win32_DeviceGuard WMI class
 	/// </summary>
 	/// <returns></returns>
-	internal static DeviceGuardStatus? GetDeviceGuardStatus()
+	internal static DeviceGuardInteropClass GetDeviceGuardStatus()
 	{
+
+		string? jsonResult;
+
+		ProcessStartInfo psi = new()
+		{
+			FileName = $"{GlobalVars.RustInteropPath}/DeviceGuardWMIRetriever.exe",
+			UseShellExecute = false,
+			RedirectStandardOutput = true,
+			RedirectStandardError = true,
+			CreateNoWindow = true
+		};
+
+		using Process? process = Process.Start(psi) ?? throw new InvalidOperationException("DeviceGuardWMIRetriever.exe could not start");
+
+		// Read the process output and error.
+		string output = process.StandardOutput.ReadToEnd();
+		string error = process.StandardError.ReadToEnd();
+
+		process.WaitForExit();
+
+		if (process.ExitCode == 0)
+		{
+			// If the process succeeded, save the JSON result into a string variable.
+			jsonResult = output;
+		}
+		else
+		{
+			Logger.Write("Error while running the Rust executable:");
+			throw new InvalidOperationException(error);
+		}
+
+		if (jsonResult is null)
+		{
+			throw new InvalidOperationException("No JSON details were found for DeviceGuardWMIRetriever.exe");
+		}
+
+		DeviceGuardInteropClass? deviceGuardResult = JsonSerializer.Deserialize(jsonResult, DeviceGuardJsonContext.Default.DeviceGuardInteropClass);
+
+		return deviceGuardResult is null
+				? throw new InvalidOperationException("Device Guard JSON deserialization failed.")
+				: deviceGuardResult;
 
 		/*
 
@@ -68,20 +256,5 @@ internal static class DeviceGuardInfo
 
 		*/
 
-
-		// TODO: Create a Native AOT compatible source generated COM code that won't rely on System.Management or PowerShell
-
-		string UMscript = "(Get-CimInstance -Namespace \\\"root\\Microsoft\\Windows\\DeviceGuard\\\" -Query \\\"SELECT UsermodeCodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard\\\").UsermodeCodeIntegrityPolicyEnforcementStatus";
-		string UMoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{UMscript}\"");
-
-
-		string KMscript = "(Get-CimInstance -Namespace \\\"root\\Microsoft\\Windows\\DeviceGuard\\\" -Query \\\"SELECT CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard\\\").CodeIntegrityPolicyEnforcementStatus";
-		string KMoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{KMscript}\"");
-
-
-		return new DeviceGuardStatus(
-			usermodeCodeIntegrityPolicyEnforcementStatus: uint.Parse(UMoutput),
-			codeIntegrityPolicyEnforcementStatus: uint.Parse(KMoutput)
-		);
 	}
 }

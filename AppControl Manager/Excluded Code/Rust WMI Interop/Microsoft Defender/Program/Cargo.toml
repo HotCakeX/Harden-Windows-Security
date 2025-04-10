@@ -13,13 +13,13 @@ publish = false
 rust-version = "1.86.0" # Enforces minimum required installed Rust version
 
 [profile.release]
-opt-level = 3              
+opt-level = 3
 overflow-checks = true
 lto = "fat"
 incremental = true
 
 [dependencies.windows]
-version = "0.61.1" 
+version = "0.61.1"
 features = [
     "Win32_Security",
     "Win32_System_Com_StructuredStorage",

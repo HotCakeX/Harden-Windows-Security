@@ -87,7 +87,7 @@
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.11.0</FileVersion>
+    <FileVersion>2.0.12.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -343,6 +343,7 @@
     <None Remove="Resources\SnapBackGuaranteeScheduledTask.ps1" />
     <None Remove="Resources\StrictKernelMode.xml" />
     <None Remove="Resources\StrictKernelMode_NoFlightRoots.xml" />
+    <None Remove="RustInterop\DeviceGuardWMIRetriever.exe" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -495,6 +496,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RustInterop\DeviceGuardWMIRetriever.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SystemInformation\ViewOnlinePolicies.xaml">

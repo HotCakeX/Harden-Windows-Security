@@ -2297,4 +2297,77 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AppDescription" xml:space="preserve">
     <value>AppControl Manager allows you to manage App Control policies and Code Integrity in Windows with ease, including but not limited to: creation, simulation, removal, deployment and signing.</value>
   </data>
+  <!-- need conversion to other languages -->
+  <data name="MergePoliciesSettingsExpander.Description" xml:space="preserve">
+    <value>Merge App Control Policies</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.Header" xml:space="preserve">
+    <value>Merge</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Merge App Control Policies</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Merge App Control Policies</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.Description" xml:space="preserve">
+    <value>Browse for the path to the main policy XML file.</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.Header" xml:space="preserve">
+    <value>Select Main Policy</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for the path to the main policy XML file.</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for the path to the main policy XML file.</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.Description" xml:space="preserve">
+    <value>Select other policies to merge with the main policy</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.Header" xml:space="preserve">
+    <value>Select other policies</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select other policies to merge with the main policy</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select other policies to merge with the main policy</value>
+  </data>
+  <data name="GenericBrowseButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="ViewTheSelectedMainPolicy.Text" xml:space="preserve">
+    <value>View the Main policy you selected.</value>
+  </data>
+  <data name="ViewTheSelectedOtherPolicies.Text" xml:space="preserve">
+    <value>View the other policies you selected.</value>
+  </data>
+  <data name="DeployAfterMergeButton.Content" xml:space="preserve">
+    <value>Deploy after Merge</value>
+  </data>
+  <data name="DeployAfterMergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deploy the policies at the end of the merge operation.</value>
+  </data>
+  <data name="DeployAfterMergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deploy the policies at the end of the merge operation.</value>
+  </data>
+  <data name="MergeButton.Content" xml:space="preserve">
+    <value>Merge</value>
+  </data>
+  <data name="MergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start the Merge operation.</value>
+  </data>
+  <data name="MergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start the Merge operation.</value>
+  </data>
+  <data name="CurrentStatusInfoBar.Title" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
 </root>

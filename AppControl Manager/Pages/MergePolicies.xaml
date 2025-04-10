@@ -38,14 +38,13 @@
 
 
                 <controls:SettingsExpander
-                           Description="Merge App Control Policies"
-                           Header="Merge"
+                           x:Uid="MergePoliciesSettingsExpander"
                            IsExpanded="True"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA3C;}">
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
@@ -58,10 +57,10 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="MergeButton" Content="Merge" IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
+                        <Button x:Name="MergeButton" x:Uid="MergeButton" IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.MergeButton_Click}" />
 
-                        <ToggleButton IsEnabled="{x:Bind ViewModel.ShouldDeployToggleState, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" Content="Deploy after Merge" Margin="0,0,15,0" />
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.ShouldDeployToggleState, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
 
                         <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.MergeProgressRingVisibility, Mode=OneWay}" />
 
@@ -75,11 +74,11 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Description="Browse for the path to the main policy XML file." IsClickEnabled="True"
-                               Header="Select Main Policy" x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click"
+                        <controls:SettingsCard x:Uid="BrowseForMainPolicyToMergeSettingsCard" IsClickEnabled="True"
+                               x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click"
                                Holding="MainPolicySettingsCard_Holding" RightTapped="MainPolicySettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button Content="Browse" RightTapped="MainPolicyBrowseButton_RightTapped" x:Name="MainPolicyBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
+                            <Button x:Uid="GenericBrowseButton" RightTapped="MainPolicyBrowseButton_RightTapped" x:Name="MainPolicyBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="MainPolicy_Flyout">
@@ -88,7 +87,7 @@
 
                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.MainPolicy_Flyout_ClearButton}" />
 
-                                            <TextBlock Text="View the Main policy you selected." TextWrapping="WrapWholeWords" />
+                                            <TextBlock x:Uid="ViewTheSelectedMainPolicy" TextWrapping="WrapWholeWords" />
 
                                             <TextBox Text="{x:Bind ViewModel.MainPolicy, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -103,11 +102,11 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Select other policies to merge with the main policy" IsClickEnabled="True"
-                            Header="Select other policies" x:Name="OtherPoliciesSettingsCard" Click="OtherPoliciesSettingsCard_Click"
+                        <controls:SettingsCard x:Uid="BrowseForOtherPoliciesToMergeSettingsCard" IsClickEnabled="True"
+                            x:Name="OtherPoliciesSettingsCard" Click="OtherPoliciesSettingsCard_Click"
                             Holding="OtherPoliciesSettingsCard_Holding" RightTapped="OtherPoliciesSettingsCard_RightTapped" IsActionIconVisible="False">
 
-                            <Button Content="Browse" x:Name="OtherPoliciesBrowseButton" RightTapped="OtherPoliciesBrowseButton_RightTapped" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
+                            <Button x:Uid="GenericBrowseButton" x:Name="OtherPoliciesBrowseButton" RightTapped="OtherPoliciesBrowseButton_RightTapped" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="OtherPolicies_Flyout">
@@ -116,7 +115,7 @@
 
                                             <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.OtherPolicies_Flyout_ClearButton}" />
 
-                                            <TextBlock Text="View the other policies you selected." TextWrapping="WrapWholeWords" />
+                                            <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
 
                                             <TextBox Text="{x:Bind ViewModel.OtherPoliciesString, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"

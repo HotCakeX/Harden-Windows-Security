@@ -204,7 +204,7 @@ internal static class DeviceGuardInfo
 			CreateNoWindow = true
 		};
 
-		using Process? process = Process.Start(processInfo) ?? throw new InvalidOperationException("DeviceGuardWMIRetriever.exe could not start");
+		using Process? process = Process.Start(processInfo) ?? throw new InvalidOperationException($"{processName} could not start");
 
 		// Read the process output and error.
 		string output = process.StandardOutput.ReadToEnd();

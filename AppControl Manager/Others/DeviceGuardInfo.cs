@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Runtime.InteropServices;
+using System.IO;
 
 #pragma warning disable IDE1006
 
@@ -186,16 +188,23 @@ internal static class DeviceGuardInfo
 
 		string? jsonResult;
 
-		ProcessStartInfo psi = new()
+		string processName = RuntimeInformation.ProcessArchitecture switch
 		{
-			FileName = $"{GlobalVars.RustInteropPath}/DeviceGuardWMIRetriever.exe",
+			Architecture.X64 => Path.Combine(GlobalVars.RustInteropPath, "DeviceGuardWMIRetriever-X64.exe"),
+			Architecture.Arm64 => Path.Combine(GlobalVars.RustInteropPath, "DeviceGuardWMIRetriever-ARM64.exe"),
+			_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
+		};
+
+		ProcessStartInfo processInfo = new()
+		{
+			FileName = processName,
 			UseShellExecute = false,
 			RedirectStandardOutput = true,
 			RedirectStandardError = true,
 			CreateNoWindow = true
 		};
 
-		using Process? process = Process.Start(psi) ?? throw new InvalidOperationException("DeviceGuardWMIRetriever.exe could not start");
+		using Process? process = Process.Start(processInfo) ?? throw new InvalidOperationException($"{processName} could not start");
 
 		// Read the process output and error.
 		string output = process.StandardOutput.ReadToEnd();

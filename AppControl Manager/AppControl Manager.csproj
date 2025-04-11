@@ -343,7 +343,8 @@
     <None Remove="Resources\SnapBackGuaranteeScheduledTask.ps1" />
     <None Remove="Resources\StrictKernelMode.xml" />
     <None Remove="Resources\StrictKernelMode_NoFlightRoots.xml" />
-    <None Remove="RustInterop\DeviceGuardWMIRetriever.exe" />
+    <None Remove="RustInterop\DeviceGuardWMIRetriever-ARM64.exe" />
+    <None Remove="RustInterop\DeviceGuardWMIRetriever-X64.exe" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -371,6 +372,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\StrictKernelMode_NoFlightRoots.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RustInterop\DeviceGuardWMIRetriever-ARM64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RustInterop\DeviceGuardWMIRetriever-X64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -496,11 +503,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\AllowNewApps\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="RustInterop\DeviceGuardWMIRetriever.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SystemInformation\ViewOnlinePolicies.xaml">

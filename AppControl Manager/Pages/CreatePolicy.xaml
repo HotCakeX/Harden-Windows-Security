@@ -311,7 +311,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="StrictKernelModePolicyInfoBar"
-                        Title="Current Status"
+                        x:Uid="CurrentStatusInfoBar"
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"

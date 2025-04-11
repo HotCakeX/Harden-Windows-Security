@@ -1,0 +1,31 @@
+[package]
+name = "WMI"
+version = "1.0.0"
+edition = "2024"
+description = "This cargo package retrieves the Microsoft Defender configurations via WMI and displays their names and types on the console."
+documentation = "https://github.com/HotCakeX/Harden-Windows-Security"
+homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
+repository = "https://github.com/HotCakeX/Harden-Windows-Security"
+license = "MIT"
+keywords = ["WMI", "Windows", "Security"]
+categories = ["WMI", "DevTools"]
+publish = false
+rust-version = "1.86.0" # Enforces minimum required installed Rust version
+
+[profile.release]
+opt-level = 3
+overflow-checks = true
+lto = "fat"
+incremental = true
+
+[dependencies.windows]
+version = "0.61.1"
+features = [
+    "Win32_Security",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Ole",
+    "Win32_Foundation",
+    "Win32_System_Rpc",
+    "Win32_System_Variant",
+    "Win32_System_Wmi",
+]

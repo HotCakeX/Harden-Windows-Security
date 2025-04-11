@@ -80,6 +80,9 @@ internal static class GlobalVars
 	// Path to the empty policy file in app resources
 	internal static readonly string EmptyPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "EmptyPolicy.xml");
 
+	// Path to the RustInterop directory
+	internal static readonly string RustInteropPath = Path.Combine(AppContext.BaseDirectory, "RustInterop");
+
 	// Path to the PS Script that creates a scheduled task
 	internal static readonly string DriversBlockListAutoUpdaterScheduledTaskScriptFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "DriversBlockListAutoUpdaterScheduledTask.ps1");
 

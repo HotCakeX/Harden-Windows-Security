@@ -4009,6 +4009,70 @@
             <param name="isIssuer"></param>
             <returns></returns>
         </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.Boolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.NullableBoolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.Byte">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.NullableByte">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.DeviceGuardInteropClass">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.ListString">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.NullableInt32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.Others.DeviceGuardJsonContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.DeviceGuardJsonContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.Others.DeviceGuardJsonContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.Others.DeviceGuardJsonContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
         <member name="M:AppControlManager.Others.DeviceGuardInfo.GetDeviceGuardStatus">
             <summary>
             Get the Device Guard status information from the Win32_DeviceGuard WMI class
@@ -7108,7 +7172,7 @@
             Initializes a new instance of the CodeIntegrityInfo class. Sets the navigation cache mode to required.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.GetPolicyStatus(System.Nullable{System.UInt32})">
+        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.GetPolicyStatus(System.Nullable{System.Int32})">
             <summary>
             Local method to convert numbers to their actual string values
             </summary>

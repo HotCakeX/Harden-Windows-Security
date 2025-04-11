@@ -93,7 +93,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="FilesAndFoldersInfoBar"
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
@@ -293,7 +293,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="CertificatesInfoBar"
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
@@ -400,7 +400,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="ISGInfoBar"
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
@@ -486,7 +486,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="StrictKernelModeInfoBar"
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
@@ -615,7 +615,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="PFNInfoBar"
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
@@ -760,7 +760,7 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar x:Name="CustomPatternBasedFileRuleInfoBar"
-                            Title="Current Status"
+                            x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"

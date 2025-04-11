@@ -1,4 +1,21 @@
-﻿using System;
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -135,54 +152,60 @@ public partial class GUIMain
 			// Set up the Click event handler for the Refresh button
 			RefreshButton.Click += async (sender, e) =>
 			{
+
 				// Only continue if there is no activity other places
 				if (ActivityTracker.IsActive)
 				{
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
+				try
+				{
 
-				// Clear the current security options before starting data generation
-				SecOpsObservableCollection.Clear();
-				SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
+					// mark as activity started
+					ActivityTracker.IsActive = true;
 
-				// Set text blocks to empty while new data is being generated
-				Application.Current.Dispatcher.Invoke(() =>
-					{
-						TotalCountTextBlock.Text = "Loading...";
-						CompliantItemsToggleButton.Content = "Compliant Items";
-						NonCompliantItemsToggleButton.Content = "Non-Compliant Items";
+					// Clear the current security options before starting data generation
+					SecOpsObservableCollection.Clear();
+					SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
 
-						UpdateCurrentVisibleItemsTextBlock();
-					});
-
-				// Run the method asynchronously in a different thread
-				await Task.Run(() =>
-					{
-						// Get fresh data for compliance checking
-						Initializer.Initialize(null, true);
-
-						// Get the currently selected compliance category - Use the App dispatcher since this is being done in a different thread
-						string SelectedCategory = app.Dispatcher.Invoke(() => ComplianceCategoriesSelectionComboBox.SelectedItem.ToString()!);
-
-						// If all categories is selected which is the default
-						if (string.Equals(SelectedCategory, "All Categories", StringComparison.OrdinalIgnoreCase))
+					// Set text blocks to empty while new data is being generated
+					Application.Current.Dispatcher.Invoke(() =>
 						{
-							// Perform the compliance check for all categories
-							InvokeConfirmation.Invoke(null);
-						}
-						// if user selected a category for compliance checking
-						else
-						{
-							// Perform the compliance check using the selected compliance category
-							InvokeConfirmation.Invoke([SelectedCategory]);
-						}
-					});
+							TotalCountTextBlock.Text = "Loading...";
+							CompliantItemsToggleButton.Content = "Compliant Items";
+							NonCompliantItemsToggleButton.Content = "Non-Compliant Items";
 
-				// After InvokeConfirmation is completed, update the security options collection
-				await Application.Current.Dispatcher.InvokeAsync(() =>
+							UpdateCurrentVisibleItemsTextBlock();
+						});
+
+					// Run the method asynchronously in a different thread
+					await Task.Run(() =>
+						{
+							// Get fresh data for compliance checking
+							Initializer.Initialize(null, true);
+
+							// Get the currently selected compliance category - Use the App dispatcher since this is being done in a different thread
+							string SelectedCategory = app.Dispatcher.Invoke(() => ComplianceCategoriesSelectionComboBox.SelectedItem.ToString()!);
+
+							// If all categories is selected which is the default
+							if (string.Equals(SelectedCategory, "All Categories", StringComparison.OrdinalIgnoreCase))
+							{
+								// Perform the compliance check for all categories
+								InvokeConfirmation.Invoke(null);
+							}
+							// if user selected a category for compliance checking
+							else
+							{
+								// Perform the compliance check using the selected compliance category
+								InvokeConfirmation.Invoke([SelectedCategory]);
+							}
+						});
+				}
+				finally
+				{
+					// After InvokeConfirmation is completed, update the security options collection
+					await Application.Current.Dispatcher.InvokeAsync(() =>
 					{
 						LoadMembers(); // Load updated security options
 						RefreshButton.IsChecked = false; // Uncheck the Refresh button
@@ -190,8 +213,9 @@ public partial class GUIMain
 						UpdateCurrentVisibleItemsTextBlock();
 					});
 
-				// mark as activity completed
-				ActivityTracker.IsActive = false;
+					// mark as activity completed
+					ActivityTracker.IsActive = false;
+				}
 			};
 
 			/// <summary>

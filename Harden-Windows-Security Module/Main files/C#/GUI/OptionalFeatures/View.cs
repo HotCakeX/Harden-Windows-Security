@@ -1,4 +1,21 @@
-﻿using System;
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -117,11 +134,11 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
 
 					// Get the results of all optional features once and store them in the static variable to be reused later
 					WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = await Task.Run(() => WindowsFeatureChecker.CheckWindowsFeatures());
@@ -264,10 +281,12 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 
 					// Defining the variables outside the Task so they are accessible after the task completes
 					string PowerShellv2 = "Unknown";
@@ -547,16 +566,13 @@ public partial class GUIMain
 						featureCheckboxes["RemoveExtendedThemeContent"].IsEnabled = true;
 					}
 
-
 				}
 				finally
 				{
-
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
 				}
 			};
-
 
 
 
@@ -656,11 +672,11 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 					await _RetrieveRemovableApps();
 				}
 				finally
@@ -682,11 +698,10 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+					// mark as activity started
+					ActivityTracker.IsActive = true;
 
 					// Get all checked checkboxes' contents from the dictionary
 					List<string> checkedCheckboxes = [.. GUIOptionalFeatures.appsCheckBoxes
@@ -808,11 +823,13 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
+
 					// When "*" is used in the middle of the name, it means both WIFI and Ethernet drivers will be targeted for removal
 					switch (NetworkAdaptersCompanyListComboBox.SelectedIndex)
 					{

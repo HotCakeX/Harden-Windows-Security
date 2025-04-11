@@ -1,3 +1,20 @@
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +28,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace HardenWindowsSecurity;
 
@@ -187,7 +203,7 @@ End time: {DateTime.Now}
 		};
 
 		// Exit Event, will work for the GUI when using compiled version of the app or in Visual Studio
-		app.Exit += (object s, ExitEventArgs e) =>
+		app.Exit += (s, e) =>
 		{
 			// Revert the changes to the PowerShell console Window Title
 			ChangePSConsoleTitle.Set("PowerShell");
@@ -197,7 +213,7 @@ End time: {DateTime.Now}
 		};
 
 		// DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
-		app.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+		app.DispatcherUnhandledException += (s, e) =>
 		{
 			Window errorWindow = new()
 			{
@@ -254,7 +270,7 @@ End time: {DateTime.Now}
 
 			TextBox errorDetailsTextBox = new()
 			{
-				Text = $"Exception: {e?.Exception}\n\nException Message: {e?.Exception?.Message}\n\nException HResult: {e?.Exception?.HResult}\n\nException Source: {e?.Exception?.Source}\n\nException TargetSite: {e?.Exception?.TargetSite}\n\nException StackTrace: {e?.Exception?.StackTrace}\n\nInner Exception: {e?.Exception?.InnerException}\n\nInner Exception Message: {e?.Exception?.InnerException?.Message}\n\nInner Exception Source: {e?.Exception?.InnerException?.Source}\n\nInner Exception HResult: {e?.Exception?.InnerException?.HResult}\n\nInner Exception StackTrace: {e?.Exception?.InnerException?.StackTrace}\n\nInner Exception TargetSite: {e?.Exception?.InnerException?.TargetSite}\n",
+				Text = $"OS version: {Environment.OSVersion}\n\nException: {e?.Exception}\n\nException Message: {e?.Exception?.Message}\n\nException HResult: {e?.Exception?.HResult}\n\nException Source: {e?.Exception?.Source}\n\nException TargetSite: {e?.Exception?.TargetSite}\n\nException StackTrace: {e?.Exception?.StackTrace}\n\nInner Exception: {e?.Exception?.InnerException}\n\nInner Exception Message: {e?.Exception?.InnerException?.Message}\n\nInner Exception Source: {e?.Exception?.InnerException?.Source}\n\nInner Exception HResult: {e?.Exception?.InnerException?.HResult}\n\nInner Exception StackTrace: {e?.Exception?.InnerException?.StackTrace}\n\nInner Exception TargetSite: {e?.Exception?.InnerException?.TargetSite}\n",
 				IsReadOnly = true,
 				TextWrapping = TextWrapping.Wrap,
 				Margin = new Thickness(5)
@@ -266,16 +282,15 @@ End time: {DateTime.Now}
 			// Set ScrollViewer as Expander content
 			errorDetailsExpander.Content = scrollViewer;
 
-			Button exitButton = new()
+			Button closeButton = new()
 			{
-				Content = "Exit",
+				Content = "Close",
 				Width = 120,
 				Margin = new Thickness(10),
 				FontSize = 16,
 				Height = 50
 			};
-
-			exitButton.Click += (sender, args) =>
+			closeButton.Click += (sender, args) =>
 			{
 				errorWindow.Close();
 			};
@@ -307,13 +322,14 @@ End time: {DateTime.Now}
 				FontSize = 16,
 				Height = 50
 			};
+
 			copyButton.Click += (sender, args) =>
 			{
 				Clipboard.SetText(errorMessage.Text + "\n" + errorDetailsTextBox.Text); // Copy the text block and error details to the clipboard
 			};
 
 			StackPanel buttonPanel = new() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-			_ = buttonPanel.Children.Add(exitButton);
+			_ = buttonPanel.Children.Add(closeButton);
 			_ = buttonPanel.Children.Add(gitHubButton);
 			_ = buttonPanel.Children.Add(copyButton);
 
@@ -326,8 +342,11 @@ End time: {DateTime.Now}
 
 			// The error will be terminating the application
 			if (e is not null)
-				e.Handled = false;
-			app.Shutdown();
+			{
+				e.Handled = true;
+			}
+
+			//	app.Shutdown();
 		};
 
 		#endregion

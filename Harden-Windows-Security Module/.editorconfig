@@ -1,12 +1,22 @@
-﻿[*.cs]
+﻿# https://github.com/dotnet/roslyn-analyzers/blob/main/src/NetAnalyzers/Microsoft.CodeAnalysis.NetAnalyzers.md
+
+# Applies to All files
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+end_of_line = crlf
+
+# https://learn.microsoft.com/en-us/visualstudio/ide/reference/add-file-header
+file_header_template = MIT License\r\n\r\nCopyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the "Software"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nSee here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE\r\n
+
+# Applies to C# files only
+[*.cs]
 
 # Spell Checker dictionary
 spelling_exclusion_path = .\exclusion.dic
 
 # Miscellaneous settings
 # https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
-trim_trailing_whitespace = true
-end_of_line = crlf
 indent_style = tab
 insert_final_newline = true
 
@@ -19,7 +29,6 @@ csharp_prefer_simple_using_statement = true:error
 csharp_new_line_before_members_in_object_initializers = true:error
 csharp_space_after_dot = false:error
 csharp_space_before_comma = false:error
-
 # CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = error
 

@@ -1,4 +1,21 @@
-﻿using System;
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,8 +24,8 @@ using System.Management;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +33,7 @@ using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using Windows.ApplicationModel;
+using Windows.Foundation;
 using Windows.Management.Deployment;
 
 #pragma warning disable IDE0063
@@ -57,9 +75,11 @@ public partial class GUIMain
 			Button InstallAppControlManagerButton = (Button)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButton");
 			Button ViewDemoOnYouTubeButton = (Button)GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButton");
 			Button AccessTheGuideOnGitHubButton = (Button)GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButton");
+			Button InstallAppControlManagerFromMicrosoftStoreButton = (Button)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerFromMicrosoftStoreButton");
 			Image ViewDemoOnYouTubeButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("ViewDemoOnYouTubeButtonIcon");
 			Image AccessTheGuideOnGitHubButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("AccessTheGuideOnGitHubButtonIcon");
 			Image InstallAppControlManagerButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerButtonIcon");
+			Image InstallAppControlManagerFromMicrosoftStoreButtonIcon = (Image)GUIAppControlManager.ParentGrid.FindName("InstallAppControlManagerFromMicrosoftStoreButtonIcon");
 			ProgressBar MainProgressBar = (ProgressBar)GUIAppControlManager.ParentGrid.FindName("MainProgressBar");
 
 			#region Assigning icon images for the buttons
@@ -85,6 +105,13 @@ public partial class GUIMain
 			BitmapImage3.EndInit();
 			InstallAppControlManagerButtonIcon.Source = BitmapImage3;
 
+			BitmapImage BitmapImage4 = new();
+			BitmapImage4.BeginInit();
+			BitmapImage4.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "MicrosoftStore.png"));
+			BitmapImage4.CacheOption = BitmapCacheOption.OnLoad;
+			BitmapImage4.EndInit();
+			InstallAppControlManagerFromMicrosoftStoreButtonIcon.Source = BitmapImage4;
+
 			#endregion
 
 			// Register the elements that will be enabled/disabled based on current activity
@@ -99,11 +126,12 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 
 					#region Ensure the app is not already installed
 
@@ -128,7 +156,6 @@ public partial class GUIMain
 					#endregion
 
 
-
 					using HttpClient client1 = new();
 
 					Logger.LogMessage("Getting the download link from GitHub", LogTypeIntel.Information);
@@ -136,12 +163,12 @@ public partial class GUIMain
 					// Store the download link to the latest available version
 					Uri onlineDownloadURL = new(await client1.GetStringAsync(GUIAppControlManager.AppUpdateDownloadLinkURL));
 
-					// The Uri will be used to detect the version and architecture of the MSIX package being installed
+					// The Uri will be used to detect the version and architecture of the MSIXBundle being installed
 					string sourceForRegex = onlineDownloadURL.ToString();
 
-					Logger.LogMessage("Downloading the AppControl Manager MSIX package...", LogTypeIntel.Information);
+					Logger.LogMessage("Downloading the AppControl Manager MSIXBundle...", LogTypeIntel.Information);
 
-					string AppControlManagerSavePath = Path.Combine(GlobalVars.WorkingDir, "AppControlManager.msix");
+					string AppControlManagerSavePath = Path.Combine(GlobalVars.WorkingDir, "AppControlManager.msixbundle");
 
 					MainProgressBar.Visibility = Visibility.Visible;
 
@@ -207,7 +234,7 @@ public partial class GUIMain
 						}
 					}
 
-					Logger.LogMessage($"The AppControl Manager MSIX package has been successfully downloaded to {AppControlManagerSavePath}", LogTypeIntel.Information);
+					Logger.LogMessage($"The AppControl Manager MSIXBundle has been successfully downloaded to {AppControlManagerSavePath}", LogTypeIntel.Information);
 
 					MainProgressBar.Visibility = Visibility.Collapsed;
 
@@ -220,7 +247,7 @@ public partial class GUIMain
 					await Task.Run(() =>
 					{
 
-						string randomPassword = Guid.NewGuid().ToString("N");
+						string randomPassword = Guid.CreateVersion7().ToString("N");
 
 						// Common name of the certificate
 						string commonName = "SelfSignedCertForAppControlManager";
@@ -243,23 +270,7 @@ public partial class GUIMain
 						UserProtectedPrivateKey: false,
 						ExportablePrivateKey: false);
 
-						// Get the version and architecture of the installing MSIX package app
-						Match RegexMatch = GUIAppControlManager.regex.Match(sourceForRegex);
-
-						string InstallingAppVersion;
-						string InstallingAppArchitecture;
-
-						if (RegexMatch.Success)
-						{
-							InstallingAppVersion = RegexMatch.Groups["Version"].Value;
-							InstallingAppArchitecture = RegexMatch.Groups["Architecture"].Value;
-						}
-						else
-						{
-							throw new InvalidOperationException("Could not get the version of the installing app");
-						}
-
-						// Signing the App Control Manager MSIX package
+						// Signing the App Control Manager MSIXBundle
 						// In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
 						ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{commonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
 
@@ -307,19 +318,66 @@ public partial class GUIMain
 									_ = managementClass.InvokeMethod("Remove", inParams, null);
 								}
 							}
+						}
 
+						catch (Exception ex)
+						{
+							Logger.LogMessage($"An error occurred while trying to remove the ASR rule exclusions which you can ignore: {ex.Message}", LogTypeIntel.Information);
+						}
+
+
+						Logger.LogMessage("Installing AppControl Manager MSIXBundle", LogTypeIntel.Information);
+
+						// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
+						AddPackageOptions options = new()
+						{
+							DeferRegistrationWhenPackagesAreInUse = false,
+							ForceUpdateFromAnyVersion = true
+						};
+
+						IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = GUIAppControlManager.packageMgr.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
+
+						// This event is signaled when the operation completes
+						ManualResetEvent opCompletedEvent = new(false);
+
+						// Define the delegate using a statement lambda
+						deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };
+
+						// Wait until the operation completes
+						_ = opCompletedEvent.WaitOne();
+
+						// Check the status of the operation
+						if (deploymentOperation.Status == AsyncStatus.Error)
+						{
+							DeploymentResult deploymentResult = deploymentOperation.GetResults();
+							throw new InvalidOperationException("Installation failed with the code: " + deploymentOperation.ErrorCode + " And error message: " + deploymentResult.ErrorText);
+						}
+						else if (deploymentOperation.Status == AsyncStatus.Canceled)
+						{
+							Logger.LogMessage("AppControl Manager installation has been cancelled.", LogTypeIntel.Warning);
+						}
+						else if (deploymentOperation.Status == AsyncStatus.Completed)
+						{
+							Logger.LogMessage($"AppControl Manager installation has been successful.", LogTypeIntel.InformationInteractionRequired);
+						}
+						else
+						{
+							throw new InvalidOperationException("An unknown error occurred during AppControl Manager installation.");
+						}
+
+
+						try
+						{
 
 							#region Add new exclusions
 
-							StringBuilder InstallingAppLocationToAdd = new();
-							_ = InstallingAppLocationToAdd.Append("C:\\Program Files\\WindowsApps\\AppControlManager_");
-							_ = InstallingAppLocationToAdd.Append(InstallingAppVersion);
-							_ = InstallingAppLocationToAdd.Append('_');
-							_ = InstallingAppLocationToAdd.Append(InstallingAppArchitecture);
-							_ = InstallingAppLocationToAdd.Append("__sadt7br7jpt02\\");
+							Package AppControlManagerPackage = GUIAppControlManager.packageMgr.FindPackages("AppControlManager_sadt7br7jpt02").First();
 
-							string path1 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.exe");
-							string path2 = Path.Combine(InstallingAppLocationToAdd.ToString(), "AppControlManager.dll");
+							string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
+
+							// Construct the paths to the .exe and .dll files of the AppControl Manager
+							string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
+							string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
 
 							ConfigDefenderHelper.ManageMpPreference("AttackSurfaceReductionOnlyExclusions", new string[] { path1, path2 }, false);
 
@@ -331,20 +389,6 @@ public partial class GUIMain
 						{
 							Logger.LogMessage($"An error occurred while trying to add the ASR rule exclusions which you can ignore: {ex.Message}", LogTypeIntel.Information);
 						}
-
-
-						Logger.LogMessage($"Installing AppControl Manager MSIX package version '{InstallingAppVersion}' with architecture '{InstallingAppArchitecture}'", LogTypeIntel.Information);
-
-						// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
-						AddPackageOptions options = new()
-						{
-							DeferRegistrationWhenPackagesAreInUse = false,
-							ForceUpdateFromAnyVersion = true
-						};
-
-						_ = GUIAppControlManager.packageMgr.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
-
-						Logger.LogMessage($"AppControl Manager installation has been successful.", LogTypeIntel.InformationInteractionRequired);
 
 
 						#region Check for incompatible policy
@@ -403,6 +447,18 @@ public partial class GUIMain
 					UseShellExecute = true // Ensure the link opens in the default browser
 				});
 			};
+
+
+			// Event handler that opens Microsoft Store
+			InstallAppControlManagerFromMicrosoftStoreButton.Click += (sender, e) =>
+			{
+				_ = Process.Start(new ProcessStartInfo
+				{
+					FileName = "https://apps.microsoft.com/detail/9png1jddtgp8",
+					UseShellExecute = true
+				});
+			};
+
 
 			// Cache the view before setting it as the CurrentView
 			_viewCache["AppControlManagerView"] = GUIAppControlManager.View;

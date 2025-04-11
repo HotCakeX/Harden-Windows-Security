@@ -28,3 +28,13 @@ windows = { version = "0.61.1", features = [    "Win32_Security",
     "Win32_System_Wmi"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+[[bin]]
+# Binary for X64 target.
+name = "DeviceGuardWMIRetriever-X64"
+path = "src/main.rs"
+
+[[bin]]
+# Binary for ARM64 target.
+name = "DeviceGuardWMIRetriever-ARM64"
+path = "src/main.rs"

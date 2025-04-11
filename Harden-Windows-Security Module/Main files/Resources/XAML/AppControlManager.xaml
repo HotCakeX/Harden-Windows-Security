@@ -8,19 +8,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Use this page to install the AppControl Manager. Since it uses certificate generated on your device, Smart App Control might not let it run. Smart App Control must be off either way if you intend to take full control of Applicaton Control in your system using the AppControl Manager."
+        <TextBlock Grid.Row="0" Text="Use this page to install the AppControl Manager on your system. You can choose to install it from Microsoft Store (Recommended) or install it via GitHub as the source."
             FontSize="14"
             Margin="20,10,20,15"
             FontWeight="Normal"
             VerticalAlignment="Center"
             HorizontalAlignment="Center" TextWrapping="Wrap"/>
 
-        <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="InstallAppControlManagerButton" Margin="0,20,0,10" ToolTipService.InitialShowDelay="1000" ToolTip="Installs the AppControl Manager on the system if it isn't already installed.">
+        <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="InstallAppControlManagerFromMicrosoftStoreButton" Margin="0,20,0,10" ToolTipService.InitialShowDelay="1000" ToolTip="Opens Microsoft Store and lets you install AppControl Manager from there.">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Image x:Name="InstallAppControlManagerButtonIcon" Width="40" Height="30"/>
-                <TextBlock Text="Install the AppControl Manager" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold"/>
+                <Image x:Name="InstallAppControlManagerFromMicrosoftStoreButtonIcon" Width="256" Height="75"/>
+                <TextBlock Text="Install from Microsoft Store" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
             </StackPanel>
         </Button>
 
@@ -46,5 +47,13 @@
                 </StackPanel>
             </Button>
         </StackPanel>
+
+        <Button Grid.Row="4" HorizontalAlignment="Center" x:Name="InstallAppControlManagerButton" Margin="0,20,0,10" ToolTipService.InitialShowDelay="1000" ToolTip="Installs the AppControl Manager on the system if it isn't already installed.">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image x:Name="InstallAppControlManagerButtonIcon" Width="40" Height="30"/>
+                <TextBlock Text="Install from GitHub source" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold"/>
+            </StackPanel>
+        </Button>
+
     </Grid>
 </UserControl>

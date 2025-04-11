@@ -1,5 +1,21 @@
-﻿using System;
-using System.Text.RegularExpressions;
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
 using System.Windows.Controls;
 using Windows.Management.Deployment;
 
@@ -13,8 +29,5 @@ internal static class GUIAppControlManager
 
 	internal static PackageManager packageMgr = new();
 
-	// Pattern for AppControl Manager version and architecture extraction from file path and download link URL
-	internal static readonly Regex regex = new(@"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$", RegexOptions.IgnoreCase);
-
-	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt");
+	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt");
 }

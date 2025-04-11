@@ -126,11 +126,12 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 
 					#region Ensure the app is not already installed
 
@@ -153,7 +154,6 @@ public partial class GUIMain
 					}
 
 					#endregion
-
 
 
 					using HttpClient client1 = new();

@@ -93,8 +93,14 @@ public partial class GUIMain
 			{
 
 				// Only continue if there is no activity other places
-				if (!ActivityTracker.IsActive)
+				if (ActivityTracker.IsActive)
 				{
+					return;
+				}
+
+				try
+				{
+
 					// mark as activity started
 					ActivityTracker.IsActive = true;
 
@@ -124,11 +130,12 @@ public partial class GUIMain
 						}
 					});
 
-
+				}
+				finally
+				{
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
 				}
-
 			};
 
 
@@ -156,14 +163,19 @@ public partial class GUIMain
 			RemoveProtectionsButton.Click += async (sender, e) =>
 			{
 				// Only continue if there is no activity other places
-				if (!ActivityTracker.IsActive)
+				if (ActivityTracker.IsActive)
 				{
+					return;
+				}
+
+				try
+				{
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 					// This will be filled in the switch statement based on the selected category
 					// And used to send to the Notification method to be used on the toast notification
 					string NotificationMessage = string.Empty;
-
-					// mark as activity started
-					ActivityTracker.IsActive = true;
 
 					// Disable the RemoveProtectionsButton button while processing
 					Application.Current.Dispatcher.Invoke(() =>
@@ -250,13 +262,15 @@ public partial class GUIMain
 								break;
 						}
 
-					});
 
+						// Display notification at the end
+						ToastNotification.Show(ToastNotification.Type.EndOfUnprotection, null, null, NotificationMessage, null);
+					});
+				}
+				finally
+				{
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
-
-					// Display notification at the end
-					ToastNotification.Show(ToastNotification.Type.EndOfUnprotection, null, null, NotificationMessage, null);
 				}
 			};
 

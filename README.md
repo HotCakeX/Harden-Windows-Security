@@ -1125,7 +1125,7 @@ NistP384
 
    * [For all incoming connections](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-restrict-ntlm-incoming-ntlm-traffic).
 
-   * [For all outgoing connections](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-restrict-ntlm-outgoing-ntlm-traffic-to-remote-servers).
+   * [For all outgoing connections](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-security-restrict-ntlm-outgoing-ntlm-traffic-to-remote-servers). - **This can prevent you from using RDP (Remote Desktop) remotely via IP address which is insecure as it needs public exposed ports and uses NTLM.** You can use Quick Assist or [Bastion for Azure VMs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Securely-Connect-to-Azure-VMs-and-Use-RDP#bastion) which are more secure alternatives. Local RDP such as for Hyper-V enhanced session is not affected.
 
    * Disables the RPC Endpoint Mapper Client Authentication policy. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-remoteprocedurecall#rpcendpointmapperclientauthentication). It is [recommended to be disabled](https://learn.microsoft.com/en-us/windows-server/security/rpc-interface-restrict) when NTLM is completely blocked.
 

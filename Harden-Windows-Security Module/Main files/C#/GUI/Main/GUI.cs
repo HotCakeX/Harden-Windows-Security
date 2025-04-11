@@ -28,7 +28,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace HardenWindowsSecurity;
 
@@ -204,7 +203,7 @@ End time: {DateTime.Now}
 		};
 
 		// Exit Event, will work for the GUI when using compiled version of the app or in Visual Studio
-		app.Exit += (object s, ExitEventArgs e) =>
+		app.Exit += (s, e) =>
 		{
 			// Revert the changes to the PowerShell console Window Title
 			ChangePSConsoleTitle.Set("PowerShell");
@@ -214,7 +213,7 @@ End time: {DateTime.Now}
 		};
 
 		// DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
-		app.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+		app.DispatcherUnhandledException += (s, e) =>
 		{
 			Window errorWindow = new()
 			{
@@ -283,16 +282,15 @@ End time: {DateTime.Now}
 			// Set ScrollViewer as Expander content
 			errorDetailsExpander.Content = scrollViewer;
 
-			Button exitButton = new()
+			Button closeButton = new()
 			{
-				Content = "Exit",
+				Content = "Close",
 				Width = 120,
 				Margin = new Thickness(10),
 				FontSize = 16,
 				Height = 50
 			};
-
-			exitButton.Click += (sender, args) =>
+			closeButton.Click += (sender, args) =>
 			{
 				errorWindow.Close();
 			};
@@ -324,13 +322,14 @@ End time: {DateTime.Now}
 				FontSize = 16,
 				Height = 50
 			};
+
 			copyButton.Click += (sender, args) =>
 			{
 				Clipboard.SetText(errorMessage.Text + "\n" + errorDetailsTextBox.Text); // Copy the text block and error details to the clipboard
 			};
 
 			StackPanel buttonPanel = new() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-			_ = buttonPanel.Children.Add(exitButton);
+			_ = buttonPanel.Children.Add(closeButton);
 			_ = buttonPanel.Children.Add(gitHubButton);
 			_ = buttonPanel.Children.Add(copyButton);
 
@@ -343,8 +342,11 @@ End time: {DateTime.Now}
 
 			// The error will be terminating the application
 			if (e is not null)
-				e.Handled = false;
-			app.Shutdown();
+			{
+				e.Handled = true;
+			}
+
+			//	app.Shutdown();
 		};
 
 		#endregion

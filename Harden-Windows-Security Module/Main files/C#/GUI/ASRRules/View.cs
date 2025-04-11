@@ -144,9 +144,16 @@ public static partial class GUIMain
 			// Set up the Click event handler for the ApplyASRRulesButton button
 			ApplyASRRulesButton.Click += async (sender, e) =>
 			{
+
 				// Only continue if there is no activity other places
-				if (!ActivityTracker.IsActive)
+				if (ActivityTracker.IsActive)
 				{
+					return;
+				}
+
+				try
+				{
+
 					// mark as activity started
 					ActivityTracker.IsActive = true;
 
@@ -219,13 +226,16 @@ public static partial class GUIMain
 							LGPORunner.RunLGPOCommand(ASRRuleActionBasedPath, LGPORunner.FileType.POL);
 						}
 
+						// Display notification at the end
+						ToastNotification.Show(ToastNotification.Type.EndOfASRRules, null, null, null, null);
 					});
 
+				}
+
+				finally
+				{
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
-
-					// Display notification at the end
-					ToastNotification.Show(ToastNotification.Type.EndOfASRRules, null, null, null, null);
 				}
 			};
 

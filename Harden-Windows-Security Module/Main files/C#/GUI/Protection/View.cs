@@ -657,9 +657,16 @@ public partial class GUIMain
 				// When Execute button is pressed
 				executeButton.Click += async (sender, e) =>
 				{
-					// Only continue if there is no activity in other places
-					if (!ActivityTracker.IsActive)
+
+					// Only continue if there is no activity other places
+					if (ActivityTracker.IsActive)
 					{
+						return;
+					}
+
+					try
+					{
+
 						// mark as activity started
 						ActivityTracker.IsActive = true;
 
@@ -958,18 +965,22 @@ public partial class GUIMain
 								}
 							}
 
-							View.Dispatcher.Invoke(() =>
+						});
+
+					}
+
+					finally
+					{
+						await View.Dispatcher.InvokeAsync(() =>
+						{
+							// Manually trigger the ToggleButton to be unchecked to trigger the ending animation
+							executeButton.IsChecked = false;
+
+							// Only enable the log file path TextBox if the log toggle button is toggled
+							if (GUIProtectWinSecurity.log!.IsChecked == true)
 							{
-								// Manually trigger the ToggleButton to be unchecked to trigger the ending animation
-								executeButton.IsChecked = false;
-
-								// Only enable the log file path TextBox if the log toggle button is toggled
-								if (GUIProtectWinSecurity.log!.IsChecked == true)
-								{
-									GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
-								}
-							});
-
+								GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
+							}
 						});
 
 						// mark as activity completed

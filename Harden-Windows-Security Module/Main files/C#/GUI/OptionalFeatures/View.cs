@@ -134,11 +134,11 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
 
 					// Get the results of all optional features once and store them in the static variable to be reused later
 					WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = await Task.Run(() => WindowsFeatureChecker.CheckWindowsFeatures());
@@ -281,10 +281,12 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 
 					// Defining the variables outside the Task so they are accessible after the task completes
 					string PowerShellv2 = "Unknown";
@@ -564,16 +566,13 @@ public partial class GUIMain
 						featureCheckboxes["RemoveExtendedThemeContent"].IsEnabled = true;
 					}
 
-
 				}
 				finally
 				{
-
 					// mark as activity completed
 					ActivityTracker.IsActive = false;
 				}
 			};
-
 
 
 
@@ -673,11 +672,11 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
 					await _RetrieveRemovableApps();
 				}
 				finally
@@ -699,11 +698,10 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+					// mark as activity started
+					ActivityTracker.IsActive = true;
 
 					// Get all checked checkboxes' contents from the dictionary
 					List<string> checkedCheckboxes = [.. GUIOptionalFeatures.appsCheckBoxes
@@ -825,11 +823,13 @@ public partial class GUIMain
 					return;
 				}
 
-				// mark as activity started
-				ActivityTracker.IsActive = true;
-
 				try
 				{
+
+					// mark as activity started
+					ActivityTracker.IsActive = true;
+
+
 					// When "*" is used in the middle of the name, it means both WIFI and Ethernet drivers will be targeted for removal
 					switch (NetworkAdaptersCompanyListComboBox.SelectedIndex)
 					{

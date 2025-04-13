@@ -177,7 +177,7 @@ internal static class SnapBackGuarantee
 		// TODO: use a Native AOT compatible way that doesn't rely on System.Management
 
 		// Execute the script using PowerShell
-		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.SnapBackGuaranteeScheduledTaskScriptFilePath}\"");
+		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.SnapBackGuaranteeScheduledTaskScriptFilePath}\"");
 
 
 		// Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
@@ -207,7 +207,7 @@ del ""%~f0""
 	{
 		string script = "Get-ScheduledTask | Where-Object { $_.TaskName -eq 'EnforcedModeSnapBack' } | ForEach-Object { Unregister-ScheduledTask -TaskName $_.TaskName -Confirm:$false }";
 
-		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"");
+		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"");
 
 		if (Path.Exists(savePath))
 		{

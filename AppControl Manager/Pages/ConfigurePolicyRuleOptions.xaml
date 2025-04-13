@@ -24,7 +24,7 @@
 
                 <TextBlock x:Uid="ConfigurePolicyRuleOptionsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton Margin="0,-6,0,0" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
+                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
 
             </controls:WrapPanel>
 
@@ -39,7 +39,7 @@
 
                             <Button x:Uid="ClearButton" Click="PickPolicyFileButton_FlyOut_Clear_Click" />
 
-                            <TextBlock Text="View the policy path you selected." TextWrapping="WrapWholeWords" />
+                            <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
 
                             <TextBox x:Name="PickPolicyFileButton_TextBox"
                              TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
@@ -78,22 +78,26 @@
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
-                        <Button x:Name="ApplyTheChangesButton" Content="Apply the Changes" Click="{x:Bind ApplyTheChangesButton_Click}"
-                            Style="{StaticResource AccentButtonStyle}" ToolTipService.ToolTip="If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected" />
+                        <Button x:Name="ApplyTheChangesButton" x:Uid="ApplyThePolicyRuleOptionsChangesButton" Click="{x:Bind ApplyTheChangesButton_Click}"
+                            Style="{StaticResource AccentButtonStyle}" />
 
-                        <ToggleButton x:Name="DeployAfterApplyingToggleButton" IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" Content="Deploy After Applying" />
+                        <ToggleButton x:Name="DeployAfterApplyingToggleButton" x:Uid="DeployAfterApplyingRuleOptionsToggleButton" IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" />
 
-                        <Button x:Name="RefreshRuleOptionsState" Content="Retrieve Rules States" Click="{x:Bind RefreshRuleOptionsState_Click}"
-                                ToolTipService.ToolTip="Retrieve the latest state of policy rule options from the policy file you selected"/>
+                        <Button x:Name="RefreshRuleOptionsState" x:Uid="RefreshRuleOptionsStateButton" Click="{x:Bind RefreshRuleOptionsState_Click}"/>
 
                         <TeachingTip x:Name="MainTeachingTip" Target="{x:Bind PolicyRuleExpander}" Title="Error"/>
                     </controls:WrapPanel>
+
                 </controls:SettingsExpander>
+
                 <controls:SettingsCard x:Name="PolicyTemplate"
                                x:Uid="PolicyTemplateSettingCard"
                                HeaderIcon="{ui:FontIcon Glyph=&#xE799;}">
+
                     <controls:WrapPanel Orientation="Horizontal">
-                        <Button x:Name="SetPolicyTemplate" Content="Set" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+                        <Button x:Name="SetPolicyTemplate" x:Uid="SetPolicyTemplateButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
                         <ComboBox x:Name="PolicyTemplatesComboBox" SelectedIndex="0">
                             <x:String>Base</x:String>
                             <x:String>BaseISG</x:String>

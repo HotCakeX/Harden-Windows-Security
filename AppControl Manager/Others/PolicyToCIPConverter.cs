@@ -39,7 +39,7 @@ internal static class PolicyToCIPConverter
 		Logger.Write($"PowerShell code that will be executed: {script}");
 
 		// Execute the command
-		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script}\"");
+		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script}\"");
 	}
 
 }

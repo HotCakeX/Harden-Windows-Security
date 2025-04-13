@@ -28,18 +28,18 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsCard
-                           Description="Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it."
-                           Header="Optional: select MSIXBundle file path"
+                           x:Uid="BrowseForCustomMSIXPathSettingsCard"
                            HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind BrowseForCustomMSIXPathButton_Click}">
 
                     <controls:WrapPanel Orientation="Horizontal">
-                        <Button x:Name="BrowseForCustomMSIXPathButton" Click="{x:Bind BrowseForCustomMSIXPathButton_Click}" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Content="Browse for MSIXBundle path"/>
+                        <Button x:Name="BrowseForCustomMSIXPathButton" Click="{x:Bind BrowseForCustomMSIXPathButton_Click}"
+                                x:Uid="BrowseForCustomMSIXPathButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Name="ConfirmUseOfCustomMSIXPathSettingsCard" Description="Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub."
-                    Header="Confirm" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="{x:Bind ConfirmUseOfCustomMSIXPath_Click}" IsActionIconVisible="False">
+                <controls:SettingsCard x:Name="ConfirmUseOfCustomMSIXPathSettingsCard" x:Uid="ConfirmUseOfCustomMSIXPathSettingsCard"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="{x:Bind ConfirmUseOfCustomMSIXPath_Click}" IsActionIconVisible="False">
                     <ToggleSwitch x:Name="ConfirmUseOfCustomMSIXPath" />
                 </controls:SettingsCard>
 

@@ -353,6 +353,12 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="CppInterop\ManageDefender-ARM64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CppInterop\ManageDefender-x64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -39,49 +39,54 @@
                                            IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}"
                                            x:Name="MainUserConfigurationsSettingsExpander"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
-                    <Button Content="Get Configuration" Click="GetConfigurationButton_Click"
+
+                    <Button x:Uid="RetrieveTheUserConfigurationsButton" Click="GetConfigurationButton_Click"
                             Style="{StaticResource AccentButtonStyle}" />
+
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard ContentAlignment="Left">
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
                                 <!-- Signed Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Signed Policy Path:" x:Name="SignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="SignedPolicyPathTextBox" x:Name="SignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="SignedPolicyPath"/>
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="SignedPolicyPath"/>
                                         <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="SignedPolicyPath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
+
                                 <!-- Unsigned Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Unsigned Policy Path:" x:Name="UnsignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="UnsignedPolicyPathTextBox" x:Name="UnsignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="UnsignedPolicyPath"/>
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="UnsignedPolicyPath"/>
                                         <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="UnsignedPolicyPath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
-                                <!-- Sign Tool Custom Path -->
+
+                                <!-- Custom Sign Tool Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Sign Tool Custom Path:" x:Name="SignToolCustomPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="SignToolCustomPathTextBox" x:Name="SignToolCustomPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="SignToolCustomPath"/>
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="SignToolCustomPath"/>
                                         <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="SignToolCustomPath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
+
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
 
                                     <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
-                                        Header="Certificate Common Name:"
+                                        x:Uid="CertificateCommonNameAutoSuggestBox"
                                         QueryIcon="Find"
                                         GotFocus="{x:Bind ViewModel.CertificateCommonNameAutoSuggestBox_GotFocus}"
                                         IsSuggestionListOpen="{x:Bind ViewModel.CertCNAutoSuggestBoxIsSuggestionListOpen, Mode=TwoWay}"
                                         Text="{x:Bind ViewModel.CertCNsAutoSuggestBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         TextChanged="{x:Bind ViewModel.CertificateCNAutoSuggestBox_TextChanged}"
-                                        PlaceholderText="Find Certificate Common Names"
                                         ItemsSource="{x:Bind ViewModel.CertCommonNames, Mode=OneWay}"
                                         MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
 
@@ -91,15 +96,17 @@
                                         <AppBarButton Icon="Refresh" x:Uid="RefreshAppBarButton" Click="{x:Bind ViewModel.FetchLatestCertificateCNs}" Tag="CertificateCommonName"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
+
                                 <!-- Certificate Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Certificate Path:" x:Name="CertificatePathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="CertificatePathTextBox" x:Name="CertificatePathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="CertificatePath"/>
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="CertificatePath"/>
                                         <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="CertificatePath"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
+
                             </StackPanel>
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
@@ -107,7 +114,7 @@
 
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
-                <controls:SettingsExpander IsExpanded="True" Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+                <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
 
                     <controls:SettingsExpander.Items>
 
@@ -166,7 +173,7 @@
                 </controls:SettingsExpander>
 
                 <!-- Language section -->
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Language" />
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
                 <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
 
                     <controls:SettingsExpander.ItemsHeader>
@@ -177,7 +184,7 @@
                             IsIconVisible="True"
                             IsOpen="False"
                             IsClosable="True"
-                            Message="Please restart the app for language changes to be fully applied to the user interface."
+                            x:Uid="LanguageSectionSettingsExpanderInfoBar"
                             Severity="Warning" />
                     </controls:SettingsExpander.ItemsHeader>
 
@@ -189,7 +196,7 @@
                             </ComboBox>
                         </controls:SettingsCard>
                         <controls:SettingsCard x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}" IsClickEnabled="True" IsActionIconVisible="False" Click="UIFlowDirectionSettingsCard_Click">
-                            <ToggleSwitch x:Name="UIFlowDirectionToggleSwitch" OnContent="Left-to-Right" OffContent="Right-to-Left" />
+                            <ToggleSwitch x:Name="UIFlowDirectionToggleSwitch" x:Uid="UIFlowDirectionToggleSwitch" />
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -216,19 +223,19 @@
                             <controls:WrapPanel Margin="-12,0,0,0" Orientation="Horizontal" HorizontalSpacing="13">
 
                                 <StackPanel Orientation="Vertical">
-                                    <HyperlinkButton Content="GitHub repository" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
-                                    <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
-                                    <HyperlinkButton Content="Microsoft Store page" NavigateUri="https://apps.microsoft.com/detail/9PNG1JDDTGP8" />
+                                    <HyperlinkButton x:Uid="GitHubRepoHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
+                                    <HyperlinkButton x:Uid="AppControlManagerDocumentationHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
+                                    <HyperlinkButton x:Uid="MicrosoftStorePageHyperLinkButton" NavigateUri="https://apps.microsoft.com/detail/9PNG1JDDTGP8" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Vertical">
-                                    <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
-                                    <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
+                                    <HyperlinkButton x:Uid="SpyNetGirlWebsiteHyperLinkButton" NavigateUri="https://spynetgirl.github.io/" />
+                                    <HyperlinkButton x:Uid="YouTubeChannelHyperLinkButton" NavigateUri="https://www.youtube.com/@hotcakex" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
-                                    <HyperlinkButton Content="Privacy Policy" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Privacy-Policy-for-the-AppControl-Manager" />
+                                    <HyperlinkButton x:Uid="PrivacyPolicyHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Privacy-Policy-for-the-AppControl-Manager" />
                                 </StackPanel>
 
                             </controls:WrapPanel>
@@ -238,10 +245,10 @@
                 </controls:SettingsExpander>
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
-                    <HyperlinkButton Content="Send Feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
-                    <HyperlinkButton Content="Icons8 website for all of the Icons used in this app" NavigateUri="https://icons8.com" />
-                    <HyperlinkButton Content="Source Code" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager" />
-                    <TextBlock Text="Sponsored by Elliot Labs LLC" FontStyle="Italic" Margin="0,6,0,0" />
+                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com" />
+                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager" />
+                    <TextBlock x:Uid="Sponsor1TextBlock" FontStyle="Italic" Margin="0,6,0,0" />
                 </controls:WrapPanel>
 
             </StackPanel>

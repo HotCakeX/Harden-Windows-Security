@@ -2297,7 +2297,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AppDescription" xml:space="preserve">
     <value>AppControl Manager allows you to manage App Control policies and Code Integrity in Windows with ease, including but not limited to: creation, simulation, removal, deployment and signing.</value>
   </data>
-  <!-- need conversion to other languages -->
   <data name="MergePoliciesSettingsExpander.Description" xml:space="preserve">
     <value>Merge App Control Policies</value>
   </data>
@@ -2369,5 +2368,338 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="CurrentStatusInfoBar.Title" xml:space="preserve">
     <value>Current Status</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.Description" xml:space="preserve">
+    <value>Detect signatures for unsigned files by querying system security catalogs for accurate results</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.Header" xml:space="preserve">
+    <value>Include Catalog Signers</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Detect signatures for unsigned files by querying system security catalogs for accurate results</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Detect signatures for unsigned files by querying system security catalogs for accurate results</value>
+  </data>
+  <data name="CertificatesSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search certificate details...</value>
+  </data>
+  <data name="CertificatesSearchBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Search among the certificate details data</value>
+  </data>
+  <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Search among the certificate details data</value>
+  </data>
+  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
+    <value>Descending Sorting</value>
+  </data>
+  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When checked, the sort will be performed in descending order, if unchecked the sort will be performed in ascending order.</value>
+  </data>
+  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When checked, the sort will be performed in descending order, if unchecked the sort will be performed in ascending order.</value>
+  </data>
+  <data name="SortTextBlock.Text" xml:space="preserve">
+    <value>Sort</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
+    <value>Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.Header" xml:space="preserve">
+    <value>Optional: select MSIXBundle file path</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathButton.Content" xml:space="preserve">
+    <value>Browse for MSIXBundle path</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the file picker allowing you to pick the AppControl Manager MSIXBundle file on your device.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the file picker allowing you to pick the AppControl Manager MSIXBundle file on your device.</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
+    <value>Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub.</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub.</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Confirm that you want to use the selected custom MSIXBundle file instead of automatically downloading it from GitHub. This will override online update check and bypass download of MSIXBundle file from GitHub.</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
+    <value>More info</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the GitHub&apos;s main wiki page for the AppControl Manager</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the GitHub&apos;s main wiki page for the AppControl Manager</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
+    <value>Release Notes</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
+    <value>Check out the GitHub releases for full release notes</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Check out the GitHub releases for full release notes</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Check out the GitHub releases for full release notes</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
+    <value>Update Status</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Update Status</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
+    <value>See What&apos;s New</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the GitHub&apos;s releases page where you can find the full release notes for the available update.</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the GitHub&apos;s releases page where you can find the full release notes for the available update.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
+    <value>Once the updates are downloaded and installed, the next time you open the AppControl Manager you will use the new version.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
+    <value>Check for AppControl Manager update</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Once the updates are downloaded and installed, the next time you open the AppControl Manager you will use the new version.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Once the updates are downloaded and installed, the next time you open the AppControl Manager you will use the new version.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
+    <value>Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
+    <value>Auto Update Check</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
+    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user&apos;s account, requiring confirmation of prompts before it can be used for signing.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
+    <value>Hardened Update Procedure</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user&apos;s account, requiring confirmation of prompts before it can be used for signing.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user&apos;s account, requiring confirmation of prompts before it can be used for signing.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approximate download size is 65 MB.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approximate download size is 65 MB.</value>
+  </data>
+  <data name="BuildCertificateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Build the certificate based on the configurations displayed below</value>
+  </data>
+  <data name="BuildCertificateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Build the certificate based on the configurations displayed below</value>
+  </data>
+  <data name="BuildCertificateTextBlock.Text" xml:space="preserve">
+    <value>Build Certificate</value>
+  </data>
+  <data name="CopyThumbPrintToClipboardButton.Content" xml:space="preserve">
+    <value>Copy ThumbPrint To Clipboard</value>
+  </data>
+  <data name="CopyThumbPrintToClipboardButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copies the thumbprint of the generated certificate to the clipboard.</value>
+  </data>
+  <data name="CopyThumbPrintToClipboardButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copies the thumbprint of the generated certificate to the clipboard.</value>
+  </data>
+  <data name="PFXEncryptionPasswordBox.PlaceholderText" xml:space="preserve">
+    <value>Type a password...</value>
+  </data>
+  <data name="PFXEncryptionPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This password will be used to encrypt the PFX file which will contain both the public key and private key of the generated certificate.</value>
+  </data>
+  <data name="PFXEncryptionPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This password will be used to encrypt the PFX file which will contain both the public key and private key of the generated certificate.</value>
+  </data>
+  <data name="CommonNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Common Name (CN)</value>
+  </data>
+  <data name="RetrieveTheUserConfigurationsButton.Content" xml:space="preserve">
+    <value>Retrieve the Configurations</value>
+  </data>
+  <data name="RetrieveTheUserConfigurationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>It will retrieve the latest user configurations and display them.</value>
+  </data>
+  <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>It will retrieve the latest user configurations and display them.</value>
+  </data>
+  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
+    <value>Signed Policy Path:</value>
+  </data>
+  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
+    <value>Unsigned Policy Path:</value>
+  </data>
+  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
+    <value>Custom Sign Tool Path:</value>
+  </data>
+  <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
+    <value>Certificate Common Name:</value>
+  </data>
+  <data name="CertificateCommonNameAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Find Certificate Common Names</value>
+  </data>
+  <data name="CertificateCommonNameAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Find Certificate Common Names</value>
+  </data>
+  <data name="CertificatePathTextBox.Header" xml:space="preserve">
+    <value>Certificate Path:</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
+    <value>Make AppControl Manager Look the Way You Want</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use various available options to change the appearance and visual effects of the AppControl Manager</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Use various available options to change the appearance and visual effects of the AppControl Manager</value>
+  </data>
+  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
+    <value>Please restart the app for language changes to be fully applied to the user interface.</value>
+  </data>
+  <data name="LanguageTextBlock.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="GitHubRepoHyperLinkButton.Content" xml:space="preserve">
+    <value>GitHub repository</value>
+  </data>
+  <data name="AppControlManagerDocumentationHyperLinkButton.Content" xml:space="preserve">
+    <value>AppControl Manager Documentation</value>
+  </data>
+  <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
+    <value>Microsoft Store Page</value>
+  </data>
+  <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>SpyNetGirl Website</value>
+  </data>
+  <data name="YouTubeChannelHyperLinkButton.Content" xml:space="preserve">
+    <value>YouTube Channel</value>
+  </data>
+  <data name="PrivacyPolicyHyperLinkButton.Content" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="SendFeedbackHyperLinkButton.Content" xml:space="preserve">
+    <value>Send Feedback</value>
+  </data>
+  <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>Icons8 website for all of the Icons used in this app</value>
+  </data>
+  <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
+    <value>Source Code</value>
+  </data>
+  <data name="Sponsor1TextBlock.Text" xml:space="preserve">
+    <value>Sponsored by Elliot Labs LLC</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Left-to-Right</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Right-to-Left</value>
+  </data>
+  <data name="RetrieveSecureSettingsButton.Content" xml:space="preserve">
+    <value>Retrieve</value>
+  </data>
+  <data name="RetrieveSecureSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Check if the system has a secure setting based on the information you provided.</value>
+  </data>
+  <data name="RetrieveSecureSettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Check if the system has a secure setting based on the information you provided.</value>
+  </data>
+  <data name="SecureSettingProviderTextBox.Header" xml:space="preserve">
+    <value>Provider</value>
+  </data>
+  <data name="SecureSettingProviderTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter the Provider</value>
+  </data>
+  <data name="SecureSettingProviderTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter the Provider</value>
+  </data>
+  <data name="SecureSettingKeyTextBox.Header" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="SecureSettingKeyTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter the Key</value>
+  </data>
+  <data name="SecureSettingKeyTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter the Key</value>
+  </data>
+  <data name="SecureSettingValueNameTextBox.Header" xml:space="preserve">
+    <value>Value Name</value>
+  </data>
+  <data name="SecureSettingValueNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter the Value Name</value>
+  </data>
+  <data name="SecureSettingValueNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enter the Value Name</value>
+  </data>
+  <data name="SecureSettingResultsTextBlock.Text" xml:space="preserve">
+    <value>The results will be displayed below</value>
+  </data>
+  <data name="ViewSelectedPolicyPathsTextBlock.Text" xml:space="preserve">
+    <value>View the policy path you selected.</value>
+  </data>
+  <data name="ApplyThePolicyRuleOptionsChangesButton.Content" xml:space="preserve">
+    <value>Apply the Changes</value>
+  </data>
+  <data name="ApplyThePolicyRuleOptionsChangesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected.</value>
+  </data>
+  <data name="ApplyThePolicyRuleOptionsChangesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>If you checked or unchecked any new check boxes among the rule options, use this button to apply them to the policy you selected.</value>
+  </data>
+  <data name="DeployAfterApplyingRuleOptionsToggleButton.Content" xml:space="preserve">
+    <value>Deploy After Applying</value>
+  </data>
+  <data name="DeployAfterApplyingRuleOptionsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Will deploy the policy after applying the rule option changes to it.</value>
+  </data>
+  <data name="DeployAfterApplyingRuleOptionsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Will deploy the policy after applying the rule option changes to it.</value>
+  </data>
+  <data name="RefreshRuleOptionsStateButton.Content" xml:space="preserve">
+    <value>Retrieve Rules States</value>
+  </data>
+  <data name="RefreshRuleOptionsStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the latest state of policy rule options from the policy file you selected</value>
+  </data>
+  <data name="RefreshRuleOptionsStateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the latest state of policy rule options from the policy file you selected</value>
+  </data>
+  <data name="SetPolicyTemplateButton.Content" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="SetPolicyTemplateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sets the selected template to the policy&apos;s rule options.</value>
+  </data>
+  <data name="SetPolicyTemplateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sets the selected template to the policy&apos;s rule options.</value>
   </data>
 </root>

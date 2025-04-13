@@ -22,7 +22,7 @@
 
             <TextBlock x:Uid="SystemInformationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton Margin="0,-6,0,0" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information" />
 
         </controls:WrapPanel>
 

@@ -47,9 +47,9 @@ internal static class ConfigureISGServices
             */
 
 
-		ProcessStarter.RunCommand("appidtel.exe", "start");
+		_ = ProcessStarter.RunCommand("appidtel.exe", "start");
 
-		ProcessStarter.RunCommand("sc.exe", "config appidsvc start=auto");
+		_ = ProcessStarter.RunCommand("sc.exe", "config appidsvc start=auto");
 
 	}
 }

@@ -25,36 +25,25 @@ internal static class ProcessStarter
 	/// <summary>
 	/// Executes an executable with arguments
 	/// </summary>
-	/// <param name="command"></param>
-	/// <param name="arguments"></param>
+	/// <param name="command">The name of full path of the executable to run.</param>
+	/// <param name="arguments">Optional arguments.</param>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static void RunCommand(string command, string? arguments = null)
+	/// <returns>The string output of the command</returns>
+	internal static string RunCommand(string command, string? arguments = null)
 	{
 
-		ProcessStartInfo processInfo;
+		ProcessStartInfo processInfo = new()
+		{
+			FileName = command,
+			RedirectStandardOutput = true,
+			RedirectStandardError = true,
+			UseShellExecute = false,
+			CreateNoWindow = true
+		};
 
 		if (arguments is not null)
 		{
-			processInfo = new()
-			{
-				FileName = command,
-				Arguments = arguments,
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false,
-				CreateNoWindow = true
-			};
-		}
-		else
-		{
-			processInfo = new()
-			{
-				FileName = command,
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false,
-				CreateNoWindow = true
-			};
+			processInfo.Arguments = arguments;
 		}
 
 		using Process process = new();
@@ -69,39 +58,7 @@ internal static class ProcessStarter
 
 		if (process.ExitCode is not 0)
 		{
-			throw new InvalidOperationException($"Command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
-		}
-	}
-
-	/// <summary>
-	/// Executes an executable with arguments and returns the output
-	/// </summary>
-	/// <param name="command"></param>
-	/// <param name="arguments"></param>
-	/// <returns>Standard output of the executed command</returns>
-	/// <exception cref="InvalidOperationException"></exception>
-	internal static string RunCommandWithOutput(string command, string? arguments = null)
-	{
-		ProcessStartInfo processInfo = new()
-		{
-			FileName = command,
-			Arguments = arguments ?? string.Empty,
-			RedirectStandardOutput = true,
-			RedirectStandardError = true,
-			UseShellExecute = false,
-			CreateNoWindow = true
-		};
-
-		using Process process = new() { StartInfo = processInfo };
-		_ = process.Start();
-
-		string output = process.StandardOutput.ReadToEnd();
-		string error = process.StandardError.ReadToEnd();
-		process.WaitForExit();
-
-		if (process.ExitCode is not 0)
-		{
-			throw new InvalidOperationException($"Command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
+			throw new InvalidOperationException($"The command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
 		}
 
 		return output;

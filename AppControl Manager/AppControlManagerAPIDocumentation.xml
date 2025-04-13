@@ -3512,6 +3512,11 @@
             Defines the source generated JSON serialization contract metadata for a given type.
             </summary>
         </member>
+        <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
         <member name="P:AppControlManager.MicrosoftGraph.MSGraphJsonContext.Default">
             <summary>
             The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
@@ -4544,18 +4549,10 @@
             <summary>
             Executes an executable with arguments
             </summary>
-            <param name="command"></param>
-            <param name="arguments"></param>
+            <param name="command">The name of full path of the executable to run.</param>
+            <param name="arguments">Optional arguments.</param>
             <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Others.ProcessStarter.RunCommandWithOutput(System.String,System.String)">
-            <summary>
-            Executes an executable with arguments and returns the output
-            </summary>
-            <param name="command"></param>
-            <param name="arguments"></param>
-            <returns>Standard output of the executed command</returns>
-            <exception cref="T:System.InvalidOperationException"></exception>
+            <returns>The string output of the command</returns>
         </member>
         <member name="T:AppControlManager.Others.PublisherSignerCreator">
             <summary>

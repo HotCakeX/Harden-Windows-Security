@@ -54,7 +54,7 @@ internal sealed partial class UpdatePageCustomMSIXPath : Page
 	private void BrowseForCustomMSIXPathButton_Click()
 	{
 		// Offer file picker to select MSIX file path
-		string? MSIXPath = FileDialogHelper.ShowFilePickerDialog("MSIXBundle file|*.msixbundle");
+		string? MSIXPath = FileDialogHelper.ShowFilePickerDialog("MSIX/MSIXBundle files|*.msixbundle;*.msix");
 
 		// If user has selected a path and the file name is valid
 		if (!string.IsNullOrWhiteSpace(MSIXPath))

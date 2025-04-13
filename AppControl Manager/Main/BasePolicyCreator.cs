@@ -193,7 +193,7 @@ internal static partial class BasePolicyCreator
 
 
 		// Execute the script using PowerShell
-		ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.DriversBlockListAutoUpdaterScheduledTaskScriptFilePath}\"");
+		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.DriversBlockListAutoUpdaterScheduledTaskScriptFilePath}\"");
 
 	}
 

@@ -2295,6 +2295,411 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>פותח תת-תפריט בעת ריחוף או נגיעה כדי לאפשר העתקת פריטים בודדים בכל שורה.</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-  <value>AppControl Manager מאפשר לך לנהל בקלות את מדיניות בקרת האפליקציות ושלמות הקוד ב-Windows, כולל אך לא מוגבל ל: יצירה, סימולציה, הסרה, פריסה וחתימה.</value>
+    <value>AppControl Manager מאפשר לך לנהל בקלות את מדיניות בקרת האפליקציות ושלמות הקוד ב-Windows, כולל אך לא מוגבל ל: יצירה, סימולציה, הסרה, פריסה וחתימה.</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.Description" xml:space="preserve">
+    <value>מיזוג מדיניות בקרת יישומים</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.Header" xml:space="preserve">
+    <value>מיזוג</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מיזוג מדיניות בקרת יישומים</value>
+  </data>
+  <data name="MergePoliciesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מיזוג מדיניות בקרת יישומים</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.Description" xml:space="preserve">
+    <value>חפש את הנתיב לקובץ XML של המדיניות הראשית.</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.Header" xml:space="preserve">
+    <value>בחר מדיניות ראשית</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חפש את הנתיב לקובץ XML של המדיניות הראשית.</value>
+  </data>
+  <data name="BrowseForMainPolicyToMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חפש את הנתיב לקובץ XML של המדיניות הראשית.</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.Description" xml:space="preserve">
+    <value>בחר מדיניות אחרות למיזוג עם המדיניות הראשית</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.Header" xml:space="preserve">
+    <value>בחר מדיניות אחרות</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר מדיניות אחרות למיזוג עם המדיניות הראשית</value>
+  </data>
+  <data name="BrowseForOtherPoliciesToMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר מדיניות אחרות למיזוג עם המדיניות הראשית</value>
+  </data>
+  <data name="GenericBrowseButton.Content" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+  <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+  <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+  <data name="ViewTheSelectedMainPolicy.Text" xml:space="preserve">
+    <value>צפה במדיניות הראשית שבחרת.</value>
+  </data>
+  <data name="ViewTheSelectedOtherPolicies.Text" xml:space="preserve">
+    <value>צפה במדיניות האחרות שבחרת.</value>
+  </data>
+  <data name="DeployAfterMergeButton.Content" xml:space="preserve">
+    <value>הפעל לאחר מיזוג</value>
+  </data>
+  <data name="DeployAfterMergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל את המדיניות בסוף פעולת המיזוג.</value>
+  </data>
+  <data name="DeployAfterMergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל את המדיניות בסוף פעולת המיזוג.</value>
+  </data>
+  <data name="MergeButton.Content" xml:space="preserve">
+    <value>מיזוג</value>
+  </data>
+  <data name="MergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את פעולת המיזוג.</value>
+  </data>
+  <data name="MergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את פעולת המיזוג.</value>
+  </data>
+  <data name="CurrentStatusInfoBar.Title" xml:space="preserve">
+    <value>מצב נוכחי</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.Description" xml:space="preserve">
+    <value>זהה חתימות לקבצים לא חתומים על ידי שאילתת קטלוגי אבטחת המערכת לתוצאות מדויקות</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.Header" xml:space="preserve">
+    <value>כלול חותמי קטלוג</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>זהה חתימות לקבצים לא חתומים על ידי שאילתת קטלוגי אבטחת המערכת לתוצאות מדויקות</value>
+  </data>
+  <data name="IncludeSecurityCatalogsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>זהה חתימות לקבצים לא חתומים על ידי שאילתת קטלוגי אבטחת המערכת לתוצאות מדויקות</value>
+  </data>
+  <data name="CertificatesSearchBox.PlaceholderText" xml:space="preserve">
+    <value>חפש פרטי תעודה...</value>
+  </data>
+  <data name="CertificatesSearchBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חפש בין נתוני פרטי התעודה</value>
+  </data>
+  <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חפש בין נתוני פרטי התעודה</value>
+  </data>
+  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
+    <value>מיון יורד</value>
+  </data>
+  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר מסומן, המיון יתבצע בסדר יורד, אם לא מסומן, המיון יתבצע בסדר עולה.</value>
+  </data>
+  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר מסומן, המיון יתבצע בסדר יורד, אם לא מסומן, המיון יתבצע בסדר עולה.</value>
+  </data>
+  <data name="SortTextBlock.Text" xml:space="preserve">
+    <value>מיון</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
+    <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.Header" xml:space="preserve">
+    <value>אופציונלי: בחר נתיב קובץ MSIXBundle</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathButton.Content" xml:space="preserve">
+    <value>חפש נתיב MSIXBundle</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את בורר הקבצים ומאפשר לך לבחור את קובץ MSIXBundle של AppControl Manager במכשיר שלך.</value>
+  </data>
+  <data name="BrowseForCustomMSIXPathButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את בורר הקבצים ומאפשר לך לבחור את קובץ MSIXBundle של AppControl Manager במכשיר שלך.</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
+    <value>אשר שברצונך להשתמש בקובץ MSIXBundle מותאם אישית שנבחר במקום להוריד אותו אוטומטית מ-GitHub. פעולה זו תדרוס את בדיקת העדכון המקוונת ותעקוף את הורדת קובץ MSIXBundle מ-GitHub.</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
+    <value>אשר</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אשר שברצונך להשתמש בקובץ MSIXBundle מותאם אישית שנבחר במקום להוריד אותו אוטומטית מ-GitHub. פעולה זו תדרוס את בדיקת העדכון המקוונת ותעקוף את הורדת קובץ MSIXBundle מ-GitHub.</value>
+  </data>
+  <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אשר שברצונך להשתמש בקובץ MSIXBundle מותאם אישית שנבחר במקום להוריד אותו אוטומטית מ-GitHub. פעולה זו תדרוס את בדיקת העדכון המקוונת ותעקוף את הורדת קובץ MSIXBundle מ-GitHub.</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
+    <value>מידע נוסף</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את עמוד הוויקי הראשי של GitHub עבור AppControl Manager</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את עמוד הוויקי הראשי של GitHub עבור AppControl Manager</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
+    <value>הערות שחרור</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
+    <value>בדוק את שחרורי GitHub לקבלת הערות שחרור מלאות</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בדוק את שחרורי GitHub לקבלת הערות שחרור מלאות</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בדוק את שחרורי GitHub לקבלת הערות שחרור מלאות</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
+    <value>סטטוס עדכון</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סטטוס עדכון</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
+    <value>ראה מה חדש</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את עמוד השחרורים של GitHub שבו תוכל למצוא את הערות השחרור המלאות לעדכון הזמין.</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את עמוד השחרורים של GitHub שבו תוכל למצוא את הערות השחרור המלאות לעדכון הזמין.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
+    <value>לאחר שהעדכונים יורדו ויותקנו, בפעם הבאה שתפתח את AppControl Manager תשתמש בגרסה החדשה.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
+    <value>בדוק לעדכון AppControl Manager</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לאחר שהעדכונים יורדו ויותקנו, בפעם הבאה שתפתח את AppControl Manager תשתמש בגרסה החדשה.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לאחר שהעדכונים יורדו ויותקנו, בפעם הבאה שתפתח את AppControl Manager תשתמש בגרסה החדשה.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
+    <value>בדוק אוטומטית לעדכונים כאשר האפליקציה מופעלת והודע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
+    <value>בדיקת עדכון אוטומטית</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בדוק אוטומטית לעדכונים כאשר האפליקציה מופעלת והודע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בדוק אוטומטית לעדכונים כאשר האפליקציה מופעלת והודע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יהיה מקושר לחשבון המשתמש, וידרוש אישור של הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
+    <value>הליך עדכון מחוזק</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יהיה מקושר לחשבון המשתמש, וידרוש אישור של הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יהיה מקושר לחשבון המשתמש, וידרוש אישור של הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יוריד ויתקין את הגרסה האחרונה ממאגר GitHub. הזמן שלוקח תלוי בחיבור הרשת שלך. גודל ההורדה המשוער הוא 65 MB.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יוריד ויתקין את הגרסה האחרונה ממאגר GitHub. הזמן שלוקח תלוי בחיבור הרשת שלך. גודל ההורדה המשוער הוא 65 MB.</value>
+  </data>
+  <data name="BuildCertificateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בנה את התעודה על סמך התצורות המוצגות להלן</value>
+  </data>
+  <data name="BuildCertificateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בנה את התעודה על סמך התצורות המוצגות להלן</value>
+  </data>
+  <data name="BuildCertificateTextBlock.Text" xml:space="preserve">
+    <value>בנה תעודה</value>
+  </data>
+  <data name="CopyThumbPrintToClipboardButton.Content" xml:space="preserve">
+    <value>העתק את טביעת האצבע ללוח</value>
+  </data>
+  <data name="CopyThumbPrintToClipboardButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מעתיק את טביעת האצבע של התעודה שנוצרה ללוח.</value>
+  </data>
+  <data name="CopyThumbPrintToClipboardButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מעתיק את טביעת האצבע של התעודה שנוצרה ללוח.</value>
+  </data>
+  <data name="PFXEncryptionPasswordBox.PlaceholderText" xml:space="preserve">
+    <value>הקלד סיסמה...</value>
+  </data>
+  <data name="PFXEncryptionPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סיסמה זו תשמש להצפנת קובץ PFX שיכיל את המפתח הציבורי והפרטי של התעודה שנוצרה.</value>
+  </data>
+  <data name="PFXEncryptionPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סיסמה זו תשמש להצפנת קובץ PFX שיכיל את המפתח הציבורי והפרטי של התעודה שנוצרה.</value>
+  </data>
+  <data name="CommonNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>שם נפוץ (CN)</value>
+  </data>
+  <data name="RetrieveTheUserConfigurationsButton.Content" xml:space="preserve">
+    <value>אחזר את התצורות</value>
+  </data>
+  <data name="RetrieveTheUserConfigurationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יאחזר את התצורות האחרונות של המשתמש ויציג אותן.</value>
+  </data>
+  <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יאחזר את התצורות האחרונות של המשתמש ויציג אותן.</value>
+  </data>
+  <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
+    <value>נתיב מדיניות חתומה:</value>
+  </data>
+  <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
+    <value>נתיב מדיניות לא חתומה:</value>
+  </data>
+  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
+    <value>נתיב כלי חתימה מותאם אישית:</value>
+  </data>
+  <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
+    <value>שם נפוץ של תעודה:</value>
+  </data>
+  <data name="CertificateCommonNameAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מצא שמות נפוצים של תעודות</value>
+  </data>
+  <data name="CertificateCommonNameAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מצא שמות נפוצים של תעודות</value>
+  </data>
+  <data name="CertificatePathTextBox.Header" xml:space="preserve">
+    <value>נתיב תעודה:</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
+    <value>התאם את מראה AppControl Manager לפי רצונך</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השתמש באפשרויות השונות הזמינות כדי לשנות את המראה והאפקטים הוויזואליים של AppControl Manager</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השתמש באפשרויות השונות הזמינות כדי לשנות את המראה והאפקטים הוויזואליים של AppControl Manager</value>
+  </data>
+  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
+    <value>אנא הפעל מחדש את האפליקציה כדי שהשינויים בשפה יחולו במלואם על ממשק המשתמש.</value>
+  </data>
+  <data name="LanguageTextBlock.Text" xml:space="preserve">
+    <value>שפה</value>
+  </data>
+  <data name="GitHubRepoHyperLinkButton.Content" xml:space="preserve">
+    <value>מאגר GitHub</value>
+  </data>
+  <data name="AppControlManagerDocumentationHyperLinkButton.Content" xml:space="preserve">
+    <value>תיעוד AppControl Manager</value>
+  </data>
+  <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
+    <value>עמוד Microsoft Store</value>
+  </data>
+  <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>אתר SpyNetGirl</value>
+  </data>
+  <data name="YouTubeChannelHyperLinkButton.Content" xml:space="preserve">
+    <value>ערוץ YouTube</value>
+  </data>
+  <data name="PrivacyPolicyHyperLinkButton.Content" xml:space="preserve">
+    <value>מדיניות פרטיות</value>
+  </data>
+  <data name="SendFeedbackHyperLinkButton.Content" xml:space="preserve">
+    <value>שלח משוב</value>
+  </data>
+  <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>אתר Icons8 לכל הסמלים המשמשים באפליקציה זו</value>
+  </data>
+  <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
+    <value>קוד מקור</value>
+  </data>
+  <data name="Sponsor1TextBlock.Text" xml:space="preserve">
+    <value>בחסות Elliot Labs LLC</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OnContent" xml:space="preserve">
+    <value>משמאל לימין</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OffContent" xml:space="preserve">
+    <value>מימין לשמאל</value>
+  </data>
+  <data name="RetrieveSecureSettingsButton.Content" xml:space="preserve">
+    <value>אחזר</value>
+  </data>
+  <data name="RetrieveSecureSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בדוק אם למערכת יש הגדרה מאובטחת על סמך המידע שסיפקת.</value>
+  </data>
+  <data name="RetrieveSecureSettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בדוק אם למערכת יש הגדרה מאובטחת על סמך המידע שסיפקת.</value>
+  </data>
+  <data name="SecureSettingProviderTextBox.Header" xml:space="preserve">
+    <value>ספק</value>
+  </data>
+  <data name="SecureSettingProviderTextBox.PlaceholderText" xml:space="preserve">
+    <value>הזן את הספק</value>
+  </data>
+  <data name="SecureSettingProviderTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן את הספק</value>
+  </data>
+  <data name="SecureSettingKeyTextBox.Header" xml:space="preserve">
+    <value>מפתח</value>
+  </data>
+  <data name="SecureSettingKeyTextBox.PlaceholderText" xml:space="preserve">
+    <value>הזן את המפתח</value>
+  </data>
+  <data name="SecureSettingKeyTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן את המפתח</value>
+  </data>
+  <data name="SecureSettingValueNameTextBox.Header" xml:space="preserve">
+    <value>שם ערך</value>
+  </data>
+  <data name="SecureSettingValueNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>הזן את שם הערך</value>
+  </data>
+  <data name="SecureSettingValueNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן את שם הערך</value>
+  </data>
+  <data name="SecureSettingResultsTextBlock.Text" xml:space="preserve">
+    <value>התוצאות יוצגו להלן</value>
+  </data>
+  <data name="ViewSelectedPolicyPathsTextBlock.Text" xml:space="preserve">
+    <value>צפה בנתיב המדיניות שבחרת.</value>
+  </data>
+  <data name="ApplyThePolicyRuleOptionsChangesButton.Content" xml:space="preserve">
+    <value>החל את השינויים</value>
+  </data>
+  <data name="ApplyThePolicyRuleOptionsChangesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אם סימנת או ביטלת את הסימון של תיבות סימון חדשות בקרב אפשרויות הכללים, השתמש בלחצן זה כדי להחיל אותן על המדיניות שבחרת.</value>
+  </data>
+  <data name="ApplyThePolicyRuleOptionsChangesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אם סימנת או ביטלת את הסימון של תיבות סימון חדשות בקרב אפשרויות הכללים, השתמש בלחצן זה כדי להחיל אותן על המדיניות שבחרת.</value>
+  </data>
+  <data name="DeployAfterApplyingRuleOptionsToggleButton.Content" xml:space="preserve">
+    <value>הפעל לאחר החלה</value>
+  </data>
+  <data name="DeployAfterApplyingRuleOptionsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יפעיל את המדיניות לאחר החלת שינויי אפשרויות הכללים עליה.</value>
+  </data>
+  <data name="DeployAfterApplyingRuleOptionsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יפעיל את המדיניות לאחר החלת שינויי אפשרויות הכללים עליה.</value>
+  </data>
+  <data name="RefreshRuleOptionsStateButton.Content" xml:space="preserve">
+    <value>אחזר את מצבי הכללים</value>
+  </data>
+  <data name="RefreshRuleOptionsStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את המצב האחרון של אפשרויות כללי המדיניות מקובץ המדיניות שבחרת</value>
+  </data>
+  <data name="RefreshRuleOptionsStateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את המצב האחרון של אפשרויות כללי המדיניות מקובץ המדיניות שבחרת</value>
+  </data>
+  <data name="SetPolicyTemplateButton.Content" xml:space="preserve">
+    <value>הגדר</value>
+  </data>
+  <data name="SetPolicyTemplateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מגדיר את התבנית שנבחרה לאפשרויות כללי המדיניות.</value>
+  </data>
+  <data name="SetPolicyTemplateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מגדיר את התבנית שנבחרה לאפשרויות כללי המדיניות.</value>
   </data>
 </root>

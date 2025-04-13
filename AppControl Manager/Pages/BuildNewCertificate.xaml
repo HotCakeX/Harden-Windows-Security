@@ -25,20 +25,20 @@
 
                 <TextBlock x:Uid="BuildNewCertificatePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton Margin="0,-6,0,0" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate" />
+                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate" />
 
             </controls:WrapPanel>
 
             <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="BuildCertificateButton"
                     HorizontalContentAlignment="Center" Margin="15" Click="{x:Bind BuildCertificateButton_Click}"
-                    ToolTipService.ToolTip="Build the certificate based on the configurations displayed below">
+                    x:Uid="BuildCertificateButton">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <ProgressRing Visibility="Collapsed" x:Name="ProgressRing" Margin="5,5,15,5" Value="0" IsIndeterminate="True" Minimum="0" Maximum="100"/>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xEB77;" Margin="5" />
-                            <TextBlock Text="Build Certificate" Margin="5"/>
+                            <TextBlock x:Uid="BuildCertificateTextBlock" Margin="5"/>
                         </StackPanel>
 
                     </StackPanel>
@@ -52,7 +52,7 @@
                 Severity="Informational"
                 Grid.Row="2">
                 <InfoBar.ActionButton>
-                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" Click="{x:Bind CopyInfoBarToClipboardButton_Click}" Content="Copy ThumbPrint To Clipboard" />
+                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" x:Uid="CopyThumbPrintToClipboardButton" Click="{x:Bind CopyInfoBarToClipboardButton_Click}" />
                 </InfoBar.ActionButton>
 
             </InfoBar>
@@ -79,7 +79,7 @@
                 x:Uid="CommonNameSettingsCard"              
                 HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
 
-                    <TextBox x:Name="CommonNameTextBox" PlaceholderText="Common Name"  TextChanged="{x:Bind CheckFieldContents}" MinWidth="200"/>
+                    <TextBox x:Name="CommonNameTextBox" x:Uid="CommonNameTextBox" TextChanged="{x:Bind CheckFieldContents}" MinWidth="200"/>
 
                 </controls:SettingsCard>
 
@@ -96,12 +96,9 @@
                 x:Uid="PFXPasswordSettingsCard"
                 HeaderIcon="{ui:FontIcon Glyph=&#xF78D;}" IsClickEnabled="False" IsActionIconVisible="False">
 
-                    <StackPanel Orientation="Horizontal">
+                    <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="{x:Bind CheckFieldContents}"
+                        MinWidth="250" PasswordChar="#" PasswordRevealMode="Peek" x:Uid="PFXEncryptionPasswordBox" />
 
-                        <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="{x:Bind CheckFieldContents}"
-                        MinWidth="250" PasswordChar="#" PasswordRevealMode="Peek" PlaceholderText="Type a password..." />
-
-                    </StackPanel>
                 </controls:SettingsCard>
 
             </StackPanel>

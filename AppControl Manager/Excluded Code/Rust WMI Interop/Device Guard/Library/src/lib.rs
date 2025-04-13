@@ -368,9 +368,16 @@ fn query_device_guard() -> DeviceGuard {
 /// should use `free_json_string` to release the memory when done.
 #[unsafe(no_mangle)]
 pub extern "C" fn get_device_guard_json() -> *mut c_char {
-    let dg = query_device_guard();
-    let json_result = serde_json::to_string(&dg)
-        .unwrap_or_else(|e| format!("{{\"error\": \"JSON serialization failed: {}\"}}", e));
+    let json_result: String = std::panic::catch_unwind(|| {
+        let dg: DeviceGuard = query_device_guard();
+        serde_json::to_string(&dg)
+            .unwrap_or_else(|e| format!("{{\"error\": \"JSON serialization failed: {}\"}}", e))
+    })
+    .map_err(|e| {
+        format!("{{\"error\": \"A panic occurred: {:?}\"}}", e)
+    })
+    .unwrap_or_else(|err| err);
+
     let cstring = CString::new(json_result).expect("CString::new failed");
     cstring.into_raw()
 }

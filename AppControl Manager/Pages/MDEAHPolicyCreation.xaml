@@ -649,13 +649,13 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE8CB;" />
-                            <TextBlock Text="Sort" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                     <Button.Flyout>
                         <MenuFlyout>
 
-                            <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" Text="Descending Sorting" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" x:Uid="SortingDirectionToggleButton" IsChecked="True"/>
 
                             <MenuFlyoutSeparator/>
 

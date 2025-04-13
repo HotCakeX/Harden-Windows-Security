@@ -17,11 +17,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Runtime.InteropServices;
-using System.IO;
 
 #pragma warning disable IDE1006
 
@@ -173,12 +170,6 @@ internal sealed partial class DeviceGuardJsonContext : JsonSerializerContext
 internal static class DeviceGuardInfo
 {
 
-	// Define the WMI query to get the Win32_DeviceGuard class information
-	// private const string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
-
-	// Define the scope (namespace) for the query
-	// private const string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
-
 	/// <summary>
 	/// Get the Device Guard status information from the Win32_DeviceGuard WMI class
 	/// </summary>
@@ -186,51 +177,12 @@ internal static class DeviceGuardInfo
 	internal static DeviceGuardInteropClass GetDeviceGuardStatus()
 	{
 
-		string? jsonResult;
-
-		string processName = RuntimeInformation.ProcessArchitecture switch
-		{
-			Architecture.X64 => Path.Combine(GlobalVars.RustInteropPath, "DeviceGuardWMIRetriever-X64.exe"),
-			Architecture.Arm64 => Path.Combine(GlobalVars.RustInteropPath, "DeviceGuardWMIRetriever-ARM64.exe"),
-			_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
-		};
-
-		ProcessStartInfo processInfo = new()
-		{
-			FileName = processName,
-			UseShellExecute = false,
-			RedirectStandardOutput = true,
-			RedirectStandardError = true,
-			CreateNoWindow = true
-		};
-
-		using Process? process = Process.Start(processInfo) ?? throw new InvalidOperationException($"{processName} could not start");
-
-		// Read the process output and error.
-		string output = process.StandardOutput.ReadToEnd();
-		string error = process.StandardError.ReadToEnd();
-
-		process.WaitForExit();
-
-		if (process.ExitCode == 0)
-		{
-			// If the process succeeded, save the JSON result into a string variable.
-			jsonResult = output;
-		}
-		else
-		{
-			Logger.Write("Error while running the Rust executable:");
-			throw new InvalidOperationException(error);
-		}
-
-		if (jsonResult is null)
-		{
-			throw new InvalidOperationException("No JSON details were found for DeviceGuardWMIRetriever.exe");
-		}
+		string? jsonResult = ProcessStarter.RunCommand(GlobalVars.DeviceGuardWMIRetrieverProcessPath, null) ?? throw new InvalidOperationException($"No JSON output were returned from {GlobalVars.DeviceGuardWMIRetrieverProcessPath}");
 
 		try
 		{
 			Logger.Write($"Attempting to deserialize JSON result: {jsonResult}");
+
 			DeviceGuardInteropClass? deviceGuardResult = JsonSerializer.Deserialize(jsonResult, DeviceGuardJsonContext.Default.DeviceGuardInteropClass);
 
 			return deviceGuardResult is null
@@ -244,6 +196,12 @@ internal static class DeviceGuardInfo
 
 
 		/*
+
+		// Define the WMI query to get the Win32_DeviceGuard class information
+		string query = "SELECT UsermodeCodeIntegrityPolicyEnforcementStatus, CodeIntegrityPolicyEnforcementStatus FROM Win32_DeviceGuard";
+
+		// Define the scope (namespace) for the query
+		string scope = @"\\.\root\Microsoft\Windows\DeviceGuard";
 
 		// Create a ManagementScope object for the WMI namespace
 		ManagementScope managementScope = new(scope);

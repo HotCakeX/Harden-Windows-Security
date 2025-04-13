@@ -44,8 +44,8 @@
 
             </controls:SettingsCard>
 
-            <controls:SettingsCard Description="Detect signatures for unsigned files by querying system security catalogs for accurate results"
-                x:Name="IncludeSecurityCatalogsSettingsCard" Header="Include Catalog Signers"
+            <controls:SettingsCard
+                x:Name="IncludeSecurityCatalogsSettingsCard" x:Uid="IncludeSecurityCatalogsSettingsCard"
                  Click="IncludeSecurityCatalogsSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
 
                 <ToggleSwitch x:Name="IncludeSecurityCatalogsToggleSwitch" IsOn="True" />
@@ -56,19 +56,19 @@
 
         <controls:WrapPanel Margin="15" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
 
-            <TextBox  x:Name="SearchBox" Width="300" PlaceholderText="Search certificate details..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search among the certificate details data" />
+            <TextBox x:Name="SearchBox" Width="300" x:Uid="CertificatesSearchBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
             <Button>
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xE8CB;" />
-                        <TextBlock Text="Sort" Margin="5,0,0,0" />
+                        <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
                     </StackPanel>
                 </Button.Content>
                 <Button.Flyout>
                     <MenuFlyout>
 
-                        <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" Text="Descending Sorting" IsChecked="True"/>
+                        <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" x:Uid="SortingDirectionToggleButton" IsChecked="True"/>
 
                         <MenuFlyoutSeparator/>
 

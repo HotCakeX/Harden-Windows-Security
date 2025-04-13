@@ -1,5 +1,5 @@
 [package]
-name = "WMI"
+name = "MSDefenderWMIRetriever"
 version = "1.0.0"
 edition = "2024"
 description = "This cargo package retrieves the Microsoft Defender configurations via WMI and serializes them to JSON."

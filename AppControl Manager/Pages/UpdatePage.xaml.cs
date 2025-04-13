@@ -34,6 +34,7 @@ using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Management.Deployment;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
@@ -261,7 +262,7 @@ internal sealed partial class UpdatePage : Page
 
 					// Signing the App Control Manager package
 					// In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
-					ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{commonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
+					_ = ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{commonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
 
 					// Remove any certificates with the specified common name again
 					// Because the existing one contains private keys and we don't want that
@@ -270,6 +271,9 @@ internal sealed partial class UpdatePage : Page
 					// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only.
 					// This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else.
 					CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
+
+
+					string? ASROutput = null;
 
 					try
 					{
@@ -285,59 +289,59 @@ internal sealed partial class UpdatePage : Page
 
 						*/
 
-						// TODO: Create a Native AOT compatible source generated COM code that won't rely on System.Management or PowerShell
 
-						string ASRscript = "(Get-CimInstance -Namespace 'ROOT\\Microsoft\\Windows\\Defender' -Query 'SELECT AttackSurfaceReductionOnlyExclusions FROM MSFT_MpPreference').AttackSurfaceReductionOnlyExclusions -join ','";
-						string ASRoutput = ProcessStarter.RunCommandWithOutput("powershell.exe", $"-NoProfile -Command \"{ASRscript}\"");
+						ASROutput = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get AttackSurfaceReductionOnlyExclusions");
 
 						// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
 						// Before adding new ones for the new version
-						if (!string.IsNullOrWhiteSpace(ASRoutput))
+						if (!string.IsNullOrWhiteSpace(ASROutput))
 						{
 
-							string[] ASRoutputArray = ASRoutput.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+							// Deserialize the JSON string
+							string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MicrosoftGraph.MSGraphJsonContext.Default.StringArray) as string[];
 
-							List<string> ASRoutputArrayCleaned = [];
-
-							foreach (string item in ASRoutputArray)
+							// If there were ASR rules exceptions
+							if (ASROutputArrayCleaned is not null && ASROutputArrayCleaned.Length > 0)
 							{
-								ASRoutputArrayCleaned.Add(item.TrimStart().TrimEnd().TrimEnd('\r', '\n'));
-							}
 
-							List<string> asrRulesToRemove = [];
+								List<string> asrRulesToRemove = [];
 
-							// Find all the rules that belong to the AppControl Manager
-							foreach (string item in ASRoutputArrayCleaned)
-							{
-								if (MyRegex1().Match(item).Success)
+								// Find all the rules that belong to the AppControl Manager
+								foreach (string item in ASROutputArrayCleaned)
 								{
-									asrRulesToRemove.Add(item);
+									if (MyRegex1().Match(item).Success)
+									{
+										asrRulesToRemove.Add(item);
+									}
 								}
-							}
 
-							// If any of the rules belong to the AppControl Manager
-							if (asrRulesToRemove.Count > 0)
-							{
-
-								// Remove ASR rule exclusions that belong to all previous app versions
-
-								/*
-
-								using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
-								ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
-								inParams["AttackSurfaceReductionOnlyExclusions"] = stringArrayRepo;
-								_ = managementClass.InvokeMethod("Remove", inParams, null);
-
-								*/
-
-								foreach (string item in asrRulesToRemove)
+								// If any of the rules belong to the AppControl Manager
+								if (asrRulesToRemove.Count > 0)
 								{
 
-									string script = $"Remove-MpPreference -AttackSurfaceReductionOnlyExclusions '{item}'";
-									ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script}\"");
+									// Remove ASR rule exclusions that belong to all previous app versions
+
+									/*
+
+									using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
+									ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
+									inParams["AttackSurfaceReductionOnlyExclusions"] = stringArrayRepo;
+									_ = managementClass.InvokeMethod("Remove", inParams, null);
+
+									*/
+
+
+									// Wrap them with double quotes and separate them with a space
+									string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
+
+									_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, $"stringarray remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
 								}
 							}
 						}
+					}
+					catch (JsonException Jex)
+					{
+						Logger.Write($"Couldn't deserialize ASR rules exceptions list JSON which was this: {ASROutput}\nError: {Jex.Message}");
 					}
 					catch (Exception ex)
 					{
@@ -397,6 +401,7 @@ internal sealed partial class UpdatePage : Page
 						string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
 						string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
 
+
 						/*
 
 						// Connect to the WMI namespace again
@@ -418,11 +423,10 @@ internal sealed partial class UpdatePage : Page
 
 						*/
 
-						string script1 = $"Add-MpPreference -AttackSurfaceReductionOnlyExclusions '{path1}'";
-						ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script1}\"");
 
-						string script2 = $"Add-MpPreference -AttackSurfaceReductionOnlyExclusions '{path2}'";
-						ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script2}\"");
+						// Adding the 2 extra executables included in the package so they will be allowed to run as well
+						_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, $"stringarray add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{GlobalVars.ManageDefenderProcessPath}\" \"{GlobalVars.DeviceGuardWMIRetrieverProcessPath}\" ");
+
 					}
 					catch (Exception ex)
 					{
@@ -469,7 +473,6 @@ internal sealed partial class UpdatePage : Page
 		}
 	}
 
-	private static readonly char[] separator = [','];
 
 	/// <summary>
 	/// Event handler for the Auto Update Check Toggle Button to modify the app settings

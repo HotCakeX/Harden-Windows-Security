@@ -32,13 +32,13 @@
 
                 <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
 
-                    <Button Content="Fetch" Click="{x:Bind InvokeButton_Click}" Margin="0,12,5,0"
+                    <Button x:Uid="RetrieveSecureSettingsButton" Click="{x:Bind InvokeButton_Click}" Margin="0,12,5,0"
                             HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}"/>
 
                     <!-- Input Fields -->
-                    <TextBox x:Name="ProviderTextBox" Header="Provider" PlaceholderText="Enter Provider" MinWidth="200"/>
-                    <TextBox x:Name="KeyTextBox" Header="Key" PlaceholderText="Enter Key" MinWidth="200"/>
-                    <TextBox x:Name="ValueNameTextBox" Header="Value Name" PlaceholderText="Enter Value Name" MinWidth="200"/>
+                    <TextBox x:Name="ProviderTextBox" x:Uid="SecureSettingProviderTextBox" MinWidth="200"/>
+                    <TextBox x:Name="KeyTextBox" x:Uid="SecureSettingKeyTextBox" MinWidth="200"/>
+                    <TextBox x:Name="ValueNameTextBox" x:Uid="SecureSettingValueNameTextBox" MinWidth="200"/>
 
                 </controls:WrapPanel>
 
@@ -47,7 +47,7 @@
             <controls:WrapPanel HorizontalSpacing="10" Margin="0,15,0,15" VerticalSpacing="10" Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="2">
 
                 <!-- Result Fields -->
-                <TextBlock Text="The results will be displayed below" FontWeight="Bold" />
+                <TextBlock x:Uid="SecureSettingResultsTextBlock" FontWeight="Bold" />
                 <TextBox x:Name="ValueTextBox" IsReadOnly="True" Header="Value" MinWidth="200" />
                 <TextBox x:Name="ValueTypeTextBox" IsReadOnly="True" Header="Value Type" MinWidth="200"/>
                 <TextBox x:Name="ValueSizeTextBox" IsReadOnly="True" Header="Value Size" MinWidth="200"/>

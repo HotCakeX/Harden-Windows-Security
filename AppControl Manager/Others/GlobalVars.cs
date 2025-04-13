@@ -17,6 +17,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace AppControlManager.Others;
@@ -81,7 +82,10 @@ internal static class GlobalVars
 	internal static readonly string EmptyPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "EmptyPolicy.xml");
 
 	// Path to the RustInterop directory
-	internal static readonly string RustInteropPath = Path.Combine(AppContext.BaseDirectory, "RustInterop");
+	private static readonly string RustInteropPath = Path.Combine(AppContext.BaseDirectory, "RustInterop");
+
+	// Path to the CppInteropPath directory
+	private static readonly string CppInteropPath = Path.Combine(AppContext.BaseDirectory, "CppInterop");
 
 	// Path to the PS Script that creates a scheduled task
 	internal static readonly string DriversBlockListAutoUpdaterScheduledTaskScriptFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "DriversBlockListAutoUpdaterScheduledTask.ps1");
@@ -103,6 +107,23 @@ internal static class GlobalVars
 
 	// When the the list of installed packaged apps is retrieved, this URI is used whenever an installed app doesn't have a valid URI logo path
 	internal const string FallBackAppLogoURI = "ms-appx:///Assets/StoreLogo.backup.png";
+
+	// Path to the DeviceGuardWMIRetriever program in the App directory
+	internal static readonly string DeviceGuardWMIRetrieverProcessPath = RuntimeInformation.ProcessArchitecture switch
+	{
+		Architecture.X64 => Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever-X64.exe"),
+		Architecture.Arm64 => Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever-ARM64.exe"),
+		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
+	};
+
+	// Path to the ManageDefender program in the App directory
+	internal static readonly string ManageDefenderProcessPath = RuntimeInformation.ProcessArchitecture switch
+	{
+		Architecture.X64 => Path.Combine(CppInteropPath, "ManageDefender-X64.exe"),
+		Architecture.Arm64 => Path.Combine(CppInteropPath, "ManageDefender-ARM64.exe"),
+		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
+	};
+
 
 	static GlobalVars()
 	{

@@ -57,14 +57,14 @@ internal static class AddSigningDetails
 
 		Signer supplementalPolicySigner = new()
 		{
-			ID = $"ID_SIGNER_S_{GUIDGenerator.GenerateUniqueGUIDToUpper()}",
+			ID = $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
 			Name = CertCommonName,
 			CertRoot = certRoot
 		};
 
 		Signer updatePolicySigner = new()
 		{
-			ID = $"ID_SIGNER_S_{GUIDGenerator.GenerateUniqueGUIDToUpper()}",
+			ID = $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
 			Name = CertCommonName,
 			CertRoot = certRoot
 		};

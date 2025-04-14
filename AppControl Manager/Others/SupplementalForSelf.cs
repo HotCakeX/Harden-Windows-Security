@@ -157,7 +157,7 @@ internal static class SupplementalForSelf
 		CiRuleOptions.Set(filePath: savePath, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 		// Define the path for the CIP file
-		string randomString = GUIDGenerator.GenerateUniqueGUID();
+		string randomString = Guid.CreateVersion7().ToString("N");
 		string xmlFileName = Path.GetFileName(savePath);
 		string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 

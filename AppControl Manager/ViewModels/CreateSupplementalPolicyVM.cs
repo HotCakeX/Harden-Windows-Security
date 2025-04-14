@@ -15,11 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
@@ -28,12 +25,8 @@ namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChanged
+internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// Used to store the scan results and as the source for the results ListViews
 	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
@@ -46,6 +39,8 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 
 	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
 
+	internal ListViewHelper.SortState SortStateFilesAndFolders { get; set; } = new();
+
 
 	private ObservableCollection<FileIdentity> _StrictKernelModeScanResults = [];
 	internal ObservableCollection<FileIdentity> StrictKernelModeScanResults
@@ -55,6 +50,8 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 	}
 
 	internal readonly List<FileIdentity> StrictKernelModeScanResultsList = [];
+
+	internal ListViewHelper.SortState SortStateStrictKernelMode { get; set; } = new();
 
 
 	#region UI-Bound Properties
@@ -632,32 +629,6 @@ internal sealed partial class CreateSupplementalPolicyVM : INotifyPropertyChange
 		{
 			TotalCountOfTheFilesStrictKernelModeTextBox = $"Total files: {StrictKernelModeScanResults.Count}";
 		}
-	}
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
 }

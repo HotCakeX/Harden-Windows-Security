@@ -10,6 +10,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
@@ -358,30 +359,6 @@
                     </Button.Content>
                 </Button>
 
-                <Button>
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE8CB;" />
-                            <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Flyout>
-                        <MenuFlyout>
-
-                            <ToggleMenuFlyoutItem Text="Descending Sorting" IsChecked="{x:Bind ViewModel.SortingDirectionToggleStatus, Mode=TwoWay}"/>
-
-                            <MenuFlyoutSeparator/>
-
-                            <MenuFlyoutItem Text="Policy ID" Click="{x:Bind ViewModel.ColumnSortingButton_PolicyID_Click}"/>
-                            <MenuFlyoutItem Text="Base Policy ID" Click="{x:Bind ViewModel.ColumnSortingButton_BasePolicyID_Click}"/>
-                            <MenuFlyoutItem Text="Friendly Name" Click="{x:Bind ViewModel.ColumnSortingButton_FriendlyName_Click}"/>
-                            <MenuFlyoutItem Text="Version" Click="{x:Bind ViewModel.ColumnSortingButton_Version_Click}"/>
-                            <MenuFlyoutItem Text="Is Signed Policy" Click="{x:Bind ViewModel.ColumnSortingButton_IsSignedPolicy_Click}"/>
-                            <MenuFlyoutItem Text="Policy Rule Option" Click="{x:Bind ViewModel.ColumnSortingButton_PolicyRuleOptions_Click}"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
-
                 <TextBlock Text="{x:Bind ViewModel.PoliciesCountTextBox, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="The count of all of the displayed policies"/>
 
                 <Button IsEnabled="{x:Bind ViewModel.RemovePolicyButtonState, Mode=OneWay}" Click="{x:Bind ViewModel.RemovePolicy_Click}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Remove any non-system policy from the system">
@@ -423,7 +400,7 @@
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:StickyHeaderBehavior />
+                        <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
 
@@ -435,12 +412,14 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Uid="PolicyIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="BasePolicyIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FriendlyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="VersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsSignedPolicyHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyOptionsHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+                        <Button x:Uid="PolicyIDColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="10,0,0,0" Padding="5" Grid.Column="0" Click="{x:Bind ViewModel.SortByPolicyID}" />
+                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="1" Click="{x:Bind ViewModel.SortByBasePolicyID}" />
+                        <Button x:Uid="FriendlyNameColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="2" Click="{x:Bind ViewModel.SortByFriendlyName}" />
+                        <Button x:Uid="VersionColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="3" Click="{x:Bind ViewModel.SortByVersion}" />
+                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="4" Click="{x:Bind ViewModel.SortByIsSignedPolicy}" />
+                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="5" Click="{x:Bind ViewModel.SortByPolicyOptions}" />
+
                     </Grid>
                 </Border>
             </ListView.Header>

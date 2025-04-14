@@ -86,18 +86,23 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 	}
 
 
-	/// <summary>
-	/// Event handler for all sort buttons
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
-
-		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, ViewModel.EventLogsAllFileIdentities, ViewModel.EventLogsFileIdentities);
+		if (sender is Button button && button.Tag is string key)
+		{
+			// Look up the mapping using the key.
+			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(mapping.Getter,
+										  SearchBox,
+										  ViewModel.EventLogsAllFileIdentities,
+										  ViewModel.EventLogsFileIdentities,
+										  ViewModel.SortStateEventLogs,
+										  key);
+			}
+		}
 	}
+
 
 
 	/// <summary>

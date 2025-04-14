@@ -18,21 +18,17 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using AppControlManager.Others;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class ViewFileCertificatesVM : INotifyPropertyChanged
+internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// Main collection assigned to the ListView
 	internal readonly ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
@@ -43,8 +39,14 @@ internal sealed partial class ViewFileCertificatesVM : INotifyPropertyChanged
 
 	#region UI-Bound Properties
 
-	#endregion
+	private string? _SearchBoxTextBox;
+	internal string? SearchBoxTextBox
+	{
+		get => _SearchBoxTextBox;
+		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
+	}
 
+	#endregion
 
 
 	#region LISTVIEW IMPLEMENTATIONS
@@ -202,28 +204,218 @@ internal sealed partial class ViewFileCertificatesVM : INotifyPropertyChanged
 
 
 	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+	/// Event handler for the search box
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
+	internal void SearchBox_TextChanged()
 	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
+		// Get the search term from the search box
+		string? query = SearchBoxTextBox?.Trim();
+
+		if (query is null)
+			return;
+
+		List<FileCertificateInfoCol> results = [];
+
+		results = [.. FilteredCertificates.Where(cert =>
+					(cert.SubjectCN is not null && cert.SubjectCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.IssuerCN is not null && cert.IssuerCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.TBSHash is not null && cert.TBSHash.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.OIDs is not null && cert.OIDs.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					cert.SignerNumber.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					cert.Type.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					cert.NotAfter.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					cert.NotBefore.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					(cert.HashingAlgorithm is not null && cert.HashingAlgorithm.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.SerialNumber is not null && cert.SerialNumber.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.Thumbprint is not null && cert.Thumbprint.Contains(query, StringComparison.OrdinalIgnoreCase))
+				)];
+
+		FileCertificates.Clear();
+
+		foreach (FileCertificateInfoCol item in results)
+		{
+			FileCertificates.Add(item);
+		}
 	}
 
 
-	private void OnPropertyChanged(string? propertyName)
+	#region Sort
+
+	/// <summary>
+	/// Enum representing the sort columns for certificate items.
+	/// </summary>
+	private enum CertificateSortColumn
 	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		SignerNumber,
+		Type,
+		SubjectCommonName,
+		IssuerCommonName,
+		NotBefore,
+		NotAfter,
+		HashingAlgorithm,
+		SerialNumber,
+		Thumbprint,
+		TBSHash,
+		ExtensionOIDs
 	}
+
+	// Sorting state: current column and sort direction.
+	private CertificateSortColumn? _currentSortColumn;
+	private bool _isDescending = true; // column defaults to descending.
+
+	/// <summary>
+	/// Common sort method that determines sort column and toggles direction.
+	/// </summary>
+	/// <param name="newSortColumn">The column to sort by.</param>
+	private async void Sort(CertificateSortColumn newSortColumn)
+	{
+		// Toggle sort order if the same column is clicked.
+		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
+		{
+			_isDescending = !_isDescending;
+		}
+		else
+		{
+			_currentSortColumn = newSortColumn;
+			_isDescending = true;
+		}
+
+		// Determine if there is active search text.
+		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
+		List<FileCertificateInfoCol> sourceData = isSearchEmpty
+			? FilteredCertificates
+			: FileCertificates.ToList();
+
+		List<FileCertificateInfoCol> sortedData = [];
+
+		switch (newSortColumn)
+		{
+			case CertificateSortColumn.SignerNumber:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.SignerNumber).ToList()
+					: sourceData.OrderBy(c => c.SignerNumber).ToList();
+				break;
+			case CertificateSortColumn.Type:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.Type).ToList()
+					: sourceData.OrderBy(c => c.Type).ToList();
+				break;
+			case CertificateSortColumn.SubjectCommonName:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.SubjectCN).ToList()
+					: sourceData.OrderBy(c => c.SubjectCN).ToList();
+				break;
+			case CertificateSortColumn.IssuerCommonName:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.IssuerCN).ToList()
+					: sourceData.OrderBy(c => c.IssuerCN).ToList();
+				break;
+			case CertificateSortColumn.NotBefore:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.NotBefore).ToList()
+					: sourceData.OrderBy(c => c.NotBefore).ToList();
+				break;
+			case CertificateSortColumn.NotAfter:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.NotAfter).ToList()
+					: sourceData.OrderBy(c => c.NotAfter).ToList();
+				break;
+			case CertificateSortColumn.HashingAlgorithm:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.HashingAlgorithm).ToList()
+					: sourceData.OrderBy(c => c.HashingAlgorithm).ToList();
+				break;
+			case CertificateSortColumn.SerialNumber:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.SerialNumber).ToList()
+					: sourceData.OrderBy(c => c.SerialNumber).ToList();
+				break;
+			case CertificateSortColumn.Thumbprint:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.Thumbprint).ToList()
+					: sourceData.OrderBy(c => c.Thumbprint).ToList();
+				break;
+			case CertificateSortColumn.TBSHash:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.TBSHash).ToList()
+					: sourceData.OrderBy(c => c.TBSHash).ToList();
+				break;
+			case CertificateSortColumn.ExtensionOIDs:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(c => c.OIDs).ToList()
+					: sourceData.OrderBy(c => c.OIDs).ToList();
+				break;
+			default:
+				break;
+		}
+
+		// Update the observable collection on the UI thread.
+		await Dispatcher.EnqueueAsync(() =>
+		{
+			FileCertificates.Clear();
+			foreach (var item in sortedData)
+			{
+				FileCertificates.Add(item);
+			}
+		});
+	}
+
+	// Methods bound to each header button’s Click events.
+	internal void SortBySignerNumber()
+	{
+		Sort(CertificateSortColumn.SignerNumber);
+	}
+
+	internal void SortByType()
+	{
+		Sort(CertificateSortColumn.Type);
+	}
+
+	internal void SortBySubjectCommonName()
+	{
+		Sort(CertificateSortColumn.SubjectCommonName);
+	}
+
+	internal void SortByIssuerCommonName()
+	{
+		Sort(CertificateSortColumn.IssuerCommonName);
+	}
+
+	internal void SortByNotBefore()
+	{
+		Sort(CertificateSortColumn.NotBefore);
+	}
+
+	internal void SortByNotAfter()
+	{
+		Sort(CertificateSortColumn.NotAfter);
+	}
+
+	internal void SortByHashingAlgorithm()
+	{
+		Sort(CertificateSortColumn.HashingAlgorithm);
+	}
+
+	internal void SortBySerialNumber()
+	{
+		Sort(CertificateSortColumn.SerialNumber);
+	}
+
+	internal void SortByThumbprint()
+	{
+		Sort(CertificateSortColumn.Thumbprint);
+	}
+
+	internal void SortByTBSHash()
+	{
+		Sort(CertificateSortColumn.TBSHash);
+	}
+
+	internal void SortByExtensionOIDs()
+	{
+		Sort(CertificateSortColumn.ExtensionOIDs);
+	}
+
+	#endregion
 
 }

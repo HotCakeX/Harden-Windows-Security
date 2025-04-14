@@ -384,7 +384,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 				AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
 
 				// Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
-				EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{GUIDGenerator.GenerateUniqueGUID()}.cip");
+				EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7().ToString("N")}.cip");
 
 				_ = DispatcherQueue.TryEnqueue(() =>
 				{

@@ -54,7 +54,7 @@ internal static class NewPublisherLevelRules
 			foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
 			{
 
-				string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 				string SignerID = $"ID_SIGNER_B_{guid}";
 
@@ -146,7 +146,7 @@ internal static class NewPublisherLevelRules
 			foreach (CertificateDetailsCreator signerData in publisherData.CertificateDetails)
 			{
 
-				string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 				string SignerID = $"ID_SIGNER_B_{guid}";
 

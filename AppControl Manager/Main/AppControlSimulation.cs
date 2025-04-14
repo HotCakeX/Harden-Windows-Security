@@ -51,53 +51,13 @@ internal static class AppControlSimulation
 	internal static bool Invoke(List<string>? filePaths, string xmlFilePath, bool noCatalogScanning)
 	{
 		// Call the main method to get the verdicts
-		ConcurrentDictionary<string, SimulationOutput> Results = Invoke(filePaths, null, xmlFilePath, noCatalogScanning, false, null, 2);
+		ConcurrentDictionary<string, SimulationOutput> Results = Invoke(filePaths, null, xmlFilePath, noCatalogScanning, null, 2);
 
 		// See if there are any unauthorized files
 		IEnumerable<SimulationOutput> ResultsAfterFilter = Results.Values.Where(R => !R.IsAuthorized);
 
 		// If there are no results where the IsAuthorized is false then return true, else return false
 		return !ResultsAfterFilter.Any();
-	}
-
-
-	internal static void ExportToCsv(ConcurrentDictionary<string, SimulationOutput> finalResults, string filePath)
-	{
-		// Create a list for CSV lines
-		List<string> csvLines = [];
-
-		// Create header instead of using reflection to get the properties' names of the SimulationOutput class
-		string header = "\"Path\",\"Source\",\"IsAuthorized\",\"SignerID\",\"SignerName\",\"SignerCertRoot\",\"SignerCertPublisher\",\"SignerScope\",\"SignerFileAttributeIDs\",\"MatchCriteria\",\"SpecificFileNameLevelMatchCriteria\",\"CertSubjectCN\",\"CertIssuerCN\",\"CertNotAfter\",\"CertTBSValue\",\"FilePath\"";
-		csvLines.Add(header);
-
-		// Iterate through the SimulationOutput instances and format each line
-		foreach (SimulationOutput output in finalResults.Values)
-		{
-			List<string> values =
-			[
-				$"\"{output.Path}\"",
-				$"\"{output.Source}\"",
-				$"\"{output.IsAuthorized}\"",
-				$"\"{output.SignerID}\"",
-				$"\"{output.SignerName}\"",
-				$"\"{output.SignerCertRoot}\"",
-				$"\"{output.SignerCertPublisher}\"",
-				$"\"{output.SignerScope}\"",
-				output.SignerFileAttributeIDs is not null ? $"\"{string.Join(",", output.SignerFileAttributeIDs)}\"" : "\"\"",
-				$"\"{output.MatchCriteria}\"",
-				$"\"{output.SpecificFileNameLevelMatchCriteria}\"",
-				$"\"{output.CertSubjectCN}\"",
-				$"\"{output.CertIssuerCN}\"",
-				$"\"{output.CertNotAfter}\"",
-				$"\"{output.CertTBSValue}\"",
-				$"\"{output.FilePath}\""
-			];
-
-			csvLines.Add(string.Join(",", values));
-		}
-
-		// Write to file
-		File.WriteAllLines(filePath, csvLines);
 	}
 
 
@@ -108,10 +68,9 @@ internal static class AppControlSimulation
 	/// <param name="folderPaths"></param>
 	/// <param name="xmlFilePath"></param>
 	/// <param name="noCatalogScanning"></param>
-	/// <param name="csvOutput"></param>
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
-	/// <param name="UIProgressBar"></param>
+	/// <param name="UIProgressRing"></param>
 	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
@@ -119,23 +78,12 @@ internal static class AppControlSimulation
 	internal static ConcurrentDictionary<string, SimulationOutput> Invoke(
 		List<string>? filePaths,
 		List<string>? folderPaths,
-		string? xmlFilePath,
+		string xmlFilePath,
 		bool noCatalogScanning,
-		bool csvOutput,
 		List<string>? catRootPath,
 		ushort threadsCount = 2,
-		ProgressBar? UIProgressBar = null)
+		ProgressRing? UIProgressRing = null)
 	{
-
-		if (xmlFilePath is null)
-		{
-			throw new ArgumentNullException(nameof(xmlFilePath), "The XML file path cannot be null.");
-		}
-
-		if (!File.Exists(xmlFilePath))
-		{
-			throw new FileNotFoundException("The XML file does not exist.", xmlFilePath);
-		}
 
 		// Ensure threadsCount is at least 1
 		threadsCount = Math.Max((ushort)1, threadsCount);
@@ -190,7 +138,7 @@ internal static class AppControlSimulation
 		// Make sure the selected directories and files contain files with the supported extensions
 		if (CollectedFiles.Item2 == 0)
 		{
-			throw new InvalidOperationException("There are no files in the selected directory that are supported by the App Control engine.");
+			throw new NoValidFilesSelectedException("There are no files in the selected directory that are supported by the App Control engine.");
 		}
 
 		Logger.Write("Looping through each supported file");
@@ -239,7 +187,7 @@ internal static class AppControlSimulation
 		// Create a timer to update the progress bar every 2 seconds.
 		Timer? progressTimer = null;
 
-		if (UIProgressBar is not null)
+		if (UIProgressRing is not null)
 		{
 			progressTimer = new(state =>
 			   {
@@ -249,9 +197,9 @@ internal static class AppControlSimulation
 				   // Calculate the percentage complete
 				   int currentPercentage = (int)(current / AllFilesCount * 100);
 
-				   _ = UIProgressBar.DispatcherQueue.TryEnqueue(() =>
+				   _ = UIProgressRing.DispatcherQueue.TryEnqueue(() =>
 				   {
-					   UIProgressBar.Value = Math.Min(currentPercentage, 100);
+					   UIProgressRing.Value = Math.Min(currentPercentage, 100);
 				   });
 			   }, null, 0, 2000);
 		}
@@ -554,21 +502,15 @@ internal static class AppControlSimulation
 			Task.WaitAll([.. tasks]);
 
 			// Dispose the timer and update the progress bar to 100%
-			if (UIProgressBar is not null)
+			if (UIProgressRing is not null)
 			{
-				_ = UIProgressBar.DispatcherQueue.TryEnqueue(() => UIProgressBar.Value = 100);
+				_ = UIProgressRing.DispatcherQueue.TryEnqueue(() => UIProgressRing.Value = 100);
 			}
 
 		}
 		finally
 		{   // Dispose of the timer
 			progressTimer?.Dispose();
-		}
-
-		// If user chose to output the results to CSV file
-		if (csvOutput)
-		{
-			ExportToCsv(FinalSimulationResults, Path.Combine(GlobalVars.UserConfigDir, @$"AppControl Simulation output {DateTime.Now:yyyy-MM-dd HH-mm-ss}.csv"));
 		}
 
 		return FinalSimulationResults;

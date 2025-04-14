@@ -17,15 +17,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using AnimatedVisuals;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -40,13 +37,8 @@ namespace AppControlManager.ViewModels;
 /// <summary>
 /// ViewModel for the MainWindow
 /// </summary>
-internal sealed partial class MainWindowVM : INotifyPropertyChanged
+internal sealed partial class MainWindowVM : ViewModelBase
 {
-	// DispatcherQueue provides access to the UI thread dispatcher, allowing for UI updates from background threads.
-	private readonly DispatcherQueue Dispatch;
-
-	// Event triggered when a bound property value changes, allowing the UI to reactively update.
-	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
 	/// Values for back drop combo box in the settings page
@@ -68,8 +60,6 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 	/// </summary>
 	public MainWindowVM()
 	{
-		Dispatch = DispatcherQueue.GetForCurrentThread();
-
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
 
@@ -440,7 +430,7 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
 	{
 		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
-		_ = Dispatch.TryEnqueue(() =>
+		_ = Dispatcher.TryEnqueue(() =>
 		{
 			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
 			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
@@ -490,7 +480,7 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 	/// <param name="unsignedPolicyPath"></param>
 	internal void AssignToSidebar(string unsignedPolicyPath)
 	{
-		_ = Dispatch.TryEnqueue(() =>
+		_ = Dispatcher.TryEnqueue(() =>
 		{
 			if (AutomaticAssignmentSidebarToggleSwitchToggledState)
 			{
@@ -891,30 +881,5 @@ internal sealed partial class MainWindowVM : INotifyPropertyChanged
 
 		// Save the selected option (using the enum's name)
 		App.Settings.BackDropBackground = selection.ToString();
-	}
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

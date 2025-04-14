@@ -71,11 +71,14 @@ internal sealed class AuthenticatedAccounts : Main.IRestrictedAuthenticatedAccou
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine(
-			StringComparer.OrdinalIgnoreCase.GetHashCode(AccountIdentifier),
-			StringComparer.OrdinalIgnoreCase.GetHashCode(Username),
-			StringComparer.OrdinalIgnoreCase.GetHashCode(TenantID),
-			StringComparer.OrdinalIgnoreCase.GetHashCode(Permissions));
+		unchecked // Not strictly necessary, but good practice for future-proofing and consistency
+		{
+			return HashCode.Combine(
+				StringComparer.OrdinalIgnoreCase.GetHashCode(AccountIdentifier),
+				StringComparer.OrdinalIgnoreCase.GetHashCode(Username),
+				StringComparer.OrdinalIgnoreCase.GetHashCode(TenantID),
+				StringComparer.OrdinalIgnoreCase.GetHashCode(Permissions));
+		}
 	}
 
 	public static bool operator ==(AuthenticatedAccounts? left, AuthenticatedAccounts? right)

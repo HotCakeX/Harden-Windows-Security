@@ -7,6 +7,7 @@
     xmlns:VM="using:AppControlManager.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:PolicyEditor="using:AppControlManager.PolicyEditor"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -223,7 +224,7 @@
 
                                 <Border CornerRadius="5" Background="Black">
                                     <interactivity:Interaction.Behaviors>
-                                        <behaviors:StickyHeaderBehavior />
+                                        <customUI:StickyHeaderBehaviorV2/>
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
 
@@ -352,7 +353,7 @@
 
                                 <Border CornerRadius="5" Background="Black">
                                     <interactivity:Interaction.Behaviors>
-                                        <behaviors:StickyHeaderBehavior />
+                                        <customUI:StickyHeaderBehaviorV2/>
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
 

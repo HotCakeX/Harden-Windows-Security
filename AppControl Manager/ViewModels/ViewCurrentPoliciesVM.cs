@@ -18,19 +18,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using AppControlManager.SiPolicyIntel;
 using CommunityToolkit.WinUI;
 using Microsoft.UI;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
@@ -42,14 +38,8 @@ namespace AppControlManager.ViewModels;
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
 
-internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
+internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 {
-	// Event handler for the PropertyChanged event
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	// DispatcherQueue instance to run tasks on the UI thread
-	private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
-
 	// To store the policies displayed on the ListView
 	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];
 
@@ -142,14 +132,6 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 		get => _SwapPolicyComboBoxState;
 		set => SetProperty(_SwapPolicyComboBoxState, value, newValue => _SwapPolicyComboBoxState = newValue);
 	}
-
-	private bool _SortingDirectionToggleStatus = true;
-	internal bool SortingDirectionToggleStatus
-	{
-		get => _SortingDirectionToggleStatus;
-		set => SetProperty(_SortingDirectionToggleStatus, value, newValue => _SortingDirectionToggleStatus = newValue);
-	}
-
 
 	private int _ListViewSelectedIndex;
 	internal int ListViewSelectedIndex
@@ -750,7 +732,7 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 								CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
 
 								// Define the path for the CIP file
-								string randomString = GUIDGenerator.GenerateUniqueGUID();
+								string randomString = Guid.CreateVersion7().ToString("N");
 								string xmlFileName = Path.GetFileName(XMLPolicyPath);
 								string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 
@@ -821,69 +803,113 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	}
 
 
-	// Event handlers for each sort button
-	internal void ColumnSortingButton_PolicyID_Click()
-	{
-		SortColumn(policy => policy.PolicyID);
-	}
-	internal void ColumnSortingButton_BasePolicyID_Click()
-	{
-		SortColumn(policy => policy.BasePolicyID);
-	}
-	internal void ColumnSortingButton_FriendlyName_Click()
-	{
-		SortColumn(policy => policy.FriendlyName);
-	}
-	internal void ColumnSortingButton_Version_Click()
-	{
-		SortColumn(policy => policy.Version);
-	}
-	internal void ColumnSortingButton_IsAuthorized_Click()
-	{
-		SortColumn(policy => policy.IsAuthorized);
-	}
-	internal void ColumnSortingButton_IsEnforced_Click()
-	{
-		SortColumn(policy => policy.IsEnforced);
-	}
-	internal void ColumnSortingButton_IsOnDisk_Click()
-	{
-		SortColumn(policy => policy.IsOnDisk);
-	}
-	internal void ColumnSortingButton_IsSignedPolicy_Click()
-	{
-		SortColumn(policy => policy.IsSignedPolicy);
-	}
-	internal void ColumnSortingButton_IsSystemPolicy_Click()
-	{
-		SortColumn(policy => policy.IsSystemPolicy);
-	}
-	internal void ColumnSortingButton_PolicyRuleOptions_Click()
-	{
-		SortColumn(policy => policy.PolicyOptionsDisplay);
-	}
-
+	#region Sorting
 
 	/// <summary>
-	/// Performs data sorting
+	/// Defines the available columns for sorting.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="keySelector"></param>
-	private async void SortColumn<T>(Func<CiPolicyInfo, T> keySelector)
+	private enum SortColumnEnum
 	{
-		// Determine if a search filter is active.
+		PolicyID,
+		BasePolicyID,
+		FriendlyName,
+		Version,
+		IsAuthorized,
+		IsEnforced,
+		IsOnDisk,
+		IsSignedPolicy,
+		IsSystemPolicy,
+		PolicyOptions
+	}
+
+
+	// Sorting state – current sort column and direction
+	private SortColumnEnum? _currentSortColumn;
+	private bool _isDescending = true; // When a column is first clicked, sort descending by default.
+
+	/// <summary>
+	/// This method is invoked by each header button when clicked.
+	/// </summary>
+	/// <param name="newSortColumn">The column that needs to be sorted.</param>
+	private async void Sort(SortColumnEnum newSortColumn)
+	{
+		// If the same column is clicked again, toggle the sorting direction.
+		// Otherwise, if a new column is clicked, start with descending order.
+		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
+		{
+			_isDescending = !_isDescending;
+		}
+		else
+		{
+			_currentSortColumn = newSortColumn;
+			_isDescending = true;
+		}
+
+		// Determine if there is an active search; if not, use the complete list.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
 
-		// if no search is active, use AllPoliciesOutput; otherwise, sort the currently displayed list.
 		List<CiPolicyInfo> sourceData = isSearchEmpty ? AllPoliciesOutput : AllPolicies.ToList();
 
-		// Prepare the sorted data in a temporary list.
-		List<CiPolicyInfo> sortedData = SortingDirectionToggleStatus
-			? sourceData.OrderByDescending(keySelector).ToList()
-			: sourceData.OrderBy(keySelector).ToList();
+		List<CiPolicyInfo> sortedData = [];
 
-		// clear the ObservableCollection and add the sorted items.
-		await Dispatch.EnqueueAsync(() =>
+		switch (newSortColumn)
+		{
+			case SortColumnEnum.PolicyID:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.PolicyID).ToList()
+					: sourceData.OrderBy(p => p.PolicyID).ToList();
+				break;
+			case SortColumnEnum.BasePolicyID:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.BasePolicyID).ToList()
+					: sourceData.OrderBy(p => p.BasePolicyID).ToList();
+				break;
+			case SortColumnEnum.FriendlyName:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.FriendlyName).ToList()
+					: sourceData.OrderBy(p => p.FriendlyName).ToList();
+				break;
+			case SortColumnEnum.Version:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.Version).ToList()
+					: sourceData.OrderBy(p => p.Version).ToList();
+				break;
+			case SortColumnEnum.IsAuthorized:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.IsAuthorized).ToList()
+					: sourceData.OrderBy(p => p.IsAuthorized).ToList();
+				break;
+			case SortColumnEnum.IsEnforced:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.IsEnforced).ToList()
+					: sourceData.OrderBy(p => p.IsEnforced).ToList();
+				break;
+			case SortColumnEnum.IsOnDisk:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.IsOnDisk).ToList()
+					: sourceData.OrderBy(p => p.IsOnDisk).ToList();
+				break;
+			case SortColumnEnum.IsSignedPolicy:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.IsSignedPolicy).ToList()
+					: sourceData.OrderBy(p => p.IsSignedPolicy).ToList();
+				break;
+			case SortColumnEnum.IsSystemPolicy:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.IsSystemPolicy).ToList()
+					: sourceData.OrderBy(p => p.IsSystemPolicy).ToList();
+				break;
+			case SortColumnEnum.PolicyOptions:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.PolicyOptionsDisplay).ToList()
+					: sourceData.OrderBy(p => p.PolicyOptionsDisplay).ToList();
+				break;
+			default:
+				break;
+		}
+
+		// Update the ObservableCollection on the UI thread.
+		await Dispatcher.EnqueueAsync(() =>
 		{
 			AllPolicies.Clear();
 			foreach (CiPolicyInfo item in sortedData)
@@ -892,6 +918,52 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 			}
 		});
 	}
+
+
+	// These methods are bound to each column header button's Click event.
+	internal void SortByPolicyID()
+	{
+		Sort(SortColumnEnum.PolicyID);
+	}
+	internal void SortByBasePolicyID()
+	{
+		Sort(SortColumnEnum.BasePolicyID);
+	}
+	internal void SortByFriendlyName()
+	{
+		Sort(SortColumnEnum.FriendlyName);
+	}
+	internal void SortByVersion()
+	{
+		Sort(SortColumnEnum.Version);
+	}
+	internal void SortByIsAuthorized()
+	{
+		Sort(SortColumnEnum.IsAuthorized);
+	}
+	internal void SortByIsEnforced()
+	{
+		Sort(SortColumnEnum.IsEnforced);
+	}
+	internal void SortByIsOnDisk()
+	{
+		Sort(SortColumnEnum.IsOnDisk);
+	}
+	internal void SortByIsSignedPolicy()
+	{
+		Sort(SortColumnEnum.IsSignedPolicy);
+	}
+	internal void SortByIsSystemPolicy()
+	{
+		Sort(SortColumnEnum.IsSystemPolicy);
+	}
+	internal void SortByPolicyOptions()
+	{
+		Sort(SortColumnEnum.PolicyOptions);
+	}
+
+
+	#endregion
 
 
 	/// <summary>
@@ -1066,31 +1138,5 @@ internal sealed partial class ViewCurrentPoliciesVM : INotifyPropertyChanged
 	}
 
 #pragma warning restore CA1822
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
 
 }

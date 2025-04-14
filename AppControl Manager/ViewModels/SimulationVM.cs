@@ -18,22 +18,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AppControlManager.Others;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class SimulationVM : INotifyPropertyChanged
+internal sealed partial class SimulationVM : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
-
 	internal readonly ObservableCollection<SimulationOutput> SimulationOutputs = [];
 
 	// Store all outputs for searching
@@ -42,6 +41,49 @@ internal sealed partial class SimulationVM : INotifyPropertyChanged
 
 	#region UI-Bound Properties
 
+	private string? _SearchBoxTextBox;
+	internal string? SearchBoxTextBox
+	{
+		get => _SearchBoxTextBox;
+		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
+	}
+
+
+
+	private Visibility _MainInfoBarVisibility = Visibility.Collapsed;
+	internal Visibility MainInfoBarVisibility
+	{
+		get => _MainInfoBarVisibility;
+		set => SetProperty(_MainInfoBarVisibility, value, newValue => _MainInfoBarVisibility = newValue);
+	}
+
+	private bool _MainInfoBarIsOpen;
+	internal bool MainInfoBarIsOpen
+	{
+		get => _MainInfoBarIsOpen;
+		set => SetProperty(_MainInfoBarIsOpen, value, newValue => _MainInfoBarIsOpen = newValue);
+	}
+
+	private string? _MainInfoBarMessage;
+	internal string? MainInfoBarMessage
+	{
+		get => _MainInfoBarMessage;
+		set => SetProperty(_MainInfoBarMessage, value, newValue => _MainInfoBarMessage = newValue);
+	}
+
+	private InfoBarSeverity _MainInfoBarSeverity = InfoBarSeverity.Informational;
+	internal InfoBarSeverity MainInfoBarSeverity
+	{
+		get => _MainInfoBarSeverity;
+		set => SetProperty(_MainInfoBarSeverity, value, newValue => _MainInfoBarSeverity = newValue);
+	}
+
+	private bool _MainInfoBarIsClosable;
+	internal bool MainInfoBarIsClosable
+	{
+		get => _MainInfoBarIsClosable;
+		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
+	}
 
 	#endregion
 
@@ -251,29 +293,251 @@ internal sealed partial class SimulationVM : INotifyPropertyChanged
 	#endregion
 
 
+
 	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+	/// Event handler for the SearchBox text change
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
+	internal void SearchBox_TextChanged()
 	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
+		string? searchTerm = SearchBoxTextBox?.Trim();
+
+		if (searchTerm is null)
+			return;
+
+		// Perform a case-insensitive search in all relevant fields
+		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
+			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(output.SpecificFileNameLevelMatchCriteria is not null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+		)];
+
+		SimulationOutputs.Clear();
+
+		foreach (SimulationOutput item in filteredResults)
+		{
+			SimulationOutputs.Add(item);
+		}
 	}
 
 
-	private void OnPropertyChanged(string? propertyName)
+	#region Sort
+
+	/// <summary>
+	/// Enum listing all available sort columns.
+	/// </summary>
+	private enum SimulationSortColumn
 	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		Path,
+		Source,
+		IsAuthorized,
+		MatchCriteria,
+		SpecificFileNameLevelMatchCriteria,
+		SignerID,
+		SignerName,
+		SignerCertRoot,
+		SignerCertPublisher,
+		SignerScope,
+		CertSubjectCN,
+		CertIssuerCN,
+		CertNotAfter,
+		CertTBSValue,
+		FilePath
+	}
+
+
+	// Sorting state: current sort column and sort direction.
+	private SimulationSortColumn? _currentSortColumn;
+	private bool _isDescending = true; // Defaults to descending when a new column is selected.
+
+	/// <summary>
+	/// Common sort method that toggles sort order on consecutive clicks and resets order on column change.
+	/// </summary>
+	/// <param name="newSortColumn">The column to sort by.</param>
+	private async void Sort(SimulationSortColumn newSortColumn)
+	{
+		// Toggle sort order if the same column is clicked; otherwise, default to descending.
+		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
+		{
+			_isDescending = !_isDescending;
+		}
+		else
+		{
+			_currentSortColumn = newSortColumn;
+			_isDescending = true;
+		}
+
+		// Use all outputs if no search text; otherwise, sort the currently displayed collection.
+		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
+
+		List<SimulationOutput> sourceData = isSearchEmpty ? AllSimulationOutputs : SimulationOutputs.ToList();
+
+		List<SimulationOutput> sortedData = [];
+
+		switch (newSortColumn)
+		{
+			case SimulationSortColumn.Path:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.Path).ToList() : sourceData.OrderBy(s => s.Path).ToList();
+				break;
+			case SimulationSortColumn.Source:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.Source).ToList() : sourceData.OrderBy(s => s.Source).ToList();
+				break;
+			case SimulationSortColumn.IsAuthorized:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.IsAuthorized).ToList() : sourceData.OrderBy(s => s.IsAuthorized).ToList();
+				break;
+			case SimulationSortColumn.MatchCriteria:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.MatchCriteria).ToList() : sourceData.OrderBy(s => s.MatchCriteria).ToList();
+				break;
+			case SimulationSortColumn.SpecificFileNameLevelMatchCriteria:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SpecificFileNameLevelMatchCriteria).ToList() : sourceData.OrderBy(s => s.SpecificFileNameLevelMatchCriteria).ToList();
+				break;
+			case SimulationSortColumn.SignerID:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerID).ToList() : sourceData.OrderBy(s => s.SignerID).ToList();
+				break;
+			case SimulationSortColumn.SignerName:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerName).ToList() : sourceData.OrderBy(s => s.SignerName).ToList();
+				break;
+			case SimulationSortColumn.SignerCertRoot:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerCertRoot).ToList() : sourceData.OrderBy(s => s.SignerCertRoot).ToList();
+				break;
+			case SimulationSortColumn.SignerCertPublisher:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerCertPublisher).ToList() : sourceData.OrderBy(s => s.SignerCertPublisher).ToList();
+				break;
+			case SimulationSortColumn.SignerScope:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerScope).ToList() : sourceData.OrderBy(s => s.SignerScope).ToList();
+				break;
+			case SimulationSortColumn.CertSubjectCN:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertSubjectCN).ToList() : sourceData.OrderBy(s => s.CertSubjectCN).ToList();
+				break;
+			case SimulationSortColumn.CertIssuerCN:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertIssuerCN).ToList() : sourceData.OrderBy(s => s.CertIssuerCN).ToList();
+				break;
+			case SimulationSortColumn.CertNotAfter:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertNotAfter).ToList() : sourceData.OrderBy(s => s.CertNotAfter).ToList();
+				break;
+			case SimulationSortColumn.CertTBSValue:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertTBSValue).ToList() : sourceData.OrderBy(s => s.CertTBSValue).ToList();
+				break;
+			case SimulationSortColumn.FilePath:
+				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.FilePath).ToList() : sourceData.OrderBy(s => s.FilePath).ToList();
+				break;
+			default:
+				break;
+		}
+
+		// Update the observable collection on the UI thread.
+		await Dispatcher.EnqueueAsync(() =>
+		{
+			SimulationOutputs.Clear();
+			foreach (SimulationOutput item in sortedData)
+			{
+				SimulationOutputs.Add(item);
+			}
+		});
+	}
+
+	// Methods bound to each header button’s Click events.
+	internal void SortByPath() { Sort(SimulationSortColumn.Path); }
+	internal void SortBySource() { Sort(SimulationSortColumn.Source); }
+	internal void SortByIsAuthorized() { Sort(SimulationSortColumn.IsAuthorized); }
+	internal void SortByMatchCriteria() { Sort(SimulationSortColumn.MatchCriteria); }
+	internal void SortBySpecificFileNameLevelMatchCriteria() { Sort(SimulationSortColumn.SpecificFileNameLevelMatchCriteria); }
+	internal void SortBySignerID() { Sort(SimulationSortColumn.SignerID); }
+	internal void SortBySignerName() { Sort(SimulationSortColumn.SignerName); }
+	internal void SortBySignerCertRoot() { Sort(SimulationSortColumn.SignerCertRoot); }
+	internal void SortBySignerCertPublisher() { Sort(SimulationSortColumn.SignerCertPublisher); }
+	internal void SortBySignerScope() { Sort(SimulationSortColumn.SignerScope); }
+	internal void SortByCertSubjectCN() { Sort(SimulationSortColumn.CertSubjectCN); }
+	internal void SortByCertIssuerCN() { Sort(SimulationSortColumn.CertIssuerCN); }
+	internal void SortByCertNotAfter() { Sort(SimulationSortColumn.CertNotAfter); }
+	internal void SortByCertTBSValue() { Sort(SimulationSortColumn.CertTBSValue); }
+	internal void SortByFilePath() { Sort(SimulationSortColumn.FilePath); }
+
+
+	#endregion
+
+
+
+	/// <summary>
+	/// Exports the list of SimulationOutput objects to a CSV file.
+	/// </summary>
+	internal async void ExportToCsv()
+	{
+
+		if (AllSimulationOutputs.Count is 0)
+		{
+			Logger.Write("There are no simulation output to export");
+			return;
+		}
+
+		await Task.Run(() =>
+		{
+
+			string outputFilePath = Path.Combine(GlobalVars.UserConfigDir, @$"AppControl Simulation output {DateTime.Now:yyyy-MM-dd HH-mm-ss}.csv");
+
+			// Use a StringBuilder to gather CSV content.
+			StringBuilder csvBuilder = new();
+
+			_ = csvBuilder.AppendLine("\"Path\",\"Source\",\"IsAuthorized\",\"SignerID\",\"SignerName\",\"SignerCertRoot\","
+				+ "\"SignerCertPublisher\",\"SignerScope\",\"SignerFileAttributeIDs\",\"MatchCriteria\","
+				+ "\"SpecificFileNameLevelMatchCriteria\",\"CertSubjectCN\",\"CertIssuerCN\",\"CertNotAfter\","
+				+ "\"CertTBSValue\",\"FilePath\"");
+
+			foreach (SimulationOutput record in AllSimulationOutputs)
+			{
+				// Retrieve all properties. If a property is null, use an empty string.
+				// Use a helper method to properly wrap and escape the values.
+				List<string> values = new()
+				{
+					WrapValue(record.Path),
+					WrapValue(record.Source),
+					WrapValue(record.IsAuthorized.ToString()),
+					WrapValue(record.SignerID),
+					WrapValue(record.SignerName),
+					WrapValue(record.SignerCertRoot),
+					WrapValue(record.SignerCertPublisher),
+					WrapValue(record.SignerScope),
+                    // For the list, join the items using a comma separator.
+                    WrapValue(record.SignerFileAttributeIDs is not null
+						? string.Join(",", record.SignerFileAttributeIDs)
+						: string.Empty),
+					WrapValue(record.MatchCriteria),
+					WrapValue(record.SpecificFileNameLevelMatchCriteria),
+					WrapValue(record.CertSubjectCN),
+					WrapValue(record.CertIssuerCN),
+					WrapValue(record.CertNotAfter),
+					WrapValue(record.CertTBSValue),
+					WrapValue(record.FilePath)
+				};
+
+				// Join the values with comma and add the row to our CSV builder.
+				_ = csvBuilder.AppendLine(string.Join(",", values));
+			}
+
+			// Write the CSV content to file
+			File.WriteAllText(outputFilePath, csvBuilder.ToString());
+
+		});
+	}
+
+	/// <summary>
+	/// Wraps a value in double quotes, replacing nulls with empty strings and escaping inner quotes.
+	/// </summary>
+	/// <param name="value">The value to wrap.</param>
+	/// <returns>A string with the value wrapped in double quotes.</returns>
+	private static string WrapValue(string? value)
+	{
+		// If the value is null, use empty string.
+		string safeValue = value ?? string.Empty;
+
+		// Escape any double quotes within the value by doubling them.
+		safeValue = safeValue.Replace("\"", "\"\"");
+
+		// Wrap the value in double quotes.
+		return $"\"{safeValue}\"";
 	}
 
 }

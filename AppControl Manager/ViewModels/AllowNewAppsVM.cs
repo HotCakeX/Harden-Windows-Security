@@ -15,11 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
@@ -28,11 +25,8 @@ namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class AllowNewAppsVM : INotifyPropertyChanged
+internal sealed partial class AllowNewAppsVM : ViewModelBase
 {
-	// This event is raised when a property changes.
-	public event PropertyChangedEventHandler? PropertyChanged;
-
 
 	#region
 
@@ -50,6 +44,8 @@ internal sealed partial class AllowNewAppsVM : INotifyPropertyChanged
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
 
+	internal ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
+
 
 	// To store the FileIdentities displayed on the Event Logs ListView
 	internal readonly ObservableCollection<FileIdentity> EventLogsFileIdentities = [];
@@ -58,6 +54,8 @@ internal sealed partial class AllowNewAppsVM : INotifyPropertyChanged
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> EventLogsAllFileIdentities = [];
+
+	internal ListViewHelper.SortState SortStateEventLogs { get; set; } = new();
 
 	#endregion
 
@@ -727,30 +725,5 @@ internal sealed partial class AllowNewAppsVM : INotifyPropertyChanged
 			EventLogsCountInfoBadgeOpacity = 1;
 			EventLogsCountInfoBadgeValue = EventLogsFileIdentities.Count;
 		}
-	}
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

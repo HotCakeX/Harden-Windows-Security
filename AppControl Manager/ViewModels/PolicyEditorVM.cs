@@ -18,28 +18,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
+internal sealed partial class PolicyEditorVM : ViewModelBase
 {
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
-
 
 	#region Column Widths
 
@@ -650,7 +643,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 		try
 		{
 
-			await Dispatch.EnqueueAsync(() =>
+			await Dispatcher.EnqueueAsync(() =>
 			{
 
 				ProgressBarVisibility = Visibility.Visible;
@@ -717,7 +710,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 						if (item.Value.Item is not null)
 
-							_ = Dispatch.TryEnqueue(() =>
+							_ = Dispatcher.TryEnqueue(() =>
 							{
 								PolicyNameTextBox = (string)item.Value.Item;
 							});
@@ -727,7 +720,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 				}
 
 
-				_ = Dispatch.TryEnqueue(() =>
+				_ = Dispatcher.TryEnqueue(() =>
 				{
 					PolicyIDTextBox = PolicyObj.PolicyID;
 					PolicyBaseIDTextBox = PolicyObj.BasePolicyID;
@@ -745,7 +738,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 						if (item.Value.Item is not null)
 
-							_ = Dispatch.TryEnqueue(() =>
+							_ = Dispatcher.TryEnqueue(() =>
 							{
 								PolicyInfoIDTextBox = (string)item.Value.Item;
 							});
@@ -757,7 +750,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 				if (PolicyObj.HvciOptionsSpecified)
 				{
-					_ = Dispatch.TryEnqueue(() =>
+					_ = Dispatcher.TryEnqueue(() =>
 					{
 						HVCIOptionComboBox = GetHVCIOptionKey(PolicyObj.HvciOptions);
 					});
@@ -765,7 +758,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 				// If policy doesn't have HVCI field then set it to None on the UI ComboBox
 				else
 				{
-					_ = Dispatch.TryEnqueue(() =>
+					_ = Dispatcher.TryEnqueue(() =>
 					{
 						HVCIOptionComboBox = GetHVCIOptionKey(0);
 					});
@@ -795,7 +788,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 			});
 
 
-			await Dispatch.EnqueueAsync(() =>
+			await Dispatcher.EnqueueAsync(() =>
 			{
 
 				// Process the Allow rules
@@ -1097,7 +1090,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 		}
 		finally
 		{
-			await Dispatch.EnqueueAsync(() =>
+			await Dispatcher.EnqueueAsync(() =>
 			{
 				UIElementsEnabledState = true;
 
@@ -1218,25 +1211,49 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 	private sealed class SignerComparer : IEqualityComparer<Signer>
 	{
 		public bool Equals(Signer? x, Signer? y) => x?.ID == y?.ID;
-		public int GetHashCode(Signer obj) => obj.ID.GetHashCode();
+		public int GetHashCode(Signer obj)
+		{
+			unchecked // Standard for hash code, protects against overflow
+			{
+				return obj.ID.GetHashCode();
+			}
+		}
 	}
 
 	private sealed class AllowedSignerComparer : IEqualityComparer<AllowedSigner>
 	{
 		public bool Equals(AllowedSigner? x, AllowedSigner? y) => x?.SignerId == y?.SignerId;
-		public int GetHashCode(AllowedSigner obj) => obj.SignerId.GetHashCode();
+		public int GetHashCode(AllowedSigner obj)
+		{
+			unchecked // Standard for hash code, protects against overflow
+			{
+				return obj.SignerId.GetHashCode();
+			}
+		}
 	}
 
 	private sealed class DeniedSignerComparer : IEqualityComparer<DeniedSigner>
 	{
 		public bool Equals(DeniedSigner? x, DeniedSigner? y) => x?.SignerId == y?.SignerId;
-		public int GetHashCode(DeniedSigner obj) => obj.SignerId.GetHashCode();
+		public int GetHashCode(DeniedSigner obj)
+		{
+			unchecked // Standard for hash code, protects against overflow
+			{
+				return obj.SignerId.GetHashCode();
+			}
+		}
 	}
 
 	private sealed class CiSignerComparer : IEqualityComparer<CiSigner>
 	{
 		public bool Equals(CiSigner? x, CiSigner? y) => x?.SignerId == y?.SignerId;
-		public int GetHashCode(CiSigner obj) => obj.SignerId.GetHashCode();
+		public int GetHashCode(CiSigner obj)
+		{
+			unchecked // Standard for hash code, protects against overflow
+			{
+				return obj.SignerId.GetHashCode();
+			}
+		}
 	}
 
 	#endregion
@@ -1588,7 +1605,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 				if (!policyIDCheckResult.Item1)
 				{
-					_ = Dispatch.TryEnqueue(() =>
+					_ = Dispatcher.TryEnqueue(() =>
 					{
 						MainTeachingTitle = "Invalid Policy ID";
 						MainTeachingSubTitle = $"{policyIDCheckResult.Item2} is not valid for Policy ID";
@@ -1602,7 +1619,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 				if (!basePolicyIDCheckResult.Item1)
 				{
-					_ = Dispatch.TryEnqueue(() =>
+					_ = Dispatcher.TryEnqueue(() =>
 					{
 						MainTeachingTitle = "Invalid Base Policy ID";
 						MainTeachingSubTitle = $"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID";
@@ -1613,7 +1630,7 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 
 				if (string.IsNullOrWhiteSpace(PolicyVersionTextBox))
 				{
-					_ = Dispatch.TryEnqueue(() =>
+					_ = Dispatcher.TryEnqueue(() =>
 					{
 						MainTeachingTitle = "Enter policy version";
 						MainTeachingSubTitle = "Policy Version cannot be empty";
@@ -1846,31 +1863,5 @@ internal sealed partial class PolicyEditorVM : INotifyPropertyChanged
 		await Task.Run(ProcessData);
 	}
 #pragma warning restore CA1822
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
 
 }

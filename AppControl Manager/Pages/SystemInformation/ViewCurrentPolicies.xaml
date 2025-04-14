@@ -69,34 +69,6 @@
                     </Button.Flyout>
                 </Button>
 
-                <Button>
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE8CB;" />
-                            <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Flyout>
-                        <MenuFlyout>
-
-                            <ToggleMenuFlyoutItem Text="Descending Sorting" IsChecked="{x:Bind ViewModel.SortingDirectionToggleStatus, Mode=TwoWay}"/>
-
-                            <MenuFlyoutSeparator/>
-
-                            <MenuFlyoutItem Text="Policy ID" Click="{x:Bind ViewModel.ColumnSortingButton_PolicyID_Click}"/>
-                            <MenuFlyoutItem Text="Base Policy ID" Click="{x:Bind ViewModel.ColumnSortingButton_BasePolicyID_Click}"/>
-                            <MenuFlyoutItem Text="Friendly Name" Click="{x:Bind ViewModel.ColumnSortingButton_FriendlyName_Click}"/>
-                            <MenuFlyoutItem Text="Version" Click="{x:Bind ViewModel.ColumnSortingButton_Version_Click}"/>
-                            <MenuFlyoutItem Text="Is Authorized" Click="{x:Bind ViewModel.ColumnSortingButton_IsAuthorized_Click}"/>
-                            <MenuFlyoutItem Text="Is Enforced" Click="{x:Bind ViewModel.ColumnSortingButton_IsEnforced_Click}"/>
-                            <MenuFlyoutItem Text="Is On Disk" Click="{x:Bind ViewModel.ColumnSortingButton_IsOnDisk_Click}"/>
-                            <MenuFlyoutItem Text="Is Signed Policy" Click="{x:Bind ViewModel.ColumnSortingButton_IsSignedPolicy_Click}"/>
-                            <MenuFlyoutItem Text="Is System Policy" Click="{x:Bind ViewModel.ColumnSortingButton_IsSystemPolicy_Click}"/>
-                            <MenuFlyoutItem Text="Policy Rule Option" Click="{x:Bind ViewModel.ColumnSortingButton_PolicyRuleOptions_Click}"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
-
                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.RetrievePolicies}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Retrieve the latest deployed policies on the system">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
@@ -169,7 +141,7 @@
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:StickyHeaderBehavior />
+                        <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
 
@@ -185,16 +157,127 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth9, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Uid="PolicyIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="BasePolicyIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FriendlyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="VersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsAuthorizedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsEnforcedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsOnDiskHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsSignedPolicyHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsSystemPolicyHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyOptionsHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+                        <Button x:Uid="PolicyIDColumnHeaderBtn"
+                    Content="Policy ID"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="10,0,0,0"
+                    Padding="5"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.SortByPolicyID}" />
+
+                        <Button x:Uid="BasePolicyIDColumnHeaderBtn"
+                    Content="Base Policy ID"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.SortByBasePolicyID}" />
+
+                        <Button x:Uid="FriendlyNameColumnHeaderBtn"
+                    Content="Friendly Name"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.SortByFriendlyName}" />
+
+                        <Button x:Uid="VersionColumnHeaderBtn"
+                    Content="Version"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.SortByVersion}" />
+
+                        <Button x:Uid="IsAuthorizedColumnHeaderBtn"
+                    Content="Is Authorized"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="4"
+                    Click="{x:Bind ViewModel.SortByIsAuthorized}" />
+
+                        <Button x:Uid="IsEnforcedColumnHeaderBtn"
+                    Content="Is Enforced"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="5"
+                    Click="{x:Bind ViewModel.SortByIsEnforced}" />
+
+                        <Button x:Uid="IsOnDiskColumnHeaderBtn"
+                    Content="Is On Disk"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="6"
+                    Click="{x:Bind ViewModel.SortByIsOnDisk}" />
+
+                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn"
+                    Content="Is Signed Policy"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="7"
+                    Click="{x:Bind ViewModel.SortByIsSignedPolicy}" />
+
+                        <Button x:Uid="IsSystemPolicyColumnHeaderBtn"
+                    Content="Is System Policy"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="8"
+                    Click="{x:Bind ViewModel.SortByIsSystemPolicy}" />
+
+                        <Button x:Uid="PolicyOptionsColumnHeaderBtn"
+                    Content="Policy Options"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Foreground="White"
+                    HorizontalAlignment="Stretch"
+                    FontWeight="Bold"
+                    Margin="0"
+                    Padding="5"
+                    Grid.Column="9"
+                    Click="{x:Bind ViewModel.SortByPolicyOptions}" />
+
                     </Grid>
                 </Border>
             </ListView.Header>

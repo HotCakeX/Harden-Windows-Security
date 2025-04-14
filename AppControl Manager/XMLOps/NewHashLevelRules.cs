@@ -49,7 +49,7 @@ internal static class NewHashLevelRules
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in hashes)
 		{
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			// Create a unique ID for the rule
 			string HashSHA256RuleID = $"ID_ALLOW_A_{guid}";
@@ -137,7 +137,7 @@ internal static class NewHashLevelRules
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in hashes)
 		{
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			// Create a unique ID for the rule
 			string HashSHA256RuleID = $"ID_DENY_A_{guid}";

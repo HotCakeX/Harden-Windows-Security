@@ -85,14 +85,25 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 		}
 	}
 
-	// Event handler for all sort buttons
-	private void ColumnSortingButton_Click(object sender, RoutedEventArgs e)
-	{
-		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
-		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, ViewModel.LocalFilesAllFileIdentities, ViewModel.LocalFilesFileIdentities);
+	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
+		{
+			// Look up the mapping in your reusable property mappings dictionary.
+			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					SearchBox,
+					ViewModel.LocalFilesAllFileIdentities,
+					ViewModel.LocalFilesFileIdentities,
+					ViewModel.SortStateLocalFiles,
+					key);
+			}
+		}
 	}
+
 
 	/// <summary>
 	/// Event handler for the SearchBox text change

@@ -6,6 +6,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:localbase="using:AppControlManager"
     xmlns:AppControlManager="using:AppControlManager"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -19,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -30,8 +32,15 @@
 
         </controls:WrapPanel>
 
+        <InfoBar Grid.Row="1"
+         Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
+         IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=OneWay}"
+         Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+         Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+         IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
         <Border
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,10,0,10"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
@@ -159,13 +168,13 @@
 
                             <MenuFlyoutSeparator/>
 
-                            <!-- Toggle Button for CSV Output -->
-                            <ToggleMenuFlyoutItem x:Name="CSVOutputToggle" Text="Save output to CSV" IsChecked="False" ToolTipService.ToolTip="Exports the output to a CSV file in the AppControlManager directory in the Program Files directory at the end of the simulation job.">
-                                <ToggleMenuFlyoutItem.Icon>
+                            <!-- Button for CSV Output -->
+                            <MenuFlyoutItem x:Name="CSVOutputToggle" Click="{x:Bind ViewModel.ExportToCsv}" Text="Save output to CSV" ToolTipService.ToolTip="Exports the output to a CSV file in the AppControlManager directory in the Program Files directory.">
+                                <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE9F9;" />
-                                </ToggleMenuFlyoutItem.Icon>
+                                </MenuFlyoutItem.Icon>
 
-                            </ToggleMenuFlyoutItem>
+                            </MenuFlyoutItem>
 
                             <MenuFlyoutSeparator/>
 
@@ -180,39 +189,6 @@
 
                     </DropDownButton.Flyout>
                 </DropDownButton>
-
-                <Button>
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE8CB;" />
-                            <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Flyout>
-                        <MenuFlyout>
-
-                            <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" x:Uid="SortingDirectionToggleButton" IsChecked="True"/>
-
-                            <MenuFlyoutSeparator/>
-
-                            <MenuFlyoutItem x:Uid="PathHeader" Click="ColumnSortingButton_Path_Click"/>
-                            <MenuFlyoutItem x:Uid="SourceHeader" Click="ColumnSortingButton_Source_Click"/>
-                            <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="ColumnSortingButton_IsAuthorized_Click"/>
-                            <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Click="ColumnSortingButton_MatchCriteria_Click"/>
-                            <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Click="ColumnSortingButton_SpecificFileNameLevelMatchCriteria_Click"/>
-                            <MenuFlyoutItem x:Uid="SignerIDHeader" Click="ColumnSortingButton_SignerID_Click"/>
-                            <MenuFlyoutItem x:Uid="SignerNameHeader" Click="ColumnSortingButton_SignerName_Click"/>
-                            <MenuFlyoutItem x:Uid="SignerCertRootHeader" Click="ColumnSortingButton_SignerCertRoot_Click"/>
-                            <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Click="ColumnSortingButton_SignerCertPublisher_Click"/>
-                            <MenuFlyoutItem x:Uid="SignerScopeHeader" Click="ColumnSortingButton_SignerScope_Click"/>
-                            <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Click="ColumnSortingButton_CertSubjectCN_Click"/>
-                            <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Click="ColumnSortingButton_CertIssuerCN_Click"/>
-                            <MenuFlyoutItem x:Uid="CertNotAfterHeader" Click="ColumnSortingButton_CertNotAfter_Click"/>
-                            <MenuFlyoutItem x:Uid="CertTBSValueHeader" Click="ColumnSortingButton_CertTBSValue_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePathHeader" Click="ColumnSortingButton_FilePath_Click"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
 
 
                 <!-- Scalability Button with RadialGauge Flyout -->
@@ -240,15 +216,15 @@
                     </Button.Flyout>
                 </Button>
 
-                <ProgressBar x:Name="SimulationProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Simulation progress" />
+                <ProgressRing x:Name="SimulationProgressRing" IsIndeterminate="False" Background="LightGray" Value="0" ToolTipService.ToolTip="The Simulation progress" />
 
-                <TextBox PlaceholderText="Total count of the files"
+                <TextBox PlaceholderText="Total count"
                          x:Name="TotalCountOfTheFilesTextBox"
                          IsReadOnly="True"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files that participated in the last Simulation job"/>
 
-                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search data..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
+                <TextBox PlaceholderText="Search in the data..." Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
 
             </controls:WrapPanel>
         </Border>
@@ -256,7 +232,7 @@
 
         <ListView x:Name="SimOutputListView"
                 ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
-                Grid.Row="2"
+                Grid.Row="3"
                 SelectionMode="Extended"
                 ScrollViewer.HorizontalScrollMode="Enabled"
                 ScrollViewer.IsHorizontalRailEnabled="True"
@@ -270,7 +246,7 @@
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:StickyHeaderBehavior />
+                        <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
 
@@ -291,21 +267,25 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth14, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Uid="PathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SourceHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IsAuthorizedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="MatchCriteriaHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SignerIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SignerNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SignerCertRootHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SignerCertPublisherHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SignerScopeHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="CertSubjectCNHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="CertIssuerCNHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="CertNotAfterHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="CertTBSValueHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+
+                        <Button x:Uid="PathColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,0,0" Padding="5" Click="{x:Bind ViewModel.SortByPath, Mode=OneWay}" />
+                        <Button x:Uid="SourceColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySource, Mode=OneWay}" />
+                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByIsAuthorized, Mode=OneWay}" />
+                        <Button x:Uid="MatchCriteriaColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByMatchCriteria, Mode=OneWay}" />
+                        <Button x:Uid="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySpecificFileNameLevelMatchCriteria, Mode=OneWay}" />
+                        <Button x:Uid="SignerIDColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerID, Mode=OneWay}" />
+                        <Button x:Uid="SignerNameColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerName, Mode=OneWay}" />
+                        <Button x:Uid="SignerCertRootColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerCertRoot, Mode=OneWay}" />
+                        <Button x:Uid="SignerCertPublisherColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerCertPublisher, Mode=OneWay}" />
+                        <Button x:Uid="SignerScopeColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerScope, Mode=OneWay}" />
+                        <Button x:Uid="CertSubjectCNColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertSubjectCN, Mode=OneWay}" />
+                        <Button x:Uid="CertIssuerCNColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertIssuerCN, Mode=OneWay}" />
+                        <Button x:Uid="CertNotAfterColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertNotAfter, Mode=OneWay}" />
+                        <Button x:Uid="CertTBSValueColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertTBSValue, Mode=OneWay}" />
+                        <Button x:Uid="FilePathColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByFilePath, Mode=OneWay}" />
+
+
                     </Grid>
                 </Border>
             </ListView.Header>

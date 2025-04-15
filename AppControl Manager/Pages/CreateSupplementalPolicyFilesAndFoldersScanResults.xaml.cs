@@ -85,14 +85,24 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 		}
 	}
 
-	// Event handler for all sort buttons
-	private void ColumnSortingButton_Click(object sender, RoutedEventArgs e)
-	{
-		_ = ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping);
 
-		Func<FileIdentity, object?> selector = mapping.Getter;
-		ListViewHelper.SortColumn(selector, SearchBox, SortingDirectionToggle, ViewModel.filesAndFoldersScanResultsList, ViewModel.FilesAndFoldersScanResults);
+	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
+		{
+			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					SearchBox,
+					ViewModel.filesAndFoldersScanResultsList,
+					ViewModel.FilesAndFoldersScanResults,
+					ViewModel.SortStateFilesAndFolders,
+					key);
+			}
+		}
 	}
+
 
 
 	/// <summary>

@@ -15,11 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
@@ -28,12 +25,8 @@ namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class EventLogsPolicyCreationVM : INotifyPropertyChanged
+internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	// private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
@@ -44,6 +37,8 @@ internal sealed partial class EventLogsPolicyCreationVM : INotifyPropertyChanged
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> AllFileIdentities = [];
 
+
+	internal ListViewHelper.SortState SortState { get; set; } = new();
 
 	#region UI-Bound Properties
 
@@ -332,32 +327,5 @@ internal sealed partial class EventLogsPolicyCreationVM : INotifyPropertyChanged
 	}
 
 	#endregion
-
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
 
 }

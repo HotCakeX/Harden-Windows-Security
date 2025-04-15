@@ -51,6 +51,12 @@ internal static class LocalFilesScan
 	internal static IEnumerable<FileIdentity> Scan<TReference>((IEnumerable<FileInfo>, int) files, ushort scalability, ProgressRing UIProgressRing, TReference VMRef, Action<FileIdentity, TReference> assignVMRef)
 	{
 
+		// Make sure scalability is always at least 2
+		if (scalability < 2)
+		{
+			scalability = 2;
+		}
+
 		try
 		{
 

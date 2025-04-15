@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root><!--
     Microsoft ResX Schema
 
@@ -2398,9 +2398,6 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
   </data>
   <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>כאשר מסומן, המיון יתבצע בסדר יורד, אם לא מסומן, המיון יתבצע בסדר עולה.</value>
-  </data>
-  <data name="SortTextBlock.Text" xml:space="preserve">
-    <value>מיון</value>
   </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>

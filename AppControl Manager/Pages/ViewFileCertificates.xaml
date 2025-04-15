@@ -6,6 +6,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:others="using:AppControlManager.Others"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -38,7 +39,7 @@
             </win:StackPanel.ChildrenTransitions>
 
             <controls:SettingsCard x:Uid="BrowseForFilesSettingsCard" x:Name="BrowseForFilesSettingsCard"
-            Click="BrowseForFilesSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+            Click="{x:Bind BrowseForFilesSettingsCard_Click}" IsClickEnabled="True" IsActionIconVisible="False">
 
                 <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="{x:Bind BrowseForFilesButton_Click}"  />
 
@@ -56,36 +57,7 @@
 
         <controls:WrapPanel Margin="15" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
 
-            <TextBox x:Name="SearchBox" Width="300" x:Uid="CertificatesSearchBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-
-            <Button>
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xE8CB;" />
-                        <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
-                    </StackPanel>
-                </Button.Content>
-                <Button.Flyout>
-                    <MenuFlyout>
-
-                        <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" x:Uid="SortingDirectionToggleButton" IsChecked="True"/>
-
-                        <MenuFlyoutSeparator/>
-
-                        <MenuFlyoutItem x:Uid="SignerNumberHeader" Click="ColumnSortingButton_SignerNumber_Click"/>
-                        <MenuFlyoutItem x:Uid="TypeHeader" Click="ColumnSortingButton_Type_Click"/>
-                        <MenuFlyoutItem x:Uid="SubjectCommonNameHeader" Click="ColumnSortingButton_SubjectCommonName_Click"/>
-                        <MenuFlyoutItem x:Uid="IssuerCommonNameHeader" Click="ColumnSortingButton_IssuerCommonName_Click"/>
-                        <MenuFlyoutItem x:Uid="NotBeforeHeader" Click="ColumnSortingButton_NotBefore_Click"/>
-                        <MenuFlyoutItem x:Uid="NotAfterHeader" Click="ColumnSortingButton_NotAfter_Click"/>
-                        <MenuFlyoutItem x:Uid="HashingAlgorithmHeader" Click="ColumnSortingButton_HashingAlgorithm_Click"/>
-                        <MenuFlyoutItem x:Uid="SerialNumberHeader" Click="ColumnSortingButton_SerialNumber_Click"/>
-                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Click="ColumnSortingButton_Thumbprint_Click"/>
-                        <MenuFlyoutItem x:Uid="TBSHashHeader" Click="ColumnSortingButton_TBSHash_Click"/>
-                        <MenuFlyoutItem x:Uid="ExtensionOIDsHeader" Click="ColumnSortingButton_ExtensionOIDs_Click"/>
-                    </MenuFlyout>
-                </Button.Flyout>
-            </Button>
+            <TextBox Width="300" x:Uid="CertificatesSearchBox" Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
         </controls:WrapPanel>
 
@@ -105,7 +77,7 @@
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:StickyHeaderBehavior />
+                        <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
 
@@ -122,17 +94,19 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth11, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Uid="SignerNumberHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="TypeHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SubjectCommonNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="IssuerCommonNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="NotBeforeHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="NotAfterHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="HashingAlgorithmHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SerialNumberHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="ThumbprintHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="TBSHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="ExtensionOIDsHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+                        <Button x:Uid="SignerNumberColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="10,0,0,0" Padding="5" Grid.Column="0" Click="{x:Bind ViewModel.SortBySignerNumber}" />
+                        <Button x:Uid="TypeColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="1" Click="{x:Bind ViewModel.SortByType}" />
+                        <Button x:Uid="SubjectCommonNameColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="2" Click="{x:Bind ViewModel.SortBySubjectCommonName}" />
+                        <Button x:Uid="IssuerCommonNameColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="3" Click="{x:Bind ViewModel.SortByIssuerCommonName}" />
+                        <Button x:Uid="NotBeforeColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="4" Click="{x:Bind ViewModel.SortByNotBefore}" />
+                        <Button x:Uid="NotAfterColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="5" Click="{x:Bind ViewModel.SortByNotAfter}" />
+                        <Button x:Uid="HashingAlgorithmColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="6" Click="{x:Bind ViewModel.SortByHashingAlgorithm}" />
+                        <Button x:Uid="SerialNumberColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="7" Click="{x:Bind ViewModel.SortBySerialNumber}" />
+                        <Button x:Uid="ThumbprintColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="8" Click="{x:Bind ViewModel.SortByThumbprint}" />
+                        <Button x:Uid="TBSHashColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="9" Click="{x:Bind ViewModel.SortByTBSHash}" />
+                        <Button x:Uid="ExtensionOIDsColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="10" Click="{x:Bind ViewModel.SortByExtensionOIDs}" />
+
                     </Grid>
                 </Border>
             </ListView.Header>

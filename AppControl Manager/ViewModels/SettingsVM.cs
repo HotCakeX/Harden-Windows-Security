@@ -18,9 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 
@@ -28,12 +26,8 @@ namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class SettingsVM : INotifyPropertyChanged
+internal sealed partial class SettingsVM : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	//private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
 
 	// To store the selectable Certificate common names
 	internal readonly ObservableCollection<string> CertCommonNames = [];
@@ -136,33 +130,6 @@ internal sealed partial class SettingsVM : INotifyPropertyChanged
 		{
 			CertCommonNames.Add(item);
 		}
-	}
-
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
 }

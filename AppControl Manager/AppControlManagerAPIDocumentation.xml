@@ -1848,6 +1848,77 @@
             GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
+        <member name="T:AppControlManager.CustomUIElements.HeaderBehaviorBase">
+            <summary>
+            Base class helper for header behaviors which manipulate an element within a viewport of a <see cref="T:Microsoft.UI.Xaml.Controls.ListViewBase"/> based control.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.CustomUIElements.HeaderBehaviorBase._scrollViewer">
+            <summary>
+            The ScrollViewer associated with the ListViewBase control.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.CustomUIElements.HeaderBehaviorBase._scrollProperties">
+            <summary>
+            The CompositionPropertySet associated with the ScrollViewer.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.CustomUIElements.HeaderBehaviorBase._animationProperties">
+            <summary>
+            The CompositionPropertySet associated with the animation.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.CustomUIElements.HeaderBehaviorBase._headerVisual">
+            <summary>
+            The Visual associated with the header element.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.HeaderBehaviorBase.Initialize">
+            <summary>
+            Attaches the behavior to the associated object.
+            </summary>
+            <returns>
+              <c>true</c> if attaching succeeded; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.HeaderBehaviorBase.Uninitialize">
+            <summary>
+            Detaches the behavior from the associated object.
+            </summary>
+            <returns>
+              <c>true</c> if detaching succeeded; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.HeaderBehaviorBase.AssignAnimation">
+            <summary>
+            Uses Composition API to get the UIElement and sets an ExpressionAnimation.
+            </summary>
+            <remarks>
+            If this method returns true, you should have access to all protected fields with assigned components to use.
+            </remarks>
+            <returns><c>true</c> if the assignment was successful; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.HeaderBehaviorBase.StopAnimation">
+            <summary>
+            Stop the animation of the UIElement.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.HeaderBehaviorBase.RemoveAnimation">
+            <summary>
+            Remove the animation from the UIElement.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.StickyHeaderBehaviorV2.Show">
+            <summary>
+            Show the header
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.StickyHeaderBehaviorV2.AssignAnimation">
+            <inheritdoc/>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.StickyHeaderBehaviorV2.StopAnimation">
+            <inheritdoc/>
+        </member>
         <member name="M:AppControlManager.IntelGathering.CatRootScanner.Scan(System.Collections.Generic.List{System.String},System.UInt16)">
             <summary>
             Scans the CatRoot directory for security catalogs.
@@ -2706,7 +2777,7 @@
             <param name="noCatalogScanning"></param>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.Main.AppControlSimulation.Invoke(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Boolean,System.Boolean,System.Collections.Generic.List{System.String},System.UInt16,Microsoft.UI.Xaml.Controls.ProgressBar)">
+        <member name="M:AppControlManager.Main.AppControlSimulation.Invoke(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Boolean,System.Collections.Generic.List{System.String},System.UInt16,Microsoft.UI.Xaml.Controls.ProgressRing)">
             <summary>
             The main method that performs the App Control Simulation.
             </summary>
@@ -2714,10 +2785,9 @@
             <param name="folderPaths"></param>
             <param name="xmlFilePath"></param>
             <param name="noCatalogScanning"></param>
-            <param name="csvOutput"></param>
             <param name="catRootPath"></param>
             <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
-            <param name="UIProgressBar"></param>
+            <param name="UIProgressRing"></param>
             <returns></returns>
             <exception cref="T:System.ArgumentNullException"></exception>
             <exception cref="T:System.IO.FileNotFoundException"></exception>
@@ -4432,17 +4502,23 @@
             <param name="lw"></param>
             <param name="source"></param>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity})">
+        <member name="T:AppControlManager.Others.ListViewHelper.SortState">
             <summary>
-            Sorts a collection
-            Used for the ObservableCollection of ListViews
+            Used to store sorting states of columns in ListViews
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String)">
+            <summary>
+            Sorts the ObservableCollection using the given key selector.
+            The SortState parameter toggles sort order when the same column is pressed.
             </summary>
             <typeparam name="T">The type returned by the key selector.</typeparam>
-            <param name="keySelector">The key selector used for sorting.</param>
-            <param name="searchBox">Reference to the search TextBox.</param>
-            <param name="sortingToggle">Reference to the ToggleMenuFlyoutItem that indicates sort direction.</param>
-            <param name="originalList">The full list to sort if no filter is active.</param>
-            <param name="observableCollection">The ObservableCollection to update with sorted data.</param>
+            <param name="keySelector">Function to obtain the sort key from the FileIdentity.</param>
+            <param name="searchBox">The TextBox used for filtering.</param>
+            <param name="originalList">The full list (if no filter is active).</param>
+            <param name="observableCollection">The observable collection to update.</param>
+            <param name="sortState">An object that holds the current sort state.</param>
+            <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
         </member>
         <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.CalendarDatePicker)">
             <summary>
@@ -4497,6 +4573,38 @@
             <param name="SecurityCatalogFilePath"></param>
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:AppControlManager.Others.NoValidFilesSelectedException">
+            <summary>
+            a class to throw a custom exception when the no valid files were found for scanning or performing other relevant tasks in the application.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.NoValidFilesSelectedException.#ctor">
+            <summary>
+            Initializes a new instance of the NoValidFilesSelectedException class. This constructor does not take any
+            parameters.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.NoValidFilesSelectedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the NoValidFilesSelectedException class with a specified error message.
+            </summary>
+            <param name="message">The error message that describes the reason for the exception.</param>
+        </member>
+        <member name="M:AppControlManager.Others.NoValidFilesSelectedException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the NoValidFilesSelectedException class with a message and function name.
+            </summary>
+            <param name="message">Provides details about the error encountered.</param>
+            <param name="functionName">Indicates the name of the function where the error occurred.</param>
+        </member>
+        <member name="M:AppControlManager.Others.NoValidFilesSelectedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the NoValidFilesSelectedException class with a specified error message and an
+            inner exception.
+            </summary>
+            <param name="message">Provides a description of the error that occurred.</param>
+            <param name="innerException">Holds the exception that is the cause of the current exception.</param>
         </member>
         <member name="T:AppControlManager.Others.OpusInfoObj">
             <summary>
@@ -4999,13 +5107,6 @@
         <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.ColumnSortingButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for all sort buttons
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -5632,13 +5733,6 @@
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.ColumnSortingButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for all sort buttons
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -7004,13 +7098,6 @@
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
         </member>
-        <member name="M:AppControlManager.Pages.Simulation.SortColumn``1(System.Func{AppControlManager.Others.SimulationOutput,``0})">
-            <summary>
-            Performs data sorting
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="keySelector"></param>
-        </member>
         <member name="M:AppControlManager.Pages.Simulation.BeginSimulationButton_Click">
             <summary>
             Event handler for the Begin Simulation button
@@ -7035,13 +7122,6 @@
             <summary>
             Event handler for the Cat Root Paths button
             </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Simulation.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.Simulation.CtrlC_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator,Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs)">
             <summary>
@@ -7087,13 +7167,6 @@
         <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.ColumnSortingButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for all sort buttons
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -7467,24 +7540,15 @@
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
         </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.SortColumn``1(System.Func{AppControlManager.Others.FileCertificateInfoCol,``0})">
-            <summary>
-            Performs data sorting
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="keySelector"></param>
-        </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesButton_Click">
             <summary>
             Event handler for the Browse button
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesSettingsCard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesSettingsCard_Click">
             <summary>
             Event handler for the Settings Card click
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.FetchForCIP(System.String)">
             <summary>
@@ -7506,13 +7570,6 @@
             </summary>
             <param name="file"></param>
             <returns></returns>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the search box
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.CtrlC_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator,Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs)">
             <summary>
@@ -7794,11 +7851,6 @@
              Additionally, the <see cref="P:AppControlManager.SiPolicy.FileRule.Type"/> property is compared. Even if all the other properties match,
              differing <see cref="P:AppControlManager.SiPolicy.FileRule.Type"/> values result in the objects being considered different.
              </summary>
-        </member>
-        <member name="T:AppControlManager.SiPolicyIntel.GUIDGenerator">
-            <summary>
-            This classes generates latest version of GUIDs
-            </summary>
         </member>
         <member name="T:AppControlManager.SiPolicyIntel.PublisherSignerRuleComparer">
             <summary>
@@ -9060,18 +9112,6 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
         <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -9084,30 +9124,6 @@
             <summary>
             Updates the total logs count displayed on the UI
             </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CalculateColumnWidths">
             <summary>
@@ -9135,34 +9151,10 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
         <member name="F:AppControlManager.ViewModels.DeploymentVM.GroupNamesCollection">
             <summary>
             Bound to the UI ListView and holds the Intune group Names/IDs
             </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.DeploymentVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.ViewModels.EventLogsPolicyCreationVM.CalculateColumnWidths">
             <summary>
@@ -9171,18 +9163,6 @@
             It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.EventLogsPolicyCreationVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="T:AppControlManager.ViewModels.MainWindowVM">
             <summary>
@@ -9429,18 +9409,6 @@
             Event handler for the Background ComboBox selection change event in the Settings page.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.MainWindowVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
         <member name="M:AppControlManager.ViewModels.MDEAHPolicyCreationVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -9448,18 +9416,6 @@
             It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.MDEAHPolicyCreationVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.ViewModels.MergePoliciesVM.MergeButton_Click">
             <summary>
@@ -9487,18 +9443,6 @@
             <summary>
             Clears the textbox for other selected policies
             </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.MergePoliciesVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.ViewModels.PolicyEditorVM.CalculateFileBasedListViewColumnWidths">
             <summary>
@@ -9592,18 +9536,6 @@
             </summary>
             <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
         </member>
-        <member name="M:AppControlManager.ViewModels.PolicyEditorVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
         <member name="M:AppControlManager.ViewModels.SettingsVM.FetchLatestCertificateCNsPrivate">
             <summary>
             Get all of the common names of the certificates in the user/my certificate stores
@@ -9626,18 +9558,6 @@
             Event handler for AutoSuggestBox
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.SettingsVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
         <member name="M:AppControlManager.ViewModels.SimulationVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -9646,17 +9566,33 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.SimulationVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+        <member name="M:AppControlManager.ViewModels.SimulationVM.SearchBox_TextChanged">
             <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            Event handler for the SearchBox text change
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
+        </member>
+        <member name="T:AppControlManager.ViewModels.SimulationVM.SimulationSortColumn">
+            <summary>
+            Enum listing all available sort columns.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.SimulationVM.Sort(AppControlManager.ViewModels.SimulationVM.SimulationSortColumn)">
+            <summary>
+            Common sort method that toggles sort order on consecutive clicks and resets order on column change.
+            </summary>
+            <param name="newSortColumn">The column to sort by.</param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.SimulationVM.ExportToCsv">
+            <summary>
+            Exports the list of SimulationOutput objects to a CSV file.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.SimulationVM.WrapValue(System.String)">
+            <summary>
+            Wraps a value in double quotes, replacing nulls with empty strings and escaping inner quotes.
+            </summary>
+            <param name="value">The value to wrap.</param>
+            <returns>A string with the value wrapped in double quotes.</returns>
         </member>
         <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.CalculateColumnWidths">
             <summary>
@@ -9686,12 +9622,16 @@
             <param name="policyID"></param>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.SortColumn``1(System.Func{AppControlManager.Others.CiPolicyInfo,``0})">
+        <member name="T:AppControlManager.ViewModels.ViewCurrentPoliciesVM.SortColumnEnum">
             <summary>
-            Performs data sorting
+            Defines the available columns for sorting.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="keySelector"></param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.Sort(AppControlManager.ViewModels.ViewCurrentPoliciesVM.SortColumnEnum)">
+            <summary>
+            This method is invoked by each header button when clicked.
+            </summary>
+            <param name="newSortColumn">The column that needs to be sorted.</param>
         </member>
         <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.SearchBox_TextChanged">
             <summary>
@@ -9723,25 +9663,34 @@
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
         <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
             and assigns the value (with a little extra padding) to the corresponding property.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+        <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.SearchBox_TextChanged">
+            <summary>
+            Event handler for the search box
+            </summary>
+        </member>
+        <member name="T:AppControlManager.ViewModels.ViewFileCertificatesVM.CertificateSortColumn">
+            <summary>
+            Enum representing the sort columns for certificate items.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.Sort(AppControlManager.ViewModels.ViewFileCertificatesVM.CertificateSortColumn)">
+            <summary>
+            Common sort method that determines sort column and toggles direction.
+            </summary>
+            <param name="newSortColumn">The column to sort by.</param>
+        </member>
+        <member name="T:AppControlManager.ViewModels.ViewModelBase">
+            <summary>
+            All of the ViewModel classes must inherit from this class
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewModelBase.SetProperty``1(``0,``0,System.Action{``0},System.String)">
             <summary>
             Sets the property and raises the PropertyChanged event if the value has changed.
             This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
@@ -9752,6 +9701,12 @@
             <param name="setter"></param>
             <param name="propertyName"></param>
             <returns></returns>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewModelBase.OnPropertyChanged(System.String)">
+            <summary>
+            Raises the PropertyChanged event.
+            </summary>
+            <param name="propertyName">The name of the property that changed.</param>
         </member>
         <member name="F:AppControlManager.ViewModels.ViewOnlinePoliciesVM._ViewModelMSGraph">
             <summary>
@@ -9781,12 +9736,16 @@
             </summary>
             <param name="on">True will enable and False will disable UI buttons when an operation is ongoing</param>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SortColumn``1(System.Func{AppControlManager.Others.CiPolicyInfo,``0})">
+        <member name="T:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SortColumnEnum">
             <summary>
-            Performs data sorting
+            Enum representing the sort columns for this view.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="keySelector"></param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.Sort(AppControlManager.ViewModels.ViewOnlinePoliciesVM.SortColumnEnum)">
+            <summary>
+            Common sort method using a column enum.
+            </summary>
+            <param name="newSortColumn">The column to sort by.</param>
         </member>
         <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SearchBox_TextChanged">
             <summary>
@@ -9815,18 +9774,6 @@
             Helper method to copy a specified property to clipboard without reflection
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
-        </member>
-        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.XMLOps.CheckForAllowAll.Check(System.String)">
             <summary>

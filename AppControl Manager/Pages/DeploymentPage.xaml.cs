@@ -254,7 +254,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 						throw new InvalidOperationException(GlobalVars.Rizz.GetString("SignedPolicyError") + file + "'");
 					}
 
-					string randomString = GUIDGenerator.GenerateUniqueGUID();
+					string randomString = Guid.CreateVersion7().ToString("N");
 
 					string xmlFileName = Path.GetFileName(file);
 
@@ -411,7 +411,7 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 					CiRuleOptions.Set(filePath: file, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					// Define the path for the CIP file
-					string randomString = GUIDGenerator.GenerateUniqueGUID();
+					string randomString = Guid.CreateVersion7().ToString("N");
 					string xmlFileName = Path.GetFileName(file);
 					string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 

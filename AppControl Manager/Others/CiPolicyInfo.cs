@@ -208,25 +208,28 @@ internal sealed class CiPolicyInfo(
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		int hash = 17;
-		hash = hash * 23 + (PolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyID));
-		hash = hash * 23 + (BasePolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(BasePolicyID));
-		hash = hash * 23 + (FriendlyName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(FriendlyName));
-		hash = hash * 23 + (Version is null ? 0 : Version.GetHashCode());
-		hash = hash * 23 + (VersionString is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(VersionString));
-		hash = hash * 23 + IsSystemPolicy.GetHashCode();
-		hash = hash * 23 + IsSignedPolicy.GetHashCode();
-		hash = hash * 23 + IsOnDisk.GetHashCode();
-		hash = hash * 23 + IsEnforced.GetHashCode();
-		hash = hash * 23 + IsAuthorized.GetHashCode();
-		if (PolicyOptions != null)
+		unchecked // Allow arithmetic overflow without exception (standard for hash code generation)
 		{
-			foreach (string option in PolicyOptions)
+			int hash = 17;
+			hash = hash * 23 + (PolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyID));
+			hash = hash * 23 + (BasePolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(BasePolicyID));
+			hash = hash * 23 + (FriendlyName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(FriendlyName));
+			hash = hash * 23 + (Version is null ? 0 : Version.GetHashCode());
+			hash = hash * 23 + (VersionString is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(VersionString));
+			hash = hash * 23 + IsSystemPolicy.GetHashCode();
+			hash = hash * 23 + IsSignedPolicy.GetHashCode();
+			hash = hash * 23 + IsOnDisk.GetHashCode();
+			hash = hash * 23 + IsEnforced.GetHashCode();
+			hash = hash * 23 + IsAuthorized.GetHashCode();
+			if (PolicyOptions != null)
 			{
-				hash = hash * 23 + (option is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(option));
+				foreach (string option in PolicyOptions)
+				{
+					hash = hash * 23 + (option is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(option));
+				}
 			}
+			return hash;
 		}
-		return hash;
 	}
 
 	/// <summary>

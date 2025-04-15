@@ -240,7 +240,7 @@ internal sealed partial class UpdatePage : Page
 				await Task.Run(() =>
 				{
 					// Random password to temporarily encrypt the private key of the newly generated certificate
-					string PassWord = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUID();
+					string PassWord = Guid.CreateVersion7().ToString("N");
 
 					// Path where the .cer file will be saved
 					string CertificateOutputPath = Path.Combine(stagingArea, $"{commonName}.cer");

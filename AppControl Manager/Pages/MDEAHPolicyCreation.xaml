@@ -9,6 +9,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
@@ -644,43 +645,6 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
 
-
-                <Button>
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE8CB;" />
-                            <TextBlock x:Uid="SortTextBlock" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </Button.Content>
-                    <Button.Flyout>
-                        <MenuFlyout>
-
-                            <ToggleMenuFlyoutItem x:Name="SortingDirectionToggle" x:Uid="SortingDirectionToggleButton" IsChecked="True"/>
-
-                            <MenuFlyoutSeparator/>
-
-                            <MenuFlyoutItem x:Uid="FileNameHeader" Tag="FileName" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="TimeCreatedHeader" Tag="TimeCreated" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="SignatureStatusHeader" Tag="SignatureStatus" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="ActionHeader" Tag="Action" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="OriginalFileNameHeader" Tag="OriginalFileName" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="InternalNameHeader" Tag="InternalName" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="FileDescriptionHeader" Tag="FileDescription" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="FileVersionHeader" Tag="FileVersion" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256HashHeader" Tag="SHA256Hash" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1HashHeader" Tag="SHA1Hash" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA256FlatHashHeader" Tag="SHA256FlatHash" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="SHA1FlatHashHeader" Tag="SHA1FlatHash" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="SigningScenarioHeader" Tag="SISigningScenario" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePathHeader" Tag="FilePath" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="ComputerNameHeader" Tag="ComputerName" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="PolicyGUIDHeader" Tag="PolicyGUID" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="PolicyNameHeader" Tag="PolicyName" Click="ColumnSortingButton_Click"/>
-                            <MenuFlyoutItem x:Uid="FilePublishersHeader" Tag="FilePublishersToDisplay" Click="ColumnSortingButton_Click"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
-
                 <Button Content="Policy Name">
                     <Button.Flyout>
                         <Flyout>
@@ -726,7 +690,7 @@
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:StickyHeaderBehavior />
+                        <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
 
@@ -750,24 +714,63 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth17, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="TimeCreatedHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SignatureStatusHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="ActionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="OriginalFileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="InternalNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FileDescriptionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA256HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA1HashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA256FlatHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SHA1FlatHashHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="SigningScenarioHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="ComputerNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyGUIDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="PolicyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock x:Uid="FilePublishersHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="17" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+
+                        <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,0,0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="TimeCreatedColumnHeaderBtn" Tag="TimeCreated" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="ActionColumnHeaderBtn" Tag="Action" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="OriginalFileNameColumnHeaderBtn" Tag="OriginalFileName" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="InternalNameColumnHeaderBtn" Tag="InternalName" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="FileDescriptionColumnHeaderBtn" Tag="FileDescription" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="FileVersionColumnHeaderBtn" Tag="FileVersion" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="SHA256HashColumnHeaderBtn" Tag="SHA256Hash" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="SHA1HashColumnHeaderBtn" Tag="SHA1Hash" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="SHA256FlatHashColumnHeaderBtn" Tag="SHA256FlatHash" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="SHA1FlatHashColumnHeaderBtn" Tag="SHA1FlatHash" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="SigningScenarioColumnHeaderBtn" Tag="SISigningScenario" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="FilePathColumnHeaderBtn" Tag="FilePath" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="15" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="16" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+                        <Button x:Uid="FilePublishersColumnHeaderBtn" Tag="FilePublishersToDisplay" BorderBrush="Transparent" Background="Transparent" Foreground="White" 
+              HorizontalAlignment="Stretch" Grid.Column="17" FontWeight="Bold" Margin="0" Padding="5" 
+              Click="HeaderColumnSortingButton_Click" />
+
                     </Grid>
                 </Border>
             </ListView.Header>

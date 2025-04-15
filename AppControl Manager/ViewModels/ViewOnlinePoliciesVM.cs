@@ -18,16 +18,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
@@ -36,13 +33,8 @@ namespace AppControlManager.ViewModels;
 
 #pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
+internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	private readonly DispatcherQueue Dispatch = DispatcherQueue.GetForCurrentThread();
-
 
 	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
 
@@ -82,8 +74,6 @@ internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
 
 	#region UI-Bound Properties
 
-
-
 	private Visibility _MainInfoBarVisibility = Visibility.Collapsed;
 	internal Visibility MainInfoBarVisibility
 	{
@@ -118,9 +108,6 @@ internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
 		get => _MainInfoBarIsClosable;
 		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
 	}
-
-
-
 
 
 	private bool _ListViewState = true;
@@ -170,13 +157,6 @@ internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
 	{
 		get => _SearchBoxTextBox;
 		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
-	}
-
-	private bool _SortingDirectionToggleStatus = true;
-	internal bool SortingDirectionToggleStatus
-	{
-		get => _SortingDirectionToggleStatus;
-		set => SetProperty(_SortingDirectionToggleStatus, value, newValue => _SortingDirectionToggleStatus = newValue);
 	}
 
 	private bool _RemovePolicyButtonState;
@@ -437,53 +417,88 @@ internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
 	}
 
 
-	// Event handlers for each sort button
-	internal void ColumnSortingButton_PolicyID_Click()
-	{
-		SortColumn(policy => policy.PolicyID);
-	}
-	internal void ColumnSortingButton_BasePolicyID_Click()
-	{
-		SortColumn(policy => policy.BasePolicyID);
-	}
-	internal void ColumnSortingButton_FriendlyName_Click()
-	{
-		SortColumn(policy => policy.FriendlyName);
-	}
-	internal void ColumnSortingButton_Version_Click()
-	{
-		SortColumn(policy => policy.VersionString);
-	}
-	internal void ColumnSortingButton_IsSignedPolicy_Click()
-	{
-		SortColumn(policy => policy.IsSignedPolicy);
-	}
-	internal void ColumnSortingButton_PolicyRuleOptions_Click()
-	{
-		SortColumn(policy => policy.PolicyOptionsDisplay);
-	}
-
+	#region Sort
 
 	/// <summary>
-	/// Performs data sorting
+	/// Enum representing the sort columns for this view.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="keySelector"></param>
-	private async void SortColumn<T>(Func<CiPolicyInfo, T> keySelector)
+	private enum SortColumnEnum
 	{
-		// Determine if a search filter is active.
+		PolicyID,
+		BasePolicyID,
+		FriendlyName,
+		Version,
+		IsSignedPolicy,
+		PolicyOptions
+	}
+
+
+	// Current sorting state.
+	private SortColumnEnum? _currentSortColumn;
+	private bool _isDescending = true; // Always sort descending on new column selection.
+
+	/// <summary>
+	/// Common sort method using a column enum.
+	/// </summary>
+	/// <param name="newSortColumn">The column to sort by.</param>
+	private async void Sort(SortColumnEnum newSortColumn)
+	{
+		// Toggle sort order if the same column is clicked again.
+		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
+		{
+			_isDescending = !_isDescending;
+		}
+		else
+		{
+			_currentSortColumn = newSortColumn;
+			_isDescending = true;
+		}
+
+		// Determine whether a search filter is active.
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
 
-		// if no search is active, use AllPoliciesOutput; otherwise, sort the currently displayed list.
 		List<CiPolicyInfo> sourceData = isSearchEmpty ? AllPoliciesOutput : AllPolicies.ToList();
 
-		// Prepare the sorted data in a temporary list.
-		List<CiPolicyInfo> sortedData = SortingDirectionToggleStatus
-			? sourceData.OrderByDescending(keySelector).ToList()
-			: sourceData.OrderBy(keySelector).ToList();
+		List<CiPolicyInfo> sortedData = [];
 
-		// clear the ObservableCollection and add the sorted items.
-		await Dispatch.EnqueueAsync(() =>
+		switch (newSortColumn)
+		{
+			case SortColumnEnum.PolicyID:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.PolicyID).ToList()
+					: sourceData.OrderBy(p => p.PolicyID).ToList();
+				break;
+			case SortColumnEnum.BasePolicyID:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.BasePolicyID).ToList()
+					: sourceData.OrderBy(p => p.BasePolicyID).ToList();
+				break;
+			case SortColumnEnum.FriendlyName:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.FriendlyName).ToList()
+					: sourceData.OrderBy(p => p.FriendlyName).ToList();
+				break;
+			case SortColumnEnum.Version:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.VersionString).ToList()
+					: sourceData.OrderBy(p => p.VersionString).ToList();
+				break;
+			case SortColumnEnum.IsSignedPolicy:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.IsSignedPolicy).ToList()
+					: sourceData.OrderBy(p => p.IsSignedPolicy).ToList();
+				break;
+			case SortColumnEnum.PolicyOptions:
+				sortedData = _isDescending
+					? sourceData.OrderByDescending(p => p.PolicyOptionsDisplay).ToList()
+					: sourceData.OrderBy(p => p.PolicyOptionsDisplay).ToList();
+				break;
+			default:
+				break;
+		}
+
+		// Update the ObservableCollection on the UI thread.
+		await Dispatcher.EnqueueAsync(() =>
 		{
 			AllPolicies.Clear();
 			foreach (CiPolicyInfo item in sortedData)
@@ -492,6 +507,39 @@ internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
 			}
 		});
 	}
+
+	// These methods are bound to the header buttons' Click events.
+	internal void SortByPolicyID()
+	{
+		Sort(SortColumnEnum.PolicyID);
+	}
+
+	internal void SortByBasePolicyID()
+	{
+		Sort(SortColumnEnum.BasePolicyID);
+	}
+
+	internal void SortByFriendlyName()
+	{
+		Sort(SortColumnEnum.FriendlyName);
+	}
+
+	internal void SortByVersion()
+	{
+		Sort(SortColumnEnum.Version);
+	}
+
+	internal void SortByIsSignedPolicy()
+	{
+		Sort(SortColumnEnum.IsSignedPolicy);
+	}
+
+	internal void SortByPolicyOptions()
+	{
+		Sort(SortColumnEnum.PolicyOptions);
+	}
+
+	#endregion
 
 
 	/// <summary>
@@ -644,31 +692,4 @@ internal sealed partial class ViewOnlinePoliciesVM : INotifyPropertyChanged
 
 	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
 	internal int _skipSelectionChangedCount;
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
-
 }

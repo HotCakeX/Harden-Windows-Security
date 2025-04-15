@@ -19,13 +19,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
@@ -168,99 +167,6 @@ internal sealed partial class Simulation : Page
 		}
 	}
 
-	// Event handlers for each sort button
-	private void ColumnSortingButton_Path_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.Path);
-	}
-	private void ColumnSortingButton_Source_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.Source);
-	}
-	private void ColumnSortingButton_IsAuthorized_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.IsAuthorized);
-	}
-	private void ColumnSortingButton_MatchCriteria_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.MatchCriteria);
-	}
-	private void ColumnSortingButton_SpecificFileNameLevelMatchCriteria_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.SpecificFileNameLevelMatchCriteria);
-	}
-	private void ColumnSortingButton_SignerID_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.SignerID);
-	}
-	private void ColumnSortingButton_SignerName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.SignerName);
-	}
-	private void ColumnSortingButton_SignerCertRoot_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.SignerCertRoot);
-	}
-	private void ColumnSortingButton_SignerCertPublisher_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.SignerCertPublisher);
-	}
-	private void ColumnSortingButton_SignerScope_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.SignerScope);
-	}
-	private void ColumnSortingButton_CertSubjectCN_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.CertSubjectCN);
-	}
-	private void ColumnSortingButton_CertIssuerCN_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.CertIssuerCN);
-	}
-	private void ColumnSortingButton_CertNotAfter_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.CertNotAfter);
-	}
-	private void ColumnSortingButton_CertTBSValue_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.CertTBSValue);
-	}
-	private void ColumnSortingButton_FilePath_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(SimOutput => SimOutput.FilePath);
-	}
-
-	/// <summary>
-	/// Performs data sorting
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="keySelector"></param>
-	private async void SortColumn<T>(Func<SimulationOutput, T> keySelector)
-	{
-		// Determine if a search filter is active.
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
-
-		// If no search is active, use the full list (AllSimulationOutputs); otherwise, use a copy of the currently displayed list.
-		List<SimulationOutput> collectionToSort = isSearchEmpty
-			? ViewModel.AllSimulationOutputs
-			: ViewModel.SimulationOutputs.ToList();
-
-		// Prepare the sorted data in a temporary list.
-		List<SimulationOutput> sortedData = SortingDirectionToggle.IsChecked
-			? collectionToSort.OrderByDescending(keySelector).ToList()
-			: collectionToSort.OrderBy(keySelector).ToList();
-
-		// Clear the displayed collection and add the sorted items.
-		await DispatcherQueue.EnqueueAsync(() =>
-		{
-			ViewModel.SimulationOutputs.Clear();
-			foreach (SimulationOutput item in sortedData)
-			{
-				ViewModel.SimulationOutputs.Add(item);
-			}
-		});
-	}
-
 
 	#endregion
 
@@ -276,18 +182,36 @@ internal sealed partial class Simulation : Page
 	/// </summary>
 	private async void BeginSimulationButton_Click()
 	{
+		if (xmlFilePath is null || !File.Exists(xmlFilePath))
+		{
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = "You need to select an existing XML policy file";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
+			ViewModel.MainInfoBarIsClosable = false;
+
+			return;
+		}
+
+		bool error = false;
+
 		try
 		{
 			// Collect values from UI elements
 			bool noCatRootScanning = NoCatRootScanningToggle.IsChecked;
 			double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
-			bool CSVOutput = CSVOutputToggle.IsChecked;
 
 			BeginSimulationButton.IsEnabled = false;
 			ScalabilityRadialGauge.IsEnabled = false;
 
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = "Performing the Simulation";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBarIsClosable = false;
+
 			// Reset the progress bar value back to 0 if it was set from previous runs
-			SimulationProgressBar.Value = 0;
+			SimulationProgressRing.Value = 0;
 
 			// Run the simulation
 			ConcurrentDictionary<string, SimulationOutput> result = await Task.Run(() =>
@@ -297,10 +221,9 @@ internal sealed partial class Simulation : Page
 					folderPaths,
 					xmlFilePath,
 					noCatRootScanning,
-					CSVOutput,
 					catRootPaths,
 					(ushort)radialGaugeValue,
-					SimulationProgressBar
+					SimulationProgressRing
 				);
 			});
 
@@ -323,10 +246,43 @@ internal sealed partial class Simulation : Page
 
 			ViewModel.CalculateColumnWidths();
 		}
+		catch (NoValidFilesSelectedException ex)
+		{
+			error = true;
+
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = ex.Message;
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
+			ViewModel.MainInfoBarIsClosable = true;
+
+			return;
+		}
+		catch (Exception ex)
+		{
+			error = true;
+
+			ViewModel.MainInfoBarVisibility = Visibility.Visible;
+			ViewModel.MainInfoBarIsOpen = true;
+			ViewModel.MainInfoBarMessage = $"There was a problem during the simulation: {ex.Message}";
+			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
+			ViewModel.MainInfoBarIsClosable = true;
+
+			throw;
+		}
 		finally
 		{
 			BeginSimulationButton.IsEnabled = true;
 			ScalabilityRadialGauge.IsEnabled = true;
+
+			if (!error)
+			{
+				ViewModel.MainInfoBarVisibility = Visibility.Visible;
+				ViewModel.MainInfoBarIsOpen = true;
+				ViewModel.MainInfoBarMessage = "Simulation completed successfully.";
+				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				ViewModel.MainInfoBarIsClosable = true;
+			}
 		}
 	}
 
@@ -416,36 +372,6 @@ internal sealed partial class Simulation : Page
 
 		// set the total count to 0 after clearing all the data
 		TotalCountOfTheFilesTextBox.Text = "0";
-	}
-
-	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		string searchTerm = SearchBox.Text.Trim();
-
-		// Perform a case-insensitive search in all relevant fields
-		List<SimulationOutput> filteredResults = [.. ViewModel.AllSimulationOutputs.Where(output =>
-			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.SpecificFileNameLevelMatchCriteria is not null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-		)];
-
-
-		ViewModel.SimulationOutputs.Clear();
-
-		foreach (SimulationOutput item in filteredResults)
-		{
-			ViewModel.SimulationOutputs.Add(item);
-		}
-
 	}
 
 
@@ -572,4 +498,5 @@ internal sealed partial class Simulation : Page
 
 		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
 	}
+
 }

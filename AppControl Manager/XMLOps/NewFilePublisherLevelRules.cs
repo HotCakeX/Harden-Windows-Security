@@ -49,7 +49,7 @@ internal static class NewFilePublisherLevelRules
 		foreach (FilePublisherSignerCreator filePublisherData in filePublisherSigners)
 		{
 
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
 
@@ -99,7 +99,7 @@ internal static class NewFilePublisherLevelRules
 			foreach (CertificateDetailsCreator signerData in filePublisherData.CertificateDetails)
 			{
 
-				string guid2 = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 				string signerID = $"ID_SIGNER_A_{guid2}";
 
@@ -192,7 +192,7 @@ internal static class NewFilePublisherLevelRules
 		foreach (FilePublisherSignerCreator filePublisherData in filePublisherSigners)
 		{
 
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			string FileAttribID = $"ID_FILEATTRIB_A_{guid}";
 
@@ -242,7 +242,7 @@ internal static class NewFilePublisherLevelRules
 			foreach (CertificateDetailsCreator signerData in filePublisherData.CertificateDetails)
 			{
 
-				string guid2 = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 				string signerID = $"ID_SIGNER_A_{guid2}";
 

@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AppControlManager.Others;
@@ -65,7 +66,7 @@ internal static class Factory
 						if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out Allow? allowElement))
 						{
 							// Create a new ID
-							string rand = $"ID_ALLOW_A_{GUIDGenerator.GenerateUniqueGUIDToUpper()}";
+							string rand = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 							// Create a new Allow rule
 							// We don't wanna modify the original one, otherwise we end up with Allow rules with duplicate IDs
@@ -148,7 +149,7 @@ internal static class Factory
 						if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out Deny? denyElement))
 						{
 
-							string rand = $"ID_DENY_A_{GUIDGenerator.GenerateUniqueGUIDToUpper()}";
+							string rand = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 							// Create a new Deny rule
 							Deny denyElementCopy = new()
@@ -231,7 +232,7 @@ internal static class Factory
 						if (fileRuleDictionary.TryGetValue(fileRuleRef.RuleID, out FileRule? fileRuleElement))
 						{
 
-							string rand = $"ID_FILE_A_{GUIDGenerator.GenerateUniqueGUIDToUpper()}";
+							string rand = $"ID_FILE_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 							FileRule fileRuleElementCopy = new()
 							{
@@ -458,7 +459,7 @@ internal static class Factory
 			.ToList() ?? [];
 
 		// Generate a new ID
-		string guid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+		string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 		string newSignerID = $"ID_SIGNER_A_{guid}";
 
 		// ------ Classification ------ \\
@@ -516,7 +517,7 @@ internal static class Factory
 
 				foreach (FileAttrib item in associatedFileAttribs)
 				{
-					string tempGuid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_FILEATTRIB_A_{tempGuid}";
 
 					newFileAttribs.Add(new()
@@ -554,7 +555,7 @@ internal static class Factory
 
 				foreach (EKU item in associatedEKUs)
 				{
-					string tempGuid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_EKU_E_{tempGuid}";
 
 					// Clone the EKU to avoid modifying the original object
@@ -639,7 +640,7 @@ internal static class Factory
 				foreach (FileAttrib item in associatedFileAttribs)
 				{
 
-					string tempGuid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+					string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 					string tempID = $"ID_FILEATTRIB_A_{tempGuid}";
 
 					newFileAttribs.Add(new()
@@ -729,7 +730,7 @@ internal static class Factory
 
 			foreach (EKU item in associatedEKUs)
 			{
-				string tempGuid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string tempGuid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string tempID = $"ID_EKU_E_{tempGuid}";
 
 				// Clone the EKU to avoid modifying the original object
@@ -833,7 +834,7 @@ internal static class Factory
 			{
 
 				// Create random ID for the signer and its corresponding SupplementalPolicySigner element
-				string guid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string newSignerID = $"ID_SIGNER_A_{guid}";
 
 				// Create the new signer element
@@ -884,7 +885,7 @@ internal static class Factory
 			{
 
 				// Create random ID for the signer and its corresponding UpdatePolicySigner element
-				string guid = GUIDGenerator.GenerateUniqueGUIDToUpper();
+				string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 				string newSignerID = $"ID_SIGNER_A_{guid}";
 
 				// Create the new signer element

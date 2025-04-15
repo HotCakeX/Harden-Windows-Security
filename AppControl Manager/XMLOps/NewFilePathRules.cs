@@ -49,7 +49,7 @@ internal static class NewFilePathRules
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
 		{
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			// Create a unique ID for the rule
 			string allowRuleID = $"ID_ALLOW_A_{guid}";
@@ -104,7 +104,7 @@ internal static class NewFilePathRules
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
 		{
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			// Create a unique ID for the rule
 			string denyRuleID = $"ID_DENY_A_{guid}";

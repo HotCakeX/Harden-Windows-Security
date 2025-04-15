@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root><!--
     Microsoft ResX Schema
 
@@ -1306,7 +1306,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="Understand" xml:space="preserve">
     <value>I Understand</value>
-  </data>
+  </data><!-- For CI Policy Info ListViews -->
   <data name="PolicyIDHeader.Text" xml:space="preserve">
     <value>Policy ID</value>
   </data>
@@ -1336,7 +1336,37 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PolicyOptionsHeader.Text" xml:space="preserve">
     <value>Policy Options</value>
+  </data><!-- End of For CI Policy Info ListViews --><!-- For CI Policy Info ListViews Column Header Buttons -->
+  <data name="PolicyIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Policy ID</value>
   </data>
+  <data name="BasePolicyIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Base Policy ID</value>
+  </data>
+  <data name="FriendlyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Friendly Name</value>
+  </data>
+  <data name="VersionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="IsAuthorizedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is Authorized</value>
+  </data>
+  <data name="IsEnforcedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is Enforced</value>
+  </data>
+  <data name="IsOnDiskColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is On Disk</value>
+  </data>
+  <data name="IsSignedPolicyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is Signed Policy</value>
+  </data>
+  <data name="IsSystemPolicyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is System Policy</value>
+  </data>
+  <data name="PolicyOptionsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Policy Options</value>
+  </data><!-- End of For CI Policy Info ListViews Column Header Buttons -->
   <data name="Copy" xml:space="preserve">
     <value>Copy </value>
   </data>
@@ -1429,7 +1459,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Successfully created the Strict Kernel-mode policy</value>
-  </data>
+  </data><!-- For File Identities texts -->
   <data name="FileNameHeader.Text" xml:space="preserve">
     <value>File Name</value>
   </data>
@@ -1504,7 +1534,82 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ActionHeader.Text" xml:space="preserve">
     <value>Action</value>
+  </data><!-- End Of For File Identities texts --><!-- For File Identities ListViews Buttons texts -->
+  <data name="FileNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>File Name</value>
   </data>
+  <data name="SignatureStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signature Status</value>
+  </data>
+  <data name="OriginalFileNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Original File Name</value>
+  </data>
+  <data name="InternalNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>InternalName</value>
+  </data>
+  <data name="FileDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>File Description</value>
+  </data>
+  <data name="ProductNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Product Name</value>
+  </data>
+  <data name="FileVersionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>File Version</value>
+  </data>
+  <data name="PackageFamilyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Package Family Name</value>
+  </data>
+  <data name="SHA256HashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Hash</value>
+  </data>
+  <data name="SHA1HashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA1 Hash</value>
+  </data>
+  <data name="SHA256FlatHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Flat Hash</value>
+  </data>
+  <data name="SHA1FlatHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA1 Flat Hash</value>
+  </data>
+  <data name="SigningScenarioColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signing Scenario</value>
+  </data>
+  <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
+    <value>File Path</value>
+  </data>
+  <data name="ComputerNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Computer Name</value>
+  </data>
+  <data name="SHA1PageHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA1 Page Hash</value>
+  </data>
+  <data name="SHA256PageHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Page Hash</value>
+  </data>
+  <data name="HasWHQLSignerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Has WHQL Signer</value>
+  </data>
+  <data name="FilePublishersColumnHeaderBtn.Content" xml:space="preserve">
+    <value>File Publishers</value>
+  </data>
+  <data name="IsECCSignedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is ECC Signed</value>
+  </data>
+  <data name="OpusDataColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Opus Data</value>
+  </data>
+  <data name="PolicyGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Policy GUID</value>
+  </data>
+  <data name="PolicyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Policy Name</value>
+  </data>
+  <data name="TimeCreatedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Time Created</value>
+  </data>
+  <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Action</value>
+  </data><!-- End Of For File Identities ListViews Buttons texts --><!-- For Simulation texts -->
   <data name="PathHeader.Text" xml:space="preserve">
     <value>Path</value>
   </data>
@@ -1549,7 +1654,52 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="FilePathHeader.Text" xml:space="preserve">
     <value>File Path</value>
+  </data><!-- End of For For Simulation texts --><!-- For Simulation ListView Column Header Buttons -->
+  <data name="PathColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Path</value>
   </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="IsAuthorizedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Is Authorized</value>
+  </data>
+  <data name="MatchCriteriaColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Match Criteria</value>
+  </data>
+  <data name="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Specific File Name Level Match</value>
+  </data>
+  <data name="SignerIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signer ID</value>
+  </data>
+  <data name="SignerNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signer Name</value>
+  </data>
+  <data name="SignerCertRootColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signer CertRoot</value>
+  </data>
+  <data name="SignerCertPublisherColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signer Cert Publisher</value>
+  </data>
+  <data name="SignerScopeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signer Scope</value>
+  </data>
+  <data name="CertSubjectCNColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Cert Subject CN</value>
+  </data>
+  <data name="CertIssuerCNColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Cert Issuer CN</value>
+  </data>
+  <data name="CertNotAfterColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Cert Not After</value>
+  </data>
+  <data name="CertTBSValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Cert TBS Value</value>
+  </data>
+  <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
+    <value>File Path</value>
+  </data><!-- End of For Simulation ListView Column Header Buttons --><!-- For View File Certificates ListViews -->
   <data name="SignerNumberHeader.Text" xml:space="preserve">
     <value>Signer Number</value>
   </data>
@@ -1582,7 +1732,40 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ExtensionOIDsHeader.Text" xml:space="preserve">
     <value>Extension OIDs</value>
+  </data><!-- End of For View File Certificates ListViews --><!-- For View File Certificates ListViews Column Header Buttons -->
+  <data name="SignerNumberColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Signer Number</value>
   </data>
+  <data name="TypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="SubjectCommonNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Subject Common Name</value>
+  </data>
+  <data name="IssuerCommonNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Issuer Common Name</value>
+  </data>
+  <data name="NotBeforeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Not Before</value>
+  </data>
+  <data name="NotAfterColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Not After</value>
+  </data>
+  <data name="HashingAlgorithmColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Hashing Algorithm</value>
+  </data>
+  <data name="SerialNumberColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Serial Number</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Thumbprint</value>
+  </data>
+  <data name="TBSHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>TBS Hash</value>
+  </data>
+  <data name="ExtensionOIDsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Extension OIDs</value>
+  </data><!-- End of For View File Certificates ListViews Column Header Buttons -->
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Description" xml:space="preserve">
     <value>Use this section to enter a custom pattern-based file rule to add to the supplemental policy.</value>
   </data>
@@ -2398,9 +2581,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>When checked, the sort will be performed in descending order, if unchecked the sort will be performed in ascending order.</value>
-  </data>
-  <data name="SortTextBlock.Text" xml:space="preserve">
-    <value>Sort</value>
   </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it.</value>

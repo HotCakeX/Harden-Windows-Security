@@ -29,7 +29,6 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -158,84 +157,6 @@ internal sealed partial class ViewFileCertificates : Page
 		}
 	}
 
-	// Event handlers for each sort button
-	private void ColumnSortingButton_SignerNumber_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.SignerNumber);
-	}
-	private void ColumnSortingButton_Type_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.Type);
-	}
-	private void ColumnSortingButton_SubjectCommonName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.SubjectCN);
-	}
-	private void ColumnSortingButton_IssuerCommonName_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.IssuerCN);
-	}
-	private void ColumnSortingButton_NotBefore_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.NotBefore);
-	}
-	private void ColumnSortingButton_NotAfter_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.NotAfter);
-	}
-	private void ColumnSortingButton_HashingAlgorithm_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.HashingAlgorithm);
-	}
-	private void ColumnSortingButton_SerialNumber_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.SerialNumber);
-	}
-	private void ColumnSortingButton_Thumbprint_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.Thumbprint);
-	}
-	private void ColumnSortingButton_TBSHash_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.TBSHash);
-	}
-	private void ColumnSortingButton_ExtensionOIDs_Click(object sender, RoutedEventArgs e)
-	{
-		SortColumn(policy => policy.OIDs);
-	}
-
-	/// <summary>
-	/// Performs data sorting
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="keySelector"></param>
-	private async void SortColumn<T>(Func<FileCertificateInfoCol, T> keySelector)
-	{
-		// Determine if a search filter is active.
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBox.Text);
-
-		// If no search is active, use the full list (FilteredCertificates); otherwise, use a copy of the currently displayed list.
-		List<FileCertificateInfoCol> collectionToSort = isSearchEmpty
-			? ViewModel.FilteredCertificates
-			: ViewModel.FileCertificates.ToList();
-
-		// Prepare the sorted data in a temporary list.
-		List<FileCertificateInfoCol> sortedData = SortingDirectionToggle.IsChecked
-			? collectionToSort.OrderByDescending(keySelector).ToList()
-			: collectionToSort.OrderBy(keySelector).ToList();
-
-		// Clear the displayed collection and add the sorted items.
-		await DispatcherQueue.EnqueueAsync(() =>
-		{
-			ViewModel.FileCertificates.Clear();
-			foreach (FileCertificateInfoCol item in sortedData)
-			{
-				ViewModel.FileCertificates.Add(item);
-			}
-		});
-	}
-
-
 
 	/// <summary>
 	/// Event handler for the Browse button
@@ -281,9 +202,7 @@ internal sealed partial class ViewFileCertificates : Page
 	/// <summary>
 	/// Event handler for the Settings Card click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void BrowseForFilesSettingsCard_Click(object sender, RoutedEventArgs e)
+	private async void BrowseForFilesSettingsCard_Click()
 	{
 		try
 		{
@@ -575,43 +494,6 @@ internal sealed partial class ViewFileCertificates : Page
 		});
 
 		return output;
-	}
-
-	/// <summary>
-	/// Event handler for the search box
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		// Get the search term from the search box
-		string query = SearchBox.Text.Trim();
-
-		List<FileCertificateInfoCol> results = [];
-
-
-
-		results = [.. ViewModel.FilteredCertificates.Where(cert =>
-					(cert.SubjectCN is not null && cert.SubjectCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					(cert.IssuerCN is not null && cert.IssuerCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					(cert.TBSHash is not null && cert.TBSHash.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					(cert.OIDs is not null && cert.OIDs.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					cert.SignerNumber.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
-					cert.Type.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
-					cert.NotAfter.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
-					cert.NotBefore.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
-					(cert.HashingAlgorithm is not null && cert.HashingAlgorithm.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					(cert.SerialNumber is not null && cert.SerialNumber.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					(cert.Thumbprint is not null && cert.Thumbprint.Contains(query, StringComparison.OrdinalIgnoreCase))
-				)];
-
-
-		ViewModel.FileCertificates.Clear();
-
-		foreach (FileCertificateInfoCol item in results)
-		{
-			ViewModel.FileCertificates.Add(item);
-		}
 	}
 
 

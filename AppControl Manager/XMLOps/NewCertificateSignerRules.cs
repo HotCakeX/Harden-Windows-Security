@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using AppControlManager.Others;
@@ -45,7 +46,7 @@ internal static class NewCertificateSignerRules
 		foreach (CertificateSignerCreator signer in signerData)
 		{
 			// Create a unique ID for the Signer element
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			string SignerID = $"ID_SIGNER_R_{guid}";
 

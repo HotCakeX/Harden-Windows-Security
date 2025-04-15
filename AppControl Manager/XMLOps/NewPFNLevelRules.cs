@@ -44,7 +44,7 @@ internal static class NewPFNLevelRules
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			string ID = $"ID_ALLOW_A_{guid}";
 
@@ -90,7 +90,7 @@ internal static class NewPFNLevelRules
 
 		foreach (PFNRuleCreator PFN in PFNData)
 		{
-			string guid = SiPolicyIntel.GUIDGenerator.GenerateUniqueGUIDToUpper();
+			string guid = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
 			string ID = $"ID_DENY_A_{guid}";
 

@@ -189,36 +189,52 @@ internal static class ListViewHelper
 
 
 	/// <summary>
-	/// Sorts a collection
-	/// Used for the ObservableCollection of ListViews
+	/// Used to store sorting states of columns in ListViews
+	/// </summary>
+	internal sealed class SortState
+	{
+		internal string? CurrentSortKey { get; set; }
+		internal bool IsDescending { get; set; } = true;
+	}
+
+
+	/// <summary>
+	/// Sorts the ObservableCollection using the given key selector.
+	/// The SortState parameter toggles sort order when the same column is pressed.
 	/// </summary>
 	/// <typeparam name="T">The type returned by the key selector.</typeparam>
-	/// <param name="keySelector">The key selector used for sorting.</param>
-	/// <param name="searchBox">Reference to the search TextBox.</param>
-	/// <param name="sortingToggle">Reference to the ToggleMenuFlyoutItem that indicates sort direction.</param>
-	/// <param name="originalList">The full list to sort if no filter is active.</param>
-	/// <param name="observableCollection">The ObservableCollection to update with sorted data.</param>
+	/// <param name="keySelector">Function to obtain the sort key from the FileIdentity.</param>
+	/// <param name="searchBox">The TextBox used for filtering.</param>
+	/// <param name="originalList">The full list (if no filter is active).</param>
+	/// <param name="observableCollection">The observable collection to update.</param>
+	/// <param name="sortState">An object that holds the current sort state.</param>
+	/// <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
 	internal static void SortColumn<T>(
-	Func<FileIdentity, T> keySelector,
-	TextBox searchBox,
-	ToggleMenuFlyoutItem sortingToggle,
-	List<FileIdentity> originalList,
-	ObservableCollection<FileIdentity> observableCollection)
+		Func<FileIdentity, T> keySelector,
+		TextBox searchBox,
+		List<FileIdentity> originalList,
+		ObservableCollection<FileIdentity> observableCollection,
+		SortState sortState,
+		string newKey)
 	{
-		// Determine if a search filter is active.
+		// Toggle sort order if the same column; otherwise, reset to descending.
+		if (sortState.CurrentSortKey == newKey)
+		{
+			sortState.IsDescending = !sortState.IsDescending;
+		}
+		else
+		{
+			sortState.CurrentSortKey = newKey;
+			sortState.IsDescending = true;
+		}
+
 		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBox.Text);
+		List<FileIdentity> sourceData = isSearchEmpty ? originalList : observableCollection.ToList();
 
-		// Choose the data source based on whether a search is active.
-		List<FileIdentity> sourceData = isSearchEmpty
-			? originalList
-			: observableCollection.ToList();
-
-		// Prepare the sorted data in a temporary list.
-		List<FileIdentity> sortedData = sortingToggle.IsChecked
+		List<FileIdentity> sortedData = sortState.IsDescending
 			? sourceData.OrderByDescending(keySelector).ToList()
 			: sourceData.OrderBy(keySelector).ToList();
 
-		// Clear the ObservableCollection and add the sorted items.
 		observableCollection.Clear();
 		foreach (FileIdentity item in sortedData)
 		{

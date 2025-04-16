@@ -1349,7 +1349,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
   <data name="FriendlyNameLabel" xml:space="preserve">
     <value>שם ידידותי: </value>
   </data>
-  <data name="VersionLabel" xml:space="preserve">
+  <data name="VersionLabel.Text" xml:space="preserve">
     <value>גרסה: </value>
   </data>
   <data name="IsAuthorizedLabel" xml:space="preserve">

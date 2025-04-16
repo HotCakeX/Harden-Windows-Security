@@ -188,7 +188,7 @@ internal sealed partial class Simulation : Page
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarMessage = "You need to select an existing XML policy file";
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
-			ViewModel.MainInfoBarIsClosable = false;
+			ViewModel.MainInfoBarIsClosable = true;
 
 			return;
 		}

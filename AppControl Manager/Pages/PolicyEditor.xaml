@@ -24,6 +24,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -35,8 +36,15 @@
 
         </controls:WrapPanel>
 
+        <InfoBar Grid.Row="1"
+          Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
+          IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=OneWay}"
+          Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+          Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+          IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
         <Border x:Name="MainBorder"
-            Grid.Row="1"
+            Grid.Row="2"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
@@ -135,7 +143,7 @@
         </Border>
 
         <TabView VerticalAlignment="Stretch"
-         IsAddTabButtonVisible="False" Grid.Row="2" TabWidthMode="SizeToContent"
+         IsAddTabButtonVisible="False" Grid.Row="3" TabWidthMode="SizeToContent"
          CanReorderTabs="False">
             <!--
             <TabView.Resources>

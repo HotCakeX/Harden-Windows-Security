@@ -2,6 +2,7 @@
 
   <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/Microsoft.Windows.CsWinRT.targets -->
 
+  <!-- Global -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
@@ -9,11 +10,6 @@
 
     <!-- https://learn.microsoft.com/en-us/dotnet/standard/frameworks#support-older-os-versions -->
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
-    <EnablePackageValidation Condition="'$(Configuration)' != 'Debug'">true</EnablePackageValidation>
-    <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
-    <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
     <InvariantGlobalization>true</InvariantGlobalization>
@@ -26,9 +22,6 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
-    <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
 
     <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
@@ -81,44 +74,67 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AssemblyName>AppControlManager</AssemblyName>
     <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/optimizing -->
-    <PublishAot>True</PublishAot>
-    <OptimizationPreference>Speed</OptimizationPreference>
+
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.13.0</FileVersion>
+    <FileVersion>2.0.14.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <StartupObject>AppControlManager.Program</StartupObject>
-    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
 
     <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code -->
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-guard -->
-    <ControlFlowGuard>Guard</ControlFlowGuard>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
-    <CetCompat>true</CetCompat>
 
     <Version>$(FileVersion)</Version>
     <Copyright>© 2024-Present</Copyright>
     <Title>AppControl Manager</Title>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 
-    <NuGetAudit Condition="'$(Configuration)' != 'Debug'">true</NuGetAudit>
-    <NuGetAudit Condition="'$(Configuration)' == 'Debug'">false</NuGetAudit>
+    <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
 
-    <NuGetAuditMode>all</NuGetAuditMode>
-    <NuGetAuditLevel>low</NuGetAuditLevel>
+    <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc -->
+    <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/background-gc -->
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/runtime-config/garbage-collector -->
 
+    <!--
+      <ServerGarbageCollection>true</ServerGarbageCollection>
+      <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+    -->
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
+    <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
+
+    <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
+    <NoWarn>IL3000</NoWarn>
+
+  </PropertyGroup>
+
+
+  <!-- Only for Debug -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+
+    <EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
+
+    <NuGetAudit>false</NuGetAudit>
+
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+  </PropertyGroup>
+
+
+  <!-- Only for Release -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+
+    <NuGetAudit>true</NuGetAudit>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
+    <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
 
     <RepositoryType>GitHub</RepositoryType>
-
-    <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
-    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Debug'">false</TreatWarningsAsErrors>
 
     <!-- There should be absolutely no trim warnings before this can be enabled
     Otherwise there is no guarantee that the app will work as expected at all times -->
@@ -154,24 +170,33 @@
      -->
     <StackTraceSupport>true</StackTraceSupport>
 
-    <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-guard -->
+    <ControlFlowGuard>Guard</ControlFlowGuard>
 
-    <GenerateDocumentationFile Condition="'$(Configuration)' != 'Debug'">True</GenerateDocumentationFile>
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
+    <CetCompat>true</CetCompat>
 
-    <DocumentationFile Condition="'$(Configuration)' != 'Debug'">AppControlManagerAPIDocumentation.xml</DocumentationFile>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    <PublishAot>True</PublishAot>
+    <OptimizationPreference>Speed</OptimizationPreference>
 
-    <PackageReadmeFile Condition="'$(Configuration)' != 'Debug'">AppControl Manager.md</PackageReadmeFile>
+    <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
+    <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
 
-    <GenerateTemporaryStoreCertificate Condition="'$(Configuration)' != 'Debug'">True</GenerateTemporaryStoreCertificate>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/background-gc -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/runtime-config/garbage-collector -->
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
 
-    <!--
-      <ServerGarbageCollection>true</ServerGarbageCollection>
-      <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
-    -->
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
+
+    <PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
+
+    <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
 
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
@@ -180,12 +205,6 @@
     <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
     <AnalysisModePerformance>All</AnalysisModePerformance>
     <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
-    <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
-
-    <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
-    <NoWarn>IL3000</NoWarn>
 
   </PropertyGroup>
 

@@ -1379,7 +1379,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="FriendlyNameLabel" xml:space="preserve">
     <value>Friendly Name: </value>
   </data>
-  <data name="VersionLabel" xml:space="preserve">
+  <data name="VersionLabel.Text" xml:space="preserve">
     <value>Version: </value>
   </data>
   <data name="IsAuthorizedLabel" xml:space="preserve">

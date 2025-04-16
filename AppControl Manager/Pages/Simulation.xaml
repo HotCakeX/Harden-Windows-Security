@@ -104,7 +104,6 @@
                         </Flyout>
                     </Button.Flyout>
 
-
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
@@ -135,7 +134,6 @@
                         </Flyout>
                     </Button.Flyout>
 
-
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xED25;" />
@@ -143,7 +141,6 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-
 
                 <DropDownButton Content="Options" ToolTipService.ToolTip="Multiple Extra Options">
                     <DropDownButton.Flyout>
@@ -189,7 +186,6 @@
 
                     </DropDownButton.Flyout>
                 </DropDownButton>
-
 
                 <!-- Scalability Button with RadialGauge Flyout -->
                 <Button x:Name="ScalabilityButton" x:Uid="ScalabilityButton">
@@ -268,7 +264,6 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
 
-
                         <Button x:Uid="PathColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,0,0" Padding="5" Click="{x:Bind ViewModel.SortByPath, Mode=OneWay}" />
                         <Button x:Uid="SourceColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySource, Mode=OneWay}" />
                         <Button x:Uid="IsAuthorizedColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByIsAuthorized, Mode=OneWay}" />
@@ -284,7 +279,6 @@
                         <Button x:Uid="CertNotAfterColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertNotAfter, Mode=OneWay}" />
                         <Button x:Uid="CertTBSValueColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertTBSValue, Mode=OneWay}" />
                         <Button x:Uid="FilePathColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByFilePath, Mode=OneWay}" />
-
 
                     </Grid>
                 </Border>

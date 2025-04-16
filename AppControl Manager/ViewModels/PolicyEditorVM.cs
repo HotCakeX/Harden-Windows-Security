@@ -26,6 +26,7 @@ using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
@@ -235,6 +236,44 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 
 	#region UI-Bound Properties
+
+	private Visibility _MainInfoBarVisibility = Visibility.Collapsed;
+	internal Visibility MainInfoBarVisibility
+	{
+		get => _MainInfoBarVisibility;
+		set => SetProperty(_MainInfoBarVisibility, value, newValue => _MainInfoBarVisibility = newValue);
+	}
+
+	private bool _MainInfoBarIsOpen;
+	internal bool MainInfoBarIsOpen
+	{
+		get => _MainInfoBarIsOpen;
+		set => SetProperty(_MainInfoBarIsOpen, value, newValue => _MainInfoBarIsOpen = newValue);
+	}
+
+	private string? _MainInfoBarMessage;
+	internal string? MainInfoBarMessage
+	{
+		get => _MainInfoBarMessage;
+		set => SetProperty(_MainInfoBarMessage, value, newValue => _MainInfoBarMessage = newValue);
+	}
+
+	private InfoBarSeverity _MainInfoBarSeverity = InfoBarSeverity.Informational;
+	internal InfoBarSeverity MainInfoBarSeverity
+	{
+		get => _MainInfoBarSeverity;
+		set => SetProperty(_MainInfoBarSeverity, value, newValue => _MainInfoBarSeverity = newValue);
+	}
+
+	private bool _MainInfoBarIsClosable;
+	internal bool MainInfoBarIsClosable
+	{
+		get => _MainInfoBarIsClosable;
+		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
+	}
+
+
+
 
 	private Visibility _ProgressBarVisibility = Visibility.Collapsed;
 	internal Visibility ProgressBarVisibility
@@ -640,6 +679,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (SelectedPolicyFile is null)
 			return;
 
+		bool error = false;
+
 		try
 		{
 
@@ -660,6 +701,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 					return;
 				}
+
+				MainInfoBarVisibility = Visibility.Visible;
+				MainInfoBarIsOpen = true;
+				MainInfoBarMessage = "Loading the policy";
+				MainInfoBarSeverity = InfoBarSeverity.Informational;
+				MainInfoBarIsClosable = false;
 
 				// Clear the class variables
 				PolicyObj = null;
@@ -1088,6 +1135,23 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			});
 		}
+		catch (Exception ex)
+		{
+			error = true;
+
+			await Dispatcher.EnqueueAsync(() =>
+			{
+
+				MainInfoBarVisibility = Visibility.Visible;
+				MainInfoBarIsOpen = true;
+				MainInfoBarMessage = $"There was a problem loading the selected policy file: {ex.Message}";
+				MainInfoBarSeverity = InfoBarSeverity.Error;
+				MainInfoBarIsClosable = true;
+
+			});
+
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
 		finally
 		{
 			await Dispatcher.EnqueueAsync(() =>
@@ -1098,6 +1162,16 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				UpdateSignatureBasedCollectionsCount();
 
 				ProgressBarVisibility = Visibility.Collapsed;
+
+				if (!error)
+				{
+					MainInfoBarVisibility = Visibility.Visible;
+					MainInfoBarIsOpen = true;
+					MainInfoBarMessage = "Successfully loaded the selected policy";
+					MainInfoBarSeverity = InfoBarSeverity.Success;
+					MainInfoBarIsClosable = true;
+				}
+
 			});
 		}
 	}
@@ -1862,6 +1936,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		await Task.Run(ProcessData);
 	}
+
 #pragma warning restore CA1822
 
 }

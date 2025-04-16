@@ -50,6 +50,7 @@ internal sealed partial class MainWindow : Window
 #pragma warning disable CA1822
 	private MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 #pragma warning restore CA1822
 
 	private readonly AppWindow m_AppWindow;
@@ -378,10 +379,10 @@ internal sealed partial class MainWindow : Window
 		// Subscribe to the global App theme change event
 		AppThemeManager.AppThemeChanged += OnAppThemeChanged;
 
-		#region
-
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = ViewModel;
+
+		#region Start up update check
 
 		if (App.PackageSource is 0)
 		{
@@ -422,24 +423,41 @@ internal sealed partial class MainWindow : Window
 
 		#endregion
 
-		if (App.IsElevated)
-		{
-			// Navigate to the CreatePolicy page when the window is loaded
-			_ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
 
-			// Set the "Create Policy" item as selected in the NavigationView
-			MainNavigation.SelectedItem = allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "CreatePolicy", StringComparison.OrdinalIgnoreCase));
-		}
-		else
+		#region Initial navigation and file activation processing
+
+
+		if (!string.IsNullOrWhiteSpace(AppSettings.FileActivatedLaunchArg))
 		{
-			_ = ContentFrame.Navigate(typeof(Pages.PolicyEditor));
+			Logger.Write($"The app was launched with file activation for the following file: {AppSettings.FileActivatedLaunchArg}");
 
 			// Set the "Policy Editor" item as selected in the NavigationView
 			MainNavigation.SelectedItem = allNavigationItems
 				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
+
+			try
+			{
+				_ = PolicyEditorViewModel.OpenInPolicyEditor(AppSettings.FileActivatedLaunchArg);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write($"There was an error launching the Policy Editor with the selected file: {ex.Message}");
+
+				// Continue doing the normal navigation if there was a problem
+				InitialNav();
+			}
+			finally
+			{
+				// Clear the file activated launch args after it's been used
+				AppSettings.FileActivatedLaunchArg = string.Empty;
+			}
+		}
+		else
+		{
+			InitialNav();
 		}
 
+		#endregion
 
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));
@@ -465,6 +483,28 @@ internal sealed partial class MainWindow : Window
 	/// internal property to access the singleton instance from other classes
 	/// </summary>
 	internal static MainWindow Instance => _instance ?? throw new InvalidOperationException("MainWindow is not initialized.");
+
+
+	private void InitialNav()
+	{
+		if (App.IsElevated)
+		{
+			// Navigate to the CreatePolicy page when the window is loaded
+			_ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
+
+			// Set the "Create Policy" item as selected in the NavigationView
+			MainNavigation.SelectedItem = allNavigationItems
+				.First(item => string.Equals(item.Tag.ToString(), "CreatePolicy", StringComparison.OrdinalIgnoreCase));
+		}
+		else
+		{
+			_ = ContentFrame.Navigate(typeof(Pages.PolicyEditor));
+
+			// Set the "Policy Editor" item as selected in the NavigationView
+			MainNavigation.SelectedItem = allNavigationItems
+				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
+		}
+	}
 
 
 	/// <summary>

@@ -21,14 +21,9 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI;
-using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -466,67 +461,6 @@ internal sealed partial class CreatePolicy : Page
 
 	private string? _policyPathMSFTRecommendedDriverBlockRules;
 
-	/// <summary>
-	/// Method to dynamically add a TextBlock with formatted content
-	/// </summary>
-	/// <returns></returns>
-	private async Task AddDriverBlockRulesInfo()
-	{
-		// Create a new TextBlock
-		TextBlock formattedTextBlock = new();
-
-		// Gather driver block list info asynchronously
-		BasePolicyCreator.DriverBlockListInfo? driverBlockListInfo = await Task.Run(BasePolicyCreator.DriversBlockListInfoGathering);
-
-		// Prepare the text to display
-		if (driverBlockListInfo is not null)
-		{
-			// Create the formatted content for version and last updated date
-			Span versionSpan = new()
-			{
-				Inlines =
-		{
-			new Run { Text = GlobalVars.Rizz.GetString("VersionLabel"), FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.Violet) },
-			new Run { Text = $"{driverBlockListInfo.Version}\n", Foreground = new SolidColorBrush(Colors.Violet) }
-		}
-			};
-
-			Span lastUpdatedSpan = new()
-			{
-				Inlines =
-		{
-			new Run { Text = GlobalVars.Rizz.GetString("LastUpdatedLabel"), FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Colors.HotPink) },
-			new Run { Text = $"{driverBlockListInfo.LastUpdated:MMMM dd, yyyy}\n", Foreground = new SolidColorBrush(Colors.HotPink) }
-		}
-			};
-
-			// Add content to the TextBlock
-			formattedTextBlock.Inlines.Add(versionSpan);
-			formattedTextBlock.Inlines.Add(lastUpdatedSpan);
-
-		}
-		else
-		{
-			// Handle the case when driver block list info is null
-			Run errorRun = new()
-			{
-				Text = GlobalVars.Rizz.GetString("DriverBlockListError"),
-				Foreground = new SolidColorBrush(Colors.Yellow)
-			};
-			formattedTextBlock.Inlines.Add(errorRun);
-		}
-
-		// Find the SettingsCard by its Header
-		foreach (var child in RecommendedDriverBlockRulesSettings.Items)
-		{
-			if (child is SettingsCard settingsCard && string.Equals(settingsCard.Header.ToString(), "Info", StringComparison.OrdinalIgnoreCase))
-			{
-				// Insert the TextBlock into the SettingsCard's content area
-				settingsCard.Content = formattedTextBlock;
-			}
-		}
-	}
-
 
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended driver block rules policy
@@ -555,6 +489,8 @@ internal sealed partial class CreatePolicy : Page
 
 			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
 
+			(string?, string?) results = (null, null);
+
 			// Run the background operation using captured values
 			await Task.Run(() =>
 			{
@@ -564,13 +500,15 @@ internal sealed partial class CreatePolicy : Page
 				}
 				else
 				{
-					_policyPathMSFTRecommendedDriverBlockRules = BasePolicyCreator.GetDriversBlockRules(stagingArea);
+					results = BasePolicyCreator.GetDriversBlockRules(stagingArea);
+
+
+					_policyPathMSFTRecommendedDriverBlockRules = results.Item1;
 				}
 			});
 
-			// Dynamically add the formatted TextBlock after gathering block list info
-			// Can remove await and the info will populate after policy is created which is fine too
-			await AddDriverBlockRulesInfo();
+
+			RecommendedDriverBlockRulesVersionTextBlock.Text = results.Item2;
 		}
 		catch (Exception ex)
 		{

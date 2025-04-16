@@ -19,6 +19,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -78,7 +79,63 @@
 
             </controls:WrapPanel>
 
-            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
+            <Border Grid.Row="1" Height="60" BorderBrush="Gray" Background="{StaticResource SystemControlChromeMediumLowAcrylicWindowMediumBrush}" BorderThickness="0.4" CornerRadius="14">
+
+                <Grid Margin="10,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="230" Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="1" Margin="0,0,10,0" VerticalAlignment="Center">
+
+                        <TextBlock Text="Mode:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" Foreground="LightGray" />
+
+                        <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
+                                  ToolTipService.ToolTip="Choose between creating a new supplemental policy or adding the rules that will be created to an existing policy">
+                            <x:String>Create New Policy</x:String>
+                            <x:String>Add to Existing Policy</x:String>
+                        </ComboBox>
+
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Grid.ColumnSpan="1" BorderBrush="Gray" Background="{StaticResource SystemChromeBlackMediumLowColor}" BorderThickness="0.4" CornerRadius="14">
+
+                        <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
+
+                            <Button x:Name="PolicyFileToMergeWithButton" Content="Select a policy file" Margin="15,0,0,0"
+                                    ToolTipService.ToolTip="Browse for an App Control policy to add all of the rules you created in this page to it."
+                                    Click="{x:Bind PolicyFileToMergeWithButton_Click}" IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}"
+                                    Holding="PolicyFileToMergeWithButton_Holding" RightTapped="{x:Bind PolicyFileToMergeWithButton_RightTapped}">
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="PolicyFileToMergeWithButton_FlyOut">
+
+                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}" />
+
+                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                            <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
+                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                MinWidth="400" IsReadOnly="True" />
+
+                                        </controls:WrapPanel>
+
+                                    </Flyout>
+                                </Button.Flyout>
+
+                            </Button>
+
+                        </controls:WrapPanel>
+
+                    </Border>
+
+                </Grid>
+            </Border>
+
+            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -175,15 +232,15 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyIsEnabled, Mode=OneWay}" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                             Header="Base Policy File" IsClickEnabled="True" Click="{x:Bind FilesAndFoldersBrowseForBasePolicySettingsCard_Click}"
                             x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard" Holding="FilesAndFoldersBrowseForBasePolicySettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForBasePolicySettingsCard_RightTapped}" IsActionIconVisible="False">
 
-                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" RightTapped="{x:Bind FilesAndFoldersBrowseForBasePolicyButton_RightTapped}"
+                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyIsEnabled, Mode=OneWay}" RightTapped="{x:Bind FilesAndFoldersBrowseForBasePolicyButton_RightTapped}"
                                     x:Uid="PickPolicyFileButton" Click="{x:Bind FilesAndFoldersBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
@@ -330,15 +387,15 @@
                         </controls:SettingsCard>
 
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="CertificatesPolicyNameTextBox" TextChanged="CertificatesPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="CertificatesPolicyNameTextBox" TextChanged="CertificatesPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="CertificatesBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CertificatesBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="CertificatesBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                                 Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind CertificatesBrowseForBasePolicySettingsCard_Click}"
                                                RightTapped="{x:Bind CertificatesBrowseForBasePolicySettingsCard_RightTapped}" Holding="CertificatesBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="CertificatesBrowseForBasePolicyButton" RightTapped="{x:Bind CertificatesBrowseForBasePolicyButton_RightTapped}"
+                            <Button x:Name="CertificatesBrowseForBasePolicyButton" Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CertificatesBrowseForBasePolicyIsEnabled, Mode=OneWay}" RightTapped="{x:Bind CertificatesBrowseForBasePolicyButton_RightTapped}"
                                     x:Uid="PickPolicyFileButton" Click="{x:Bind CertificatesBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
@@ -391,7 +448,6 @@
 
                 </controls:SettingsExpander>
 
-
                 <!-- ISG -->
                 <controls:SettingsExpander x:Name="ISGSettingsCard"
                     Description="Create a Supplemental policy that only enables the usage of the Intelligent Security Graph to automatically authorize reputable apps and files"
@@ -426,15 +482,15 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="ISGPolicyNameTextBox" TextChanged="ISGPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="ISGPolicyNameTextBox" TextChanged="ISGPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="ISGBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ISGBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="ISGBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                             Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind ISGBrowseForBasePolicySettingsCard_Click}"
                                                Holding="ISGBrowseForBasePolicySettingsCard_Holding" RightTapped="{x:Bind ISGBrowseForBasePolicySettingsCard_RightTapped}">
 
-                            <Button x:Name="ISGBrowseForBasePolicyButton" Click="{x:Bind ISGBrowseForBasePolicyButton_Click}"
+                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ISGBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="ISGBrowseForBasePolicyButton" Click="{x:Bind ISGBrowseForBasePolicyButton_Click}"
                                     x:Uid="PickPolicyFileButton" RightTapped="{x:Bind ISGBrowseForBasePolicyButton_RightTapped}">
 
                                 <Button.Flyout>
@@ -476,7 +532,6 @@
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
-
 
                 <!-- Strict Kernel-Mode -->
                 <controls:SettingsExpander x:Name="StrictKernelModeSection"
@@ -543,11 +598,11 @@
                         </controls:SettingsCard>
 
 
-                        <controls:SettingsCard x:Name="StrictKernelModeBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="StrictKernelModeBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                             Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind StrictKernelModeBrowseForBasePolicySettingsCard_Click}"
                                                RightTapped="{x:Bind StrictKernelModeBrowseForBasePolicySettingsCard_RightTapped}" Holding="StrictKernelModeBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" RightTapped="{x:Bind StrictKernelModeBrowseForBasePolicyButton_RightTapped}"
+                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyIsEnabled, Mode=OneWay}" RightTapped="{x:Bind StrictKernelModeBrowseForBasePolicyButton_RightTapped}"
                                     x:Uid="PickPolicyFileButton" Click="{x:Bind StrictKernelModeBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
@@ -587,8 +642,8 @@
                         </controls:SettingsCard>
 
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="StrictKernelModePolicyNameTextBox" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="StrictKernelModePolicyNameTextBox" x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
 
@@ -605,7 +660,6 @@
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
-
 
                 <!-- Package Family Name (PFN) -->
                 <controls:SettingsExpander x:Name="PFNSettingsCard"
@@ -641,15 +695,15 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="PFNPolicyNameTextBox" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="PFNPolicyNameTextBox" x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="PFNBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.PFNBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="PFNBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                             Header="Base Policy File" IsClickEnabled="True" Click="{x:Bind PFNBrowseForBasePolicySettingsCard_Click}" IsActionIconVisible="False"
                                                RightTapped="{x:Bind PFNBrowseForBasePolicySettingsCard_RightTapped}" Holding="PFNBrowseForBasePolicySettingsCard_Holding">
 
-                            <Button x:Name="PFNBrowseForBasePolicyButton" RightTapped="{x:Bind PFNBrowseForBasePolicyButton_RightTapped}"
+                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.PFNBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="PFNBrowseForBasePolicyButton" RightTapped="{x:Bind PFNBrowseForBasePolicyButton_RightTapped}"
                                     x:Uid="PickPolicyFileButton" Click="{x:Bind PFNBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
@@ -752,7 +806,6 @@
 
                 </controls:SettingsExpander>
 
-
                 <!-- Custom File Path Rules -->
                 <controls:SettingsExpander x:Name="CustomPatternBasedFileRuleSettingsExpander"
                         x:Uid="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander"
@@ -786,15 +839,15 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="CustomPatternBasedFileRulePolicyNameTextBox" TextChanged="CustomPatternBasedFileRulePolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="CustomPatternBasedFileRulePolicyNameTextBox" TextChanged="CustomPatternBasedFileRulePolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Name="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard" Description="Browse for the Base policy XML file that this Supplemental policy will be associated to."
                             Header="Base Policy File" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Click}"
                                 Holding="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Holding" RightTapped="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_RightTapped}">
 
-                            <Button x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton" Click="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
+                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton" Click="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
                                     x:Uid="PickPolicyFileButton" RightTapped="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicyButton_RightTapped}">
 
                                 <Button.Flyout>

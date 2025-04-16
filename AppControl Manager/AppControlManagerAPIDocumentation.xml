@@ -1481,6 +1481,7 @@
             The old location was called "WDACConfig" because it was the location of the module i had created. I maintained the
             same location to provide interoperability for both the module and the new app but the module is now deprecated so
             it's time to change the user config location name to an appropriate one.
+            GitHub release: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/AppControlManager.v.1.9.2.0
             </summary>
         </member>
         <member name="M:AppControlManager.App.InitializeComponent">
@@ -1603,6 +1604,12 @@
         <member name="P:AppControlManager.AppSettings.Main.ApplicationGlobalFlowDirection">
             <summary>
             Whether the User Interface flow direction is Left-to-Right or Right-to-Left
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.FileActivatedLaunchArg">
+            <summary>
+            The argument received if the app is launched via file activation.
+            This allows us to have access to this after app has been relaunched with Admin privileges.
             </summary>
         </member>
         <member name="T:AppControlManager.Crumb">
@@ -2818,7 +2825,7 @@
             And creates a valid Code Integrity XML policy file from it.
             </summary>
             <param name="StagingArea">The directory where the XML file will be saved to.</param>
-            <returns>the path to the Microsoft recommended driver block rules base policy path</returns>
+            <returns>the path to the Microsoft recommended driver block rules base policy path and the policy version</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.BuildAllowMSFT(System.String,System.Boolean,System.Nullable{System.UInt64},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
@@ -4202,6 +4209,13 @@
             Represents an optional description of a file. It can hold a string value or be null.
             </summary>
         </member>
+        <member name="M:AppControlManager.Others.FileAccessCheck.IsFileAccessibleForWrite(System.String)">
+            <summary>
+            Checks if the file can be opened with both read and write permissions using native API.
+            </summary>
+            <param name="filePath">The full path to the file.</param>
+            <returns>True if the file is accessible for modification; otherwise, false.</returns>
+        </member>
         <member name="T:AppControlManager.Others.FileBasedInfoPackage">
             <summary>
             Used by the BuildSignerAndHashObjects method to store and return the output
@@ -4701,7 +4715,7 @@
             <summary>
             Relaunches the application with Administrator privileges
             </summary>
-            <returns></returns>
+            <returns>True if elevation was successful and user accepted the UAC prompt</returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:AppControlManager.Others.CiPolicyHandler.RemoveSupplementalSigners(System.String)">
@@ -5841,12 +5855,6 @@
             <summary>
             Event handler to open the created Signed and Reputable policy in the Policy Editor
             </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.AddDriverBlockRulesInfo">
-            <summary>
-            Method to dynamically add a TextBlock with formatted content
-            </summary>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesCreate_Click">
             <summary>
@@ -9133,6 +9141,36 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._FilesAndFoldersBrowseForBasePolicyIsEnabled">
+            <summary>
+            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._filesAndFoldersScanResults">
+            <summary>
+            Used to store the scan results and as the source for the results ListViews
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UpdateTotalFilesFilesAndFolders(System.Nullable{System.Boolean})">
+            <summary>
+            Updates the total logs count displayed on the UI
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._CertificatesBrowseForBasePolicyIsEnabled">
+            <summary>
+            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._ISGBrowseForBasePolicyIsEnabled">
+            <summary>
+            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._StrictKernelModeBrowseForBasePolicyIsEnabled">
+            <summary>
+            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CalculateColumnWidthsStrictKernelMode">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -9141,14 +9179,45 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UpdateTotalFilesFilesAndFolders(System.Nullable{System.Boolean})">
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UpdateTotalFilesStrictKernelMode(System.Nullable{System.Boolean})">
             <summary>
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UpdateTotalFilesStrictKernelMode(System.Nullable{System.Boolean})">
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PFNBrowseForBasePolicyIsEnabled">
             <summary>
-            Updates the total logs count displayed on the UI
+            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled">
+            <summary>
+            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PolicyFileToMergeWith">
+            <summary>
+            The path to the policy file that user selected to add the new rules to.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PolicyFileToMergeWithPickerButtonIsEnabled">
+            <summary>
+            Whether the button that allows for picking a policy file to add the rules to is enabled or disabled.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._BasePolicyElementsVisibility">
+            <summary>
+            Controls the visibility of all of the elements related to browsing for base policy file.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._OperationModeComboBoxSelectedIndex">
+            <summary>
+            The mode of operation for the Supplemental creation page.
+            Set to 0 (Creating New Policies) by default.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ClearPolicyFileToMergeWith">
+            <summary>
+            Clears the PolicyFileToMergeWith
             </summary>
         </member>
         <member name="F:AppControlManager.ViewModels.DeploymentVM.GroupNamesCollection">

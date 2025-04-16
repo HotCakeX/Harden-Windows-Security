@@ -53,6 +53,7 @@ internal sealed partial class Main : INotifyPropertyChanged
 	private bool _autoCheckForUpdateAtStartup = true;
 	private string _ApplicationGlobalLanguage = "en-US";
 	private string _ApplicationGlobalFlowDirection = "LeftToRight";
+	private string _fileActivatedLaunchArg = string.Empty;
 
 	internal Main(ApplicationDataContainer LocalSettings)
 	{
@@ -75,6 +76,7 @@ internal sealed partial class Main : INotifyPropertyChanged
 		_autoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), _autoCheckForUpdateAtStartup);
 		_ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), _ApplicationGlobalLanguage);
 		_ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), _ApplicationGlobalFlowDirection);
+		_fileActivatedLaunchArg = ReadValue(nameof(FileActivatedLaunchArg), _fileActivatedLaunchArg);
 	}
 
 
@@ -534,8 +536,34 @@ internal sealed partial class Main : INotifyPropertyChanged
 		}
 	}
 
+	/// <summary>
+	/// The argument received if the app is launched via file activation.
+	/// This allows us to have access to this after app has been relaunched with Admin privileges.
+	/// </summary>
+	internal string FileActivatedLaunchArg
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return _fileActivatedLaunchArg;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (_fileActivatedLaunchArg != value)
+				{
+					_fileActivatedLaunchArg = value;
+					SaveValue(nameof(FileActivatedLaunchArg), value);
+					OnPropertyChanged(nameof(FileActivatedLaunchArg));
+				}
+			}
+		}
+	}
+
 
 	private void OnPropertyChanged(string propertyName) =>
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
-

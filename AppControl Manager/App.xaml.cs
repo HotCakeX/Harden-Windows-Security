@@ -35,7 +35,7 @@ using Windows.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using AppControlManager.ViewModels;
 using AppControlManager.MicrosoftGraph;
-using Windows.Globalization;
+using Microsoft.Windows.Globalization;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
@@ -128,7 +128,52 @@ public partial class App : Application
 	internal App()
 	{
 
+		// Retrieve the app settings early on to check for elevation at startup and to pass it to DI container for the constructor of the Main app settings class
+		ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
+
 		this.InitializeComponent();
+
+		AppHost = Host.CreateDefaultBuilder()
+		.ConfigureServices((context, services) =>
+		{
+			// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda when it takes parameters
+			_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
+			_ = services.AddSingleton<ViewCurrentPoliciesVM>();
+			_ = services.AddSingleton<PolicyEditorVM>();
+			_ = services.AddSingleton<SettingsVM>();
+			_ = services.AddSingleton<MergePoliciesVM>();
+			_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
+			_ = services.AddSingleton<AllowNewAppsVM>();
+			_ = services.AddSingleton<CreateDenyPolicyVM>();
+			_ = services.AddSingleton<CreateSupplementalPolicyVM>();
+			_ = services.AddSingleton<EventLogsPolicyCreationVM>();
+			_ = services.AddSingleton<SimulationVM>();
+			_ = services.AddSingleton<MDEAHPolicyCreationVM>();
+			_ = services.AddSingleton<ViewFileCertificatesVM>();
+			_ = services.AddSingleton<MainWindowVM>();
+			_ = services.AddSingleton<CreatePolicyVM>();
+			_ = services.AddSingleton<DeploymentVM>();
+
+			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
+			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
+			_ = services.AddSingleton(provider =>
+			{
+				ViewModel graphVM = provider.GetRequiredService<ViewModel>();
+				return new ViewOnlinePoliciesVM(graphVM);
+			});
+
+			_ = services.AddSingleton<ViewModel>();
+		})
+		.Build();
+
+
+		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
+
+		// Set the language of the application to the user's preferred language
+		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
+
+		// Create the Logs directory if it doesn't exist, won't do anything if it exists
+		_ = Directory.CreateDirectory(LogsDirectory);
 
 		// to handle unhandled exceptions
 		this.UnhandledException += App_UnhandledException;
@@ -149,6 +194,25 @@ public partial class App : Application
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
 		this.FocusVisualKind = FocusVisualKind.Reveal;
+
+		if (IsElevated)
+			MoveUserConfigDirectory();
+
+		#region
+
+		// Check for the SoundSetting in the local settings
+		if (Settings.SoundSetting)
+		{
+			ElementSoundPlayer.State = ElementSoundPlayerState.On;
+			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
+		}
+		else
+		{
+			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
+		}
+
+		#endregion
 	}
 
 
@@ -196,45 +260,6 @@ public partial class App : Application
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
-		// Retrieve the app settings early on to check for elevation at startup and to pass it to DI container for the constructor of the Main app settings class
-		ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-
-		AppHost = Host.CreateDefaultBuilder()
-		.ConfigureServices((context, services) =>
-		{
-			// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda when it takes parameters
-			_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
-			_ = services.AddSingleton<ViewCurrentPoliciesVM>();
-			_ = services.AddSingleton<PolicyEditorVM>();
-			_ = services.AddSingleton<SettingsVM>();
-			_ = services.AddSingleton<MergePoliciesVM>();
-			_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
-			_ = services.AddSingleton<AllowNewAppsVM>();
-			_ = services.AddSingleton<CreateDenyPolicyVM>();
-			_ = services.AddSingleton<CreateSupplementalPolicyVM>();
-			_ = services.AddSingleton<EventLogsPolicyCreationVM>();
-			_ = services.AddSingleton<SimulationVM>();
-			_ = services.AddSingleton<MDEAHPolicyCreationVM>();
-			_ = services.AddSingleton<ViewFileCertificatesVM>();
-			_ = services.AddSingleton<MainWindowVM>();
-			_ = services.AddSingleton<CreatePolicyVM>();
-			_ = services.AddSingleton<DeploymentVM>();
-
-			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
-			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
-			_ = services.AddSingleton(provider =>
-			{
-				ViewModel graphVM = provider.GetRequiredService<ViewModel>();
-				return new ViewOnlinePoliciesVM(graphVM);
-			});
-
-			_ = services.AddSingleton<ViewModel>();
-		})
-		.Build();
-
-
-		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
-
 
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 
@@ -371,33 +396,6 @@ public partial class App : Application
 			}
 
 		}
-
-
-		// Set the language of the application to the user's preferred language
-		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
-
-		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(LogsDirectory);
-
-
-		if (IsElevated)
-			MoveUserConfigDirectory();
-
-		#region
-
-		// Check for the SoundSetting in the local settings
-		if (Settings.SoundSetting)
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.On;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
-		}
-		else
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
-		}
-
-		#endregion
 
 
 		m_window = new MainWindow();

@@ -551,8 +551,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		if (filesAndFoldersFilePaths.Count is 0 && filesAndFoldersFolderPaths.Count is 0)
 		{
 			CreateSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateSupplementalPolicyTeachingTip.Title = "Select files or folders";
-			CreateSupplementalPolicyTeachingTip.Subtitle = "No files or folders were selected for Supplemental policy creation";
+			CreateSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectFilesOrFoldersTitle");
+			CreateSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoFilesOrFoldersSelected");
 			return;
 		}
 
@@ -562,16 +562,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			if (ViewModel.PolicyFileToMergeWith is null)
 			{
 				CreateSupplementalPolicyTeachingTip.IsOpen = true;
-				CreateSupplementalPolicyTeachingTip.Title = "Select the policy to add the rules to.";
-				CreateSupplementalPolicyTeachingTip.Subtitle = "You need to select the policy to Add the rules to because you've set the operation mode to \"Add to Existing Policy\".";
+				CreateSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle");
+				CreateSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle");
 				return;
 			}
 		}
 		else if (filesAndFoldersBasePolicyPath is null)
 		{
 			CreateSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateSupplementalPolicyTeachingTip.Title = "Select base policy";
-			CreateSupplementalPolicyTeachingTip.Subtitle = "You need to select a base policy before you can create a Supplemental policy.";
+			CreateSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectBasePolicyTitle");
+			CreateSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectBasePolicySubtitle");
 			return;
 		}
 
@@ -579,8 +579,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		if (ViewModel.OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(filesAndFoldersSupplementalPolicyName))
 		{
 			CreateSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateSupplementalPolicyTeachingTip.Title = "Choose Supplemental Policy Name";
-			CreateSupplementalPolicyTeachingTip.Subtitle = "You need to provide a name for the Supplemental policy.";
+			CreateSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreateSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -756,8 +756,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
-
-					string msg4 = "Deploying the Supplemental policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -777,14 +776,14 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			});
 
 		}
-		catch
+		catch (Exception ex)
 		{
 			FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Error;
-			FilesAndFoldersInfoBar.Message = "An error occurred while creating the Supplemental policy";
+			FilesAndFoldersInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
+
+			Logger.Write(ErrorWriter.FormatException(ex));
 
 			errorsOccurred = true;
-
-			throw;
 		}
 		finally
 		{
@@ -1003,16 +1002,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			if (ViewModel.PolicyFileToMergeWith is null)
 			{
 				CreateCertificateBasedSupplementalPolicyTeachingTip.IsOpen = true;
-				CreateCertificateBasedSupplementalPolicyTeachingTip.Title = "Select the policy to add the rules to.";
-				CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = "You need to select the policy to Add the rules to because you've set the operation mode to \"Add to Existing Policy\".";
+				CreateCertificateBasedSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle");
+				CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle");
 				return;
 			}
 		}
 		else if (CertificatesBasedBasePolicyPath is null)
 		{
 			CreateCertificateBasedSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = "Select base policy";
-			CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = "You need to select a base policy before you can create a Supplemental policy.";
+			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectBasePolicyTitle");
+			CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectBasePolicySubtitle");
 			return;
 		}
 
@@ -1020,8 +1019,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		if (ViewModel.OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CertificatesBasedSupplementalPolicyName))
 		{
 			CreateCertificateBasedSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = "Choose Supplemental Policy Name";
-			CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = "You need to provide a name for the Supplemental policy.";
+			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -1128,7 +1127,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// If user selected to deploy the policy
 				if (CertificatesBasedDeployButton)
 				{
-					string msg4 = "Deploying the Supplemental policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -1149,14 +1148,14 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			});
 		}
 
-		catch
+		catch (Exception ex)
 		{
 			CertificatesInfoBar.Severity = InfoBarSeverity.Error;
-			CertificatesInfoBar.Message = "An error occurred while creating certificate based Supplemental policy";
+			CertificatesInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
+
+			Logger.Write(ErrorWriter.FormatException(ex));
 
 			errorsOccurred = true;
-
-			throw;
 		}
 		finally
 		{
@@ -1259,16 +1258,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			if (ViewModel.PolicyFileToMergeWith is null)
 			{
 				CreateISGSupplementalPolicyTeachingTip.IsOpen = true;
-				CreateISGSupplementalPolicyTeachingTip.Title = "Select the policy to add the rules to.";
-				CreateISGSupplementalPolicyTeachingTip.Subtitle = "You need to select the policy to Add the rules to because you've set the operation mode to \"Add to Existing Policy\".";
+				CreateISGSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle");
+				CreateISGSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle");
 				return;
 			}
 		}
 		else if (ISGBasedBasePolicyPath is null)
 		{
 			CreateISGSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateISGSupplementalPolicyTeachingTip.Title = "Select base policy";
-			CreateISGSupplementalPolicyTeachingTip.Subtitle = "You need to select a base policy before you can create a Supplemental policy.";
+			CreateISGSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectBasePolicyTitle");
+			CreateISGSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectBasePolicySubtitle");
 			return;
 		}
 
@@ -1351,6 +1350,15 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
 				{
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
+
+					Logger.Write(msg4);
+
+					_ = DispatcherQueue.TryEnqueue(() =>
+					{
+						ISGInfoBar.Message = msg4;
+					});
+
 					// Prepare the ISG services
 					ConfigureISGServices.Configure();
 
@@ -1372,11 +1380,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			errorsOccurred = true;
 
 			ISGInfoBar.Severity = InfoBarSeverity.Error;
-			ISGInfoBar.Message = $"An error occurred while creating ISG based Supplemental policy: {ex.Message}";
+			ISGInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
 
-			Logger.Write($"An error occurred while creating ISG based Supplemental policy: {ex.Message}");
-
-			throw;
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -1632,7 +1638,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			ErrorsOccurred = true;
 
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
-			StrictKernelModeInfoBar.Message = $"An error occurred while scanning the system for events: {ex.Message}";
+			StrictKernelModeInfoBar.Message = $"An error occurred while scanning the system: {ex.Message}";
+
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -1676,8 +1684,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		if (ViewModel.OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(StrictKernelModePolicyNameTextBox.Text))
 		{
 			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
-			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
-			StrictKernelModeCreateButtonTeachingTip.Subtitle = "No policy name was selected for the supplemental policy";
+			StrictKernelModeCreateButtonTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			StrictKernelModeCreateButtonTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -1688,16 +1696,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			if (ViewModel.PolicyFileToMergeWith is null)
 			{
 				StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
-				StrictKernelModeCreateButtonTeachingTip.Title = "Select the policy to add the rules to.";
-				StrictKernelModeCreateButtonTeachingTip.Subtitle = "You need to select the policy to Add the rules to because you've set the operation mode to \"Add to Existing Policy\".";
+				StrictKernelModeCreateButtonTeachingTip.Title = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle");
+				StrictKernelModeCreateButtonTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle");
 				return;
 			}
 		}
 		else if (string.IsNullOrWhiteSpace(StrictKernelModeBasePolicyPath))
 		{
 			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
-			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
-			StrictKernelModeCreateButtonTeachingTip.Subtitle = "No Base policy file was selected for the supplemental policy";
+			StrictKernelModeCreateButtonTeachingTip.Title = GlobalVars.Rizz.GetString("SelectBasePolicyTitle");
+			StrictKernelModeCreateButtonTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectBasePolicySubtitle");
 			return;
 		}
 
@@ -1787,7 +1795,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-					string msg4 = "Deploying the Supplemental policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -1812,9 +1820,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			ErrorsOccurred = true;
 
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
-			StrictKernelModeInfoBar.Message = $"There was an error: {ex.Message}";
+			StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
 
-			throw;
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -2240,8 +2248,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		if (ViewModel.OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(PFNBasedSupplementalPolicyName))
 		{
 			CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
-			CreatePFNSupplementalPolicyTeachingTip.Title = "PFN based Supplemental policy";
-			CreatePFNSupplementalPolicyTeachingTip.Subtitle = "No policy name was selected for the supplemental policy";
+			CreatePFNSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreatePFNSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -2252,16 +2260,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			if (ViewModel.PolicyFileToMergeWith is null)
 			{
 				CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
-				CreatePFNSupplementalPolicyTeachingTip.Title = "Select the policy to add the rules to.";
-				CreatePFNSupplementalPolicyTeachingTip.Subtitle = "You need to select the policy to Add the rules to because you've set the operation mode to \"Add to Existing Policy\".";
+				CreatePFNSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle");
+				CreatePFNSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle");
 				return;
 			}
 		}
 		else if (string.IsNullOrWhiteSpace(PFNBasePolicyPath))
 		{
 			CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
-			CreatePFNSupplementalPolicyTeachingTip.Title = "PFN based Supplemental policy";
-			CreatePFNSupplementalPolicyTeachingTip.Subtitle = "No Base policy file was selected for the supplemental policy";
+			CreatePFNSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectBasePolicyTitle");
+			CreatePFNSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectBasePolicySubtitle");
 			return;
 		}
 
@@ -2350,7 +2358,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-					string msg4 = "Deploying the Supplemental policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -2377,9 +2385,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			ErrorsOccurred = true;
 
 			PFNInfoBar.Severity = InfoBarSeverity.Error;
-			PFNInfoBar.Message = $"There was an error: {ex.Message}";
+			PFNInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
 
-			throw;
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -2514,16 +2522,16 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			if (ViewModel.PolicyFileToMergeWith is null)
 			{
 				CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
-				CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Select the policy to add the rules to.";
-				CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to select the policy to Add the rules to because you've set the operation mode to \"Add to Existing Policy\".";
+				CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle");
+				CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle");
 				return;
 			}
 		}
 		else if (CustomPatternBasedFileRuleBasedBasePolicyPath is null)
 		{
 			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Select base policy";
-			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to select a base policy before you can create a Supplemental policy.";
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectBasePolicyTitle");
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectBasePolicySubtitle");
 			return;
 		}
 
@@ -2539,8 +2547,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		if (ViewModel.OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedSupplementalPolicyName))
 		{
 			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Enter a policy name";
-			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to enter a name for the supplemental policy.";
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -2614,7 +2622,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					string msg4 = "Deploying the Supplemental policy on the system";
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -2639,11 +2647,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			errorsOccurred = true;
 
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Error;
-			CustomPatternBasedFileRuleInfoBar.Message = $"An error occurred while creating Pattern-based File Path rule Supplemental policy: {ex.Message}";
+			CustomPatternBasedFileRuleInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
 
-			Logger.Write($"An error occurred while creating Pattern-based File Path rule Supplemental policy: {ex.Message}");
-
-			throw;
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{

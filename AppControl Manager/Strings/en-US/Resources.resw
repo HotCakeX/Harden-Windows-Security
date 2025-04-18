@@ -315,10 +315,10 @@
     <value>Deploy after Creation</value>
   </data>
   <data name="DeployAfterCreationButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+    <value>Toggling this button means the policy will be deployed on the system after it's been created</value>
   </data>
   <data name="DeployAfterCreationButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+    <value>Toggling this button means the policy will be deployed on the system after it's been created</value>
   </data>
   <data name="CreateSupplementalPolicyButton.Content" xml:space="preserve">
     <value>Create Supplemental Policy</value>
@@ -351,16 +351,16 @@
     <value>Create Deny policy by scanning files and folders</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Description" xml:space="preserve">
-    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+    <value>Create a Deny policy based on an app's Package Family Name (PFN)</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Header" xml:space="preserve">
     <value>Package Family Name</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+    <value>Create a Deny policy based on an app's Package Family Name (PFN)</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Create a Deny policy based on an app&apos;s Package Family Name (PFN)</value>
+    <value>Create a Deny policy based on an app's Package Family Name (PFN)</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.Description" xml:space="preserve">
     <value>Indicates that the created/deployed policy will have (Enabled:Audit Mode) policy rule option and will generate audit logs instead of blocking files.</value>
@@ -519,10 +519,10 @@
     <value>Deploy after Creation</value>
   </data>
   <data name="DeployAfterCreationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+    <value>Toggling this button means the policy will be deployed on the system after it's been created</value>
   </data>
   <data name="DeployAfterCreationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Toggling this button means the policy will be deployed on the system after it&apos;s been created</value>
+    <value>Toggling this button means the policy will be deployed on the system after it's been created</value>
   </data>
   <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Search the data...</value>
@@ -690,7 +690,7 @@
     <value>Select the required info such as a deployed policy XML file and a name for the Supplemental policy that will be created</value>
   </data>
   <data name="AllowNewAppsStep2Text.Text" xml:space="preserve">
-    <value>Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you&apos;re done, use the button below to go to Step 3.</value>
+    <value>Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you're done, use the button below to go to Step 3.</value>
   </data>
   <data name="AllowNewAppsStep3Text.Text" xml:space="preserve">
     <value>Use the Event logs and local files tab to confirm or select the detected files in order to include them in the final Supplemental policy.</value>
@@ -783,10 +783,10 @@
     <value>Refresh</value>
   </data>
   <data name="RefreshAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Fetches the latest certificate common names from the User&apos;s personal certificate store</value>
+    <value>Fetches the latest certificate common names from the User's personal certificate store</value>
   </data>
   <data name="RefreshAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Fetches the latest certificate common names from the User&apos;s personal certificate store</value>
+    <value>Fetches the latest certificate common names from the User's personal certificate store</value>
   </data>
   <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
     <value>Customize the App Background Style</value>
@@ -807,10 +807,10 @@
     <value>Icons Style</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pick a style for the main navigation&apos;s icons.</value>
+    <value>Pick a style for the main navigation's icons.</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Pick a style for the main navigation&apos;s icons.</value>
+    <value>Pick a style for the main navigation's icons.</value>
   </data>
   <data name="AppThemeSettingsCard.Description" xml:space="preserve">
     <value>Customize the Theme</value>
@@ -855,10 +855,10 @@
     <value>Darker Background</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager&apos;s appearance.</value>
+    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager's appearance.</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager&apos;s appearance.</value>
+    <value>It will remove the extra light shadow from the background, giving an overall darker look to the AppControl Manager's appearance.</value>
   </data>
   <data name="UserConfigurations.Text" xml:space="preserve">
     <value>User Configurations</value>
@@ -906,16 +906,16 @@
     <value>App Control policies restrict both kernel-mode and user-mode binaries. By default, only kernel-mode binaries are restricted. Enabling this rule option validates user mode executables and scripts.</value>
   </data>
   <data name="RuleOption_EnabledBootMenuProtection" xml:space="preserve">
-    <value>This option isn&apos;t currently supported.</value>
+    <value>This option isn't currently supported.</value>
   </data>
   <data name="RuleOption_RequiredWHQL" xml:space="preserve">
-    <value>By default, kernel drivers that aren&apos;t Windows Hardware Quality Labs (WHQL) signed are allowed to run. Enabling this rule requires that every driver is WHQL signed and removes legacy driver support. Kernel drivers built for Windows 10 should be WHQL certified.</value>
+    <value>By default, kernel drivers that aren't Windows Hardware Quality Labs (WHQL) signed are allowed to run. Enabling this rule requires that every driver is WHQL signed and removes legacy driver support. Kernel drivers built for Windows 10 should be WHQL certified.</value>
   </data>
   <data name="RuleOption_EnabledAuditMode" xml:space="preserve">
     <value>Instructs App Control to log information about applications, binaries, and scripts that would have been blocked, if the policy was enforced. You can use this option to identify the potential impact of your App Control policy, and use the audit events to refine the policy before enforcement. To enforce an App Control policy, delete this option.</value>
   </data>
   <data name="RuleOption_DisabledFlightSigning" xml:space="preserve">
-    <value>If enabled, binaries from Windows Insider builds aren&apos;t trusted. This option is useful for organizations that only want to run released binaries, not prerelease Windows builds.</value>
+    <value>If enabled, binaries from Windows Insider builds aren't trusted. This option is useful for organizations that only want to run released binaries, not prerelease Windows builds.</value>
   </data>
   <data name="RuleOption_EnabledInheritDefaultPolicy" xml:space="preserve">
     <value>This option is reserved for future use and currently has no effect.</value>
@@ -924,7 +924,7 @@
     <value>Allows the policy to remain unsigned. When this option is removed, the policy must be signed and any supplemental policies must also be signed. The certificates that are trusted for future policy updates must be identified in the UpdatePolicySigners section. Certificates that are trusted for supplemental policies must be identified in the SupplementalPolicySigners section.</value>
   </data>
   <data name="RuleOption_RequiredEVSigners" xml:space="preserve">
-    <value>This option isn&apos;t currently supported.</value>
+    <value>This option isn't currently supported.</value>
   </data>
   <data name="RuleOption_EnabledAdvancedBootOptionsMenu" xml:space="preserve">
     <value>The F8 preboot menu is disabled by default for all App Control policies. Setting this rule option allows the F8 menu to appear to physically present users.</value>
@@ -934,7 +934,7 @@
   </data>
   <data name="RuleOption_DisabledScriptEnforcement" xml:space="preserve">
     <value>This option disables script enforcement options, covering PowerShell, Windows Based Script Host (wscript.exe), Windows Console Based Script Host (cscript.exe), HTA files run in Microsoft HTML Application Host (mshta.exe), and MSXML. Some script hosts may behave differently even when your policy is in audit mode. For more information on script enforcement, see Script enforcement with App Control.
-NOTE: This option isn&apos;t supported on Windows Server 2016 or Windows 10 1607 LTSB and shouldn&apos;t be used on those operating systems.</value>
+NOTE: This option isn't supported on Windows Server 2016 or Windows 10 1607 LTSB and shouldn't be used on those operating systems.</value>
   </data>
   <data name="RuleOption_RequiredEnforceStoreApplications" xml:space="preserve">
     <value>If this rule option is enabled, App Control policies also apply to Universal Windows applications.</value>
@@ -943,7 +943,7 @@ NOTE: This option isn&apos;t supported on Windows Server 2016 or Windows 10 1607
     <value>Use this option to automatically allow applications installed by a managed installer. For more information, see Authorize apps deployed with an App Control managed installer.</value>
   </data>
   <data name="RuleOption_EnabledIntelligentSecurityGraphAuthorization" xml:space="preserve">
-    <value>Use this option to automatically allow applications with &quot;known good&quot; reputation as defined by Microsoft&apos;s Intelligent Security Graph (ISG).</value>
+    <value>Use this option to automatically allow applications with &quot;known good&quot; reputation as defined by Microsoft's Intelligent Security Graph (ISG).</value>
   </data>
   <data name="RuleOption_EnabledInvalidateEAsOnReboot" xml:space="preserve">
     <value>When the Intelligent Security Graph option is used, App Control sets an extended file attribute that indicates that the file was authorized to run. This option causes App Control to periodically revalidate the reputation for files previously authorized by the ISG.</value>
@@ -963,7 +963,7 @@ NOTE: This option is only supported on Windows 10, version 1903 and later, or Wi
   <data name="RuleOption_EnabledDynamicCodeSecurity" xml:space="preserve">
     <value>Enables policy enforcement for .NET applications and dynamically loaded libraries.
 NOTE: This option is only supported on Windows 10, version 1803 and later, or Windows Server 2019 and later.
-NOTE: This option is always enforced if any App Control UMCI policy enables it. There&apos;s no audit mode for .NET dynamic code security hardening.</value>
+NOTE: This option is always enforced if any App Control UMCI policy enables it. There's no audit mode for .NET dynamic code security hardening.</value>
   </data>
   <data name="RuleOption_EnabledRevokedExpiredAsUnsigned" xml:space="preserve">
     <value>Use this option to treat binaries signed with revoked certificates, or expired certificates with the Lifetime Signing EKU on the signature, as &quot;Unsigned binaries&quot; for user-mode process/components, under enterprise signing scenarios.</value>
@@ -975,7 +975,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>It is currently undocumented.</value>
   </data>
   <data name="RuleOption_EnabledConditionalWindowsLockdownPolicy" xml:space="preserve">
-    <value>It&apos;s used by the Smart App Control policy only.</value>
+    <value>It's used by the Smart App Control policy only.</value>
   </data>
   <data name="ConfigurePolicyRuleOptions_ButtonContent" xml:space="preserve">
     <value>Configure Policy Rule Options</value>
@@ -1122,10 +1122,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value> unsigned XML files.</value>
   </data>
   <data name="DeployingXMLFile" xml:space="preserve">
-    <value>Currently Deploying XML file: &apos;</value>
+    <value>Currently Deploying XML file: '</value>
   </data>
   <data name="SignedPolicyError" xml:space="preserve">
-    <value>The XML file &apos;</value>
+    <value>The XML file '</value>
   </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>There was an error deploying the selected XML files</value>
@@ -1155,7 +1155,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value> CIP binary files.</value>
   </data>
   <data name="DeployingCIPFile" xml:space="preserve">
-    <value>Currently Deploying CIP file: &apos;</value>
+    <value>Currently Deploying CIP file: '</value>
   </data>
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>Successfully deployed all of the selected CIP files</value>
@@ -1206,7 +1206,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Success</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
-    <value>Successfully generated the certificate with the selected details. The certificate&apos;s thumbprint is: &apos;</value>
+    <value>Successfully generated the certificate with the selected details. The certificate's thumbprint is: '</value>
   </data>
   <data name="CreateDenyPolicyNotInitialized" xml:space="preserve">
     <value>CreateDenyPolicy is not initialized.</value>
@@ -1215,13 +1215,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Select files or folders</value>
   </data>
   <data name="NoFilesOrFoldersSelected" xml:space="preserve">
-    <value>No files or folders were selected for Deny policy creation</value>
+    <value>No files or folders were selected for policy creation.</value>
   </data>
-  <data name="ChooseDenyPolicyNameTitle" xml:space="preserve">
-    <value>Choose Deny Policy Name</value>
+  <data name="ChoosePolicyNameTitle" xml:space="preserve">
+    <value>Choose a Policy Name</value>
   </data>
-  <data name="ProvidePolicyName" xml:space="preserve">
-    <value>You need to provide a name for the Deny policy.</value>
+  <data name="ChoosePolicyNameSubtitle" xml:space="preserve">
+    <value>You need to provide a name for the policy.</value>
   </data>
   <data name="SelectedFilesAndFolders" xml:space="preserve">
     <value>You selected </value>
@@ -1247,26 +1247,17 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ScanCompleted" xml:space="preserve">
     <value>Scan completed, creating the Deny policy</value>
   </data>
-  <data name="DeployingDenyPolicy" xml:space="preserve">
-    <value>Deploying the Deny policy on the system</value>
-  </data>
-  <data name="ErrorCreatingDenyPolicy" xml:space="preserve">
-    <value>An error occurred while creating the Deny policy</value>
+  <data name="DeployingThePolicy" xml:space="preserve">
+    <value>Deploying the policy on the system.</value>
   </data>
   <data name="DenyPolicyCreatedSuccessfully" xml:space="preserve">
-    <value>Successfully created a Deny policy named &apos;</value>
+    <value>Successfully created a Deny policy named '</value>
   </data>
   <data name="Scalability" xml:space="preserve">
     <value>Scalability: </value>
   </data>
-  <data name="PFNBasedDenyPolicyTitle" xml:space="preserve">
-    <value>PFN based Deny policy</value>
-  </data>
   <data name="NoAppSelectedForDenyPolicy" xml:space="preserve">
     <value>No app was selected to create a deny policy for</value>
-  </data>
-  <data name="NoPolicyNameSelected" xml:space="preserve">
-    <value>No policy name was selected for the deny policy</value>
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>Creating the deny policy based on Package Family Names</value>
@@ -1287,7 +1278,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>WARNING</value>
   </data>
   <data name="ManualRemovalWarning" xml:space="preserve">
-    <value>The policy &apos;</value>
+    <value>The policy '</value>
   </data>
   <data name="ManualRemovalWarningEnd" xml:space="preserve">
     <value> must not be manually removed because you WILL NOT BE ABLE TO USE APPCONTROL MANAGER AGAIN. It is automatically removed when its corresponding base policy is removed from the system. Are you sure you still want to remove it manually?</value>
@@ -1299,14 +1290,15 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No</value>
   </data>
   <data name="RestartRequired" xml:space="preserve">
-    <value>Before you can safely remove the signed policy named &apos;</value>
+    <value>Before you can safely remove the signed policy named '</value>
   </data>
   <data name="RestartRequiredEnd" xml:space="preserve">
-    <value> with the ID &apos;</value>
+    <value> with the ID '</value>
   </data>
   <data name="Understand" xml:space="preserve">
     <value>I Understand</value>
-  </data><!-- For CI Policy Info ListViews -->
+  </data>
+  <!-- For CI Policy Info ListViews -->
   <data name="PolicyIDHeader.Text" xml:space="preserve">
     <value>Policy ID</value>
   </data>
@@ -1336,7 +1328,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PolicyOptionsHeader.Text" xml:space="preserve">
     <value>Policy Options</value>
-  </data><!-- End of For CI Policy Info ListViews --><!-- For CI Policy Info ListViews Column Header Buttons -->
+  </data>
+  <!-- End of For CI Policy Info ListViews -->
+  <!-- For CI Policy Info ListViews Column Header Buttons -->
   <data name="PolicyIDColumnHeaderBtn.Content" xml:space="preserve">
     <value>Policy ID</value>
   </data>
@@ -1366,7 +1360,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PolicyOptionsColumnHeaderBtn.Content" xml:space="preserve">
     <value>Policy Options</value>
-  </data><!-- End of For CI Policy Info ListViews Column Header Buttons -->
+  </data>
+  <!-- End of For CI Policy Info ListViews Column Header Buttons -->
   <data name="Copy" xml:space="preserve">
     <value>Copy </value>
   </data>
@@ -1379,7 +1374,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="FriendlyNameLabel" xml:space="preserve">
     <value>Friendly Name: </value>
   </data>
-  <data name="VersionLabel" xml:space="preserve">
+  <data name="VersionLabel.Text" xml:space="preserve">
     <value>Version: </value>
   </data>
   <data name="IsAuthorizedLabel" xml:space="preserve">
@@ -1401,10 +1396,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Policy Options: </value>
   </data>
   <data name="LastRebootTime" xml:space="preserve">
-    <value>System&apos;s last reboot was </value>
+    <value>System's last reboot was </value>
   </data>
   <data name="PolicyStage1Completed" xml:space="preserve">
-    <value>Signed policy with the ID &apos;</value>
+    <value>Signed policy with the ID '</value>
   </data>
   <data name="CompletedAt" xml:space="preserve">
     <value> completed its 1st stage at </value>
@@ -1422,7 +1417,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value> will be changed to the type </value>
   </data>
   <data name="PolicyRedeployInfo" xml:space="preserve">
-    <value>It will be re-deployed on the system with the same Policy ID and Base Policy ID. If it&apos;s currently in Audit Mode, it will be in Enforced Mode after this operation is completed.</value>
+    <value>It will be re-deployed on the system with the same Policy ID and Base Policy ID. If it's currently in Audit Mode, it will be in Enforced Mode after this operation is completed.</value>
   </data>
   <data name="SupplementalPolicyContinues" xml:space="preserve">
     <value>Any existing Supplemental policy will continue to work.</value>
@@ -1459,7 +1454,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Successfully created the Strict Kernel-mode policy</value>
-  </data><!-- For File Identities texts -->
+  </data>
+  <!-- For File Identities texts -->
   <data name="FileNameHeader.Text" xml:space="preserve">
     <value>File Name</value>
   </data>
@@ -1534,7 +1530,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ActionHeader.Text" xml:space="preserve">
     <value>Action</value>
-  </data><!-- End Of For File Identities texts --><!-- For File Identities ListViews Buttons texts -->
+  </data>
+  <!-- End Of For File Identities texts -->
+  <!-- For File Identities ListViews Buttons texts -->
   <data name="FileNameColumnHeaderBtn.Content" xml:space="preserve">
     <value>File Name</value>
   </data>
@@ -1609,7 +1607,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
     <value>Action</value>
-  </data><!-- End Of For File Identities ListViews Buttons texts --><!-- For Simulation texts -->
+  </data>
+  <!-- End Of For File Identities ListViews Buttons texts -->
+  <!-- For Simulation texts -->
   <data name="PathHeader.Text" xml:space="preserve">
     <value>Path</value>
   </data>
@@ -1654,7 +1654,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="FilePathHeader.Text" xml:space="preserve">
     <value>File Path</value>
-  </data><!-- End of For For Simulation texts --><!-- For Simulation ListView Column Header Buttons -->
+  </data>
+  <!-- End of For For Simulation texts -->
+  <!-- For Simulation ListView Column Header Buttons -->
   <data name="PathColumnHeaderBtn.Content" xml:space="preserve">
     <value>Path</value>
   </data>
@@ -1699,7 +1701,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
     <value>File Path</value>
-  </data><!-- End of For Simulation ListView Column Header Buttons --><!-- For View File Certificates ListViews -->
+  </data>
+  <!-- End of For Simulation ListView Column Header Buttons -->
+  <!-- For View File Certificates ListViews -->
   <data name="SignerNumberHeader.Text" xml:space="preserve">
     <value>Signer Number</value>
   </data>
@@ -1732,7 +1736,9 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ExtensionOIDsHeader.Text" xml:space="preserve">
     <value>Extension OIDs</value>
-  </data><!-- End of For View File Certificates ListViews --><!-- For View File Certificates ListViews Column Header Buttons -->
+  </data>
+  <!-- End of For View File Certificates ListViews -->
+  <!-- For View File Certificates ListViews Column Header Buttons -->
   <data name="SignerNumberColumnHeaderBtn.Content" xml:space="preserve">
     <value>Signer Number</value>
   </data>
@@ -1765,7 +1771,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ExtensionOIDsColumnHeaderBtn.Content" xml:space="preserve">
     <value>Extension OIDs</value>
-  </data><!-- End of For View File Certificates ListViews Column Header Buttons -->
+  </data>
+  <!-- End of For View File Certificates ListViews Column Header Buttons -->
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Description" xml:space="preserve">
     <value>Use this section to enter a custom pattern-based file rule to add to the supplemental policy.</value>
   </data>
@@ -1956,7 +1963,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The Username of the account that is currently selected to perform the tasks in this page.</value>
   </data>
   <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>The selected account&apos;s Username will appear here</value>
+    <value>The selected account's Username will appear here</value>
   </data>
   <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
     <value>Tenant ID</value>
@@ -1968,7 +1975,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The Tenant ID of the account that is currently selected to perform the tasks in this page.</value>
   </data>
   <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>The selected account&apos;s Tenant ID will appear here</value>
+    <value>The selected account's Tenant ID will appear here</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
     <value>Account Identifier</value>
@@ -1980,7 +1987,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The Account Identifier of the account that is currently selected to perform the tasks in this page.</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>The selected account&apos;s Identifier will appear here</value>
+    <value>The selected account's Identifier will appear here</value>
   </data>
   <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
     <value>Permissions</value>
@@ -1992,13 +1999,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The Permissions of the account that is currently selected to perform the tasks in this page.</value>
   </data>
   <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>The selected account&apos;s Permissions will appear here</value>
+    <value>The selected account's Permissions will appear here</value>
   </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sign into your Microsoft tenant. After successful sign in, the account&apos;s information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
+    <value>Sign into your Microsoft tenant. After successful sign in, the account's information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
   </data>
   <data name="SignInButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Sign into your Microsoft tenant. After successful sign in, the account&apos;s information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
+    <value>Sign into your Microsoft tenant. After successful sign in, the account's information will be saved in memory of the application until the app is closed or remove it from the &quot;Signed In Accounts&quot; section.</value>
   </data>
   <data name="CancelSigningInButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Cancel the current sign in process that is in progress.</value>
@@ -2016,10 +2023,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Select the authentication context to use for the Sign in operation. Each context is a set of Microsoft Graph permissions required to successfully complete the tasks offered in the AppControl Manager.</value>
   </data>
   <data name="RemoveAccountButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Remove the account from the list. It will be completely removed from the app&apos;s memory and the Microsoft Authentication Library&apos;s cache.</value>
+    <value>Remove the account from the list. It will be completely removed from the app's memory and the Microsoft Authentication Library's cache.</value>
   </data>
   <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Remove the account from the list. It will be completely removed from the app&apos;s memory and the Microsoft Authentication Library&apos;s cache.</value>
+    <value>Remove the account from the list. It will be completely removed from the app's memory and the Microsoft Authentication Library's cache.</value>
   </data>
   <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Set the currently selected account as the Active Account to be used for the Online operations in the current page.</value>
@@ -2094,13 +2101,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Key Size</value>
   </data>
   <data name="KeySizeSettingsCard.Description" xml:space="preserve">
-    <value>The cryptographic key&apos;s length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
+    <value>The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
   </data>
   <data name="KeySizeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The cryptographic key&apos;s length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
+    <value>The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
   </data>
   <data name="KeySizeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The cryptographic key&apos;s length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
+    <value>The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate.</value>
   </data>
   <data name="CommonNameSettingsCard.Header" xml:space="preserve">
     <value>Common Name</value>
@@ -2163,7 +2170,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Select a template to apply to the selected policy file. Templates are predefined lists of policy rule options.</value>
   </data>
   <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
-    <value>Create App Control for Business policies based on different templates and policy rule options. Signed And Reputable is great for new users. Allow Microsoft only allows files signed by Microsoft&apos;s certificates. Default Windows only allows files that come by default with the Windows OS.</value>
+    <value>Create App Control for Business policies based on different templates and policy rule options. Signed And Reputable is great for new users. Allow Microsoft only allows files signed by Microsoft's certificates. Default Windows only allows files that come by default with the Windows OS.</value>
   </data>
   <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
     <value>Create a Supplemental policy that will expand the scope of a base policy. Supplemental policies can only allow files, they cannot have deny rules in them.</value>
@@ -2196,13 +2203,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Edit App Control for Business Policies. Easily browse for a policy XML file and load its details using the Load button. Once loaded, you can review the number of each rule within the policy, remove specific rules, and modify various other policy settings.</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>Customize your app settings here. Your preferences will be saved so they&apos;re ready for you every time you start the AppControl Manager.</value>
+    <value>Customize your app settings here. Your preferences will be saved so they're ready for you every time you start the AppControl Manager.</value>
   </data>
   <data name="SimulationPageTitle.Text" xml:space="preserve">
     <value>Perform App Control for Business Simulation by selecting files or folders, and a XML policy file, then use the Begin Simulation button to populate the data grid. The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were running.</value>
   </data>
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
-    <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don&apos;t want to be included in the final Strict Kernel-mode policy from the list.</value>
+    <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.</value>
   </data>
   <data name="UpdatePageTitle.Text" xml:space="preserve">
     <value>Check for updates in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available. This page is only available when the AppControl Manager is installed from the GitHub source.</value>
@@ -2418,13 +2425,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Create Signed And Reputable Policy</value>
   </data>
   <data name="SignedAndReputableSettings.Description" xml:space="preserve">
-    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft&apos;s Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft's Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
   </data>
   <data name="SignedAndReputableSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft&apos;s Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft's Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
   </data>
   <data name="SignedAndReputableSettings.AutomationProperties.HelpText" xml:space="preserve">
-    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft&apos;s Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
+    <value>This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft's Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked.</value>
   </data>
   <data name="DefaultWindowsSettings.Header" xml:space="preserve">
     <value>Create Default Windows Policy</value>
@@ -2619,10 +2626,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>More info</value>
   </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the GitHub&apos;s main wiki page for the AppControl Manager</value>
+    <value>Opens the GitHub's main wiki page for the AppControl Manager</value>
   </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the GitHub&apos;s main wiki page for the AppControl Manager</value>
+    <value>Opens the GitHub's main wiki page for the AppControl Manager</value>
   </data>
   <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
     <value>Release Notes</value>
@@ -2643,13 +2650,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Update Status</value>
   </data>
   <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
-    <value>See What&apos;s New</value>
+    <value>See What's New</value>
   </data>
   <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the GitHub&apos;s releases page where you can find the full release notes for the available update.</value>
+    <value>Opens the GitHub's releases page where you can find the full release notes for the available update.</value>
   </data>
   <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the GitHub&apos;s releases page where you can find the full release notes for the available update.</value>
+    <value>Opens the GitHub's releases page where you can find the full release notes for the available update.</value>
   </data>
   <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
     <value>Once the updates are downloaded and installed, the next time you open the AppControl Manager you will use the new version.</value>
@@ -2676,16 +2683,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it.</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
-    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user&apos;s account, requiring confirmation of prompts before it can be used for signing.</value>
+    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user's account, requiring confirmation of prompts before it can be used for signing.</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
     <value>Hardened Update Procedure</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user&apos;s account, requiring confirmation of prompts before it can be used for signing.</value>
+    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user's account, requiring confirmation of prompts before it can be used for signing.</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user&apos;s account, requiring confirmation of prompts before it can be used for signing.</value>
+    <value>When this option is enabled, the temporary private key of the on-device generated certificate will be linked to the user's account, requiring confirmation of prompts before it can be used for signing.</value>
   </data>
   <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approximate download size is 65 MB.</value>
@@ -2877,9 +2884,24 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Set</value>
   </data>
   <data name="SetPolicyTemplateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Sets the selected template to the policy&apos;s rule options.</value>
+    <value>Sets the selected template to the policy's rule options.</value>
   </data>
   <data name="SetPolicyTemplateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Sets the selected template to the policy&apos;s rule options.</value>
+    <value>Sets the selected template to the policy's rule options.</value>
+  </data>
+  <data name="SelectBasePolicyTitle" xml:space="preserve">
+    <value>Select a base policy</value>
+  </data>
+  <data name="SelectBasePolicySubtitle" xml:space="preserve">
+    <value>You need to select a base policy before you can create a Supplemental policy.</value>
+  </data>
+  <data name="SelectPolicyToAddRulesToTitle" xml:space="preserve">
+    <value>Select the policy to add the rules to.</value>
+  </data>
+  <data name="SelectPolicyToAddRulesToSubtitle" xml:space="preserve">
+    <value>You need to select the policy to Add the rules to because you've set the operation mode to "Add to Existing Policy".</value>
+  </data>
+  <data name="ErrorOccurredCreatingPolicy" xml:space="preserve">
+    <value>An error occurred while creating the policy.</value>
   </data>
 </root>

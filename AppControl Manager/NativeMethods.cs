@@ -18,6 +18,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Marshalling;
+using Microsoft.Win32.SafeHandles;
 
 namespace AppControlManager;
 
@@ -224,5 +225,18 @@ internal static partial class NativeMethods
 	int SystemInformationLength,
 	ref int ReturnLength
 	);
+
+
+	// https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-createfilew
+	[LibraryImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial SafeFileHandle CreateFile(
+	 string lpFileName,
+	 uint dwDesiredAccess,
+	 uint dwShareMode,
+	 IntPtr lpSecurityAttributes,
+	 uint dwCreationDisposition,
+	 uint dwFlagsAndAttributes,
+	 IntPtr hTemplateFile);
 
 }

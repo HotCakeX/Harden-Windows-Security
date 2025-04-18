@@ -28,94 +28,8 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 {
 
-	// Used to store the scan results and as the source for the results ListViews
-	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
-	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults
-	{
-		get => _filesAndFoldersScanResults;
-		set => SetProperty(_filesAndFoldersScanResults, value, newValue => _filesAndFoldersScanResults = newValue);
-	}
 
-
-	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
-
-	internal ListViewHelper.SortState SortStateFilesAndFolders { get; set; } = new();
-
-
-	private ObservableCollection<FileIdentity> _StrictKernelModeScanResults = [];
-	internal ObservableCollection<FileIdentity> StrictKernelModeScanResults
-	{
-		get => _StrictKernelModeScanResults;
-		set => SetProperty(_StrictKernelModeScanResults, value, newValue => _StrictKernelModeScanResults = newValue);
-	}
-
-	internal readonly List<FileIdentity> StrictKernelModeScanResultsList = [];
-
-	internal ListViewHelper.SortState SortStateStrictKernelMode { get; set; } = new();
-
-
-	#region UI-Bound Properties
-
-
-	private Visibility _FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
-	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility
-	{
-		get => _FilesAndFoldersInfoBarActionButtonVisibility;
-		set => SetProperty(_FilesAndFoldersInfoBarActionButtonVisibility, value, newValue => _FilesAndFoldersInfoBarActionButtonVisibility = newValue);
-	}
-
-
-	private Visibility _CertificatesInfoBarActionButtonVisibility = Visibility.Collapsed;
-	internal Visibility CertificatesInfoBarActionButtonVisibility
-	{
-		get => _CertificatesInfoBarActionButtonVisibility;
-		set => SetProperty(_CertificatesInfoBarActionButtonVisibility, value, newValue => _CertificatesInfoBarActionButtonVisibility = newValue);
-	}
-
-	private Visibility _ISGInfoBarActionButtonVisibility = Visibility.Collapsed;
-	internal Visibility ISGInfoBarActionButtonVisibility
-	{
-		get => _ISGInfoBarActionButtonVisibility;
-		set => SetProperty(_ISGInfoBarActionButtonVisibility, value, newValue => _ISGInfoBarActionButtonVisibility = newValue);
-	}
-
-	private Visibility _StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
-	internal Visibility StrictKernelModeInfoBarActionButtonVisibility
-	{
-		get => _StrictKernelModeInfoBarActionButtonVisibility;
-		set => SetProperty(_StrictKernelModeInfoBarActionButtonVisibility, value, newValue => _StrictKernelModeInfoBarActionButtonVisibility = newValue);
-	}
-
-	private Visibility _PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
-	internal Visibility PFNInfoBarActionButtonVisibility
-	{
-		get => _PFNInfoBarActionButtonVisibility;
-		set => SetProperty(_PFNInfoBarActionButtonVisibility, value, newValue => _PFNInfoBarActionButtonVisibility = newValue);
-	}
-
-	private Visibility _CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
-	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility
-	{
-		get => _CustomFilePathRulesInfoBarActionButtonVisibility;
-		set => SetProperty(_CustomFilePathRulesInfoBarActionButtonVisibility, value, newValue => _CustomFilePathRulesInfoBarActionButtonVisibility = newValue);
-	}
-
-
-	private string _TotalCountOfTheFilesTextBox = "Total files: 0";
-	internal string TotalCountOfTheFilesTextBox
-	{
-		get => _TotalCountOfTheFilesTextBox;
-		set => SetProperty(_TotalCountOfTheFilesTextBox, value, newValue => _TotalCountOfTheFilesTextBox = newValue);
-	}
-
-	private string _TotalCountOfTheFilesStrictKernelModeTextBox = "Total files: 0";
-	internal string TotalCountOfTheFilesStrictKernelModeTextBox
-	{
-		get => _TotalCountOfTheFilesStrictKernelModeTextBox;
-		set => SetProperty(_TotalCountOfTheFilesStrictKernelModeTextBox, value, newValue => _TotalCountOfTheFilesStrictKernelModeTextBox = newValue);
-	}
-
-	#endregion
+	#region Files and Folders scan
 
 
 	#region LISTVIEW IMPLEMENTATIONS Files And Folders
@@ -357,6 +271,117 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	#endregion
 
+
+	/// <summary>
+	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
+	/// </summary>
+	private bool _FilesAndFoldersBrowseForBasePolicyIsEnabled = true;
+	internal bool FilesAndFoldersBrowseForBasePolicyIsEnabled
+	{
+		get => _FilesAndFoldersBrowseForBasePolicyIsEnabled;
+		set => SetProperty(_FilesAndFoldersBrowseForBasePolicyIsEnabled, value, newValue => _FilesAndFoldersBrowseForBasePolicyIsEnabled = newValue);
+	}
+
+	/// <summary>
+	/// Used to store the scan results and as the source for the results ListViews
+	/// </summary>
+	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
+	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults
+	{
+		get => _filesAndFoldersScanResults;
+		set => SetProperty(_filesAndFoldersScanResults, value, newValue => _filesAndFoldersScanResults = newValue);
+	}
+
+	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
+
+	internal ListViewHelper.SortState SortStateFilesAndFolders { get; set; } = new();
+
+
+	private Visibility _FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility
+	{
+		get => _FilesAndFoldersInfoBarActionButtonVisibility;
+		set => SetProperty(_FilesAndFoldersInfoBarActionButtonVisibility, value, newValue => _FilesAndFoldersInfoBarActionButtonVisibility = newValue);
+	}
+
+
+	/// <summary>
+	/// Updates the total logs count displayed on the UI
+	/// </summary>
+	internal void UpdateTotalFilesFilesAndFolders(bool? Zero = null)
+	{
+		if (Zero == true)
+		{
+			TotalCountOfTheFilesTextBox = "Total files: 0";
+		}
+		else
+		{
+			TotalCountOfTheFilesTextBox = $"Total files: {FilesAndFoldersScanResults.Count}";
+		}
+	}
+
+	private string _TotalCountOfTheFilesTextBox = "Total files: 0";
+	internal string TotalCountOfTheFilesTextBox
+	{
+		get => _TotalCountOfTheFilesTextBox;
+		set => SetProperty(_TotalCountOfTheFilesTextBox, value, newValue => _TotalCountOfTheFilesTextBox = newValue);
+	}
+
+	#endregion
+
+	#region Certificates scan
+
+	/// <summary>
+	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
+	/// </summary>
+	private bool _CertificatesBrowseForBasePolicyIsEnabled = true;
+	internal bool CertificatesBrowseForBasePolicyIsEnabled
+	{
+		get => _CertificatesBrowseForBasePolicyIsEnabled;
+		set => SetProperty(_CertificatesBrowseForBasePolicyIsEnabled, value, newValue => _CertificatesBrowseForBasePolicyIsEnabled = newValue);
+	}
+
+	private Visibility _CertificatesInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility CertificatesInfoBarActionButtonVisibility
+	{
+		get => _CertificatesInfoBarActionButtonVisibility;
+		set => SetProperty(_CertificatesInfoBarActionButtonVisibility, value, newValue => _CertificatesInfoBarActionButtonVisibility = newValue);
+	}
+
+	#endregion
+
+	#region ISG
+
+	/// <summary>
+	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
+	/// </summary>
+	private bool _ISGBrowseForBasePolicyIsEnabled = true;
+	internal bool ISGBrowseForBasePolicyIsEnabled
+	{
+		get => _ISGBrowseForBasePolicyIsEnabled;
+		set => SetProperty(_ISGBrowseForBasePolicyIsEnabled, value, newValue => _ISGBrowseForBasePolicyIsEnabled = newValue);
+	}
+
+	private Visibility _ISGInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility ISGInfoBarActionButtonVisibility
+	{
+		get => _ISGInfoBarActionButtonVisibility;
+		set => SetProperty(_ISGInfoBarActionButtonVisibility, value, newValue => _ISGInfoBarActionButtonVisibility = newValue);
+	}
+
+	#endregion
+
+	#region Strict Kernel-Mode Supplemental Policy
+
+	/// <summary>
+	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
+	/// </summary>
+	private bool _StrictKernelModeBrowseForBasePolicyIsEnabled = true;
+	internal bool StrictKernelModeBrowseForBasePolicyIsEnabled
+	{
+		get => _StrictKernelModeBrowseForBasePolicyIsEnabled;
+		set => SetProperty(_StrictKernelModeBrowseForBasePolicyIsEnabled, value, newValue => _StrictKernelModeBrowseForBasePolicyIsEnabled = newValue);
+	}
 
 
 	#region LISTVIEW IMPLEMENTATIONS Strict Kernel Mode
@@ -600,19 +625,31 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 
 
-	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalFilesFilesAndFolders(bool? Zero = null)
+	private ObservableCollection<FileIdentity> _StrictKernelModeScanResults = [];
+	internal ObservableCollection<FileIdentity> StrictKernelModeScanResults
 	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesTextBox = "Total files: 0";
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox = $"Total files: {FilesAndFoldersScanResults.Count}";
-		}
+		get => _StrictKernelModeScanResults;
+		set => SetProperty(_StrictKernelModeScanResults, value, newValue => _StrictKernelModeScanResults = newValue);
+	}
+
+	internal readonly List<FileIdentity> StrictKernelModeScanResultsList = [];
+
+	internal ListViewHelper.SortState SortStateStrictKernelMode { get; set; } = new();
+
+
+	private Visibility _StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility StrictKernelModeInfoBarActionButtonVisibility
+	{
+		get => _StrictKernelModeInfoBarActionButtonVisibility;
+		set => SetProperty(_StrictKernelModeInfoBarActionButtonVisibility, value, newValue => _StrictKernelModeInfoBarActionButtonVisibility = newValue);
+	}
+
+
+	private string _TotalCountOfTheFilesStrictKernelModeTextBox = "Total files: 0";
+	internal string TotalCountOfTheFilesStrictKernelModeTextBox
+	{
+		get => _TotalCountOfTheFilesStrictKernelModeTextBox;
+		set => SetProperty(_TotalCountOfTheFilesStrictKernelModeTextBox, value, newValue => _TotalCountOfTheFilesStrictKernelModeTextBox = newValue);
 	}
 
 
@@ -629,6 +666,115 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			TotalCountOfTheFilesStrictKernelModeTextBox = $"Total files: {StrictKernelModeScanResults.Count}";
 		}
+	}
+
+	#endregion
+
+	#region Package Family Names
+
+	/// <summary>
+	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
+	/// </summary>
+	private bool _PFNBrowseForBasePolicyIsEnabled = true;
+	internal bool PFNBrowseForBasePolicyIsEnabled
+	{
+		get => _PFNBrowseForBasePolicyIsEnabled;
+		set => SetProperty(_PFNBrowseForBasePolicyIsEnabled, value, newValue => _PFNBrowseForBasePolicyIsEnabled = newValue);
+	}
+
+
+	private Visibility _PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility PFNInfoBarActionButtonVisibility
+	{
+		get => _PFNInfoBarActionButtonVisibility;
+		set => SetProperty(_PFNInfoBarActionButtonVisibility, value, newValue => _PFNInfoBarActionButtonVisibility = newValue);
+	}
+
+	#endregion
+
+	#region Custom Pattern-based File Rule
+
+	/// <summary>
+	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
+	/// </summary>
+	private bool _CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled = true;
+	internal bool CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled
+	{
+		get => _CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled;
+		set => SetProperty(_CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled, value, newValue => _CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled = newValue);
+	}
+
+
+	private Visibility _CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
+	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility
+	{
+		get => _CustomFilePathRulesInfoBarActionButtonVisibility;
+		set => SetProperty(_CustomFilePathRulesInfoBarActionButtonVisibility, value, newValue => _CustomFilePathRulesInfoBarActionButtonVisibility = newValue);
+	}
+
+	#endregion
+
+
+
+	/// <summary>
+	/// The path to the policy file that user selected to add the new rules to.
+	/// </summary>
+	private string? _PolicyFileToMergeWith;
+	internal string? PolicyFileToMergeWith
+	{
+		get => _PolicyFileToMergeWith;
+		set => SetProperty(_PolicyFileToMergeWith, value, newValue => _PolicyFileToMergeWith = newValue);
+	}
+
+
+	/// <summary>
+	/// Whether the button that allows for picking a policy file to add the rules to is enabled or disabled.
+	/// </summary>
+	private bool _PolicyFileToMergeWithPickerButtonIsEnabled;
+	internal bool PolicyFileToMergeWithPickerButtonIsEnabled
+	{
+		get => _PolicyFileToMergeWithPickerButtonIsEnabled;
+		set => SetProperty(_PolicyFileToMergeWithPickerButtonIsEnabled, value, newValue => _PolicyFileToMergeWithPickerButtonIsEnabled = newValue);
+	}
+
+	/// <summary>
+	/// Controls the visibility of all of the elements related to browsing for base policy file.
+	/// </summary>
+	private Visibility _BasePolicyElementsVisibility = Visibility.Visible;
+	internal Visibility BasePolicyElementsVisibility
+	{
+		get => _BasePolicyElementsVisibility;
+		set => SetProperty(_BasePolicyElementsVisibility, value, newValue => _BasePolicyElementsVisibility = newValue);
+	}
+
+
+	/// <summary>
+	/// The mode of operation for the Supplemental creation page.
+	/// Set to 0 (Creating New Policies) by default.
+	/// </summary>
+	private int _OperationModeComboBoxSelectedIndex;
+	internal int OperationModeComboBoxSelectedIndex
+	{
+		get => _OperationModeComboBoxSelectedIndex;
+		set
+		{
+			// Update the operation mode property
+			_ = SetProperty(_OperationModeComboBoxSelectedIndex, value, newValue => _OperationModeComboBoxSelectedIndex = newValue);
+
+			// Automate the update of elements responsible for accepting base policy path.
+			// If this is set to 0, they should be visible, otherwise they should be collapsed.
+			BasePolicyElementsVisibility = value == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+			PolicyFileToMergeWithPickerButtonIsEnabled = value == 1;
+		}
+	}
+
+	/// <summary>
+	/// Clears the PolicyFileToMergeWith
+	/// </summary>
+	internal void ClearPolicyFileToMergeWith()
+	{
+		PolicyFileToMergeWith = null;
 	}
 
 }

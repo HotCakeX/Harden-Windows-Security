@@ -181,7 +181,7 @@ internal static class DeviceGuardInfo
 
 		try
 		{
-			Logger.Write($"Attempting to deserialize JSON result: {jsonResult}");
+			Logger.Write("Attempting to deserialize the Device Guard JSON result.");
 
 			DeviceGuardInteropClass? deviceGuardResult = JsonSerializer.Deserialize(jsonResult, DeviceGuardJsonContext.Default.DeviceGuardInteropClass);
 

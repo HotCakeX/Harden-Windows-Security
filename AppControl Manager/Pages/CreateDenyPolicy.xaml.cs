@@ -137,7 +137,7 @@ internal sealed partial class CreateDenyPolicy : Page
 		// Reset the progress ring from previous runs or in case an error occurred
 		FilesAndFoldersProgressRing.Value = 0;
 
-		FilesAndFoldersInfoBar.IsClosable = false;
+		FilesAndFoldersInfoBar.IsClosable = true;
 
 		if (filesAndFoldersFilePaths.Count == 0 && filesAndFoldersFolderPaths.Count == 0)
 		{
@@ -151,8 +151,8 @@ internal sealed partial class CreateDenyPolicy : Page
 		if (string.IsNullOrWhiteSpace(filesAndFoldersDenyPolicyName))
 		{
 			CreateDenyPolicyTeachingTip.IsOpen = true;
-			CreateDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChooseDenyPolicyNameTitle");
-			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ProvidePolicyName");
+			CreateDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreateDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -175,6 +175,7 @@ internal sealed partial class CreateDenyPolicy : Page
 			FilesAndFoldersViewFileDetailsSettingsCard.IsEnabled = true;
 
 			FilesAndFoldersInfoBar.IsOpen = true;
+			FilesAndFoldersInfoBar.IsClosable = false;
 			FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
 			string msg1 = GlobalVars.Rizz.GetString("SelectedFilesAndFolders") + filesAndFoldersFilePaths.Count + GlobalVars.Rizz.GetString("FilesAnd") + filesAndFoldersFolderPaths.Count + GlobalVars.Rizz.GetString("Folders");
 			FilesAndFoldersInfoBar.Message = msg1;
@@ -301,7 +302,7 @@ internal sealed partial class CreateDenyPolicy : Page
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
 				{
-					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -324,7 +325,7 @@ internal sealed partial class CreateDenyPolicy : Page
 		catch
 		{
 			FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Error;
-			FilesAndFoldersInfoBar.Message = GlobalVars.Rizz.GetString("ErrorCreatingDenyPolicy");
+			FilesAndFoldersInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy");
 
 			errorsOccurred = true;
 
@@ -727,6 +728,8 @@ internal sealed partial class CreateDenyPolicy : Page
 
 		bool shouldDeploy = PFNPolicyDeployToggleButton.IsChecked ?? false;
 
+		PFNInfoBar.IsClosable = true;
+
 		ViewModel.PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		// Close the teaching tip if it's open when user presses the button
@@ -744,8 +747,8 @@ internal sealed partial class CreateDenyPolicy : Page
 		if (string.IsNullOrWhiteSpace(PFNBasedDenyPolicyName))
 		{
 			CreatePFNDenyPolicyTeachingTip.IsOpen = true;
-			CreatePFNDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("PFNBasedDenyPolicyTitle");
-			CreatePFNDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoPolicyNameSelected");
+			CreatePFNDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreatePFNDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -818,7 +821,7 @@ internal sealed partial class CreateDenyPolicy : Page
 				// If user selected to deploy the policy
 				if (shouldDeploy)
 				{
-					string msg4 = GlobalVars.Rizz.GetString("DeployingDenyPolicy");
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -912,6 +915,8 @@ internal sealed partial class CreateDenyPolicy : Page
 
 		ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 
+		CustomPatternBasedFileRuleInfoBar.IsClosable = true;
+
 		if (string.IsNullOrWhiteSpace(DenyPolicyCustomPatternBasedCustomPatternTextBox.Text))
 		{
 			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
@@ -923,8 +928,8 @@ internal sealed partial class CreateDenyPolicy : Page
 		if (string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedDenyPolicyName))
 		{
 			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
-			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = "Enter a policy name";
-			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a name for the Deny policy.";
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("ChoosePolicyNameTitle");
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle");
 			return;
 		}
 
@@ -982,7 +987,8 @@ internal sealed partial class CreateDenyPolicy : Page
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
 				{
-					string msg4 = "Deploying the Deny policy on the system";
+
+					string msg4 = GlobalVars.Rizz.GetString("DeployingThePolicy");
 
 					Logger.Write(msg4);
 
@@ -1008,11 +1014,9 @@ internal sealed partial class CreateDenyPolicy : Page
 			errorsOccurred = true;
 
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Error;
-			CustomPatternBasedFileRuleInfoBar.Message = $"An error occurred while creating Pattern-based File Path rule Deny policy: {ex.Message}";
+			CustomPatternBasedFileRuleInfoBar.Message = GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy") + ex.Message;
 
-			Logger.Write($"An error occurred while creating Pattern-based File Path rule Deny policy: {ex.Message}");
-
-			throw;
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{

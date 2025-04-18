@@ -283,7 +283,14 @@
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
-                        <controls:SettingsCard x:Uid="DriversBlockRulesLittleSettingsCard" />
+                        <controls:SettingsCard x:Uid="DriversBlockRulesLittleSettingsCard">
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Uid="VersionLabel" FontWeight="Bold" Margin="0,0,5,0" Foreground="Violet"/>
+                                <TextBlock x:Name="RecommendedDriverBlockRulesVersionTextBlock" Text="N/A" Foreground="Violet"/>
+                            </StackPanel>
+
+                        </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>

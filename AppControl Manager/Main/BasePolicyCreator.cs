@@ -197,18 +197,12 @@ internal static partial class BasePolicyCreator
 
 	}
 
-	internal sealed class DriverBlockListInfo
-	{
-		internal string? Version { get; set; }
-		internal DateTime LastUpdated { get; set; }
-	}
-
 
 	/// <summary>
 	/// Used to supply extra information regarding Microsoft recommended driver block rules
 	/// </summary>
 	/// <returns></returns>
-	internal static DriverBlockListInfo? DriversBlockListInfoGathering()
+	internal static DateTime? DriversBlockListInfoGathering()
 	{
 		try
 		{
@@ -246,28 +240,7 @@ internal static partial class BasePolicyCreator
 				Logger.Write($"The document containing the drivers block list on GitHub was last updated on {lastUpdated}");
 			}
 
-			// Fetch the content of the Markdown file
-			string markdownContent = httpClient.GetStringAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
-
-			// Use Regex to find the version
-			string version = string.Empty;
-			Match match = MyRegex().Match(markdownContent);
-			if (match.Success)
-			{
-				version = match.Groups[1].Value;
-				Logger.Write($"The current version of Microsoft recommended drivers block list is {version}");
-			}
-			else
-			{
-				Logger.Write("Version not found in the Markdown content.");
-			}
-
-			// Return an instance of DriverBlockListInfo with extracted data
-			return new DriverBlockListInfo
-			{
-				Version = version,
-				LastUpdated = lastUpdated
-			};
+			return lastUpdated;
 		}
 		catch (Exception ex)
 		{
@@ -350,40 +323,54 @@ internal static partial class BasePolicyCreator
 	/// And creates a valid Code Integrity XML policy file from it.
 	/// </summary>
 	/// <param name="StagingArea">The directory where the XML file will be saved to.</param>
-	/// <returns>the path to the Microsoft recommended driver block rules base policy path</returns>
-	internal static string GetDriversBlockRules(string StagingArea)
+	/// <returns>the path to the Microsoft recommended driver block rules base policy path and the policy version</returns>
+	internal static (string, string) GetDriversBlockRules(string StagingArea)
 	{
 		string name = "Microsoft Recommended Driver Block Rules";
 
-		// Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
-		string msftDriverBlockRulesAsString;
-		using (HttpClient client = new SecHttpClient())
+		// The location where the downloaded zip file will be saved
+		string DownloadSaveLocation = Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
+
+		// The location where the zip file will be extracted
+		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
+
+		// The link to download the zip file
+		Uri DriversBlockListZipDownloadLink = new("https://aka.ms/VulnerableDriverBlockList");
+
+		// Download the zip file
+		using (HttpClient client = new())
 		{
-			msftDriverBlockRulesAsString = client.GetStringAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
+			// Download the file synchronously
+			byte[] fileBytes = client.GetByteArrayAsync(DriversBlockListZipDownloadLink).GetAwaiter().GetResult();
+			File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 		}
 
-		// Extracted the XML content from the markdown string will saved in this variable
-		string xmlContent;
+		// Extract the contents of the zip file, overwriting any existing files
+		ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
 
-		// Extract the XML content with Regex
-		Match match = MyRegex1().Match(msftDriverBlockRulesAsString);
+		// Get the path of the XML file
+		string[] SiPolicyPaths = Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.xml", SearchOption.AllDirectories);
 
-		if (match.Success)
-		{
-			// Capture the XML content
-			xmlContent = match.Groups[1].Value;
-		}
-		else
-		{
-			throw new InvalidOperationException("No XML content found on the Microsoft GitHub source.");
-		}
-
-		// Load the XML content into an XmlDocument
-		XmlDocument driverBlockRulesXML = new();
-		driverBlockRulesXML.LoadXml(xmlContent);
+		// Make sure to get only one file if there is more than one (which is unexpected)
+		string SiPolicyPath = SiPolicyPaths[0];
 
 		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(null, driverBlockRulesXML);
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(SiPolicyPath, null);
+
+		// Set the policy name
+		foreach (SiPolicy.Setting item in policyObj.Settings)
+		{
+			if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
+			string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+			string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
+			{
+				item.Value.Item = name;
+
+				break;
+			}
+		}
+
+		string policyVersion = policyObj.VersionEx;
 
 		// Generate the path for the XML file
 		string xmlPath = Path.Combine(StagingArea, $"{name}.xml");
@@ -401,7 +388,7 @@ internal static partial class BasePolicyCreator
 
 		Logger.Write($"The policy file was created and saved to {savePathLocation}");
 
-		return savePathLocation;
+		return (savePathLocation, policyVersion);
 	}
 
 

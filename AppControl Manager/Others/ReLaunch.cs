@@ -61,7 +61,7 @@ internal static unsafe class ReLaunch
 	/// <summary>
 	/// Relaunches the application with Administrator privileges
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>True if elevation was successful and user accepted the UAC prompt</returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static bool Action()
 	{

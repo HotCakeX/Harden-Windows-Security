@@ -1086,7 +1086,7 @@ dotnet_diagnostic.IDE0150.severity = error
 dotnet_diagnostic.IDE0084.severity = error
 
 # IDE0079: Remove unnecessary suppression
-dotnet_diagnostic.IDE0079.severity = error
+dotnet_diagnostic.IDE0079.severity = silent
 
 # CA1505: Avoid unmaintainable code
 dotnet_diagnostic.CA1505.severity = error

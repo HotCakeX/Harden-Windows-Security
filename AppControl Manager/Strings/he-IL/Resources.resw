@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root><!--
-    Microsoft ResX Schema
+  Microsoft ResX Schema
 
-    Version 2.0
+  Version 2.0
 
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
-    associated with the data types.
+  The primary goals of this format is to allow a simple XML format
+  that is mostly human readable. The generation and parsing of the
+  various data types are done through the TypeConverter classes
+  associated with the data types.
 
-    Example:
+  Example:
 
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
+  ... ado.net/XML headers & schema ...
+  <resheader name="resmimetype">text/microsoft-resx</resheader>
+  <resheader name="version">2.0</resheader>
+  <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+  <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+  <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+  <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+  <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>[base64 mime encoded serialized .NET Framework object]</value>
+  </data>
+  <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+    <comment>This is a comment</comment>
+  </data>
 
-    There are any number of "resheader" rows that contain simple
-    name/value pairs.
+  There are any number of "resheader" rows that contain simple
+  name/value pairs.
 
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
-    mimetype set.
+  Each data row contains a name, and value. The row also contains a
+  type or mimetype. Type corresponds to a .NET class that support
+  text/value conversion through the TypeConverter architecture.
+  Classes that don't support this are serialized and stored with the
+  mimetype set.
 
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
-    extensible. For a given mimetype the value must be set accordingly:
+  The mimetype is used for serialized objects, and tells the
+  ResXResourceReader how to depersist the object. This is currently not
+  extensible. For a given mimetype the value must be set accordingly:
 
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
-    read any of the formats listed below.
+  Note - application/x-microsoft.net.object.binary.base64 is the format
+  that the ResXResourceWriter will generate, however the reader can
+  read any of the formats listed below.
 
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
+  mimetype: application/x-microsoft.net.object.binary.base64
+  value   : The object must be serialized with
+      : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+      : and then encoded with base64 encoding.
 
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
+  mimetype: application/x-microsoft.net.object.soap.base64
+  value   : The object must be serialized with
+      : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+      : and then encoded with base64 encoding.
 
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
+  mimetype: application/x-microsoft.net.object.bytearray.base64
+  value   : The object must be serialized into a byte array
+      : using a System.ComponentModel.TypeConverter
+      : and then encoded with base64 encoding.
+  -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -120,148 +120,148 @@
     <value>צור מדיניות חסימה</value>
   </data>
   <data name="CreateDenyPolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות חסימה לאפליקציות</value>
+    <value>צור מדיניות חסימה של בקרת אפליקציות</value>
   </data>
   <data name="CreateDenyPolicyNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות חסימה לאפליקציות</value>
+    <value>צור מדיניות חסימה של בקרת אפליקציות</value>
   </data>
   <data name="CreatePolicyNavItem.Content" xml:space="preserve">
     <value>צור מדיניות</value>
     <comment>Main Navigation</comment>
   </data>
   <data name="CreatePolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות שליטה באפליקציות עם מאפיינים שונים</value>
+    <value>צור מדיניות בקרת אפליקציות עם מאפיינים שונים</value>
     <comment>Main Navigation</comment>
   </data>
   <data name="CreatePolicyNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות שליטה באפליקציות עם מאפיינים שונים</value>
+    <value>צור מדיניות בקרת אפליקציות עם מאפיינים שונים</value>
     <comment>Main Navigation</comment>
   </data>
   <data name="CreateSupplementalPolicyNavItem.Content" xml:space="preserve">
     <value>צור מדיניות משלימה</value>
   </data>
   <data name="CreateSupplementalPolicyNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות משלימה לשליטה באפליקציות</value>
+    <value>צור מדיניות משלימה של בקרת אפליקציות</value>
   </data>
   <data name="CreateSupplementalPolicyNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות משלימה לשליטה באפליקציות</value>
+    <value>צור מדיניות משלימה של בקרת אפליקציות</value>
   </data>
   <data name="BuildNewCertificateNavItem.Content" xml:space="preserve">
     <value>בנה תעודה חדשה</value>
   </data>
   <data name="BuildNewCertificateNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור תעודות מתאימות לחתימה על מדיניות שליטה באפליקציות</value>
+    <value>צור תעודות המתאימות לחתימה על מדיניות בקרת אפליקציות</value>
   </data>
   <data name="BuildNewCertificateNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור תעודות מתאימות לחתימה על מדיניות שליטה באפליקציות</value>
+    <value>צור תעודות המתאימות לחתימה על מדיניות בקרת אפליקציות</value>
   </data>
   <data name="ViewFileCertificatesNavItem.Content" xml:space="preserve">
-    <value>הצג תעודות קבצים</value>
+    <value>הצג תעודות קובץ</value>
   </data>
   <data name="ViewFileCertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הצג מידע מתקדם ומפורט אודות כל התעודות של הקבצים החתומים</value>
+    <value>הצג מידע מתקדם ומפורט ביותר על כל התעודות של קבצים חתומים</value>
   </data>
   <data name="ViewFileCertificatesNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הצג מידע מתקדם ומפורט אודות כל התעודות של הקבצים החתומים</value>
+    <value>הצג מידע מתקדם ומפורט ביותר על כל התעודות של קבצים חתומים</value>
   </data>
   <data name="CreatePolicyFromEventLogsNavItem.Content" xml:space="preserve">
-    <value>צור מדיניות מתוך יומני אירועים</value>
+    <value>צור מדיניות מרישומי אירועים</value>
   </data>
   <data name="CreatePolicyFromEventLogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות שליטה באפליקציות מהיומנים המקומיים או מקבצי EVTX</value>
+    <value>צור מדיניות בקרת אפליקציות מרישומי האירועים המקומיים או מקבצי EVTX</value>
   </data>
   <data name="CreatePolicyFromEventLogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות שליטה באפליקציות מהיומנים המקומיים או מקבצי EVTX</value>
+    <value>צור מדיניות בקרת אפליקציות מרישומי האירועים המקומיים או מקבצי EVTX</value>
   </data>
   <data name="CreatePolicyFromMDEAHNavItem.Content" xml:space="preserve">
-    <value>חיפוש מתקדם ב-MDE</value>
+    <value>MDE - ציד מתקדם</value>
   </data>
   <data name="CreatePolicyFromMDEAHNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות שליטה באפליקציות מתוך יומני חיפוש מתקדם של Microsoft Defender for Endpoint (MDE)</value>
+    <value>צור מדיניות בקרת אפליקציות מרישומי ציד מתקדם של Microsoft Defender for Endpoint (MDE)</value>
   </data>
   <data name="CreatePolicyFromMDEAHNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות שליטה באפליקציות מתוך יומני חיפוש מתקדם של Microsoft Defender for Endpoint (MDE)</value>
+    <value>צור מדיניות בקרת אפליקציות מרישומי ציד מתקדם של Microsoft Defender for Endpoint (MDE)</value>
   </data>
   <data name="SimulationNavItem.Content" xml:space="preserve">
     <value>סימולציה</value>
   </data>
   <data name="SimulationNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הדמיית פריסת מדיניות שליטה באפליקציות</value>
+    <value>בצע סימולציה לפריסת מדיניות בקרת אפליקציות</value>
   </data>
   <data name="SimulationNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הדמיית פריסת מדיניות שליטה באפליקציות</value>
+    <value>בצע סימולציה לפריסת מדיניות בקרת אפליקציות</value>
   </data>
   <data name="AllowNewAppsNavItem.Content" xml:space="preserve">
-    <value>אשר אפליקציות חדשות</value>
+    <value>אפשר אפליקציות חדשות</value>
   </data>
   <data name="AllowNewAppsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אפשר אפליקציות או תוכניות שנחסמות מהתקנה או שכבר הותקנו אך נחסמות מהרצה.</value>
+    <value>אפשר אפליקציות או תוכניות חדשות שנחסמות מהתקנה או שכבר מותקנות אך נחסמות מהפעלה.</value>
   </data>
   <data name="AllowNewAppsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אפשר אפליקציות או תוכניות שנחסמות מהתקנה או שכבר הותקנו אך נחסמות מהרצה.</value>
+    <value>אפשר אפליקציות או תוכניות חדשות שנחסמות מהתקנה או שכבר מותקנות אך נחסמות מהפעלה.</value>
   </data>
   <data name="SystemInformationNavItem.Content" xml:space="preserve">
     <value>מידע מערכת</value>
   </data>
   <data name="SystemInformationNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הצג מידע אודות המערכת</value>
+    <value>הצג מידע על המערכת</value>
   </data>
   <data name="SystemInformationNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הצג מידע אודות המערכת</value>
+    <value>הצג מידע על המערכת</value>
   </data>
   <data name="GetCodeIntegrityHashesNavItem.Content" xml:space="preserve">
-    <value>קבל Hashes לאימות קוד</value>
+    <value>קבל חתימות שלמות קוד</value>
   </data>
   <data name="GetCodeIntegrityHashesNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>קבל Hashes לאימות קבצים</value>
+    <value>קבל חתימות שלמות קוד של קבצים</value>
   </data>
   <data name="GetCodeIntegrityHashesNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>קבל Hashes לאימות קבצים</value>
+    <value>קבל חתימות שלמות קוד של קבצים</value>
   </data>
   <data name="GetSecurePolicySettingsNavItem.Content" xml:space="preserve">
     <value>קבל הגדרות מדיניות מאובטחות</value>
   </data>
   <data name="GetSecurePolicySettingsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>קבל את הגדרות המדיניות המאובטחות מתוך המדיניות שפורסמו</value>
+    <value>קבל את הגדרות המדיניות המאובטחות מבין המדיניות שנפרסו</value>
   </data>
   <data name="GetSecurePolicySettingsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>קבל את הגדרות המדיניות המאובטחות מתוך המדיניות שפורסמו</value>
+    <value>קבל את הגדרות המדיניות המאובטחות מבין המדיניות שנפרסו</value>
   </data>
   <data name="ConfigurePolicyRuleOptionsNavItem.Content" xml:space="preserve">
-    <value>הגדר אפשרויות חוקי המדיניות</value>
+    <value>הגדר אפשרויות חוקי מדיניות</value>
   </data>
   <data name="ConfigurePolicyRuleOptionsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הגדר אפשרויות חוקי המדיניות</value>
+    <value>הגדר אפשרויות חוקי מדיניות</value>
   </data>
   <data name="ConfigurePolicyRuleOptionsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הגדר אפשרויות חוקי המדיניות</value>
+    <value>הגדר אפשרויות חוקי מדיניות</value>
   </data>
   <data name="MergePoliciesNavItem.Content" xml:space="preserve">
-    <value>מזג מדיניות שליטה באפליקציות</value>
+    <value>מזג מדיניות בקרת אפליקציות</value>
   </data>
   <data name="MergePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מזג שתי מדיניות שליטה באפליקציות יחד או הסר כפילויות ממדיניות בודדת</value>
+    <value>מזג שתי מדיניות בקרת אפליקציות יחד או הסר כפילויות ממדיניות אחת</value>
   </data>
   <data name="MergePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מזג שתי מדיניות שליטה באפליקציות יחד או הסר כפילויות ממדיניות בודדת</value>
+    <value>מזג שתי מדיניות בקרת אפליקציות יחד או הסר כפילויות ממדיניות אחת</value>
   </data>
   <data name="DeploymentNavItem.Content" xml:space="preserve">
-    <value>פרוס מדיניות שליטה באפליקציות</value>
+    <value>פרוס מדיניות בקרת אפליקציות</value>
   </data>
   <data name="DeploymentNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פרוס מדיניות שליטה באפליקציות חתומות או לא חתומות במערכת</value>
+    <value>פרוס מדיניות בקרת אפליקציות חתומות או לא חתומות במערכת</value>
   </data>
   <data name="DeploymentNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פרוס מדיניות שליטה באפליקציות חתומות או לא חתומות במערכת</value>
+    <value>פרוס מדיניות בקרת אפליקציות חתומות או לא חתומות במערכת</value>
   </data>
   <data name="ValidatePoliciesNavItem.Content" xml:space="preserve">
-    <value>בדוק את תקינות המדיניות</value>
+    <value>אמת מדיניות</value>
   </data>
   <data name="ValidatePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בדוק את תקינות מדיניות השליטה באפליקציות</value>
+    <value>אמת מדיניות בקרת אפליקציות</value>
   </data>
   <data name="ValidatePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בדוק את תקינות מדיניות השליטה באפליקציות</value>
+    <value>אמת מדיניות בקרת אפליקציות</value>
   </data>
   <data name="GitHubDocsNavItem.Content" xml:space="preserve">
     <value>תיעוד GitHub</value>
@@ -276,10 +276,10 @@
     <value>תיעוד Microsoft</value>
   </data>
   <data name="MSFTDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>קבל תיעוד מקוון מ-Microsoft על מדיניות App Control לעסקים</value>
+    <value>קבל תיעוד מקוון מ-Microsoft על מדיניות בקרת אפליקציות לעסקים</value>
   </data>
   <data name="MSFTDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>קבל תיעוד מקוון מ-Microsoft על מדיניות App Control לעסקים</value>
+    <value>קבל תיעוד מקוון מ-Microsoft על מדיניות בקרת אפליקציות לעסקים</value>
   </data>
   <data name="LogsNavItem.Content" xml:space="preserve">
     <value>יומנים</value>
@@ -288,16 +288,16 @@
     <value>הגדרות</value>
   </data>
   <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הצג את היומנים של היישום בזמן אמת</value>
+    <value>הצג את יומני היישום בזמן אמת</value>
   </data>
   <data name="LogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הצג את היומנים של היישום בזמן אמת</value>
+    <value>הצג את יומני היישום בזמן אמת</value>
   </data>
   <data name="ScanResults" xml:space="preserve">
     <value>תוצאות סריקה</value>
   </data>
   <data name="BrowseForFilesSettingsCard.Description" xml:space="preserve">
-    <value>בחר קובץ לצפייה בכל התעודות הזמינות שלו</value>
+    <value>עיין בקובץ כדי לראות את כל התעודות הזמינות שלו</value>
   </data>
   <data name="BrowseForFilesSettingsCard.Header" xml:space="preserve">
     <value>בחר קובץ</value>
@@ -306,19 +306,19 @@
     <value>מדריך</value>
   </data>
   <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
-    <value>לחץ/נגיע כדי לעבור למדריך המלא של עמוד זה ב-GitHub</value>
+    <value>לחץ/הקש כדי לבקר במדריך המלא לעמוד זה ב-GitHub</value>
   </data>
   <data name="GuideButtonAtTop.AutomationProperties.HelpText" xml:space="preserve">
-    <value>לחץ/נגיע כדי לעבור למדריך המלא של עמוד זה ב-GitHub</value>
+    <value>לחץ/הקש כדי לבקר במדריך המלא לעמוד זה ב-GitHub</value>
   </data>
   <data name="DeployAfterCreationButton.Content" xml:space="preserve">
     <value>פרוס לאחר יצירה</value>
   </data>
   <data name="DeployAfterCreationButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>לחיצה על כפתור זה תגרום לפריסת המדיניות במערכת מיד לאחר יצירתה</value>
+    <value>החלפת כפתור זה פירושה שהמדיניות תיפרס במערכת לאחר יצירתה</value>
   </data>
   <data name="DeployAfterCreationButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>לחיצה על כפתור זה תגרום לפריסת המדיניות במערכת מיד לאחר יצירתה</value>
+    <value>החלפת כפתור זה פירושה שהמדיניות תיפרס במערכת לאחר יצירתה</value>
   </data>
   <data name="CreateSupplementalPolicyButton.Content" xml:space="preserve">
     <value>צור מדיניות משלימה</value>
@@ -339,127 +339,127 @@
     <value>צור את מדיניות החסימה בהתבסס על התצורות שבחרת</value>
   </data>
   <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.Description" xml:space="preserve">
-    <value>צור מדיניות חסימה באמצעות סריקת קבצים ותיקיות</value>
+    <value>צור מדיניות חסימה על ידי סריקת קבצים ותיקיות</value>
   </data>
   <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.Header" xml:space="preserve">
     <value>קבצים ותיקיות</value>
   </data>
   <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות חסימה באמצעות סריקת קבצים ותיקיות</value>
+    <value>צור מדיניות חסימה על ידי סריקת קבצים ותיקיות</value>
   </data>
   <data name="CreateDenyPolicyFilesAndFoldersSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות חסימה באמצעות סריקת קבצים ותיקיות</value>
+    <value>צור מדיניות חסימה על ידי סריקת קבצים ותיקיות</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Description" xml:space="preserve">
-    <value>צור מדיניות חסימה בהתבסס על שם משפחת החבילה (PFN) של האפליקציה</value>
+    <value>צור מדיניות חסימה בהתבסס על שם משפחת החבילה (PFN) של אפליקציה</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.Header" xml:space="preserve">
-    <value>שם משפחת החבילה</value>
+    <value>שם משפחת חבילה</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות חסימה בהתבסס על שם משפחת החבילה (PFN) של האפליקציה</value>
+    <value>צור מדיניות חסימה בהתבסס על שם משפחת החבילה (PFN) של אפליקציה</value>
   </data>
   <data name="CreateDenyPolicyPFNSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות חסימה בהתבסס על שם משפחת החבילה (PFN) של האפליקציה</value>
+    <value>צור מדיניות חסימה בהתבסס על שם משפחת החבילה (PFN) של אפליקציה</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.Description" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרות כללית (מאופשר: מצב בקרה) ותפיק יומני בקרה במקום לחסום קבצים.</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרות חוק המדיניות (מופעל: מצב ביקורת) ותייצר יומני ביקורת במקום לחסום קבצים.</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.Header" xml:space="preserve">
-    <value>בקרה</value>
+    <value>ביקורת</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרות כללית (מאופשר: מצב בקרה) ותפיק יומני בקרה במקום לחסום קבצים.</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרות חוק המדיניות (מופעל: מצב ביקורת) ותייצר יומני ביקורת במקום לחסום קבצים.</value>
   </data>
   <data name="AuditRuleOptionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרות כללית (מאופשר: מצב בקרה) ותפיק יומני בקרה במקום לחסום קבצים.</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרות חוק המדיניות (מופעל: מצב ביקורת) ותייצר יומני ביקורת במקום לחסום קבצים.</value>
   </data>
   <data name="RequireEVSignersRuleOption.Description" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרות כללית (דרוש חתימה ב-EV) שתאפשר הפעלה של דרייברים במצב ליבה חתומים בתעודת EV בלבד</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרות חוק המדיניות (דרוש חותמי EV) שתאפשר רק להפעיל מנהלי התקנים במצב ליבה שחתומים עם תעודת EV.</value>
   </data>
   <data name="RequireEVSignersRuleOption.Header" xml:space="preserve">
-    <value>דרוש חתימה ב-EV</value>
+    <value>דרוש חותמי EV</value>
   </data>
   <data name="RequireEVSignersRuleOption.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרות כללית (דרוש חתימה ב-EV) שתאפשר הפעלה של דרייברים במצב ליבה חתומים בתעודת EV בלבד</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרות חוק המדיניות (דרוש חותמי EV) שתאפשר רק להפעיל מנהלי התקנים במצב ליבה שחתומים עם תעודת EV.</value>
   </data>
   <data name="RequireEVSignersRuleOption.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרות כללית (דרוש חתימה ב-EV) שתאפשר הפעלה של דרייברים במצב ליבה חתומים בתעודת EV בלבד</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרות חוק המדיניות (דרוש חותמי EV) שתאפשר רק להפעיל מנהלי התקנים במצב ליבה שחתומים עם תעודת EV.</value>
   </data>
   <data name="EnableScriptEnforcementRuleOption.Description" xml:space="preserve">
-    <value>מאפשר אכיפת סקריפטים עבור המדיניות, מה שיקטין באופן משמעותי את משטח ההתקפה של PowerShell בכך שיכריח להפעיל רק סקריפטים/מודולים חתומים ומותרים במדיניות תקינות הקוד</value>
+    <value>מאפשר אכיפת סקריפטים למדיניות, מה שיגביל באופן חמור את משטח התקיפה של PowerShell על ידי דרישה שרק סקריפטים/מודולים חתומים ומורשים במדיניות שלמות הקוד יופעלו.</value>
   </data>
   <data name="EnableScriptEnforcementRuleOption.Header" xml:space="preserve">
     <value>הפעל אכיפת סקריפטים</value>
   </data>
   <data name="EnableScriptEnforcementRuleOption.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מאפשר אכיפת סקריפטים עבור המדיניות, מה שיקטין באופן משמעותי את משטח ההתקפה של PowerShell בכך שיכריח להפעיל רק סקריפטים/מודולים חתומים ומותרים במדיניות תקינות הקוד</value>
+    <value>מאפשר אכיפת סקריפטים למדיניות, מה שיגביל באופן חמור את משטח התקיפה של PowerShell על ידי דרישה שרק סקריפטים/מודולים חתומים ומורשים במדיניות שלמות הקוד יופעלו.</value>
   </data>
   <data name="EnableScriptEnforcementRuleOption.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מאפשר אכיפת סקריפטים עבור המדיניות, מה שיקטין באופן משמעותי את משטח ההתקפה של PowerShell בכך שיכריח להפעיל רק סקריפטים/מודולים חתומים ומותרים במדיניות תקינות הקוד</value>
+    <value>מאפשר אכיפת סקריפטים למדיניות, מה שיגביל באופן חמור את משטח התקיפה של PowerShell על ידי דרישה שרק סקריפטים/מודולים חתומים ומורשים במדיניות שלמות הקוד יופעלו.</value>
   </data>
   <data name="TestModeRuleOption.Description" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרויות כלליות (מאופשר: בקרה בעת אתחול עם כישלון) ו-(מאופשר: תפריט אפשרויות אתחול מתקדמות). אפשרות זו מתאימה לבדיקת המדיניות ולהבטחת אפשרויות שיחזור במקרה של תקלה, אך אינה מומלצת לשימוש במדיניות הסופית המיועדת לייצור מסיבות אבטחה.</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרויות חוק המדיניות (מופעל: ביקורת אתחול בכשל) ו-(מופעל: תפריט אפשרויות אתחול מתקדמות). שימושי לבדיקת המדיניות ולהחזקת אפשרויות שחזור זמינות כאשר משהו משתבש. לא מומלץ לשימוש במדיניות הסופית המוכנה לייצור מסיבות אבטחה.</value>
   </data>
   <data name="TestModeRuleOption.Header" xml:space="preserve">
     <value>מצב בדיקה</value>
   </data>
   <data name="TestModeRuleOption.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרויות כלליות (מאופשר: בקרה בעת אתחול עם כישלון) ו-(מאופשר: תפריט אפשרויות אתחול מתקדמות). אפשרות זו מתאימה לבדיקת המדיניות ולהבטחת אפשרויות שיחזור במקרה של תקלה, אך אינה מומלצת לשימוש במדיניות הסופית המיועדת לייצור מסיבות אבטחה.</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרויות חוק המדיניות (מופעל: ביקורת אתחול בכשל) ו-(מופעל: תפריט אפשרויות אתחול מתקדמות). שימושי לבדיקת המדיניות ולהחזקת אפשרויות שחזור זמינות כאשר משהו משתבש. לא מומלץ לשימוש במדיניות הסופית המוכנה לייצור מסיבות אבטחה.</value>
   </data>
   <data name="TestModeRuleOption.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מציין שהמדיניות שתיווצר/יופעל תכלול אפשרויות כלליות (מאופשר: בקרה בעת אתחול עם כישלון) ו-(מאופשר: תפריט אפשרויות אתחול מתקדמות). אפשרות זו מתאימה לבדיקת המדיניות ולהבטחת אפשרויות שיחזור במקרה של תקלה, אך אינה מומלצת לשימוש במדיניות הסופית המיועדת לייצור מסיבות אבטחה.</value>
+    <value>מציין שהמדיניות שנוצרה/נפרסה תכלול את אפשרויות חוק המדיניות (מופעל: ביקורת אתחול בכשל) ו-(מופעל: תפריט אפשרויות אתחול מתקדמות). שימושי לבדיקת המדיניות ולהחזקת אפשרויות שחזור זמינות כאשר משהו משתבש. לא מומלץ לשימוש במדיניות הסופית המוכנה לייצור מסיבות אבטחה.</value>
   </data>
   <data name="FileBrowseButton.Content" xml:space="preserve">
     <value>עיין</value>
   </data>
   <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח את חלון בחירת הקבצים המאפשר לבחור קובץ/קבצים</value>
+    <value>פותח את דיאלוג בורר הקבצים ומאפשר לך לבחור קובץ(ים)</value>
   </data>
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח את חלון בחירת הקבצים המאפשר לבחור קובץ/קבצים</value>
+    <value>פותח את דיאלוג בורר הקבצים ומאפשר לך לבחור קובץ(ים)</value>
   </data>
   <data name="FolderBrowseButton.Content" xml:space="preserve">
     <value>עיין</value>
   </data>
   <data name="FolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח את חלון בחירת התיקיות המאפשר לבחור תיקייה/תיקיות</value>
+    <value>פותח את דיאלוג בורר התיקיות ומאפשר לך לבחור תיקיה(ות)</value>
   </data>
   <data name="FolderBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח את חלון בחירת התיקיות המאפשר לבחור תיקייה/תיקיות</value>
+    <value>פותח את דיאלוג בורר התיקיות ומאפשר לך לבחור תיקיה(ות)</value>
   </data>
   <data name="SupplementalPolicyNameTextBox.PlaceholderText" xml:space="preserve">
     <value>שם מדיניות משלימה</value>
   </data>
   <data name="SupplementalPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הזן שם עבור המדיניות המשלימה שתיווצר</value>
+    <value>הזן שם עבור המדיניות המשלימה שתיווצר.</value>
   </data>
   <data name="SupplementalPolicyNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הזן שם עבור המדיניות המשלימה שתיווצר</value>
+    <value>הזן שם עבור המדיניות המשלימה שתיווצר.</value>
   </data>
   <data name="SupplementalPolicyNameSettingsCard.Description" xml:space="preserve">
-    <value>שם המדיניות המשלימה שתיווצר</value>
+    <value>שם המדיניות המשלימה שתיווצר.</value>
   </data>
   <data name="SupplementalPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שם המדיניות המשלימה שתיווצר</value>
+    <value>שם המדיניות המשלימה שתיווצר.</value>
   </data>
   <data name="SupplementalPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שם המדיניות המשלימה שתיווצר</value>
+    <value>שם המדיניות המשלימה שתיווצר.</value>
   </data>
   <data name="SupplementalPolicyNameSettingsCard.Header" xml:space="preserve">
-    <value>שם המדיניות</value>
+    <value>שם מדיניות</value>
   </data>
   <data name="SupplementalFilesAndFoldersSettingsCard.Header" xml:space="preserve">
     <value>קבצים ותיקיות</value>
   </data>
   <data name="SupplementalFilesAndFoldersSettingsCard.Description" xml:space="preserve">
-    <value>צור מדיניות משלימה באמצעות סריקת קבצים ותיקיות</value>
+    <value>צור מדיניות משלימה על ידי סריקת קבצים ותיקיות</value>
   </data>
   <data name="SupplementalFilesAndFoldersSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות משלימה באמצעות סריקת קבצים ותיקיות</value>
+    <value>צור מדיניות משלימה על ידי סריקת קבצים ותיקיות</value>
   </data>
   <data name="SupplementalFilesAndFoldersSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות משלימה באמצעות סריקת קבצים ותיקיות</value>
+    <value>צור מדיניות משלימה על ידי סריקת קבצים ותיקיות</value>
   </data>
   <data name="ClearButton.Content" xml:space="preserve">
     <value>נקה</value>
@@ -471,40 +471,40 @@
     <value>נקה</value>
   </data>
   <data name="ReviewEventLogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סקור את יומני האירועים שנאספו במהלך שלב מצב הבקרה</value>
+    <value>סקור את רישומי האירועים שנאספו במהלך שלב מצב הביקורת</value>
   </data>
   <data name="ReviewEventLogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סקור את יומני האירועים שנאספו במהלך שלב מצב הבקרה</value>
+    <value>סקור את רישומי האירועים שנאספו במהלך שלב מצב הביקורת</value>
   </data>
   <data name="ReviewEventLogsNavItem.Content" xml:space="preserve">
-    <value>סקור את יומני האירועים</value>
+    <value>סקור את רישומי האירועים</value>
   </data>
   <data name="ReviewLocalFilesNavItem.Content" xml:space="preserve">
     <value>סקור את הקבצים המקומיים</value>
   </data>
   <data name="ReviewLocalFilesNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סקור את הקבצים המקומיים. אלו הם הקבצים שנמצאו בתיקיות שבהן עיינת.</value>
+    <value>סקור את הקבצים המקומיים. אלו הקבצים שנמצאו בספריות שעיינת בהן.</value>
   </data>
   <data name="ReviewLocalFilesNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סקור את הקבצים המקומיים. אלו הם הקבצים שנמצאו בתיקיות שבהן עיינת.</value>
+    <value>סקור את הקבצים המקומיים. אלו הקבצים שנמצאו בספריות שעיינת בהן.</value>
   </data>
   <data name="AllowNewAppsInternalMainNavItem.Content" xml:space="preserve">
     <value>התחל לאפשר אפליקציות או קבצים</value>
   </data>
   <data name="AllowNewAppsInternalMainNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>התחל לאפשר אפליקציות או קבצים על ידי הפעלתם או עיון בתיקיותיהם במהלך שלב מצב הבקרה</value>
+    <value>התחל לאפשר אפליקציות או קבצים על ידי הפעלתם או עיון בספריות שלהם במהלך שלב מצב הביקורת.</value>
   </data>
   <data name="AllowNewAppsInternalMainNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>התחל לאפשר אפליקציות או קבצים על ידי הפעלתם או עיון בתיקיותיהם במהלך שלב מצב הבקרה</value>
+    <value>התחל לאפשר אפליקציות או קבצים על ידי הפעלתם או עיון בספריות שלהם במהלך שלב מצב הביקורת.</value>
   </data>
   <data name="ExtraActionsDropDownButton.Content" xml:space="preserve">
     <value>פעולות</value>
   </data>
   <data name="ExtraActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מציע מספר פעולות שונות לביצוע על הנתונים המוצגים</value>
+    <value>מציע פעולות שונות שניתן לבצע על הנתונים המוצגים</value>
   </data>
   <data name="ExtraActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מציע מספר פעולות שונות לביצוע על הנתונים המוצגים</value>
+    <value>מציע פעולות שונות שניתן לבצע על הנתונים המוצגים</value>
   </data>
   <data name="ClearDataMenuFlyoutItem.Text" xml:space="preserve">
     <value>נקה נתונים</value>
@@ -519,28 +519,28 @@
     <value>פרוס לאחר יצירה</value>
   </data>
   <data name="DeployAfterCreationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>לחיצה על כפתור זה תגרום לפריסת המדיניות במערכת מיד לאחר יצירתה</value>
+    <value>החלפת כפתור זה פירושה שהמדיניות תיפרס במערכת לאחר יצירתה</value>
   </data>
   <data name="DeployAfterCreationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>לחיצה על כפתור זה תגרום לפריסת המדיניות במערכת מיד לאחר יצירתה</value>
+    <value>החלפת כפתור זה פירושה שהמדיניות תיפרס במערכת לאחר יצירתה</value>
   </data>
   <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>חפש בנתונים...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>חפש בנתונים המוצגים</value>
+    <value>חפש בין הנתונים המוצגים</value>
   </data>
   <data name="SearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>חפש בנתונים המוצגים</value>
+    <value>חפש בין הנתונים המוצגים</value>
   </data>
   <data name="DeSelectAllMenuFlyoutItem.Text" xml:space="preserve">
-    <value>בטל את כל הבחירות</value>
+    <value>בטל בחירה של הכל</value>
   </data>
   <data name="DeSelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בטל את הבחירה מכל הנתונים שנבחרו</value>
+    <value>בטל בחירה של כל הנתונים שנבחרו</value>
   </data>
   <data name="DeSelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בטל את הבחירה מכל הנתונים שנבחרו</value>
+    <value>בטל בחירה של כל הנתונים שנבחרו</value>
   </data>
   <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
     <value>בחר הכל</value>
@@ -582,82 +582,82 @@
     <value>אפליקציות נבחרות: 0</value>
   </data>
   <data name="SelectedAppsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מספר כולל של האפליקציות שנבחרו</value>
+    <value>המספר הכולל של האפליקציות שנבחרו</value>
   </data>
   <data name="SelectedAppsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מספר כולל של האפליקציות שנבחרו</value>
+    <value>המספר הכולל של האפליקציות שנבחרו</value>
   </data>
   <data name="BrowseForFoldersDenyPolicySettingsCard.Description" xml:space="preserve">
-    <value>עיין בנתיבי תיקיות לסריקה והכללה במדיניות החסימה. התיקיות יסרקו באופן רקורסיבי.</value>
+    <value>עיין בנתיבי תיקיות לסריקה ולכלול במדיניות החסימה. התיקיות ייסרקו באופן רקורסיבי.</value>
   </data>
   <data name="BrowseForFoldersDenyPolicySettingsCard.Header" xml:space="preserve">
     <value>עיין בתיקיות</value>
   </data>
   <data name="BrowseForFoldersDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בנתיבי תיקיות לסריקה והכללה במדיניות החסימה. התיקיות יסרקו באופן רקורסיבי.</value>
+    <value>עיין בנתיבי תיקיות לסריקה ולכלול במדיניות החסימה. התיקיות ייסרקו באופן רקורסיבי.</value>
   </data>
   <data name="BrowseForFoldersDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בנתיבי תיקיות לסריקה והכללה במדיניות החסימה. התיקיות יסרקו באופן רקורסיבי.</value>
+    <value>עיין בנתיבי תיקיות לסריקה ולכלול במדיניות החסימה. התיקיות ייסרקו באופן רקורסיבי.</value>
   </data>
   <data name="BrowseForFilesDenyPolicySettingsCard.Description" xml:space="preserve">
-    <value>עיין בנתיבי קבצים לסריקה והכללה במדיניות החסימה.</value>
+    <value>עיין בנתיבי קבצים לסריקה ולכלול במדיניות החסימה.</value>
   </data>
   <data name="BrowseForFilesDenyPolicySettingsCard.Header" xml:space="preserve">
     <value>עיין בקבצים</value>
   </data>
   <data name="BrowseForFilesDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בנתיבי קבצים לסריקה והכללה במדיניות החסימה.</value>
+    <value>עיין בנתיבי קבצים לסריקה ולכלול במדיניות החסימה.</value>
   </data>
   <data name="BrowseForFilesDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בנתיבי קבצים לסריקה והכללה במדיניות החסימה.</value>
+    <value>עיין בנתיבי קבצים לסריקה ולכלול במדיניות החסימה.</value>
   </data>
   <data name="DenyPolicyNameSettingsCard.Description" xml:space="preserve">
-    <value>שם מדיניות החסימה שתיווצר</value>
+    <value>שם מדיניות החסימה שתיווצר.</value>
   </data>
   <data name="DenyPolicyNameSettingsCard.Header" xml:space="preserve">
-    <value>שם המדיניות</value>
+    <value>שם מדיניות</value>
   </data>
   <data name="DenyPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שם מדיניות החסימה שתיווצר</value>
+    <value>שם מדיניות החסימה שתיווצר.</value>
   </data>
   <data name="DenyPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שם מדיניות החסימה שתיווצר</value>
+    <value>שם מדיניות החסימה שתיווצר.</value>
   </data>
   <data name="ViewSelectedBasePolicyTextBlock.Text" xml:space="preserve">
-    <value>הצג את נתיב המדיניות הבסיסית שבחרת</value>
+    <value>הצג את נתיב המדיניות הבסיסית שבחרת.</value>
   </data>
   <data name="ViewSelectedFilesTextBlock.Text" xml:space="preserve">
-    <value>הצג את הקבצים שבחרת</value>
+    <value>הצג את הקבצים שבחרת.</value>
   </data>
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
-    <value>הצג את התיקיות שבחרת</value>
+    <value>הצג את התיקיות שבחרת.</value>
   </data>
   <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>סה"כ יומנים: 0</value>
+    <value>סך כל היומנים: 0</value>
   </data>
   <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מספר כולל של היומנים</value>
+    <value>המספר הכולל של היומנים</value>
   </data>
   <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מספר כולל של היומנים</value>
+    <value>המספר הכולל של היומנים</value>
   </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>רענן את היומנים</value>
   </data>
   <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אחזר את היומנים העדכניים למושב הנוכחי על ידי קריאתם מקובץ היומן בתיקיית תצורת המשתמש</value>
+    <value>אחזר את היומנים העדכניים ביותר עבור ההפעלה הנוכחית על ידי קריאתם מקובץ היומן בספריית התצורות של המשתמש</value>
   </data>
   <data name="RefreshLogFilesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אחזר את היומנים העדכניים למושב הנוכחי על ידי קריאתם מקובץ היומן בתיקיית תצורת המשתמש</value>
+    <value>אחזר את היומנים העדכניים ביותר עבור ההפעלה הנוכחית על ידי קריאתם מקובץ היומן בספריית התצורות של המשתמש</value>
   </data>
   <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
     <value>חפש פריטי תפריט...</value>
   </data>
   <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הזן שמות פריטי תפריט למציאתם במהירות</value>
+    <value>הזן שמות של פריטי תפריט כדי למצוא אותם במהירות</value>
   </data>
   <data name="MainSearchAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הזן שמות פריטי תפריט למציאתם במהירות</value>
+    <value>הזן שמות של פריטי תפריט כדי למצוא אותם במהירות</value>
   </data>
   <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>בדוק עדכונים</value>
@@ -666,76 +666,76 @@
     <value>בדוק עדכונים</value>
   </data>
   <data name="UpdateNavItem.Content" xml:space="preserve">
-    <value>עדכן</value>
+    <value>עדכון</value>
   </data>
   <data name="OpenConfigDirectoryButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פתח את התיקייה בה מאוחסנים קבצי תצורת המשתמש וקבצים שנוצרו על ידו</value>
+    <value>פתח את הספרייה שבה מאוחסנות תצורות המשתמש והקבצים שנוצרו על ידי המשתמש</value>
   </data>
   <data name="OpenConfigDirectoryButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פתח את התיקייה בה מאוחסנים קבצי תצורת המשתמש וקבצים שנוצרו על ידו</value>
+    <value>פתח את הספרייה שבה מאוחסנות תצורות המשתמש והקבצים שנוצרו על ידי המשתמש</value>
   </data>
   <data name="OpenConfigDirectoryButtonText.Text" xml:space="preserve">
-    <value>פתח תיקיית תצורת משתמש</value>
+    <value>פתח ספריית תצורות משתמש</value>
   </data>
   <data name="ResetStepsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>יאפס את השלבים ואם המדיניות הבסיסית מופעלת במצב בקרה, תופעל מחדש במצב אכיפה.</value>
+    <value>יאפס את השלבים ואם המדיניות הבסיסית נפרסה במצב ביקורת, יפרוס אותה מחדש במצב אכיפה.</value>
   </data>
   <data name="ResetStepsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>יאפס את השלבים ואם המדיניות הבסיסית מופעלת במצב בקרה, תופעל מחדש במצב אכיפה.</value>
+    <value>יאפס את השלבים ואם המדיניות הבסיסית נפרסה במצב ביקורת, יפרוס אותה מחדש במצב אכיפה.</value>
   </data>
   <data name="ResetStepsButton.Content" xml:space="preserve">
     <value>אפס שלבים</value>
   </data>
   <data name="AllowNewAppsStep1Text.Text" xml:space="preserve">
-    <value>בחר את הפרטים הנדרשים כגון קובץ XML של מדיניות מופעלת ושם למדיניות המשלימה שתיווצר</value>
+    <value>בחר את המידע הנדרש כגון קובץ XML של מדיניות נפרסת ושם עבור המדיניות המשלימה שתיווצר</value>
   </data>
   <data name="AllowNewAppsStep2Text.Text" xml:space="preserve">
-    <value>עכשיו התקן את האפליקציה החדשה או הרץ אפליקציה מותקנת מראש שנחסמה. ניתן, במידת הצורך, לעיין בתיקיות לסריקה כגון מיקום ההתקנה של האפליקציה. כאשר תסיים, השתמש בכפתור למטה לעבור לשלב 3.</value>
+    <value>כעת התקן את האפליקציה החדשה שלך או הפעל אפליקציה מותקנת מראש שנחסמה. ניתן לעיין בתיקיות לסריקה כגון המיקום שבו האפליקציה מותקנת. לאחר שסיימת, השתמש בלחצן למטה כדי לעבור לשלב 3.</value>
   </data>
   <data name="AllowNewAppsStep3Text.Text" xml:space="preserve">
-    <value>השתמש בלשונית יומני האירועים והקבצים המקומיים כדי לאשר או לבחור את הקבצים שזוהו, לצורך הכללתם במדיניות המשלימה הסופית.</value>
+    <value>השתמש בלשוניות רישומי האירועים והקבצים המקומיים כדי לאשר או לבחור את הקבצים שזוהו כדי לכלול אותם במדיניות המשלימה הסופית.</value>
   </data>
   <data name="AllowNewAppsCreatePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>התחל ביצירת המדיניות עם היומנים והקבצים שבחרת</value>
+    <value>התחל ליצור את המדיניות עם היומנים והקבצים שבחרת</value>
   </data>
   <data name="AllowNewAppsCreatePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>התחל ביצירת המדיניות עם היומנים והקבצים שבחרת</value>
+    <value>התחל ליצור את המדיניות עם היומנים והקבצים שבחרת</value>
   </data>
   <data name="AllowNewAppsCreatePolicyButton.Content" xml:space="preserve">
     <value>צור מדיניות</value>
   </data>
   <data name="LogSizeNumberBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>זוהי הקיבולת המרבית של יומני פעילות תקינות הקוד</value>
+    <value>זו הקיבולת המרבית של גודל יומן התפעול של שלמות הקוד</value>
   </data>
   <data name="LogSizeNumberBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>זוהי הקיבולת המרבית של יומני פעילות תקינות הקוד</value>
+    <value>זו הקיבולת המרבית של גודל יומן התפעול של שלמות הקוד</value>
   </data>
   <data name="LogSizeNumberBox.Header" xml:space="preserve">
-    <value>הזן מספר עבור גודל היומן במגה-בייט</value>
+    <value>הזן מספר לגודל היומן ב-MB</value>
   </data>
   <data name="BrowseTextBlock.Text" xml:space="preserve">
     <value>עיין</value>
   </data>
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
-    <value>עיין לקובץ מדיניות בסיסית</value>
+    <value>עיין בקובץ מדיניות בסיסית</value>
   </data>
   <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>עיין לקובץ XML של מדיניות</value>
+    <value>עיין בקובץ XML של מדיניות</value>
   </data>
   <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>לחץ/נגע לבחירת קובץ XML של מדיניות מהמכשיר שלך</value>
+    <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
   </data>
   <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>לחץ/נגע לבחירת קובץ XML של מדיניות מהמכשיר שלך</value>
+    <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
   </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר רמה שעל פיה יסרקו הקבצים/היומנים</value>
+    <value>בחר רמה שבה הקבצים/יומנים ייסרקו</value>
   </data>
   <data name="ScanLevelComboBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר רמה שעל פיה יסרקו הקבצים/היומנים</value>
+    <value>בחר רמה שבה הקבצים/יומנים ייסרקו</value>
   </data>
   <data name="WebViewBackButton.Text" xml:space="preserve">
-    <value>חזרה</value>
+    <value>חזור</value>
   </data>
   <data name="WebViewForwardButton.Text" xml:space="preserve">
     <value>קדימה</value>
@@ -747,7 +747,7 @@
     <value>בית</value>
   </data>
   <data name="UserConfigsSettingsExpander.Description" xml:space="preserve">
-    <value>להלן תוכן קובץ JSON של תצורות המשתמש</value>
+    <value>להלן התוכן של קובץ JSON של תצורות המשתמש</value>
   </data>
   <data name="UserConfigsSettingsExpander.Header" xml:space="preserve">
     <value>תצורות משתמש</value>
@@ -783,10 +783,10 @@
     <value>רענן</value>
   </data>
   <data name="RefreshAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מאחזר את שמות התעודות המעודכנות ביותר מחנות התעודות האישית של המשתמש</value>
+    <value>מאחזר את שמות התעודות המשותפות העדכניות ביותר ממאגר התעודות האישי של המשתמש</value>
   </data>
   <data name="RefreshAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מאחזר את שמות התעודות המעודכנות ביותר מחנות התעודות האישית של המשתמש</value>
+    <value>מאחזר את שמות התעודות המשותפות העדכניות ביותר ממאגר התעודות האישי של המשתמש</value>
   </data>
   <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
     <value>התאם אישית את סגנון הרקע של היישום</value>
@@ -795,34 +795,34 @@
     <value>סגנון רקע</value>
   </data>
   <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>זהו הרקע של AppControl Manager. השינויים יהיו נראים ברקע.</value>
+    <value>זו הרקע של AppControl Manager. השינויים יהיו גלויים ברקע.</value>
   </data>
   <data name="BackgroundStyleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>זהו הרקע של AppControl Manager. השינויים יהיו נראים ברקע.</value>
+    <value>זו הרקע של AppControl Manager. השינויים יהיו גלויים ברקע.</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
-    <value>בחר סגנון לאייקוני התפריט הראשי</value>
+    <value>בחר סגנון עבור הסמלים של הניווט הראשי</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.Header" xml:space="preserve">
-    <value>סגנון אייקונים</value>
+    <value>סגנון סמלים</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר סגנון לאייקוני התפריט הראשי.</value>
+    <value>בחר סגנון עבור הסמלים של הניווט הראשי.</value>
   </data>
   <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר סגנון לאייקוני התפריט הראשי.</value>
+    <value>בחר סגנון עבור הסמלים של הניווט הראשי.</value>
   </data>
   <data name="AppThemeSettingsCard.Description" xml:space="preserve">
-    <value>התאם אישית את הנושא</value>
+    <value>התאם אישית את הערכת הנושא</value>
   </data>
   <data name="AppThemeSettingsCard.Header" xml:space="preserve">
-    <value>נושא</value>
+    <value>ערכת נושא</value>
   </data>
   <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר נושא עבור AppControl Manager</value>
+    <value>בחר ערכת נושא עבור AppControl Manager</value>
   </data>
   <data name="AppThemeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר נושא עבור AppControl Manager</value>
+    <value>בחר ערכת נושא עבור AppControl Manager</value>
   </data>
   <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
     <value>התאם אישית את מיקום תפריט הניווט</value>
@@ -831,34 +831,34 @@
     <value>תפריט ניווט</value>
   </data>
   <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר מיקום לתפריט הניווט</value>
+    <value>בחר מיקום עבור תפריט הניווט</value>
   </data>
   <data name="MainNavigationLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר מיקום לתפריט הניווט</value>
+    <value>בחר מיקום עבור תפריט הניווט</value>
   </data>
   <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
-    <value>קבל משוב קולי בעת שימוש באלמנטים שונים של AppControl Manager</value>
+    <value>שמע משוב קולי בעת שימוש ברכיבים שונים של AppControl Manager</value>
   </data>
   <data name="AppSoundSettingSettingsCard.Header" xml:space="preserve">
-    <value>קול</value>
+    <value>צליל</value>
   </data>
   <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>קבל משוב קולי בעת שימוש באלמנטים שונים של AppControl Manager</value>
+    <value>שמע משוב קולי בעת שימוש ברכיבים שונים של AppControl Manager</value>
   </data>
   <data name="AppSoundSettingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>קבל משוב קולי בעת שימוש באלמנטים שונים של AppControl Manager</value>
+    <value>שמע משוב קולי בעת שימוש ברכיבים שונים של AppControl Manager</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
-    <value>מתאים בעיקר כאשר נעשה שימוש ב-MicaAlt כרקע.</value>
+    <value>מתאים בעיקר לשימוש עם MicaAlt כרקע.</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.Header" xml:space="preserve">
     <value>רקע כהה יותר</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>יהסיר את הצללים הקלים הנוספים מהרקע, וייתן למראה הכללי של AppControl Manager מראה כהה יותר.</value>
+    <value>זה יסיר את הצל הבהיר הנוסף מהרקע, וייתן מראה כהה יותר כללי למראה של AppControl Manager.</value>
   </data>
   <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>יהסיר את הצללים הקלים הנוספים מהרקע, וייתן למראה הכללי של AppControl Manager מראה כהה יותר.</value>
+    <value>זה יסיר את הצל הבהיר הנוסף מהרקע, וייתן מראה כהה יותר כללי למראה של AppControl Manager.</value>
   </data>
   <data name="UserConfigurations.Text" xml:space="preserve">
     <value>תצורות משתמש</value>
@@ -867,13 +867,13 @@
     <value>מראה</value>
   </data>
   <data name="Sound.Text" xml:space="preserve">
-    <value>קול</value>
+    <value>צליל</value>
   </data>
   <data name="About.Text" xml:space="preserve">
     <value>אודות</value>
   </data>
   <data name="ValidateAppControlPolicySettingsCard.Description" xml:space="preserve">
-    <value>עיין לקובץ XML של מדיניות שליטה באפליקציות לאימות</value>
+    <value>עיין בקובץ XML של מדיניות בקרת אפליקציות לאימות</value>
   </data>
   <data name="ValidateAppControlPolicySettingsCard.Header" xml:space="preserve">
     <value>בחר מדיניות</value>
@@ -882,7 +882,7 @@
     <value>עיין</value>
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
-    <value>הצג את קובץ(י) ה-XML שבחרת.</value>
+    <value>הצג את קובצי ה-XML שבחרת.</value>
   </data>
   <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
     <value>בחר קובץ XML</value>
@@ -897,97 +897,97 @@
     <value>סרוק יומנים</value>
   </data>
   <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סרוק את המערכת או את קבצי EVTX שנבחרו עבור יומני תקינות קוד/אפלוקר</value>
+    <value>סרוק את המערכת או את קבצי ה-EVTX שנבחרו עבור יומני שלמות קוד/AppLocker</value>
   </data>
   <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סרוק את המערכת או את קבצי EVTX שנבחרו עבור יומני תקינות קוד/אפלוקר</value>
+    <value>סרוק את המערכת או את קבצי ה-EVTX שנבחרו עבור יומני שלמות קוד/AppLocker</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
-    <value>מדיניות שליטה באפליקציות מגבילות הן קבצים במצב ליבה והן קבצים במצב משתמש. כברירת מחדל, מוגבלים רק קבצים במצב ליבה. הפעלת אפשרות כלל זו תוודא את תקינות הקבצים והסקריפטים במצב משתמש.</value>
+    <value>מדיניות בקרת אפליקציות מגבילות הן בינאריים במצב ליבה והן בינאריים במצב משתמש. כברירת מחדל, רק בינאריים במצב ליבה מוגבלים. הפעלת אפשרות חוק זו מאמתת קבצי הפעלה וסקריפטים במצב משתמש.</value>
   </data>
   <data name="RuleOption_EnabledBootMenuProtection" xml:space="preserve">
-    <value>אפשרות זו אינה נתמכת כעת.</value>
+    <value>אפשרות זו אינה נתמכת כרגע.</value>
   </data>
   <data name="RuleOption_RequiredWHQL" xml:space="preserve">
-    <value>ברירת המחדל מאפשרת הפעלה של דרייברים במצב ליבה שאינם חתומים ע"י Windows Hardware Quality Labs (WHQL). הפעלת אפשרות כלל זו מחייבת שכל הדרייברים יהיו חתומים ע"י WHQL ומסירה תמיכה בדרייברים ישנים. דרייברים למצב ליבה המיועדים ל-Windows 10 צריכים להיות מאושרים על ידי WHQL.</value>
+    <value>כברירת מחדל, מנהלי התקנים בליבה שאינם חתומים על ידי Windows Hardware Quality Labs (WHQL) מורשים לפעול. הפעלת חוק זה דורשת שכל מנהל התקן יהיה חתום על ידי WHQL ומסירה תמיכה במנהלי התקנים ישנים. מנהלי התקנים בליבה שנבנו עבור Windows 10 צריכים להיות מאושרים על ידי WHQL.</value>
   </data>
   <data name="RuleOption_EnabledAuditMode" xml:space="preserve">
-    <value>מצווה את App Control לתעד מידע על אפליקציות, קבצים וסקריפטים שהיו נחסמים אם המדיניות הייתה מופעלת. ניתן להשתמש באפשרות זו לזיהוי ההשפעה הפוטנציאלית של המדיניות, ולהשתמש ביומני הבקרה לשיפור המדיניות טרם הפעלתה. להפעלת מדיניות, יש להסיר אפשרות זו.</value>
+    <value>מורה לבקרת אפליקציות לרשום מידע על אפליקציות, בינאריים וסקריפטים שהיו נחסמים, אם המדיניות הייתה נאכפת. ניתן להשתמש באפשרות זו כדי לזהות את ההשפעה הפוטנציאלית של מדיניות בקרת האפליקציות שלך, ולהשתמש באירועי הביקורת כדי לשפר את המדיניות לפני האכיפה. כדי לאכוף מדיניות בקרת אפליקציות, מחק אפשרות זו.</value>
   </data>
   <data name="RuleOption_DisabledFlightSigning" xml:space="preserve">
-    <value>אם מופעלת, קבצים מגרסאות Windows Insider אינם נחשבים לאמינים. אפשרות זו שימושית לארגונים המעוניינים להפעיל רק קבצים שפורסמו רשמית, ולא גרסאות ניסיוניות של Windows.</value>
+    <value>אם מופעל, בינאריים מגרסאות Windows Insider אינם מהימנים. אפשרות זו שימושית עבור ארגונים שרוצים להריץ רק בינאריים ששוחררו, ולא גרסאות Windows לפני שחרור.</value>
   </data>
   <data name="RuleOption_EnabledInheritDefaultPolicy" xml:space="preserve">
-    <value>אפשרות זו שמורה לשימוש עתידי ואינה משפיעה כעת.</value>
+    <value>אפשרות זו שמורה לשימוש עתידי וכרגע אין לה השפעה.</value>
   </data>
   <data name="RuleOption_EnabledUnsignedSystemIntegrityPolicy" xml:space="preserve">
-    <value>מאפשר למדיניות להישאר ללא חתימה. כאשר אפשרות זו מוסרת, המדיניות חייבת להיות חתומה וכל המדיניות המשלימות גם חייבות להיות חתומות. יש לציין את התעודות המורשות לעדכוני מדיניות עתידיים בקטע UpdatePolicySigners. תעודות המורשות למדיניות משלימות יש לציין בקטע SupplementalPolicySigners.</value>
+    <value>מאפשר למדיניות להישאר לא חתומה. כאשר אפשרות זו מוסרת, המדיניות חייבת להיות חתומה וגם כל המדיניות המשלימות חייבות להיות חתומות. התעודות המהימנות לעדכוני מדיניות עתידיים חייבות להיות מזוהות בסעיף UpdatePolicySigners. תעודות המהימנות למדיניות משלימות חייבות להיות מזוהות בסעיף SupplementalPolicySigners.</value>
   </data>
   <data name="RuleOption_RequiredEVSigners" xml:space="preserve">
-    <value>אפשרות זו אינה נתמכת כעת.</value>
+    <value>אפשרות זו אינה נתמכת כרגע.</value>
   </data>
   <data name="RuleOption_EnabledAdvancedBootOptionsMenu" xml:space="preserve">
-    <value>תפריט האתחול של F8 מושבת כברירת מחדל לכל מדיניות שליטה באפליקציות. הפעלת אפשרות כלל זו מאפשרת לתפריט F8 להופיע למשתמשים הנוכחים פיזית.</value>
+    <value>תפריט ה-F8 לפני האתחול מושבת כברירת מחדל עבור כל מדיניות בקרת אפליקציות. הגדרת אפשרות חוק זו מאפשרת לתפריט F8 להופיע למשתמשים הנוכחים פיזית.</value>
   </data>
   <data name="RuleOption_EnabledBootAuditOnFailure" xml:space="preserve">
-    <value>משמש כאשר מדיניות השליטה מופעלת במצב אכיפה. כאשר דרייבר קריטי לאתחול נכשל בעת ההפעלה, המדיניות מועברת למצב בקרה כדי לאפשר טעינת Windows. מנהלים יכולים לאמת את סיבת הכישלון ביומן האירועים של CodeIntegrity.</value>
+    <value>משמש כאשר מדיניות בקרת האפליקציות נמצאת במצב אכיפה. כאשר מנהל התקן קריטי לאתחול נכשל במהלך ההפעלה, מדיניות בקרת האפליקציות מועברת למצב ביקורת כך ש-Windows יטען. מנהלי מערכת יכולים לאמת את סיבת הכשל ביומן האירועים של CodeIntegrity.</value>
   </data>
   <data name="RuleOption_DisabledScriptEnforcement" xml:space="preserve">
-    <value>אפשרות זו משביתת את אפשרויות אכיפת הסקריפטים, הכוללת את PowerShell, Windows Based Script Host (wscript.exe), Windows Console Based Script Host (cscript.exe), קבצי HTA הפועלים ב-Microsoft HTML Application Host (mshta.exe) ו-MSXML. חלק ממארחי הסקריפטים עשויים להתנהג באופן שונה גם כאשר המדיניות במצב בקרה. למידע נוסף אודות אכיפת סקריפטים, ראו 'אכיפת סקריפטים עם App Control'.
-NOTE: אפשרות זו אינה נתמכת ב-Windows Server 2016 או Windows 10 1607 LTSB ואין להשתמש בה במערכות הפעלה אלו.</value>
+    <value>אפשרות זו משביתה אפשרויות אכיפת סקריפטים, כולל PowerShell, Windows Based Script Host (wscript.exe), Windows Console Based Script Host (cscript.exe), קבצי HTA המופעלים ב-Microsoft HTML Application Host (mshta.exe), ו-MSXML. חלק ממארחי הסקריפטים עשויים להתנהג אחרת גם כאשר המדיניות שלך נמצאת במצב ביקורת. למידע נוסף על אכיפת סקריפטים, ראה אכיפת סקריפטים עם בקרת אפליקציות.
+הערה: אפשרות זו אינה נתמכת ב-Windows Server 2016 או ב-Windows 10 1607 LTSB ולא מומלץ להשתמש בה במערכות הפעלה אלו.</value>
   </data>
   <data name="RuleOption_RequiredEnforceStoreApplications" xml:space="preserve">
-    <value>אם אפשרות זו מופעלת, מדיניות השליטה באפליקציות חלה גם על אפליקציות Universal Windows.</value>
+    <value>אם אפשרות חוק זו מופעלת, מדיניות בקרת אפליקציות חלות גם על יישומי Windows אוניברסליים.</value>
   </data>
   <data name="RuleOption_EnabledManagedInstaller" xml:space="preserve">
-    <value>השתמש באפשרות זו כדי לאפשר באופן אוטומטי אפליקציות המותקנות על ידי מתקין מנוהל. למידע נוסף, ראו 'אשר אפליקציות המופעלות עם מתקין מנוהל של App Control'.</value>
+    <value>השתמש באפשרות זו כדי לאפשר באופן אוטומטי יישומים המותקנים על ידי מתקין מנוהל. למידע נוסף, ראה אישור יישומים שנפרסו עם מתקין מנוהל של בקרת אפליקציות.</value>
   </data>
   <data name="RuleOption_EnabledIntelligentSecurityGraphAuthorization" xml:space="preserve">
-    <value>השתמש באפשרות זו כדי לאפשר באופן אוטומטי אפליקציות בעלות מוניטין "טוב ידוע" כפי שמוגדר על ידי Intelligent Security Graph (ISG) של Microsoft.</value>
+    <value>השתמש באפשרות זו כדי לאפשר באופן אוטומטי יישומים עם מוניטין &quot;ידוע כטוב&quot; כפי שהוגדר על ידי Intelligent Security Graph (ISG) של Microsoft.</value>
   </data>
   <data name="RuleOption_EnabledInvalidateEAsOnReboot" xml:space="preserve">
-    <value>כאשר נעשה שימוש באפשרות Intelligent Security Graph, App Control מגדיר תכונה מורחבת לקובץ המציינת שהקובץ אושר להרצה. אפשרות זו גורמת ל-App Control לאמת מחדש באופן תקופתי את המוניטין של קבצים שאושרו בעבר על ידי ISG.</value>
+    <value>כאשר משתמשים באפשרות Intelligent Security Graph, בקרת אפליקציות מגדירה תכונת קובץ מורחבת המציינת שהקובץ אושר להפעלה. אפשרות זו גורמת לבקרת אפליקציות לאמת מחדש את המוניטין של קבצים שאושרו בעבר על ידי ה-ISG באופן תקופתי.</value>
   </data>
   <data name="RuleOption_EnabledUpdatePolicyNoReboot" xml:space="preserve">
-    <value>השתמש באפשרות זו כדי לאפשר עדכוני מדיניות App Control עתידיים ללא צורך באתחול המערכת.
-NOTE: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1709 ומעלה, או ב-Windows Server 2019 ומעלה.</value>
+    <value>השתמש באפשרות זו כדי לאפשר לעדכוני מדיניות בקרת אפליקציות עתידיים להחיל ללא צורך באתחול מחדש של המערכת.
+הערה: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1709 ואילך, או ב-Windows Server 2019 ואילך.</value>
   </data>
   <data name="RuleOption_EnabledAllowSupplementalPolicies" xml:space="preserve">
-    <value>השתמש באפשרות זו במדיניות בסיסית כדי לאפשר למדיניות משלימות להרחיבה.
-NOTE: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1903 ומעלה, או ב-Windows Server 2022 ומעלה.</value>
+    <value>השתמש באפשרות זו במדיניות בסיסית כדי לאפשר למדיניות משלימות להרחיב אותה.
+הערה: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1903 ואילך, או ב-Windows Server 2022 ואילך.</value>
   </data>
   <data name="RuleOption_DisabledRuntimeFilePathRuleProtection" xml:space="preserve">
-    <value>אפשרות זו משביתת את בדיקת זמן הריצה המוגדרת כברירת מחדל, המאפשרת כללים של נתיבי קבצים רק עבור נתיבים הניתנים לכתיבה על ידי מנהל בלבד.
-NOTE: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1903 ומעלה, או ב-Windows Server 2022 ומעלה.</value>
+    <value>אפשרות זו משביתה את בדיקת הזמן ריצה המוגדרת כברירת מחדל שמאפשרת חוקי FilePath רק עבור נתיבים שניתנים לכתיבה רק על ידי מנהל מערכת.
+הערה: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1903 ואילך, או ב-Windows Server 2022 ואילך.</value>
   </data>
   <data name="RuleOption_EnabledDynamicCodeSecurity" xml:space="preserve">
-    <value>מאפשר אכיפת מדיניות עבור אפליקציות .NET וספריות טעונות דינמית.
-NOTE: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1803 ומעלה, או ב-Windows Server 2019 ומעלה.
-NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Control UMCI מפעילה אותה. אין מצב בקרה עבור קידוד מאובטח דינמי ב-.NET.</value>
+    <value>מאפשר אכיפת מדיניות עבור יישומי .NET וספריות שנטענות באופן דינמי.
+הערה: אפשרות זו נתמכת רק ב-Windows 10, גרסה 1803 ואילך, או ב-Windows Server 2019 ואילך.
+הערה: אפשרות זו נאכפת תמיד אם מדיניות UMCI של בקרת אפליקציות כלשהי מפעילה אותה. אין מצב ביקורת עבור חיזוק אבטחת קוד דינמי של .NET.</value>
   </data>
   <data name="RuleOption_EnabledRevokedExpiredAsUnsigned" xml:space="preserve">
-    <value>השתמש באפשרות זו כדי להתייחס לקבצים חתומים עם תעודות שנשללו, או תעודות שפגו עם ה-Lifetime Signing EKU בחתימה, כ"קבצים לא חתומים" עבור תהליכים/רכיבים במצב משתמש, בתרחישי חתימה ארגוניים.</value>
+    <value>השתמש באפשרות זו כדי להתייחס לבינאריים שחתומים עם תעודות שבוטלו, או תעודות שפג תוקפן עם Lifetime Signing EKU על החתימה, כ&quot;בינאריים לא חתומים&quot; עבור תהליכים/רכיבים במצב משתמש, תחת תרחישי חתימה ארגוניים.</value>
   </data>
   <data name="RuleOption_EnabledDeveloperModeDynamicCodeTrust" xml:space="preserve">
-    <value>השתמש באפשרות זו כדי לסמוך על אפליקציות UWP שנבדקו ב-Visual Studio או הופעלו דרך פורטל המכשיר כאשר מצב מפתח מופעל במערכת.</value>
+    <value>השתמש באפשרות זו כדי לסמוך על יישומי UWP שמתבצע עליהם ניפוי שגיאות ב-Visual Studio או נפרסים דרך פורטל המכשיר כאשר מצב מפתח מופעל במערכת.</value>
   </data>
   <data name="RuleOption_EnabledSecureSettingPolicy" xml:space="preserve">
-    <value>כרגע אינו מתועד.</value>
+    <value>זה לא מתועד כרגע.</value>
   </data>
   <data name="RuleOption_EnabledConditionalWindowsLockdownPolicy" xml:space="preserve">
-    <value>משמש אך ורק למדיניות Smart App Control.</value>
+    <value>משמש על ידי מדיניות Smart App Control בלבד.</value>
   </data>
   <data name="ConfigurePolicyRuleOptions_ButtonContent" xml:space="preserve">
-    <value>הגדר אפשרויות חוקי המדיניות</value>
+    <value>הגדר אפשרויות חוקי מדיניות</value>
   </data>
   <data name="SelectPolicyFileBeforeAddingOptions" xml:space="preserve">
     <value>אנא בחר קובץ מדיניות לפני הוספת אפשרויות.</value>
   </data>
   <data name="SelectPolicyFileBeforeSettingTemplate" xml:space="preserve">
-    <value>אנא בחר קובץ מדיניות לפני קביעת תבנית.</value>
+    <value>אנא בחר קובץ מדיניות לפני הגדרת תבנית.</value>
   </data>
   <data name="SelectPolicyFileBeforeRetrievingOptions" xml:space="preserve">
-    <value>אנא בחר קובץ מדיניות לפני קבלת סטטוס אפשרויות הכלל שלו.</value>
+    <value>אנא בחר קובץ מדיניות לפני אחזור מצב אפשרויות החוק שלו.</value>
   </data>
   <data name="GetSecurePolicySettings_FillAllFields" xml:space="preserve">
     <value>אנא מלא את כל שלושת השדות.</value>
@@ -996,34 +996,34 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>נדרש קלט</value>
   </data>
   <data name="GetSecurePolicySettings_NoPolicyMessage" xml:space="preserve">
-    <value>אין מדיניות מופעלת במערכת המכילה את ההגדרה המאובטחת הנבחרת.</value>
+    <value>אין מדיניות מופעלת במערכת שמכילה את ההגדרה המאובטחת שנבחרה.</value>
   </data>
   <data name="GetSecurePolicySettings_PolicyNotFound" xml:space="preserve">
     <value>מדיניות לא נמצאה</value>
   </data>
   <data name="GetSecurePolicySettings_PolicyFoundMessage" xml:space="preserve">
-    <value>מדיניות עם פרטי ההגדרה המאובטחת הנבחרת מופעלת כעת במערכת.</value>
+    <value>מדיניות עם פרטי ההגדרה המאובטחת שנבחרה מופעלת כעת במערכת.</value>
   </data>
   <data name="GetSecurePolicySettings_PolicyFound" xml:space="preserve">
     <value>מדיניות נמצאה</value>
   </data>
   <data name="MergePolicies_SelectMainPolicyXML" xml:space="preserve">
-    <value>בחר קובץ XML של המדיניות הראשית</value>
+    <value>בחר XML של המדיניות הראשית</value>
   </data>
   <data name="MergePolicies_SelectMainPolicySubtitle" xml:space="preserve">
-    <value>יש לבחור קובץ XML כמדיניות ראשית</value>
+    <value>עליך לבחור קובץ XML כמדיניות הראשית</value>
   </data>
   <data name="MergePolicies_SelectOtherPolicies" xml:space="preserve">
-    <value>בחר מדיניות נוספות</value>
+    <value>בחר מדיניות אחרות</value>
   </data>
   <data name="MergePolicies_SelectOtherPoliciesSubtitle" xml:space="preserve">
-    <value>יש לבחור לפחות מדיניות נוספת לאיחוד עם המדיניות הראשית</value>
+    <value>עליך לבחור לפחות מדיניות אחת נוספת כדי למזג עם המדיניות הראשית</value>
   </data>
   <data name="MergePolicies_MergingMessage" xml:space="preserve">
     <value>ממזג את המדיניות</value>
   </data>
   <data name="MergePolicies_DeployingMessage" xml:space="preserve">
-    <value>מפרוס את המדיניות הראשית לאחר האיחוד.</value>
+    <value>מפעיל את המדיניות הראשית לאחר המיזוג.</value>
   </data>
   <data name="MergePolicies_StagingAreaName" xml:space="preserve">
     <value>PolicyMerger</value>
@@ -1032,13 +1032,13 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>MergedPolicy.cip</value>
   </data>
   <data name="MergePolicies_ErrorMessage" xml:space="preserve">
-    <value>אירעה שגיאה במהלך תהליך האיחוד</value>
+    <value>אירעה שגיאה במהלך תהליך המיזוג</value>
   </data>
   <data name="MergePolicies_SuccessMessage" xml:space="preserve">
-    <value>המדיניות אוחדו בהצלחה</value>
+    <value>המדיניות מוזגו בהצלחה</value>
   </data>
   <data name="UpdateNotInitialized" xml:space="preserve">
-    <value>העדכון אינו מאותחל.</value>
+    <value>העדכון לא אותחל.</value>
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>בודק עדכון</value>
@@ -1056,85 +1056,85 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>, מעדכן את היישום...</value>
   </data>
   <data name="DownloadingPackage" xml:space="preserve">
-    <value>מוריד את חבילת ה-MSIXBundle של AppControl Manager...</value>
+    <value>מוריד את חבילת ה-MSIXBundle של מנהל AppControl...</value>
   </data>
   <data name="DownloadSuccess" xml:space="preserve">
-    <value>חבילת ה-MSIXBundle של AppControl Manager הורדה בהצלחה אל </value>
+    <value>חבילת ה-MSIXBundle של מנהל AppControl הורדה בהצלחה אל </value>
   </data>
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>לא נבחר נתיב MSIXBundle</value>
   </data>
   <data name="DetectingSignTool" xml:space="preserve">
-    <value>מאתר/מוריד את SignTool.exe משרתי Microsoft</value>
+    <value>מזהה/מוריד את SignTool.exe משרתי מיקרוסופט</value>
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
-    <value>כל ההורדות הושלמו, מתקין את גרסת AppControl Manager החדשה</value>
+    <value>כל ההורדות הסתיימו, מתקין את הגרסה החדשה של מנהל AppControl</value>
   </data>
   <data name="ASRError" xml:space="preserve">
-    <value>אירעה שגיאה בעת ניסיון להסיר את החריגות לכלל ASR, אותה ניתן להתעלם בבטחה: </value>
+    <value>אירעה שגיאה בעת ניסיון להסיר את החרגות כלל ה-ASR, אשר ניתן להתעלם ממנה בבטחה: </value>
   </data>
   <data name="InstallingPackage" xml:space="preserve">
-    <value>מתקין את חבילת ה-MSIXBundle של AppControl Manager</value>
+    <value>מתקין את חבילת ה-MSIXBundle של מנהל AppControl</value>
   </data>
   <data name="InstallationError" xml:space="preserve">
-    <value>שגיאה בהתקנת AppControl Manager. קוד שגיאה: </value>
+    <value>שגיאה בהתקנת מנהל AppControl. קוד שגיאה: </value>
   </data>
   <data name="InstallationErrorText" xml:space="preserve">
-    <value> - טקסט השגיאה: </value>
+    <value> - טקסט שגיאה: </value>
   </data>
   <data name="InstallationCanceled" xml:space="preserve">
-    <value>ההתקנה של AppControl Manager בוטלה</value>
+    <value>התקנת מנהל AppControl בוטלה</value>
   </data>
   <data name="InstallationSucceeded" xml:space="preserve">
-    <value>ההתקנה של AppControl Manager הצליחה</value>
+    <value>התקנת מנהל AppControl הצליחה</value>
   </data>
   <data name="UnknownInstallationIssue" xml:space="preserve">
-    <value>אירעה בעיה לא ידועה בהתקנת AppControl Manager</value>
+    <value>הייתה בעיה לא ידועה בהתקנת מנהל AppControl</value>
   </data>
   <data name="ASRAddError" xml:space="preserve">
-    <value>אירעה שגיאה בעת ניסיון להוסיף את החריגות לכלל ASR, אותה ניתן להתעלם בבטחה: </value>
+    <value>אירעה שגיאה בעת ניסיון להוסיף את החרגות כלל ה-ASR, אשר ניתן להתעלם ממנה בבטחה: </value>
   </data>
   <data name="UpdateSuccess" xml:space="preserve">
-    <value>העדכון הצליח. כאשר תסגור ותפתח מחדש את AppControl Manager, תשתמש אוטומטית בגרסה החדשה.</value>
+    <value>העדכון הצליח. כאשר תסגור ותפתח מחדש את מנהל AppControl, תשתמש אוטומטית בגרסה החדשה.</value>
   </data>
   <data name="UpdatesInstalled" xml:space="preserve">
-    <value>עדכונים מותקנים</value>
+    <value>עדכונים הותקנו</value>
   </data>
   <data name="AlreadyUpdated" xml:space="preserve">
-    <value>הגרסה הנוכחית מעודכנת כבר.</value>
+    <value>הגרסה הנוכחית כבר מעודכנת.</value>
   </data>
   <data name="UpdateCheckError" xml:space="preserve">
-    <value>אירעה שגיאה בבדיקת עדכון.</value>
+    <value>אירעה שגיאה בעת בדיקת עדכון.</value>
   </data>
   <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>דורש Windows 11 24H2 או גרסה מאוחרת יותר</value>
+    <value>דורש Windows 11 24H2 או מאוחר יותר</value>
   </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
-    <value>פרוס מדיניות ללא חתימה</value>
+    <value>הפעל מדיניות לא חתומה</value>
   </data>
   <data name="DeploySignedPolicy" xml:space="preserve">
-    <value>פרוס מדיניות חתומה</value>
+    <value>הפעל מדיניות חתומה</value>
   </data>
   <data name="DeployingXMLFiles" xml:space="preserve">
-    <value>מפרוס </value>
+    <value>מפעיל </value>
   </data>
   <data name="UnsignedXMLFiles" xml:space="preserve">
-    <value> קבצי XML ללא חתימה.</value>
+    <value> קבצי XML לא חתומים.</value>
   </data>
   <data name="DeployingXMLFile" xml:space="preserve">
-    <value>כרגע מפרוס קובץ XML: '</value>
+    <value>כעת מפעיל קובץ XML: '</value>
   </data>
   <data name="SignedPolicyError" xml:space="preserve">
     <value>קובץ ה-XML '</value>
   </data>
   <data name="DeploymentError" xml:space="preserve">
-    <value>אירעה שגיאה בפריסת קבצי ה-XML שנבחרו</value>
+    <value>הייתה שגיאה בהפעלת קבצי ה-XML שנבחרו</value>
   </data>
   <data name="DeploymentSuccess" xml:space="preserve">
-    <value>פריסת כל קבצי ה-XML שנבחרו בוצעה בהצלחה</value>
+    <value>הפעלתי בהצלחה את כל קבצי ה-XML שנבחרו</value>
   </data>
   <data name="DeployingSignedXMLFiles" xml:space="preserve">
-    <value>מפרוס </value>
+    <value>מפעיל </value>
   </data>
   <data name="SignedXMLFiles" xml:space="preserve">
     <value> קבצי XML חתומים.</value>
@@ -1143,31 +1143,31 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>מדיניות עם אותו PolicyID </value>
   </data>
   <data name="RemovingPolicy" xml:space="preserve">
-    <value> כבר מופעלת במערכת בגרסה ללא חתימה. יש להסירה לפני פריסת הגרסה החתומה כדי למנוע כשלים באתחול.</value>
+    <value> כבר מופעלת במערכת בגרסה לא חתומה. מסיר אותה לפני הפעלת הגרסה החתומה כדי למנוע כשלי אתחול.</value>
   </data>
   <data name="SignedDeploymentSuccess" xml:space="preserve">
-    <value>כל קבצי ה-XML שנבחרו הופצו בהצלחה כמדיניות חתומות</value>
+    <value>הפעלתי בהצלחה את כל קבצי ה-XML שנבחרו כמדיניות חתומות</value>
   </data>
   <data name="DeployingCIPFiles" xml:space="preserve">
-    <value>מפרוס </value>
+    <value>מפעיל </value>
   </data>
   <data name="CIPFiles" xml:space="preserve">
-    <value> קבצי בינארי CIP.</value>
+    <value> קבצי CIP בינאריים.</value>
   </data>
   <data name="DeployingCIPFile" xml:space="preserve">
-    <value>כרגע מפרוס קובץ CIP: '</value>
+    <value>כעת מפעיל קובץ CIP: '</value>
   </data>
   <data name="CIPDeploymentSuccess" xml:space="preserve">
-    <value>פריסת כל קבצי ה-CIP שנבחרו בוצעה בהצלחה</value>
+    <value>הפעלתי בהצלחה את כל קבצי ה-CIP שנבחרו</value>
   </data>
   <data name="SigningIntoIntune" xml:space="preserve">
     <value>מתחבר ל-Intune</value>
   </data>
   <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>התחברות ל-Intune הצליחה</value>
+    <value>התחברתי בהצלחה ל-Intune</value>
   </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
-    <value>פריסה בענן מופעלת כעת</value>
+    <value>הפעלה בענן פעילה כעת</value>
   </data>
   <data name="IntuneSignInCancelled" xml:space="preserve">
     <value>ההתחברות ל-Intune בוטלה על ידי המשתמש</value>
@@ -1176,19 +1176,19 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>ההתחברות ל-Intune בוטלה על ידי המשתמש</value>
   </data>
   <data name="IntuneSignInError" xml:space="preserve">
-    <value>אירעה שגיאה בהתחברות ל-Intune: </value>
+    <value>הייתה שגיאה בהתחברות ל-Intune: </value>
   </data>
   <data name="SigningOutOfIntune" xml:space="preserve">
     <value>מתנתק מ-Intune</value>
   </data>
   <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>התנתקות מ-Intune הצליחה</value>
+    <value>התנתקתי בהצלחה מ-Intune</value>
   </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
-    <value>הפריסה המקומית מופעלת כעת</value>
+    <value>הפעלה מקומית פעילה כעת</value>
   </data>
   <data name="IntuneSignOutError" xml:space="preserve">
-    <value>אירעה שגיאה בעת התנתקות מ-Intune: </value>
+    <value>הייתה שגיאה בהתנתקות מ-Intune: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>מעבד</value>
@@ -1206,22 +1206,22 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>הצלחה</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
-    <value>התעודה נוצרה בהצלחה עם הפרטים שנבחרו. טביעת האצבע של התעודה היא: '</value>
+    <value>יצרתי בהצלחה את התעודה עם הפרטים שנבחרו. טביעת האצבע של התעודה היא: '</value>
   </data>
   <data name="CreateDenyPolicyNotInitialized" xml:space="preserve">
-    <value>CreateDenyPolicy אינו מאותחל.</value>
+    <value>CreateDenyPolicy לא אותחל.</value>
   </data>
   <data name="SelectFilesOrFoldersTitle" xml:space="preserve">
     <value>בחר קבצים או תיקיות</value>
   </data>
   <data name="NoFilesOrFoldersSelected" xml:space="preserve">
-    <value>לא נבחרו קבצים או תיקיות ליצירת מדיניות חסימה</value>
+    <value>לא נבחרו קבצים או תיקיות ליצירת מדיניות.</value>
   </data>
-  <data name="ChooseDenyPolicyNameTitle" xml:space="preserve">
-    <value>בחר שם למדיניות החסימה</value>
+  <data name="ChoosePolicyNameTitle" xml:space="preserve">
+    <value>בחר שם מדיניות</value>
   </data>
-  <data name="ProvidePolicyName" xml:space="preserve">
-    <value>יש לספק שם למדיניות החסימה.</value>
+  <data name="ChoosePolicyNameSubtitle" xml:space="preserve">
+    <value>עליך לספק שם למדיניות.</value>
   </data>
   <data name="SelectedFilesAndFolders" xml:space="preserve">
     <value>בחרת </value>
@@ -1236,49 +1236,40 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>לא זוהו קבצים תואמים</value>
   </data>
   <data name="NoCompatibleFilesDetected" xml:space="preserve">
-    <value>לא זוהו קבצים תואמים ל-AppControl באף אחד מנתיבי הקבצים והתיקיות שבחרת</value>
+    <value>לא זוהו קבצים תואמי AppControl באף אחד מהקבצים ונתיבי התיקיות שבחרת</value>
   </data>
   <data name="ScanningFiles" xml:space="preserve">
-    <value>סורקים סך הכל </value>
+    <value>סורק סך של </value>
   </data>
   <data name="AppControlCompatibleFiles" xml:space="preserve">
-    <value> קבצים תואמים ל-AppControl...</value>
+    <value> קבצים תואמי AppControl...</value>
   </data>
   <data name="ScanCompleted" xml:space="preserve">
-    <value>הסריקה הושלמה, נוצרה מדיניות החסימה</value>
+    <value>הסריקה הושלמה, יוצר את מדיניות הדחייה</value>
   </data>
-  <data name="DeployingDenyPolicy" xml:space="preserve">
-    <value>מפרוס את מדיניות החסימה במערכת</value>
-  </data>
-  <data name="ErrorCreatingDenyPolicy" xml:space="preserve">
-    <value>אירעה שגיאה במהלך יצירת מדיניות החסימה</value>
+  <data name="DeployingThePolicy" xml:space="preserve">
+    <value>מפעיל את המדיניות במערכת.</value>
   </data>
   <data name="DenyPolicyCreatedSuccessfully" xml:space="preserve">
-    <value>מדיניות חסימה בשם ' נוצרה בהצלחה</value>
+    <value>יצרתי בהצלחה מדיניות דחייה בשם '</value>
   </data>
   <data name="Scalability" xml:space="preserve">
-    <value>סקלביליות: </value>
-  </data>
-  <data name="PFNBasedDenyPolicyTitle" xml:space="preserve">
-    <value>מדיניות חסימה מבוססת PFN</value>
+    <value>מדרגיות: </value>
   </data>
   <data name="NoAppSelectedForDenyPolicy" xml:space="preserve">
-    <value>לא נבחרה אפליקציה ליצירת מדיניות חסימה עבורה</value>
-  </data>
-  <data name="NoPolicyNameSelected" xml:space="preserve">
-    <value>לא נבחר שם למדיניות החסימה</value>
+    <value>לא נבחרה אפליקציה ליצירת מדיניות דחייה עבורה</value>
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
-    <value>יוצר את מדיניות החסימה המבוססת על שמות משפחת חבילות</value>
+    <value>יוצר את מדיניות הדחייה בהתבסס על שמות משפחת חבילה</value>
   </data>
   <data name="SelectedApps" xml:space="preserve">
-    <value>אפליקציות נבחרות: </value>
+    <value>אפליקציות שנבחרו: </value>
   </data>
   <data name="ErrorOccurred" xml:space="preserve">
-    <value>אירעה שגיאה: </value>
+    <value>הייתה שגיאה: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
-    <value>מדיניות החסימה נוצרה בהצלחה</value>
+    <value>יצרתי בהצלחה את מדיניות הדחייה</value>
   </data>
   <data name="NumberOfPolicies" xml:space="preserve">
     <value>מספר המדיניות: </value>
@@ -1290,7 +1281,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>המדיניות '</value>
   </data>
   <data name="ManualRemovalWarningEnd" xml:space="preserve">
-    <value> אינה אמורה להסיר ידנית כיוון שלא תוכל להשתמש ב-AppControl Manager שוב. היא מוסרת אוטומטית כאשר המדיניות הבסיסית המתאימה מוסרת מהמערכת. האם אתה בטוח שברצונך להסיר אותה ידנית?</value>
+    <value> אסור להסיר ידנית מכיוון שלא תוכל להשתמש שוב במנהל AppControl. היא מוסרת אוטומטית כאשר המדיניות הבסיסית המתאימה מוסרת מהמערכת. האם אתה בטוח שברצונך להסיר אותה ידנית?</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>כן</value>
@@ -1307,6 +1298,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
   <data name="Understand" xml:space="preserve">
     <value>אני מבין</value>
   </data>
+  <!-- For CI Policy Info ListViews -->
   <data name="PolicyIDHeader.Text" xml:space="preserve">
     <value>מזהה מדיניות</value>
   </data>
@@ -1320,13 +1312,13 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>גרסה</value>
   </data>
   <data name="IsAuthorizedHeader.Text" xml:space="preserve">
-    <value>מאושר</value>
+    <value>מורשה</value>
   </data>
   <data name="IsEnforcedHeader.Text" xml:space="preserve">
-    <value>במצב אכיפה</value>
+    <value>אכיפה</value>
   </data>
   <data name="IsOnDiskHeader.Text" xml:space="preserve">
-    <value>נמצא בדיסק</value>
+    <value>נמצא על הדיסק</value>
   </data>
   <data name="IsSignedPolicyHeader.Text" xml:space="preserve">
     <value>מדיניות חתומה</value>
@@ -1337,8 +1329,41 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
   <data name="PolicyOptionsHeader.Text" xml:space="preserve">
     <value>אפשרויות מדיניות</value>
   </data>
+  <!-- End of For CI Policy Info ListViews -->
+  <!-- For CI Policy Info ListViews Column Header Buttons -->
+  <data name="PolicyIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה מדיניות</value>
+  </data>
+  <data name="BasePolicyIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה מדיניות בסיסית</value>
+  </data>
+  <data name="FriendlyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם ידידותי</value>
+  </data>
+  <data name="VersionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>גרסה</value>
+  </data>
+  <data name="IsAuthorizedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מורשה</value>
+  </data>
+  <data name="IsEnforcedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אכיפה</value>
+  </data>
+  <data name="IsOnDiskColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נמצא על הדיסק</value>
+  </data>
+  <data name="IsSignedPolicyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מדיניות חתומה</value>
+  </data>
+  <data name="IsSystemPolicyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מדיניות מערכת</value>
+  </data>
+  <data name="PolicyOptionsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אפשרויות מדיניות</value>
+  </data>
+  <!-- End of For CI Policy Info ListViews Column Header Buttons -->
   <data name="Copy" xml:space="preserve">
-    <value>העתק </value>
+    <value>העתק</value>
   </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>מזהה מדיניות: </value>
@@ -1349,17 +1374,17 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
   <data name="FriendlyNameLabel" xml:space="preserve">
     <value>שם ידידותי: </value>
   </data>
-  <data name="VersionLabel" xml:space="preserve">
+  <data name="VersionLabel.Text" xml:space="preserve">
     <value>גרסה: </value>
   </data>
   <data name="IsAuthorizedLabel" xml:space="preserve">
-    <value>מאושר: </value>
+    <value>מורשה: </value>
   </data>
   <data name="IsEnforcedLabel" xml:space="preserve">
-    <value>במצב אכיפה: </value>
+    <value>אכיפה: </value>
   </data>
   <data name="IsOnDiskLabel" xml:space="preserve">
-    <value>נמצא בדיסק: </value>
+    <value>נמצא על הדיסק: </value>
   </data>
   <data name="IsSignedPolicyLabel" xml:space="preserve">
     <value>מדיניות חתומה: </value>
@@ -1371,31 +1396,31 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>אפשרויות מדיניות: </value>
   </data>
   <data name="LastRebootTime" xml:space="preserve">
-    <value>האתיול האחרון של המערכת היה </value>
+    <value>האתחול האחרון של המערכת היה</value>
   </data>
   <data name="PolicyStage1Completed" xml:space="preserve">
-    <value>מדיניות חתומה עם ה-ID '</value>
+    <value>מדיניות חתומה עם המזהה '</value>
   </data>
   <data name="CompletedAt" xml:space="preserve">
-    <value> סיימה את שלב 1 שלה ב- </value>
+    <value>השלימה את שלב 1 שלה ב-</value>
   </data>
   <data name="PolicySafeToRemove" xml:space="preserve">
-    <value>מדיניות חתומה יכולה להיות מוסרת בבטחה כיוון שהמערכת הופעלה מחדש לאחר השלב הראשון</value>
+    <value>מדיניות חתומה בטוחה להסרה מכיוון שהמערכת הופעלה מחדש לאחר שלב 1</value>
   </data>
   <data name="SelectedPolicyName" xml:space="preserve">
-    <value>המדיניות הנבחרת עם השם </value>
+    <value>המדיניות שנבחרה בשם </value>
   </data>
   <data name="AndID" xml:space="preserve">
-    <value> ו-ID </value>
+    <value>ומזהה</value>
   </data>
   <data name="WillBeChangedTo" xml:space="preserve">
-    <value> תשונה לסוג </value>
+    <value>תשתנה לסוג</value>
   </data>
   <data name="PolicyRedeployInfo" xml:space="preserve">
-    <value>תופעל מחדש במערכת עם אותו מזהה מדיניות ומזהה מדיניות בסיסית. אם היא נמצאת כעת במצב בקרה, היא תעבור למצב אכיפה לאחר השלמת הפעולה.</value>
+    <value>היא תופעל מחדש במערכת עם אותו מזהה מדיניות ומזהה מדיניות בסיסית. אם היא כעת במצב ביקורת, היא תהיה במצב אכיפה לאחר השלמת פעולה זו.</value>
   </data>
   <data name="SupplementalPolicyContinues" xml:space="preserve">
-    <value>כל מדיניות משלימה קיימת תמשיך לפעול.</value>
+    <value>כל מדיניות משלימה קיימת תמשיך לעבוד.</value>
   </data>
   <data name="SwappingPolicyTitle" xml:space="preserve">
     <value>החלפת מדיניות</value>
@@ -1410,7 +1435,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>עודכן לאחרונה: </value>
   </data>
   <data name="DriverBlockListError" xml:space="preserve">
-    <value>שגיאה בקבלת מידע אודות רשימת חסימת הדרייברים.</value>
+    <value>שגיאה באחזור מידע על רשימת חסימת מנהלי התקנים.</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>מגדיר משימה מתוזמנת לעדכון אוטומטי</value>
@@ -1419,85 +1444,86 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>אירעה שגיאה.</value>
   </data>
   <data name="AutoUpdateConfigured" xml:space="preserve">
-    <value>משימה מתוזמנת להגדרת כללי חסימת דרייברים של Microsoft עודכנה בהצלחה</value>
+    <value>הגדרתי בהצלחה משימה מתוזמנת לשמירה על כללי חסימת מנהלי התקנים של מיקרוסופט מעודכנים</value>
   </data>
   <data name="CreatingPolicy" xml:space="preserve">
-    <value>יוצר את מדיניות קפדנית למצב ליבה</value>
+    <value>יוצר את מדיניות מצב הליבה המחמירה</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>אירעה שגיאה ביצירת מדיניות קפדנית למצב ליבה: </value>
+    <value>הייתה שגיאה ביצירת מדיניות מצב הליבה המחמירה:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
-    <value>נוצרה בהצלחה מדיניות קפדנית למצב ליבה</value>
+    <value>יצרתי בהצלחה את מדיניות מצב הליבה המחמירה</value>
   </data>
+  <!-- For File Identities texts -->
   <data name="FileNameHeader.Text" xml:space="preserve">
-    <value>שם הקובץ</value>
+    <value>שם קובץ</value>
   </data>
   <data name="SignatureStatusHeader.Text" xml:space="preserve">
-    <value>מצב החתימה</value>
+    <value>סטטוס חתימה</value>
   </data>
   <data name="OriginalFileNameHeader.Text" xml:space="preserve">
-    <value>שם הקובץ המקורי</value>
+    <value>שם קובץ מקורי</value>
   </data>
   <data name="InternalNameHeader.Text" xml:space="preserve">
     <value>שם פנימי</value>
   </data>
   <data name="FileDescriptionHeader.Text" xml:space="preserve">
-    <value>תיאור הקובץ</value>
+    <value>תיאור קובץ</value>
   </data>
   <data name="ProductNameHeader.Text" xml:space="preserve">
-    <value>שם המוצר</value>
+    <value>שם מוצר</value>
   </data>
   <data name="FileVersionHeader.Text" xml:space="preserve">
-    <value>גרסת הקובץ</value>
+    <value>גרסת קובץ</value>
   </data>
   <data name="PackageFamilyNameHeader.Text" xml:space="preserve">
-    <value>שם משפחת החבילה</value>
+    <value>שם משפחת חבילה</value>
   </data>
   <data name="SHA256HashHeader.Text" xml:space="preserve">
-    <value>האשט SHA256</value>
+    <value>האש SHA256</value>
   </data>
   <data name="SHA1HashHeader.Text" xml:space="preserve">
-    <value>האשט SHA1</value>
+    <value>האש SHA1</value>
   </data>
   <data name="SHA256FlatHashHeader.Text" xml:space="preserve">
-    <value>האשט SHA256 שטוח</value>
+    <value>האש SHA256 שטוח</value>
   </data>
   <data name="SHA1FlatHashHeader.Text" xml:space="preserve">
-    <value>האשט SHA1 שטוח</value>
+    <value>האש SHA1 שטוח</value>
   </data>
   <data name="SigningScenarioHeader.Text" xml:space="preserve">
     <value>תרחיש חתימה</value>
   </data>
   <data name="FilePathHeader.Text" xml:space="preserve">
-    <value>נתיב הקובץ</value>
+    <value>נתיב קובץ</value>
   </data>
   <data name="ComputerNameHeader.Text" xml:space="preserve">
-    <value>שם המחשב</value>
+    <value>שם מחשב</value>
   </data>
   <data name="SHA1PageHashHeader.Text" xml:space="preserve">
-    <value>האשט עמוד SHA1</value>
+    <value>האש דף SHA1</value>
   </data>
   <data name="SHA256PageHashHeader.Text" xml:space="preserve">
-    <value>האשט עמוד SHA256</value>
+    <value>האש דף SHA256</value>
   </data>
   <data name="HasWHQLSignerHeader.Text" xml:space="preserve">
-    <value>חתום על ידי WHQL</value>
+    <value>יש חותם WHQL</value>
   </data>
   <data name="FilePublishersHeader.Text" xml:space="preserve">
-    <value>מפרסמי הקבצים</value>
+    <value>מפרסמי קובץ</value>
   </data>
   <data name="IsECCSignedHeader.Text" xml:space="preserve">
-    <value>חתום באמצעות ECC</value>
+    <value>חתום ב-ECC</value>
   </data>
   <data name="OpusDataHeader.Text" xml:space="preserve">
     <value>נתוני Opus</value>
   </data>
   <data name="PolicyGUIDHeader.Text" xml:space="preserve">
-    <value>GUID של המדיניות</value>
+    <value>GUID מדיניות</value>
   </data>
   <data name="PolicyNameHeader.Text" xml:space="preserve">
-    <value>שם המדיניות</value>
+    <value>שם מדיניות</value>
   </data>
   <data name="TimeCreatedHeader.Text" xml:space="preserve">
     <value>זמן יצירה</value>
@@ -1505,6 +1531,85 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
   <data name="ActionHeader.Text" xml:space="preserve">
     <value>פעולה</value>
   </data>
+  <!-- End Of For File Identities texts -->
+  <!-- For File Identities ListViews Buttons texts -->
+  <data name="FileNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם קובץ</value>
+  </data>
+  <data name="SignatureStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>סטטוס חתימה</value>
+  </data>
+  <data name="OriginalFileNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם קובץ מקורי</value>
+  </data>
+  <data name="InternalNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם פנימי</value>
+  </data>
+  <data name="FileDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תיאור קובץ</value>
+  </data>
+  <data name="ProductNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם מוצר</value>
+  </data>
+  <data name="FileVersionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>גרסת קובץ</value>
+  </data>
+  <data name="PackageFamilyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם משפחת חבילה</value>
+  </data>
+  <data name="SHA256HashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש SHA256</value>
+  </data>
+  <data name="SHA1HashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש SHA1</value>
+  </data>
+  <data name="SHA256FlatHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש SHA256 שטוח</value>
+  </data>
+  <data name="SHA1FlatHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש SHA1 שטוח</value>
+  </data>
+  <data name="SigningScenarioColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תרחיש חתימה</value>
+  </data>
+  <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נתיב קובץ</value>
+  </data>
+  <data name="ComputerNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם מחשב</value>
+  </data>
+  <data name="SHA1PageHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש דף SHA1</value>
+  </data>
+  <data name="SHA256PageHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש דף SHA256</value>
+  </data>
+  <data name="HasWHQLSignerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>יש חותם WHQL</value>
+  </data>
+  <data name="FilePublishersColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מפרסמי קובץ</value>
+  </data>
+  <data name="IsECCSignedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>חתום ב-ECC</value>
+  </data>
+  <data name="OpusDataColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נתוני Opus</value>
+  </data>
+  <data name="PolicyGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID מדיניות</value>
+  </data>
+  <data name="PolicyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם מדיניות</value>
+  </data>
+  <data name="TimeCreatedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>זמן יצירה</value>
+  </data>
+  <data name="ActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>פעולה</value>
+  </data>
+  <!-- End Of For File Identities ListViews Buttons texts -->
+  <!-- For Simulation texts -->
   <data name="PathHeader.Text" xml:space="preserve">
     <value>נתיב</value>
   </data>
@@ -1512,55 +1617,104 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>מקור</value>
   </data>
   <data name="IsAuthorizedHeader.Text" xml:space="preserve">
-    <value>מאושר</value>
+    <value>מורשה</value>
   </data>
   <data name="MatchCriteriaHeader.Text" xml:space="preserve">
     <value>קריטריוני התאמה</value>
   </data>
   <data name="SpecificFileNameLevelMatchCriteriaHeader.Text" xml:space="preserve">
-    <value>התאמה ספציפית לשם קובץ</value>
+    <value>התאמת רמת שם קובץ ספציפית</value>
   </data>
   <data name="SignerIDHeader.Text" xml:space="preserve">
-    <value>מזהה החותם</value>
+    <value>מזהה חותם</value>
   </data>
   <data name="SignerNameHeader.Text" xml:space="preserve">
-    <value>שם החותם</value>
+    <value>שם חותם</value>
   </data>
   <data name="SignerCertRootHeader.Text" xml:space="preserve">
-    <value>שורש תעודת החותם</value>
+    <value>שורש תעודת חותם</value>
   </data>
   <data name="SignerCertPublisherHeader.Text" xml:space="preserve">
-    <value>מפרסם תעודת החותם</value>
+    <value>מפרסם תעודת חותם</value>
   </data>
   <data name="SignerScopeHeader.Text" xml:space="preserve">
-    <value>תחום החותם</value>
+    <value>היקף חותם</value>
   </data>
   <data name="CertSubjectCNHeader.Text" xml:space="preserve">
-    <value>CN של נושא התעודה</value>
+    <value>CN נושא תעודה</value>
   </data>
   <data name="CertIssuerCNHeader.Text" xml:space="preserve">
-    <value>CN של מנפיק התעודה</value>
+    <value>CN מנפיק תעודה</value>
   </data>
   <data name="CertNotAfterHeader.Text" xml:space="preserve">
-    <value>תוקף עד</value>
+    <value>תעודה לא תקפה לאחר</value>
   </data>
   <data name="CertTBSValueHeader.Text" xml:space="preserve">
-    <value>ערך TBS של התעודה</value>
+    <value>ערך TBS של תעודה</value>
   </data>
   <data name="FilePathHeader.Text" xml:space="preserve">
-    <value>נתיב הקובץ</value>
+    <value>נתיב קובץ</value>
   </data>
+  <!-- End of For For Simulation texts -->
+  <!-- For Simulation ListView Column Header Buttons -->
+  <data name="PathColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נתיב</value>
+  </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+  <data name="IsAuthorizedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מורשה</value>
+  </data>
+  <data name="MatchCriteriaColumnHeaderBtn.Content" xml:space="preserve">
+    <value>קריטריוני התאמה</value>
+  </data>
+  <data name="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn.Content" xml:space="preserve">
+    <value>התאמת רמת שם קובץ ספציפית</value>
+  </data>
+  <data name="SignerIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה חותם</value>
+  </data>
+  <data name="SignerNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם חותם</value>
+  </data>
+  <data name="SignerCertRootColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שורש תעודת חותם</value>
+  </data>
+  <data name="SignerCertPublisherColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מפרסם תעודת חותם</value>
+  </data>
+  <data name="SignerScopeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>היקף חותם</value>
+  </data>
+  <data name="CertSubjectCNColumnHeaderBtn.Content" xml:space="preserve">
+    <value>CN נושא תעודה</value>
+  </data>
+  <data name="CertIssuerCNColumnHeaderBtn.Content" xml:space="preserve">
+    <value>CN מנפיק תעודה</value>
+  </data>
+  <data name="CertNotAfterColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תעודה לא תקפה לאחר</value>
+  </data>
+  <data name="CertTBSValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ערך TBS של תעודה</value>
+  </data>
+  <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נתיב קובץ</value>
+  </data>
+  <!-- End of For Simulation ListView Column Header Buttons -->
+  <!-- For View File Certificates ListViews -->
   <data name="SignerNumberHeader.Text" xml:space="preserve">
-    <value>מספר החותם</value>
+    <value>מספר חותם</value>
   </data>
   <data name="TypeHeader.Text" xml:space="preserve">
     <value>סוג</value>
   </data>
   <data name="SubjectCommonNameHeader.Text" xml:space="preserve">
-    <value>שם נושא (CN)</value>
+    <value>שם נפוץ של נושא</value>
   </data>
   <data name="IssuerCommonNameHeader.Text" xml:space="preserve">
-    <value>שם מנפיק (CN)</value>
+    <value>שם נפוץ של מנפיק</value>
   </data>
   <data name="NotBeforeHeader.Text" xml:space="preserve">
     <value>לא לפני</value>
@@ -1569,7 +1723,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>לא אחרי</value>
   </data>
   <data name="HashingAlgorithmHeader.Text" xml:space="preserve">
-    <value>אלגוריתם האשט</value>
+    <value>אלגוריתם האשינג</value>
   </data>
   <data name="SerialNumberHeader.Text" xml:space="preserve">
     <value>מספר סידורי</value>
@@ -1578,31 +1732,67 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>טביעת אצבע</value>
   </data>
   <data name="TBSHashHeader.Text" xml:space="preserve">
-    <value>האשט TBS</value>
+    <value>האש TBS</value>
   </data>
   <data name="ExtensionOIDsHeader.Text" xml:space="preserve">
     <value>OID של הרחבות</value>
   </data>
+  <!-- End of For View File Certificates ListViews -->
+  <!-- For View File Certificates ListViews Column Header Buttons -->
+  <data name="SignerNumberColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מספר חותם</value>
+  </data>
+  <data name="TypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>סוג</value>
+  </data>
+  <data name="SubjectCommonNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם נפוץ של נושא</value>
+  </data>
+  <data name="IssuerCommonNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם נפוץ של מנפיק</value>
+  </data>
+  <data name="NotBeforeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>לא לפני</value>
+  </data>
+  <data name="NotAfterColumnHeaderBtn.Content" xml:space="preserve">
+    <value>לא אחרי</value>
+  </data>
+  <data name="HashingAlgorithmColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אלגוריתם האשינג</value>
+  </data>
+  <data name="SerialNumberColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מספר סידורי</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>טביעת אצבע</value>
+  </data>
+  <data name="TBSHashColumnHeaderBtn.Content" xml:space="preserve">
+    <value>האש TBS</value>
+  </data>
+  <data name="ExtensionOIDsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>OID של הרחבות</value>
+  </data>
+  <!-- End of For View File Certificates ListViews Column Header Buttons -->
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Description" xml:space="preserve">
-    <value>השתמש בחלק זה להזנת כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות המשלימה.</value>
+    <value>השתמש בסעיף זה כדי להזין כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות המשלימה.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>השתמש בחלק זה להזנת כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות המשלימה.</value>
+    <value>השתמש בסעיף זה כדי להזין כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות המשלימה.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>השתמש בחלק זה להזנת כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות המשלימה.</value>
+    <value>השתמש בסעיף זה כדי להזין כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות המשלימה.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Header" xml:space="preserve">
     <value>כלל קובץ מבוסס תבנית מותאם אישית</value>
   </data>
   <data name="CustomPatternBasedFileRuleInfoSettingsCard.Description" xml:space="preserve">
-    <value>לחץ/נגע כאן כדי לראות מידע נוסף על התבניות שניתן להשתמש בהן</value>
+    <value>לחץ/הקש כאן כדי לראות מידע נוסף על התבניות שבהן תוכל להשתמש</value>
   </data>
   <data name="CustomPatternBasedFileRuleInfoSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>לחץ/נגע כאן כדי לראות מידע נוסף על התבניות שניתן להשתמש בהן</value>
+    <value>לחץ/הקש כאן כדי לראות מידע נוסף על התבניות שבהן תוכל להשתמש</value>
   </data>
   <data name="CustomPatternBasedFileRuleInfoSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>לחץ/נגע כאן כדי לראות מידע נוסף על התבניות שניתן להשתמש בהן</value>
+    <value>לחץ/הקש כאן כדי לראות מידע נוסף על התבניות שבהן תוכל להשתמש</value>
   </data>
   <data name="CustomPatternBasedFileRuleInfoSettingsCard.Header" xml:space="preserve">
     <value>מידע נוסף</value>
@@ -1611,31 +1801,31 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>הזן תבנית התאמה מותאמת אישית</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הזן תבנית התאמה מותאמת אישית לכללי הקבצים. כל הנתיבים שתואמים לתבנית זו יאושרו על ידי המדיניות המשלימה.</value>
+    <value>הזן תבנית התאמה מותאמת אישית לכללי קובץ. כל נתיבי הקבצים שתואמים לתבנית זו יורשו על ידי המדיניות המשלימה.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הזן תבנית התאמה מותאמת אישית לכללי הקבצים. כל הנתיבים שתואמים לתבנית זו יאושרו על ידי המדיניות המשלימה.</value>
+    <value>הזן תבנית התאמה מותאמת אישית לכללי קובץ. כל נתיבי הקבצים שתואמים לתבנית זו יורשו על ידי המדיניות המשלימה.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
-    <value>צור מדיניות משלימה המשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
+    <value>צור מדיניות משלימה שמשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות משלימה המשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
+    <value>צור מדיניות משלימה שמשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות משלימה המשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
+    <value>צור מדיניות משלימה שמשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
   </data>
   <data name="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
     <value>כלל קובץ מבוסס תבנית</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Description" xml:space="preserve">
-    <value>השתמש בחלק זה להזנת כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות החסימה.</value>
+    <value>השתמש בסעיף זה כדי להזין כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות הדחייה.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>השתמש בחלק זה להזנת כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות החסימה.</value>
+    <value>השתמש בסעיף זה כדי להזין כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות הדחייה.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>השתמש בחלק זה להזנת כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות החסימה.</value>
+    <value>השתמש בסעיף זה כדי להזין כלל קובץ מבוסס תבנית מותאם אישית להוספה למדיניות הדחייה.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard.Header" xml:space="preserve">
     <value>כלל קובץ מבוסס תבנית מותאם אישית</value>
@@ -1644,721 +1834,721 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>הזן תבנית התאמה מותאמת אישית</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedCustomPatternTextBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הזן תבנית התאמה מותאמת אישית לכללי הקבצים. כל הנתיבים שתואמים לתבנית זו ייחסמו על ידי מדיניות החסימה.</value>
+    <value>הזן תבנית התאמה מותאמת אישית לכללי קובץ. כל נתיבי הקבצים שתואמים לתבנית זו יידחו על ידי מדיניות הדחייה.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedCustomPatternTextBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הזן תבנית התאמה מותאמת אישית לכללי הקבצים. כל הנתיבים שתואמים לתבנית זו ייחסמו על ידי מדיניות החסימה.</value>
+    <value>הזן תבנית התאמה מותאמת אישית לכללי קובץ. כל נתיבי הקבצים שתואמים לתבנית זו יידחו על ידי מדיניות הדחייה.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Description" xml:space="preserve">
-    <value>צור מדיניות חסימה המשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
+    <value>צור מדיניות דחייה שמשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור מדיניות חסימה המשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
+    <value>צור מדיניות דחייה שמשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור מדיניות חסימה המשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
+    <value>צור מדיניות דחייה שמשתמשת בכלל קובץ מבוסס תבנית מותאם אישית.</value>
   </data>
   <data name="DenyPolicyCustomPatternBasedFileRuleSettingsExpander.Header" xml:space="preserve">
     <value>כלל קובץ מבוסס תבנית</value>
   </data>
   <data name="NoMSRecommendedBlockRules.Description" xml:space="preserve">
-    <value>שימוש באפשרות זו אומר שהתבניות המומלצות על ידי Microsoft לחסימת קבצים במצב משתמש לא יווצרו או יופעלו יחד עם המדיניות הבסיסית. (לא מומלץ)</value>
+    <value>שימוש באפשרות זו פירושו שכללי החסימה המומלצים של מיקרוסופט (מצב משתמש) לא ייווצרו/יופעלו יחד עם המדיניות הבסיסית. (לא מומלץ)</value>
   </data>
   <data name="NoMSRecommendedBlockRules.Header" xml:space="preserve">
-    <value>ללא כללי חסימה מומלצים של Microsoft</value>
+    <value>ללא כללי חסימה מומלצים של מיקרוסופט</value>
   </data>
   <data name="NoMSRecommendedBlockRules.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שימוש באפשרות זו אומר שהתבניות המומלצות על ידי Microsoft לחסימת קבצים במצב משתמש לא יווצרו או יופעלו יחד עם המדיניות הבסיסית. (לא מומלץ)</value>
+    <value>שימוש באפשרות זו פירושו שכללי החסימה המומלצים של מיקרוסופט (מצב משתמש) לא ייווצרו/יופעלו יחד עם המדיניות הבסיסית. (לא מומלץ)</value>
   </data>
   <data name="NoMSRecommendedBlockRules.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שימוש באפשרות זו אומר שהתבניות המומלצות על ידי Microsoft לחסימת קבצים במצב משתמש לא יווצרו או יופעלו יחד עם המדיניות הבסיסית. (לא מומלץ)</value>
+    <value>שימוש באפשרות זו פירושו שכללי החסימה המומלצים של מיקרוסופט (מצב משתמש) לא ייווצרו/יופעלו יחד עם המדיניות הבסיסית. (לא מומלץ)</value>
   </data>
   <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
-    <value>שנה את התנהגות AppControl Manager והאלמנטים שבו</value>
+    <value>שנה את התנהגות מנהל AppControl ואלמנטים שונים בתוכו</value>
   </data>
   <data name="Behavior.Text" xml:space="preserve">
     <value>התנהגות</value>
   </data>
   <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שנה את התנהגות AppControl Manager והאלמנטים שבו</value>
+    <value>שנה את התנהגות מנהל AppControl ואלמנטים שונים בתוכו</value>
   </data>
   <data name="BehaviorSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שנה את התנהגות AppControl Manager והאלמנטים שבו</value>
+    <value>שנה את התנהגות מנהל AppControl ואלמנטים שונים בתוכו</value>
   </data>
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
-    <value>כאשר אתה בוחר פריט ברשימת תצוגה, ימרכז את הפריט אנכית על המסך.</value>
+    <value>בכל פעם שתבחר פריט בתצוגת רשימה, מרכז את הפריט הזה אנכית על המסך.</value>
   </data>
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Header" xml:space="preserve">
-    <value>מרכוז אנכי ברשימות תצוגה עם בחירה</value>
+    <value>תצוגות רשימה מרכזות אנכית בעת בחירה</value>
   </data>
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>כאשר אתה בוחר פריט ברשימת תצוגה, ימרכז את הפריט אנכית על המסך.</value>
+    <value>בכל פעם שתבחר פריט בתצוגת רשימה, מרכז את הפריט הזה אנכית על המסך.</value>
   </data>
   <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>כאשר אתה בוחר פריט ברשימת תצוגה, ימרכז את הפריט אנכית על המסך.</value>
+    <value>בכל פעם שתבחר פריט בתצוגת רשימה, מרכז את הפריט הזה אנכית על המסך.</value>
   </data>
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.Description" xml:space="preserve">
-    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה למשך 5 דקות לפני ביצוע סריקה מחדש. פעולה זו יכולה לשפר את ביצועי הסריקה בתוך האפליקציה.</value>
+    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה למשך 5 דקות לפני סריקה מחדש. זה יכול לשפר את ביצועי הסריקה בתוך האפליקציה.</value>
   </data>
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.Header" xml:space="preserve">
-    <value>מטמון תוצאות סריקת קטלוגי האבטחה</value>
+    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה</value>
   </data>
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה למשך 5 דקות לפני ביצוע סריקה מחדש. פעולה זו יכולה לשפר את ביצועי הסריקה בתוך האפליקציה.</value>
+    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה למשך 5 דקות לפני סריקה מחדש. זה יכול לשפר את ביצועי הסריקה בתוך האפליקציה.</value>
   </data>
   <data name="CacheSecurityCatalogsScanResultsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה למשך 5 דקות לפני ביצוע סריקה מחדש. פעולה זו יכולה לשפר את ביצועי הסריקה בתוך האפליקציה.</value>
+    <value>שמור במטמון את תוצאות סריקת קטלוגי האבטחה למשך 5 דקות לפני סריקה מחדש. זה יכול לשפר את ביצועי הסריקה בתוך האפליקציה.</value>
   </data>
   <data name="PolicyEditorNavItem.Content" xml:space="preserve">
     <value>עורך מדיניות</value>
   </data>
   <data name="PolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ערוך מדיניות שליטה באפליקציות, הצג והסר כללים בודדים ושנה פרטים נוספים.</value>
+    <value>ערוך מדיניות בקרת אפליקציות, צפה והסר כללים בודדים ושנה פרטים אחרים.</value>
   </data>
   <data name="PolicyEditorNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ערוך מדיניות שליטה באפליקציות, הצג והסר כללים בודדים ושנה פרטים נוספים.</value>
+    <value>ערוך מדיניות בקרת אפליקציות, צפה והסר כללים בודדים ושנה פרטים אחרים.</value>
   </data>
   <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
-    <value>אם אפשרות זו מופעלת, AppControl Manager יבקש הרשאות ניהול להפעלה עם זכויות מנהל בעת ההפעלה.</value>
+    <value>אם זה מופעל, מנהל AppControl יבקש הרשאות מנהל בעת ההפעלה.</value>
   </data>
   <data name="PromptForElevationSettingsCard.Header" xml:space="preserve">
-    <value>בקשת העלאת הרשאות בעת הפעלה</value>
+    <value>בקש הרשאות מנהל בעת ההפעלה</value>
   </data>
   <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אם אפשרות זו מופעלת, AppControl Manager יבקש הרשאות ניהול להפעלה עם זכויות מנהל בעת ההפעלה.</value>
+    <value>אם זה מופעל, מנהל AppControl יבקש הרשאות מנהל בעת ההפעלה.</value>
   </data>
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אם אפשרות זו מופעלת, AppControl Manager יבקש הרשאות ניהול להפעלה עם זכויות מנהל בעת ההפעלה.</value>
+    <value>אם זה מופעל, מנהל AppControl יבקש הרשאות מנהל בעת ההפעלה.</value>
   </data>
   <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
     <value>פתח בעורך המדיניות</value>
   </data>
   <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פתח את המדיניות בעורך המדיניות, בו תוכל לראות סקירה מפורטת ולהתאים אישית אותה ישירות בתוך האפליקציה.</value>
+    <value>פתח את המדיניות בעורך המדיניות שם תוכל לראות סקירה מפורטת של המדיניות ולהתאים אותה עוד יותר בתוך האפליקציה הזו.</value>
   </data>
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פתח את המדיניות בעורך המדיניות, בו תוכל לראות סקירה מפורטת ולהתאים אישית אותה ישירות בתוך האפליקציה.</value>
+    <value>פתח את המדיניות בעורך המדיניות שם תוכל לראות סקירה מפורטת של המדיניות ולהתאים אותה עוד יותר בתוך האפליקציה הזו.</value>
   </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>השתמש רק בפריטים שנבחרו</value>
   </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>כלול רק את הפריטים שנבחרו במדיניות המשלימה. באפשרותך לבחור פריט אחד או יותר ברשימת התצוגה, ואם אפשרות זו מופעלת, רק אותם ייכללו במדיניות המשלימה. אם היא מבוטלת, הכול ייכלל. אם תשתמש בה ואינך בוחר פריטים, הכול ייכלל.</value>
+    <value>כלול רק את הפריטים שנבחרו במדיניות המשלימה. תוכל לבחור פריט אחד או יותר בתצוגת הרשימה, ואם אפשרות זו מופעלת, רק אלה ייכללו במדיניות המשלימה. אם זה מושבת, הכל ייכלל במדיניות המשלימה. אם תשתמש באפשרות זו ולא נבחר דבר בתצוגת הרשימה, הכל ייכלל במדיניות המשלימה.</value>
   </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>כלול רק את הפריטים שנבחרו במדיניות המשלימה. באפשרותך לבחור פריט אחד או יותר ברשימת התצוגה, ואם אפשרות זו מופעלת, רק אותם ייכללו במדיניות המשלימה. אם היא מבוטלת, הכול ייכלל. אם תשתמש בה ואינך בוחר פריטים, הכול ייכלל.</value>
+    <value>כלול רק את הפריטים שנבחרו במדיניות המשלימה. תוכל לבחור פריט אחד או יותר בתצוגת הרשימה, ואם אפשרות זו מופעלת, רק אלה ייכללו במדיניות המשלימה. אם זה מושבת, הכל ייכלל במדיניות המשלימה. אם תשתמש באפשרות זו ולא נבחר דבר בתצוגת הרשימה, הכל ייכלל במדיניות המשלימה.</value>
   </data>
   <data name="SignInMethodsComboBox.Header" xml:space="preserve">
     <value>שיטת התחברות</value>
   </data>
   <data name="SignInMethodsComboBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר שיטת התחברות לפי העדפתך</value>
+    <value>בחר שיטת התחברות על פי העדפתך</value>
   </data>
   <data name="SignInMethodsComboBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר שיטת התחברות לפי העדפתך</value>
+    <value>בחר שיטת התחברות על פי העדפתך</value>
   </data>
   <data name="MicrosoftGraphButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>רכז את תהליכי האימות של דיירי Microsoft שלך בקלות. מחלקה זו, תוכל לבחור את החשבון שברצונך להשתמש בו בדף הנוכחי, לצפות בכל החשבונות המחוברים, להתנתק לפי הצורך ועוד.</value>
+    <value>מרכז את אימותי הדיירים של מיקרוסופט בקלות. מסעיף זה, תוכל לבחור את החשבון שבו ברצונך להשתמש בדף הנוכחי, לסקור את כל החשבונות המחוברים, להתנתק לפי הצורך ועוד.</value>
   </data>
   <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>רכז את תהליכי האימות של דיירי Microsoft שלך בקלות. מחלקה זו, תוכל לבחור את החשבון שברצונך להשתמש בו בדף הנוכחי, לצפות בכל החשבונות המחוברים, להתנתק לפי הצורך ועוד.</value>
+    <value>מרכז את אימותי הדיירים של מיקרוסופט בקלות. מסעיף זה, תוכל לבחור את החשבון שבו ברצונך להשתמש בדף הנוכחי, לסקור את כל החשבונות המחוברים, להתנתק לפי הצורך ועוד.</value>
   </data>
   <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
     <value>שם משתמש</value>
   </data>
   <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שם המשתמש של החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>שם המשתמש של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שם המשתמש של החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>שם המשתמש של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
-    <value>שם המשתמש של החשבון הנבחר יופיע כאן</value>
+    <value>שם המשתמש של החשבון שנבחר יופיע כאן</value>
   </data>
   <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
     <value>מזהה דייר</value>
   </data>
   <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מזהה הדייר של החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>מזהה הדייר של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מזהה הדייר של החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>מזהה הדייר של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
-    <value>מזהה הדייר של החשבון הנבחר יופיע כאן</value>
+    <value>מזהה הדייר של החשבון שנבחר יופיע כאן</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
     <value>מזהה חשבון</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מזהה החשבון של החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>מזהה החשבון של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מזהה החשבון של החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>מזהה החשבון של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
-    <value>מזהה החשבון של החשבון הנבחר יופיע כאן</value>
+    <value>מזהה החשבון שנבחר יופיע כאן</value>
   </data>
   <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
     <value>הרשאות</value>
   </data>
   <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הרשאות החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>ההרשאות של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הרשאות החשבון הנבחר לביצוע הפעולות בדף זה.</value>
+    <value>ההרשאות של החשבון שנבחר כעת לביצוע המשימות בדף זה.</value>
   </data>
   <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
-    <value>הרשאות החשבון הנבחר יופיעו כאן</value>
+    <value>ההרשאות של החשבון שנבחר יופיעו כאן</value>
   </data>
   <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>התחבר לדייר Microsoft שלך. לאחר התחברות מוצלחת, המידע של החשבון יישמר בזיכרון האפליקציה עד לסגירתה או הסרתו מחלקת "חשבונות מחוברים".</value>
+    <value>התחבר לדייר של מיקרוסופט שלך. לאחר התחברות מוצלחת, פרטי החשבון יישמרו בזיכרון האפליקציה עד לסגירת האפליקציה או להסרתם מהסעיף &quot;חשבונות מחוברים&quot;.</value>
   </data>
   <data name="SignInButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>התחבר לדייר Microsoft שלך. לאחר התחברות מוצלחת, המידע של החשבון יישמר בזיכרון האפליקציה עד לסגירתה או הסרתו מחלקת "חשבונות מחוברים".</value>
+    <value>התחבר לדייר של מיקרוסופט שלך. לאחר התחברות מוצלחת, פרטי החשבון יישמרו בזיכרון האפליקציה עד לסגירת האפליקציה או להסרתם מהסעיף &quot;חשבונות מחוברים&quot;.</value>
   </data>
   <data name="CancelSigningInButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בטל את תהליך ההתחברות הנוכחי.</value>
+    <value>בטל את תהליך ההתחברות הנוכחי שנמצא בעיצומו.</value>
   </data>
   <data name="CancelSigningInButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בטל את תהליך ההתחברות הנוכחי.</value>
+    <value>בטל את תהליך ההתחברות הנוכחי שנמצא בעיצומו.</value>
   </data>
   <data name="AuthenticationContextComboBox.Header" xml:space="preserve">
-    <value>קונטקסט אימות</value>
+    <value>הקשר אימות</value>
   </data>
   <data name="AuthenticationContextComboBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר את קונטקסט האימות שישמש לתהליך ההתחברות. כל קונטקסט כולל סט הרשאות Microsoft Graph הנדרש לביצוע הפעולות בהצלחה.</value>
+    <value>בחר את הקשר האימות לשימוש בפעולת ההתחברות. כל הקשר הוא קבוצה של הרשאות Microsoft Graph הנדרשות להשלמת המשימות המוצעות במנהל AppControl.</value>
   </data>
   <data name="AuthenticationContextComboBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר את קונטקסט האימות שישמש לתהליך ההתחברות. כל קונטקסט כולל סט הרשאות Microsoft Graph הנדרש לביצוע הפעולות בהצלחה.</value>
+    <value>בחר את הקשר האימות לשימוש בפעולת ההתחברות. כל הקשר הוא קבוצה של הרשאות Microsoft Graph הנדרשות להשלמת המשימות המוצעות במנהל AppControl.</value>
   </data>
   <data name="RemoveAccountButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית Microsoft Authentication.</value>
+    <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית האימות של מיקרוסופט.</value>
   </data>
   <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית Microsoft Authentication.</value>
+    <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית האימות של מיקרוסופט.</value>
   </data>
   <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הגדר את החשבון הנבחר כחשבון פעיל שישמש לביצוע פעולות מקוונות בדף הנוכחי.</value>
+    <value>הגדר את החשבון שנבחר כעת כחשבון פעיל לשימוש בפעולות המקוונות בדף הנוכחי.</value>
   </data>
   <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הגדר את החשבון הנבחר כחשבון פעיל שישמש לביצוע פעולות מקוונות בדף הנוכחי.</value>
+    <value>הגדר את החשבון שנבחר כעת כחשבון פעיל לשימוש בפעולות המקוונות בדף הנוכחי.</value>
   </data>
   <data name="RetrieveOnlinePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שלוף את המדיניות המקוונות הזמינות ב-Intune</value>
+    <value>אחזר את המדיניות המקוונות הזמינות ב-Intune</value>
   </data>
   <data name="RetrieveOnlinePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שלוף את המדיניות המקוונות הזמינות ב-Intune</value>
+    <value>אחזר את המדיניות המקוונות הזמינות ב-Intune</value>
   </data>
   <data name="ScalabilitySettingsCard.Header" xml:space="preserve">
-    <value>סקלביליות</value>
+    <value>מדרגיות</value>
   </data>
   <data name="ScalabilitySettingsCard.Description" xml:space="preserve">
-    <value>ככל שהמספר גבוה יותר, הסריקה תושלם במהירות רבה יותר ותשתמש ביותר משאבי מערכת.</value>
+    <value>ככל שהמספר גבוה יותר, הסריקה תושלם מהר יותר ויידרשו יותר משאבי מערכת.</value>
   </data>
   <data name="ScalabilitySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ככל שהמספר גבוה יותר, הסריקה תושלם במהירות רבה יותר ותשתמש ביותר משאבי מערכת.</value>
+    <value>ככל שהמספר גבוה יותר, הסריקה תושלם מהר יותר ויידרשו יותר משאבי מערכת.</value>
   </data>
   <data name="ScalabilitySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ככל שהמספר גבוה יותר, הסריקה תושלם במהירות רבה יותר ותשתמש ביותר משאבי מערכת.</value>
+    <value>ככל שהמספר גבוה יותר, הסריקה תושלם מהר יותר ויידרשו יותר משאבי מערכת.</value>
   </data>
   <data name="ScalabilityButton.Content" xml:space="preserve">
-    <value>סקלביליות</value>
+    <value>מדרגיות</value>
   </data>
   <data name="ScalabilityButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מספר המשימות המקבילות שישמשו לסריקת הקבצים. כברירת מחדל, משתמשים בשתי משימות מקבילות.</value>
+    <value>מספר המשימות המקבילות/מקבילות לשימוש בעת סריקת קבצים. כברירת מחדל, משתמש בשתי משימות מקבילות.</value>
   </data>
   <data name="ScalabilityButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מספר המשימות המקבילות שישמשו לסריקת הקבצים. כברירת מחדל, משתמשים בשתי משימות מקבילות.</value>
+    <value>מספר המשימות המקבילות/מקבילות לשימוש בעת סריקת קבצים. כברירת מחדל, משתמש בשתי משימות מקבילות.</value>
   </data>
   <data name="CurrentlyDeployedPoliciesNavigationItem.Content" xml:space="preserve">
     <value>מדיניות מופעלות כעת</value>
   </data>
   <data name="CurrentlyDeployedPoliciesNavigationItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הצג את המדיניות המופעלות כעת במערכת</value>
+    <value>צפה במדיניות המופעלות כעת במערכת</value>
   </data>
   <data name="CurrentlyDeployedPoliciesNavigationItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הצג את המדיניות המופעלות כעת במערכת</value>
+    <value>צפה במדיניות המופעלות כעת במערכת</value>
   </data>
   <data name="OnlinePoliciesNavigationItem.Content" xml:space="preserve">
     <value>מדיניות מקוונות</value>
   </data>
   <data name="OnlinePoliciesNavigationItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הצג מדיניות המופעלות במחשבים מרוחקים</value>
+    <value>צפה במדיניות המופעלות על מכונות מרוחקות</value>
   </data>
   <data name="OnlinePoliciesNavigationItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הצג מדיניות המופעלות במחשבים מרוחקים</value>
+    <value>צפה במדיניות המופעלות על מכונות מרוחקות</value>
   </data>
   <data name="CodeIntegrityInformationNavigationItem.Content" xml:space="preserve">
-    <value>מידע תקינות קוד</value>
+    <value>מידע על שלמות קוד</value>
   </data>
   <data name="CodeIntegrityInformationNavigationItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הצג מידע אודות תקינות הקוד במערכת</value>
+    <value>צפה במידע על שלמות קוד של המערכת</value>
   </data>
   <data name="CodeIntegrityInformationNavigationItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הצג מידע אודות תקינות הקוד במערכת</value>
+    <value>צפה במידע על שלמות קוד של המערכת</value>
   </data>
   <data name="RetrieveCodeIntegrityInfoButton.Content" xml:space="preserve">
-    <value>שלוף מידע תקינות קוד</value>
+    <value>אחזר מידע על שלמות קוד</value>
   </data>
   <data name="RetrieveCodeIntegrityInfoButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>שלוף את המידע העדכני ביותר אודות תקינות הקוד מהמערכת הנוכחית</value>
+    <value>אחזר את המידע העדכני ביותר על שלמות קוד מהמערכת הנוכחית</value>
   </data>
   <data name="RetrieveCodeIntegrityInfoButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>שלוף את המידע העדכני ביותר אודות תקינות הקוד מהמערכת הנוכחית</value>
+    <value>אחזר את המידע העדכני ביותר על שלמות קוד מהמערכת הנוכחית</value>
   </data>
   <data name="KeySizeSettingsCard.Header" xml:space="preserve">
     <value>גודל מפתח</value>
   </data>
   <data name="KeySizeSettingsCard.Description" xml:space="preserve">
-    <value>אורך המפתח הקריפטוגרפי, הנמדד בביטים, מגדיר את חוזק ואבטחת ההצפנה של המפתח הפרטי. גדלים גדולים יותר דורשים יותר זמן וכוח עיבוד ליצירתם.</value>
+    <value>אורך המפתח הקריפטוגרפי, הנמדד בסיביות, מגדיר את החוזק והאבטחה של הצפנת מפתח פרטי. גדלי מפתח גדולים יותר דורשים יותר זמן וכוח עיבוד ליצירה.</value>
   </data>
   <data name="KeySizeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אורך המפתח הקריפטוגרפי, הנמדד בביטים, מגדיר את חוזק ואבטחת ההצפנה של המפתח הפרטי. גדלים גדולים יותר דורשים יותר זמן וכוח עיבוד ליצירתם.</value>
+    <value>אורך המפתח הקריפטוגרפי, הנמדד בסיביות, מגדיר את החוזק והאבטחה של הצפנת מפתח פרטי. גדלי מפתח גדולים יותר דורשים יותר זמן וכוח עיבוד ליצירה.</value>
   </data>
   <data name="KeySizeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אורך המפתח הקריפטוגרפי, הנמדד בביטים, מגדיר את חוזק ואבטחת ההצפנה של המפתח הפרטי. גדלים גדולים יותר דורשים יותר זמן וכוח עיבוד ליצירתם.</value>
+    <value>אורך המפתח הקריפטוגרפי, הנמדד בסיביות, מגדיר את החוזק והאבטחה של הצפנת מפתח פרטי. גדלי מפתח גדולים יותר דורשים יותר זמן וכוח עיבוד ליצירה.</value>
   </data>
   <data name="CommonNameSettingsCard.Header" xml:space="preserve">
-    <value>שם משותף</value>
+    <value>שם נפוץ</value>
   </data>
   <data name="CommonNameSettingsCard.Description" xml:space="preserve">
-    <value>השם המשותף (CN) הוא שדה בתעודה המפרט את שם הדומיין המלא (FQDN) או המזהה עבורו הונפקה התעודה.</value>
+    <value>השם הנפוץ (CN) הוא שדה בתעודה שמציין את שם הדומיין המלא (FQDN) או המזהה שעבורו הונפקה התעודה.</value>
   </data>
   <data name="CommonNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>השם המשותף (CN) הוא שדה בתעודה המפרט את שם הדומיין המלא (FQDN) או המזהה עבורו הונפקה התעודה.</value>
+    <value>השם הנפוץ (CN) הוא שדה בתעודה שמציין את שם הדומיין המלא (FQDN) או המזהה שעבורו הונפקה התעודה.</value>
   </data>
   <data name="CommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>השם המשותף (CN) הוא שדה בתעודה המפרט את שם הדומיין המלא (FQDN) או המזהה עבורו הונפקה התעודה.</value>
+    <value>השם הנפוץ (CN) הוא שדה בתעודה שמציין את שם הדומיין המלא (FQDN) או המזהה שעבורו הונפקה התעודה.</value>
   </data>
   <data name="ValiditySettingsCard.Header" xml:space="preserve">
     <value>תוקף</value>
   </data>
   <data name="ValiditySettingsCard.Description" xml:space="preserve">
-    <value>תקופת הזמן (בשנים) בה התעודה נחשבת לתוקפת ומהימנה.</value>
+    <value>התקופה (בשנים) שבה התעודה נחשבת תקפה ומהימנה.</value>
   </data>
   <data name="ValiditySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>תקופת הזמן (בשנים) בה התעודה נחשבת לתוקפת ומהימנה.</value>
+    <value>התקופה (בשנים) שבה התעודה נחשבת תקפה ומהימנה.</value>
   </data>
   <data name="ValiditySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>תקופת הזמן (בשנים) בה התעודה נחשבת לתוקפת ומהימנה.</value>
+    <value>התקופה (בשנים) שבה התעודה נחשבת תקפה ומהימנה.</value>
   </data>
   <data name="PFXPasswordSettingsCard.Header" xml:space="preserve">
     <value>סיסמת הצפנת PFX</value>
   </data>
   <data name="PFXPasswordSettingsCard.Description" xml:space="preserve">
-    <value>משפט סיסמה מאובטח המשמש להצפנה ולהגנה על הגישה למפתח הפרטי ולנתוני התעודה בתוך קובץ PFX (חלופת מידע אישי).</value>
+    <value>ביטוי סיסמה מאובטח המשמש להצפנה והגנה על גישה למפתח הפרטי ולנתוני התעודה בתוך קובץ PFX (Personal Information Exchange).</value>
   </data>
   <data name="PFXPasswordSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>משפט סיסמה מאובטח המשמש להצפנה ולהגנה על הגישה למפתח הפרטי ולנתוני התעודה בתוך קובץ PFX (חלופת מידע אישי).</value>
+    <value>ביטוי סיסמה מאובטח המשמש להצפנה והגנה על גישה למפתח הפרטי ולנתוני התעודה בתוך קובץ PFX (Personal Information Exchange).</value>
   </data>
   <data name="PFXPasswordSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>משפט סיסמה מאובטח המשמש להצפנה ולהגנה על הגישה למפתח הפרטי ולנתוני התעודה בתוך קובץ PFX (חלופת מידע אישי).</value>
+    <value>ביטוי סיסמה מאובטח המשמש להצפנה והגנה על גישה למפתח הפרטי ולנתוני התעודה בתוך קובץ PFX (Personal Information Exchange).</value>
   </data>
   <data name="PolicyRuleExpander.Header" xml:space="preserve">
-    <value>אפשרויות חוקי המדיניות</value>
+    <value>אפשרויות כלל מדיניות</value>
   </data>
   <data name="PolicyRuleExpander.Description" xml:space="preserve">
-    <value>בחר אפשרויות חוקי מדיניות להוספה או להסרה מקובץ ה-XML הנבחר</value>
+    <value>בחר אפשרויות כלל מדיניות להוספה או להסרה מקובץ מדיניות XML שנבחר</value>
   </data>
   <data name="PolicyRuleExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר אפשרויות חוקי מדיניות להוספה או להסרה מקובץ ה-XML הנבחר</value>
+    <value>בחר אפשרויות כלל מדיניות להוספה או להסרה מקובץ מדיניות XML שנבחר</value>
   </data>
   <data name="PolicyRuleExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר אפשרויות חוקי מדיניות להוספה או להסרה מקובץ ה-XML הנבחר</value>
+    <value>בחר אפשרויות כלל מדיניות להוספה או להסרה מקובץ מדיניות XML שנבחר</value>
   </data>
   <data name="PolicyTemplateSettingCard.Header" xml:space="preserve">
     <value>תבנית מדיניות</value>
   </data>
   <data name="PolicyTemplateSettingCard.Description" xml:space="preserve">
-    <value>בחר תבנית ליישום על קובץ המדיניות הנבחר. התבניות הן רשימות מוגדרות מראש של אפשרויות חוקי מדיניות.</value>
+    <value>בחר תבנית ליישום על קובץ המדיניות שנבחר. תבניות הן רשימות מוגדרות מראש של אפשרויות כלל מדיניות.</value>
   </data>
   <data name="PolicyTemplateSettingCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר תבנית ליישום על קובץ המדיניות הנבחר. התבניות הן רשימות מוגדרות מראש של אפשרויות חוקי מדיניות.</value>
+    <value>בחר תבנית ליישום על קובץ המדיניות שנבחר. תבניות הן רשימות מוגדרות מראש של אפשרויות כלל מדיניות.</value>
   </data>
   <data name="PolicyTemplateSettingCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר תבנית ליישום על קובץ המדיניות הנבחר. התבניות הן רשימות מוגדרות מראש של אפשרויות חוקי מדיניות.</value>
+    <value>בחר תבנית ליישום על קובץ המדיניות שנבחר. תבניות הן רשימות מוגדרות מראש של אפשרויות כלל מדיניות.</value>
   </data>
   <data name="CreatePolicyPageTitle.Text" xml:space="preserve">
-    <value>צור מדיניות App Control לעסקים המבוססות על תבניות שונות ואפשרויות חוקי מדיניות. "Signed And Reputable" מצוינת למשתמשים חדשים. "Allow Microsoft" מאפשרת רק קבצים החתומים על ידי תעודות Microsoft. "Default Windows" מאפשרת רק קבצים המגיעים כברירת מחדל עם מערכת ההפעלה Windows.</value>
+    <value>צור מדיניות בקרת אפליקציות לעסקים על בסיס תבניות שונות ואפשרויות כלל מדיניות. חתום ומוכר הוא נהדר למשתמשים חדשים. אפשר למיקרוסופט מאפשר רק לקבצים חתומים על ידי תעודות של מיקרוסופט. חלונות ברירת מחדל מאפשר רק לקבצים שמגיעים כברירת מחדל עם מערכת ההפעלה Windows.</value>
   </data>
   <data name="CreateSupplementalPolicyPageTitle.Text" xml:space="preserve">
-    <value>צור מדיניות משלימה שתרחיב את היקף המדיניות הבסיסית. מדיניות משלימות יכולות לאפשר קבצים בלבד, אינן יכולות לכלול כללי חסימה.</value>
+    <value>צור מדיניות משלימה שתרחיב את היקף המדיניות הבסיסית. מדיניות משלימות יכולות רק לאפשר קבצים, הן לא יכולות להכיל כללי דחייה.</value>
   </data>
   <data name="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
-    <value>הצג את הקבצים שזוהו ונעשה בהם שימוש ליצירת המדיניות המשלימה.</value>
+    <value>צפה בקבצים שזוהו וששימשו ליצירת המדיניות המשלימה.</value>
   </data>
   <data name="DeploymentPageTitle.Text" xml:space="preserve">
-    <value>פרוס כל סוג של מדיניות App Control באופן מקומי או מרחוק למחשבים המנוהלים בענן.</value>
+    <value>הפעל כל סוג של מדיניות בקרת אפליקציות מקומית או מרחוק על מחשבים מנוהלים בענן.</value>
   </data>
   <data name="EventLogsPolicyCreationPageTitle.Text" xml:space="preserve">
-    <value>השתמש ביומני המערכת המקומיים או בקבצי EVTX ליצירת מדיניות שליטה באפליקציות. נדרשים רק יומני פעילות תקינות קוד ו-AppLocker. השתמש בכפתור "סריקה" למילוי טבלת הנתונים. לאחר המילוי, השתמש בכפתור "צור מדיניות" להגדרת תצורת הפלט וליצירת קובץ ה-XML של המדיניות.</value>
+    <value>השתמש ביומני המערכת המקומיים או בקבצי יומן EVTX ליצירת מדיניות בקרת אפליקציות. נדרשים רק יומני Code Integrity Operational ו-AppLocker. השתמש בלחצן הסריקה כדי למלא את רשת הנתונים. לאחר המילוי, השתמש בלחצן יצירת מדיניות כדי להגדיר את תצורת הפלט וליצור את קובץ מדיניות ה-XML.</value>
   </data>
   <data name="GetCIHashesPageTitle.Text" xml:space="preserve">
-    <value>חשב את תקינות הקוד וסוגי האשטים נוספים של הקבצים.</value>
+    <value>חשב את האשי שלמות הקוד וסוגים אחרים של האשים של קבצים.</value>
   </data>
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
-    <value>שלוף ושאל אודות ההגדרות המאובטחות במערכת.</value>
+    <value>אחזר ושאל את ההגדרות המאובטחות במערכת.</value>
   </data>
   <data name="LogsPageTitle.Text" xml:space="preserve">
-    <value>להלן היומנים שה-AppControl Manager מייצר ושומר באופן אוטומטי בתיקיית "AppControl Manager" בתוך תיקיית Program Files (אם מופעל בהרשאות מנהל, אחרת יישמרו בתיקיית TEMP). גודל התיקייה הכולל של היומנים לא יעלה על 1GB.</value>
+    <value>להלן היומנים שמנהל AppControl מייצר אוטומטית ומאחסן בתיקיית &quot;AppControl Manager&quot; ב-Program Files (אם פועל עם הרשאות מוגברות, אחרת הם יישמרו בספריית TEMP). הגודל הכולל של תיקיית היומנים לעולם לא יעלה על 1GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
-    <value>השתמש ביומני "Advanced Hunting" של Microsoft Defender for Endpoint ליצירת מדיניות שליטה באפליקציות. באפשרותך לעיין בקבצי יומנים מיוצאים או לשלוף אותם מהענן באמצעות התחברות לחשבון Microsoft שלך.</value>
+    <value>השתמש ביומני ה-Advanced Hunting של Microsoft Defender for Endpoint לבניית מדיניות בקרת אפליקציות. תוכל לדפדף בקבצי יומן מיוצאים או לאחזר אותם מהענן על ידי התחברות לחשבון מיקרוסופט שלך.</value>
   </data>
   <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
-    <value>מזג מדיניות App Control לעסקים והסר כפילויות. באפשרותך לבחור את אותה מדיניות פעמיים כדי להסיר כפילויות מהכללים שלה.</value>
+    <value>מזג מדיניות בקרת אפליקציות לעסקים ודדופליקט אותן. תוכל לבחור את אותה מדיניות פעמיים כדי לדדופליקט את הכללים שלה.</value>
   </data>
   <data name="PolicyEditorPageTitle.Text" xml:space="preserve">
-    <value>ערוך מדיניות App Control לעסקים. עיין בקלות בקובץ XML של מדיניות וטען את פרטיו באמצעות כפתור "טען". לאחר הטעינה, תוכל לעיין במספר כל אחד מהכללים, להסיר כללים מסוימים ולשנות הגדרות נוספות.</value>
+    <value>ערוך מדיניות בקרת אפליקציות לעסקים. דפדף בקלות לקובץ מדיניות XML וטען את פרטיו באמצעות לחצן הטעינה. לאחר הטעינה, תוכל לסקור את מספר כל כלל בתוך המדיניות, להסיר כללים ספציפיים ולשנות הגדרות מדיניות אחרות.</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
-    <value>התאם אישית את הגדרות האפליקציה כאן. העדפותיך יישמרו כך שיהיו מוכנות עבורך בכל הפעלה של AppControl Manager.</value>
+    <value>התאם אישית את הגדרות האפליקציה שלך כאן. ההעדפות שלך יישמרו כך שיהיו מוכנות עבורך בכל פעם שתפעיל את מנהל AppControl.</value>
   </data>
   <data name="SimulationPageTitle.Text" xml:space="preserve">
-    <value>בצע הדמיית App Control לעסקים על ידי בחירת קבצים או תיקיות, וקובץ XML של מדיניות, ולאחר מכן השתמש בכפתור "התחל הדמיה" למילוי טבלת הנתונים. התוצאות יראו לך האם הקבצים הנבחרים היו מורשים או חסומים על ידי המדיניות שלך אם היא הייתה מופעלת במערכת והקבצים פועלים.</value>
+    <value>בצע סימולציה של בקרת אפליקציות לעסקים על ידי בחירת קבצים או תיקיות, וקובץ מדיניות XML, ולאחר מכן השתמש בלחצן התחל סימולציה כדי למלא את רשת הנתונים. התוצאות יראו לך אם הקבצים שנבחרו יורשו או ייחסמו על ידי מדיניות בקרת האפליקציות שלך אם היא הייתה מופעלת בפועל על מערכת והקבצים האלה היו פועלים.</value>
   </data>
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
-    <value>הצג את הקבצים במצב ליבה שזוהו וישמשו ליצירת המדיניות האכיפתית. הסר פריטים שאינך רוצה שייכללו במדיניות הקפדנית הסופית.</value>
+    <value>צפה בקבצי מצב הליבה שזוהו שישמשו ליצירת מדיניות מצב אכיפה. הסר פריטים שאינך רוצה שייכללו במדיניות מצב הליבה המחמירה הסופית מהרשימה.</value>
   </data>
   <data name="UpdatePageTitle.Text" xml:space="preserve">
-    <value>בדוק עדכונים בדף זה. באפשרותך גם להפעיל בדיקת עדכונים אוטומטית שתתרחש בעת ההפעלה ותודיע לך כאשר גרסה חדשה זמינה. דף זה זמין רק כאשר AppControl Manager הותקן מהמקור ב-GitHub.</value>
+    <value>בדוק עדכונים בדף זה. תוכל גם להפעיל בדיקת עדכונים אוטומטית שתתבצע פעם אחת בעת ההפעלה ותקבל הודעה בכל פעם שגרסה חדשה זמינה. דף זה זמין רק כאשר מנהל AppControl מותקן ממקור GitHub.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
-    <value>אמת מדיניות שליטה באפליקציות כדי לוודא שהן תואמות לסכימה הרשמית. אם שינית ידנית קבצי XML של המדיניות וברצונך לוודא שהשינויים נכונים, השתמש בתכונה זו לאימותם.</value>
+    <value>אמת מדיניות בקרת אפליקציות כדי לוודא שהן תואמות לסכמה הרשמית. אם שינית ידנית קבצי מדיניות XML וברצונך לוודא שהשינויים שלך נכונים, השתמש בתכונה זו לאימותם.</value>
   </data>
   <data name="ViewFileCertificatesPageTitle.Text" xml:space="preserve">
-    <value>הצג מידע מקיף אודות התעודות בהן נעשה שימוש לחתימת כל קובץ. פרטים שבדרך כלל אינם זמינים בתכונות File Explorer או בפקודות PowerShell מוצגים כאן במלואם.</value>
+    <value>צפה במידע מקיף על התעודות המשמשות לחתימת כל קובץ. פרטים שאינם זמינים בדרך כלל במאפייני סייר הקבצים או ב-cmdlets של PowerShell מוצגים כאן במלואם.</value>
   </data>
   <data name="CreateDenyPolicyFilesAndFoldersScanResultsPageTitle.Text" xml:space="preserve">
-    <value>הצג את הקבצים שזוהו ושישמשו ליצירת מדיניות החסימה.</value>
+    <value>צפה בקבצים שזוהו ששימשו ליצירת מדיניות הדחייה.</value>
   </data>
   <data name="CreateDenyPolicyPageTitle.Text" xml:space="preserve">
-    <value>צור מדיניות בסיסית לחסימה שתסרב באופן מפורש להרצת קבצים או אפליקציות. זכור, שליטת אפליקציות מבוססת בעיקר על רשימת הרשאות, כלומר כל מה שאינו מורשה כבר נחסם אוטומטית.</value>
+    <value>צור מדיניות בסיסית של דחייה שתדחה במפורש קבצים או אפליקציות. זכור שבקרת אפליקציות מבוססת ביסודה על רשימת אישורים, מה שאומר שכל דבר שלא מותר על ידי מדיניות כבר נדחה אוטומטית.</value>
   </data>
   <data name="ConfigurePolicyRuleOptionsPageTitle.Text" xml:space="preserve">
-    <value>הגדר אפשרויות חוקי מדיניות App Control לעסקים. מידע מפורט מוצג ליד כל כלל, ותוכל להשתמש בכפתור "מדריך" או לפתוח דיון ב-GitHub אם נדרש מידע נוסף.</value>
+    <value>הגדר אפשרויות כלל מדיניות בקרת אפליקציות לעסקים. מידע מפורט מסופק ליד כל כלל ותוכל להשתמש בלחצן המדריך או לפתוח דיון ב-GitHub אם אתה זקוק למידע נוסף.</value>
   </data>
   <data name="BuildNewCertificatePageTitle.Text" xml:space="preserve">
-    <value>בנה בצורה מאובטחת תעודות חתימה לקוד המתאימות לחתימת מדיניות שליטה באפליקציות.</value>
+    <value>בנה בצורה מאובטחת תעודות חתימת קוד המתאימות לחתימת מדיניות בקרת אפליקציות.</value>
   </data>
   <data name="SystemInformationPageTitle.Text" xml:space="preserve">
-    <value>הצג מידע מפורט אודות המדיניות המופעלות ותקינות הקוד במערכות מקומיות או מרוחקות.</value>
+    <value>צפה במידע מפורט על המדיניות המופעלות ושלמות הקוד במערכות מקומיות או מרוחקות.</value>
   </data>
   <data name="AllowNewAppsPageTitle.Text" xml:space="preserve">
-    <value>השתמש בדף זה כדי לאפשר הפעלה של אפליקציות או קבצים חדשים או שכבר מותקנים במערכת.</value>
+    <value>השתמש בדף זה כדי לאפשר לאפליקציות או קבצים חדשים או כבר מותקנים לפעול על המערכת.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
-    <value>החלף בין שפות ממשק משתמש ופריסות נתמכות שונות.</value>
+    <value>עבור בין שפות ופריסות ממשק משתמש נתמכות שונות.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>החלף בין שפות ממשק משתמש ופריסות נתמכות שונות.</value>
+    <value>עבור בין שפות ופריסות ממשק משתמש נתמכות שונות.</value>
   </data>
   <data name="LanguageSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>החלף בין שפות ממשק משתמש ופריסות נתמכות שונות.</value>
+    <value>עבור בין שפות ופריסות ממשק משתמש נתמכות שונות.</value>
   </data>
   <data name="LanguageSelectionSettingsCard.Description" xml:space="preserve">
-    <value>בחר שפה שונה מהרשימה</value>
+    <value>בחר שפה אחרת מהרשימה</value>
   </data>
   <data name="LanguageSelectionSettingsCard.Header" xml:space="preserve">
     <value>בחירת שפה</value>
   </data>
   <data name="LanguageSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר שפה שונה מהרשימה</value>
+    <value>בחר שפה אחרת מהרשימה</value>
   </data>
   <data name="LanguageSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר שפה שונה מהרשימה</value>
+    <value>בחר שפה אחרת מהרשימה</value>
   </data>
   <data name="UIFlowDirectionSettingsCard.Description" xml:space="preserve">
-    <value>החלף בין כיווני זרימה מימין לשמאל ומשמאל לימין עבור אלמנטים בממשק המשתמש.</value>
+    <value>עבור בין כיווני זרימה מימין לשמאל ומשמאל לימין לאלמנטים של ממשק המשתמש.</value>
   </data>
   <data name="UIFlowDirectionSettingsCard.Header" xml:space="preserve">
     <value>כיוון זרימה</value>
   </data>
   <data name="UIFlowDirectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>החלף בין כיווני זרימה מימין לשמאל ומשמאל לימין עבור אלמנטים בממשק המשתמש.</value>
+    <value>עבור בין כיווני זרימה מימין לשמאל ומשמאל לימין לאלמנטים של ממשק המשתמש.</value>
   </data>
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>החלף בין כיווני זרימה מימין לשמאל ומשמאל לימין עבור אלמנטים בממשק המשתמש.</value>
+    <value>עבור בין כיווני זרימה מימין לשמאל ומשמאל לימין לאלמנטים של ממשק המשתמש.</value>
   </data>
   <data name="AppElevationNotice.Main" xml:space="preserve">
-    <value>אנא הפעל את AppControl Manager עם הרשאות מנהל כדי לגשת לדף זה</value>
+    <value>אנא הפעל את מנהל AppControl כמנהל כדי לגשת לדף זה</value>
   </data>
   <data name="AppElevationNotice.Title" xml:space="preserve">
     <value>נדרשות הרשאות מנהל</value>
   </data>
   <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
-    <value>תמיד בקש העלאת הרשאות בעת אתחול האפליקציה</value>
+    <value>תמיד בקש הרשאות מוגברות בעת הפעלת האפליקציה</value>
   </data>
   <data name="AppElevationNotice.Relaunch" xml:space="preserve">
     <value>הפעל מחדש כמנהל</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
-    <value>החלון הוגדל כאשר האפליקציה נסגרה בפעם האחרונה, מוגדר כעת להיות מוגדל</value>
+    <value>החלון היה מוגדל כשהאפליקציה נסגרה בפעם האחרונה, מגדיר אותו למוגדל כעת</value>
   </data>
   <data name="AllowMicrosoftCreateButton.Content" xml:space="preserve">
     <value>צור</value>
   </data>
   <data name="AllowMicrosoftCreateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית לאישור Microsoft</value>
+    <value>צור את מדיניות הבסיס של אפשר למיקרוסופט</value>
   </data>
   <data name="AllowMicrosoftCreateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית לאישור Microsoft</value>
+    <value>צור את מדיניות הבסיס של אפשר למיקרוסופט</value>
   </data>
   <data name="DefaultWindowsCreateButton.Content" xml:space="preserve">
     <value>צור</value>
   </data>
   <data name="DefaultWindowsCreateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית של Windows ברירת מחדל</value>
+    <value>צור את מדיניות הבסיס של חלונות ברירת מחדל</value>
   </data>
   <data name="DefaultWindowsCreateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית של Windows ברירת מחדל</value>
+    <value>צור את מדיניות הבסיס של חלונות ברירת מחדל</value>
   </data>
   <data name="SignedAndReputableCreateButton.Content" xml:space="preserve">
     <value>צור</value>
   </data>
   <data name="SignedAndReputableCreateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית "חתומה ומכובדת"</value>
+    <value>צור את מדיניות הבסיס של חתום ומוכר</value>
   </data>
   <data name="SignedAndReputableCreateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית "חתומה ומכובדת"</value>
+    <value>צור את מדיניות הבסיס של חתום ומוכר</value>
   </data>
   <data name="RecommendedDriverBlockRulesCreateButton.Content" xml:space="preserve">
     <value>צור</value>
   </data>
   <data name="RecommendedDriverBlockRulesCreateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור את מדיניות רשימת חסימת הדרייברים המומלצת על ידי Microsoft</value>
+    <value>צור את מדיניות רשימת חסימת מנהלי התקנים המומלצת של מיקרוסופט</value>
   </data>
   <data name="RecommendedDriverBlockRulesCreateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור את מדיניות רשימת חסימת הדרייברים המומלצת על ידי Microsoft</value>
+    <value>צור את מדיניות רשימת חסימת מנהלי התקנים המומלצת של מיקרוסופט</value>
   </data>
   <data name="RecommendedUserModeBlockRulesCreateButton.Content" xml:space="preserve">
     <value>צור</value>
   </data>
   <data name="RecommendedUserModeBlockRulesCreateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור את מדיניות כללי חסימת מצב משתמש המומלצים על ידי Microsoft</value>
+    <value>צור את מדיניות כללי החסימה המומלצים של מיקרוסופט למצב משתמש</value>
   </data>
   <data name="RecommendedUserModeBlockRulesCreateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור את מדיניות כללי חסימת מצב משתמש המומלצים על ידי Microsoft</value>
+    <value>צור את מדיניות כללי החסימה המומלצים של מיקרוסופט למצב משתמש</value>
   </data>
   <data name="StrictKernelModePolicyCreateButton.Content" xml:space="preserve">
     <value>צור</value>
   </data>
   <data name="StrictKernelModePolicyCreateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית הקפדנית למצב ליבה</value>
+    <value>צור את מדיניות הבסיס של מצב הליבה המחמיר</value>
   </data>
   <data name="StrictKernelModePolicyCreateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור את המדיניות הבסיסית הקפדנית למצב ליבה</value>
+    <value>צור את מדיניות הבסיס של מצב הליבה המחמיר</value>
   </data>
   <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.Header" xml:space="preserve">
-    <value>ללא תעודות שורש גרסת ניסוי</value>
+    <value>ללא תעודות שורש טיסה</value>
   </data>
   <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.Description" xml:space="preserve">
-    <value>אין לאפשר תעודות שורש גרסת ניסוי</value>
+    <value>אל תאפשר תעודות שורש טיסה</value>
   </data>
   <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אין לאפשר תעודות שורש גרסת ניסוי</value>
+    <value>אל תאפשר תעודות שורש טיסה</value>
   </data>
   <data name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אין לאפשר תעודות שורש גרסת ניסוי</value>
+    <value>אל תאפשר תעודות שורש טיסה</value>
   </data>
   <data name="StrictKernelModePolicySection.Header" xml:space="preserve">
-    <value>צור מדיניות קפדנית למצב ליבה</value>
+    <value>צור מדיניות מצב הליבה מחמירה</value>
   </data>
   <data name="StrictKernelModePolicySection.Description" xml:space="preserve">
-    <value>מדיניות זו תחול רק על קבצים במצב ליבה ואינה משפיעה על קבצים במצב משתמש</value>
+    <value>מדיניות זו תאכוף רק קבצי מצב הליבה ואין לה השפעה על קבצי מצב משתמש</value>
   </data>
   <data name="StrictKernelModePolicySection.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מדיניות זו תחול רק על קבצים במצב ליבה ואינה משפיעה על קבצים במצב משתמש</value>
+    <value>מדיניות זו תאכוף רק קבצי מצב הליבה ואין לה השפעה על קבצי מצב משתמש</value>
   </data>
   <data name="StrictKernelModePolicySection.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מדיניות זו תחול רק על קבצים במצב ליבה ואינה משפיעה על קבצים במצב משתמש</value>
+    <value>מדיניות זו תאכוף רק קבצי מצב הליבה ואין לה השפעה על קבצי מצב משתמש</value>
   </data>
   <data name="RecommendedUserModeBlockRulesSettings.Header" xml:space="preserve">
-    <value>צור כללי חסימת מצב משתמש מומלצים על ידי Microsoft</value>
+    <value>צור כללי חסימה מומלצים של מיקרוסופט למצב משתמש</value>
   </data>
   <data name="RecommendedUserModeBlockRulesSettings.Description" xml:space="preserve">
-    <value>מדיניות זו תיצור את כללי חסימת מצב משתמש המומלצים על ידי Microsoft.</value>
+    <value>מדיניות זו תיצור את כללי החסימה המומלצים של מיקרוסופט למצב משתמש.</value>
   </data>
   <data name="RecommendedUserModeBlockRulesSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מדיניות זו תיצור את כללי חסימת מצב משתמש המומלצים על ידי Microsoft.</value>
+    <value>מדיניות זו תיצור את כללי החסימה המומלצים של מיקרוסופט למצב משתמש.</value>
   </data>
   <data name="RecommendedUserModeBlockRulesSettings.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מדיניות זו תיצור את כללי חסימת מצב משתמש המומלצים על ידי Microsoft.</value>
+    <value>מדיניות זו תיצור את כללי החסימה המומלצים של מיקרוסופט למצב משתמש.</value>
   </data>
   <data name="DriversBlockRulesLittleSettingsCard.Header" xml:space="preserve">
     <value>מידע</value>
   </data>
   <data name="DriversBlockRulesLittleSettingsCard.Description" xml:space="preserve">
-    <value>מידע אודות כללי חסימת הדרייברים המומלצים העדכניים של Microsoft</value>
+    <value>מידע על כללי חסימת מנהלי התקנים המומלצים האחרונים של מיקרוסופט</value>
   </data>
   <data name="DriversBlockRulesLittleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מידע אודות כללי חסימת הדרייברים המומלצים העדכניים של Microsoft</value>
+    <value>מידע על כללי חסימת מנהלי התקנים המומלצים האחרונים של מיקרוסופט</value>
   </data>
   <data name="DriversBlockRulesLittleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מידע אודות כללי חסימת הדרייברים המומלצים העדכניים של Microsoft</value>
+    <value>מידע על כללי חסימת מנהלי התקנים המומלצים האחרונים של מיקרוסופט</value>
   </data>
   <data name="RecommendedDriverBlockRulesScheduledAutoUpdate.Content" xml:space="preserve">
     <value>עדכון אוטומטי</value>
   </data>
   <data name="RecommendedDriverBlockRulesScheduledAutoUpdate.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מגדיר את רשימת חסימת הדרייברים המומלצת על ידי Microsoft לעדכון אוטומטי באמצעות משימה מתוזמנת</value>
+    <value>מגדיר את רשימת חסימת מנהלי התקנים המומלצת של מיקרוסופט להתעדכן אוטומטית באמצעות משימה מתוזמנת</value>
   </data>
   <data name="RecommendedDriverBlockRulesScheduledAutoUpdate.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מגדיר את רשימת חסימת הדרייברים המומלצת על ידי Microsoft לעדכון אוטומטי באמצעות משימה מתוזמנת</value>
+    <value>מגדיר את רשימת חסימת מנהלי התקנים המומלצת של מיקרוסופט להתעדכן אוטומטית באמצעות משימה מתוזמנת</value>
   </data>
   <data name="RecommendedDriverBlockRulesSettings.Header" xml:space="preserve">
-    <value>צור כללי חסימת דרייברים מומלצים על ידי Microsoft</value>
+    <value>צור כללי חסימת מנהלי התקנים המומלצים של מיקרוסופט</value>
   </data>
   <data name="RecommendedDriverBlockRulesSettings.Description" xml:space="preserve">
-    <value>מדיניות זו תיצור את כללי חסימת הדרייברים המומלצים על ידי Microsoft.</value>
+    <value>מדיניות זו תיצור את כללי חסימת מנהלי התקנים המומלצים של מיקרוסופט.</value>
   </data>
   <data name="RecommendedDriverBlockRulesSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מדיניות זו תיצור את כללי חסימת הדרייברים המומלצים על ידי Microsoft.</value>
+    <value>מדיניות זו תיצור את כללי חסימת מנהלי התקנים המומלצים של מיקרוסופט.</value>
   </data>
   <data name="RecommendedDriverBlockRulesSettings.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מדיניות זו תיצור את כללי חסימת הדרייברים המומלצים על ידי Microsoft.</value>
+    <value>מדיניות זו תיצור את כללי חסימת מנהלי התקנים המומלצים של מיקרוסופט.</value>
   </data>
   <data name="LogSizeConfigSettingsCard.Header" xml:space="preserve">
     <value>גודל יומן</value>
   </data>
   <data name="LogSizeConfigSettingsCard.Description" xml:space="preserve">
-    <value>מגדיר את גודל היומן לאירועי Microsoft-Windows-CodeIntegrity/Operational.</value>
+    <value>מציין את גודל היומן לאירועי Microsoft-Windows-CodeIntegrity/Operational.</value>
   </data>
   <data name="LogSizeConfigSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מגדיר את גודל היומן לאירועי Microsoft-Windows-CodeIntegrity/Operational.</value>
+    <value>מציין את גודל היומן לאירועי Microsoft-Windows-CodeIntegrity/Operational.</value>
   </data>
   <data name="LogSizeConfigSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מגדיר את גודל היומן לאירועי Microsoft-Windows-CodeIntegrity/Operational.</value>
+    <value>מציין את גודל היומן לאירועי Microsoft-Windows-CodeIntegrity/Operational.</value>
   </data>
   <data name="SignedAndReputableSettings.Header" xml:space="preserve">
-    <value>צור מדיניות חתומה ומכובדת</value>
+    <value>צור מדיניות חתומה ומוכרת</value>
   </data>
   <data name="SignedAndReputableSettings.Description" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של כל תוכנית וקובץ החתומים על ידי תעודות Microsoft. היא תשתמש גם במודיעין הגלובלי של Microsoft Intelligent Security Graph כדי לאשר באופן אוטומטי קבצים מכובדים וחתומים להרצה. כל דבר אחר ייחסם.</value>
+    <value>מדיניות זו תאפשר לכל תוכנית וקובץ שחתומים על ידי תעודות של מיקרוסופט לפעול. היא גם תשתמש במודיעין הגלובלי של גרף האבטחה החכם של מיקרוסופט כדי לאשר אוטומטית קבצים מוכרים וחתומים לפעול. כל דבר אחר ייחסם.</value>
   </data>
   <data name="SignedAndReputableSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של כל תוכנית וקובץ החתומים על ידי תעודות Microsoft. היא תשתמש גם במודיעין הגלובלי של Microsoft Intelligent Security Graph כדי לאשר באופן אוטומטי קבצים מכובדים וחתומים להרצה. כל דבר אחר ייחסם.</value>
+    <value>מדיניות זו תאפשר לכל תוכנית וקובץ שחתומים על ידי תעודות של מיקרוסופט לפעול. היא גם תשתמש במודיעין הגלובלי של גרף האבטחה החכם של מיקרוסופט כדי לאשר אוטומטית קבצים מוכרים וחתומים לפעול. כל דבר אחר ייחסם.</value>
   </data>
   <data name="SignedAndReputableSettings.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של כל תוכנית וקובץ החתומים על ידי תעודות Microsoft. היא תשתמש גם במודיעין הגלובלי של Microsoft Intelligent Security Graph כדי לאשר באופן אוטומטי קבצים מכובדים וחתומים להרצה. כל דבר אחר ייחסם.</value>
+    <value>מדיניות זו תאפשר לכל תוכנית וקובץ שחתומים על ידי תעודות של מיקרוסופט לפעול. היא גם תשתמש במודיעין הגלובלי של גרף האבטחה החכם של מיקרוסופט כדי לאשר אוטומטית קבצים מוכרים וחתומים לפעול. כל דבר אחר ייחסם.</value>
   </data>
   <data name="DefaultWindowsSettings.Header" xml:space="preserve">
-    <value>צור מדיניות Windows ברירת מחדל</value>
+    <value>צור מדיניות חלונות ברירת מחדל</value>
   </data>
   <data name="DefaultWindowsSettings.Description" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של קבצים המגיעים כברירת מחדל עם מערכת ההפעלה Windows (כולל מוצרי Office) וכל שאר הקבצים ייחסמו.</value>
+    <value>מדיניות זו תאפשר לקבצים שמגיעים כברירת מחדל עם מערכת ההפעלה Windows לפעול (כולל מוצרי Office) וכל דבר אחר ייחסם.</value>
   </data>
   <data name="DefaultWindowsSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של קבצים המגיעים כברירת מחדל עם מערכת ההפעלה Windows (כולל מוצרי Office) וכל שאר הקבצים ייחסמו.</value>
+    <value>מדיניות זו תאפשר לקבצים שמגיעים כברירת מחדל עם מערכת ההפעלה Windows לפעול (כולל מוצרי Office) וכל דבר אחר ייחסם.</value>
   </data>
   <data name="DefaultWindowsSettings.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של קבצים המגיעים כברירת מחדל עם מערכת ההפעלה Windows (כולל מוצרי Office) וכל שאר הקבצים ייחסמו.</value>
+    <value>מדיניות זו תאפשר לקבצים שמגיעים כברירת מחדל עם מערכת ההפעלה Windows לפעול (כולל מוצרי Office) וכל דבר אחר ייחסם.</value>
   </data>
   <data name="AllowMicrosoftSettings.Header" xml:space="preserve">
-    <value>צור מדיניות אישור Microsoft</value>
+    <value>צור מדיניות אישור מיקרוסופט</value>
   </data>
   <data name="AllowMicrosoftSettings.Description" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של כל תוכנית וקובץ החתומים על ידי תעודות Microsoft, וכל דבר אחר ייחסם.</value>
+    <value>מדיניות זו תאפשר לכל תוכנה וקובץ החתומים באמצעות תעודות של מיקרוסופט לפעול, וכל השאר יחסם.</value>
   </data>
   <data name="AllowMicrosoftSettings.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של כל תוכנית וקובץ החתומים על ידי תעודות Microsoft, וכל דבר אחר ייחסם.</value>
+    <value>מדיניות זו תאפשר לכל תוכנה וקובץ החתומים באמצעות תעודות של מיקרוסופט לפעול, וכל השאר יחסם.</value>
   </data>
   <data name="AllowMicrosoftSettings.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מדיניות זו תאפשר הפעלה של כל תוכנית וקובץ החתומים על ידי תעודות Microsoft, וכל דבר אחר ייחסם.</value>
+    <value>מדיניות זו תאפשר לכל תוכנה וקובץ החתומים באמצעות תעודות של מיקרוסופט לפעול, וכל השאר יחסם.</value>
   </data>
   <data name="CopyRow.Text" xml:space="preserve">
     <value>העתק שורה</value>
   </data>
   <data name="CopyRow.ToolTipService.ToolTip" xml:space="preserve">
-    <value>העתק את השורה/השורות הנבחרות כטקסט ללוח הגזירות כדי שתוכל להדביק אותן בעורך טקסט.</value>
+    <value>העתק את השורה (או השורות) הנבחרת ללוח כטקסט, כדי שתוכל להדביק אותן בכל עורך טקסט.</value>
   </data>
   <data name="CopyRow.AutomationProperties.HelpText" xml:space="preserve">
-    <value>העתק את השורה/השורות הנבחרות כטקסט ללוח הגזירות כדי שתוכל להדביק אותן בעורך טקסט.</value>
+    <value>העתק את השורה (או השורות) הנבחרת ללוח כטקסט, כדי שתוכל להדביק אותן בכל עורך טקסט.</value>
   </data>
   <data name="DeleteRow.Text" xml:space="preserve">
     <value>מחק שורה</value>
   </data>
   <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מחק את השורה/השורות הנבחרות. הנתונים הקשורים אליהן יוסרו.</value>
+    <value>מחק את השורה (או השורות) הנבחרת. הנתונים המשויכים אליהן יוסר.</value>
   </data>
   <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מחק את השורה/השורות הנבחרות. הנתונים הקשורים אליהן יוסרו.</value>
+    <value>מחק את השורה (או השורות) הנבחרת. הנתונים המשויכים אליהן יוסר.</value>
   </data>
   <data name="CopyIndividualItems.Text" xml:space="preserve">
     <value>העתק פריטים בודדים</value>
   </data>
   <data name="CopyIndividualItems.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח תת-תפריט בעת ריחוף או נגיעה כדי לאפשר העתקת פריטים בודדים בכל שורה.</value>
+    <value>מרחיב תפריט משנה בהגבהה או בנגיעה כדי לאפשר העתקת פריטים נפרדים בכל שורה.</value>
   </data>
   <data name="CopyIndividualItems.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח תת-תפריט בעת ריחוף או נגיעה כדי לאפשר העתקת פריטים בודדים בכל שורה.</value>
+    <value>מרחיב תפריט משנה בהגבהה או בנגיעה כדי לאפשר העתקת פריטים נפרדים בכל שורה.</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>AppControl Manager מאפשר לך לנהל בקלות את מדיניות בקרת האפליקציות ושלמות הקוד ב-Windows, כולל אך לא מוגבל ל: יצירה, סימולציה, הסרה, פריסה וחתימה.</value>
+    <value>AppControl Manager מאפשר לך לנהל בקלות מדיניות App Control ו-Code Integrity ב-Windows, כולל אך לא מוגבל ליצירה, סימולציה, הסרה, פריסה וחתימה.</value>
   </data>
   <data name="MergePoliciesSettingsExpander.Description" xml:space="preserve">
-    <value>מיזוג מדיניות בקרת יישומים</value>
+    <value>מיזוג מדיניות App Control</value>
   </data>
   <data name="MergePoliciesSettingsExpander.Header" xml:space="preserve">
     <value>מיזוג</value>
   </data>
   <data name="MergePoliciesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מיזוג מדיניות בקרת יישומים</value>
+    <value>מיזוג מדיניות App Control</value>
   </data>
   <data name="MergePoliciesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מיזוג מדיניות בקרת יישומים</value>
+    <value>מיזוג מדיניות App Control</value>
   </data>
   <data name="BrowseForMainPolicyToMergeSettingsCard.Description" xml:space="preserve">
-    <value>חפש את הנתיב לקובץ XML של המדיניות הראשית.</value>
+    <value>עיין ובחר נתיב לקובץ ה-XML של המדיניות הראשית.</value>
   </data>
   <data name="BrowseForMainPolicyToMergeSettingsCard.Header" xml:space="preserve">
     <value>בחר מדיניות ראשית</value>
   </data>
   <data name="BrowseForMainPolicyToMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>חפש את הנתיב לקובץ XML של המדיניות הראשית.</value>
+    <value>עיין ובחר נתיב לקובץ ה-XML של המדיניות הראשית.</value>
   </data>
   <data name="BrowseForMainPolicyToMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>חפש את הנתיב לקובץ XML של המדיניות הראשית.</value>
+    <value>עיין ובחר נתיב לקובץ ה-XML של המדיניות הראשית.</value>
   </data>
   <data name="BrowseForOtherPoliciesToMergeSettingsCard.Description" xml:space="preserve">
-    <value>בחר מדיניות אחרות למיזוג עם המדיניות הראשית</value>
+    <value>בחר מדיניות נוספות למיזוג עם המדיניות הראשית.</value>
   </data>
   <data name="BrowseForOtherPoliciesToMergeSettingsCard.Header" xml:space="preserve">
-    <value>בחר מדיניות אחרות</value>
+    <value>בחר מדיניות נוספות</value>
   </data>
   <data name="BrowseForOtherPoliciesToMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בחר מדיניות אחרות למיזוג עם המדיניות הראשית</value>
+    <value>בחר מדיניות נוספות למיזוג עם המדיניות הראשית.</value>
   </data>
   <data name="BrowseForOtherPoliciesToMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בחר מדיניות אחרות למיזוג עם המדיניות הראשית</value>
+    <value>בחר מדיניות נוספות למיזוג עם המדיניות הראשית.</value>
   </data>
   <data name="GenericBrowseButton.Content" xml:space="preserve">
-    <value>עיון</value>
+    <value>עיין</value>
   </data>
   <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיון</value>
+    <value>עיין</value>
   </data>
   <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיון</value>
+    <value>עיין</value>
   </data>
   <data name="ViewTheSelectedMainPolicy.Text" xml:space="preserve">
-    <value>צפה במדיניות הראשית שבחרת.</value>
+    <value>הצג את המדיניות הראשית שבחרת.</value>
   </data>
   <data name="ViewTheSelectedOtherPolicies.Text" xml:space="preserve">
-    <value>צפה במדיניות האחרות שבחרת.</value>
+    <value>הצג את המדיניות הנוספות שבחרת.</value>
   </data>
   <data name="DeployAfterMergeButton.Content" xml:space="preserve">
-    <value>הפעל לאחר מיזוג</value>
+    <value>פרוס לאחר המיזוג</value>
   </data>
   <data name="DeployAfterMergeButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הפעל את המדיניות בסוף פעולת המיזוג.</value>
+    <value>פרוס את המדיניות בסיום פעולת המיזוג.</value>
   </data>
   <data name="DeployAfterMergeButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הפעל את המדיניות בסוף פעולת המיזוג.</value>
+    <value>פרוס את המדיניות בסיום פעולת המיזוג.</value>
   </data>
   <data name="MergeButton.Content" xml:space="preserve">
-    <value>מיזוג</value>
+    <value>מזג</value>
   </data>
   <data name="MergeButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>התחל את פעולת המיזוג.</value>
@@ -2367,91 +2557,91 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>התחל את פעולת המיזוג.</value>
   </data>
   <data name="CurrentStatusInfoBar.Title" xml:space="preserve">
-    <value>מצב נוכחי</value>
+    <value>סטטוס נוכחי</value>
   </data>
   <data name="IncludeSecurityCatalogsSettingsCard.Description" xml:space="preserve">
-    <value>זהה חתימות לקבצים לא חתומים על ידי שאילתת קטלוגי אבטחת המערכת לתוצאות מדויקות</value>
+    <value>זיהוי חתימות של קבצים לא חתומים על ידי שאילת קטלוגי אבטחה של המערכת לתוצאות מדויקות.</value>
   </data>
   <data name="IncludeSecurityCatalogsSettingsCard.Header" xml:space="preserve">
-    <value>כלול חותמי קטלוג</value>
+    <value>כלול חתימות מקטלוגים</value>
   </data>
   <data name="IncludeSecurityCatalogsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>זהה חתימות לקבצים לא חתומים על ידי שאילתת קטלוגי אבטחת המערכת לתוצאות מדויקות</value>
+    <value>זיהוי חתימות של קבצים לא חתומים על ידי שאילת קטלוגי אבטחה של המערכת לתוצאות מדויקות.</value>
   </data>
   <data name="IncludeSecurityCatalogsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>זהה חתימות לקבצים לא חתומים על ידי שאילתת קטלוגי אבטחת המערכת לתוצאות מדויקות</value>
+    <value>זיהוי חתימות של קבצים לא חתומים על ידי שאילת קטלוגי אבטחה של המערכת לתוצאות מדויקות.</value>
   </data>
   <data name="CertificatesSearchBox.PlaceholderText" xml:space="preserve">
     <value>חפש פרטי תעודה...</value>
   </data>
   <data name="CertificatesSearchBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>חפש בין נתוני פרטי התעודה</value>
+    <value>חפש בין פרטי התעודה</value>
   </data>
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>חפש בין נתוני פרטי התעודה</value>
+    <value>חפש בין פרטי התעודה</value>
   </data>
   <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>מיון יורד</value>
+    <value>מיון בסדר יורד</value>
   </data>
   <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>כאשר מסומן, המיון יתבצע בסדר יורד, אם לא מסומן, המיון יתבצע בסדר עולה.</value>
+    <value>כאשר מסומן, המיון יתבצע בסדר יורד; כאשר לא מסומן, המיון יתבצע בסדר עולה.</value>
   </data>
   <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>כאשר מסומן, המיון יתבצע בסדר יורד, אם לא מסומן, המיון יתבצע בסדר עולה.</value>
+    <value>כאשר מסומן, המיון יתבצע בסדר יורד; כאשר לא מסומן, המיון יתבצע בסדר עולה.</value>
   </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>
+    <value>עיין ובחר את הנתיב לקובץ MSIXBundle של AppControl Manager במכשיר שלך, ולאחר מכן חזור לדף העדכונים כדי להתקין אותו.</value>
   </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Header" xml:space="preserve">
-    <value>אופציונלי: בחר נתיב קובץ MSIXBundle</value>
+    <value>אופציונלי: בחר נתיב לקובץ MSIXBundle</value>
   </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>
+    <value>עיין ובחר את הנתיב לקובץ MSIXBundle של AppControl Manager במכשיר שלך, ולאחר מכן חזור לדף העדכונים כדי להתקין אותו.</value>
   </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>חפש את נתיב קובץ MSIXBundle של AppControl Manager במכשיר שלך ואז חזור לעמוד העדכון כדי להתקין אותו.</value>
+    <value>עיין ובחר את הנתיב לקובץ MSIXBundle של AppControl Manager במכשיר שלך, ולאחר מכן חזור לדף העדכונים כדי להתקין אותו.</value>
   </data>
   <data name="BrowseForCustomMSIXPathButton.Content" xml:space="preserve">
-    <value>חפש נתיב MSIXBundle</value>
+    <value>עיין ובחר נתיב MSIXBundle</value>
   </data>
   <data name="BrowseForCustomMSIXPathButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח את בורר הקבצים ומאפשר לך לבחור את קובץ MSIXBundle של AppControl Manager במכשיר שלך.</value>
+    <value>פותח בורר קבצים כדי לבחור את קובץ MSIXBundle של AppControl Manager במכשיר שלך.</value>
   </data>
   <data name="BrowseForCustomMSIXPathButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח את בורר הקבצים ומאפשר לך לבחור את קובץ MSIXBundle של AppControl Manager במכשיר שלך.</value>
+    <value>פותח בורר קבצים כדי לבחור את קובץ MSIXBundle של AppControl Manager במכשיר שלך.</value>
   </data>
   <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Description" xml:space="preserve">
-    <value>אשר שברצונך להשתמש בקובץ MSIXBundle מותאם אישית שנבחר במקום להוריד אותו אוטומטית מ-GitHub. פעולה זו תדרוס את בדיקת העדכון המקוונת ותעקוף את הורדת קובץ MSIXBundle מ-GitHub.</value>
+    <value>אשר שברצונך להשתמש בקובץ MSIXBundle המותאם שבחרת במקום להורידו אוטומטית מ-GitHub. פעולה זו תעקוף בדיקת עדכונים מקוונת ותדלג על הורדת הקובץ מ-GitHub.</value>
   </data>
   <data name="ConfirmUseOfCustomMSIXPathSettingsCard.Header" xml:space="preserve">
     <value>אשר</value>
   </data>
   <data name="ConfirmUseOfCustomMSIXPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אשר שברצונך להשתמש בקובץ MSIXBundle מותאם אישית שנבחר במקום להוריד אותו אוטומטית מ-GitHub. פעולה זו תדרוס את בדיקת העדכון המקוונת ותעקוף את הורדת קובץ MSIXBundle מ-GitHub.</value>
+    <value>אשר שברצונך להשתמש בקובץ MSIXBundle המותאם שבחרת במקום להורידו אוטומטית מ-GitHub. פעולה זו תעקוף בדיקת עדכונים מקוונת ותדלג על הורדת הקובץ מ-GitHub.</value>
   </data>
   <data name="ConfirmUseOfCustomMSIXPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אשר שברצונך להשתמש בקובץ MSIXBundle מותאם אישית שנבחר במקום להוריד אותו אוטומטית מ-GitHub. פעולה זו תדרוס את בדיקת העדכון המקוונת ותעקוף את הורדת קובץ MSIXBundle מ-GitHub.</value>
+    <value>אשר שברצונך להשתמש בקובץ MSIXBundle המותאם שבחרת במקום להורידו אוטומטית מ-GitHub. פעולה זו תעקוף בדיקת עדכונים מקוונת ותדלג על הורדת הקובץ מ-GitHub.</value>
   </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
     <value>מידע נוסף</value>
   </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח את עמוד הוויקי הראשי של GitHub עבור AppControl Manager</value>
+    <value>פותח את דף הוויקי הראשי של AppControl Manager ב-GitHub.</value>
   </data>
   <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח את עמוד הוויקי הראשי של GitHub עבור AppControl Manager</value>
+    <value>פותח את דף הוויקי הראשי של AppControl Manager ב-GitHub.</value>
   </data>
   <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
     <value>הערות שחרור</value>
   </data>
   <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
-    <value>בדוק את שחרורי GitHub לקבלת הערות שחרור מלאות</value>
+    <value>עיין במהדורות GitHub למידע מלא על הערות השחרור</value>
   </data>
   <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בדוק את שחרורי GitHub לקבלת הערות שחרור מלאות</value>
+    <value>עיין במהדורות GitHub למידע מלא על הערות השחרור</value>
   </data>
   <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בדוק את שחרורי GitHub לקבלת הערות שחרור מלאות</value>
+    <value>עיין במהדורות GitHub למידע מלא על הערות השחרור</value>
   </data>
   <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
     <value>סטטוס עדכון</value>
@@ -2460,19 +2650,19 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>סטטוס עדכון</value>
   </data>
   <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
-    <value>ראה מה חדש</value>
+    <value>הצג מה חדש</value>
   </data>
   <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח את עמוד השחרורים של GitHub שבו תוכל למצוא את הערות השחרור המלאות לעדכון הזמין.</value>
+    <value>פותח את עמוד ה-Releases של GitHub שבו תוכל למצוא את הערות השחרור המלאות עבור העדכון הקיים.</value>
   </data>
   <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח את עמוד השחרורים של GitHub שבו תוכל למצוא את הערות השחרור המלאות לעדכון הזמין.</value>
+    <value>פותח את עמוד ה-Releases של GitHub שבו תוכל למצוא את הערות השחרור המלאות עבור העדכון הקיים.</value>
   </data>
   <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
     <value>לאחר שהעדכונים יורדו ויותקנו, בפעם הבאה שתפתח את AppControl Manager תשתמש בגרסה החדשה.</value>
   </data>
   <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
-    <value>בדוק לעדכון AppControl Manager</value>
+    <value>בדוק עדכון ל-AppControl Manager</value>
   </data>
   <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>לאחר שהעדכונים יורדו ויותקנו, בפעם הבאה שתפתח את AppControl Manager תשתמש בגרסה החדשה.</value>
@@ -2481,46 +2671,46 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>לאחר שהעדכונים יורדו ויותקנו, בפעם הבאה שתפתח את AppControl Manager תשתמש בגרסה החדשה.</value>
   </data>
   <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
-    <value>בדוק אוטומטית לעדכונים כאשר האפליקציה מופעלת והודע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+    <value>בודק באופן אוטומטי עדכונים בעת הפעלת האפליקציה ומודיע לך אם גרסה חדשה זמינה, כך שתוכל להשתמש בדף זה כדי להתקין אותה.</value>
   </data>
   <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
-    <value>בדיקת עדכון אוטומטית</value>
+    <value>בדיקה אוטומטית לעדכונים</value>
   </data>
   <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בדוק אוטומטית לעדכונים כאשר האפליקציה מופעלת והודע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+    <value>בודק באופן אוטומטי עדכונים בעת הפעלת האפליקציה ומודיע לך אם גרסה חדשה זמינה, כך שתוכל להשתמש בדף זה כדי להתקין אותה.</value>
   </data>
   <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בדוק אוטומטית לעדכונים כאשר האפליקציה מופעלת והודע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+    <value>בודק באופן אוטומטי עדכונים בעת הפעלת האפליקציה ומודיע לך אם גרסה חדשה זמינה, כך שתוכל להשתמש בדף זה כדי להתקין אותה.</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
-    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יהיה מקושר לחשבון המשתמש, וידרוש אישור של הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יקושר לחשבון המשתמש, ויידרש אישור בהנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
-    <value>הליך עדכון מחוזק</value>
+    <value>נוהל עדכון מחוזק</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יהיה מקושר לחשבון המשתמש, וידרוש אישור של הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יקושר לחשבון המשתמש, ויידרש אישור בהנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
   </data>
   <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יהיה מקושר לחשבון המשתמש, וידרוש אישור של הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של התעודה שנוצרה במכשיר יקושר לחשבון המשתמש, ויידרש אישור בהנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
   </data>
   <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>יוריד ויתקין את הגרסה האחרונה ממאגר GitHub. הזמן שלוקח תלוי בחיבור הרשת שלך. גודל ההורדה המשוער הוא 65 MB.</value>
+    <value>יוריד ויתקין את הגרסה העדכנית ביותר ממאגר GitHub. משך הפעולה תלוי בחיבור הרשת שלך. הגודל המשוער להורדה הוא 65 MB.</value>
   </data>
   <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>יוריד ויתקין את הגרסה האחרונה ממאגר GitHub. הזמן שלוקח תלוי בחיבור הרשת שלך. גודל ההורדה המשוער הוא 65 MB.</value>
+    <value>יוריד ויתקין את הגרסה העדכנית ביותר ממאגר GitHub. משך הפעולה תלוי בחיבור הרשת שלך. הגודל המשוער להורדה הוא 65 MB.</value>
   </data>
   <data name="BuildCertificateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בנה את התעודה על סמך התצורות המוצגות להלן</value>
+    <value>בנה את התעודה על בסיס ההגדרות המוצגות למטה.</value>
   </data>
   <data name="BuildCertificateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בנה את התעודה על סמך התצורות המוצגות להלן</value>
+    <value>בנה את התעודה על בסיס ההגדרות המוצגות למטה.</value>
   </data>
   <data name="BuildCertificateTextBlock.Text" xml:space="preserve">
     <value>בנה תעודה</value>
   </data>
   <data name="CopyThumbPrintToClipboardButton.Content" xml:space="preserve">
-    <value>העתק את טביעת האצבע ללוח</value>
+    <value>העתק טביעת האצבע ללוח</value>
   </data>
   <data name="CopyThumbPrintToClipboardButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>מעתיק את טביעת האצבע של התעודה שנוצרה ללוח.</value>
@@ -2532,22 +2722,22 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>הקלד סיסמה...</value>
   </data>
   <data name="PFXEncryptionPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סיסמה זו תשמש להצפנת קובץ PFX שיכיל את המפתח הציבורי והפרטי של התעודה שנוצרה.</value>
+    <value>סיסמה זו תשמש להצפנת קובץ PFX שיכיל הן את המפתח הציבורי והן את המפתח הפרטי של התעודה שנוצרה.</value>
   </data>
   <data name="PFXEncryptionPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סיסמה זו תשמש להצפנת קובץ PFX שיכיל את המפתח הציבורי והפרטי של התעודה שנוצרה.</value>
+    <value>סיסמה זו תשמש להצפנת קובץ PFX שיכיל הן את המפתח הציבורי והן את המפתח הפרטי של התעודה שנוצרה.</value>
   </data>
   <data name="CommonNameTextBox.PlaceholderText" xml:space="preserve">
     <value>שם נפוץ (CN)</value>
   </data>
   <data name="RetrieveTheUserConfigurationsButton.Content" xml:space="preserve">
-    <value>אחזר את התצורות</value>
+    <value>שלוף את ההגדרות</value>
   </data>
   <data name="RetrieveTheUserConfigurationsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>יאחזר את התצורות האחרונות של המשתמש ויציג אותן.</value>
+    <value>יאחזר את הגדרות המשתמש העדכניות ויציג אותן.</value>
   </data>
   <data name="RetrieveTheUserConfigurationsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>יאחזר את התצורות האחרונות של המשתמש ויציג אותן.</value>
+    <value>יאחזר את הגדרות המשתמש העדכניות ויציג אותן.</value>
   </data>
   <data name="SignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>נתיב מדיניות חתומה:</value>
@@ -2556,10 +2746,10 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>נתיב מדיניות לא חתומה:</value>
   </data>
   <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>נתיב כלי חתימה מותאם אישית:</value>
+    <value>נתיב מותאם לכלי חתימה:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
-    <value>שם נפוץ של תעודה:</value>
+    <value>שם נפוץ של התעודה:</value>
   </data>
   <data name="CertificateCommonNameAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>מצא שמות נפוצים של תעודות</value>
@@ -2568,19 +2758,19 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>מצא שמות נפוצים של תעודות</value>
   </data>
   <data name="CertificatePathTextBox.Header" xml:space="preserve">
-    <value>נתיב תעודה:</value>
+    <value>נתיב התעודה:</value>
   </data>
   <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
-    <value>התאם את מראה AppControl Manager לפי רצונך</value>
+    <value>התאם את מראה AppControl Manager לפי העדפתך.</value>
   </data>
   <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
-    <value>השתמש באפשרויות השונות הזמינות כדי לשנות את המראה והאפקטים הוויזואליים של AppControl Manager</value>
+    <value>השתמש באפשרויות השונות הזמינות לשינוי המראה והאפקטים הוויזואליים של AppControl Manager.</value>
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
-    <value>השתמש באפשרויות השונות הזמינות כדי לשנות את המראה והאפקטים הוויזואליים של AppControl Manager</value>
+    <value>השתמש באפשרויות השונות הזמינות לשינוי המראה והאפקטים הוויזואליים של AppControl Manager.</value>
   </data>
   <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>אנא הפעל מחדש את האפליקציה כדי שהשינויים בשפה יחולו במלואם על ממשק המשתמש.</value>
+    <value>אנא הפעל מחדש את האפליקציה כדי שהשינויים בשפה יתממשו במלואם בממשק המשתמש.</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>שפה</value>
@@ -2592,7 +2782,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>תיעוד AppControl Manager</value>
   </data>
   <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
-    <value>עמוד Microsoft Store</value>
+    <value>דף Microsoft Store</value>
   </data>
   <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
     <value>אתר SpyNetGirl</value>
@@ -2607,7 +2797,7 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>שלח משוב</value>
   </data>
   <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
-    <value>אתר Icons8 לכל הסמלים המשמשים באפליקציה זו</value>
+    <value>אתר Icons8 עבור כל האייקונים המשמשים באפליקציה זו</value>
   </data>
   <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>קוד מקור</value>
@@ -2622,13 +2812,13 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>מימין לשמאל</value>
   </data>
   <data name="RetrieveSecureSettingsButton.Content" xml:space="preserve">
-    <value>אחזר</value>
+    <value>שלוף</value>
   </data>
   <data name="RetrieveSecureSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>בדוק אם למערכת יש הגדרה מאובטחת על סמך המידע שסיפקת.</value>
+    <value>בדוק אם למערכת יש הגדרה מאובטחת על בסיס המידע שסיפקת.</value>
   </data>
   <data name="RetrieveSecureSettingsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>בדוק אם למערכת יש הגדרה מאובטחת על סמך המידע שסיפקת.</value>
+    <value>בדוק אם למערכת יש הגדרה מאובטחת על בסיס המידע שסיפקת.</value>
   </data>
   <data name="SecureSettingProviderTextBox.Header" xml:space="preserve">
     <value>ספק</value>
@@ -2658,45 +2848,60 @@ NOTE: אפשרות זו תמיד מופעלת אם כל מדיניות App Contr
     <value>הזן את שם הערך</value>
   </data>
   <data name="SecureSettingResultsTextBlock.Text" xml:space="preserve">
-    <value>התוצאות יוצגו להלן</value>
+    <value>התוצאות יוצגו למטה</value>
   </data>
   <data name="ViewSelectedPolicyPathsTextBlock.Text" xml:space="preserve">
-    <value>צפה בנתיב המדיניות שבחרת.</value>
+    <value>הצג את נתיב המדיניות שבחרת.</value>
   </data>
   <data name="ApplyThePolicyRuleOptionsChangesButton.Content" xml:space="preserve">
     <value>החל את השינויים</value>
   </data>
   <data name="ApplyThePolicyRuleOptionsChangesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אם סימנת או ביטלת את הסימון של תיבות סימון חדשות בקרב אפשרויות הכללים, השתמש בלחצן זה כדי להחיל אותן על המדיניות שבחרת.</value>
+    <value>אם סימנת או הסרת סימון מתיבות בחירה חדשות באפשרויות הכלל, השתמש בכפתור זה כדי להחיל אותן על המדיניות שבחרת.</value>
   </data>
   <data name="ApplyThePolicyRuleOptionsChangesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אם סימנת או ביטלת את הסימון של תיבות סימון חדשות בקרב אפשרויות הכללים, השתמש בלחצן זה כדי להחיל אותן על המדיניות שבחרת.</value>
+    <value>אם סימנת או הסרת סימון מתיבות בחירה חדשות באפשרויות הכלל, השתמש בכפתור זה כדי להחיל אותן על המדיניות שבחרת.</value>
   </data>
   <data name="DeployAfterApplyingRuleOptionsToggleButton.Content" xml:space="preserve">
-    <value>הפעל לאחר החלה</value>
+    <value>פרוס לאחר היישום</value>
   </data>
   <data name="DeployAfterApplyingRuleOptionsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>יפעיל את המדיניות לאחר החלת שינויי אפשרויות הכללים עליה.</value>
+    <value>יבצע פריסה של המדיניות לאחר החלת השינויים באפשרויות הכללים.</value>
   </data>
   <data name="DeployAfterApplyingRuleOptionsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>יפעיל את המדיניות לאחר החלת שינויי אפשרויות הכללים עליה.</value>
+    <value>יבצע פריסה של המדיניות לאחר החלת השינויים באפשרויות הכללים.</value>
   </data>
   <data name="RefreshRuleOptionsStateButton.Content" xml:space="preserve">
-    <value>אחזר את מצבי הכללים</value>
+    <value>שלוף את מצב אפשרויות הכללים</value>
   </data>
   <data name="RefreshRuleOptionsStateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>אחזר את המצב האחרון של אפשרויות כללי המדיניות מקובץ המדיניות שבחרת</value>
+    <value>יאחזר את המצב העדכני של אפשרויות הכללים מתוך קובץ המדיניות שבחרת.</value>
   </data>
   <data name="RefreshRuleOptionsStateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>אחזר את המצב האחרון של אפשרויות כללי המדיניות מקובץ המדיניות שבחרת</value>
+    <value>יאחזר את המצב העדכני של אפשרויות הכללים מתוך קובץ המדיניות שבחרת.</value>
   </data>
   <data name="SetPolicyTemplateButton.Content" xml:space="preserve">
     <value>הגדר</value>
   </data>
   <data name="SetPolicyTemplateButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מגדיר את התבנית שנבחרה לאפשרויות כללי המדיניות.</value>
+    <value>מגדיר את התבנית הנבחרת לאפשרויות הכלל של המדיניות.</value>
   </data>
   <data name="SetPolicyTemplateButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מגדיר את התבנית שנבחרה לאפשרויות כללי המדיניות.</value>
+    <value>מגדיר את התבנית הנבחרת לאפשרויות הכלל של המדיניות.</value>
+  </data>
+  <data name="SelectBasePolicyTitle" xml:space="preserve">
+    <value>בחר מדיניות בסיס</value>
+  </data>
+  <data name="SelectBasePolicySubtitle" xml:space="preserve">
+    <value>עליך לבחור מדיניות בסיס לפני שתוכל ליצור מדיניות משלימה.</value>
+  </data>
+  <data name="SelectPolicyToAddRulesToTitle" xml:space="preserve">
+    <value>בחר את המדיניות שאליה יש להוסיף את הכללים.</value>
+  </data>
+  <data name="SelectPolicyToAddRulesToSubtitle" xml:space="preserve">
+    <value>עליך לבחור את המדיניות שאליה יתווספו הכללים מכיוון שהגדרת את מצב הפעולה ל-&quot;הוספה למדיניות קיימת&quot;.</value>
+  </data>
+  <data name="ErrorOccurredCreatingPolicy" xml:space="preserve">
+    <value>אירעה שגיאה בזמן יצירת המדיניות.</value>
   </data>
 </root>

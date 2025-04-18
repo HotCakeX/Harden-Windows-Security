@@ -16,23 +16,26 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Main;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Windows.AppLifecycle;
 using Windows.ApplicationModel;
-using Windows.Globalization;
+using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using Microsoft.Extensions.DependencyInjection;
+using AppControlManager.ViewModels;
+using AppControlManager.MicrosoftGraph;
+using Microsoft.Windows.Globalization;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
@@ -124,11 +127,211 @@ public partial class App : Application
 	/// </summary>
 	internal App()
 	{
+
 		// Retrieve the app settings early on to check for elevation at startup and to pass it to DI container for the constructor of the Main app settings class
 		ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
+		this.InitializeComponent();
+
+		AppHost = Host.CreateDefaultBuilder()
+		.ConfigureServices((context, services) =>
+		{
+			// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda when it takes parameters
+			_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
+			_ = services.AddSingleton<ViewCurrentPoliciesVM>();
+			_ = services.AddSingleton<PolicyEditorVM>();
+			_ = services.AddSingleton<SettingsVM>();
+			_ = services.AddSingleton<MergePoliciesVM>();
+			_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
+			_ = services.AddSingleton<AllowNewAppsVM>();
+			_ = services.AddSingleton<CreateDenyPolicyVM>();
+			_ = services.AddSingleton<CreateSupplementalPolicyVM>();
+			_ = services.AddSingleton<EventLogsPolicyCreationVM>();
+			_ = services.AddSingleton<SimulationVM>();
+			_ = services.AddSingleton<MDEAHPolicyCreationVM>();
+			_ = services.AddSingleton<ViewFileCertificatesVM>();
+			_ = services.AddSingleton<MainWindowVM>();
+			_ = services.AddSingleton<CreatePolicyVM>();
+			_ = services.AddSingleton<DeploymentVM>();
+
+			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
+			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
+			_ = services.AddSingleton(provider =>
+			{
+				ViewModel graphVM = provider.GetRequiredService<ViewModel>();
+				return new ViewOnlinePoliciesVM(graphVM);
+			});
+
+			_ = services.AddSingleton<ViewModel>();
+		})
+		.Build();
+
+
+		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
+
+		// Set the language of the application to the user's preferred language
+		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
+
+		// Create the Logs directory if it doesn't exist, won't do anything if it exists
+		_ = Directory.CreateDirectory(LogsDirectory);
+
+		// to handle unhandled exceptions
+		this.UnhandledException += App_UnhandledException;
+
+		AppDomain.CurrentDomain.UnhandledException += App_UnhandledException;
+
+		// Subscribe to FirstChanceException events
+		// AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
+
+		// Subscribe to UnobservedTaskException events
+		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
+		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
+
+		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
+		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
+
+		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
+		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
+		this.FocusVisualKind = FocusVisualKind.Reveal;
+
+		if (IsElevated)
+			MoveUserConfigDirectory();
+
+		#region
+
+		// Check for the SoundSetting in the local settings
+		if (Settings.SoundSetting)
+		{
+			ElementSoundPlayer.State = ElementSoundPlayerState.On;
+			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
+		}
+		else
+		{
+			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
+		}
+
+		#endregion
+	}
+
+
+
+	/*
+
+	/// <summary>
+	/// Event handler for FirstChanceException events.
+	/// This event is raised as soon as an exception is thrown, before any catch blocks are executed.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
+	{
+		// Log the first chance exception details.
+		// Note: FirstChanceExceptions are raised for all exceptions, even if they are handled later.
+		Logger.Write($"FirstChanceException caught: {e.Exception.Message}");
+	}
+
+	*/
+
+
+	/// <summary>
+	/// Event handler for UnobservedTaskException events.
+	/// This event is raised when a faulted Task's exception is not observed.
+	/// UnobservedTaskException doesn't help for exceptions thrown in event handlers.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+	{
+		// Log the unobserved task exception details.
+		Logger.Write($"UnobservedTaskException caught: {e.Exception.Message}");
+
+		// Mark the exception as observed to prevent the process from terminating.
+		e.SetObserved();
+
+		await ShowErrorDialogAsync(e.Exception);
+	}
+
+
+	/// <summary>
+	/// Invoked when the application is launched.
+	/// </summary>
+	/// <param name="args">Details about the launch request and process.</param>
+	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+	{
+
+		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
+
+		// Creates a named Mutex with the specified unique name
+		// The first parameter specifies that this instance initially owns the Mutex if created successfully
+		// The third parameter indicates whether this application instance is the first/unique one
+		// If "IsUniqueAppInstance" is true, it means no other instance of the app is running; otherwise, another instance exists and it will be false
+		_mutex = new Mutex(true, MutexName, out IsUniqueAppInstance);
+
+		if (!IsUniqueAppInstance)
+		{
+			Logger.Write("There is another instance of the AppControl Manager running. This is just an informational log.");
+		}
+
+
+		// Determines whether the session must prompt for UAC to elevate or not
+		bool requireAdminPrivilege = false;
+
+		try
+		{
+
+			// https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#file-type-association
+			AppActivationArguments activatedEventArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+
+			if (activatedEventArgs.Kind is ExtendedActivationKind.File)
+			{
+				Logger.Write("File Activation detected");
+
+				IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
+
+				if (fileActivatedArgs is not null)
+				{
+					IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
+
+					if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
+					{
+						foreach (IStorageItem item in incomingStorageItems)
+						{
+							if (item.Path is not null && File.Exists(item.Path))
+							{
+								// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+								requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
+
+								Settings.FileActivatedLaunchArg = item.Path;
+
+								// We can only process one XML file for now
+								break;
+							}
+						}
+					}
+					else
+					{
+						Logger.Write("App was launched via File activation but arguments didn't have any file objects in them");
+					}
+				}
+				else
+				{
+					Logger.Write("App was launched via File activation but without any file activation arguments");
+				}
+			}
+
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+
+
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
-		if (!IsElevated && _localSettings.Values.TryGetValue("PromptForElevationOnStartup", out object? value) && value is bool typedValue && typedValue)
+		// if (!IsElevated && _localSettings.Values.TryGetValue("PromptForElevationOnStartup", out object? value) && value is bool typedValue && typedValue)
+		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
+		if (!IsElevated && Settings.PromptForElevationOnStartup || !IsElevated && requireAdminPrivilege)
 		{
 			/*
 			ProcessStartInfo processInfo = new()
@@ -180,151 +383,20 @@ public partial class App : Application
 				// Exit the process
 				Environment.Exit(0);
 			}
-
-		}
-
-		this.InitializeComponent();
-
-
-		// Delaying the dependency injection container build only after the app has been relaunched with Admin privileges
-		// So we don't unnecessarily do this twice if the unelevated app instance is just going to be terminated.
-		AppHost = Host.CreateDefaultBuilder()
-		.ConfigureServices((context, services) =>
-		{
-			// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda when it takes parameters
-			_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
-			_ = services.AddSingleton<ViewCurrentPoliciesVM>();
-			_ = services.AddSingleton<PolicyEditorVM>();
-			_ = services.AddSingleton<SettingsVM>();
-			_ = services.AddSingleton<MergePoliciesVM>();
-			_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
-			_ = services.AddSingleton<AllowNewAppsVM>();
-			_ = services.AddSingleton<CreateDenyPolicyVM>();
-			_ = services.AddSingleton<CreateSupplementalPolicyVM>();
-			_ = services.AddSingleton<EventLogsPolicyCreationVM>();
-			_ = services.AddSingleton<SimulationVM>();
-			_ = services.AddSingleton<MDEAHPolicyCreationVM>();
-			_ = services.AddSingleton<ViewFileCertificatesVM>();
-			_ = services.AddSingleton<MainWindowVM>();
-			_ = services.AddSingleton<CreatePolicyVM>();
-			_ = services.AddSingleton<DeploymentVM>();
-
-			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
-			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
-			_ = services.AddSingleton(provider =>
+			else if (requireAdminPrivilege)
 			{
-				ViewModel graphVM = provider.GetRequiredService<ViewModel>();
-				return new ViewOnlinePoliciesVM(graphVM);
-			});
+				Logger.Write("Elevation request was required to process the selected file but it was denied by the user. Exiting the app.");
 
-			_ = services.AddSingleton<ViewModel>();
-		})
-		.Build();
+				// Exit the process anyway since admin privileges were required but user didn't successfully elevate
+				Environment.Exit(0);
+			}
+			else
+			{
+				Logger.Write("Elevation request was denied by the user");
+			}
 
-
-		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
-
-		// Set the language of the application to the user's preferred language
-		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
-
-		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(LogsDirectory);
-
-		// to handle unhandled exceptions
-		this.UnhandledException += App_UnhandledException;
-
-		// Subscribe to FirstChanceException events
-		// AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-
-		// Subscribe to UnobservedTaskException events
-		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
-		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
-
-		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
-		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
-
-		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
-		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
-		this.FocusVisualKind = FocusVisualKind.Reveal;
-
-		if (IsElevated)
-			MoveUserConfigDirectory();
-
-		#region
-
-		// Check for the SoundSetting in the local settings
-		if (Settings.SoundSetting)
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.On;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
-		}
-		else
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
 		}
 
-		#endregion
-
-	}
-
-
-
-	/*
-
-	/// <summary>
-	/// Event handler for FirstChanceException events.
-	/// This event is raised as soon as an exception is thrown, before any catch blocks are executed.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
-	{
-		// Log the first chance exception details.
-		// Note: FirstChanceExceptions are raised for all exceptions, even if they are handled later.
-		Logger.Write($"FirstChanceException caught: {e.Exception.Message}");
-	}
-
-	*/
-
-
-	/// <summary>
-	/// Event handler for UnobservedTaskException events.
-	/// This event is raised when a faulted Task's exception is not observed.
-	/// UnobservedTaskException doesn't help for exceptions thrown in event handlers.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
-	{
-		// Log the unobserved task exception details.
-		Logger.Write($"UnobservedTaskException caught: {e.Exception.Message}");
-
-		// Mark the exception as observed to prevent the process from terminating.
-		e.SetObserved();
-
-		await ShowErrorDialogAsync(e.Exception);
-	}
-
-
-	/// <summary>
-	/// Invoked when the application is launched.
-	/// </summary>
-	/// <param name="args">Details about the launch request and process.</param>
-	protected override void OnLaunched(LaunchActivatedEventArgs args)
-	{
-
-		// Creates a named Mutex with the specified unique name
-		// The first parameter specifies that this instance initially owns the Mutex if created successfully
-		// The third parameter indicates whether this application instance is the first/unique one
-		// If "IsUniqueAppInstance" is true, it means no other instance of the app is running; otherwise, another instance exists and it will be false
-		_mutex = new Mutex(true, MutexName, out IsUniqueAppInstance);
-
-		if (!IsUniqueAppInstance)
-		{
-			Logger.Write("There is another instance of the AppControl Manager running. This is just an informational log.");
-		}
 
 		m_window = new MainWindow();
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
@@ -352,6 +424,17 @@ public partial class App : Application
 
 		// Show error dialog to the user
 		await ShowErrorDialogAsync(e.Exception);
+	}
+
+
+	private async void App_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+	{
+		Exception ex = (Exception)e.ExceptionObject;
+
+		Logger.Write(ErrorWriter.FormatException(ex));
+
+		// Show error dialog to the user
+		await ShowErrorDialogAsync(ex);
 	}
 
 
@@ -424,6 +507,7 @@ public partial class App : Application
 	/// The old location was called "WDACConfig" because it was the location of the module i had created. I maintained the
 	/// same location to provide interoperability for both the module and the new app but the module is now deprecated so
 	/// it's time to change the user config location name to an appropriate one.
+	/// GitHub release: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/AppControlManager.v.1.9.2.0
 	/// </summary>
 	private static void MoveUserConfigDirectory()
 	{

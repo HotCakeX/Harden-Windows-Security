@@ -443,6 +443,18 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	/// <param name="newSortColumn">The column to sort by.</param>
 	private async void Sort(SortColumnEnum newSortColumn)
 	{
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.ViewOnlinePolicies.Instance.ListViewElement;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// Toggle sort order if the same column is clicked again.
 		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
 		{
@@ -505,6 +517,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			{
 				AllPolicies.Add(item);
 			}
+
+			if (scrollViewer != null && savedHorizontal.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			}
 		});
 	}
 
@@ -552,6 +570,18 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.ViewOnlinePolicies.Instance.ListViewElement;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		IEnumerable<CiPolicyInfo> filteredResults = [];
 
 		await Task.Run(() =>
@@ -576,6 +606,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 		// Update the policies count text
 		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+
+		if (scrollViewer != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+		}
 	}
 
 

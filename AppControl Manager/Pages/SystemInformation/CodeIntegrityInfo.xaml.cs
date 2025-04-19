@@ -50,9 +50,9 @@ internal sealed partial class CodeIntegrityInfo : Page
 	/// <returns></returns>
 	private static string? GetPolicyStatus(int? status) => status switch
 	{
-		0 => "Disabled/Not Running",
-		1 => "Audit Mode",
-		2 => "Enforced Mode",
+		0 => GlobalVars.Rizz.GetString("NotRunningOrDisabled"),
+		1 => GlobalVars.Rizz.GetString("AuditMode"),
+		2 => GlobalVars.Rizz.GetString("EnforcedMode"),
 		_ => null
 	};
 

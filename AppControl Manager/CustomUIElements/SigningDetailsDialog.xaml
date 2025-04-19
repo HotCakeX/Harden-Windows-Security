@@ -9,9 +9,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d"
-    Title="Signing Details"
-    PrimaryButtonText="Submit"
-    CloseButtonText="Cancel"
+    x:Uid="SigningDetailsDialog"
     IsPrimaryButtonEnabled="False"
     DefaultButton="Primary"
     BorderThickness="1"
@@ -48,7 +46,7 @@
                 Message="You can configure the following details in the app settings once, eliminating the need to enter them repeatedly"
                 Severity="Informational">
                 <InfoBar.ActionButton>
-                    <Button Content="Go to Settings" Click="OpenAppSettingsButton_Click" />
+                    <Button x:Uid="GoToSettingsButton" Click="OpenAppSettingsButton_Click" />
                 </InfoBar.ActionButton>
             </InfoBar>
 
@@ -62,8 +60,7 @@
                 </win:StackPanel.ChildrenTransitions>
 
 
-                <controls:SettingsCard Header="Certificate File"
-                 Description="Its details will be added to the policy file"
+                <controls:SettingsCard x:Uid="CertificateDetailsSettingsCard"
                  HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" VerticalSpacing="10" HorizontalSpacing="10">
@@ -75,8 +72,7 @@
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard Header="Certificate Common Name"
-                 Description="Used during the signing operation"
+                <controls:SettingsCard x:Uid="CertificateCommonNameSettingsCard"
                  HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
@@ -92,10 +88,8 @@
 
                 </controls:SettingsCard>
 
-
-                <controls:SettingsCard Header="SignTool Path"
-                Description="Used to sign the policy CIP file"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
+                <controls:SettingsCard x:Uid="SignToolPathSettingsCard"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
 
                     <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 
@@ -109,17 +103,15 @@
 
                     </controls:WrapPanel>
 
-
                 </controls:SettingsCard>
-
 
             </StackPanel>
 
             <controls:WrapPanel Grid.Row="3" Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10" Margin="10,15,10,0" HorizontalAlignment="Center">
 
                 <Button HorizontalAlignment="Center" ToolTipService.ToolTip="Verify the settings before submitting them"
-            Click="{x:Bind VerifyButton_Click}"
-            x:Name="VerifyButton">
+                    Click="{x:Bind VerifyButton_Click}"
+                    x:Name="VerifyButton">
 
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" Padding="10,5,10,5">
@@ -129,7 +121,6 @@
                     </Button.Content>
 
                 </Button>
-
 
                 <TeachingTip x:Name="VerifyButtonTeachingTip"
                             Target="{x:Bind VerifyButton}"
@@ -141,6 +132,5 @@
         </Grid>
 
     </ScrollView>
-
 
 </ContentDialog>

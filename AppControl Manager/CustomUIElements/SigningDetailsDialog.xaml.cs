@@ -23,16 +23,21 @@ using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.CustomUIElements;
 
-// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
+// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
 
 internal sealed partial class SigningDetailsDialog : ContentDialog
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
+
 	// Properties to access the input value
 	internal string? CertificatePath { get; private set; }
 	internal string? CertificateCommonName { get; private set; }
@@ -55,6 +60,8 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 		XamlRoot = App.MainWindow?.Content.XamlRoot;
 
 		policyObjectToVerify = policyObject;
+
+		this.RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
 
 		// Populate the AutoSuggestBox with possible certificate common names available on the system
 		FetchLatestCertificateCNs();

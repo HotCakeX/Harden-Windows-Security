@@ -24,33 +24,15 @@ using System.Security.Cryptography.Pkcs;
 namespace AppControlManager.Others;
 
 /// <summary>
-/// For retrieving Opus data from files
+/// For retrieving Opus data from signed files
 /// </summary>
 internal static partial class Opus
 {
-	internal static partial class Crypt32
-	{
-
-		// More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
-		[LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		internal static partial bool CryptDecodeObject(
-			uint dwCertEncodingType,        // Specifies the encoding type used in the encoded message
-			IntPtr lpszStructType,          // Pointer to a null-terminated ANSI string that identifies the type of the structure to be decoded
-			[In] byte[] pbEncoded,          // Pointer to a buffer that contains the encoded structure
-			uint cbEncoded,                 // Size, in bytes, of the pbEncoded buffer
-			uint dwFlags,                   // Flags that modify the behavior of the function
-			IntPtr pvStructInto,            // Pointer to a buffer that receives the decoded structure
-			ref uint pcbStructInfo          // Pointer to a variable that specifies the size, in bytes, of the pvStructInfo buffer
-		);
-	}
 
 	/// <summary>
 	/// More info about this at the end of the code
 	/// </summary>
-	private const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
-
+	private const nint SPC_SP_OPUS_INFO_STRUCT = 2007;
 
 	/// <summary>
 	/// for the SpcSpOpusInfo structure
@@ -58,7 +40,7 @@ internal static partial class Opus
 	private const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
 
 	// Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
-	// https://learn.microsoft.com/en-us/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
+	// https://learn.microsoft.com/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
 	// https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
 	internal static List<OpusInfoObj> GetOpusData(SignedCms signature)
 	{
@@ -84,7 +66,7 @@ internal static partial class Opus
 						AsnEncodedData asnEncodedData = signedAttribute.Values[0];  // Retrieving the first value from the signed attribute's Values collection
 
 						// Decoding ASN.1-encoded data using CryptDecodeObject
-						if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
+						if (!NativeMethods.CryptDecodeObject(65537U, SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
 						{
 							// If CryptDecodeObject fails, ignore
 						}
@@ -94,7 +76,7 @@ internal static partial class Opus
 							decodedDataPtr = Marshal.AllocCoTaskMem((int)pcbStructInfo);
 
 							// Decoding ASN.1-encoded data again into decodedDataPtr
-							if (!Crypt32.CryptDecodeObject(65537U, (IntPtr)(long)SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
+							if (!NativeMethods.CryptDecodeObject(65537U, SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
 							{
 								// If CryptDecodeObject fails, ignore
 							}

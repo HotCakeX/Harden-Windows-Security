@@ -587,30 +587,30 @@
   <data name="SelectedAppsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
     <value>המספר הכולל של האפליקציות שנבחרו</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.Description" xml:space="preserve">
-    <value>עיין בנתיבי תיקיות לסריקה ולכלול במדיניות החסימה. התיקיות ייסרקו באופן רקורסיבי.</value>
+    <data name="BrowseForFoldersPolicyCreationSettingsCard.Description" xml:space="preserve">
+    <value>בחר נתיבי תיקיות לסריקה ולהכללה במדיניות. התיקיות יסרקו בצורה רקורסיבית.</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.Header" xml:space="preserve">
-    <value>עיין בתיקיות</value>
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.Header" xml:space="preserve">
+    <value>בחר תיקיות</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בנתיבי תיקיות לסריקה ולכלול במדיניות החסימה. התיקיות ייסרקו באופן רקורסיבי.</value>
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר נתיבי תיקיות לסריקה ולהכללה במדיניות. התיקיות יסרקו בצורה רקורסיבית.</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בנתיבי תיקיות לסריקה ולכלול במדיניות החסימה. התיקיות ייסרקו באופן רקורסיבי.</value>
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר נתיבי תיקיות לסריקה ולהכללה במדיניות. התיקיות יסרקו בצורה רקורסיבית.</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.Description" xml:space="preserve">
-    <value>עיין בנתיבי קבצים לסריקה ולכלול במדיניות החסימה.</value>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.Description" xml:space="preserve">
+    <value>בחר נתיבי קבצים לסריקה ולהכללה במדיניות.</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.Header" xml:space="preserve">
-    <value>עיין בקבצים</value>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.Header" xml:space="preserve">
+    <value>בחר קבצים</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין בנתיבי קבצים לסריקה ולכלול במדיניות החסימה.</value>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר נתיבי קבצים לסריקה ולהכללה במדיניות.</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין בנתיבי קבצים לסריקה ולכלול במדיניות החסימה.</value>
-  </data>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר נתיבי קבצים לסריקה ולהכללה במדיניות.</value>
+  </data>  
   <data name="DenyPolicyNameSettingsCard.Description" xml:space="preserve">
     <value>שם מדיניות החסימה שתיווצר.</value>
   </data>
@@ -2903,5 +2903,316 @@
   </data>
   <data name="ErrorOccurredCreatingPolicy" xml:space="preserve">
     <value>אירעה שגיאה בזמן יצירת המדיניות.</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.Header" xml:space="preserve">
+    <value>קובץ מדיניות בסיסית</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.Description" xml:space="preserve">
+    <value>עיין בקובץ ה-XML של מדיניות הבסיס שאליו תהיה מקושרת מדיניות המשנה הזו.</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקובץ ה-XML של מדיניות הבסיס שאליו תהיה מקושרת מדיניות המשנה הזו.</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקובץ ה-XML של מדיניות הבסיס שאליו תהיה מקושרת מדיניות המשנה הזו.</value>
+  </data>
+  <data name="AuditMode" xml:space="preserve">
+    <value>מצב ביקורת</value>
+  </data>
+    <data name="EnforcedMode" xml:space="preserve">
+    <value>מצב אכיפה</value>
+  </data>
+    <data name="NotRunningOrDisabled" xml:space="preserve">
+    <value>מנוטרל/לא בפעולה</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
+    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <value>אכיפת שלמות הקוד במצב Kernel מופעלת.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
+    <comment>Test signed content is allowed by Code Integrity</comment>
+    <value>תוכן חתום בבדיקה מותר על ידי מנגנון שלמות הקוד.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
+    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <value>אכיפת שלמות הקוד במצב משתמש מופעלת.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
+    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <value>אכיפת שלמות הקוד במצב משתמש מופעלת במצב ביקורת.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
+    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <value>קבצי בינארי במצב משתמש ממסלולים מסוימים יכולים לפעול גם אם הם נכשלו בבדיקות שלמות הקוד.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
+    <comment>The Code Integrity component is from a test build</comment>
+    <value>גרסת מנגנון שלמות הקוד היא גרסת בדיקה.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
+    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <value>גרסת מנגנון שלמות הקוד היא מגרסת טרום‑הפקה.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
+    <comment>Kernel debugger attached, unsigned code can load</comment>
+    <value>מנפה הבאגים של הליבה מחובר, מה שמאפשר טעינת קוד לא חתום.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_FLIGHT_BUILD" xml:space="preserve">
+    <comment>The Code Integrity component is from a flight build</comment>
+    <value>גרסת מנגנון שלמות הקוד היא מגרסת טיסה.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
+    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <value>תוכן עם חתימת טיסה מותר על ידי מנגנון שלמות הקוד.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <value>אכיפת שלמות הקוד על ידי היפרוויזור מופעלת עבור רכיבי Kernel.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI in audit mode</comment>
+    <value>אכיפת שלמות הקוד על ידי היפרוויזור מופעלת במצב ביקורת.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <value>אכיפת שלמות הקוד על ידי היפרוויזור מופעלת עבור מצב Kernel במצב מחמיר.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI with Isolated User Mode signing</comment>
+    <value>אכיפת שלמות הקוד על ידי היפרוויזור עם חתימת רכיבי מצב משתמש מבודל.</value>
+  </data>
+  <data name="EffectiveCodeIntegrityFeaturesListViewHeaderTextBlock.Text" xml:space="preserve">
+    <value>מאפייני שלמות הקוד הפעילים</value>
+  </data>
+  <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
+    <value>מצב בקרת היישומים לעסקים</value>
+  </data>
+  <data name="UMCITextBlock.Text" xml:space="preserve">
+    <value>שלמות הקוד במצב משתמש</value>
+  </data>
+  <data name="KMCITextBlock.Text" xml:space="preserve">
+    <value>שלמות הקוד במצב Kernel</value>
+  </data>
+  <data name="BasePolicies.Text" xml:space="preserve">
+    <value>מדיניות בסיסית</value>
+  </data>
+  <data name="SupplementalPolicies.Text" xml:space="preserve">
+    <value>מדיניות משלימה</value>
+  </data>
+  <data name="SystemPolicies.Text" xml:space="preserve">
+    <value>מדיניות מערכת</value>
+  </data>
+  <data name="AutomaticPolicies.Text" xml:space="preserve">
+    <value>מדיניות אוטומטית</value>
+  </data>
+  <data name="RetrievePolicies.Text" xml:space="preserve">
+    <value>אחזר מדיניות</value>
+  </data>
+  <data name="RetrievePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את המדיניות האחרונות שהוטמעו במערכת.</value>
+  </data>
+  <data name="RetrievePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את המדיניות האחרונות שהוטמעו במערכת.</value>
+  </data>
+  <data name="SwapPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>החלף מדיניות</value>
+  </data>
+  <data name="SwapPolicyComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>תכונה זו מאפשרת החלפה חלקה של כל מדיניות בסיסית שאינה מערכתית שהופעלה, במדיניות אחרת מתוך הרשימה.</value>
+  </data>
+  <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>תכונה זו מאפשרת החלפה חלקה של כל מדיניות בסיסית שאינה מערכתית שהופעלה, במדיניות אחרת מתוך הרשימה.</value>
+  </data>
+  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מספר כל המדיניות המוצגות.</value>
+  </data>
+  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מספר כל המדיניות המוצגות.</value>
+  </data>
+  <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
+    <value>הסר מדיניות</value>
+  </data>
+  <data name="RemovePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר כל מדיניות שאינה מערכתית מהמערכת.</value>
+  </data>
+  <data name="RemovePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר כל מדיניות שאינה מערכתית מהמערכת.</value>
+  </data>
+  <data name="SearchPoliciesTextBox.PlaceholderText" xml:space="preserve">
+    <value>חפש בין המדיניות...</value>
+  </data>
+    <data name="SearchPoliciesTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חפש בין המדיניות על ידי הקלדת כל אחד מהפרטים הזמינים של המדיניות אותה אתה מחפש.</value>
+  </data>
+  <data name="SearchPoliciesTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חפש בין המדיניות על ידי הקלדת כל אחד מהפרטים הזמינים של המדיניות אותה אתה מחפש.</value>
+  </data>
+  <data name="SigningDetailsDialog.Title" xml:space="preserve">
+    <value>פרטי חתימה</value>
+  </data>
+  <data name="SigningDetailsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>שלח</value>
+  </data>
+  <data name="SigningDetailsDialog.CloseButtonText" xml:space="preserve">
+    <value>ביטול</value>
+  </data>
+  <data name="CustomPatternBasedFilePathsDialog.Title" xml:space="preserve">
+    <value>נתיב קובץ מבוסס תבנית</value>
+  </data>
+  <data name="CustomPatternBasedFilePathsDialog.CloseButtonText" xml:space="preserve">
+    <value>אישור</value>
+  </data>
+  <data name="CustomPatternBasedFilePathsDialogTopTextBlock.Text" xml:space="preserve">
+    <value>הנה כמה דוגמאות לתבניות מותאמות לכללי נתיב קובץ</value>
+  </data>
+  <data name="ExampleText.Text" xml:space="preserve">
+    <value>דוגמה</value>
+  </data>
+  <data name="DescriptionText.Text" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+  <data name="MatchesZeroOrMoreCharactersText.Text" xml:space="preserve">
+    <value>מתאים לאפס או יותר תווים.</value>
+  </data>
+  <data name="MatchesASingleCharacterText.Text" xml:space="preserve">
+    <value>מתאים לתו בודד.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription1" xml:space="preserve">
+    <value>מתאים לכל הקבצים בתיקיית 'C:\Windows' ובתיקיות המשנה שלה.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription2" xml:space="preserve">
+    <value>מתאים לכל הקבצים בתיקיית 'D:\EnterpriseApps\MyApp\' ובתיקיות המשנה שלה.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription3" xml:space="preserve">
+    <value>מתאים לכל קובץ בשם 'Bing.exe' בכל מיקום.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription4" xml:space="preserve">
+    <value>שימוש בתווים כלליים באמצע הנתיב מאפשר התאמה של כל הקבצים שתואמים לתבנית זו. בדוגמה זו, שני הנתיבים ההיפותטיים הבאים יתאימו: 'C:\WINDOWS\CCMCACHE\12345\7zabcd-x64.exe' ו-'C:\USERS\AppControlUSER\Downloads\Malware\CCMCACHE\Pwned\7zhaha-x64.exe'</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription5" xml:space="preserve">
+    <value>בדוגמה זו מותר לכל קובץ זמני עם סיומת '.node' בתוך תיקיית TEMP שיש לו GUID כשם הקובץ.</value>
+  </data>
+  <data name="GoToSettingsButton.Content" xml:space="preserve">
+    <value>עבור להגדרות</value>
+  </data>
+  <data name="GoToSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נווט לעמוד ההגדרות של האפליקציה.</value>
+  </data>
+  <data name="GoToSettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נווט לעמוד ההגדרות של האפליקציה.</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.Header" xml:space="preserve">
+    <value>קובץ תעודה</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.Description" xml:space="preserve">
+    <value>הפרטים שלה יתווספו לקובץ המדיניות.</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפרטים שלה יתווספו לקובץ המדיניות.</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפרטים שלה יתווספו לקובץ המדיניות.</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.Header" xml:space="preserve">
+    <value>שם כללי של התעודה</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.Description" xml:space="preserve">
+    <value>משמשת במהלך פעולת החתימה</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שם כללי (CN) של התעודה שישמש במהלך פעולת החתימה.</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שם כללי (CN) של התעודה שישמש במהלך פעולת החתימה.</value>
+  </data>
+  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
+    <value>נתיב ל-SignTool</value>
+  </data>
+  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
+    <value>משמש לחתימת קובץ המדיניות CIP</value>
+  </data>
+  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הנתיב לקובץ SignTool.exe שישמש במהלך פעולת החתימה לחתום על קובץ הבינארי CIP.</value>
+  </data>
+  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הנתיב לקובץ SignTool.exe שישמש במהלך פעולת החתימה לחתום על קובץ הבינארי CIP.</value>
+  </data>
+  <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>יצירה</value>
+  </data>
+  <data name="CertificatesNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>תעודות</value>
+  </data>
+  <data name="LogsProcessingNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>עיבוד יומנים</value>
+  </data>
+  <data name="TacticalNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>טקטי</value>
+  </data>
+  <data name="InfoGatheringNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>איסוף מידע</value>
+  </data>
+  <data name="PolicyManagementNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>ניהול מדיניות</value>
+  </data>
+  <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>תיעוד</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
+    <value>הקצאה אוטומטית</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
+    <value>שמירה אוטומטית של הנתיב למדיניות הבסיס שאתה יוצר בסרגל הצד.</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמירה אוטומטית של הנתיב למדיניות הבסיס שאתה יוצר בסרגל הצד.</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שמירה אוטומטית של הנתיב למדיניות הבסיס שאתה יוצר בסרגל הצד.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
+    <value>מדריך סרגל הצד</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לקבלת מדריך שימוש בסרגל הצד, אנא בקר בדף הוויקי של GitHub על ידי לחיצה/הקשה כאן.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לקבלת מדריך שימוש בסרגל הצד, אנא בקר בדף הוויקי של GitHub על ידי לחיצה/הקשה כאן.</value>
+  </data>
+  <data name="SelectTextBlock.Text" xml:space="preserve">
+    <value>בחר</value>
+  </data>
+  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הקצה את קובץ המדיניות XML הנבחר בסרגל הצד לנתיב המדיניות הבסיסית של הסקשן המתאים בעמוד המוצג כעת.</value>
+  </data>
+  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הקצה את קובץ המדיניות XML הנבחר בסרגל הצד לנתיב המדיניות הבסיסית של הסקשן המתאים בעמוד המוצג כעת.</value>
+  </data>
+  <data name="ClearTextBlock.Text" xml:space="preserve">
+    <value>נקה</value>
+  </data>
+  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את תיבת הטקסט של נתיב קובץ ה-XML הנבחר.</value>
+  </data>
+  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את תיבת הטקסט של נתיב קובץ ה-XML הנבחר.</value>
+  </data>
+  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקובץ מדיניות XML</value>
+  </data>
+  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקובץ מדיניות XML</value>
+  </data>
+  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>השתמש בסרגל הצד כדי לנעוץ נתיבי קובצי XML ולהשתמש בהם שוב בחלקים שונים של AppControl Manager.</value>
+  </data>  
+  <data name="SidebarTextBlock.Text" xml:space="preserve">
+    <value>סרגל צד</value>
+  </data>
+  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
+    <value>נתיב מדיניות מקובע</value>
+  </data>
+  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>נתיב מדיניות</value>
   </data>
 </root>

@@ -19,8 +19,8 @@
             <x:Double x:Key="SettingsCardSpacing">4</x:Double>
             <!--  Style (inc. the correct spacing) of a section header  -->
             <Style x:Key="SettingsSectionHeaderTextBlockStyle"
-         BasedOn="{StaticResource BodyStrongTextBlockStyle}"
-         TargetType="TextBlock">
+                BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+                TargetType="TextBlock">
                 <Style.Setters>
                     <Setter Property="Margin" Value="1,30,0,6" />
                 </Style.Setters>
@@ -37,8 +37,28 @@
             </Style>
 
 
-            <Style x:Key="PanelStyle"
-          TargetType="StackPanel">
+            <!-- The style for the ListView headers buttons -->
+            <Style x:Key="ListViewHeaderButton" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Style.Setters>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="5"/>
+                </Style.Setters>
+            </Style>
+
+
+            <!-- The style for the ListView cells TextBlocks -->
+            <Style x:Key="ListViewCellTextBlock" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="0,2,2,2" />
+            </Style>
+
+
+            <Style x:Key="PanelStyle" TargetType="StackPanel">
                 <Setter Property="CornerRadius" Value="8" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Margin" Value="0,8,0,8" />

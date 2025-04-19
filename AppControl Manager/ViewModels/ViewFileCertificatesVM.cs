@@ -22,6 +22,7 @@ using System.Linq;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
@@ -214,6 +215,17 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		if (query is null)
 			return;
 
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.ViewFileCertificates.Instance.ListViewElement;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
 		List<FileCertificateInfoCol> results = [];
 
 		results = [.. FilteredCertificates.Where(cert =>
@@ -235,6 +247,12 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		foreach (FileCertificateInfoCol item in results)
 		{
 			FileCertificates.Add(item);
+		}
+
+		if (scrollViewer != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 
@@ -269,6 +287,18 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <param name="newSortColumn">The column to sort by.</param>
 	private async void Sort(CertificateSortColumn newSortColumn)
 	{
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.ViewFileCertificates.Instance.ListViewElement;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// Toggle sort order if the same column is clicked.
 		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
 		{
@@ -356,6 +386,12 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			foreach (var item in sortedData)
 			{
 				FileCertificates.Add(item);
+			}
+
+			if (scrollViewer != null && savedHorizontal.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 			}
 		});
 	}

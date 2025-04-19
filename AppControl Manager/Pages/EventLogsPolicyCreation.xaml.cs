@@ -122,7 +122,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 					ViewModel.AllFileIdentities,
 					ViewModel.FileIdentities,
 					ViewModel.SortState,
-					key);
+					key,
+					FileIdentitiesListView);
 			}
 		}
 	}
@@ -147,7 +148,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 		allFileIdentities: ViewModel.AllFileIdentities.AsEnumerable(),
 		filteredCollection: ViewModel.FileIdentities,
 		searchTextBox: SearchBox,
-		datePicker: FilterByDateCalendarPicker
+		datePicker: FilterByDateCalendarPicker,
+		lw: FileIdentitiesListView
 		);
 		UpdateTotalLogs();
 	}

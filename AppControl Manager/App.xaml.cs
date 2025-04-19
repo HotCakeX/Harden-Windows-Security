@@ -38,7 +38,7 @@ using AppControlManager.MicrosoftGraph;
 using Microsoft.Windows.Globalization;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
-// Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
+// Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
 namespace AppControlManager;
 
@@ -192,7 +192,7 @@ public partial class App : Application
 		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
-		// https://learn.microsoft.com/en-us/windows/apps/design/style/reveal-focus
+		// https://learn.microsoft.com/windows/apps/design/style/reveal-focus
 		this.FocusVisualKind = FocusVisualKind.Reveal;
 
 		if (IsElevated)

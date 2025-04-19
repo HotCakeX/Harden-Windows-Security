@@ -141,9 +141,9 @@ internal static class CertificateGenerator
 			);
 
 		// Add custom extension for "Application Policies"
-		// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-crtd/44012f2d-5ef3-440d-a61b-b30d3d978130
-		// https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc776986(v=ws.10)?redirectedfrom=MSDN
-		// https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc754305(v=ws.10)
+		// https://learn.microsoft.com/openspecs/windows_protocols/ms-crtd/44012f2d-5ef3-440d-a61b-b30d3d978130
+		// https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2003/cc776986(v=ws.10)?redirectedfrom=MSDN
+		// https://learn.microsoft.com/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc754305(v=ws.10)
 		// Application Policies OID
 		Oid appPoliciesOid = new("1.3.6.1.4.1.311.21.10");
 		// this must be set as specified and not randomly generated
@@ -162,8 +162,8 @@ internal static class CertificateGenerator
 		// Export the certificate for .PFX file as Byte Array
 		byte[] certData = cert.Export(X509ContentType.Pfx, pfxPassword);
 
-		// https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadpkcs12
-		// https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
+		// https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadpkcs12
+		// https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
 
 		X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.PersistKeySet;
 
@@ -228,7 +228,7 @@ internal static class CertificateGenerator
 			byte[] publicKeyData = cert.Export(X509ContentType.Cert);
 
 			// Reload the certificate from the exported public key data and replace the incoming data to eliminate the private key
-			// https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadcertificate
+			// https://learn.microsoft.com/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadcertificate
 			cert = X509CertificateLoader.LoadCertificate(publicKeyData);
 		}
 

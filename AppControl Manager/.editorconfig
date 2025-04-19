@@ -6,7 +6,7 @@ charset = utf-8
 trim_trailing_whitespace = true
 end_of_line = crlf
 
-# https://learn.microsoft.com/en-us/visualstudio/ide/reference/add-file-header
+# https://learn.microsoft.com/visualstudio/ide/reference/add-file-header
 file_header_template = MIT License\r\n\r\nCopyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the "Software"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nSee here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE\r\n
 
 # Applies to C# files only
@@ -20,10 +20,10 @@ spelling_exclusion_path = .\exclusion.dic
 indent_style = tab
 insert_final_newline = true
 
-# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/dotnet-formatting-options
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/dotnet-formatting-options
 dotnet_sort_system_directives_first = true
 
-# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options
 csharp_using_directive_placement = outside_namespace:error
 csharp_prefer_simple_using_statement = true:error
 csharp_new_line_before_members_in_object_initializers = true:error
@@ -1047,7 +1047,7 @@ dotnet_diagnostic.IDE0330.severity = error
 
 # IDE0304: Use collection expression for builder
 dotnet_diagnostic.IDE0304.severity = error
-# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/language-rules#option-format
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/language-rules#option-format
 dotnet_style_prefer_collection_expression = when_types_loosely_match:error
 
 # IDE0303: Use collection expression for Create()
@@ -1062,7 +1062,7 @@ dotnet_style_prefer_collection_expression = when_types_exactly_match:error
 dotnet_diagnostic.IDE0280.severity = error
 
 # IDE0029, IDE0030, IDE0270: Null check can be simplified
-# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0029-ide0030-ide0270
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/ide0029-ide0030-ide0270
 dotnet_diagnostic.IDE0029.severity = error
 dotnet_diagnostic.IDE0030.severity = error
 dotnet_diagnostic.IDE0270.severity = error
@@ -1098,7 +1098,7 @@ dotnet_diagnostic.CA1047.severity = error
 dotnet_diagnostic.IDE0054.severity = error
 
 # IDE0161: Use file-scoped namespace - enforces file-scoped namespace style with error severity
-# https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-10.0/file-scoped-namespaces
+# https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-10.0/file-scoped-namespaces
 dotnet_diagnostic.IDE0161.severity = error
 csharp_style_namespace_declarations = file_scoped:error
 
@@ -1125,7 +1125,7 @@ dotnet_diagnostic.CA1051.severity = error
 
 # CA1819: Properties should not return arrays
 dotnet_diagnostic.CA1819.severity = error
-# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-quality-rule-options#api_surface
+# https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options#api_surface
 dotnet_code_quality.CA1819.api_surface = private, internal, public
 
 # CA2227: Collection properties should be read only

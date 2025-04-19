@@ -91,7 +91,7 @@
                                     <!--
                                          Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
                                          Width does not override MaxWidth
-                                         https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
+                                         https://learn.microsoft.com/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
                                          -->
                                     <Setter Property="MaxWidth" Value="1234" />
                                 </Style>
@@ -374,7 +374,7 @@
                     </Button.Content>
                 </Button>
 
-                <TextBox Width="300" Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search policies..." IsEnabled="{x:Bind ViewModel.SearchTextBoxState, Mode=OneWay}"
+                <TextBox Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="SearchPoliciesTextBox" IsEnabled="{x:Bind ViewModel.SearchTextBoxState, Mode=OneWay}"
                          TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" />
 
             </controls:WrapPanel>
@@ -403,7 +403,6 @@
                         <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
-
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=OneWay}" />
@@ -412,14 +411,12 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-
-                        <Button x:Uid="PolicyIDColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="10,0,0,0" Padding="5" Grid.Column="0" Click="{x:Bind ViewModel.SortByPolicyID}" />
-                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="1" Click="{x:Bind ViewModel.SortByBasePolicyID}" />
-                        <Button x:Uid="FriendlyNameColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="2" Click="{x:Bind ViewModel.SortByFriendlyName}" />
-                        <Button x:Uid="VersionColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="3" Click="{x:Bind ViewModel.SortByVersion}" />
-                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="4" Click="{x:Bind ViewModel.SortByIsSignedPolicy}" />
-                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" FontWeight="Bold" Margin="0" Padding="5" Grid.Column="5" Click="{x:Bind ViewModel.SortByPolicyOptions}" />
-
+                        <Button x:Uid="PolicyIDColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPolicyID}"/>
+                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByBasePolicyID}"/>
+                        <Button x:Uid="FriendlyNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByFriendlyName}"/>
+                        <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByVersion}"/>
+                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsSignedPolicy}"/>
+                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPolicyOptions}"/>
                     </Grid>
                 </Border>
             </ListView.Header>
@@ -499,12 +496,12 @@
                             <ColumnDefinition Width="{x:Bind OnlineParentViewModel.ColumnWidth5, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind OnlineParentViewModel.ColumnWidth6, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind PolicyID}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind BasePolicyID}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind FriendlyName}" HorizontalAlignment="Left" Grid.Column="2" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind VersionString}" HorizontalAlignment="Left" Grid.Column="3" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind IsSignedPolicy}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind PolicyOptionsDisplay}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind PolicyID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind BasePolicyID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind VersionString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind IsSignedPolicy}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind PolicyOptionsDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

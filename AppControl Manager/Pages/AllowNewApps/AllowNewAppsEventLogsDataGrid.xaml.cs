@@ -98,7 +98,8 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 										  ViewModel.EventLogsAllFileIdentities,
 										  ViewModel.EventLogsFileIdentities,
 										  ViewModel.SortStateEventLogs,
-										  key);
+										  key,
+										  FileIdentitiesListView);
 			}
 		}
 	}
@@ -122,7 +123,8 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 			allFileIdentities: ViewModel.EventLogsAllFileIdentities.AsEnumerable(),
 			filteredCollection: ViewModel.EventLogsFileIdentities,
 			searchTextBox: SearchBox,
-			datePicker: null
+			datePicker: null,
+			lw: FileIdentitiesListView
 		);
 
 		ViewModel.UpdateTotalLogs();

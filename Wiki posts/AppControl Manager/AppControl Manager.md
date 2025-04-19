@@ -71,11 +71,11 @@ Please feel free to open a discussion if you have any questions about the build 
 ## Technical Details of The App
 
 * Secure and transparent development and build process.
-* Built using [WinUI3](https://learn.microsoft.com/en-us/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/en-us/dotnet/csharp/).
+* Built using [WinUI3](https://learn.microsoft.com/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/dotnet/csharp/).
 * Built using the latest [.NET](https://dotnet.microsoft.com) SDK.
 * Powered by the [WinAppSDK](https://github.com/microsoft/WindowsAppSDK) (formerly Project Reunion).
-* Packaged with the modern [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) format.
-* Incorporates the [Mica](https://learn.microsoft.com/en-us/windows/apps/design/style/mica) material design for backgrounds.
+* Packaged with the modern [MSIX](https://learn.microsoft.com/windows/msix/overview) format.
+* Incorporates the [Mica](https://learn.microsoft.com/windows/apps/design/style/mica) material design for backgrounds.
 * Adopts the Windows 11 [Fluent design system](https://fluent2.microsoft.design/components/windows).
 * Fast execution and startup time.
 * 0 required dependency.
@@ -85,7 +85,7 @@ Please feel free to open a discussion if you have any questions about the build 
 * 100% clean uninstallation.
 * 100% open-source and free to use.
 * Natively supports X64 and ARM64 architectures.
-* Full [Trimming](https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot) support.
+* Full [Trimming](https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) support.
 
 <br>
 
@@ -128,13 +128,13 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * Any file(s) the AppControl Manager ever produces, uses or expects is only from an Administrator-protected location in `C:\Program Files\AppControl Manager`.
 
-* The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/en-us/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`.
+* The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`.
 
 * The AppControl Manager always uses the latest .NET SDK and NuGet package versions, ensuring all the security patches released by Microsoft will be included.
 
 * The entire codebase is thoroughly commented, allowing code reviewers to effortlessly examine and verify every aspect of AppControl Manager's source code.
 
-* AppControl Manager leverages [MSAL from Microsoft](https://learn.microsoft.com/en-us/entra/identity-platform/msal-overview) to manage Microsoft 365 authentications. This industry-standard library adheres to best practices for secure authentication token management.
+* AppControl Manager leverages [MSAL from Microsoft](https://learn.microsoft.com/entra/identity-platform/msal-overview) to manage Microsoft 365 authentications. This industry-standard library adheres to best practices for secure authentication token management.
 
 <br>
 
@@ -204,7 +204,7 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 | https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt | The file on this repository that contains the download link to the latest version of the AppControl Manager. That text file is updated via automated GitHub action workflow that securely builds and uploads the MSIXBundle package to the GitHub releases. |
 | https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt | The latest available version of the AppControl Manager application. That text file is updated via automated GitHub action workflow that securely builds and uploads the MSIXBundle package to the GitHub releases. |
 | https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction | The link that opens in the GitHub documentations page in the app via the built-in WebView 2 |
-| https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/appcontrol | The link that opens in the Microsoft documentations page in the app via the built-in WebView 2 |
+| https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol | The link that opens in the Microsoft documentations page in the app via the built-in WebView 2 |
 | https://github.com/HotCakeX/Harden-Windows-Security/releases | During the update process, this link that is for the GitHub releases will be displayed on the update page as a quick way to read the release notes |
 | https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager | Will be displayed on the Update page when a new version is available and being downloaded |
 | https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose | Link for the "Send Feedback" button at the bottom of the about section in settings |
@@ -249,7 +249,7 @@ The installation process for AppControl Manager is uniquely streamlined. When yo
 
 * The `SignTool.exe` utility is sourced directly from Microsoft by retrieving the associated [Nuget package](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/), ensuring a trusted origin.
 
-* A secure, on-device code-signing certificate is then generated. This certificate, managed by the Microsoft-signed `SignTool.exe`, is used to sign the [MSIXBundle package](https://learn.microsoft.com/en-us/windows/msix/packaging-tool/bundle-msix-packages) obtained from GitHub.
+* A secure, on-device code-signing certificate is then generated. This certificate, managed by the Microsoft-signed `SignTool.exe`, is used to sign the [MSIXBundle package](https://learn.microsoft.com/windows/msix/packaging-tool/bundle-msix-packages) obtained from GitHub.
 
 * The private key of the certificate is non-exportable, never written on the disk and is securely discarded once signing is complete, leaving only the public key on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
 
@@ -265,7 +265,7 @@ You can build the AppControl Manager application directly from the source code l
 
 It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages. You can even optionally chain it with the [Bootstrapper script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) to sign and install the application on your system at the end.
 
-The build process will generate complete log files and you can use the [MSBuild Structured Log Viewer](https://learn.microsoft.com/en-us/shows/visual-studio-toolbox/msbuild-structured-log-viewer) to inspect them.
+The build process will generate complete log files and you can use the [MSBuild Structured Log Viewer](https://learn.microsoft.com/shows/visual-studio-toolbox/msbuild-structured-log-viewer) to inspect them.
 
 <details>
 
@@ -327,10 +327,10 @@ winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements -
 if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install .NET SDK') }
 
 # Downloads the online installer and automatically runs it and installs the build tools
-# https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/set-up-your-development-environment
-# https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools
-# https://learn.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio
-# https://learn.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-community
+# https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment
+# https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-build-tools
+# https://learn.microsoft.com/visualstudio/install/use-command-line-parameters-to-install-visual-studio
+# https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community
 winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 --add Microsoft.VisualStudio.Component.UWP.VC.ARM64'
 
 if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
@@ -406,9 +406,9 @@ if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsd
     }
 }
 
-# https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
-# https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference
-# https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
+# https://learn.microsoft.com/dotnet/core/tools/dotnet-build
+# https://learn.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+# https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
 
 # Generate for X64 architecture
 dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=x64
@@ -550,7 +550,7 @@ if ([System.string]::IsNullOrWhiteSpace($MakeAppxPath)) {
     throw [System.IO.FileNotFoundException]::New('Could not find the makeappx.exe')
 }
 
-# https://learn.microsoft.com/en-us/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
+# https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
 . $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v
 
 if ($LASTEXITCODE -ne 0) { Throw [System.InvalidOperationException]::New("MakeAppx failed creating the MSIXBundle. Exit Code: $LASTEXITCODE") }

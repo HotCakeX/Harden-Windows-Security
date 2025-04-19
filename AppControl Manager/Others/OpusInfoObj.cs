@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 namespace AppControlManager.Others;
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
+/// https://learn.microsoft.com/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
 /// Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]

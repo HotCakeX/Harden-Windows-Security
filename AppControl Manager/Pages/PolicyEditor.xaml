@@ -235,7 +235,6 @@
                                         <customUI:StickyHeaderBehaviorV2/>
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
-
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth1, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth2, Mode=OneWay}" />
@@ -307,20 +306,20 @@
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth13, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth14, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Id}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FriendlyName}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Hash}" HorizontalAlignment="Left" Grid.Column="2" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FileName}" HorizontalAlignment="Left" Grid.Column="3" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind InternalName}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FileDescription}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind ProductName}" HorizontalAlignment="Left" Grid.Column="6" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FilePath}" HorizontalAlignment="Left" Grid.Column="7" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind MinimumFileVersion}" HorizontalAlignment="Left" Grid.Column="8" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind MaximumFileVersion}" HorizontalAlignment="Left" Grid.Column="9" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind PackageFamilyName}" HorizontalAlignment="Left" Grid.Column="10" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind PackageVersion}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind AppIDs}" HorizontalAlignment="Left" Grid.Column="12" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Type}" HorizontalAlignment="Left" Grid.Column="13" Margin="0,2,2,2"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FileName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind InternalName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FileDescription}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind ProductName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind MinimumFileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind MaximumFileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind PackageFamilyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind PackageVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind AppIDs}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Type}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -364,7 +363,6 @@
                                         <customUI:StickyHeaderBehaviorV2/>
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
-
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth1, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth2, Mode=OneWay}" />
@@ -415,13 +413,13 @@
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth6, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth7, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Id}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Name}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertRoot}" HorizontalAlignment="Left" Grid.Column="2" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertPublisher}" HorizontalAlignment="Left" Grid.Column="3" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertOemID}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertificateEKU}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertIssuer}" HorizontalAlignment="Left" Grid.Column="6" Margin="0,2,2,2"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertRoot}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertPublisher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertOemID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertificateEKU}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertIssuer}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

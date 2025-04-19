@@ -40,6 +40,25 @@ namespace AppControlManager.Others;
 internal static class ListViewHelper
 {
 	/// <summary>
+	/// Walks the VisualTree under 'element' and returns the first ScrollViewer it finds.
+	/// </summary>
+	internal static ScrollViewer? FindScrollViewer(this DependencyObject element)
+	{
+		if (element is ScrollViewer sv)
+			return sv;
+
+		int count = VisualTreeHelper.GetChildrenCount(element);
+		for (int i = 0; i < count; i++)
+		{
+			DependencyObject child = VisualTreeHelper.GetChild(element, i);
+			ScrollViewer? result = FindScrollViewer(child);
+			if (result != null)
+				return result;
+		}
+		return null;
+	}
+
+	/// <summary>
 	/// An offscreen TextBlock for measurement
 	/// </summary>
 	private static readonly TextBlock tb = new()
@@ -215,8 +234,21 @@ internal static class ListViewHelper
 		List<FileIdentity> originalList,
 		ObservableCollection<FileIdentity> observableCollection,
 		SortState sortState,
-		string newKey)
+		string newKey,
+		ListView lw)
 	{
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = lw;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// Toggle sort order if the same column; otherwise, reset to descending.
 		if (sortState.CurrentSortKey == newKey)
 		{
@@ -240,6 +272,13 @@ internal static class ListViewHelper
 		{
 			observableCollection.Add(item);
 		}
+
+
+		if (scrollViewer != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+		}
 	}
 
 
@@ -262,9 +301,22 @@ internal static class ListViewHelper
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,
 		TextBox searchTextBox,
-		CalendarDatePicker? datePicker
+		CalendarDatePicker? datePicker,
+		ListView lw
 		)
 	{
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = lw;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// Get the search term from the SearchBox, converting it to lowercase for case-insensitive searching
 		string searchTerm = searchTextBox.Text.Trim();
 
@@ -311,6 +363,13 @@ internal static class ListViewHelper
 		foreach (FileIdentity item in filteredResults)
 		{
 			filteredCollection.Add(item);
+		}
+
+
+		if (scrollViewer != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 

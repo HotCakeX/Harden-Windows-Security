@@ -113,7 +113,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 	/// <summary>
 	/// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
-	/// https://learn.microsoft.com/en-us/windows/apps/design/controls/info-badge
+	/// https://learn.microsoft.com/windows/apps/design/controls/info-badge
 	/// Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
 	/// When set to 0, the badge is hidden.
 	/// </summary>

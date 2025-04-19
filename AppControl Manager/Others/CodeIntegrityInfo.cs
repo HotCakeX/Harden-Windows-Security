@@ -28,10 +28,10 @@ internal sealed class CodeIntegrityOption(string name, string description)
 	internal string Description { get; } = description;
 }
 
-internal sealed class SystemCodeIntegrityInfo
+internal sealed class SystemCodeIntegrityInfo(uint codeIntegrityOptions, List<CodeIntegrityOption> codeIntegrityDetails)
 {
-	internal uint CodeIntegrityOptions { get; set; }
-	internal required List<CodeIntegrityOption> CodeIntegrityDetails { get; set; }
+	internal uint CodeIntegrityOptions { get; } = codeIntegrityOptions;
+	internal List<CodeIntegrityOption> CodeIntegrityDetails { get; } = codeIntegrityDetails;
 }
 
 internal static partial class DetailsRetrieval
@@ -51,20 +51,47 @@ internal static partial class DetailsRetrieval
 	/// </summary>
 	private static readonly Dictionary<uint, (string Name, string Description)> codeIntegrityFlags = new()
 		{
-			{ 0x00000001, ("CODEINTEGRITY_OPTION_ENABLED", "Enforcement of kernel mode Code Integrity is enabled.") },
-			{ 0x00000002, ("CODEINTEGRITY_OPTION_TESTSIGN", "Test signed content is allowed by Code Integrity.") },
-			{ 0x00000004, ("CODEINTEGRITY_OPTION_UMCI_ENABLED", "Enforcement of user mode Code Integrity is enabled.") },
-			{ 0x00000008, ("CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED", "Enforcement of user mode Code Integrity is enabled in audit mode.") },
-			{ 0x00000010, ("CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED", "User mode binaries from certain paths can run even if they fail code integrity checks.") },
-			{ 0x00000020, ("CODEINTEGRITY_OPTION_TEST_BUILD", "The build of Code Integrity is from a test build.") },
-			{ 0x00000040, ("CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD", "The build of Code Integrity is from a pre-production build.") },
-			{ 0x00000080, ("CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED", "The kernel debugger is attached, allowing unsigned code to load.") },
-			{ 0x00000100, ("CODEINTEGRITY_OPTION_FLIGHT_BUILD", "The build of Code Integrity is from a flight build.") },
-			{ 0x00000200, ("CODEINTEGRITY_OPTION_FLIGHTING_ENABLED", "Flight signed content is allowed by Code Integrity.") },
-			{ 0x00000400, ("CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED", "Hypervisor enforced Code Integrity is enabled for kernel mode components.") },
-			{ 0x00000800, ("CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED", "Hypervisor enforced Code Integrity is enabled in audit mode.") },
-			{ 0x00001000, ("CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED", "Hypervisor enforced Code Integrity is enabled for kernel mode in strict mode.") },
-			{ 0x00002000, ("CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED", "Hypervisor enforced Code Integrity with Isolated User Mode component signing.") }
+			{ 0x00000001, ("CODEINTEGRITY_OPTION_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_ENABLED")) },
+
+			{ 0x00000002, ("CODEINTEGRITY_OPTION_TESTSIGN",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_TESTSIGN")) },
+
+			{ 0x00000004, ("CODEINTEGRITY_OPTION_UMCI_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_UMCI_ENABLED")) },
+
+			{ 0x00000008, ("CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED")) },
+
+			{ 0x00000010, ("CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED")) },
+
+			{ 0x00000020, ("CODEINTEGRITY_OPTION_TEST_BUILD",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_TEST_BUILD")) },
+
+			{ 0x00000040, ("CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD")) },
+
+			{ 0x00000080, ("CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED")) },
+
+			{ 0x00000100, ("CODEINTEGRITY_OPTION_FLIGHT_BUILD",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_FLIGHT_BUILD")) },
+
+			{ 0x00000200, ("CODEINTEGRITY_OPTION_FLIGHTING_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_FLIGHTING_ENABLED")) },
+
+			{ 0x00000400, ("CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED")) },
+
+			{ 0x00000800, ("CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED")) },
+
+			{ 0x00001000, ("CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED")) },
+
+			{ 0x00002000, ("CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED",
+				GlobalVars.Rizz.GetString("CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED")) }
 		};
 
 
@@ -116,11 +143,10 @@ internal static partial class DetailsRetrieval
 
 			sci = Marshal.PtrToStructure<SYSTEM_CODEINTEGRITY_INFORMATION>(buffer);
 
-			SystemCodeIntegrityInfo output = new()
-			{
-				CodeIntegrityOptions = sci.CodeIntegrityOptions,
-				CodeIntegrityDetails = GetCodeIntegrityDetails(sci.CodeIntegrityOptions)
-			};
+			SystemCodeIntegrityInfo output = new(
+				codeIntegrityOptions: sci.CodeIntegrityOptions,
+				codeIntegrityDetails: GetCodeIntegrityDetails(sci.CodeIntegrityOptions)
+			);
 
 			return output;
 		}

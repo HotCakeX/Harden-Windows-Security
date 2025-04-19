@@ -12,8 +12,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     mc:Ignorable="d"
-    Title="Pattern Based File Path"
-    CloseButtonText="OK"
+    x:Uid="CustomPatternBasedFilePathsDialog"
     IsPrimaryButtonEnabled="False"
     DefaultButton="Primary"
     BorderThickness="1"
@@ -37,9 +36,9 @@
 
         <controls:WrapPanel Orientation="Vertical" Margin="0,0,0,15" Grid.Row="0" HorizontalSpacing="10" VerticalSpacing="10">
 
-            <TextBlock IsTextSelectionEnabled="True" TextWrapping="Wrap" VerticalAlignment="Top" Text="Here are some examples of custom patterns for file path rules" />
+            <TextBlock IsTextSelectionEnabled="True" TextWrapping="Wrap" VerticalAlignment="Top" x:Uid="CustomPatternBasedFilePathsDialogTopTextBlock" />
 
-            <HyperlinkButton Content="More Info" NavigateUri="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#using-wildcards-in-app-control-filepath-rules" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#using-wildcards-in-app-control-filepath-rules" />
 
         </controls:WrapPanel>
 
@@ -60,13 +59,12 @@
                         <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
-
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="400" />
                             <ColumnDefinition Width="400" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Example" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                        <TextBlock Text="Description" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="ExampleText" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                        <TextBlock x:Uid="DescriptionText" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                     </Grid>
                 </Border>
             </ListView.Header>
@@ -90,12 +88,12 @@
 
         <TextBlock IsTextSelectionEnabled="True" Margin="0,0,0,15" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top">
              <Bold><Run Foreground="DeepPink" FontSize="18">*</Run></Bold>
-            <Span>Matches zero or more characters.</Span>
+            <Run x:Uid="MatchesZeroOrMoreCharactersText"/>
         </TextBlock>
 
         <TextBlock IsTextSelectionEnabled="True" Margin="0,0,0,15" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Top">
             <Bold><Run Foreground="DeepPink" FontSize="18">?</Run></Bold>
-             <Span>Matches a single character.</Span>
+             <Run x:Uid="MatchesASingleCharacterText" />
         </TextBlock>
 
     </Grid>

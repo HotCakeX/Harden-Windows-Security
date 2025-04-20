@@ -228,6 +228,7 @@ internal static class ListViewHelper
 	/// <param name="observableCollection">The observable collection to update.</param>
 	/// <param name="sortState">An object that holds the current sort state.</param>
 	/// <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
+	/// <param name="lw">ListView element</param>
 	internal static void SortColumn<T>(
 		Func<FileIdentity, T> keySelector,
 		TextBox searchBox,
@@ -296,6 +297,7 @@ internal static class ListViewHelper
 	/// </param>
 	/// <param name="datePicker">
 	/// An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
+	/// <param name="lw">ListView element</param>
 	/// </param>
 	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,

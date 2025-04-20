@@ -1614,7 +1614,7 @@
         </member>
         <member name="T:AppControlManager.Crumb">
             <summary>
-            https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
+            https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
             Represents an item in the BreadCrumBar's ItemsSource collection
             </summary>
             <param name="label"></param>
@@ -1622,7 +1622,7 @@
         </member>
         <member name="M:AppControlManager.Crumb.#ctor(System.String,System.Type)">
             <summary>
-            https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
+            https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
             Represents an item in the BreadCrumBar's ItemsSource collection
             </summary>
             <param name="label"></param>
@@ -3454,7 +3454,7 @@
         </member>
         <member name="M:AppControlManager.MicrosoftGraph.Main.CreateCustomIntunePolicy(System.String,System.String,System.String,System.String,System.String)">
             <summary>
-            https://learn.microsoft.com/en-us/mem/intune/configuration/custom-settings-windows-10
+            https://learn.microsoft.com/mem/intune/configuration/custom-settings-windows-10
             </summary>
             <param name="accessToken"></param>
             <param name="policyData"></param>
@@ -4076,6 +4076,18 @@
             <param name="XMLObject"></param>
             <param name="XMLFilePath"></param>
         </member>
+        <member name="M:AppControlManager.Others.ConfigureISGServices.SetServiceStartType(System.String,AppControlManager.Others.ConfigureISGServices.ServiceStartType)">
+            <summary>
+            Sets the start mode of a Windows service.
+            </summary>
+            <param name="serviceName">The short name of the service.</param>
+            <param name="startType">Desired start type.</param>
+        </member>
+        <member name="T:AppControlManager.Others.ConfigureISGServices.ServiceStartType">
+            <summary>
+            Available service start types.
+            </summary>
+        </member>
         <member name="M:AppControlManager.Others.ConfigureISGServices.Configure">
             <summary>
             Starts the AppIdTel and sets the AppIDSvc service to auto start
@@ -4244,10 +4256,10 @@
         </member>
         <member name="T:AppControlManager.Others.FileDialogHelper">
             <summary>
-            https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100
+            https://learn.microsoft.com/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100
             This class uses unmanaged code, "allowMarshaling" should be "false" for CsWin32 JSON settings.
             Using P/Invoke because when running as Admin, WinAppSDK's file picker doesn't work.
-            https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100#in-a-desktop-app-that-requires-elevation
+            https://learn.microsoft.com/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100#in-a-desktop-app-that-requires-elevation
             </summary>
         </member>
         <member name="M:AppControlManager.Others.FileDialogHelper.ShowFilePickerDialog(System.String)">
@@ -4401,7 +4413,7 @@
         </member>
         <member name="T:AppControlManager.Others.Opus">
             <summary>
-            For retrieving Opus data from files
+            For retrieving Opus data from signed files
             </summary>
         </member>
         <member name="F:AppControlManager.Others.Opus.SPC_SP_OPUS_INFO_STRUCT">
@@ -4483,6 +4495,11 @@
             This class includes methods that are helpers for the custom ListView implementations in this application.
             </summary>
         </member>
+        <member name="M:AppControlManager.Others.ListViewHelper.FindScrollViewer(Microsoft.UI.Xaml.DependencyObject)">
+            <summary>
+            Walks the VisualTree under 'element' and returns the first ScrollViewer it finds.
+            </summary>
+        </member>
         <member name="F:AppControlManager.Others.ListViewHelper.tb">
             <summary>
             An offscreen TextBlock for measurement
@@ -4521,7 +4538,7 @@
             Used to store sorting states of columns in ListViews
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String)">
+        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String,Microsoft.UI.Xaml.Controls.ListView)">
             <summary>
             Sorts the ObservableCollection using the given key selector.
             The SortState parameter toggles sort order when the same column is pressed.
@@ -4533,8 +4550,9 @@
             <param name="observableCollection">The observable collection to update.</param>
             <param name="sortState">An object that holds the current sort state.</param>
             <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
+            <param name="lw">ListView element</param>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.CalendarDatePicker)">
+        <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.CalendarDatePicker,Microsoft.UI.Xaml.Controls.ListView)">
             <summary>
             Applies the search (and optional date) filters to the provided data.
             </summary>
@@ -4549,6 +4567,7 @@
             </param>
             <param name="datePicker">
             An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
+            <param name="lw">ListView element</param>
             </param>
         </member>
         <member name="M:AppControlManager.Others.ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(Microsoft.UI.Xaml.Controls.ListViewBase,Microsoft.UI.Xaml.Controls.ListView,System.Int32,System.Boolean,System.Boolean,System.Int32,System.Int32)">
@@ -4622,7 +4641,7 @@
         </member>
         <member name="T:AppControlManager.Others.OpusInfoObj">
             <summary>
-            https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
+            https://learn.microsoft.com/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
             Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
             </summary>
         </member>
@@ -9272,7 +9291,7 @@
         <member name="F:AppControlManager.ViewModels.MainWindowVM._infoBadgeOpacity">
             <summary>
             Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
-            https://learn.microsoft.com/en-us/windows/apps/design/controls/info-badge
+            https://learn.microsoft.com/windows/apps/design/controls/info-badge
             Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
             When set to 0, the badge is hidden.
             </summary>

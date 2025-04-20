@@ -50,6 +50,12 @@ internal sealed partial class ViewFileCertificates : Page
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
+
+	internal ListView ListViewElement { get; }
+
+	// Singleton instance of the class
+	private static ViewFileCertificates? _instance;
+
 	/// <summary>
 	/// Constructor for the ViewFileCertificates class. Initializes components, sets navigation cache mode, and assigns the
 	/// data context.
@@ -62,8 +68,14 @@ internal sealed partial class ViewFileCertificates : Page
 		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		this.DataContext = ViewModel;
+
+		_instance = this;
+
+		ListViewElement = FileCertificatesListView;
 	}
 
+
+	internal static ViewFileCertificates Instance => _instance ?? throw new InvalidOperationException("ViewFileCertificates is not initialized.");
 
 
 	/// <summary>
@@ -280,7 +292,7 @@ internal sealed partial class ViewFileCertificates : Page
 
 			// Decode the signed message from the file specified by cipFilePath
 			// The file is read as a byte array because the SignedCms.Decode() method expects a byte array as input
-			// https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
+			// https://learn.microsoft.com/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
 			signedCms.Decode(File.ReadAllBytes(file));
 
 			X509Certificate2Collection certificates = signedCms.Certificates;

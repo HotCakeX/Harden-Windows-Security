@@ -587,29 +587,29 @@
   <data name="SelectedAppsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
     <value>The total number of the selected Apps</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.Description" xml:space="preserve">
-    <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.Description" xml:space="preserve">
+    <value>Browse for Folder paths to scan and include in the policy. The folders will be scanned recursively.</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.Header" xml:space="preserve">
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.Header" xml:space="preserve">
     <value>Browse For Folders</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for Folder paths to scan and include in the policy. The folders will be scanned recursively.</value>
   </data>
-  <data name="BrowseForFoldersDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for Folder paths to scan and include in the Deny policy. The folders will be scanned recursively.</value>
+  <data name="BrowseForFoldersPolicyCreationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for Folder paths to scan and include in the policy. The folders will be scanned recursively.</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.Description" xml:space="preserve">
-    <value>Browse for file paths to scan and include in the Deny policy.</value>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.Description" xml:space="preserve">
+    <value>Browse for file paths to scan and include in the policy.</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.Header" xml:space="preserve">
+  <data name="BrowseForFilesPolicyCreationSettingsCard.Header" xml:space="preserve">
     <value>Browse For Files</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for file paths to scan and include in the Deny policy.</value>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for file paths to scan and include in the policy.</value>
   </data>
-  <data name="BrowseForFilesDenyPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for file paths to scan and include in the Deny policy.</value>
+  <data name="BrowseForFilesPolicyCreationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for file paths to scan and include in the policy.</value>
   </data>
   <data name="DenyPolicyNameSettingsCard.Description" xml:space="preserve">
     <value>The name of the Deny policy that is going to be created.</value>
@@ -2903,5 +2903,316 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ErrorOccurredCreatingPolicy" xml:space="preserve">
     <value>An error occurred while creating the policy.</value>
+  </data>  
+ <data name="BasePolicyFileSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Base Policy File</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Browse for the Base policy XML file that this Supplemental policy will be associated with.</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for the Base policy XML file that this Supplemental policy will be associated with.</value>
+  </data>
+  <data name="BasePolicyFileSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for the Base policy XML file that this Supplemental policy will be associated with.</value>
+  </data>
+  <data name="AuditMode" xml:space="preserve">
+    <value>Audit Mode</value>
+  </data>
+    <data name="EnforcedMode" xml:space="preserve">
+    <value>Enforced Mode</value>
+  </data>
+    <data name="NotRunningOrDisabled" xml:space="preserve">
+    <value>Disabled/Not Running</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
+    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <value>Enforcement of kernel mode Code Integrity is enabled.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
+    <comment>Test signed content is allowed by Code Integrity</comment>
+    <value>Test signed content is allowed by Code Integrity.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
+    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <value>Enforcement of user mode Code Integrity is enabled.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
+    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <value>Enforcement of user mode Code Integrity is enabled in audit mode.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
+    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <value>User mode binaries from certain paths can run even if they fail code integrity checks.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
+    <comment>The Code Integrity component is from a test build</comment>
+    <value>The build of Code Integrity is from a test build.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
+    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <value>The build of Code Integrity is from a pre-production build.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
+    <comment>Kernel debugger attached, unsigned code can load</comment>
+    <value>The kernel debugger is attached, allowing unsigned code to load.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_FLIGHT_BUILD" xml:space="preserve">
+    <comment>The Code Integrity component is from a flight build</comment>
+    <value>The build of Code Integrity is from a flight build.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
+    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <value>Flight signed content is allowed by Code Integrity.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <value>Hypervisor enforced Code Integrity is enabled for kernel mode components.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI in audit mode</comment>
+    <value>Hypervisor enforced Code Integrity is enabled in audit mode.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <value>Hypervisor enforced Code Integrity is enabled for kernel mode in strict mode.</value>
+  </data>
+  <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
+    <comment>Hypervisor enforced CI with Isolated User Mode signing</comment>
+    <value>Hypervisor enforced Code Integrity with Isolated User Mode component signing.</value>
+  </data>
+  <data name="EffectiveCodeIntegrityFeaturesListViewHeaderTextBlock.Text" xml:space="preserve">
+    <value>Effective Code Integrity Features</value>
+  </data>
+  <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
+    <value>Application Control for Business Status</value>
+  </data>
+  <data name="UMCITextBlock.Text" xml:space="preserve">
+    <value>User Mode Code Integrity</value>
+  </data>
+  <data name="KMCITextBlock.Text" xml:space="preserve">
+    <value>Kernel Mode Code Integrity</value>
+  </data>
+  <data name="BasePolicies.Text" xml:space="preserve">
+    <value>Base Policies</value>
+  </data>
+  <data name="SupplementalPolicies.Text" xml:space="preserve">
+    <value>Supplemental Policies</value>
+  </data>
+  <data name="SystemPolicies.Text" xml:space="preserve">
+    <value>System Policies</value>
+  </data>
+  <data name="AutomaticPolicies.Text" xml:space="preserve">
+    <value>Automatic Policies</value>
+  </data>
+  <data name="RetrievePolicies.Text" xml:space="preserve">
+    <value>Retrieve Policies</value>
+  </data>
+  <data name="RetrievePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the latest deployed policies on the system</value>
+  </data>
+  <data name="RetrievePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the latest deployed policies on the system</value>
+  </data>
+  <data name="SwapPolicyComboBox.PlaceholderText" xml:space="preserve">
+    <value>Swap Policy</value>
+  </data>
+  <data name="SwapPolicyComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This feature lets you seamlessly swap any of the applicable deployed non-system base policies with another policy from the list.</value>
+  </data>
+  <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This feature lets you seamlessly swap any of the applicable deployed non-system base policies with another policy from the list.</value>
+  </data>
+  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The count of all of the displayed policies</value>
+  </data>
+  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The count of all of the displayed policies</value>
+  </data>
+  <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
+    <value>Remove Policy</value>
+  </data>
+  <data name="RemovePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove any non-system policy from the system</value>
+  </data>
+  <data name="RemovePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove any non-system policy from the system</value>
+  </data>
+  <data name="SearchPoliciesTextBox.PlaceholderText" xml:space="preserve">
+    <value>Search among the policies...</value>
+  </data>
+    <data name="SearchPoliciesTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Search among the policies by typing any of the available details of the policy you are looking for.</value>
+  </data>
+  <data name="SearchPoliciesTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Search among the policies by typing any of the available details of the policy you are looking for.</value>
+  </data>
+  <data name="SigningDetailsDialog.Title" xml:space="preserve">
+    <value>Signing Details</value>
+  </data>
+  <data name="SigningDetailsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="SigningDetailsDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CustomPatternBasedFilePathsDialog.Title" xml:space="preserve">
+    <value>Pattern Based File Path</value>
+  </data>
+  <data name="CustomPatternBasedFilePathsDialog.CloseButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="CustomPatternBasedFilePathsDialogTopTextBlock.Text" xml:space="preserve">
+    <value>Here are some examples of custom patterns for file path rules</value>
+  </data>
+  <data name="ExampleText.Text" xml:space="preserve">
+    <value>Example</value>
+  </data>
+  <data name="DescriptionText.Text" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="MatchesZeroOrMoreCharactersText.Text" xml:space="preserve">
+    <value>Matches zero or more characters.</value>
+  </data>
+  <data name="MatchesASingleCharacterText.Text" xml:space="preserve">
+    <value>Matches a single character.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription1" xml:space="preserve">
+    <value>Matches all files in the 'C:\Windows' directory and its sub-directories.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription2" xml:space="preserve">
+    <value>Matches all files in the 'D:\EnterpriseApps\MyApp\' directory and its sub-directories.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription3" xml:space="preserve">
+    <value>Matches any file(s) named 'Bing.exe' in any location.</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription4" xml:space="preserve">
+    <value>Wildcards used in the middle of a path allow all files that match that pattern. In this example, both of these hypothetical paths would match: 'C:\WINDOWS\CCMCACHE\12345\7zabcd-x64.exe' and 'C:\USERS\AppControlUSER\Downloads\Malware\CCMCACHE\Pwned\7zhaha-x64.exe'</value>
+  </data>
+  <data name="CustomPatternBasedFilePathExampleDescription5" xml:space="preserve">
+    <value>This example allows any '.node' temporary file inside of the TEMP folder that has a GUID as file name.</value>
+  </data>
+  <data name="GoToSettingsButton.Content" xml:space="preserve">
+    <value>Go to Settings</value>
+  </data>
+  <data name="GoToSettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Navigates to the app's settings page.</value>
+  </data>
+  <data name="GoToSettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Navigates to the app's settings page.</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Certificate File</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Its details will be added to the policy file</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Its details will be added to the policy file</value>
+  </data>
+  <data name="CertificateDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Its details will be added to the policy file</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.Header" xml:space="preserve">
+    <value>Certificate Common Name</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.Description" xml:space="preserve">
+    <value>Used during the signing operation</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Common Name (CN) of the certificate that will be used during the signing operation.</value>
+  </data>
+  <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Common Name (CN) of the certificate that will be used during the signing operation.</value>
+  </data>
+  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
+    <value>SignTool Path</value>
+  </data>
+  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
+    <value>Used to sign the policy CIP file</value>
+  </data>
+  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The path to the SignTool.exe that will be used during the signing operation to sign the CIP binary file.</value>
+  </data>
+  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The path to the SignTool.exe that will be used during the signing operation to sign the CIP binary file.</value>
+  </data>
+  <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Creation</value>
+  </data>
+  <data name="CertificatesNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Certificates</value>
+  </data>
+  <data name="LogsProcessingNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Logs Processing</value>
+  </data>
+  <data name="TacticalNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Tactical</value>
+  </data>
+  <data name="InfoGatheringNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Info Gathering</value>
+  </data>
+  <data name="PolicyManagementNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Policy Management</value>
+  </data>
+  <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.Header" xml:space="preserve">
+    <value>Automatic Assignment</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.Description" xml:space="preserve">
+    <value>Automatically save the path to the base policies you create in the Sidebar.</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatically save the path to the base policies you create in the Sidebar.</value>
+  </data>
+  <data name="SidebarAutomaticAssignmentSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Automatically save the path to the base policies you create in the Sidebar.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
+    <value>Sidebar Guide</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>For Sidebar usage guide please visit the GitHub wiki page by clicking/tapping here.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>For Sidebar usage guide please visit the GitHub wiki page by clicking/tapping here.</value>
+  </data>
+  <data name="SelectTextBlock.Text" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page.</value>
+  </data>
+  <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page.</value>
+  </data>
+  <data name="ClearTextBlock.Text" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clear the selected XML file path text box.</value>
+  </data>
+  <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Clear the selected XML file path text box.</value>
+  </data>
+  <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for an XML policy file</value>
+  </data>
+  <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for an XML policy file</value>
+  </data>
+  <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Use the sidebar to pin XML file paths and reuse them in different parts of the AppControl Manager.</value>
+  </data>  
+  <data name="SidebarTextBlock.Text" xml:space="preserve">
+    <value>Sidebar</value>
+  </data>
+  <data name="SidebarPinnedPolicyPathTextBlock.Text" xml:space="preserve">
+    <value>Pinned Policy Path</value>
+  </data>
+  <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Policy Path</value>
   </data>
 </root>

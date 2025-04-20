@@ -22,7 +22,7 @@ namespace AppControlManager.IntelGathering;
 // Application Control event tags intelligence
 internal static class CILogIntel
 {
-	// Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
+	// Requested and Validated Signing Level Mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
 	internal static readonly Dictionary<int, string> ReqValSigningLevels = new()
 	{
 		{ 0, "Signing level hasn't yet been checked"},
@@ -39,7 +39,7 @@ internal static class CILogIntel
 		{ 14, "Windows Trusted Computing Base signed"}
 	};
 
-	// SignatureType Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#signaturetype
+	// SignatureType Mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#signaturetype
 	internal static readonly Dictionary<int, string> SignatureTypeTable = new()
 	{
 		{ 0, "Unsigned or verification hasn't been attempted" },
@@ -52,7 +52,7 @@ internal static class CILogIntel
 		{ 7, "File was verified" }
 	};
 
-	// VerificationError mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#verificationerror
+	// VerificationError mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#verificationerror
 	internal static readonly Dictionary<int, string> VerificationErrorTable = new()
 	{
 		{ 0, "Successfully verified signature."},

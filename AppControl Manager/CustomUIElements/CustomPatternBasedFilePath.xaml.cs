@@ -15,41 +15,47 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.ObjectModel;
+using AppControlManager.Others;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.CustomUIElements;
 
-// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
+// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
 internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
 	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [
 
 		new()
 		{
 			Example = "C:\\Windows\\*",
-			Description = "Matches all files in the 'C:\\Windows' directory and its sub-directories."
+			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription1")
 		},
 		new()
 		{
 			Example = "D:\\EnterpriseApps\\MyApp\\*",
-			Description = "Matches all files in the 'D:\\EnterpriseApps\\MyApp\\' directory and its sub-directories."
+			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription2")
 		},
 		new()
 		{
 			Example = "*\\Bing.exe",
-			Description = "Matches any file(s) named 'Bing.exe' in any location."
+			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription3")
 		},
 		new()
 		{
 			Example = "C:\\*\\CCMCACHE\\*\\7z????-x64.exe",
-			Description = "Wildcards used in the middle of a path allow all files that match that pattern. In this example, both of these hypothetical paths would match: 'C:\\WINDOWS\\CCMCACHE\\12345\\7zabcd-x64.exe' and 'C:\\USERS\\AppControlUSER\\Downloads\\Malware\\CCMCACHE\\Pwned\\7zhaha-x64.exe'"
+			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription4")
 		},
 		new()
 		{
 			Example = "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node\"",
-			Description = "This example allows any '.node' temporary file inside of the TEMP folder that has a GUID as file name."
+			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription5")
 		}
 	];
 
@@ -60,6 +66,8 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 		XamlRoot = App.MainWindow?.Content.XamlRoot;
 
 		CustomPatternBasedFilePathListView.ItemsSource = FilePathPatternExamplesCollection;
+
+		this.RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
 	}
 }
 

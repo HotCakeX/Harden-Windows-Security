@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/Microsoft.Windows.CsWinRT.targets -->
 
@@ -8,10 +8,10 @@
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/standard/frameworks#support-older-os-versions -->
+    <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
     <InvariantGlobalization>true</InvariantGlobalization>
 
     <RootNamespace>AppControlManager</RootNamespace>
@@ -37,7 +37,7 @@
 
     Without this, we'd have to download the latest SDK and install it manually on the user's system, which will add the relevant packages
     and satisfy the requirements of the MSIX instlaler.
-    https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads
+    https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads
     -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
@@ -53,11 +53,11 @@
     <PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#rollforward -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#rollforward -->
     <RollForward>LatestMajor</RollForward>
 
     <!-- Automatically created for packing -->
-    <!-- https://learn.microsoft.com/en-us/windows/msix/app-installer/create-appinstallerfile-vs -->
+    <!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
@@ -75,7 +75,7 @@
     <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AssemblyName>AppControlManager</AssemblyName>
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/optimizing -->
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
     <FileVersion>2.0.14.0</FileVersion>
@@ -84,7 +84,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <StartupObject>AppControlManager.Program</StartupObject>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code -->
+    <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/unsafe-code -->
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
     <Version>$(FileVersion)</Version>
@@ -94,16 +94,16 @@
 
     <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/workstation-server-gc -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/background-gc -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/runtime-config/garbage-collector -->
+    <!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc -->
+    <!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/background-gc -->
+    <!-- https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector -->
 
     <!--
       <ServerGarbageCollection>true</ServerGarbageCollection>
       <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     -->
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
     <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
 
     <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
@@ -131,14 +131,14 @@
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
     <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
 
     <RepositoryType>GitHub</RepositoryType>
 
     <!-- There should be absolutely no trim warnings before this can be enabled
     Otherwise there is no guarantee that the app will work as expected at all times -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options -->
     <PublishTrimmed>True</PublishTrimmed>
     <TrimMode>full</TrimMode>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -170,17 +170,17 @@
      -->
     <StackTraceSupport>true</StackTraceSupport>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-guard -->
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-guard -->
     <ControlFlowGuard>Guard</ControlFlowGuard>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
     <CetCompat>true</CetCompat>
 
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <PublishAot>True</PublishAot>
     <OptimizationPreference>Speed</OptimizationPreference>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
+    <!-- https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview -->
     <EnablePackageValidation>true</EnablePackageValidation>
     <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
     <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
@@ -200,7 +200,7 @@
 
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
     <AnalysisModeDocumentation>All</AnalysisModeDocumentation>
     <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
     <AnalysisModePerformance>All</AnalysisModePerformance>

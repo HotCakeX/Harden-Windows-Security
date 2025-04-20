@@ -30,7 +30,7 @@ namespace AppControlManager.Others;
 internal static partial class AllCertificatesGrabber
 {
 	// Structure defining signer information for cryptographic providers
-	// https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
+	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 	internal struct CryptProviderSigner
 	{
@@ -47,7 +47,7 @@ internal static partial class AllCertificatesGrabber
 	}
 
 	// Structure defining provider data for cryptographic operations
-	// https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-crypt_provider_data
+	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_data
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 	internal struct CryptProviderData
 	{
@@ -124,7 +124,7 @@ internal static partial class AllCertificatesGrabber
 	}
 
 	// Structure defining overall trust data for WinTrust
-	// https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-wintrust_data
+	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_data
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 	internal sealed class WinTrustData
 	{
@@ -176,7 +176,7 @@ internal static partial class AllCertificatesGrabber
 		[LibraryImport("crypt32.dll", SetLastError = true)]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		[return: MarshalAs(UnmanagedType.Bool)]
-		// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
+		// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
 		internal static partial bool CryptMsgGetParam(
 			IntPtr hCryptMsg,
 			int dwParamType,
@@ -257,7 +257,7 @@ internal static partial class AllCertificatesGrabber
 
 					int pcbData = 0;   // Size of data in bytes
 
-					// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
+					// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
 					// Get size of encoded message
 					if (providerData.hMsg != IntPtr.Zero && Crypt32DLL.CryptMsgGetParam(
 						providerData.hMsg,          // Handle to the cryptographic message

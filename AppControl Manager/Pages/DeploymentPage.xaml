@@ -121,7 +121,7 @@
                                                 <!--
                                                     Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
                                                     Width does not override MaxWidth
-                                                    https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
+                                                    https://learn.microsoft.com/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
                                                     -->
                                                 <Setter Property="MaxWidth" Value="1234" />
                                             </Style>

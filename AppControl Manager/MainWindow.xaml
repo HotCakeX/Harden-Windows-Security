@@ -29,7 +29,7 @@
             <x:Double x:Key="BreadcrumbBarChevronFontSize">30</x:Double>
 
             <!-- Theme Shadow effect used on certain elements inside of the grid -->
-            <!-- https://learn.microsoft.com/en-us/windows/apps/design/layout/depth-shadow -->
+            <!-- https://learn.microsoft.com/windows/apps/design/layout/depth-shadow -->
             <ThemeShadow x:Name="SharedShadow" />
 
         </Grid.Resources>
@@ -73,7 +73,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <!-- Titlebar -->
-        <!-- https://learn.microsoft.com/en-us/windows/apps/develop/title-bar#full-customization-example -->
+        <!-- https://learn.microsoft.com/windows/apps/develop/title-bar#full-customization-example -->
         <Grid x:Name="AppTitleBar" Height="48" Grid.Row="0">
 
             <Grid.ColumnDefinitions>
@@ -135,7 +135,7 @@
 
         </Grid>
 
-        <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
+        <!-- Doc: https://learn.microsoft.com/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
                     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
                     IsTabStop="True"
@@ -178,42 +178,42 @@
 
             <NavigationView.MenuItems>
                 <!-- Creation Group -->
-                <NavigationViewItemHeader Content="Creation" />
+                <NavigationViewItemHeader x:Uid="CreationNavigationViewItemHeader" />
                 <NavigationViewItem x:Uid="CreatePolicyNavItem" Icon="{x:Bind ViewModel.CreatePolicyIcon, Mode=OneWay}" Tag="CreatePolicy" />
                 <NavigationViewItem x:Uid="CreateSupplementalPolicyNavItem" Icon="{x:Bind ViewModel.CreateSupplementalPolicyIcon, Mode=OneWay}" Tag="CreateSupplementalPolicy" />
                 <NavigationViewItem x:Uid="CreateDenyPolicyNavItem" Icon="{x:Bind ViewModel.CreateDenyPolicyIcon, Mode=OneWay}" Tag="CreateDenyPolicy" />
 
                 <!-- Certificates Group -->
-                <NavigationViewItemHeader Content="Certificates"/>
+                <NavigationViewItemHeader x:Uid="CertificatesNavigationViewItemHeader"/>
                 <NavigationViewItem x:Uid="BuildNewCertificateNavItem" Icon="{x:Bind ViewModel.BuildNewCertificateIcon, Mode=OneWay}" Tag="BuildNewCertificate" />
                 <NavigationViewItem x:Uid="ViewFileCertificatesNavItem" Icon="{x:Bind ViewModel.ViewFileCertificatesIcon, Mode=OneWay}" Tag="ViewFileCertificates" />
 
                 <!-- Logs Processing Group -->
-                <NavigationViewItemHeader Content="Logs Processing"/>
+                <NavigationViewItemHeader x:Uid="LogsProcessingNavigationViewItemHeader"/>
                 <NavigationViewItem x:Uid="CreatePolicyFromEventLogsNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromEventLogsIcon, Mode=OneWay}" Tag="CreatePolicyFromEventLogs" />
                 <NavigationViewItem x:Uid="CreatePolicyFromMDEAHNavItem" Icon="{x:Bind ViewModel.CreatePolicyFromMDEAHIcon, Mode=OneWay}" Tag="CreatePolicyFromMDEAH" />
 
                 <!-- Tactical Group -->
-                <NavigationViewItemHeader Content="Tactical"/>
+                <NavigationViewItemHeader x:Uid="TacticalNavigationViewItemHeader"/>
                 <NavigationViewItem x:Uid="AllowNewAppsNavItem" Icon="{x:Bind ViewModel.AllowNewAppsIcon, Mode=OneWay}" Tag="AllowNewApps" />
                 <NavigationViewItem x:Uid="PolicyEditorNavItem" Icon="{x:Bind ViewModel.PolicyEditorIcon, Mode=OneWay}" Tag="PolicyEditor" />
                 <NavigationViewItem x:Uid="SimulationNavItem" Icon="{x:Bind ViewModel.SimulationIcon, Mode=OneWay}" Tag="Simulation" />
 
                 <!-- Info Gathering Group -->
-                <NavigationViewItemHeader Content="Info Gathering"/>
+                <NavigationViewItemHeader x:Uid="InfoGatheringNavigationViewItemHeader"/>
                 <NavigationViewItem x:Uid="SystemInformationNavItem" Icon="{x:Bind ViewModel.SystemInformationIcon, Mode=OneWay}" Tag="SystemInformation" />
                 <NavigationViewItem x:Uid="GetCodeIntegrityHashesNavItem" Icon="{x:Bind ViewModel.GetCodeIntegrityHashesIcon, Mode=OneWay}" Tag="GetCodeIntegrityHashes" />
                 <NavigationViewItem x:Uid="GetSecurePolicySettingsNavItem" Icon="{x:Bind ViewModel.GetSecurePolicySettingsIcon, Mode=OneWay}" Tag="GetSecurePolicySettings" />
 
                 <!-- Policy Management Group -->
-                <NavigationViewItemHeader Content="Policy Management"/>
+                <NavigationViewItemHeader x:Uid="PolicyManagementNavigationViewItemHeader"/>
                 <NavigationViewItem x:Uid="ConfigurePolicyRuleOptionsNavItem" Icon="{x:Bind ViewModel.ConfigurePolicyRuleOptionsIcon, Mode=OneWay}" Tag="ConfigurePolicyRuleOptions" />
                 <NavigationViewItem x:Uid="MergePoliciesNavItem" Icon="{x:Bind ViewModel.MergePoliciesIcon, Mode=OneWay}" Tag="MergePolicies" />
                 <NavigationViewItem x:Uid="DeploymentNavItem" Icon="{x:Bind ViewModel.DeploymentIcon, Mode=OneWay}" Tag="Deployment" />
                 <NavigationViewItem x:Uid="ValidatePoliciesNavItem" Icon="{x:Bind ViewModel.ValidatePoliciesIcon, Mode=OneWay}" Tag="ValidatePolicies" />
 
                 <!-- Documentation Group -->
-                <NavigationViewItemHeader Content="Documentation"/>
+                <NavigationViewItemHeader x:Uid="DocumentationNavigationViewItemHeader"/>
                 <NavigationViewItem x:Uid="GitHubDocsNavItem" Icon="{x:Bind ViewModel.GitHubDocsIcon, Mode=OneWay}" Tag="GitHubDocs" />
                 <NavigationViewItem x:Uid="MSFTDocsNavItem" Icon="{x:Bind ViewModel.MSFTDocsIcon, Mode=OneWay}" Tag="MSFTDocs" />
 
@@ -251,9 +251,9 @@
 
                             <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
 
-                                <TextBlock Text="Sidebar" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
+                                <TextBlock x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
 
-                                <TextBlock Text="Use the sidebar to select XML file paths and reuse them in different parts of the AppControl Manager." Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
+                                <TextBlock x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
                                 <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
 
@@ -276,35 +276,35 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Unsigned Base Policy" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center" x:Uid="SidebarPinnedPolicyPathTextBlock" Style="{ThemeResource BodyStrongTextBlockStyle}" />
 
                                         <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"
-                                        Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}" PlaceholderText="Base Policy Path" TextWrapping="Wrap"
-                                        Width="150" />
+                                            Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}" x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
+                                            Width="150" />
 
-                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Browse for an XML policy file" Click="{x:Bind ViewModel.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Uid="SidebarBrowseButton" Click="{x:Bind ViewModel.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                                         <FontIcon Glyph="&#xE8E5;" Margin="0,0,8,0" />
-                                                        <TextBlock Text="Browse"/>
+                                                        <TextBlock x:Uid="BrowseTextBlock"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Row="2" ToolTipService.ToolTip="Clear the selected XML file path text box" Click="{x:Bind ViewModel.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" x:Uid="SidebarClearButton" Grid.Row="2" Click="{x:Bind ViewModel.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                                         <FontIcon Glyph="&#xE8E6;" Margin="0,0,8,0" />
-                                                        <TextBlock Text="Clear"/>
+                                                        <TextBlock x:Uid="ClearTextBlock"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" ToolTipService.ToolTip="Assign the selected XML policy file in the sidebar to the base policy path of the applicable section in the currently visible page" HorizontalAlignment="Center">
+                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" x:Uid="SidebarPolicySelectAssignmentButton" HorizontalAlignment="Center">
                                             <Button.Content>
                                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -314,7 +314,7 @@
                                                         </AnimatedIcon.Source>
                                                     </AnimatedIcon>
 
-                                                    <TextBlock Text="Select" />
+                                                    <TextBlock x:Uid="SelectTextBlock" />
 
                                                 </controls:WrapPanel>
                                             </Button.Content>
@@ -337,12 +337,12 @@
                                 </Border>
 
                                 <controls:SettingsCard HorizontalContentAlignment="Center"
-                               Description="Automatically save the path to the base policies you create in the Sidebar." Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
-                               Header="Automatic Assignment" HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
+                                    x:Uid="SidebarAutomaticAssignmentSettingsCard" Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
+                                    HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
                                     <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}" IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
                                 </controls:SettingsCard>
 
-                                <HyperlinkButton HorizontalAlignment="Center" ToolTipService.ToolTip="Sidebar usage guide on GitHub wiki" Content="Sidebar Guide" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
+                                <HyperlinkButton x:Uid="SidebarGuideHyperlinkButton" HorizontalAlignment="Center" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
 
                                 <Button HorizontalAlignment="Center" x:Uid="OpenConfigDirectoryButton"
                                         IsEnabled="{x:Bind ViewModel.OpenConfigDirectoryButtonState, Mode=OneWay}" Click="{x:Bind ViewModel.OpenConfigDirectoryButton_Click}">

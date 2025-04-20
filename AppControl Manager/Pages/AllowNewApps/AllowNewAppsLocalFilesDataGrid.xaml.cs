@@ -99,7 +99,8 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 					ViewModel.LocalFilesAllFileIdentities,
 					ViewModel.LocalFilesFileIdentities,
 					ViewModel.SortStateLocalFiles,
-					key);
+					key,
+					FileIdentitiesListView);
 			}
 		}
 	}
@@ -122,7 +123,8 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 			allFileIdentities: ViewModel.LocalFilesAllFileIdentities.AsEnumerable(),
 			filteredCollection: ViewModel.LocalFilesFileIdentities,
 			searchTextBox: SearchBox,
-			datePicker: null
+			datePicker: null,
+			lw: FileIdentitiesListView
 		);
 
 		ViewModel.UpdateTotalFiles();

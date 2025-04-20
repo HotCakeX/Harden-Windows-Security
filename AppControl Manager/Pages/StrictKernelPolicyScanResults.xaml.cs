@@ -103,7 +103,8 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 					ViewModel.StrictKernelModeScanResultsList,
 					ViewModel.StrictKernelModeScanResults,
 					ViewModel.SortStateStrictKernelMode,
-					key);
+					key,
+					FileIdentitiesListView);
 			}
 		}
 	}
@@ -128,7 +129,8 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 		allFileIdentities: ViewModel.StrictKernelModeScanResultsList.AsEnumerable(),
 		filteredCollection: ViewModel.StrictKernelModeScanResults,
 		searchTextBox: SearchBox,
-		datePicker: null
+		datePicker: null,
+		lw: FileIdentitiesListView
 		);
 		ViewModel.UpdateTotalFilesStrictKernelMode();
 	}

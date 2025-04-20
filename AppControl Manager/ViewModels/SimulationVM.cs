@@ -304,6 +304,17 @@ internal sealed partial class SimulationVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.Simulation.Instance.ListViewElement;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// Perform a case-insensitive search in all relevant fields
 		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
 			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -320,6 +331,13 @@ internal sealed partial class SimulationVM : ViewModelBase
 		foreach (SimulationOutput item in filteredResults)
 		{
 			SimulationOutputs.Add(item);
+		}
+
+
+		if (scrollViewer != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 
@@ -359,6 +377,18 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <param name="newSortColumn">The column to sort by.</param>
 	private async void Sort(SimulationSortColumn newSortColumn)
 	{
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.Simulation.Instance.ListViewElement;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// Toggle sort order if the same column is clicked; otherwise, default to descending.
 		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
 		{
@@ -435,6 +465,13 @@ internal sealed partial class SimulationVM : ViewModelBase
 			foreach (SimulationOutput item in sortedData)
 			{
 				SimulationOutputs.Add(item);
+			}
+
+
+			if (scrollViewer != null && savedHorizontal.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 			}
 		});
 	}

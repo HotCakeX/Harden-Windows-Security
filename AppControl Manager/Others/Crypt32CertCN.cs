@@ -22,17 +22,6 @@ namespace AppControlManager.Others;
 
 internal static partial class CryptoAPI
 {
-	// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringw
-	[LibraryImport("crypt32.dll", EntryPoint = "CertGetNameStringW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	private static partial int CertGetNameString(
-		IntPtr pCertContext, // The handle property of the certificate object
-		int dwType,
-		int dwFlags,
-		IntPtr pvTypePara,
-		[Out] char[] pszNameString,
-		int cchNameString
-	);
 
 	// Define constants for the name types
 	internal const int CERT_NAME_SIMPLE_DISPLAY_TYPE = 4; // Display type for simple names
@@ -69,7 +58,7 @@ internal static partial class CryptoAPI
 			int flags = isIssuer ? CERT_NAME_ISSUER_FLAG : 0;
 
 			// Call the CertGetNameString function to get the name string
-			int result = CertGetNameString(
+			int result = NativeMethods.CertGetNameString(
 				pCertContext,
 				dwType,
 				flags,

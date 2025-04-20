@@ -44,24 +44,6 @@ internal static partial class GetExtendedFileAttrib
 	/// </summary>
 	private const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
 
-	// Importing external functions from Version.dll to work with file version info
-	// https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
-	[LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoSizeExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	private static partial int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
-
-	// https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-verqueryvaluea
-	[LibraryImport("Version.dll", EntryPoint = "VerQueryValueW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	private static partial bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
-
-	// https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfoexa
-	[LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	private static partial bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, [Out] byte[] data);
-
 	/// <summary>
 	/// Retrieves extended file information, including version, original file name, internal name, file description, and
 	/// product name.
@@ -74,7 +56,7 @@ internal static partial class GetExtendedFileAttrib
 		ExFileInfo BadCaseReturnVal = new(null, null, null, null, null);
 
 		// Get the size of the version information block
-		int versionInfoSize = GetFileVersionInfoSizeEx(FILE_VER_GET_NEUTRAL, filePath, out int handle);
+		int versionInfoSize = NativeMethods.GetFileVersionInfoSizeEx(FILE_VER_GET_NEUTRAL, filePath, out int handle);
 
 		if (versionInfoSize == 0)
 		{
@@ -84,7 +66,7 @@ internal static partial class GetExtendedFileAttrib
 		// Allocate array for version data and retrieve it
 		byte[] versionData = new byte[versionInfoSize];
 
-		if (!GetFileVersionInfoEx(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
+		if (!NativeMethods.GetFileVersionInfoEx(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
 		{
 			return BadCaseReturnVal;
 		}
@@ -133,7 +115,7 @@ internal static partial class GetExtendedFileAttrib
 	{
 		version = null;
 		// Query the root block for version info
-		if (!VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\", out nint buffer, out _))
+		if (!NativeMethods.VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\", out nint buffer, out _))
 			return false;
 
 		// Marshal the version info structure
@@ -162,7 +144,7 @@ internal static partial class GetExtendedFileAttrib
 		locale = null;
 		encoding = null;
 		// Query the translation block for locale and encoding
-		if (!VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\VarFileInfo\\Translation", out nint buffer, out _))
+		if (!NativeMethods.VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\VarFileInfo\\Translation", out nint buffer, out _))
 			return false;
 
 		// Copy the translation values
@@ -191,7 +173,7 @@ internal static partial class GetExtendedFileAttrib
 		{
 			string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
 
-			if (VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out nint buffer, out _))
+			if (NativeMethods.VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out nint buffer, out _))
 				return Marshal.PtrToStringAuto(buffer);
 
 			// If error is not resource type not found, throw the error

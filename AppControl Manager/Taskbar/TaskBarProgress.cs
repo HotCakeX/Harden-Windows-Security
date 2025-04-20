@@ -28,8 +28,8 @@ namespace AppControlManager.Taskbar;
 internal static unsafe partial class TaskBarProgress
 {
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue
-	// https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3
+	// https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue
+	// https://learn.microsoft.com/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3
 
 	/// <summary>
 	/// Represents the flag for an in-process server in COM (Component Object Model) programming. It indicates that the

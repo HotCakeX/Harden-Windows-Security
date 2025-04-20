@@ -353,7 +353,7 @@ internal sealed partial class UpdatePage : Page
 
 					Logger.Write(GlobalVars.Rizz.GetString("InstallingPackage"));
 
-					// https://learn.microsoft.com/en-us/uwp/api/windows.management.deployment.addpackageoptions
+					// https://learn.microsoft.com/uwp/api/windows.management.deployment.addpackageoptions
 					AddPackageOptions options = new()
 					{
 						DeferRegistrationWhenPackagesAreInUse = true,

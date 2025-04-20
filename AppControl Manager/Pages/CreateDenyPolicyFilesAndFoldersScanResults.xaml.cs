@@ -97,7 +97,8 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 					ViewModel.filesAndFoldersScanResultsList,
 					ViewModel.FilesAndFoldersScanResults,
 					ViewModel.SortStateFilesAndFolders,
-					key);
+					key,
+					FileIdentitiesListView);
 			}
 		}
 	}
@@ -121,7 +122,8 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 			allFileIdentities: ViewModel.filesAndFoldersScanResultsList.AsEnumerable(),
 			filteredCollection: ViewModel.FilesAndFoldersScanResults,
 			searchTextBox: SearchBox,
-			datePicker: null
+			datePicker: null,
+			lw: FileIdentitiesListView
 		);
 		ViewModel.UpdateTotalFiles();
 	}

@@ -26,6 +26,7 @@ using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -40,6 +41,9 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 {
+
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+
 	// To store the policies displayed on the ListView
 	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];
 
@@ -411,7 +415,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 				BorderThickness = new Thickness(1),
 				CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
-				XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot // Set XamlRoot to the current page's XamlRoot
+				XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot, // Set XamlRoot to the current page's XamlRoot
+				RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 			};
 
 			App.CurrentlyOpenContentDialog = dialog;
@@ -586,7 +591,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 							BorderThickness = new Thickness(1),
 							CloseButtonText = GlobalVars.Rizz.GetString("No"),
-							XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot // Set XamlRoot to the current page's XamlRoot
+							XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot, // Set XamlRoot to the current page's XamlRoot
+							RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 						};
 
 						App.CurrentlyOpenContentDialog = dialog;
@@ -674,7 +680,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 										PrimaryButtonText = GlobalVars.Rizz.GetString("Understand"),
 										BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 										BorderThickness = new Thickness(1),
-										XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot // Set XamlRoot to the current page's XamlRoot
+										XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot, // Set XamlRoot to the current page's XamlRoot
+										RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 									};
 
 									App.CurrentlyOpenContentDialog = dialog;
@@ -833,6 +840,18 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <param name="newSortColumn">The column that needs to be sorted.</param>
 	private async void Sort(SortColumnEnum newSortColumn)
 	{
+
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.ViewCurrentPolicies.Instance.DeployedPoliciesListView;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
+
 		// If the same column is clicked again, toggle the sorting direction.
 		// Otherwise, if a new column is clicked, start with descending order.
 		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
@@ -916,6 +935,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			{
 				AllPolicies.Add(item);
 			}
+
+			if (scrollViewer != null && savedHorizontal.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			}
 		});
 	}
 
@@ -976,6 +1001,16 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
+		// Get the ScrollViewer from the ListView
+		ListView listView = Pages.ViewCurrentPolicies.Instance.DeployedPoliciesListView;
+		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+
+		double? savedHorizontal = null;
+		if (scrollViewer != null)
+		{
+			savedHorizontal = scrollViewer.HorizontalOffset;
+		}
+
 		IEnumerable<CiPolicyInfo> filteredResults = [];
 
 		await Task.Run(() =>
@@ -1003,6 +1038,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 		// Update the policies count text
 		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+
+		if (scrollViewer != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+		}
 	}
 
 

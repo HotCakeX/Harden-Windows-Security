@@ -120,7 +120,7 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" x:Uid="BrowseForFilesDenyPolicySettingsCard"
+                        <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" x:Uid="BrowseForFilesPolicyCreationSettingsCard"
                                Holding="FilesAndFoldersBrowseForFilesSettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForFilesSettingsCard_RightTapped}"
                                IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind FilesAndFoldersBrowseForFilesSettingsCard_Click}">
 
@@ -149,7 +149,7 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="BrowseForFoldersDenyPolicySettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_Click}"
+                        <controls:SettingsCard x:Uid="BrowseForFoldersPolicyCreationSettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_Click}"
                                 Holding="FilesAndFoldersBrowseForFoldersSettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped}" IsClickEnabled="True" IsActionIconVisible="False">
 
                             <Button x:Name="FilesAndFoldersBrowseForFoldersButton" RightTapped="{x:Bind FilesAndFoldersBrowseForFoldersButton_RightTapped}" x:Uid="FolderBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Click}">

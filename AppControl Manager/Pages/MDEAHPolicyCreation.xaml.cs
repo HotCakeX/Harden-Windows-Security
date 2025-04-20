@@ -232,7 +232,8 @@ DeviceEvents
 					ViewModel.AllFileIdentities,
 					ViewModel.FileIdentities,
 					ViewModel.SortState,
-					key);
+					key,
+					FileIdentitiesListView);
 			}
 		}
 	}
@@ -265,7 +266,8 @@ DeviceEvents
 		   allFileIdentities: ViewModel.AllFileIdentities.AsEnumerable(),
 		   filteredCollection: ViewModel.FileIdentities,
 		   searchTextBox: SearchBox,
-		   datePicker: FilterByDateCalendarPicker
+		   datePicker: FilterByDateCalendarPicker,
+		   lw: FileIdentitiesListView
 	   );
 		UpdateTotalLogs();
 	}

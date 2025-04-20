@@ -49,6 +49,11 @@ internal sealed partial class Simulation : Page
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
+	internal ListView ListViewElement { get; }
+
+	// Singleton instance of the class
+	private static Simulation? _instance;
+
 	/// <summary>
 	/// Initializes a new instance of the Simulation class. Sets up the component, navigation cache mode, data context, and
 	/// initializes file and folder path arrays.
@@ -63,7 +68,14 @@ internal sealed partial class Simulation : Page
 		filePaths = [];
 		folderPaths = [];
 		catRootPaths = [];
+
+		_instance = this;
+
+		ListViewElement = SimOutputListView;
 	}
+
+
+	internal static Simulation Instance => _instance ?? throw new InvalidOperationException("Simulation is not initialized.");
 
 
 

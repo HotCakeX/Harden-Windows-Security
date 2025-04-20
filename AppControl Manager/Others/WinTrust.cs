@@ -68,7 +68,7 @@ internal static partial class WinTrust
 	#region This section is related to the MeowParser class operations
 
 	// P/Invoke declaration to import the 'CryptCATOpen' function from WinTrust.dll
-	// https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatopen
+	// https://learn.microsoft.com/windows/win32/api/mscat/nf-mscat-cryptcatopen
 	[LibraryImport("WinTrust.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr CryptCATOpen(
@@ -79,7 +79,7 @@ internal static partial class WinTrust
 		uint EncodingType); // The encoding type.
 
 	// P/Invoke declaration to import the 'CryptCATEnumerateMember' function from WinTrust.dll
-	// https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatenumeratemember
+	// https://learn.microsoft.com/windows/win32/api/mscat/nf-mscat-cryptcatenumeratemember
 	[LibraryImport("WinTrust.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr CryptCATEnumerateMember(
@@ -87,7 +87,7 @@ internal static partial class WinTrust
 		IntPtr PrevCatalogMember); // Pointer to the previous catalog member.
 
 	// P/Invoke declaration to import the 'CryptCATClose' function from WinTrust.dll
-	// https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatclose
+	// https://learn.microsoft.com/windows/win32/api/mscat/nf-mscat-cryptcatclose
 	[LibraryImport("WinTrust.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr CryptCATClose(IntPtr MainCryptProviderHandle); // Closes the catalog context.
@@ -135,7 +135,7 @@ internal static partial class WinTrust
 	internal static Guid GenericWinTrustVerifyActionGuid = new("{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}");
 
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-winverifytrust
+	// https://learn.microsoft.com/windows/win32/api/wintrust/nf-wintrust-winverifytrust
 	[LibraryImport("wintrust.dll", EntryPoint = "WinVerifyTrust")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	// Set to return a WinVerifyTrustResult enum
@@ -144,7 +144,7 @@ internal static partial class WinTrust
 		ref Guid pgActionID,
 		IntPtr pWVTData);
 
-	// https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-wthelperprovdatafromstatedata
+	// https://learn.microsoft.com/windows/win32/api/wintrust/nf-wintrust-wthelperprovdatafromstatedata
 	[LibraryImport("wintrust.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr WTHelperProvDataFromStateData(IntPtr hStateData);

@@ -334,7 +334,7 @@ internal sealed partial class MainWindow : Window
 		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
 		GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
-		// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
+		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
 		// Make title bar Mica
 		ExtendsContentIntoTitleBar = true;
 
@@ -353,7 +353,7 @@ internal sealed partial class MainWindow : Window
 		// Set the TitleBar title text to the app's display name
 		TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
 
-		// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.settitlebar
+		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.settitlebar
 		// This is required. Without it, the page that has the TabView would make the App Window's TitleBar non-draggable.
 		this.SetTitleBar(AppTitleBar);
 
@@ -973,7 +973,7 @@ internal sealed partial class MainWindow : Window
 			// The "Content" property of the Settings page is null when NavigationView is in "Top" mode since it has no label/content on the UI
 			// That is why we use the "IsSettingsInvoked" property to check for the Settings page click/tap.
 			// Settings' content is also auto translated on different system localizations so this is also useful for those situations.
-			// https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
+			// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
 			if (args.IsSettingsInvoked)
 			{
 				NavView_Navigate(typeof(Pages.Settings), args?.RecommendedNavigationTransitionInfo, null);
@@ -1058,7 +1058,8 @@ internal sealed partial class MainWindow : Window
 					SecondaryButtonText = GlobalVars.Rizz.GetString("AppElevationNotice/Relaunch"),
 					BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
 					BorderThickness = new Thickness(1),
-					XamlRoot = this.Content.XamlRoot
+					XamlRoot = this.Content.XamlRoot,
+					RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 				};
 
 				App.CurrentlyOpenContentDialog = dialog;

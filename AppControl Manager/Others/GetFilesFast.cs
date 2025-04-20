@@ -102,9 +102,9 @@ internal static class FileUtility
 			extensions = appControlExtensions;
 		}
 
-		// https://learn.microsoft.com/en-us/dotnet/api/system.collections.concurrent.blockingcollection-1
-		// https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/when-to-use-a-thread-safe-collection
-		// https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/blockingcollection-overview
+		// https://learn.microsoft.com/dotnet/api/system.collections.concurrent.blockingcollection-1
+		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/when-to-use-a-thread-safe-collection
+		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/blockingcollection-overview
 		using BlockingCollection<FileInfo> bc = [];
 
 		// To store all of the tasks

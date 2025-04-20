@@ -287,7 +287,7 @@
 
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Uid="VersionLabel" FontWeight="Bold" Margin="0,0,5,0" Foreground="Violet"/>
-                                <TextBlock x:Name="RecommendedDriverBlockRulesVersionTextBlock" Text="N/A" Foreground="Violet"/>
+                                <TextBlock x:Name="RecommendedDriverBlockRulesVersionTextBlock" IsTextSelectionEnabled="True" Text="N/A" Foreground="Violet"/>
                             </StackPanel>
 
                         </controls:SettingsCard>

@@ -20,7 +20,7 @@ using System;
 namespace AppControlManager;
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/apps/design/controls/breadcrumbbar#itemssource
+/// https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
 /// Represents an item in the BreadCrumBar's ItemsSource collection
 /// </summary>
 /// <param name="label"></param>

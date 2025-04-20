@@ -245,7 +245,6 @@
                         <customUI:StickyHeaderBehaviorV2/>
                     </interactivity:Interaction.Behaviors>
                     <Grid>
-
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=OneWay}" />
@@ -263,23 +262,21 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth14, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-
-                        <Button x:Uid="PathColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,0,0" Padding="5" Click="{x:Bind ViewModel.SortByPath, Mode=OneWay}" />
-                        <Button x:Uid="SourceColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySource, Mode=OneWay}" />
-                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByIsAuthorized, Mode=OneWay}" />
-                        <Button x:Uid="MatchCriteriaColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByMatchCriteria, Mode=OneWay}" />
-                        <Button x:Uid="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySpecificFileNameLevelMatchCriteria, Mode=OneWay}" />
-                        <Button x:Uid="SignerIDColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerID, Mode=OneWay}" />
-                        <Button x:Uid="SignerNameColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerName, Mode=OneWay}" />
-                        <Button x:Uid="SignerCertRootColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerCertRoot, Mode=OneWay}" />
-                        <Button x:Uid="SignerCertPublisherColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerCertPublisher, Mode=OneWay}" />
-                        <Button x:Uid="SignerScopeColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortBySignerScope, Mode=OneWay}" />
-                        <Button x:Uid="CertSubjectCNColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertSubjectCN, Mode=OneWay}" />
-                        <Button x:Uid="CertIssuerCNColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertIssuerCN, Mode=OneWay}" />
-                        <Button x:Uid="CertNotAfterColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertNotAfter, Mode=OneWay}" />
-                        <Button x:Uid="CertTBSValueColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByCertTBSValue, Mode=OneWay}" />
-                        <Button x:Uid="FilePathColumnHeaderBtn" BorderBrush="Transparent" Background="Transparent" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="14" FontWeight="Bold" Margin="0" Padding="5" Click="{x:Bind ViewModel.SortByFilePath, Mode=OneWay}" />
-
+                        <Button x:Uid="PathColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPath, Mode=OneWay}"/>
+                        <Button x:Uid="SourceColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySource, Mode=OneWay}"/>
+                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsAuthorized, Mode=OneWay}"/>
+                        <Button x:Uid="MatchCriteriaColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByMatchCriteria, Mode=OneWay}"/>
+                        <Button x:Uid="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySpecificFileNameLevelMatchCriteria, Mode=OneWay}"/>
+                        <Button x:Uid="SignerIDColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerID, Mode=OneWay}"/>
+                        <Button x:Uid="SignerNameColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerName, Mode=OneWay}"/>
+                        <Button x:Uid="SignerCertRootColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerCertRoot, Mode=OneWay}"/>
+                        <Button x:Uid="SignerCertPublisherColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerCertPublisher, Mode=OneWay}"/>
+                        <Button x:Uid="SignerScopeColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerScope, Mode=OneWay}"/>
+                        <Button x:Uid="CertSubjectCNColumnHeaderBtn" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertSubjectCN, Mode=OneWay}"/>
+                        <Button x:Uid="CertIssuerCNColumnHeaderBtn" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertIssuerCN, Mode=OneWay}"/>
+                        <Button x:Uid="CertNotAfterColumnHeaderBtn" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertNotAfter, Mode=OneWay}"/>
+                        <Button x:Uid="CertTBSValueColumnHeaderBtn" Grid.Column="13" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertTBSValue, Mode=OneWay}"/>
+                        <Button x:Uid="FilePathColumnHeaderBtn" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByFilePath, Mode=OneWay}"/>
                     </Grid>
                 </Border>
             </ListView.Header>
@@ -421,21 +418,21 @@
                             <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth14, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ParentViewModelSimulationVM.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind Path}" HorizontalAlignment="Left" Grid.Column="0" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind Source}" HorizontalAlignment="Left" Grid.Column="1" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind IsAuthorized}" HorizontalAlignment="Left" Grid.Column="2" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind MatchCriteria}" HorizontalAlignment="Left" Grid.Column="3" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SpecificFileNameLevelMatchCriteria}" HorizontalAlignment="Left" Grid.Column="4" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SignerID}" HorizontalAlignment="Left" Grid.Column="5" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SignerName}" HorizontalAlignment="Left" Grid.Column="6" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SignerCertRoot}" HorizontalAlignment="Left" Grid.Column="7" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SignerCertPublisher}" HorizontalAlignment="Left" Grid.Column="8" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind SignerScope}" HorizontalAlignment="Left" Grid.Column="9" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind CertSubjectCN}" HorizontalAlignment="Left" Grid.Column="10" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind CertIssuerCN}" HorizontalAlignment="Left" Grid.Column="11" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind CertNotAfter}" HorizontalAlignment="Left" Grid.Column="12" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind CertTBSValue}" HorizontalAlignment="Left" Grid.Column="13" Margin="0,2,2,2"/>
-                        <TextBlock Text="{x:Bind FilePath}" HorizontalAlignment="Left" Grid.Column="14" Margin="0,2,2,2"/>
+                        <TextBlock Text="{x:Bind Path}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind Source}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind IsAuthorized}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind MatchCriteria}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind SpecificFileNameLevelMatchCriteria}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind SignerID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock Text="{x:Bind SignerName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock Text="{x:Bind SignerCertRoot}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock Text="{x:Bind SignerCertPublisher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock Text="{x:Bind SignerScope}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock Text="{x:Bind CertSubjectCN}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                        <TextBlock Text="{x:Bind CertIssuerCN}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                        <TextBlock Text="{x:Bind CertNotAfter}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                        <TextBlock Text="{x:Bind CertTBSValue}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                        <TextBlock Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

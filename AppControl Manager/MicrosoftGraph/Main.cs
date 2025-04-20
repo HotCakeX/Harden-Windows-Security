@@ -96,14 +96,14 @@ internal static class Main
 	private static readonly Dictionary<AuthenticationContext, string[]> Scopes = new() {
 
 		// Scopes required to create and assign device configurations for Intune
-		// https://learn.microsoft.com/en-us/graph/permissions-reference
+		// https://learn.microsoft.com/graph/permissions-reference
 		{ AuthenticationContext.Intune, [
 		"Group.Read.All", // For Groups enumeration
 		"DeviceManagementConfiguration.ReadWrite.All" // For uploading policy
 		]},
 
 		// Scopes required to retrieve MDE Advanced Hunting results
-		// https://learn.microsoft.com/en-us/graph/api/security-security-runhuntingquery
+		// https://learn.microsoft.com/graph/api/security-security-runhuntingquery
 		{AuthenticationContext.MDEAdvancedHunting,  ["ThreatHunting.Read.All"]}
 
 	};
@@ -373,7 +373,7 @@ DeviceEvents
 
 		File.Copy(policyPath, tempPolicyPath, true);
 
-		// https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-app-control-policies-with-custom-oma-uri
+		// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-app-control-policies-with-custom-oma-uri
 		string base64String = ConvertBinFileToBase64(tempPolicyPath, 350000);
 
 		// Call Microsoft Graph API to create the custom policy
@@ -447,7 +447,7 @@ DeviceEvents
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/mem/intune/configuration/custom-settings-windows-10
+	/// https://learn.microsoft.com/mem/intune/configuration/custom-settings-windows-10
 	/// </summary>
 	/// <param name="accessToken"></param>
 	/// <param name="policyData"></param>
@@ -461,7 +461,7 @@ DeviceEvents
 		string displayNameText = !string.IsNullOrWhiteSpace(policyName) ? $"{policyName} App Control Policy" : "App Control Policy";
 
 		// Making sure the policy ID doesn't have the curly brackets
-		// https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-custom-app-control-policies-on-windows-10-1903
+		// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-custom-app-control-policies-on-windows-10-1903
 		policyID = policyID.Trim('{', '}');
 
 		// Create the policy object

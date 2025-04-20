@@ -25,7 +25,7 @@ internal static partial class MeowParser
 {
 
 	// P/Invoke declaration to import the 'BCryptOpenAlgorithmProvider' function from 'bcrypt.dll'.
-	// https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
 	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptOpenAlgorithmProvider", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int BCryptOpenAlgorithmProvider(
@@ -36,13 +36,13 @@ internal static partial class MeowParser
 
 	// P/Invoke declaration to import the 'BCryptCloseAlgorithmProvider' function from 'bcrypt.dll'.
 	// Releases the algorithm handle acquired by 'BCryptOpenAlgorithmProvider'.
-	// https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
 	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptCloseAlgorithmProvider", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int BCryptCloseAlgorithmProvider(IntPtr hAlgorithm, uint dwFlags);
 
 	// Defines a structure with sequential layout to match the native structure.
-	// https://learn.microsoft.com/en-us/windows/win32/api/mscat/ns-mscat-cryptcatmember
+	// https://learn.microsoft.com/windows/win32/api/mscat/ns-mscat-cryptcatmember
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 	internal struct MeowMemberCrypt
 	{

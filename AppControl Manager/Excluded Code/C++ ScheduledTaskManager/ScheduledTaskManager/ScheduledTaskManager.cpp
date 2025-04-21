@@ -381,6 +381,9 @@ static HRESULT AddTriggerToCollection(ITriggerCollection* pTriggers, const Trigg
 				return hr;
 			}
 		}
+
+		// If we don't specify repeat_duration then it will mean repeat the task indefinitely.
+		// This option appears as "for a duration of" in the Task Scheduler GUI.
 		if (trig.kv.count(L"repeat_duration")) {
 			hr = pRep->put_Duration(_bstr_t(trig.kv.at(L"repeat_duration").c_str()));
 			if (FAILED(hr)) {

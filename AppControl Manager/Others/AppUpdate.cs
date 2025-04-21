@@ -17,6 +17,7 @@
 
 using System;
 using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AppControlManager.Others;
 
@@ -32,6 +33,8 @@ internal static class AppUpdate
 	/// Includes details about the availability status and the version.
 	/// </summary>
 	internal static event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
+
+	private static ViewModels.UpdateVM UpdateVM { get; } = App.AppHost.Services.GetRequiredService<ViewModels.UpdateVM>();
 
 	/// <summary>
 	/// Downloads the version file from GitHub,
@@ -52,6 +55,17 @@ internal static class AppUpdate
 			null,
 			new UpdateAvailableEventArgs(isUpdateAvailable, onlineAvailableVersion)
 		);
+
+		// If a new version is available
+		if (isUpdateAvailable)
+		{
+			// Set the text for the button in the update page
+			UpdateVM.UpdateButtonContent = $"Install version {versionsResponse.ToString().Trim()}";
+		}
+		else
+		{
+			Logger.Write("No new version of the AppControl Manager is available.");
+		}
 
 		return new UpdateCheckResponse(
 			isUpdateAvailable,

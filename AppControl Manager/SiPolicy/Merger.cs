@@ -317,7 +317,6 @@ internal static class Merger
 	}
 
 
-
 	/// <summary>
 	/// Creates an App Control policy from the deserialized data
 	/// </summary>
@@ -494,7 +493,6 @@ internal static class Merger
 	}
 
 
-
 	/// <summary>
 	/// Helper method to de-duplicate EKUs
 	/// </summary>
@@ -590,8 +588,6 @@ internal static class Merger
 		// Compare sets of EKU values
 		return ekuValuesX.SetEquals(ekuValuesY);
 	}
-
-
 
 
 	/// <summary>
@@ -714,7 +710,6 @@ internal static class Merger
 	}
 
 
-
 	/// <summary>
 	/// Helper method to check if two strings are both whitespace or exactly equal
 	/// ✅ " " and " " → Equal
@@ -743,7 +738,6 @@ internal static class Merger
 
 		return false; // Otherwise, they are not equal
 	}
-
 
 
 	internal const long modulus = 0x7FFFFFFF; // A prime modulus to prevent overflow and ensure a non-negative int.

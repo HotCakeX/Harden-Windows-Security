@@ -28,11 +28,12 @@
             </controls:WrapPanel>
 
             <InfoBar
-                x:Name="MainInfoBar"
-                IsOpen="False"
+                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"                
+                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
+                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"                
+                Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
                 IsIconVisible="True"
-                IsClosable="False"
-                Title="Status"
                 Grid.Row="1">
             </InfoBar>
 
@@ -44,11 +45,11 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"
-                   x:Name="BrowseForXMLSettingsCard"
-                   IsClickEnabled="True" Click="{x:Bind ValidateXML}" IsActionIconVisible="False">
+                <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"                   
+                   IsClickEnabled="True"
+                   IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ValidateXML}" IsActionIconVisible="False">
 
-                    <Button x:Uid="BrowseButton" x:Name="BrowseForXMLButton" Click="{x:Bind ValidateXML}" />
+                    <Button x:Uid="BrowseButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ValidateXML}" />
 
                 </controls:SettingsCard>
 

@@ -49,7 +49,7 @@ internal sealed partial class MergePolicies : Page
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 
 		this.DataContext = ViewModel;
 	}

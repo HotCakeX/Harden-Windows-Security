@@ -445,15 +445,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 
 
 	/// <summary>
-	/// File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
-	/// </summary>
-	private void ScanLevelComboBoxSettingsCard_Click()
-	{
-		ScanLevelComboBox.IsDropDownOpen = !ScanLevelComboBox.IsDropDownOpen;
-	}
-
-
-	/// <summary>
 	/// Deploy policy Toggle Button
 	/// </summary>
 	/// <param name="sender"></param>
@@ -1454,7 +1445,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	}
 
 
-
 	/// <summary>
 	/// Path to the ISG Supplemental policy XML file
 	/// </summary>
@@ -1844,7 +1834,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
-
 
 
 	/// <summary>
@@ -2410,7 +2399,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	}
 
 
-
 	/// <summary>
 	/// Path to the PFN Supplemental policy XML file
 	/// </summary>
@@ -2685,7 +2673,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		// Show the dialog
 		_ = await customDialog.ShowAsync();
 	}
-
 
 
 	/// <summary>

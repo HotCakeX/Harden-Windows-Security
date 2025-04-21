@@ -28,12 +28,10 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 {
 	// Used to store the scan results and as the source for the results ListViews
-	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
 	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults
 	{
-		get => _filesAndFoldersScanResults;
-		set => SetProperty(_filesAndFoldersScanResults, value, newValue => _filesAndFoldersScanResults = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = [];
 
 	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
 
@@ -41,34 +39,25 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private Visibility _FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility
 	{
-		get => _FilesAndFoldersInfoBarActionButtonVisibility;
-		set => SetProperty(_FilesAndFoldersInfoBarActionButtonVisibility, value, newValue => _FilesAndFoldersInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private Visibility _PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility PFNInfoBarActionButtonVisibility
 	{
-		get => _PFNInfoBarActionButtonVisibility;
-		set => SetProperty(_PFNInfoBarActionButtonVisibility, value, newValue => _PFNInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private Visibility _CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility
 	{
-		get => _CustomFilePathRulesInfoBarActionButtonVisibility;
-		set => SetProperty(_CustomFilePathRulesInfoBarActionButtonVisibility, value, newValue => _CustomFilePathRulesInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-
-	private string _TotalCountOfTheFilesTextBox = "Total files: 0";
 	internal string TotalCountOfTheFilesTextBox
 	{
-		get => _TotalCountOfTheFilesTextBox;
-		set => SetProperty(_TotalCountOfTheFilesTextBox, value, newValue => _TotalCountOfTheFilesTextBox = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = "Total files: 0";
 
 	#endregion
 
@@ -76,130 +65,94 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS
 
 	// Properties to hold each columns' width.
-	private GridLength _columnWidth1;
 	internal GridLength ColumnWidth1
 	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth2;
 	internal GridLength ColumnWidth2
 	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth3;
 	internal GridLength ColumnWidth3
 	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth4;
 	internal GridLength ColumnWidth4
 	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth5;
 	internal GridLength ColumnWidth5
 	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth6;
 	internal GridLength ColumnWidth6
 	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth7;
 	internal GridLength ColumnWidth7
 	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth8;
 	internal GridLength ColumnWidth8
 	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth9;
 	internal GridLength ColumnWidth9
 	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth10;
 	internal GridLength ColumnWidth10
 	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth11;
 	internal GridLength ColumnWidth11
 	{
-		get => _columnWidth11;
-		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth12;
 	internal GridLength ColumnWidth12
 	{
-		get => _columnWidth12;
-		set { _columnWidth12 = value; OnPropertyChanged(nameof(ColumnWidth12)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth13;
 	internal GridLength ColumnWidth13
 	{
-		get => _columnWidth13;
-		set { _columnWidth13 = value; OnPropertyChanged(nameof(ColumnWidth13)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth14;
 	internal GridLength ColumnWidth14
 	{
-		get => _columnWidth14;
-		set { _columnWidth14 = value; OnPropertyChanged(nameof(ColumnWidth14)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth15;
 	internal GridLength ColumnWidth15
 	{
-		get => _columnWidth15;
-		set { _columnWidth15 = value; OnPropertyChanged(nameof(ColumnWidth15)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth16;
 	internal GridLength ColumnWidth16
 	{
-		get => _columnWidth16;
-		set { _columnWidth16 = value; OnPropertyChanged(nameof(ColumnWidth16)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth17;
 	internal GridLength ColumnWidth17
 	{
-		get => _columnWidth17;
-		set { _columnWidth17 = value; OnPropertyChanged(nameof(ColumnWidth17)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth18;
 	internal GridLength ColumnWidth18
 	{
-		get => _columnWidth18;
-		set { _columnWidth18 = value; OnPropertyChanged(nameof(ColumnWidth18)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>

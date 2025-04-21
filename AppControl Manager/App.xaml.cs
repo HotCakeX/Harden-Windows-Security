@@ -153,6 +153,8 @@ public partial class App : Application
 			_ = services.AddSingleton<MainWindowVM>();
 			_ = services.AddSingleton<CreatePolicyVM>();
 			_ = services.AddSingleton<DeploymentVM>();
+			_ = services.AddSingleton<UpdateVM>();
+			_ = services.AddSingleton<ValidatePolicyVM>();
 
 			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
 			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
@@ -214,7 +216,6 @@ public partial class App : Application
 
 		#endregion
 	}
-
 
 
 	/*
@@ -486,7 +487,8 @@ public partial class App : Application
 						BorderThickness = new Thickness(1),
 						Content = $"An unexpected error has occurred:\n{ex.Message}",
 						CloseButtonText = "OK",
-						XamlRoot = m_window.Content.XamlRoot // Ensure dialog is attached to the main window
+						XamlRoot = m_window.Content.XamlRoot, // Ensure dialog is attached to the main window
+						RequestedTheme = string.Equals(Settings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(Settings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 					};
 
 					// Show the dialog

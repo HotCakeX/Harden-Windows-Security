@@ -523,7 +523,9 @@ static void DeleteTasksByName(ITaskFolder* pFolder, const std::wstring& name, in
 {
 	// 1. Delete tasks with the specified name in this folder
 	IRegisteredTaskCollection* pTasks = nullptr;
-	HRESULT hr = pFolder->GetTasks(0, &pTasks);
+
+	// Get the tasks (including hidden)
+	HRESULT hr = pFolder->GetTasks(TASK_ENUM_HIDDEN, &pTasks);
 	if (FAILED(hr)) {
 		_com_error err(hr);
 		std::wcerr << L"[Error] GetTasks failed: 0x" << std::hex << hr << L" — " << err.ErrorMessage() << std::endl;

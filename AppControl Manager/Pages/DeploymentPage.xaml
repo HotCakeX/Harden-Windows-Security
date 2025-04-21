@@ -12,6 +12,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
@@ -37,7 +38,7 @@
 
             <InfoBar Grid.Row="1"
                 Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
-                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=OneWay}"
+                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
@@ -64,10 +65,10 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard
+                        <customUI:SettingsCardV2
                             Description="Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions."
                             Header="Entra ID Sign In"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}" IsClickEnabled="False" IsActionIconVisible="False">
+                            HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}" IsClickEnabled="True" IsActionIconVisible="False">
 
                             <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 
@@ -377,7 +378,7 @@
                                 </Button.Flyout>
                             </Button>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV2>
 
                         <controls:SettingsCard
                         Description="Select the security group(s) to assign to the policy in Intune"

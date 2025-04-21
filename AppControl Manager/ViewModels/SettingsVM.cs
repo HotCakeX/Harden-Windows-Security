@@ -39,18 +39,14 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal bool IsElevated => App.IsElevated;
 #pragma warning restore CA1822
 
-	private string? _CertCNsAutoSuggestBoxText;
 	internal string? CertCNsAutoSuggestBoxText
 	{
-		get => _CertCNsAutoSuggestBoxText;
-		set => SetProperty(_CertCNsAutoSuggestBoxText, value, newValue => _CertCNsAutoSuggestBoxText = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _CertCNAutoSuggestBoxIsSuggestionListOpen;
 	internal bool CertCNAutoSuggestBoxIsSuggestionListOpen
 	{
-		get => _CertCNAutoSuggestBoxIsSuggestionListOpen;
-		set => SetProperty(_CertCNAutoSuggestBoxIsSuggestionListOpen, value, newValue => _CertCNAutoSuggestBoxIsSuggestionListOpen = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	// Set the version in the settings card to the current app version

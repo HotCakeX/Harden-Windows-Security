@@ -348,8 +348,6 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 		// Instantiate the Content Dialog
 		SigningDetailsDialog customDialog = new();
 
-		App.CurrentlyOpenContentDialog = customDialog;
-
 		// Show the dialog and await its result
 		ContentDialogResult result = await customDialog.ShowAsync();
 
@@ -682,7 +680,6 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 	}
 
 
-
 	/// <summary>
 	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
 	/// the ListView with group names.
@@ -784,7 +781,6 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 	}
 
 
-
 	private void BrowseForXMLPolicyFilesButton_RightTapped()
 	{
 		if (!BrowseForXMLPolicyFilesButton_Flyout.IsOpen)
@@ -846,8 +842,6 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			}
 		}
 	}
-
-
 
 
 	private void BrowseForXMLPolicesButton_Holding(object sender, HoldingRoutedEventArgs e)
@@ -971,8 +965,6 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 
 		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
 	}
-
-
 
 
 	/// <summary>

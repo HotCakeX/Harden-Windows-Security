@@ -28,48 +28,35 @@ internal sealed partial class DeploymentVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private Visibility _MainInfoBarVisibility = Visibility.Collapsed;
 	internal Visibility MainInfoBarVisibility
 	{
-		get => _MainInfoBarVisibility;
-		set => SetProperty(_MainInfoBarVisibility, value, newValue => _MainInfoBarVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private bool _MainInfoBarIsOpen;
 	internal bool MainInfoBarIsOpen
 	{
-		get => _MainInfoBarIsOpen;
-		set => SetProperty(_MainInfoBarIsOpen, value, newValue => _MainInfoBarIsOpen = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string? _MainInfoBarMessage;
 	internal string? MainInfoBarMessage
 	{
-		get => _MainInfoBarMessage;
-		set => SetProperty(_MainInfoBarMessage, value, newValue => _MainInfoBarMessage = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private InfoBarSeverity _MainInfoBarSeverity = InfoBarSeverity.Informational;
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get => _MainInfoBarSeverity;
-		set => SetProperty(_MainInfoBarSeverity, value, newValue => _MainInfoBarSeverity = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = InfoBarSeverity.Informational;
 
-	private bool _MainInfoBarIsClosable;
 	internal bool MainInfoBarIsClosable
 	{
-		get => _MainInfoBarIsClosable;
-		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-
-	private string _LocalOnlineStatusText = "Local Deployment is Currently Active";
 	internal string LocalOnlineStatusText
 	{
-		get => _LocalOnlineStatusText;
-		set => SetProperty(_LocalOnlineStatusText, value, newValue => _LocalOnlineStatusText = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = "Local Deployment is Currently Active";
 
 
 	/// <summary>

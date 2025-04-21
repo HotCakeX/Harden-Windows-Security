@@ -34,7 +34,7 @@
 
         <InfoBar Grid.Row="1"
          Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
-         IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=OneWay}"
+         IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
          Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
          Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
          IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
@@ -226,19 +226,13 @@
         </Border>
 
 
-        <ListView x:Name="SimOutputListView"
+        <customUI:ListViewV2 x:Name="SimOutputListView"
+                RegistryKey="Simulation"
                 ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
                 Grid.Row="3"
-                SelectionMode="Extended"
-                ScrollViewer.HorizontalScrollMode="Enabled"
-                ScrollViewer.IsHorizontalRailEnabled="True"
-                ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                ShowsScrollingPlaceholders="True"
-                ScrollViewer.VerticalScrollBarVisibility="Visible"
-                SelectionChanged="SimOutputListView_SelectionChanged"
-                ContainerContentChanging="ListView_ContainerContentChanging">
+                SelectionMode="Extended">
 
-            <ListView.Header>
+            <customUI:ListViewV2.Header>
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
@@ -279,10 +273,10 @@
                         <Button x:Uid="FilePathColumnHeaderBtn" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByFilePath, Mode=OneWay}"/>
                     </Grid>
                 </Border>
-            </ListView.Header>
+            </customUI:ListViewV2.Header>
 
             <!-- DataTemplate for ListView items -->
-            <ListView.ItemTemplate>
+            <customUI:ListViewV2.ItemTemplate>
                 <DataTemplate x:DataType="others:SimulationOutput">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
@@ -435,8 +429,8 @@
                         <TextBlock Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
                     </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
 
     </Grid>
 </Page>

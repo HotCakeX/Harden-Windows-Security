@@ -78,7 +78,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.14.0</FileVersion>
+    <FileVersion>2.0.15.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -108,6 +108,7 @@
 
     <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
     <NoWarn>IL3000</NoWarn>
+    <LangVersion>preview</LangVersion>
 
   </PropertyGroup>
 
@@ -231,7 +232,6 @@
   </ItemGroup>
 
 
-
   <!--
   Not needed for now
 
@@ -266,8 +266,8 @@
     <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.70.2" />
-    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.70.2" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.71.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.71.1" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -282,7 +282,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.8.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.9.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
@@ -327,6 +327,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="CppInterop\ScheduledTaskManager-ARM64.exe" />
+    <None Remove="CppInterop\ScheduledTaskManager-x64.exe" />
     <None Remove="Pages\AllowNewAppsDataGrid.xaml" />
     <None Remove="Pages\AllowNewAppsEventLogsDataGrid.xaml" />
     <None Remove="Pages\AllowNewAppsLocalFilesDataGrid.xaml" />
@@ -356,10 +358,8 @@
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
     <None Remove="Pages\ViewFileCertificates.xaml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
-    <None Remove="Resources\DriversBlockListAutoUpdaterScheduledTask.ps1" />
     <None Remove="Resources\EmptyPolicy.xml" />
     <None Remove="Resources\ISGBasedSupplementalPolicy.xml" />
-    <None Remove="Resources\SnapBackGuaranteeScheduledTask.ps1" />
     <None Remove="Resources\StrictKernelMode.xml" />
     <None Remove="Resources\StrictKernelMode_NoFlightRoots.xml" />
     <None Remove="RustInterop\DeviceGuardWMIRetriever-ARM64.exe" />
@@ -378,19 +378,19 @@
     <Content Include="CppInterop\ManageDefender-x64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
+    <Content Include="CppInterop\ScheduledTaskManager-ARM64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\DriversBlockListAutoUpdaterScheduledTask.ps1">
+    <Content Include="CppInterop\ScheduledTaskManager-x64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\EmptyPolicy.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\ISGBasedSupplementalPolicy.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\SnapBackGuaranteeScheduledTask.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\StrictKernelMode.xml">

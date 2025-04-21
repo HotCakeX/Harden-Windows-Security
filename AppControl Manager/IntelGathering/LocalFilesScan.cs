@@ -389,7 +389,6 @@ internal static class LocalFilesScan
 	}
 
 
-
 	/// <summary>
 	/// Gets the EKU OIDs of the leaf certificates of all of the signers of a signed file, the ones that App Control policy uses for EKU-based authorization.
 	/// Only the leaf certificates have EKUs, others such as root or intermediate have KUs only.

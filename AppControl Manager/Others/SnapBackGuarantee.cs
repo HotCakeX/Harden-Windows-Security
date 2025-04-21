@@ -174,10 +174,16 @@ internal static class SnapBackGuarantee
 		*/
 
 
-		// TODO: use a Native AOT compatible way that doesn't rely on System.Management
+		string command = """
+/c ""C:\Program Files\AppControl Manager\EnforcedModeSnapBack.cmd""
+""";
 
-		// Execute the script using PowerShell
-		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.SnapBackGuaranteeScheduledTaskScriptFilePath}\"");
+
+		string args = $"""
+--name "EnforcedModeSnapBack" --exe "cmd.exe" --arg "{command}" --description "Created by AppControl Manager - Allow New Apps page - Ensures that the enforced mode policy will be deployed in case of a sudden power loss or system restart" --author "AppControl Manager" --logon 2 --runlevel 1 --sid "S-1-5-18" --allowstartifonbatteries --dontstopifgoingonbatteries --startwhenavailable --restartcount 2 --restartinterval PT3M --priority 0 --trigger "type=logon;" --useunifiedschedulingengine true --executiontimelimit PT4M --multipleinstancespolicy 2 --allowhardterminate 1 --hidden
+""";
+
+		_ = ProcessStarter.RunCommand(GlobalVars.ScheduledTaskManagerProcessPath, args);
 
 
 		// Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
@@ -205,9 +211,11 @@ del ""%~f0""
 	/// </summary>
 	internal static void Remove()
 	{
-		string script = "Get-ScheduledTask | Where-Object { $_.TaskName -eq 'EnforcedModeSnapBack' } | ForEach-Object { Unregister-ScheduledTask -TaskName $_.TaskName -Confirm:$false }";
+		string arg = """
+--delete --name EnforcedModeSnapBack
+""";
 
-		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"");
+		_ = ProcessStarter.RunCommand(GlobalVars.ScheduledTaskManagerProcessPath, arg);
 
 		if (Path.Exists(savePath))
 		{

@@ -37,97 +37,56 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private HashSet<string> _otherPolicies = [];
 	internal HashSet<string> OtherPolicies
 	{
-		get => _otherPolicies;
-		set => SetProperty(_otherPolicies, value, newValue => _otherPolicies = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = [];
 
-	private string? _OtherPoliciesString;
 	internal string? OtherPoliciesString
 	{
-		get => _OtherPoliciesString;
-		set => SetProperty(_OtherPoliciesString, value, newValue => _OtherPoliciesString = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _shouldDeploy;
 	internal bool ShouldDeploy
 	{
-		get => _shouldDeploy;
-		set => SetProperty(_shouldDeploy, value, newValue => _shouldDeploy = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	internal bool ShouldDeployToggleState = App.IsElevated;
 
-	private string? _mainPolicy;
 	internal string? MainPolicy
 	{
-		get => _mainPolicy;
-		set => SetProperty(_mainPolicy, value, newValue => _mainPolicy = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _MergeButtonState = true;
 	internal bool MergeButtonState
 	{
-		get => _MergeButtonState;
-		set => SetProperty(_MergeButtonState, value, newValue => _MergeButtonState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private bool _MergeButtonTeachingTipIsOpen;
-	internal bool MergeButtonTeachingTipIsOpen
-	{
-		get => _MergeButtonTeachingTipIsOpen;
-		set => SetProperty(_MergeButtonTeachingTipIsOpen, value, newValue => _MergeButtonTeachingTipIsOpen = newValue);
-	}
-
-	private string? _MergeButtonTeachingTipTitle;
-	internal string? MergeButtonTeachingTipTitle
-	{
-		get => _MergeButtonTeachingTipTitle;
-		set => SetProperty(_MergeButtonTeachingTipTitle, value, newValue => _MergeButtonTeachingTipTitle = newValue);
-	}
-
-	private string? _MergeButtonTeachingTipSubTitle;
-	internal string? MergeButtonTeachingTipSubTitle
-	{
-		get => _MergeButtonTeachingTipSubTitle;
-		set => SetProperty(_MergeButtonTeachingTipSubTitle, value, newValue => _MergeButtonTeachingTipSubTitle = newValue);
-	}
-
-	private bool _PolicyMergerInfoBarIsOpen;
 	internal bool PolicyMergerInfoBarIsOpen
 	{
-		get => _PolicyMergerInfoBarIsOpen;
-		set => SetProperty(_PolicyMergerInfoBarIsOpen, value, newValue => _PolicyMergerInfoBarIsOpen = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string? _PolicyMergerInfoBarMessage;
 	internal string? PolicyMergerInfoBarMessage
 	{
-		get => _PolicyMergerInfoBarMessage;
-		set => SetProperty(_PolicyMergerInfoBarMessage, value, newValue => _PolicyMergerInfoBarMessage = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private Visibility _MergeProgressRingVisibility = Visibility.Collapsed;
 	internal Visibility MergeProgressRingVisibility
 	{
-		get => _MergeProgressRingVisibility;
-		set => SetProperty(_MergeProgressRingVisibility, value, newValue => _MergeProgressRingVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private InfoBarSeverity _PolicyMergerInfoBarSeverity;
 	internal InfoBarSeverity PolicyMergerInfoBarSeverity
 	{
-		get => _PolicyMergerInfoBarSeverity;
-		set => SetProperty(_PolicyMergerInfoBarSeverity, value, newValue => _PolicyMergerInfoBarSeverity = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _PolicyMergerInfoBarIsClosable;
 	internal bool PolicyMergerInfoBarIsClosable
 	{
-		get => _PolicyMergerInfoBarIsClosable;
-		set => SetProperty(_PolicyMergerInfoBarIsClosable, value, newValue => _PolicyMergerInfoBarIsClosable = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
@@ -139,42 +98,34 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	internal async void MergeButton_Click()
 	{
 
-		// Close the teaching tip if it's open when user presses the button
-		// it will be opened again if necessary
-		MergeButtonTeachingTipIsOpen = false;
-
 		if (string.IsNullOrWhiteSpace(MainPolicy))
 		{
-			MergeButtonTeachingTipIsOpen = true;
-			MergeButtonTeachingTipTitle = GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicyXML");
-			MergeButtonTeachingTipSubTitle = GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicySubtitle");
+			PolicyMergerInfoBarIsOpen = true;
+			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicySubtitle");
+			PolicyMergerInfoBarIsClosable = true;
+			PolicyMergerInfoBarSeverity = InfoBarSeverity.Warning;
 			return;
 		}
 
 		if (OtherPolicies.Count is 0)
 		{
-			MergeButtonTeachingTipIsOpen = true;
-			MergeButtonTeachingTipTitle = GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPolicies");
-			MergeButtonTeachingTipSubTitle = GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPoliciesSubtitle");
+			PolicyMergerInfoBarIsOpen = true;
+			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPoliciesSubtitle");
+			PolicyMergerInfoBarIsClosable = true;
+			PolicyMergerInfoBarSeverity = InfoBarSeverity.Warning;
 			return;
 		}
-
 
 		bool errorsOccurred = false;
 
 		try
 		{
-
-			PolicyMergerInfoBarIsClosable = false;
-
 			MergeButtonState = false;
-
-			PolicyMergerInfoBarIsOpen = true;
-
-			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_MergingMessage");
-
 			MergeProgressRingVisibility = Visibility.Visible;
 
+			PolicyMergerInfoBarIsOpen = true;
+			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_MergingMessage");
+			PolicyMergerInfoBarIsClosable = false;
 			PolicyMergerInfoBarSeverity = InfoBarSeverity.Informational;
 
 			await Task.Run(() =>

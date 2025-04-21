@@ -32,7 +32,7 @@ namespace AppControlManager.CustomUIElements;
 
 // https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
 
-internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
+internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 {
 
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
@@ -59,10 +59,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialog
 	internal SigningDetailsDialogForRemoval(List<string?> currentlyDeployedBasePolicyIDs, string idBeingRemoved)
 	{
 		this.InitializeComponent();
-
-		XamlRoot = App.MainWindow?.Content.XamlRoot;
-
-		this.RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
 
 		// Populate the AutoSuggestBox with possible certificate common names available on the system
 		FetchLatestCertificateCNs();

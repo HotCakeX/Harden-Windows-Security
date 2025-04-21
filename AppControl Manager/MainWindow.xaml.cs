@@ -401,17 +401,6 @@ internal sealed partial class MainWindow : Window
 
 						// Start the update check
 						UpdateCheckResponse updateCheckResponse = AppUpdate.Check();
-
-						// If a new version is available
-						if (updateCheckResponse.IsNewVersionAvailable)
-						{
-							// Set the text for the button in the update page
-							GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
-						}
-						else
-						{
-							Logger.Write("No new version of the AppControl Manager is available.");
-						}
 					}
 				}
 				catch (Exception ex)
@@ -653,7 +642,6 @@ internal sealed partial class MainWindow : Window
 	}
 
 
-
 	/// <summary>
 	/// Event handler to run at Window launch to restore its size to the one before closing
 	/// </summary>
@@ -696,7 +684,6 @@ internal sealed partial class MainWindow : Window
 		return AppWindow.GetFromWindowId(windowId);
 	}
 	*/
-
 
 
 	/// <summary>
@@ -1050,19 +1037,13 @@ internal sealed partial class MainWindow : Window
 				panel.Children.Add(extraInfoCheckBox);
 
 				// Create and configure the ContentDialog.
-				ContentDialog dialog = new()
+				CustomUIElements.ContentDialogV2 dialog = new()
 				{
 					Title = GlobalVars.Rizz.GetString("AppElevationNotice/Title"),
 					Content = panel,
 					CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
-					SecondaryButtonText = GlobalVars.Rizz.GetString("AppElevationNotice/Relaunch"),
-					BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
-					BorderThickness = new Thickness(1),
-					XamlRoot = this.Content.XamlRoot,
-					RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
+					SecondaryButtonText = GlobalVars.Rizz.GetString("AppElevationNotice/Relaunch")
 				};
-
-				App.CurrentlyOpenContentDialog = dialog;
 
 				// Show the dialog and wait for user response
 				ContentDialogResult result = await dialog.ShowAsync();
@@ -1134,7 +1115,6 @@ internal sealed partial class MainWindow : Window
 				}
 			}
 		}
-
 
 
 		// Play a sound

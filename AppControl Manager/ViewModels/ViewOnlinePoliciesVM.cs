@@ -74,96 +74,69 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private Visibility _MainInfoBarVisibility = Visibility.Collapsed;
 	internal Visibility MainInfoBarVisibility
 	{
-		get => _MainInfoBarVisibility;
-		set => SetProperty(_MainInfoBarVisibility, value, newValue => _MainInfoBarVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private bool _MainInfoBarIsOpen;
 	internal bool MainInfoBarIsOpen
 	{
-		get => _MainInfoBarIsOpen;
-		set => SetProperty(_MainInfoBarIsOpen, value, newValue => _MainInfoBarIsOpen = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string? _MainInfoBarMessage;
 	internal string? MainInfoBarMessage
 	{
-		get => _MainInfoBarMessage;
-		set => SetProperty(_MainInfoBarMessage, value, newValue => _MainInfoBarMessage = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private InfoBarSeverity _MainInfoBarSeverity = InfoBarSeverity.Informational;
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get => _MainInfoBarSeverity;
-		set => SetProperty(_MainInfoBarSeverity, value, newValue => _MainInfoBarSeverity = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = InfoBarSeverity.Informational;
 
-	private bool _MainInfoBarIsClosable;
 	internal bool MainInfoBarIsClosable
 	{
-		get => _MainInfoBarIsClosable;
-		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-
-	private bool _ListViewState = true;
 	internal bool ListViewState
 	{
-		get => _ListViewState;
-		set => SetProperty(_ListViewState, value, newValue => _ListViewState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private bool _SearchTextBoxState = true;
 	internal bool SearchTextBoxState
 	{
-		get => _SearchTextBoxState;
-		set => SetProperty(_SearchTextBoxState, value, newValue => _SearchTextBoxState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private bool _RetrievePoliciesButtonState;
 	internal bool RetrievePoliciesButtonState
 	{
-		get => _RetrievePoliciesButtonState;
-		set => SetProperty(_RetrievePoliciesButtonState, value, newValue => _RetrievePoliciesButtonState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private CiPolicyInfo? _ListViewSelectedPolicy;
 	internal CiPolicyInfo? ListViewSelectedPolicy
 	{
-		get => _ListViewSelectedPolicy;
-		set => SetProperty(_ListViewSelectedPolicy, value, newValue => _ListViewSelectedPolicy = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private int _ListViewSelectedIndex;
 	internal int ListViewSelectedIndex
 	{
-		get => _ListViewSelectedIndex;
-		set => SetProperty(_ListViewSelectedIndex, value, newValue => _ListViewSelectedIndex = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string _PoliciesCountTextBox = "Number of Policies: 0";
 	internal string PoliciesCountTextBox
 	{
-		get => _PoliciesCountTextBox;
-		set => SetProperty(_PoliciesCountTextBox, value, newValue => _PoliciesCountTextBox = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = "Number of Policies: 0";
 
-	private string? _SearchBoxTextBox;
 	internal string? SearchBoxTextBox
 	{
-		get => _SearchBoxTextBox;
-		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _RemovePolicyButtonState;
 	internal bool RemovePolicyButtonState
 	{
-		get => _RemovePolicyButtonState;
-		set => SetProperty(_RemovePolicyButtonState, value, newValue => _RemovePolicyButtonState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
@@ -176,64 +149,41 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 
 	#region Properties to hold each columns' width.
-	private GridLength _columnWidth1;
 	internal GridLength ColumnWidth1
 	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth2;
 	internal GridLength ColumnWidth2
 	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth3;
 	internal GridLength ColumnWidth3
 	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth4;
 	internal GridLength ColumnWidth4
 	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth5;
 	internal GridLength ColumnWidth5
 	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth6;
 	internal GridLength ColumnWidth6
 	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
 
 
-	internal async void DeployedPolicies_SelectionChanged()
+	internal void DeployedPolicies_SelectionChanged()
 	{
-
-		// Check if we need to skip this event.
-		if (_skipSelectionChangedCount > 0)
-		{
-			_skipSelectionChangedCount--;
-			return;
-		}
-
-		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: Pages.ViewOnlinePolicies.Instance.ListViewElement, listView: Pages.ViewOnlinePolicies.Instance.ListViewElement, index: ListViewSelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
-
-
 		if (ListViewSelectedPolicy is null)
 		{
 			return;
@@ -287,7 +237,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		ColumnWidth5 = new GridLength(maxWidth5);
 		ColumnWidth6 = new GridLength(maxWidth6);
 	}
-
 
 
 	/// <summary>
@@ -444,16 +393,14 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	private async void Sort(SortColumnEnum newSortColumn)
 	{
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.ViewOnlinePolicies.Instance.ListViewElement;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
-
 
 		// Toggle sort order if the same column is clicked again.
 		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
@@ -518,10 +465,10 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 				AllPolicies.Add(item);
 			}
 
-			if (scrollViewer != null && savedHorizontal.HasValue)
+			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
-				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 			}
 		});
 	}
@@ -570,15 +517,13 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.ViewOnlinePolicies.Instance.ListViewElement;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
 
 
@@ -607,13 +552,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		// Update the policies count text
 		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
 
-		if (scrollViewer != null && savedHorizontal.HasValue)
+		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
-			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
-
 
 
 	/// <summary>
@@ -725,7 +669,4 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 #pragma warning restore CA1822
 
-
-	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
-	internal int _skipSelectionChangedCount;
 }

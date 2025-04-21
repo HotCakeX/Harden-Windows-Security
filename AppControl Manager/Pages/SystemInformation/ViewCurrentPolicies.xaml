@@ -97,7 +97,7 @@
                 </Button>
 
                 <ComboBox x:Uid="SwapPolicyComboBox" SelectedItem="{x:Bind ViewModel.SwapPolicyComboBoxSelectedItem, Mode=TwoWay}"
-                          x:Name="SwapPolicyComboBox" SelectedIndex="{x:Bind ViewModel.SwapPolicyComboBoxSelectedIndex, Mode=TwoWay}"
+                          SelectedIndex="{x:Bind ViewModel.SwapPolicyComboBoxSelectedIndex, Mode=TwoWay}"
                           IsEnabled="{x:Bind ViewModel.SwapPolicyComboBoxState, Mode=OneWay}" SelectionChanged="{x:Bind ViewModel.SwapPolicyComboBox_SelectionChanged}">
                     <x:String>Default Windows</x:String>
                     <x:String>Allow Microsoft</x:String>
@@ -122,22 +122,17 @@
 
         </Border>
 
-        <ListView x:Name="DeployedPolicies"
+        <customUI:ListViewV2
+                  RegistryKey="Locally_Deployed_Policies"
                   Grid.Row="1"
                   SelectionMode="Single"
                   IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                  ScrollViewer.HorizontalScrollMode="Enabled"
-                  ScrollViewer.IsHorizontalRailEnabled="True"
-                  ScrollViewer.HorizontalScrollBarVisibility="Visible"
-                  ShowsScrollingPlaceholders="True"
                   SelectedIndex="{x:Bind ViewModel.ListViewSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                   SelectionChanged="{x:Bind ViewModel.DeployedPolicies_SelectionChanged}"
                   SelectedItem="{x:Bind ViewModel.ListViewSelectedPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  ItemsSource="{x:Bind ViewModel.AllPolicies, Mode=OneWay}"
-                  ContainerContentChanging="ListView_ContainerContentChanging">
+                  ItemsSource="{x:Bind ViewModel.AllPolicies, Mode=OneWay}">
 
-            <ListView.Header>
+            <customUI:ListViewV2.Header>
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
@@ -168,10 +163,10 @@
                         <Button x:Uid="PolicyOptionsColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPolicyOptions}" />
                     </Grid>
                 </Border>
-            </ListView.Header>
+            </customUI:ListViewV2.Header>
 
             <!-- DataTemplate for ListView items -->
-            <ListView.ItemTemplate>
+            <customUI:ListViewV2.ItemTemplate>
                 <DataTemplate x:DataType="others:CiPolicyInfo">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
@@ -285,7 +280,7 @@
                         <TextBlock Text="{x:Bind PolicyOptionsDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
                     </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
     </Grid>
 </Page>

@@ -352,8 +352,6 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 				// Instantiate the Content Dialog
 				SigningDetailsDialog customDialog = new(_BasePolicyObject);
 
-				App.CurrentlyOpenContentDialog = customDialog;
-
 				// Show the dialog and await its result
 				ContentDialogResult result = await customDialog.ShowAsync();
 

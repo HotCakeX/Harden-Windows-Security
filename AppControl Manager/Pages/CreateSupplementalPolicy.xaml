@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -278,8 +279,8 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Select the level based on which the detected files will be scanned."
-                            Header="Select Scan Level" Click="{x:Bind ScanLevelComboBoxSettingsCard_Click}" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 Description="Select the level based on which the detected files will be scanned."
+                            Header="Select Scan Level" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
 
                             <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
                                  SelectedIndex="0">
@@ -290,7 +291,7 @@
                                 <x:String>WildCard Folder Path</x:String>
                             </ComboBox>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="ScalabilitySettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
 

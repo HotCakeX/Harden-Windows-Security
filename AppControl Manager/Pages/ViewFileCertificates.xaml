@@ -45,13 +45,13 @@
 
             </controls:SettingsCard>
 
-            <controls:SettingsCard
+            <customUI:SettingsCardV2
                 x:Name="IncludeSecurityCatalogsSettingsCard" x:Uid="IncludeSecurityCatalogsSettingsCard"
-                 Click="IncludeSecurityCatalogsSettingsCard_Click" IsClickEnabled="True" IsActionIconVisible="False">
+                 IsClickEnabled="True" IsActionIconVisible="False">
 
                 <ToggleSwitch x:Name="IncludeSecurityCatalogsToggleSwitch" IsOn="True" />
 
-            </controls:SettingsCard>
+            </customUI:SettingsCardV2>
 
         </StackPanel>
 
@@ -61,19 +61,13 @@
 
         </controls:WrapPanel>
 
-        <ListView x:Name="FileCertificatesListView"
+        <customUI:ListViewV2 x:Name="FileCertificatesListView"
+          RegistryKey="View_File_Certificates"
           Grid.Row="3"
           ItemsSource="{x:Bind ViewModel.FileCertificates, Mode=OneWay}"
-          SelectionMode="Single"
-          ScrollViewer.HorizontalScrollMode="Enabled"
-          ScrollViewer.IsHorizontalRailEnabled="True"
-          ScrollViewer.HorizontalScrollBarVisibility="Visible"
-          ShowsScrollingPlaceholders="True"
-          ScrollViewer.VerticalScrollBarVisibility="Visible"
-          SelectionChanged="FileCertificatesListView_SelectionChanged"
-          ContainerContentChanging="ListView_ContainerContentChanging">
+          SelectionMode="Single">
 
-            <ListView.Header>
+            <customUI:ListViewV2.Header>
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
@@ -106,10 +100,10 @@
                         <Button x:Uid="ExtensionOIDsColumnHeaderBtn" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByExtensionOIDs}" />
                     </Grid>
                 </Border>
-            </ListView.Header>
+            </customUI:ListViewV2.Header>
 
             <!-- DataTemplate for ListView items -->
-            <ListView.ItemTemplate>
+            <customUI:ListViewV2.ItemTemplate>
                 <DataTemplate x:DataType="others:FileCertificateInfoCol">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
@@ -230,7 +224,7 @@
                         <TextBlock Text="{x:Bind OIDs}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
                     </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
     </Grid>
 </Page>

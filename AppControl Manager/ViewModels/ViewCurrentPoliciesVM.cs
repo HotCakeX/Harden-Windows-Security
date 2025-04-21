@@ -53,168 +53,120 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private bool _UIElementsEnabledState = true;
 	internal bool UIElementsEnabledState
 	{
-		get => _UIElementsEnabledState;
-		set => SetProperty(_UIElementsEnabledState, value, newValue => _UIElementsEnabledState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private bool _IncludeSystemPoliciesCheckboxState;
 	internal bool IncludeSystemPoliciesCheckboxState
 	{
-		get => _IncludeSystemPoliciesCheckboxState;
-		set => SetProperty(_IncludeSystemPoliciesCheckboxState, value, newValue => _IncludeSystemPoliciesCheckboxState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _IncludeBasePoliciesCheckboxState = true;
 	internal bool IncludeBasePoliciesCheckboxState
 	{
-		get => _IncludeBasePoliciesCheckboxState;
-		set => SetProperty(_IncludeBasePoliciesCheckboxState, value, newValue => _IncludeBasePoliciesCheckboxState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private bool _IncludeSupplementalPoliciesCheckboxState = true;
 	internal bool IncludeSupplementalPoliciesCheckboxState
 	{
-		get => _IncludeSupplementalPoliciesCheckboxState;
-		set => SetProperty(_IncludeSupplementalPoliciesCheckboxState, value, newValue => _IncludeSupplementalPoliciesCheckboxState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private bool _IncludeAppControlManagerSupplementalPoliciesCheckboxState;
 	internal bool IncludeAppControlManagerSupplementalPoliciesCheckboxState
 	{
-		get => _IncludeAppControlManagerSupplementalPoliciesCheckboxState;
-		set => SetProperty(_IncludeAppControlManagerSupplementalPoliciesCheckboxState, value, newValue => _IncludeAppControlManagerSupplementalPoliciesCheckboxState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string _PoliciesCountTextBox = "Number of Policies: 0";
 	internal string PoliciesCountTextBox
 	{
-		get => _PoliciesCountTextBox;
-		set => SetProperty(_PoliciesCountTextBox, value, newValue => _PoliciesCountTextBox = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = "Number of Policies: 0";
 
-	private string? _SearchBoxTextBox;
 	internal string? SearchBoxTextBox
 	{
-		get => _SearchBoxTextBox;
-		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _RemovePolicyButtonState;
 	internal bool RemovePolicyButtonState
 	{
-		get => _RemovePolicyButtonState;
-		set => SetProperty(_RemovePolicyButtonState, value, newValue => _RemovePolicyButtonState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private CiPolicyInfo? _ListViewSelectedPolicy;
 	internal CiPolicyInfo? ListViewSelectedPolicy
 	{
-		get => _ListViewSelectedPolicy;
-		set => SetProperty(_ListViewSelectedPolicy, value, newValue => _ListViewSelectedPolicy = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string? _SwapPolicyComboBoxSelectedItem;
 	internal string? SwapPolicyComboBoxSelectedItem
 	{
-		get => _SwapPolicyComboBoxSelectedItem;
-		set => SetProperty(_SwapPolicyComboBoxSelectedItem, value, newValue => _SwapPolicyComboBoxSelectedItem = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private int _SwapPolicyComboBoxSelectedIndex;
 	internal int SwapPolicyComboBoxSelectedIndex
 	{
-		get => _SwapPolicyComboBoxSelectedIndex;
-		set => SetProperty(_SwapPolicyComboBoxSelectedIndex, value, newValue => _SwapPolicyComboBoxSelectedIndex = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _SwapPolicyComboBoxState;
 	internal bool SwapPolicyComboBoxState
 	{
-		get => _SwapPolicyComboBoxState;
-		set => SetProperty(_SwapPolicyComboBoxState, value, newValue => _SwapPolicyComboBoxState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private int _ListViewSelectedIndex;
 	internal int ListViewSelectedIndex
 	{
-		get => _ListViewSelectedIndex;
-		set => SetProperty(_ListViewSelectedIndex, value, newValue => _ListViewSelectedIndex = newValue);
+		get; set => SetProperty(ref field, value);
 	}
-
-
 
 	#region Properties to hold each columns' width.
-	private GridLength _columnWidth1;
 	internal GridLength ColumnWidth1
 	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth2;
 	internal GridLength ColumnWidth2
 	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth3;
 	internal GridLength ColumnWidth3
 	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth4;
 	internal GridLength ColumnWidth4
 	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth5;
 	internal GridLength ColumnWidth5
 	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth6;
 	internal GridLength ColumnWidth6
 	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth7;
 	internal GridLength ColumnWidth7
 	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth8;
 	internal GridLength ColumnWidth8
 	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth9;
 	internal GridLength ColumnWidth9
 	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth10;
 	internal GridLength ColumnWidth10
 	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
@@ -285,7 +237,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		ColumnWidth9 = new GridLength(maxWidth9);
 		ColumnWidth10 = new GridLength(maxWidth10);
 	}
-
 
 
 	/// <summary>
@@ -407,19 +358,13 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			formattedTextBlock.Inlines.Add(boldText);
 
 			// Create and display a ContentDialog with styled TextBlock
-			ContentDialog dialog = new()
+			ContentDialogV2 dialog = new()
 			{
 				Title = GlobalVars.Rizz.GetString("SwappingPolicyTitle"),
 				Content = formattedTextBlock,
 				PrimaryButtonText = GlobalVars.Rizz.GetString("OK"),
-				BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
-				BorderThickness = new Thickness(1),
 				CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
-				XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot, // Set XamlRoot to the current page's XamlRoot
-				RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 			};
-
-			App.CurrentlyOpenContentDialog = dialog;
 
 			// Show the dialog and wait for user response
 			ContentDialogResult result = await dialog.ShowAsync();
@@ -583,19 +528,13 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 					if (currentlyDeployedBasePolicyIDs.Contains(ListViewSelectedPolicy.BasePolicyID))
 					{
 						// Create and display a ContentDialog with Yes and No options
-						ContentDialog dialog = new()
+						ContentDialogV2 dialog = new()
 						{
 							Title = GlobalVars.Rizz.GetString("WarningTitle"),
 							Content = GlobalVars.Rizz.GetString("ManualRemovalWarning") + GlobalVars.AppControlManagerSpecialPolicyName + "' " + GlobalVars.Rizz.GetString("ManualRemovalWarningEnd"),
 							PrimaryButtonText = GlobalVars.Rizz.GetString("Yes"),
-							BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
-							BorderThickness = new Thickness(1),
 							CloseButtonText = GlobalVars.Rizz.GetString("No"),
-							XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot, // Set XamlRoot to the current page's XamlRoot
-							RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 						};
-
-						App.CurrentlyOpenContentDialog = dialog;
 
 						// Show the dialog and wait for user response
 						ContentDialogResult result = await dialog.ShowAsync();
@@ -673,18 +612,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								else
 								{
 									// Create and display a ContentDialog
-									ContentDialog dialog = new()
+									ContentDialogV2 dialog = new()
 									{
 										Title = GlobalVars.Rizz.GetString("WarningTitle"),
 										Content = GlobalVars.Rizz.GetString("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.Rizz.GetString("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
 										PrimaryButtonText = GlobalVars.Rizz.GetString("Understand"),
-										BorderBrush = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
-										BorderThickness = new Thickness(1),
-										XamlRoot = Pages.ViewCurrentPolicies.Instance.XamlRoot, // Set XamlRoot to the current page's XamlRoot
-										RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
 									};
-
-									App.CurrentlyOpenContentDialog = dialog;
 
 									// Show the dialog and wait for user response
 									_ = await dialog.ShowAsync();
@@ -707,8 +640,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 								// Instantiate the Content Dialog
 								SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
-
-								App.CurrentlyOpenContentDialog = customDialog;
 
 								// Show the dialog and await its result
 								ContentDialogResult result = await customDialog.ShowAsync();
@@ -841,16 +772,14 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	private async void Sort(SortColumnEnum newSortColumn)
 	{
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.ViewCurrentPolicies.Instance.DeployedPoliciesListView;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
-
 
 		// If the same column is clicked again, toggle the sorting direction.
 		// Otherwise, if a new column is clicked, start with descending order.
@@ -936,10 +865,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				AllPolicies.Add(item);
 			}
 
-			if (scrollViewer != null && savedHorizontal.HasValue)
+			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
-				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 			}
 		});
 	}
@@ -1001,14 +930,13 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.ViewCurrentPolicies.Instance.DeployedPoliciesListView;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
 
 		IEnumerable<CiPolicyInfo> filteredResults = [];
@@ -1039,35 +967,21 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		// Update the policies count text
 		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
 
-		if (scrollViewer != null && savedHorizontal.HasValue)
+		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
-			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 
-
-	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
-	internal int _skipSelectionChangedCount;
 
 	/// <summary>
 	/// Event handler for when a policy is selected from the ListView. It will contain the selected policy.
 	/// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, ListView's SelectedItem property will be null,
 	/// so we detect it here and return from the method without assigning null to the selectedPolicy class instance.
 	/// </summary>
-	internal async void DeployedPolicies_SelectionChanged()
+	internal void DeployedPolicies_SelectionChanged()
 	{
-
-		// Check if we need to skip this event.
-		if (_skipSelectionChangedCount > 0)
-		{
-			_skipSelectionChangedCount--;
-			return;
-		}
-
-		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: Pages.ViewCurrentPolicies.Instance.DeployedPoliciesListView, listView: Pages.ViewCurrentPolicies.Instance.DeployedPoliciesListView, index: ListViewSelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
-
-
 		if (ListViewSelectedPolicy is null)
 		{
 			return;
@@ -1092,8 +1006,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		// Enable the Swap Policy ComboBox only when the selected policy is a base type, unsigned and non-system
 		SwapPolicyComboBoxState = string.Equals(ListViewSelectedPolicy.BasePolicyID, ListViewSelectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && !ListViewSelectedPolicy.IsSignedPolicy && !ListViewSelectedPolicy.IsSystemPolicy;
 	}
-
-
 
 
 	/// <summary>

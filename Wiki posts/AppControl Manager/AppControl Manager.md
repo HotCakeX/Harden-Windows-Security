@@ -406,19 +406,46 @@ if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsd
     }
 }
 
+
+#region --- Compile C++ projects ---
+
+### ManageDefender
+
+MSBuild.exe 'Excluded Code\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+
+Copy-Item -Path 'Excluded Code\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
+
+MSBuild.exe 'Excluded Code\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+
+Copy-Item -Path 'Excluded Code\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
+
+
+### ScheduledTaskManager
+
+MSBuild.exe 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+
+Copy-Item -Path 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
+
+MSBuild.exe 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+
+Copy-Item -Path 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
+
+#endregion
+
+
 # https://learn.microsoft.com/dotnet/core/tools/dotnet-build
 # https://learn.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
 # https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
 
 # Generate for X64 architecture
-dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=x64
+dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
 
-dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
 
 # Generate for ARM64 architecture
-dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=ARM64
+dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
 
-dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
 
 Function Get-MSIXFile {
     Param(

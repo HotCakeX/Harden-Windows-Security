@@ -1003,7 +1003,7 @@ extern "C" __declspec(dllexport) bool __stdcall GetMpPreference(const wchar_t* p
 // If "get" is specified, it retrieves a property value.
 // Otherwise, it uses ManageMpPreference to set a value.
 // Comments below explain expected command line usage.
-static int wmain(int argc, wchar_t* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
 	// command line option added for getting MSFT_MpPreference results.
 	// Usage: program.exe get <preferenceName>

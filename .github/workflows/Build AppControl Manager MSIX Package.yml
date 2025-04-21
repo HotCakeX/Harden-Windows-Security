@@ -130,11 +130,11 @@ jobs:
           # https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties
 
           # Generate for X64 architecture
-          dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=x64
-          dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+          dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
+          dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
           # Generate for ARM64 architecture
-          dotnet build 'AppControl Manager.sln' --configuration Release --verbosity minimal /p:Platform=ARM64
-          dotnet msbuild 'AppControl Manager.sln' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+          dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
+          dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
 
           Function Get-MSIXFile {
               Param(

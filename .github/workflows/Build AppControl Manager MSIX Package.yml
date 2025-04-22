@@ -581,7 +581,7 @@ jobs:
           "@
 
           # Create the pull request
-          # gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
+          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
 
       - name: Add Body Text to the Draft Release
         shell: pwsh
@@ -602,8 +602,6 @@ jobs:
           [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
           ## What's New
-
-          <br>
 
           <!-- Main Content -->
 

@@ -8,7 +8,7 @@ homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 license = "MIT"
 keywords = ["WMI", "Windows", "Security"]
-categories = ["WMI", "DevTools"]
+categories = ["API bindings", "Security"]
 publish = false
 rust-version = "1.86.0" # Enforces minimum required installed Rust version
 

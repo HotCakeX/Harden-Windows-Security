@@ -330,7 +330,6 @@ jobs:
           Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_PATH=$FinalMSIXARM64SymbolPath"
           Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_NAME=$FinalMSIXARM64SymbolName"
 
-      
           # https://github.com/microsoft/sbom-tool
           # Generating SBOM
           Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${{ env.RUNNER_TEMP }}\sbom-tool.exe"
@@ -338,11 +337,9 @@ jobs:
           # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
           . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv $MSIXVersion -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true -lto 80
 
-
           # Saving the details of the SBOM file
           Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
           Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_NAME=manifest.spdx.json"
-
 
       - name: Finding the Latest Draft Release
         id: find_draft_release
@@ -511,7 +508,7 @@ jobs:
     steps:
 
       - name: Check out the repository code
-        uses: actions/checkout@v4     
+        uses: actions/checkout@v4
 
       - name: Updating The MSIX/MSIXBundle Download Links and Version via Pull Request
         shell: pwsh

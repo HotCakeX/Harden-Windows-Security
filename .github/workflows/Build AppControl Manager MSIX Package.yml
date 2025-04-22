@@ -424,6 +424,7 @@ jobs:
           name: ${{ env.ARM64Symbol_NAME }}
           path: ${{ env.ARM64Symbol_PATH }}
 
+  # The Attestation runs right after build and no other job, especially 3rd party actions/steps etc. should run in between.
   attest:
     needs: build
     runs-on: windows-2025
@@ -459,22 +460,30 @@ jobs:
       - name: Check out the repository code
         uses: actions/checkout@v4
 
-      - name: Generating SBOM
-        uses: anchore/sbom-action@v0
+      - name: Downloading all Artifacts
+        uses: actions/download-artifact@v4
         with:
-          dependency-snapshot: false # This would require more permissions than "contents: read". This action is not to be trusted with more permissions.
-          upload-release-assets: false # Done manually in next steps
-          upload-artifact: false # Done manually in next steps
-          output-file: ./HardenWindowsSecurityRepoSBOM.spdx
-        # artifact-name: HardenWindowsSecurityRepoSBOM.spdx
+          path: Downloaded-Artifacts # Download all artifacts in this folder
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls -R Downloaded-Artifacts
+      
+      # https://github.com/microsoft/sbom-tool
+      - name: Generating SBOM
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe" -OutFile "sbom-tool.exe"
+
+          .\sbom-tool.exe generate -b .\Downloaded-Artifacts -bc ".\AppControl Manager" -pn "AppControl Manager" -ps "Violet Hansen" -pv "1.0.0.0" -nsb "https://github.com/HotCakeX/Harden-Windows-Security" -gt true -li true -pm true -D true
 
       - name: Uploading Artifact 7
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
           compression-level: 0
-          name: HardenWindowsSecurityRepoSBOM.spdx
-          path: ./HardenWindowsSecurityRepoSBOM.spdx
+          name: manifest.spdx.json
+          path: "./Downloaded-Artifacts/_manifest/spdx_2.2/manifest.spdx.json"
 
   SbomAttest:
     needs: [build, sbom]
@@ -500,7 +509,7 @@ jobs:
         with:
         # subject-path: "${{ needs.build.outputs.MSIX_PATH }}, ${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
           subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
-          sbom-path: ./Downloaded-Artifacts/HardenWindowsSecurityRepoSBOM.spdx
+          sbom-path: ./Downloaded-Artifacts/manifest.spdx.json
           show-summary: true
 
   final:
@@ -518,7 +527,7 @@ jobs:
       - name: Downloading an Artifact
         uses: actions/download-artifact@v4
         with:
-          name: HardenWindowsSecurityRepoSBOM.spdx
+          name: manifest.spdx.json
           path: Downloaded-Artifacts
           merge-multiple: true
 
@@ -529,8 +538,8 @@ jobs:
         shell: pwsh
         run: |
           [string]$DraftReleaseId = ${{ needs.build.outputs.DRAFT_RELEASE_ID }}
-          [string]$FilePath = ".\Downloaded-Artifacts\HardenWindowsSecurityRepoSBOM.spdx"
-          [string]$FileName = "HardenWindowsSecurityRepoSBOM.spdx"
+          [string]$FilePath = ".\Downloaded-Artifacts\manifest.spdx.json"
+          [string]$FileName = "manifest.spdx.json"
           [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
 
           $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{

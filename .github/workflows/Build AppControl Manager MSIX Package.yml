@@ -336,7 +336,7 @@ jobs:
           Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${{ env.RUNNER_TEMP }}\sbom-tool.exe"
 
           # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
-          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv "${{ needs.build.outputs.PACKAGE_VERSION }}" -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true
+          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv $MSIXVersion -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true -lto 80
 
 
           # Saving the details of the SBOM file
@@ -451,7 +451,7 @@ jobs:
 
   # The Attestation runs right after build and no other job, especially 3rd party actions/steps etc. should run in between.
   attest:
-    needs: build
+    needs: [build]
     runs-on: windows-2025
     permissions:
       attestations: write
@@ -511,31 +511,7 @@ jobs:
     steps:
 
       - name: Check out the repository code
-        uses: actions/checkout@v4
-
-      - name: Downloading an Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: manifest.spdx.json
-          path: Downloaded-Artifacts
-          merge-multiple: true
-
-      - name: Display structure of downloaded files
-        run: ls -R Downloaded-Artifacts
-
-      - name: Uploading the SBOM file to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = ${{ needs.build.outputs.DRAFT_RELEASE_ID }}
-          [string]$FilePath = ".\Downloaded-Artifacts\manifest.spdx.json"
-          [string]$FileName = "manifest.spdx.json"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
+        uses: actions/checkout@v4     
 
       - name: Updating The MSIX/MSIXBundle Download Links and Version via Pull Request
         shell: pwsh

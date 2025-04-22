@@ -468,6 +468,9 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R Downloaded-Artifacts
+
+      - name: Display structure of AppControl Manager directory
+        run: ls -R "AppControl Manager"
       
       # https://github.com/microsoft/sbom-tool
       - name: Generating SBOM
@@ -619,7 +622,7 @@ jobs:
           "@
 
           # Create the pull request
-          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
+          # gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX
 
       - name: Add Body Text to the Draft Release
         shell: pwsh

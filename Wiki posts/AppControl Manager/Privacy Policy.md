@@ -27,3 +27,7 @@ We may update this Privacy Policy from time to time. Any changes will be posted 
 ## 6. Contact Us
 
 If you have any questions or concerns regarding this Privacy Policy or the App, feel free to reach out at the email: spynetgirl@outlook.com or use the same Email in the Microsoft Teams for communication. You can also always post in the GitHub discussions.
+
+## 7. Microsoft Privacy Policy
+
+Please refer to [the Microsoft's privacy policy](https://www.microsoft.com/privacy/privacystatement) for information collected when installing AppControl Manager through the Microsoft Store.

@@ -479,7 +479,7 @@ jobs:
           # "$($XMLCSProj.Project.PropertyGroup.FileVersion)"
 
           # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
-          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b .\Downloaded-Artifacts -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv "${{ needs.build.outputs.PACKAGE_VERSION }}" -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose
+          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b .\Downloaded-Artifacts -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv "${{ needs.build.outputs.PACKAGE_VERSION }}" -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true
 
       - name: Uploading Artifact 7
         uses: actions/upload-artifact@v4

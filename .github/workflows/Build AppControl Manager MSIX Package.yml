@@ -475,7 +475,7 @@ jobs:
         run: |
           Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${{ env.RUNNER_TEMP }}\sbom-tool.exe"
 
-          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b .\Downloaded-Artifacts -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv '1.0.0.0' -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -gt true -li true -pm true -D true
+          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b .\Downloaded-Artifacts -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv '1.0.0.0' -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose # -gt true -li true -pm true -D true
 
       - name: Uploading Artifact 7
         uses: actions/upload-artifact@v4

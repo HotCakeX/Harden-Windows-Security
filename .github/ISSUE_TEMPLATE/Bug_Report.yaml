@@ -12,18 +12,18 @@ body:
   - type: dropdown
     id: version
     attributes:
-      label: Tools category
-      description: Which Category/Tool Does This Bug Belong To?
+      label: Product
+      description: Which Product Does This Bug Belong To?
       options:
         - Harden Windows Security Module
-        - AppControl Manager app
+        - AppControl Manager
     validations:
       required: true
   - type: checkboxes
     id: Requirements
     attributes:
       label: Does Your System Meet The Requirements?
-      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+      description: Depending on which product your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#supported-operation-systems)
       options:
         - label: Yes, I acknowledge that I've read the requirements and my system meets them. 👍
           required: true
@@ -32,8 +32,15 @@ body:
     attributes:
       label: Is your Windows Installation Genuine?
       options:
-        - label: Yes, I acknowledge that the installation media of the Windows OS I used the tool on was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
+        - label: Yes, I acknowledge that the installation media (such as ISO file) of the Windows OS I used was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
           required: true
+  - type: checkboxes
+    id: No-3rd-Party-Tool
+    attributes:
+      label: Have you used any other 3rd party tools to modify your Windows installation?
+      options:
+        - label: If you used any other 3rd party tools to modify your Windows installation, they can be causing the problem you're experiencing.
+          required: false
   - type: checkboxes
     id: Read-FAQ
     attributes:
@@ -53,8 +60,6 @@ body:
     id: Error-Details
     attributes:
       label: Error Details
-      description: Paste the output from `Get-Error` if PowerShell returned errors.
-      render: console
-      placeholder: PS> Get-Error
+      description: Any error messages or codes you received.
     validations:
       required: false

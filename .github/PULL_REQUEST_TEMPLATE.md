@@ -8,4 +8,5 @@ By submitting this PR you agree that you've read and accepted the [Contributing 
 * [ ] Link any issues that this PR will fix.
 * [ ] Please Allow edits by maintainers
 * [ ] If your PR involves C# code, please ensure it complies with the code styles defined in the project files in the repository.
+* [ ] Please comment your code appropriately.
 -->

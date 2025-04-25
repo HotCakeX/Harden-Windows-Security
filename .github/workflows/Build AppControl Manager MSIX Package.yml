@@ -27,6 +27,8 @@ jobs:
       X64Symbol_NAME: ${{ steps.main_buildOp.outputs.X64Symbol_NAME }}
       ARM64Symbol_PATH: ${{ steps.main_buildOp.outputs.ARM64Symbol_PATH }}
       ARM64Symbol_NAME: ${{ steps.main_buildOp.outputs.ARM64Symbol_NAME }}
+      SBOM_PATH: ${{ steps.main_buildOp.outputs.SBOM_PATH }}
+      SBOM_NAME: ${{ steps.main_buildOp.outputs.SBOM_NAME }}
 
     permissions:
       contents: write # Required for adding files to the GitHub draft release
@@ -328,6 +330,17 @@ jobs:
           Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_PATH=$FinalMSIXARM64SymbolPath"
           Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_NAME=$FinalMSIXARM64SymbolName"
 
+          # https://github.com/microsoft/sbom-tool
+          # Generating SBOM
+          Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${{ env.RUNNER_TEMP }}\sbom-tool.exe"
+
+          # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
+          . "${{ env.RUNNER_TEMP }}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv $MSIXVersion -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true -lto 80
+
+          # Saving the details of the SBOM file
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
+          Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_NAME=manifest.spdx.json"
+
       - name: Finding the Latest Draft Release
         id: find_draft_release
         shell: pwsh
@@ -361,6 +374,7 @@ jobs:
               @{ Path = "${{ env.ARM64MSBuildLog_PATH }}"; Name = 'ARM64MSBuildLog.binlog' }
               @{ Path = "${{ env.X64Symbol_PATH }}"; Name = "${{ env.X64Symbol_NAME }}" }
               @{ Path = "${{ env.ARM64Symbol_PATH }}"; Name = "${{ env.ARM64Symbol_NAME }}" }
+              @{ Path = "${{ env.SBOM_PATH }}"; Name = "${{ env.SBOM_NAME }}" }
           )
           [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
           [string]$Repo = "${{ github.repository }}"
@@ -424,8 +438,17 @@ jobs:
           name: ${{ env.ARM64Symbol_NAME }}
           path: ${{ env.ARM64Symbol_PATH }}
 
+      - name: Uploading Artifact 7
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          compression-level: 0
+          name: ${{ env.SBOM_NAME }}
+          path: ${{ env.SBOM_PATH }}
+
+  # The Attestation runs right after build and no other job, especially 3rd party actions/steps etc. should run in between.
   attest:
-    needs: build
+    needs: [build]
     runs-on: windows-2025
     permissions:
       attestations: write
@@ -448,36 +471,8 @@ jobs:
         # subject-path: "${{ needs.build.outputs.MSIX_PATH }}, ${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
           subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
 
-  sbom:
-    needs: build
-    runs-on: windows-2025
-    permissions:
-      contents: read
-
-    steps:
-
-      - name: Check out the repository code
-        uses: actions/checkout@v4
-
-      - name: Generating SBOM
-        uses: anchore/sbom-action@v0
-        with:
-          dependency-snapshot: false # This would require more permissions than "contents: read". This action is not to be trusted with more permissions.
-          upload-release-assets: false # Done manually in next steps
-          upload-artifact: false # Done manually in next steps
-          output-file: ./HardenWindowsSecurityRepoSBOM.spdx
-        # artifact-name: HardenWindowsSecurityRepoSBOM.spdx
-
-      - name: Uploading Artifact 7
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 1
-          compression-level: 0
-          name: HardenWindowsSecurityRepoSBOM.spdx
-          path: ./HardenWindowsSecurityRepoSBOM.spdx
-
   SbomAttest:
-    needs: [build, sbom]
+    needs: [build]
     runs-on: windows-2025
     permissions:
       contents: read
@@ -500,11 +495,11 @@ jobs:
         with:
         # subject-path: "${{ needs.build.outputs.MSIX_PATH }}, ${{ needs.build.outputs.MSIXBundle_PATH }}, ${{ needs.build.outputs.X64MSBuildLog_PATH }}, ${{ needs.build.outputs.ARM64MSBuildLog_PATH }}, ${{ needs.build.outputs.X64Symbol_PATH }}, ${{ needs.build.outputs.ARM64Symbol_PATH }}"
           subject-path: "Downloaded-Artifacts/*" # Use all the files in the artifact downloads folder
-          sbom-path: ./Downloaded-Artifacts/HardenWindowsSecurityRepoSBOM.spdx
+          sbom-path: ./Downloaded-Artifacts/manifest.spdx.json
           show-summary: true
 
   final:
-    needs: [build, attest, sbom, SbomAttest]
+    needs: [build, attest, SbomAttest]
     runs-on: windows-2025
     permissions:
       contents: write
@@ -514,30 +509,6 @@ jobs:
 
       - name: Check out the repository code
         uses: actions/checkout@v4
-
-      - name: Downloading an Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: HardenWindowsSecurityRepoSBOM.spdx
-          path: Downloaded-Artifacts
-          merge-multiple: true
-
-      - name: Display structure of downloaded files
-        run: ls -R Downloaded-Artifacts
-
-      - name: Uploading the SBOM file to the Draft Release
-        shell: pwsh
-        run: |
-          [string]$DraftReleaseId = ${{ needs.build.outputs.DRAFT_RELEASE_ID }}
-          [string]$FilePath = ".\Downloaded-Artifacts\HardenWindowsSecurityRepoSBOM.spdx"
-          [string]$FileName = "HardenWindowsSecurityRepoSBOM.spdx"
-          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-
-          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
-            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
-            "Content-Type" = "application/octet-stream"
-          }
-          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
 
       - name: Updating The MSIX/MSIXBundle Download Links and Version via Pull Request
         shell: pwsh
@@ -631,8 +602,6 @@ jobs:
           [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
           ## What's New
-
-          <br>
 
           <!-- Main Content -->
 

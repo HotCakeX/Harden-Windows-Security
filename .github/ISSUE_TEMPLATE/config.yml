@@ -6,3 +6,6 @@ contact_links:
   - name: Basic FAQs 💞
     url: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions
     about: Answers to the Basic Frequently Asked Questions - Make sure to read them first.
+  - name: AppControl Manager Privacy Policy 🔒
+    url: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Privacy-Policy-for-the-AppControl-Manager
+    about: The privacy policy for the AppControl Manager is available in this link.

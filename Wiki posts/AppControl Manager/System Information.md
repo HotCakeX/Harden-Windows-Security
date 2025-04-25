@@ -10,7 +10,9 @@
 
 <br>
 
-Use the System Information page in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to view details about the deployed App Control policies on the system.
+## Currently Deployed Policies
+
+Use this section in [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to view details about the deployed App Control policies on the system.
 
 * Search through the list of policies
 
@@ -31,17 +33,9 @@ Use the System Information page in [AppControl Manager](https://github.com/HotCa
 
 <br>
 
-## View Code Integrity Information
+### Policy Removal
 
-In the ***Code Integrity Information*** section you can view advanced details about the current status of Code Integrity on the system.
-
-You can also check the status of Application Control for Business, including whether User-Mode or Kernel-Mode policies are deployed and whether they are set to Enforced mode or Audit mode.
-
-<br>
-
-## Policy Removal
-
-This page also allows you to **remove** the deployed non-system App Control policies from the system.
+This section also allows you to **remove** the deployed non-system App Control policies from the system.
 
 Whenever you select a policy from the list, the app will automatically present to you the best and most appropriate course of action in order to remove it.
 
@@ -99,8 +93,24 @@ Following this step, the policy will be re-signed and redeployed on the system w
 
 <br>
 
-## Swapping Policies
+### Swapping Policies
 
 You can seamlessly swap any deployed policy on the System Information page. For example, if the "Allow Microsoft" policy is active and you want to switch to "Default Windows," simply select "Default Windows" from the dropdown menu and confirm your choice. All supplemental policies associated with the base policy will continue to function. Currently, this feature supports only unsigned policies; support for signed policies will be added in a future release.
+
+<br>
+
+## Online Policies
+
+Use the <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="30"> [**Microsoft Graph Button**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph) to sign into your account and then press the `Retrieve Online Policies` button to retrieve any available App Control policies from Intune. They will be populated in the List View where you can see them in detail, sort them, search through them and manage them.
+
+* **Remove Policy**: After selecting an Intune policy, use this button to remove it from Intune. The devices that this policy is deployed to will have to reboot in order for the policy to be fully removed from them.
+
+<br>
+
+## Code Integrity Information
+
+In the ***Code Integrity Information*** section you can view advanced details about the current status of Code Integrity on the system.
+
+You can also check the status of Application Control for Business, including whether User-Mode or Kernel-Mode policies are deployed and whether they are set to Enforced mode or Audit mode.
 
 <br>

@@ -38,11 +38,7 @@ Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permissio
 
 ### Cloud Tab
 
-* **Sign In**: Sign into your tenant with Entra ID credentials.
-
-* **Sign Out**: Sign out of your tenant and discard any saved credentials from the app's memory.
-
-* **Cancel Sign In**: Cancel the sign-in process. If there was a problem during sign in process, use this button to cancel it and try again by pressing the `Sign In` button.
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="30"> [**Microsoft Graph Button**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph).
 
 * **Device Name**: Use this button to display a text box where you can enter a name of a device to filter the logs by before retrieving them. The device name will be included as part of the query that will be forwarded to the MDE Advanced Hunting API and the filtering will happen on the MDE side.
 

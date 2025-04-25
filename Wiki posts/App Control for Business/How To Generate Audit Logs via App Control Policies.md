@@ -22,7 +22,7 @@ First, we have to deploy a base policy. The type of base policy we deploy will d
 
    * Apps installed directly from the Microsoft Store
 
-   * Microsoft 365 apps 
+   * Microsoft 365 apps
 
    * WHQL-signed Drivers
 

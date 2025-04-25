@@ -11,7 +11,7 @@ AppControl Manager is a modern secure app that provides easy to use graphical us
 ### Use The Microsoft Store
 
 <a href="https://apps.microsoft.com/detail/9png1jddtgp8?mode=direct">
-	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="install AppControl Manager from Microsoft Store"/>
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="230" alt="install AppControl Manager from Microsoft Store"/>
 </a>
 
 AppControl Manager is available on [**the Microsoft Store**](https://apps.microsoft.com/detail/9PNG1JDDTGP8). **This is the easiest and recommended way to install it.** You will use Microsoft Store to receive future updates.
@@ -110,6 +110,7 @@ Please feel free to open a discussion if you have any questions about the build 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Sidebar.gif" alt="AppControl Manager Menu Item" width="20"> [Sidebar](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/View%20File%20Certificates.gif" alt="AppControl Manager Menu Item" width="20"> [Validate Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-Policies)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Validate%20Policies.gif" alt="AppControl Manager Menu Item" width="20"> [View File Certificates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="20"> [Microsoft Graph](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph)
 
 *More features will come very quickly in the near future.*
 

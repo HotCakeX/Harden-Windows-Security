@@ -4,7 +4,7 @@ The AppControl Manager offers integration with Microsoft Graph to allow you to m
 
 <br>
 
-## Sign In 
+## Sign In
 
 ### Sign In button <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph%20-%20Sign%20in.gif" alt="Sign In" width="30" />
 

@@ -19,6 +19,16 @@ Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 <br>
 
+This page has 2 modes of operations:
+
+1. **Create New Policy**: In this mode, whenever you create a Supplemental policy, a new policy XML file will be created in the `AppControl Manager` directory.
+
+2. **Add to Existing Policy**: In this mode, you will have to select an existing App Control XML policy file so that any policy you create will be directly and automatically added to this policy and no new policy file will be created.
+
+   * When this mode is active, elements related to `Policy Name` and `Base Policy File` will be automatically hidden since they won't be needed anymore.
+
+<br>
+
 ## Create a Supplemental Policy by Files or Folders Scan
 
 With AppControl Manager, you can easily create a supplemental policy by scanning files or folders. If an application or file is being blocked by Application Control, use this feature to scan its files or installation directory. This process enables you to generate a supplemental policy that ensures the application or file can run seamlessly on your system.

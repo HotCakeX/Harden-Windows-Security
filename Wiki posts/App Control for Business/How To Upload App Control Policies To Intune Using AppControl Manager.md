@@ -28,7 +28,7 @@ To do that, navigate to the [Deploy App Control Policy](https://github.com/HotCa
 
 </div>
 
-Once signed in, you'll be redirected back to the AppControl Manager. 
+Once signed in, you'll be redirected back to the AppControl Manager.
 
 <br>
 

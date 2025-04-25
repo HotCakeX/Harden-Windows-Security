@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
@@ -27,21 +28,20 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard
-                           x:Uid="BrowseForCustomMSIXPathSettingsCard"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind BrowseForCustomMSIXPathButton_Click}">
+                <controls:SettingsCard x:Uid="BrowseForCustomMSIXPathSettingsCard"
+                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind ViewModel.BrowseForCustomMSIXPathButton_Click}">
 
-                    <controls:WrapPanel Orientation="Horizontal">
-                        <Button x:Name="BrowseForCustomMSIXPathButton" Click="{x:Bind BrowseForCustomMSIXPathButton_Click}"
-                                x:Uid="BrowseForCustomMSIXPathButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
-                    </controls:WrapPanel>
+                    <Button Click="{x:Bind ViewModel.BrowseForCustomMSIXPathButton_Click}"
+                       x:Uid="BrowseForCustomMSIXPathButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Name="ConfirmUseOfCustomMSIXPathSettingsCard" x:Uid="ConfirmUseOfCustomMSIXPathSettingsCard"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="{x:Bind ConfirmUseOfCustomMSIXPath_Click}" IsActionIconVisible="False">
-                    <ToggleSwitch x:Name="ConfirmUseOfCustomMSIXPath" />
-                </controls:SettingsCard>
+                <customUI:SettingsCardV2 x:Uid="ConfirmUseOfCustomMSIXPathSettingsCard"
+                     IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" IsActionIconVisible="False">
+                    <ToggleSwitch IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
+                                  IsOn="{x:Bind ViewModel.InstallLocalPackageConfirmation, Mode=TwoWay}" />
+                </customUI:SettingsCardV2>
 
             </StackPanel>
 

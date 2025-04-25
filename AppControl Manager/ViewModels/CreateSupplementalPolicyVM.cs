@@ -35,130 +35,94 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS Files And Folders
 
 	// Properties to hold each columns' width.
-	private GridLength _ColumnWidthFilesAndFolders1;
 	internal GridLength ColumnWidthFilesAndFolders1
 	{
-		get => _ColumnWidthFilesAndFolders1;
-		set { _ColumnWidthFilesAndFolders1 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders2;
 	internal GridLength ColumnWidthFilesAndFolders2
 	{
-		get => _ColumnWidthFilesAndFolders2;
-		set { _ColumnWidthFilesAndFolders2 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders3;
 	internal GridLength ColumnWidthFilesAndFolders3
 	{
-		get => _ColumnWidthFilesAndFolders3;
-		set { _ColumnWidthFilesAndFolders3 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders4;
 	internal GridLength ColumnWidthFilesAndFolders4
 	{
-		get => _ColumnWidthFilesAndFolders4;
-		set { _ColumnWidthFilesAndFolders4 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders5;
 	internal GridLength ColumnWidthFilesAndFolders5
 	{
-		get => _ColumnWidthFilesAndFolders5;
-		set { _ColumnWidthFilesAndFolders5 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders6;
 	internal GridLength ColumnWidthFilesAndFolders6
 	{
-		get => _ColumnWidthFilesAndFolders6;
-		set { _ColumnWidthFilesAndFolders6 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders7;
 	internal GridLength ColumnWidthFilesAndFolders7
 	{
-		get => _ColumnWidthFilesAndFolders7;
-		set { _ColumnWidthFilesAndFolders7 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders8;
 	internal GridLength ColumnWidthFilesAndFolders8
 	{
-		get => _ColumnWidthFilesAndFolders8;
-		set { _ColumnWidthFilesAndFolders8 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders9;
 	internal GridLength ColumnWidthFilesAndFolders9
 	{
-		get => _ColumnWidthFilesAndFolders9;
-		set { _ColumnWidthFilesAndFolders9 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders10;
 	internal GridLength ColumnWidthFilesAndFolders10
 	{
-		get => _ColumnWidthFilesAndFolders10;
-		set { _ColumnWidthFilesAndFolders10 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders11;
 	internal GridLength ColumnWidthFilesAndFolders11
 	{
-		get => _ColumnWidthFilesAndFolders11;
-		set { _ColumnWidthFilesAndFolders11 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders12;
 	internal GridLength ColumnWidthFilesAndFolders12
 	{
-		get => _ColumnWidthFilesAndFolders12;
-		set { _ColumnWidthFilesAndFolders12 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders12)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders13;
 	internal GridLength ColumnWidthFilesAndFolders13
 	{
-		get => _ColumnWidthFilesAndFolders13;
-		set { _ColumnWidthFilesAndFolders13 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders13)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders14;
 	internal GridLength ColumnWidthFilesAndFolders14
 	{
-		get => _ColumnWidthFilesAndFolders14;
-		set { _ColumnWidthFilesAndFolders14 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders14)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders15;
 	internal GridLength ColumnWidthFilesAndFolders15
 	{
-		get => _ColumnWidthFilesAndFolders15;
-		set { _ColumnWidthFilesAndFolders15 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders15)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders16;
 	internal GridLength ColumnWidthFilesAndFolders16
 	{
-		get => _ColumnWidthFilesAndFolders16;
-		set { _ColumnWidthFilesAndFolders16 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders16)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders17;
 	internal GridLength ColumnWidthFilesAndFolders17
 	{
-		get => _ColumnWidthFilesAndFolders17;
-		set { _ColumnWidthFilesAndFolders17 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders17)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthFilesAndFolders18;
 	internal GridLength ColumnWidthFilesAndFolders18
 	{
-		get => _ColumnWidthFilesAndFolders18;
-		set { _ColumnWidthFilesAndFolders18 = value; OnPropertyChanged(nameof(ColumnWidthFilesAndFolders18)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
@@ -275,34 +239,27 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
 	/// </summary>
-	private bool _FilesAndFoldersBrowseForBasePolicyIsEnabled = true;
 	internal bool FilesAndFoldersBrowseForBasePolicyIsEnabled
 	{
-		get => _FilesAndFoldersBrowseForBasePolicyIsEnabled;
-		set => SetProperty(_FilesAndFoldersBrowseForBasePolicyIsEnabled, value, newValue => _FilesAndFoldersBrowseForBasePolicyIsEnabled = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
 	/// <summary>
 	/// Used to store the scan results and as the source for the results ListViews
 	/// </summary>
-	private ObservableCollection<FileIdentity> _filesAndFoldersScanResults = [];
 	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults
 	{
-		get => _filesAndFoldersScanResults;
-		set => SetProperty(_filesAndFoldersScanResults, value, newValue => _filesAndFoldersScanResults = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = [];
 
 	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
 
 	internal ListViewHelper.SortState SortStateFilesAndFolders { get; set; } = new();
 
-
-	private Visibility _FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility
 	{
-		get => _FilesAndFoldersInfoBarActionButtonVisibility;
-		set => SetProperty(_FilesAndFoldersInfoBarActionButtonVisibility, value, newValue => _FilesAndFoldersInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 
 	/// <summary>
@@ -320,12 +277,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 	}
 
-	private string _TotalCountOfTheFilesTextBox = "Total files: 0";
 	internal string TotalCountOfTheFilesTextBox
 	{
-		get => _TotalCountOfTheFilesTextBox;
-		set => SetProperty(_TotalCountOfTheFilesTextBox, value, newValue => _TotalCountOfTheFilesTextBox = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = "Total files: 0";
 
 	#endregion
 
@@ -334,19 +289,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
 	/// </summary>
-	private bool _CertificatesBrowseForBasePolicyIsEnabled = true;
 	internal bool CertificatesBrowseForBasePolicyIsEnabled
 	{
-		get => _CertificatesBrowseForBasePolicyIsEnabled;
-		set => SetProperty(_CertificatesBrowseForBasePolicyIsEnabled, value, newValue => _CertificatesBrowseForBasePolicyIsEnabled = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private Visibility _CertificatesInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility CertificatesInfoBarActionButtonVisibility
 	{
-		get => _CertificatesInfoBarActionButtonVisibility;
-		set => SetProperty(_CertificatesInfoBarActionButtonVisibility, value, newValue => _CertificatesInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 	#endregion
 
@@ -355,19 +306,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
 	/// </summary>
-	private bool _ISGBrowseForBasePolicyIsEnabled = true;
 	internal bool ISGBrowseForBasePolicyIsEnabled
 	{
-		get => _ISGBrowseForBasePolicyIsEnabled;
-		set => SetProperty(_ISGBrowseForBasePolicyIsEnabled, value, newValue => _ISGBrowseForBasePolicyIsEnabled = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-	private Visibility _ISGInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility ISGInfoBarActionButtonVisibility
 	{
-		get => _ISGInfoBarActionButtonVisibility;
-		set => SetProperty(_ISGInfoBarActionButtonVisibility, value, newValue => _ISGInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 	#endregion
 
@@ -376,141 +323,103 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
 	/// </summary>
-	private bool _StrictKernelModeBrowseForBasePolicyIsEnabled = true;
 	internal bool StrictKernelModeBrowseForBasePolicyIsEnabled
 	{
-		get => _StrictKernelModeBrowseForBasePolicyIsEnabled;
-		set => SetProperty(_StrictKernelModeBrowseForBasePolicyIsEnabled, value, newValue => _StrictKernelModeBrowseForBasePolicyIsEnabled = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
 
 	#region LISTVIEW IMPLEMENTATIONS Strict Kernel Mode
 
 	// Properties to hold each columns' width.
-	private GridLength _ColumnWidthStrictKernelMode1;
 	internal GridLength ColumnWidthStrictKernelMode1
 	{
-		get => _ColumnWidthStrictKernelMode1;
-		set { _ColumnWidthStrictKernelMode1 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode2;
 	internal GridLength ColumnWidthStrictKernelMode2
 	{
-		get => _ColumnWidthStrictKernelMode2;
-		set { _ColumnWidthStrictKernelMode2 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode3;
 	internal GridLength ColumnWidthStrictKernelMode3
 	{
-		get => _ColumnWidthStrictKernelMode3;
-		set { _ColumnWidthStrictKernelMode3 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode4;
 	internal GridLength ColumnWidthStrictKernelMode4
 	{
-		get => _ColumnWidthStrictKernelMode4;
-		set { _ColumnWidthStrictKernelMode4 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode5;
 	internal GridLength ColumnWidthStrictKernelMode5
 	{
-		get => _ColumnWidthStrictKernelMode5;
-		set { _ColumnWidthStrictKernelMode5 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode6;
 	internal GridLength ColumnWidthStrictKernelMode6
 	{
-		get => _ColumnWidthStrictKernelMode6;
-		set { _ColumnWidthStrictKernelMode6 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode7;
 	internal GridLength ColumnWidthStrictKernelMode7
 	{
-		get => _ColumnWidthStrictKernelMode7;
-		set { _ColumnWidthStrictKernelMode7 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode8;
 	internal GridLength ColumnWidthStrictKernelMode8
 	{
-		get => _ColumnWidthStrictKernelMode8;
-		set { _ColumnWidthStrictKernelMode8 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode9;
 	internal GridLength ColumnWidthStrictKernelMode9
 	{
-		get => _ColumnWidthStrictKernelMode9;
-		set { _ColumnWidthStrictKernelMode9 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode10;
 	internal GridLength ColumnWidthStrictKernelMode10
 	{
-		get => _ColumnWidthStrictKernelMode10;
-		set { _ColumnWidthStrictKernelMode10 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode11;
 	internal GridLength ColumnWidthStrictKernelMode11
 	{
-		get => _ColumnWidthStrictKernelMode11;
-		set { _ColumnWidthStrictKernelMode11 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode12;
 	internal GridLength ColumnWidthStrictKernelMode12
 	{
-		get => _ColumnWidthStrictKernelMode12;
-		set { _ColumnWidthStrictKernelMode12 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode12)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode13;
 	internal GridLength ColumnWidthStrictKernelMode13
 	{
-		get => _ColumnWidthStrictKernelMode13;
-		set { _ColumnWidthStrictKernelMode13 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode13)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode14;
 	internal GridLength ColumnWidthStrictKernelMode14
 	{
-		get => _ColumnWidthStrictKernelMode14;
-		set { _ColumnWidthStrictKernelMode14 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode14)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode15;
 	internal GridLength ColumnWidthStrictKernelMode15
 	{
-		get => _ColumnWidthStrictKernelMode15;
-		set { _ColumnWidthStrictKernelMode15 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode15)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode16;
 	internal GridLength ColumnWidthStrictKernelMode16
 	{
-		get => _ColumnWidthStrictKernelMode16;
-		set { _ColumnWidthStrictKernelMode16 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode16)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode17;
 	internal GridLength ColumnWidthStrictKernelMode17
 	{
-		get => _ColumnWidthStrictKernelMode17;
-		set { _ColumnWidthStrictKernelMode17 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode17)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthStrictKernelMode18;
 	internal GridLength ColumnWidthStrictKernelMode18
 	{
-		get => _ColumnWidthStrictKernelMode18;
-		set { _ColumnWidthStrictKernelMode18 = value; OnPropertyChanged(nameof(ColumnWidthStrictKernelMode18)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
@@ -623,34 +532,25 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	#endregion
 
-
-
-	private ObservableCollection<FileIdentity> _StrictKernelModeScanResults = [];
 	internal ObservableCollection<FileIdentity> StrictKernelModeScanResults
 	{
-		get => _StrictKernelModeScanResults;
-		set => SetProperty(_StrictKernelModeScanResults, value, newValue => _StrictKernelModeScanResults = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = [];
 
 	internal readonly List<FileIdentity> StrictKernelModeScanResultsList = [];
 
 	internal ListViewHelper.SortState SortStateStrictKernelMode { get; set; } = new();
 
-
-	private Visibility _StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility StrictKernelModeInfoBarActionButtonVisibility
 	{
-		get => _StrictKernelModeInfoBarActionButtonVisibility;
-		set => SetProperty(_StrictKernelModeInfoBarActionButtonVisibility, value, newValue => _StrictKernelModeInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 
-	private string _TotalCountOfTheFilesStrictKernelModeTextBox = "Total files: 0";
 	internal string TotalCountOfTheFilesStrictKernelModeTextBox
 	{
-		get => _TotalCountOfTheFilesStrictKernelModeTextBox;
-		set => SetProperty(_TotalCountOfTheFilesStrictKernelModeTextBox, value, newValue => _TotalCountOfTheFilesStrictKernelModeTextBox = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = "Total files: 0";
 
 
 	/// <summary>
@@ -675,20 +575,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
 	/// </summary>
-	private bool _PFNBrowseForBasePolicyIsEnabled = true;
 	internal bool PFNBrowseForBasePolicyIsEnabled
 	{
-		get => _PFNBrowseForBasePolicyIsEnabled;
-		set => SetProperty(_PFNBrowseForBasePolicyIsEnabled, value, newValue => _PFNBrowseForBasePolicyIsEnabled = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-
-	private Visibility _PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility PFNInfoBarActionButtonVisibility
 	{
-		get => _PFNInfoBarActionButtonVisibility;
-		set => SetProperty(_PFNInfoBarActionButtonVisibility, value, newValue => _PFNInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 	#endregion
 
@@ -697,75 +592,60 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Controls enabled/disabled states of the elements that allow browsing for base policy file path
 	/// </summary>
-	private bool _CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled = true;
 	internal bool CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled
 	{
-		get => _CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled;
-		set => SetProperty(_CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled, value, newValue => _CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
-
-	private Visibility _CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility
 	{
-		get => _CustomFilePathRulesInfoBarActionButtonVisibility;
-		set => SetProperty(_CustomFilePathRulesInfoBarActionButtonVisibility, value, newValue => _CustomFilePathRulesInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 	#endregion
-
-
 
 	/// <summary>
 	/// The path to the policy file that user selected to add the new rules to.
 	/// </summary>
-	private string? _PolicyFileToMergeWith;
 	internal string? PolicyFileToMergeWith
 	{
-		get => _PolicyFileToMergeWith;
-		set => SetProperty(_PolicyFileToMergeWith, value, newValue => _PolicyFileToMergeWith = newValue);
+		get; set => SetProperty(ref field, value);
 	}
-
 
 	/// <summary>
 	/// Whether the button that allows for picking a policy file to add the rules to is enabled or disabled.
 	/// </summary>
-	private bool _PolicyFileToMergeWithPickerButtonIsEnabled;
 	internal bool PolicyFileToMergeWithPickerButtonIsEnabled
 	{
-		get => _PolicyFileToMergeWithPickerButtonIsEnabled;
-		set => SetProperty(_PolicyFileToMergeWithPickerButtonIsEnabled, value, newValue => _PolicyFileToMergeWithPickerButtonIsEnabled = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Controls the visibility of all of the elements related to browsing for base policy file.
 	/// </summary>
-	private Visibility _BasePolicyElementsVisibility = Visibility.Visible;
 	internal Visibility BasePolicyElementsVisibility
 	{
-		get => _BasePolicyElementsVisibility;
-		set => SetProperty(_BasePolicyElementsVisibility, value, newValue => _BasePolicyElementsVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Visible;
 
 
 	/// <summary>
 	/// The mode of operation for the Supplemental creation page.
 	/// Set to 0 (Creating New Policies) by default.
 	/// </summary>
-	private int _OperationModeComboBoxSelectedIndex;
 	internal int OperationModeComboBoxSelectedIndex
 	{
-		get => _OperationModeComboBoxSelectedIndex;
+		get;
 		set
 		{
 			// Update the operation mode property
-			_ = SetProperty(_OperationModeComboBoxSelectedIndex, value, newValue => _OperationModeComboBoxSelectedIndex = newValue);
+			_ = SetProperty(ref field, value);
 
 			// Automate the update of elements responsible for accepting base policy path.
 			// If this is set to 0, they should be visible, otherwise they should be collapsed.
-			BasePolicyElementsVisibility = value == 0 ? Visibility.Visible : Visibility.Collapsed;
+			BasePolicyElementsVisibility = field == 0 ? Visibility.Visible : Visibility.Collapsed;
 
-			PolicyFileToMergeWithPickerButtonIsEnabled = value == 1;
+			PolicyFileToMergeWithPickerButtonIsEnabled = field == 1;
 		}
 	}
 

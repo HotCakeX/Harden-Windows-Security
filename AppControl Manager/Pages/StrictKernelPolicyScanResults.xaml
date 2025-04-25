@@ -73,19 +73,13 @@
             </controls:WrapPanel>
         </Border>
 
-        <ListView x:Name="FileIdentitiesListView"
+        <customUI:ListViewV2 x:Name="FileIdentitiesListView"
+            RegistryKey="SupplementalPolicy_StrictKernelMode_ScanResults"
             Grid.Row="2"
             SelectionMode="Extended"
-            ItemsSource="{x:Bind ViewModel.StrictKernelModeScanResults, Mode=OneWay}"
-            ScrollViewer.HorizontalScrollMode="Enabled"
-            ScrollViewer.IsHorizontalRailEnabled="True"
-            ScrollViewer.HorizontalScrollBarVisibility="Visible"
-            ShowsScrollingPlaceholders="True"
-            ScrollViewer.VerticalScrollBarVisibility="Visible"
-            SelectionChanged="FileIdentitiesListView_SelectionChanged"
-            ContainerContentChanging="ListView_ContainerContentChanging">
+            ItemsSource="{x:Bind ViewModel.StrictKernelModeScanResults, Mode=OneWay}">
 
-            <ListView.Header>
+            <customUI:ListViewV2.Header>
 
                 <Border CornerRadius="5" Background="Black">
                     <interactivity:Interaction.Behaviors>
@@ -132,10 +126,10 @@
                         <Button x:Uid="OpusDataColumnHeaderBtn" Tag="Opus" Grid.Column="17" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
                     </Grid>
                 </Border>
-            </ListView.Header>
+            </customUI:ListViewV2.Header>
 
             <!-- DataTemplate for ListView items -->
-            <ListView.ItemTemplate>
+            <customUI:ListViewV2.ItemTemplate>
                 <DataTemplate x:DataType="intelgathering:FileIdentity">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
@@ -318,8 +312,8 @@
                         <TextBlock Text="{x:Bind Opus}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
                     </Grid>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
 
     </Grid>
 </Page>

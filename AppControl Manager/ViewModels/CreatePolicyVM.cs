@@ -26,41 +26,30 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private Visibility _AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility AllowMicrosoftInfoBarActionButtonVisibility
 	{
-		get => _AllowMicrosoftInfoBarActionButtonVisibility;
-		set => SetProperty(_AllowMicrosoftInfoBarActionButtonVisibility, value, newValue => _AllowMicrosoftInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-
-	private Visibility _DefaultWindowsInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility DefaultWindowsInfoBarActionButtonVisibility
 	{
-		get => _DefaultWindowsInfoBarActionButtonVisibility;
-		set => SetProperty(_DefaultWindowsInfoBarActionButtonVisibility, value, newValue => _DefaultWindowsInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private Visibility _SignedAndReputableInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility SignedAndReputableInfoBarActionButtonVisibility
 	{
-		get => _SignedAndReputableInfoBarActionButtonVisibility;
-		set => SetProperty(_SignedAndReputableInfoBarActionButtonVisibility, value, newValue => _SignedAndReputableInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private Visibility _MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility
 	{
-		get => _MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility;
-		set => SetProperty(_MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility, value, newValue => _MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private Visibility _StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility StrictKernelModeInfoBarActionButtonVisibility
 	{
-		get => _StrictKernelModeInfoBarActionButtonVisibility;
-		set => SetProperty(_StrictKernelModeInfoBarActionButtonVisibility, value, newValue => _StrictKernelModeInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 	#endregion
 

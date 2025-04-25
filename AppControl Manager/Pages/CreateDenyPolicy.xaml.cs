@@ -507,14 +507,6 @@ internal sealed partial class CreateDenyPolicy : Page
 
 	}
 
-	/// <summary>
-	/// File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
-	/// </summary>
-	private void ScanLevelComboBoxSettingsCard_Click()
-	{
-		ScanLevelComboBox.IsDropDownOpen = !ScanLevelComboBox.IsDropDownOpen;
-	}
-
 
 	/// <summary>
 	/// Button to clear the list of selected folder paths
@@ -739,7 +731,7 @@ internal sealed partial class CreateDenyPolicy : Page
 		if (PFNPackagedAppsListView.SelectedItems.Count is 0)
 		{
 			CreatePFNDenyPolicyTeachingTip.IsOpen = true;
-			CreatePFNDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("PFNBasedDenyPolicyTitle");
+			CreatePFNDenyPolicyTeachingTip.Title = "PFN based policy";
 			CreatePFNDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoAppSelectedForDenyPolicy");
 			return;
 		}
@@ -883,7 +875,6 @@ internal sealed partial class CreateDenyPolicy : Page
 	{
 		await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
 	}
-
 
 	#endregion
 
@@ -1051,7 +1042,6 @@ internal sealed partial class CreateDenyPolicy : Page
 		// Show the dialog
 		_ = await customDialog.ShowAsync();
 	}
-
 
 
 	/// <summary>

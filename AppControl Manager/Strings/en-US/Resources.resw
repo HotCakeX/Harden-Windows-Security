@@ -1007,14 +1007,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="GetSecurePolicySettings_PolicyFound" xml:space="preserve">
     <value>Policy found</value>
   </data>
-  <data name="MergePolicies_SelectMainPolicyXML" xml:space="preserve">
-    <value>Select main policy XML</value>
-  </data>
   <data name="MergePolicies_SelectMainPolicySubtitle" xml:space="preserve">
     <value>You need to select an XML file as the main policy</value>
-  </data>
-  <data name="MergePolicies_SelectOtherPolicies" xml:space="preserve">
-    <value>Select other policies</value>
   </data>
   <data name="MergePolicies_SelectOtherPoliciesSubtitle" xml:space="preserve">
     <value>You need to select at least one more policy to merge with the main policy</value>
@@ -1036,9 +1030,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="MergePolicies_SuccessMessage" xml:space="preserve">
     <value>Policies have been merged successfully</value>
-  </data>
-  <data name="UpdateNotInitialized" xml:space="preserve">
-    <value>Update is not initialized.</value>
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>Checking for update</value>
@@ -1207,9 +1198,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
     <value>Successfully generated the certificate with the selected details. The certificate's thumbprint is: '</value>
-  </data>
-  <data name="CreateDenyPolicyNotInitialized" xml:space="preserve">
-    <value>CreateDenyPolicy is not initialized.</value>
   </data>
   <data name="SelectFilesOrFoldersTitle" xml:space="preserve">
     <value>Select files or folders</value>

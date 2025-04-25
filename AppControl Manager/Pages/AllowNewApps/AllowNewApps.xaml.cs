@@ -85,7 +85,6 @@ internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	}
 
 
-
 	private string? unsignedBasePolicyPathFromSidebar;
 
 

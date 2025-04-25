@@ -41,48 +41,34 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private string? _SearchBoxTextBox;
 	internal string? SearchBoxTextBox
 	{
-		get => _SearchBoxTextBox;
-		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-
-
-	private Visibility _MainInfoBarVisibility = Visibility.Collapsed;
 	internal Visibility MainInfoBarVisibility
 	{
-		get => _MainInfoBarVisibility;
-		set => SetProperty(_MainInfoBarVisibility, value, newValue => _MainInfoBarVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
-	private bool _MainInfoBarIsOpen;
 	internal bool MainInfoBarIsOpen
 	{
-		get => _MainInfoBarIsOpen;
-		set => SetProperty(_MainInfoBarIsOpen, value, newValue => _MainInfoBarIsOpen = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private string? _MainInfoBarMessage;
 	internal string? MainInfoBarMessage
 	{
-		get => _MainInfoBarMessage;
-		set => SetProperty(_MainInfoBarMessage, value, newValue => _MainInfoBarMessage = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private InfoBarSeverity _MainInfoBarSeverity = InfoBarSeverity.Informational;
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get => _MainInfoBarSeverity;
-		set => SetProperty(_MainInfoBarSeverity, value, newValue => _MainInfoBarSeverity = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = InfoBarSeverity.Informational;
 
-	private bool _MainInfoBarIsClosable;
 	internal bool MainInfoBarIsClosable
 	{
-		get => _MainInfoBarIsClosable;
-		set => SetProperty(_MainInfoBarIsClosable, value, newValue => _MainInfoBarIsClosable = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
@@ -91,111 +77,80 @@ internal sealed partial class SimulationVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS
 
 	// Properties to hold each columns' width.
-	private GridLength _columnWidth1;
 	internal GridLength ColumnWidth1
 	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth2;
 	internal GridLength ColumnWidth2
 	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth3;
 	internal GridLength ColumnWidth3
 	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth4;
 	internal GridLength ColumnWidth4
 	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth5;
 	internal GridLength ColumnWidth5
 	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth6;
 	internal GridLength ColumnWidth6
 	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth7;
 	internal GridLength ColumnWidth7
 	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth8;
 	internal GridLength ColumnWidth8
 	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth9;
 	internal GridLength ColumnWidth9
 	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth10;
 	internal GridLength ColumnWidth10
 	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth11;
 	internal GridLength ColumnWidth11
 	{
-		get => _columnWidth11;
-		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth12;
 	internal GridLength ColumnWidth12
 	{
-		get => _columnWidth12;
-		set { _columnWidth12 = value; OnPropertyChanged(nameof(ColumnWidth12)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth13;
 	internal GridLength ColumnWidth13
 	{
-		get => _columnWidth13;
-		set { _columnWidth13 = value; OnPropertyChanged(nameof(ColumnWidth13)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth14;
 	internal GridLength ColumnWidth14
 	{
-		get => _columnWidth14;
-		set { _columnWidth14 = value; OnPropertyChanged(nameof(ColumnWidth14)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth15;
 	internal GridLength ColumnWidth15
 	{
-		get => _columnWidth15;
-		set { _columnWidth15 = value; OnPropertyChanged(nameof(ColumnWidth15)); }
+		get; set => SetProperty(ref field, value);
 	}
-
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -293,7 +248,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 	#endregion
 
 
-
 	/// <summary>
 	/// Event handler for the SearchBox text change
 	/// </summary>
@@ -304,14 +258,13 @@ internal sealed partial class SimulationVM : ViewModelBase
 		if (searchTerm is null)
 			return;
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.Simulation.Instance.ListViewElement;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
 
 
@@ -334,10 +287,10 @@ internal sealed partial class SimulationVM : ViewModelBase
 		}
 
 
-		if (scrollViewer != null && savedHorizontal.HasValue)
+		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
-			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 
@@ -378,16 +331,14 @@ internal sealed partial class SimulationVM : ViewModelBase
 	private async void Sort(SimulationSortColumn newSortColumn)
 	{
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.Simulation.Instance.ListViewElement;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
-
 
 		// Toggle sort order if the same column is clicked; otherwise, default to descending.
 		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
@@ -468,10 +419,10 @@ internal sealed partial class SimulationVM : ViewModelBase
 			}
 
 
-			if (scrollViewer != null && savedHorizontal.HasValue)
+			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
-				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 			}
 		});
 	}
@@ -493,9 +444,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	internal void SortByCertTBSValue() { Sort(SimulationSortColumn.CertTBSValue); }
 	internal void SortByFilePath() { Sort(SimulationSortColumn.FilePath); }
 
-
 	#endregion
-
 
 
 	/// <summary>

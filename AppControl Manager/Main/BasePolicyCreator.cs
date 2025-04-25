@@ -189,12 +189,25 @@ internal static partial class BasePolicyCreator
 
 		*/
 
-		// TODO: use a Native AOT compatible way that doesn't rely on System.Management
+		string command = """
+-NoProfile -WindowStyle Hidden -Command ""try { Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile 'VulnerableDriverBlockList.zip' -ErrorAction Stop } catch { exit 1 };
+Expand-Archive -Path '.\VulnerableDriverBlockList.zip' -DestinationPath 'VulnerableDriverBlockList' -Force;
+$SiPolicy_EnforcedFile = Get-ChildItem -Recurse -File -Path '.\VulnerableDriverBlockList' -Filter 'SiPolicy_Enforced.p7b' | Select-Object -First 1;
+Move-Item -Path $SiPolicy_EnforcedFile.FullName -Destination ($env:SystemDrive + '\Windows\System32\CodeIntegrity\SiPolicy.p7b') -Force;
+$null = CiTool.exe --refresh -json;
+Remove-Item -Path '.\VulnerableDriverBlockList' -Recurse -Force;
+Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
+""";
 
+		DateTime currentTimePlus6 = DateTime.UtcNow.AddHours(6);
 
-		// Execute the script using PowerShell
-		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -ExecutionPolicy Bypass -File \"{GlobalVars.DriversBlockListAutoUpdaterScheduledTaskScriptFilePath}\"");
+		string formattedTime = currentTimePlus6.ToString("yyyy-MM-ddTHH:mm:ss");
 
+		string args = $"""
+--name "MSFT Driver Block list update" --exe "PowerShell.exe" --arg "{command}" --folder "MSFT Driver Block list update" --description "This scheduled task runs every 7 days to keep the Microsoft Recommended Drivers Block List up to date. It uses Windows PowerShell for execution. It was created by the AppControl Manager application when you used the feature in the 'Create Policy' page." --author "AppControl Manager" --logon 2 --runlevel 1 --sid "S-1-5-18" --allowstartifonbatteries --dontstopifgoingonbatteries --startwhenavailable --restartcount 4 --restartinterval PT6H --priority 4 --runonlyifnetworkavailable --trigger "type=onetime;start={formattedTime};repeat_interval=P7D;execution_time_limit=PT1H;stop_at_duration_end=1;" --useunifiedschedulingengine true --executiontimelimit PT4M --waketorun 0 --multipleinstancespolicy 2 --allowhardterminate 1 --allowdemandstart 1
+""";
+
+		_ = ProcessStarter.RunCommand(GlobalVars.ScheduledTaskManagerProcessPath, args);
 	}
 
 
@@ -267,9 +280,6 @@ internal static partial class BasePolicyCreator
 		// The location where the zip file will be extracted
 		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
 
-		// The link to download the zip file
-		Uri DriversBlockListZipDownloadLink = new("https://aka.ms/VulnerableDriverBlockList");
-
 		// Get the system drive
 		string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
 
@@ -289,7 +299,7 @@ internal static partial class BasePolicyCreator
 		using (HttpClient client = new())
 		{
 			// Download the file synchronously
-			byte[] fileBytes = client.GetByteArrayAsync(DriversBlockListZipDownloadLink).GetAwaiter().GetResult();
+			byte[] fileBytes = client.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
 			File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 		}
 
@@ -334,14 +344,11 @@ internal static partial class BasePolicyCreator
 		// The location where the zip file will be extracted
 		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
 
-		// The link to download the zip file
-		Uri DriversBlockListZipDownloadLink = new("https://aka.ms/VulnerableDriverBlockList");
-
 		// Download the zip file
 		using (HttpClient client = new())
 		{
 			// Download the file synchronously
-			byte[] fileBytes = client.GetByteArrayAsync(DriversBlockListZipDownloadLink).GetAwaiter().GetResult();
+			byte[] fileBytes = client.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
 			File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 		}
 
@@ -572,7 +579,6 @@ internal static partial class BasePolicyCreator
 	}
 
 
-
 	/// <summary>
 	/// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
 	/// It generates a XML file compliant with CI Policies Schema.
@@ -762,7 +768,6 @@ internal static partial class BasePolicyCreator
 
 		return finalPolicyPath;
 	}
-
 
 
 	/// <summary>

@@ -55,7 +55,6 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 	}
 
 
-
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
 	/// </summary>
@@ -99,12 +98,10 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 					ViewModel.FilesAndFoldersScanResults,
 					ViewModel.SortStateFilesAndFolders,
 					key,
-					FileIdentitiesListView);
+					regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults);
 			}
 		}
 	}
-
-
 
 	/// <summary>
 	/// Event handler for the SearchBox text change
@@ -124,7 +121,7 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 			filteredCollection: ViewModel.FilesAndFoldersScanResults,
 			searchTextBox: SearchBox,
 			datePicker: null,
-			lw: FileIdentitiesListView
+			regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults
 		);
 		ViewModel.UpdateTotalFilesFilesAndFolders();
 	}
@@ -162,48 +159,6 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
 	}
 
-
-
-	#region Ensuring right-click on rows behaves better and normally on ListView
-
-	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
-	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
-
-	private void ListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-	{
-		// When the container is being recycled, detach the handler.
-		if (args.InRecycleQueue)
-		{
-			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
-		}
-		else
-		{
-			// Detach first to avoid multiple subscriptions, then attach the handler.
-			args.ItemContainer.RightTapped -= ListViewItem_RightTapped;
-			args.ItemContainer.RightTapped += ListViewItem_RightTapped;
-		}
-	}
-
-	private void ListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (sender is ListViewItem item)
-		{
-			// If the item is not already selected
-			if (!item.IsSelected)
-			{
-				// Set the counter so that the SelectionChanged event handler will ignore the next 2 events.
-				_skipSelectionChangedCount = 2;
-
-				//clear for exclusive selection
-				FileIdentitiesListView.SelectedItems.Clear();
-				item.IsSelected = true;
-			}
-		}
-	}
-
-	#endregion
-
-
 	/// <summary>
 	/// CTRL + C shortcuts event handler
 	/// </summary>
@@ -215,18 +170,4 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 		args.Handled = true;
 	}
 
-	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
-	private int _skipSelectionChangedCount;
-
-	private async void FileIdentitiesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		// Check if we need to skip this event.
-		if (_skipSelectionChangedCount > 0)
-		{
-			_skipSelectionChangedCount--;
-			return;
-		}
-
-		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
-	}
 }

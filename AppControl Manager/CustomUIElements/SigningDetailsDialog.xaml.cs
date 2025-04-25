@@ -32,7 +32,7 @@ namespace AppControlManager.CustomUIElements;
 
 // https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
 
-internal sealed partial class SigningDetailsDialog : ContentDialog
+internal sealed partial class SigningDetailsDialog : ContentDialogV2
 {
 
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
@@ -57,11 +57,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	{
 		this.InitializeComponent();
 
-		XamlRoot = App.MainWindow?.Content.XamlRoot;
-
 		policyObjectToVerify = policyObject;
-
-		this.RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
 
 		// Populate the AutoSuggestBox with possible certificate common names available on the system
 		FetchLatestCertificateCNs();
@@ -153,7 +149,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialog
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
-	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+	private void OnPrimaryButtonClick(ContentDialogV2 sender, ContentDialogButtonClickEventArgs args)
 	{
 		// Fill in the text boxes based on the current user configs
 		CertificatePath = CertFilePathTextBox.Text;

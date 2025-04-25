@@ -57,18 +57,12 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="MergeButton" x:Uid="MergeButton" IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
+                        <Button x:Uid="MergeButton" IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.MergeButton_Click}" />
 
                         <ToggleButton IsEnabled="{x:Bind ViewModel.ShouldDeployToggleState, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
 
                         <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.MergeProgressRingVisibility, Mode=OneWay}" />
-
-                        <TeachingTip
-                                IsOpen="{x:Bind ViewModel.MergeButtonTeachingTipIsOpen, Mode=TwoWay}"
-                                Title="{x:Bind ViewModel.MergeButtonTeachingTipTitle, Mode=OneWay}"
-                                Subtitle="{x:Bind ViewModel.MergeButtonTeachingTipSubTitle, Mode=OneWay}"
-                                Target="{x:Bind MergeButton}" />
 
                     </controls:WrapPanel>
 

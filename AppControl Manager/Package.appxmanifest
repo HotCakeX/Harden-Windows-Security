@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -23,7 +23,7 @@
   <Identity
     Name="AppControlManager"
     Publisher="CN=SelfSignedCertForAppControlManager"
-    Version="2.0.14.0" />
+    Version="2.0.15.0" />
 
   <mp:PhoneIdentity PhoneProductId="199a23ec-7cb6-4ab5-ab50-8baca348bc79" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

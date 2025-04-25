@@ -29,9 +29,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1822
-
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
+#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
 
 /// <summary>
@@ -75,7 +73,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	}
 
 
-
 	#region UI-Bound Properties
 
 	/// <summary>
@@ -87,29 +84,26 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Sets the initial value of the back drop. if it's null, Mica Alt will be used.
 	/// </summary>
-	private int _BackDropComboBoxSelectedIndex = (int)Enum.Parse<BackDropComboBoxItems>(App.Settings.BackDropBackground);
 	internal int BackDropComboBoxSelectedIndex
 	{
-		get => _BackDropComboBoxSelectedIndex;
+		get;
 		set
 		{
 			// Update the value and the system backdrop
-			if (SetProperty(_BackDropComboBoxSelectedIndex, value, newValue => _BackDropComboBoxSelectedIndex = newValue))
+			if (SetProperty(ref field, value))
 			{
 				UpdateSystemBackDrop();
 			}
 		}
-	}
+	} = (int)Enum.Parse<BackDropComboBoxItems>(App.Settings.BackDropBackground);
 
 	/// <summary>
 	/// Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
 	/// </summary>
-	private SystemBackdrop _SystemBackDropStyle = new MicaBackdrop { Kind = MicaKind.BaseAlt };
 	internal SystemBackdrop SystemBackDropStyle
 	{
-		get => _SystemBackDropStyle;
-		set => SetProperty(_SystemBackDropStyle, value, newValue => _SystemBackDropStyle = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = new MicaBackdrop { Kind = MicaKind.BaseAlt };
 
 	/// <summary>
 	/// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
@@ -117,296 +111,236 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Opacity level of the InfoBadge icon in the UI. When set to 1, the badge is visible.
 	/// When set to 0, the badge is hidden.
 	/// </summary>
-	private double _infoBadgeOpacity;
 	internal double InfoBadgeOpacity
 	{
-		get => _infoBadgeOpacity;
-		set => SetProperty(_infoBadgeOpacity, value, newValue => _infoBadgeOpacity = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar
 	/// </summary>
-	private bool _OpenConfigDirectoryButtonState = App.IsElevated;
 	internal bool OpenConfigDirectoryButtonState
 	{
-		get => _OpenConfigDirectoryButtonState;
-		set => SetProperty(_OpenConfigDirectoryButtonState, value, newValue => _OpenConfigDirectoryButtonState = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = App.IsElevated;
 
 	/// <summary>
 	/// Whether the sidebar pane is open or closed
 	/// </summary>
-	private bool _SidebarPaneIsOpen;
 	internal bool SidebarPaneIsOpen
 	{
-		get => _SidebarPaneIsOpen;
-		set => SetProperty(_SidebarPaneIsOpen, value, newValue => _SidebarPaneIsOpen = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Indicates whether the automatic assignment sidebar toggle switch is in a toggled state. It stores a boolean value.
 	/// </summary>
-	private bool _AutomaticAssignmentSidebarToggleSwitchToggledState = true;
 	internal bool AutomaticAssignmentSidebarToggleSwitchToggledState
 	{
-		get => _AutomaticAssignmentSidebarToggleSwitchToggledState;
-		set => SetProperty(_AutomaticAssignmentSidebarToggleSwitchToggledState, value, newValue => _AutomaticAssignmentSidebarToggleSwitchToggledState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// The text in the SidebarBasePolicyPathTextBox
 	/// </summary>
-	private string? _SidebarBasePolicyPathTextBoxText;
 	internal string? SidebarBasePolicyPathTextBoxText
 	{
-		get => _SidebarBasePolicyPathTextBoxText;
-		set => SetProperty(_SidebarBasePolicyPathTextBoxText, value, newValue => _SidebarBasePolicyPathTextBoxText = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	///  Adjust the elevation of the border to achieve the shadow effect
 	/// </summary>
-	private Vector3 _BorderTranslation = new(0, 0, 500);
 	internal Vector3 BorderTranslation
 	{
-		get => _BorderTranslation;
-		set => SetProperty(_BorderTranslation, value, newValue => _BorderTranslation = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = new(0, 0, 500);
 
 	/// <summary>
 	/// Whether the main NavigationView's pane is open or closed
 	/// </summary>
-	private bool _MainNavigationIsPaneOpen = true;
 	internal bool MainNavigationIsPaneOpen
 	{
-		get => _MainNavigationIsPaneOpen;
-		set => SetProperty(_MainNavigationIsPaneOpen, value, newValue => _MainNavigationIsPaneOpen = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = true;
 
 	/// <summary>
 	/// The width of the TitleColumn in the main window's custom title bar
 	/// </summary>
-	private GridLength _TitleColumnWidth = GridLength.Auto;
 	internal GridLength TitleColumnWidth
 	{
-		get => _TitleColumnWidth;
-		set => SetProperty(_TitleColumnWidth, value, newValue => _TitleColumnWidth = newValue);
-	}
-
-
+		get; set => SetProperty(ref field, value);
+	} = GridLength.Auto;
 
 
 	// Navigation Icon Properties
 
-	private IconElement? _CreatePolicyIcon;
 	/// <summary>
 	/// Icon for the Create Policy navigation item.
 	/// </summary>
 	internal IconElement? CreatePolicyIcon
 	{
-		get => _CreatePolicyIcon;
-		set => SetProperty(_CreatePolicyIcon, value, newValue => _CreatePolicyIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _CreateSupplementalPolicyIcon;
 	/// <summary>
 	/// Icon for the Create Supplemental Policy navigation item.
 	/// </summary>
 	internal IconElement? CreateSupplementalPolicyIcon
 	{
-		get => _CreateSupplementalPolicyIcon;
-		set => SetProperty(_CreateSupplementalPolicyIcon, value, newValue => _CreateSupplementalPolicyIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _CreateDenyPolicyIcon;
 	/// <summary>
 	/// Icon for the Create Deny Policy navigation item.
 	/// </summary>
 	internal IconElement? CreateDenyPolicyIcon
 	{
-		get => _CreateDenyPolicyIcon;
-		set => SetProperty(_CreateDenyPolicyIcon, value, newValue => _CreateDenyPolicyIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _BuildNewCertificateIcon;
 	/// <summary>
 	/// Icon for the Build New Certificate navigation item.
 	/// </summary>
 	internal IconElement? BuildNewCertificateIcon
 	{
-		get => _BuildNewCertificateIcon;
-		set => SetProperty(_BuildNewCertificateIcon, value, newValue => _BuildNewCertificateIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _ViewFileCertificatesIcon;
 	/// <summary>
 	/// Icon for the View File Certificates navigation item.
 	/// </summary>
 	internal IconElement? ViewFileCertificatesIcon
 	{
-		get => _ViewFileCertificatesIcon;
-		set => SetProperty(_ViewFileCertificatesIcon, value, newValue => _ViewFileCertificatesIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _CreatePolicyFromEventLogsIcon;
 	/// <summary>
 	/// Icon for the Create Policy from Event Logs navigation item.
 	/// </summary>
 	internal IconElement? CreatePolicyFromEventLogsIcon
 	{
-		get => _CreatePolicyFromEventLogsIcon;
-		set => SetProperty(_CreatePolicyFromEventLogsIcon, value, newValue => _CreatePolicyFromEventLogsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _CreatePolicyFromMDEAHIcon;
 	/// <summary>
 	/// Icon for the MDE Advanced Hunting navigation item.
 	/// </summary>
 	internal IconElement? CreatePolicyFromMDEAHIcon
 	{
-		get => _CreatePolicyFromMDEAHIcon;
-		set => SetProperty(_CreatePolicyFromMDEAHIcon, value, newValue => _CreatePolicyFromMDEAHIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _AllowNewAppsIcon;
 	/// <summary>
 	/// Icon for the Allow New Apps navigation item.
 	/// </summary>
 	internal IconElement? AllowNewAppsIcon
 	{
-		get => _AllowNewAppsIcon;
-		set => SetProperty(_AllowNewAppsIcon, value, newValue => _AllowNewAppsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _PolicyEditorIcon;
 	/// <summary>
 	/// Icon for the Policy Editor navigation item.
 	/// </summary>
 	internal IconElement? PolicyEditorIcon
 	{
-		get => _PolicyEditorIcon;
-		set => SetProperty(_PolicyEditorIcon, value, newValue => _PolicyEditorIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _SimulationIcon;
 	/// <summary>
 	/// Icon for the Simulation navigation item.
 	/// </summary>
 	internal IconElement? SimulationIcon
 	{
-		get => _SimulationIcon;
-		set => SetProperty(_SimulationIcon, value, newValue => _SimulationIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _SystemInformationIcon;
 	/// <summary>
 	/// Icon for the System Information navigation item.
 	/// </summary>
 	internal IconElement? SystemInformationIcon
 	{
-		get => _SystemInformationIcon;
-		set => SetProperty(_SystemInformationIcon, value, newValue => _SystemInformationIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _GetCodeIntegrityHashesIcon;
 	/// <summary>
 	/// Icon for the Get Code Integrity Hashes navigation item.
 	/// </summary>
 	internal IconElement? GetCodeIntegrityHashesIcon
 	{
-		get => _GetCodeIntegrityHashesIcon;
-		set => SetProperty(_GetCodeIntegrityHashesIcon, value, newValue => _GetCodeIntegrityHashesIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _GetSecurePolicySettingsIcon;
 	/// <summary>
 	/// Icon for the Get Secure Policy Settings navigation item.
 	/// </summary>
 	internal IconElement? GetSecurePolicySettingsIcon
 	{
-		get => _GetSecurePolicySettingsIcon;
-		set => SetProperty(_GetSecurePolicySettingsIcon, value, newValue => _GetSecurePolicySettingsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _ConfigurePolicyRuleOptionsIcon;
 	/// <summary>
 	/// Icon for the Configure Policy Rule Options navigation item.
 	/// </summary>
 	internal IconElement? ConfigurePolicyRuleOptionsIcon
 	{
-		get => _ConfigurePolicyRuleOptionsIcon;
-		set => SetProperty(_ConfigurePolicyRuleOptionsIcon, value, newValue => _ConfigurePolicyRuleOptionsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _MergePoliciesIcon;
 	/// <summary>
 	/// Icon for the Merge Policies navigation item.
 	/// </summary>
 	internal IconElement? MergePoliciesIcon
 	{
-		get => _MergePoliciesIcon;
-		set => SetProperty(_MergePoliciesIcon, value, newValue => _MergePoliciesIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _DeploymentIcon;
 	/// <summary>
 	/// Icon for the Deployment navigation item.
 	/// </summary>
 	internal IconElement? DeploymentIcon
 	{
-		get => _DeploymentIcon;
-		set => SetProperty(_DeploymentIcon, value, newValue => _DeploymentIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _ValidatePoliciesIcon;
 	/// <summary>
 	/// Icon for the Validate Policies navigation item.
 	/// </summary>
 	internal IconElement? ValidatePoliciesIcon
 	{
-		get => _ValidatePoliciesIcon;
-		set => SetProperty(_ValidatePoliciesIcon, value, newValue => _ValidatePoliciesIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _GitHubDocsIcon;
 	/// <summary>
 	/// Icon for the GitHub Documentation navigation item.
 	/// </summary>
 	internal IconElement? GitHubDocsIcon
 	{
-		get => _GitHubDocsIcon;
-		set => SetProperty(_GitHubDocsIcon, value, newValue => _GitHubDocsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _MSFTDocsIcon;
 	/// <summary>
 	/// Icon for the Microsoft Documentation navigation item.
 	/// </summary>
 	internal IconElement? MSFTDocsIcon
 	{
-		get => _MSFTDocsIcon;
-		set => SetProperty(_MSFTDocsIcon, value, newValue => _MSFTDocsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _LogsIcon;
 	/// <summary>
 	/// Icon for the Logs navigation item.
 	/// </summary>
 	internal IconElement? LogsIcon
 	{
-		get => _LogsIcon;
-		set => SetProperty(_LogsIcon, value, newValue => _LogsIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private IconElement? _UpdateIcon;
 	/// <summary>
 	/// Icon for the Update navigation item in the footer.
 	/// </summary>
 	internal IconElement? UpdateIcon
 	{
-		get => _UpdateIcon;
-		set => SetProperty(_UpdateIcon, value, newValue => _UpdateIcon = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion

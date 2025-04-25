@@ -216,7 +216,6 @@ internal static class SetCiPolicyInfo
 	}
 
 
-
 	/// <summary>
 	/// A method that accepts a string and tests if it is valid to be a Policy ID or Base Policy ID
 	/// </summary>

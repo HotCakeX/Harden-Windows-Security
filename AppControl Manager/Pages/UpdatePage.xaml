@@ -6,6 +6,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -30,10 +31,12 @@
             </controls:WrapPanel>
 
             <InfoBar
-                x:Name="UpdateStatusInfoBar"
-                IsOpen="False"
+                Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
+                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                 IsIconVisible="True"
-                IsClosable="False"
+                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
                 x:Uid="UpdatePageUpdateStatusInfoBar"
                 Grid.Row="1">
                 <InfoBar.ActionButton>
@@ -41,9 +44,9 @@
                 </InfoBar.ActionButton>
             </InfoBar>
 
-            <InfoBar Grid.Row="2" x:Name="WhatsNewInfoBar"
+            <InfoBar Grid.Row="2"
                      x:Uid="UpdatePageWhatsNewInfoBar"                
-                     IsOpen="False"
+                     IsOpen="{x:Bind ViewModel.WhatsNewInfoBarIsOpen, Mode=TwoWay}"
                      Severity="Success"
                      IsClosable="True">
                 <InfoBar.IconSource>
@@ -62,31 +65,43 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Name="CheckForUpdate"
-                           x:Uid="CheckForUpdateSettingsCard"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}" IsClickEnabled="True" Click="{x:Bind CheckForUpdate_Click}">
+                <controls:SettingsCard
+                        x:Uid="CheckForUpdateSettingsCard"
+                        IsClickEnabled="{x:Bind ViewModel.CheckForUpdateSettingsCardIsClickable, Mode=OneWay}"
+                        HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}"
+                        Click="{x:Bind ViewModel.CheckForUpdate_Click}">
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <ProgressRing Visibility="Collapsed" x:Name="DownloadProgressRingForMSIXFile" Width="60" Height="60" Margin="5,5,15,5" Value="0" IsIndeterminate="False" Minimum="0" Maximum="100"/>
+                        <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"                                      
+                                      Value="{x:Bind ViewModel.ProgressBarValue, Mode=OneWay}"
+                                      IsIndeterminate="{x:Bind ViewModel.ProgressBarIsIndeterminate, Mode=OneWay}"
+                                      Minimum="0" Maximum="100" Width="60" Height="60" Margin="5,5,15,5"/>
 
-                        <Button x:Name="CheckForUpdateButton" x:Uid="UpdatePageCheckForUpdateButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                                Click="{x:Bind CheckForUpdateButton_Click}" />
+                        <Button IsEnabled="{x:Bind ViewModel.CheckForUpdateButtonIsEnabled, Mode=OneWay}"
+                                Content="{x:Bind ViewModel.UpdateButtonContent, Mode=OneWay}"
+                                x:Uid="UpdatePageCheckForUpdateButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Click="{x:Bind ViewModel.CheckForUpdateButton_Click}"
+                                Margin="0,0,15,0"/>
 
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Uid="AutoUpdateCheckSettingsCard"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" Click="{x:Bind AutoUpdateCheckToggleSettingsCard_Click}" IsActionIconVisible="False">
-                    <ToggleSwitch x:Name="AutoUpdateCheckToggle" Toggled="{x:Bind AutoUpdateCheckToggle_Toggled}"/>
-                </controls:SettingsCard>
+                <customUI:SettingsCardV2
+                    x:Uid="AutoUpdateCheckSettingsCard"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}"
+                    IsClickEnabled="True" IsActionIconVisible="False">
+                    <ToggleSwitch IsOn="{x:Bind AppSettings.AutoCheckForUpdateAtStartup, Mode=TwoWay}"/>
+                </customUI:SettingsCardV2>
 
-                <controls:SettingsCard x:Uid="HardenedUpdateProcedureSettingsCard"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind HardenedUpdateProcedureToggleSettingsCard_Click}">
-                    <ToggleSwitch x:Name="HardenedUpdateProcedureToggle" Toggled="HardenedUpdateProcedureToggle_Toggled" />
-                </controls:SettingsCard>
+                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xF552;}"
+                    IsClickEnabled="True"
+                    IsActionIconVisible="False">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}" />
+                </customUI:SettingsCardV2>
 
             </StackPanel>
 

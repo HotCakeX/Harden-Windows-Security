@@ -40,6 +40,91 @@ namespace AppControlManager.Others;
 internal static class ListViewHelper
 {
 	/// <summary>
+	/// A list of all of the ListViews in this application
+	/// </summary>
+	internal enum ListViewsRegistry
+	{
+		Locally_Deployed_Policies = 0,
+		Online_Deployed_Policies = 1,
+		Allow_New_Apps_EventLogs_ScanResults = 2,
+		Allow_New_Apps_LocalFiles_ScanResults = 3,
+		View_File_Certificates = 4,
+		MDE_AdvancedHunting = 5,
+		Event_Logs = 6,
+		SupplementalPolicy_FilesAndFolders_ScanResults = 7,
+		SupplementalPolicy_StrictKernelMode_ScanResults = 8,
+		DenyPolicy_FilesAndFolders_ScanResults = 9,
+		Simulation = 10,
+		PolicyEditor_FileBasedRules = 11,
+		PolicyEditor_SignatureBasedRules = 12
+	}
+
+	/// <summary>
+	/// Stores a reference to all of the ListViews currently available in the visual tree
+	/// </summary>
+	private static readonly Dictionary<ListViewsRegistry, ListView> ListViewsCache = [];
+
+	/// <summary>
+	/// Stores a reference to the ScrollViewers inside all of the ListViews currently available in the visual tree
+	/// </summary>
+	private static readonly Dictionary<ListViewsRegistry, ScrollViewer> ListViewsScrollViewerCache = [];
+
+	/// <summary>
+	/// Registers a ListView and its ScrollViewer in the caches.
+	/// </summary>
+	/// <param name="key"></param>
+	/// <param name="listView"></param>
+	/// <param name="viewer"></param>
+	internal static void Register(ListViewsRegistry key, ListView listView, ScrollViewer viewer)
+	{
+		// Logger.Write("Registering ListView in the cache");
+		ListViewsCache[key] = listView;
+		ListViewsScrollViewerCache[key] = viewer;
+	}
+
+	/// <summary>
+	/// Removes the references to a ListView and its ScrollViewer in the caches.
+	/// </summary>
+	/// <param name="key"></param>
+	internal static void Unregister(ListViewsRegistry key)
+	{
+		// Logger.Write("Unregistering ListView from the cache");
+
+		if (ListViewsCache.TryGetValue(key, out ListView? lv))
+		{
+			if (ObjRemovalTracking.Remove(lv))
+			{
+				// Logger.Write("Removed a ListView reference from ObjRemovalTracking");
+			}
+		}
+
+		_ = ListViewsCache.Remove(key);
+		_ = ListViewsScrollViewerCache.Remove(key);
+	}
+
+	/// <summary>
+	/// Used to retrieve the ListView from the cache.
+	/// </summary>
+	/// <param name="key">the key used for retrieval.</param>
+	/// <returns></returns>
+	internal static ListView? GetListViewFromCache(ListViewsRegistry key)
+	{
+		_ = ListViewsCache.TryGetValue(key, out ListView? listView);
+		return listView;
+	}
+
+	/// <summary>
+	/// Used to retrieve a ScrollViewer from the cache.
+	/// </summary>
+	/// <param name="key">the key used for retrieval.</param>
+	/// <returns></returns>
+	internal static ScrollViewer? GetScrollViewerFromCache(ListViewsRegistry key)
+	{
+		_ = ListViewsScrollViewerCache.TryGetValue(key, out ScrollViewer? scrollViewer);
+		return scrollViewer;
+	}
+
+	/// <summary>
 	/// Walks the VisualTree under 'element' and returns the first ScrollViewer it finds.
 	/// </summary>
 	internal static ScrollViewer? FindScrollViewer(this DependencyObject element)
@@ -228,7 +313,7 @@ internal static class ListViewHelper
 	/// <param name="observableCollection">The observable collection to update.</param>
 	/// <param name="sortState">An object that holds the current sort state.</param>
 	/// <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
-	/// <param name="lw">ListView element</param>
+	/// <param name="regKey">used to find the ListView in the cache.</param>
 	internal static void SortColumn<T>(
 		Func<FileIdentity, T> keySelector,
 		TextBox searchBox,
@@ -236,19 +321,17 @@ internal static class ListViewHelper
 		ObservableCollection<FileIdentity> observableCollection,
 		SortState sortState,
 		string newKey,
-		ListView lw)
+		ListViewsRegistry regKey)
 	{
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = lw;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = GetScrollViewerFromCache(regKey);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
-
 
 		// Toggle sort order if the same column; otherwise, reset to descending.
 		if (sortState.CurrentSortKey == newKey)
@@ -274,11 +357,10 @@ internal static class ListViewHelper
 			observableCollection.Add(item);
 		}
 
-
-		if (scrollViewer != null && savedHorizontal.HasValue)
+		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
-			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 
@@ -297,27 +379,25 @@ internal static class ListViewHelper
 	/// </param>
 	/// <param name="datePicker">
 	/// An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
-	/// <param name="lw">ListView element</param>
 	/// </param>
+	/// <param name="regKey">used to find the ListView in the cache.</param>
 	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,
 		TextBox searchTextBox,
 		CalendarDatePicker? datePicker,
-		ListView lw
+		ListViewsRegistry regKey
 		)
 	{
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = lw;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = GetScrollViewerFromCache(regKey);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
-
 
 		// Get the search term from the SearchBox, converting it to lowercase for case-insensitive searching
 		string searchTerm = searchTextBox.Text.Trim();
@@ -368,10 +448,10 @@ internal static class ListViewHelper
 		}
 
 
-		if (scrollViewer != null && savedHorizontal.HasValue)
+		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
-			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 

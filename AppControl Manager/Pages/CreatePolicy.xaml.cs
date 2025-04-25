@@ -697,17 +697,6 @@ internal sealed partial class CreatePolicy : Page
 		}
 	}
 
-	private void StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard_Click()
-	{
-		StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn = !StrictKernelModePolicyUseNoFlightRootsToggleSwitch.IsOn;
-	}
-
-
-	private void StrictKernelModePolicyAuditSettingsCard_Click()
-	{
-		StrictKernelModePolicyAudit.IsOn = !StrictKernelModePolicyAudit.IsOn;
-	}
-
 
 	/// <summary>
 	/// Event handler to open the created Strict Kernel-mode policy in the Policy Editor

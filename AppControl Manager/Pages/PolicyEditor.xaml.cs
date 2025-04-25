@@ -17,12 +17,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -90,129 +88,4 @@ internal sealed partial class PolicyEditor : Page
 			ViewModel.RemoveSignatureRuleFromCollection(item);
 		}
 	}
-
-
-	#region FileBasedRulesListView enhancements
-
-
-	#region Ensuring right-click on rows behaves better and normally on FileBasedRulesListView
-
-	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
-	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
-
-	private void FileBasedRulesListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-	{
-		// When the container is being recycled, detach the handler.
-		if (args.InRecycleQueue)
-		{
-			args.ItemContainer.RightTapped -= FileBasedRulesListViewItem_RightTapped;
-		}
-		else
-		{
-			// Detach first to avoid multiple subscriptions, then attach the handler.
-			args.ItemContainer.RightTapped -= FileBasedRulesListViewItem_RightTapped;
-			args.ItemContainer.RightTapped += FileBasedRulesListViewItem_RightTapped;
-		}
-	}
-
-	private void FileBasedRulesListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (sender is ListViewItem item)
-		{
-			// If the item is not already selected, clear previous selections and select this one.
-			if (!item.IsSelected)
-			{
-
-				// Set the counter so that the SelectionChanged event handler will ignore the next 2 events.
-				_skipSelectionChangedCountForFileBasedRulesListView = 2;
-
-				//clear for exclusive selection
-				FileBasedRulesListView.SelectedItems.Clear();
-				item.IsSelected = true;
-			}
-		}
-	}
-
-	#endregion
-
-
-	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
-	private int _skipSelectionChangedCountForFileBasedRulesListView;
-
-	private async void FileBasedRulesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		// Check if we need to skip this event.
-		if (_skipSelectionChangedCountForFileBasedRulesListView > 0)
-		{
-			_skipSelectionChangedCountForFileBasedRulesListView--;
-			return;
-		}
-
-		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
-	}
-
-	#endregion
-
-
-	#region SignatureBasedRulesListView enhancements
-
-	#region Ensuring right-click on rows behaves better and normally on ListView
-
-	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
-	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
-
-	private void SignatureBasedRulesListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-	{
-		// When the container is being recycled, detach the handler.
-		if (args.InRecycleQueue)
-		{
-			args.ItemContainer.RightTapped -= SignatureBasedRulesListViewItem_RightTapped;
-		}
-		else
-		{
-			// Detach first to avoid multiple subscriptions, then attach the handler.
-			args.ItemContainer.RightTapped -= SignatureBasedRulesListViewItem_RightTapped;
-			args.ItemContainer.RightTapped += SignatureBasedRulesListViewItem_RightTapped;
-		}
-	}
-
-	private void SignatureBasedRulesListViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (sender is ListViewItem item)
-		{
-			// If the item is not already selected, clear previous selections and select this one.
-			if (!item.IsSelected)
-			{
-
-				// Set the counter so that the SelectionChanged event handler will ignore the next 2 events.
-				_skipSelectionChangedCountForSignatureBasedRulesListView = 2;
-
-				//clear for exclusive selection
-				SignatureBasedRulesListView.SelectedItems.Clear();
-				item.IsSelected = true;
-			}
-		}
-	}
-
-	#endregion
-
-
-	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row
-	private int _skipSelectionChangedCountForSignatureBasedRulesListView;
-
-	private async void SignatureBasedRulesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		// Check if we need to skip this event.
-		if (_skipSelectionChangedCountForSignatureBasedRulesListView > 0)
-		{
-			_skipSelectionChangedCountForSignatureBasedRulesListView--;
-			return;
-		}
-
-		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(listViewBase: (ListView)sender, listView: (ListView)sender, index: ((ListView)sender).SelectedIndex, disableAnimation: false, scrollIfVisible: true, additionalHorizontalOffset: 0, additionalVerticalOffset: 0);
-	}
-
-
-	#endregion
-
 }

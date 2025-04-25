@@ -1007,14 +1007,8 @@
   <data name="GetSecurePolicySettings_PolicyFound" xml:space="preserve">
     <value>מדיניות נמצאה</value>
   </data>
-  <data name="MergePolicies_SelectMainPolicyXML" xml:space="preserve">
-    <value>בחר XML של המדיניות הראשית</value>
-  </data>
   <data name="MergePolicies_SelectMainPolicySubtitle" xml:space="preserve">
     <value>עליך לבחור קובץ XML כמדיניות הראשית</value>
-  </data>
-  <data name="MergePolicies_SelectOtherPolicies" xml:space="preserve">
-    <value>בחר מדיניות אחרות</value>
   </data>
   <data name="MergePolicies_SelectOtherPoliciesSubtitle" xml:space="preserve">
     <value>עליך לבחור לפחות מדיניות אחת נוספת כדי למזג עם המדיניות הראשית</value>
@@ -1036,9 +1030,6 @@
   </data>
   <data name="MergePolicies_SuccessMessage" xml:space="preserve">
     <value>המדיניות מוזגו בהצלחה</value>
-  </data>
-  <data name="UpdateNotInitialized" xml:space="preserve">
-    <value>העדכון לא אותחל.</value>
   </data>
   <data name="CheckingForUpdate" xml:space="preserve">
     <value>בודק עדכון</value>
@@ -1207,9 +1198,6 @@
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
     <value>יצרתי בהצלחה את התעודה עם הפרטים שנבחרו. טביעת האצבע של התעודה היא: '</value>
-  </data>
-  <data name="CreateDenyPolicyNotInitialized" xml:space="preserve">
-    <value>CreateDenyPolicy לא אותחל.</value>
   </data>
   <data name="SelectFilesOrFoldersTitle" xml:space="preserve">
     <value>בחר קבצים או תיקיות</value>

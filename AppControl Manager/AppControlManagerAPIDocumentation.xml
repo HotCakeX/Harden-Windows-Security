@@ -1643,6 +1643,36 @@
             GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
+        <member name="P:AppControlManager.CustomUIElements.ListViewV2.RegistryKey">
+            <summary>
+            When set in XAML, this key will be used for to register/unregister the ScrollViewer inside of the ListView and the ListView itself.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.CustomUIElements.ListViewV2.RegistryKeyProperty">
+            <summary>
+            A DP added to the ListView which is a type Enum, used to register it in the caches.
+            This property is exposed and is available in the XAML just like other native properties of the ListView.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.ListViewV2.#ctor">
+            <summary>
+            The SelectionChanged and ContainerContentChanging events can still be subscribed to from the code behind of any page that utilizes this ListView.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.ListViewV2.OnLoaded(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Loaded event of the ListView. Every time the ListView becomes visible, such as by navigating to the page containing it, this event will be fired.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.ListViewV2.OnUnloaded(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Whenever we navigate away from a page that contains the ListView, this even will be fired.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
         <member name="T:AppControlManager.CustomUIElements.MenuFlyoutV2">
             <summary>
             A custom implementation of MenuFlyout that prevents the flyout from automatically closing
@@ -1684,6 +1714,12 @@
             <param name="sender">The menu item that the pointer exited.</param>
             <param name="e">The event data for the pointer interaction.</param>
         </member>
+        <member name="T:AppControlManager.CustomUIElements.SettingsCardV2">
+            <summary>
+            Extends SettingsCard to automatically invoke its single child element
+            (ToggleSwitch, ComboBox or Button) when the card itself is clicked.
+            </summary>
+        </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.CertificateCNAutoSuggestBox_TextChanged(Microsoft.UI.Xaml.Controls.AutoSuggestBox,Microsoft.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs)">
             <summary>
             Event handler for AutoSuggestBox
@@ -1710,7 +1746,7 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.OnPrimaryButtonClick(Microsoft.UI.Xaml.Controls.ContentDialog,Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs)">
+        <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.OnPrimaryButtonClick(AppControlManager.CustomUIElements.ContentDialogV2,Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs)">
             <summary>
             Event handler for the primary button click
             </summary>
@@ -4495,6 +4531,49 @@
             This class includes methods that are helpers for the custom ListView implementations in this application.
             </summary>
         </member>
+        <member name="T:AppControlManager.Others.ListViewHelper.ListViewsRegistry">
+            <summary>
+            A list of all of the ListViews in this application
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.ListViewHelper.ListViewsCache">
+            <summary>
+            Stores a reference to all of the ListViews currently available in the visual tree
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.ListViewHelper.ListViewsScrollViewerCache">
+            <summary>
+            Stores a reference to the ScrollViewers inside all of the ListViews currently available in the visual tree
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.ListViewHelper.Register(AppControlManager.Others.ListViewHelper.ListViewsRegistry,Microsoft.UI.Xaml.Controls.ListView,Microsoft.UI.Xaml.Controls.ScrollViewer)">
+            <summary>
+            Registers a ListView and its ScrollViewer in the caches.
+            </summary>
+            <param name="key"></param>
+            <param name="listView"></param>
+            <param name="viewer"></param>
+        </member>
+        <member name="M:AppControlManager.Others.ListViewHelper.Unregister(AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
+            <summary>
+            Removes the references to a ListView and its ScrollViewer in the caches.
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:AppControlManager.Others.ListViewHelper.GetListViewFromCache(AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
+            <summary>
+            Used to retrieve the ListView from the cache.
+            </summary>
+            <param name="key">the key used for retrieval.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.Others.ListViewHelper.GetScrollViewerFromCache(AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
+            <summary>
+            Used to retrieve a ScrollViewer from the cache.
+            </summary>
+            <param name="key">the key used for retrieval.</param>
+            <returns></returns>
+        </member>
         <member name="M:AppControlManager.Others.ListViewHelper.FindScrollViewer(Microsoft.UI.Xaml.DependencyObject)">
             <summary>
             Walks the VisualTree under 'element' and returns the first ScrollViewer it finds.
@@ -4538,7 +4617,7 @@
             Used to store sorting states of columns in ListViews
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String,Microsoft.UI.Xaml.Controls.ListView)">
+        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String,AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
             <summary>
             Sorts the ObservableCollection using the given key selector.
             The SortState parameter toggles sort order when the same column is pressed.
@@ -4550,9 +4629,9 @@
             <param name="observableCollection">The observable collection to update.</param>
             <param name="sortState">An object that holds the current sort state.</param>
             <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
-            <param name="lw">ListView element</param>
+            <param name="regKey">used to find the ListView in the cache.</param>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.CalendarDatePicker,Microsoft.UI.Xaml.Controls.ListView)">
+        <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.CalendarDatePicker,AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
             <summary>
             Applies the search (and optional date) filters to the provided data.
             </summary>
@@ -4567,8 +4646,8 @@
             </param>
             <param name="datePicker">
             An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
-            <param name="lw">ListView element</param>
             </param>
+            <param name="regKey">used to find the ListView in the cache.</param>
         </member>
         <member name="M:AppControlManager.Others.ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(Microsoft.UI.Xaml.Controls.ListViewBase,Microsoft.UI.Xaml.Controls.ListView,System.Int32,System.Boolean,System.Boolean,System.Int32,System.Int32)">
             <summary>
@@ -5632,11 +5711,6 @@
             <param name="e"></param>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.ScanLevelComboBoxSettingsCard_Click">
-            <summary>
-            File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
             <summary>
             Button to clear the list of selected folder paths
@@ -5983,11 +6057,6 @@
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersViewFileDetailsSettingsCard_Click">
             <summary>
             Link to the page that shows scanned file details
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.ScanLevelComboBoxSettingsCard_Click">
-            <summary>
-            File Scan Level ComboBox - Settings Card Click to simulate ComboBox click
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
@@ -7377,80 +7446,6 @@
             packages, and signing them.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.MyRegex1">
-            <remarks>
-            Pattern:<br/>
-            <code>__sadt7br7jpt02</code><br/>
-            Options:<br/>
-            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
-            Explanation:<br/>
-            <code>
-            ○ Match the string "__".<br/>
-            ○ Match a character in the set [Ss].<br/>
-            ○ Match a character in the set [Aa].<br/>
-            ○ Match a character in the set [Dd].<br/>
-            ○ Match a character in the set [Tt].<br/>
-            ○ Match '7'.<br/>
-            ○ Match a character in the set [Bb].<br/>
-            ○ Match a character in the set [Rr].<br/>
-            ○ Match '7'.<br/>
-            ○ Match a character in the set [Jj].<br/>
-            ○ Match a character in the set [Pp].<br/>
-            ○ Match a character in the set [Tt].<br/>
-            ○ Match the string "02".<br/>
-            </code>
-            </remarks>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.#ctor">
-            <summary>
-            Initializes a new instance of the UpdatePage class. Caches the page for improved performance during navigation.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.Pages.UpdatePage.Instance">
-            <summary>
-            Public property to access the singleton instance from other classes
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.CheckForUpdateButton_Click">
-            <summary>
-            Event handler for check for update button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.AutoUpdateCheckToggle_Toggled">
-            <summary>
-            Event handler for the Auto Update Check Toggle Button to modify the app settings
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs)">
-            <summary>
-            Override OnNavigatedTo to update the toggle button when the page is navigated to.
-            The method is called whenever the page becomes the active page in the navigation stack but the Update() constructor is not called again.
-            Changes the in-memory (cached) instance of the page
-            </summary>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.HardenedUpdateProcedureToggle_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the Hardened Update Procedure Toggle Button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.AutoUpdateCheckToggleSettingsCard_Click">
-            <summary>
-            Event handler for the Settings card click that will act as click/tap on the toggle switch itself
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.HardenedUpdateProcedureToggleSettingsCard_Click">
-            <summary>
-            Event handler for the Settings card click that will act as click/tap on the toggle switch itself
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePage.CheckForUpdate_Click">
-            <summary>
-            Navigate to the extra sub-page
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.UpdatePage.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -7468,25 +7463,8 @@
         </member>
         <member name="T:AppControlManager.Pages.UpdatePageCustomMSIXPath">
             <summary>
-            Handles the selection and confirmation of a custom MSIX file path for updates. Updates UI elements based on user
+            Handles the selection and confirmation of a custom package file path for updates. Updates UI elements based on user
             interactions.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.#ctor">
-            <summary>
-            Initializes the UpdatePageCustomMSIXPath component and sets the initial state of the confirm toggle switch.
-            Navigation cache mode is set to required.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.BrowseForCustomMSIXPathButton_Click">
-            <summary>
-            Opens a file picker to select an MSIX file path. Updates the path on the main page and enables confirmation
-            settings if valid.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.SetConfirmToggleSwitchState">
-            <summary>
-            Set the initial state of the toggle switch based on whether a custom MSIX file path is selected or not
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.UpdatePageCustomMSIXPath.InitializeComponent">
@@ -7508,16 +7486,6 @@
             <summary>
             Validates an XML policy file selected by the user and displays the result in an info bar. It handles errors and
             updates UI elements accordingly.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ValidatePolicy.#ctor">
-            <summary>
-            Initializes a new instance of the ValidatePolicy class. Sets the navigation cache mode to required.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ValidatePolicy.ValidateXML">
-            <summary>
-            Validates an App Control XML policy file by allowing the user to select a file and checking its validity.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.ValidatePolicy.InitializeComponent">
@@ -9067,38 +9035,38 @@
             <param name="completed">Represents the amount of work completed towards the total task.</param>
             <param name="total">Indicates the total amount of work to be completed.</param>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._EventLogsMenuItemState">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.EventLogsMenuItemState">
             <summary>
             Holds the state of the Event Logs menu item, indicating whether it is enabled or disabled.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._LocalFilesMenuItemState">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.LocalFilesMenuItemState">
             <summary>
             Stores the state of the local files menu item as a boolean value. Indicates whether the local files menu item is
             enabled or disabled.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._LocalFilesCountInfoBadgeValue">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.LocalFilesCountInfoBadgeValue">
             <summary>
             Stores the count of local files for display in an info badge. Used to track and indicate the number of local files.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._LocalFilesCountInfoBadgeOpacity">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.LocalFilesCountInfoBadgeOpacity">
             <summary>
             Stores the opacity level for the local files count info badge. It is a double value representing transparency.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._EventLogsCountInfoBadgeValue">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.EventLogsCountInfoBadgeValue">
             <summary>
             Stores the count of event logs for the info badge. Used to track the number of events for display purposes.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._EventLogsCountInfoBadgeOpacity">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.EventLogsCountInfoBadgeOpacity">
             <summary>
             Stores the opacity level for the event logs count info badge. It is a double value representing transparency.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._DeployPolicy">
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.DeployPolicy">
             <summary>
             Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not
             </summary>
@@ -9160,12 +9128,12 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._FilesAndFoldersBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForBasePolicyIsEnabled">
             <summary>
             Controls enabled/disabled states of the elements that allow browsing for base policy file path
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._filesAndFoldersScanResults">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersScanResults">
             <summary>
             Used to store the scan results and as the source for the results ListViews
             </summary>
@@ -9175,17 +9143,17 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._CertificatesBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBrowseForBasePolicyIsEnabled">
             <summary>
             Controls enabled/disabled states of the elements that allow browsing for base policy file path
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._ISGBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ISGBrowseForBasePolicyIsEnabled">
             <summary>
             Controls enabled/disabled states of the elements that allow browsing for base policy file path
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._StrictKernelModeBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeBrowseForBasePolicyIsEnabled">
             <summary>
             Controls enabled/disabled states of the elements that allow browsing for base policy file path
             </summary>
@@ -9203,32 +9171,32 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PFNBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBrowseForBasePolicyIsEnabled">
             <summary>
             Controls enabled/disabled states of the elements that allow browsing for base policy file path
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled">
             <summary>
             Controls enabled/disabled states of the elements that allow browsing for base policy file path
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PolicyFileToMergeWith">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PolicyFileToMergeWith">
             <summary>
             The path to the policy file that user selected to add the new rules to.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PolicyFileToMergeWithPickerButtonIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PolicyFileToMergeWithPickerButtonIsEnabled">
             <summary>
             Whether the button that allows for picking a policy file to add the rules to is enabled or disabled.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._BasePolicyElementsVisibility">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.BasePolicyElementsVisibility">
             <summary>
             Controls the visibility of all of the elements related to browsing for base policy file.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._OperationModeComboBoxSelectedIndex">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OperationModeComboBoxSelectedIndex">
             <summary>
             The mode of operation for the Supplemental creation page.
             Set to 0 (Creating New Policies) by default.
@@ -9278,17 +9246,17 @@
             Only make it visible if the app is installed from the GitHub source.
             </summary>	
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._BackDropComboBoxSelectedIndex">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.BackDropComboBoxSelectedIndex">
             <summary>
             Sets the initial value of the back drop. if it's null, Mica Alt will be used.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._SystemBackDropStyle">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.SystemBackDropStyle">
             <summary>
             Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._infoBadgeOpacity">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.InfoBadgeOpacity">
             <summary>
             Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
             https://learn.microsoft.com/windows/apps/design/controls/info-badge
@@ -9296,37 +9264,37 @@
             When set to 0, the badge is hidden.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._OpenConfigDirectoryButtonState">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.OpenConfigDirectoryButtonState">
             <summary>
             The state of the OpenConfigDirectoryButton button which is on the Sidebar
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._SidebarPaneIsOpen">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.SidebarPaneIsOpen">
             <summary>
             Whether the sidebar pane is open or closed
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._AutomaticAssignmentSidebarToggleSwitchToggledState">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.AutomaticAssignmentSidebarToggleSwitchToggledState">
             <summary>
             Indicates whether the automatic assignment sidebar toggle switch is in a toggled state. It stores a boolean value.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._SidebarBasePolicyPathTextBoxText">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyPathTextBoxText">
             <summary>
             The text in the SidebarBasePolicyPathTextBox
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._BorderTranslation">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.BorderTranslation">
             <summary>
              Adjust the elevation of the border to achieve the shadow effect
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._MainNavigationIsPaneOpen">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.MainNavigationIsPaneOpen">
             <summary>
             Whether the main NavigationView's pane is open or closed
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM._TitleColumnWidth">
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.TitleColumnWidth">
             <summary>
             The width of the TitleColumn in the main window's custom title bar
             </summary>
@@ -9608,16 +9576,6 @@
             Implementing it in the ViewModel via x:Bind would not work properly.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.PolicyEditorVM.PolicyTypeSettingsCard_Click">
-            <summary>
-            Event handler to open the Policy type ComboBox's dropdown menu when its parent settings card is clicked on
-            </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.PolicyEditorVM.PolicyHVCIOptionsComboBox_Click">
-            <summary>
-            Event handler to open the Policy HVCI Option/Level ComboBox's dropdown menu when its parent settings card is clicked on
-            </summary>
-        </member>
         <member name="M:AppControlManager.ViewModels.PolicyEditorVM.OpenInPolicyEditor(System.String)">
             <summary>
             Used by various methods internally to open a created/modified policy in the Policy Editor
@@ -9681,6 +9639,85 @@
             </summary>
             <param name="value">The value to wrap.</param>
             <returns>A string with the value wrapped in double quotes.</returns>
+        </member>
+        <member name="M:AppControlManager.ViewModels.UpdateVM.AppPFNRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>__sadt7br7jpt02</code><br/>
+            Options:<br/>
+            <code>RegexOptions.IgnoreCase | RegexOptions.Compiled</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match the string "__".<br/>
+            ○ Match a character in the set [Ss].<br/>
+            ○ Match a character in the set [Aa].<br/>
+            ○ Match a character in the set [Dd].<br/>
+            ○ Match a character in the set [Tt].<br/>
+            ○ Match '7'.<br/>
+            ○ Match a character in the set [Bb].<br/>
+            ○ Match a character in the set [Rr].<br/>
+            ○ Match '7'.<br/>
+            ○ Match a character in the set [Jj].<br/>
+            ○ Match a character in the set [Pp].<br/>
+            ○ Match a character in the set [Tt].<br/>
+            ○ Match the string "02".<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="F:AppControlManager.ViewModels.UpdateVM.CertCommonName">
+            <summary>
+            Common name of the on-device generated certificate used to sign the AppControl Manager MSIXBundle package
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.UpdateVM.CheckForUpdateButtonIsEnabled">
+            <summary>
+            To determine whether to use the user-supplied package or continue with downloading the package from GitHub.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.UpdateVM.UpdateButtonContent">
+            <summary>
+            Content of the main update button
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.UpdateVM.InstallLocalPackageConfirmation">
+            <summary>
+            To determine whether to use the user-supplied package or continue with downloading the package from GitHub.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.UpdateVM.LocalPackageFilePath">
+            <summary>
+            The custom package path that the user supplied.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.UpdateVM.InstallLocalPackageConfirmationIsEnabled">
+            <summary>
+            Whether the section that provides confirmation ability is enabled or disabled
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.UpdateVM.UseHardenedInstallationProcess">
+            <summary>
+            Whether the installation process must use hardened procedures.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.UpdateVM.CheckForUpdate_Click">
+            <summary>
+            Navigate to the extra sub-page
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.UpdateVM.CheckForUpdateButton_Click">
+            <summary>
+            Event handler for check for update button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.UpdateVM.BrowseForCustomMSIXPathButton_Click">
+            <summary>
+            Opens a file picker to select a MSIX/MSIXBundle package file.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ValidatePolicyVM.ValidateXML">
+            <summary>
+            Validates an App Control XML policy file by allowing the user to select a file and checking its validity.
+            </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.CalculateColumnWidths">
             <summary>
@@ -9778,17 +9815,16 @@
             All of the ViewModel classes must inherit from this class
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewModelBase.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+        <member name="M:AppControlManager.ViewModels.ViewModelBase.SetProperty``1(``0@,``0,System.String)">
             <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            Sets the field to <paramref name="newValue"/> if it differs from its current contents,
+            raises PropertyChanged, and returns true if a change occurred.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI,
+            and the UI might call set again, leading to an infinite loop.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
+            <param name="field">The existing value.</param>
+            <param name="newValue">The new value.</param>
             <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.ViewModels.ViewModelBase.OnPropertyChanged(System.String)">
             <summary>
@@ -12720,34 +12756,34 @@
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex1_3">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the MyRegex1 method.</summary>
+        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_3">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the AppPFNRegex method.</summary>
         </member>
-        <member name="F:System.Text.RegularExpressions.Generated.MyRegex1_3.Instance">
+        <member name="F:System.Text.RegularExpressions.Generated.AppPFNRegex_3.Instance">
             <summary>Cached, thread-safe singleton instance.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex1_3.#ctor">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.#ctor">
             <summary>Initializes the instance.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex1_3.RunnerFactory">
+        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory">
             <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex1_3.RunnerFactory.CreateInstance">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.CreateInstance">
             <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex1_3.RunnerFactory.Runner">
+        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner">
             <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex1_3.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
             <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex1_3.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
             <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if a possible match was found; false if no more matches are possible.</returns>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex1_3.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
             <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>

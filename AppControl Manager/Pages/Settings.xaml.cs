@@ -370,7 +370,6 @@ internal sealed partial class Settings : Page
 	}
 
 
-
 	private void ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 	{
 		// Get the ToggleSwitch that triggered the event
@@ -421,72 +420,4 @@ internal sealed partial class Settings : Page
 		// Save the setting to the local app settings
 		App.Settings.ApplicationGlobalFlowDirection = IsOn ? "LeftToRight" : "RightToLeft";
 	}
-
-
-	#region Settings cards clicks event handlers
-
-	private void BackgroundComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		BackgroundComboBox.IsDropDownOpen = true;
-	}
-
-	private void ThemeComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		ThemeComboBox.IsDropDownOpen = true;
-	}
-
-	private void IconsStyleComboBoxSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		IconsStyleComboBox.IsDropDownOpen = true;
-	}
-
-	private void NavigationMenuLocationSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		NavigationMenuLocation.IsDropDownOpen = true;
-	}
-
-	private void SoundToggleSwitchSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-
-		SoundToggleSwitch.IsOn = !SoundToggleSwitch.IsOn;
-		SoundToggleSwitch_Toggled(SoundToggleSwitch, new RoutedEventArgs());
-	}
-
-	private void NavigationViewBackgroundToggleSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		NavigationViewBackgroundToggle.IsOn = !NavigationViewBackgroundToggle.IsOn;
-		NavigationViewBackground_Toggled(NavigationViewBackgroundToggle, new RoutedEventArgs());
-	}
-
-	private void ListViewsCenterVerticallyUponSelectionSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn = !ListViewsCenterVerticallyUponSelectionToggleSwitch.IsOn;
-		ListViewsCenterVerticallyUponSelectionToggleSwitch_Toggled(ListViewsCenterVerticallyUponSelectionToggleSwitch, new RoutedEventArgs());
-	}
-
-	private void CacheSecurityCatalogsScanResultsSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		CacheSecurityCatalogsScanResultsToggleSwitch.IsOn = !CacheSecurityCatalogsScanResultsToggleSwitch.IsOn;
-		CacheSecurityCatalogsScanResultsToggleSwitch_Toggled(CacheSecurityCatalogsScanResultsToggleSwitch, new RoutedEventArgs());
-	}
-
-	private void PromptForElevationSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		PromptForElevationToggleSwitch.IsOn = !PromptForElevationToggleSwitch.IsOn;
-		PromptForElevationToggleSwitch_Toggled(PromptForElevationToggleSwitch, new RoutedEventArgs());
-	}
-
-	private void LanguageSelectionSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		LanguageSelectionComboBox.IsDropDownOpen = true;
-	}
-
-	private void UIFlowDirectionSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-		UIFlowDirectionToggleSwitch.IsOn = !UIFlowDirectionToggleSwitch.IsOn;
-		UIFlowDirectionToggleSwitch_Toggled(UIFlowDirectionToggleSwitch, new RoutedEventArgs());
-	}
-
-	#endregion
-
 }

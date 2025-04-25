@@ -32,7 +32,7 @@ internal static class GlobalVars
 	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
 
 	// Kernel Mode block rules
-	internal static readonly Uri MSFTRecommendedDriverBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md");
+	internal static readonly Uri MSFTRecommendedDriverBlockRulesURL = new("https://aka.ms/VulnerableDriverBlockList");
 
 	// Storing the path to the Code Integrity Schema XSD file
 	internal static readonly string CISchemaPath = Path.Combine(
@@ -54,10 +54,6 @@ internal static class GlobalVars
 
 	// The link to the file that contains the version number of the latest available version of the AppControl Manager
 	internal static readonly Uri AppVersionLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt");
-
-	// The check for update button on the Update page uses this variable as the text/content for its button
-	// It is dynamically updated on app launch when a new version is available
-	internal static string updateButtonTextOnTheUpdatePage = "Check for update";
 
 	// Handle of the main Window - acquired in the MainWindow.xaml.cs
 	internal static nint hWnd;
@@ -87,12 +83,6 @@ internal static class GlobalVars
 	// Path to the CppInteropPath directory
 	private static readonly string CppInteropPath = Path.Combine(AppContext.BaseDirectory, "CppInterop");
 
-	// Path to the PS Script that creates a scheduled task
-	internal static readonly string DriversBlockListAutoUpdaterScheduledTaskScriptFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "DriversBlockListAutoUpdaterScheduledTask.ps1");
-
-	// Path to the PS Script that creates a scheduled task for SnapBack guarantee in Allow New Apps page
-	internal static readonly string SnapBackGuaranteeScheduledTaskScriptFilePath = Path.Combine(AppContext.BaseDirectory, "Resources", "SnapBackGuaranteeScheduledTask.ps1");
-
 	// Get the current OS version
 	private static readonly Version CurrentOSVersion = Environment.OSVersion.Version;
 
@@ -121,6 +111,14 @@ internal static class GlobalVars
 	{
 		Architecture.X64 => Path.Combine(CppInteropPath, "ManageDefender-X64.exe"),
 		Architecture.Arm64 => Path.Combine(CppInteropPath, "ManageDefender-ARM64.exe"),
+		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
+	};
+
+	// Path to the ScheduledTaskManager program in the App directory
+	internal static readonly string ScheduledTaskManagerProcessPath = RuntimeInformation.ProcessArchitecture switch
+	{
+		Architecture.X64 => Path.Combine(CppInteropPath, "ScheduledTaskManager-x64.exe"),
+		Architecture.Arm64 => Path.Combine(CppInteropPath, "ScheduledTaskManager-ARM64.exe"),
 		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
 	};
 

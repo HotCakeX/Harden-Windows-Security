@@ -40,94 +40,69 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private string? _SearchBoxTextBox;
 	internal string? SearchBoxTextBox
 	{
-		get => _SearchBoxTextBox;
-		set => SetProperty(_SearchBoxTextBox, value, newValue => _SearchBoxTextBox = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
 
-
 	#region LISTVIEW IMPLEMENTATIONS
 
 	// Properties to hold each columns' width.
-	private GridLength _columnWidth1;
 	internal GridLength ColumnWidth1
 	{
-		get => _columnWidth1;
-		set { _columnWidth1 = value; OnPropertyChanged(nameof(ColumnWidth1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth2;
 	internal GridLength ColumnWidth2
 	{
-		get => _columnWidth2;
-		set { _columnWidth2 = value; OnPropertyChanged(nameof(ColumnWidth2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth3;
 	internal GridLength ColumnWidth3
 	{
-		get => _columnWidth3;
-		set { _columnWidth3 = value; OnPropertyChanged(nameof(ColumnWidth3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth4;
 	internal GridLength ColumnWidth4
 	{
-		get => _columnWidth4;
-		set { _columnWidth4 = value; OnPropertyChanged(nameof(ColumnWidth4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth5;
 	internal GridLength ColumnWidth5
 	{
-		get => _columnWidth5;
-		set { _columnWidth5 = value; OnPropertyChanged(nameof(ColumnWidth5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth6;
 	internal GridLength ColumnWidth6
 	{
-		get => _columnWidth6;
-		set { _columnWidth6 = value; OnPropertyChanged(nameof(ColumnWidth6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth7;
 	internal GridLength ColumnWidth7
 	{
-		get => _columnWidth7;
-		set { _columnWidth7 = value; OnPropertyChanged(nameof(ColumnWidth7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth8;
 	internal GridLength ColumnWidth8
 	{
-		get => _columnWidth8;
-		set { _columnWidth8 = value; OnPropertyChanged(nameof(ColumnWidth8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth9;
 	internal GridLength ColumnWidth9
 	{
-		get => _columnWidth9;
-		set { _columnWidth9 = value; OnPropertyChanged(nameof(ColumnWidth9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth10;
 	internal GridLength ColumnWidth10
 	{
-		get => _columnWidth10;
-		set { _columnWidth10 = value; OnPropertyChanged(nameof(ColumnWidth10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _columnWidth11;
 	internal GridLength ColumnWidth11
 	{
-		get => _columnWidth11;
-		set { _columnWidth11 = value; OnPropertyChanged(nameof(ColumnWidth11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
@@ -203,7 +178,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	#endregion
 
 
-
 	/// <summary>
 	/// Event handler for the search box
 	/// </summary>
@@ -215,15 +189,13 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		if (query is null)
 			return;
 
-
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.ViewFileCertificates.Instance.ListViewElement;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
 
 		List<FileCertificateInfoCol> results = [];
@@ -249,10 +221,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			FileCertificates.Add(item);
 		}
 
-		if (scrollViewer != null && savedHorizontal.HasValue)
+		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
-			_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
 	}
 
@@ -288,14 +260,13 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	private async void Sort(CertificateSortColumn newSortColumn)
 	{
 
-		// Get the ScrollViewer from the ListView
-		ListView listView = Pages.ViewFileCertificates.Instance.ListViewElement;
-		ScrollViewer? scrollViewer = listView.FindScrollViewer();
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
 		double? savedHorizontal = null;
-		if (scrollViewer != null)
+		if (Sv != null)
 		{
-			savedHorizontal = scrollViewer.HorizontalOffset;
+			savedHorizontal = Sv.HorizontalOffset;
 		}
 
 
@@ -388,10 +359,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				FileCertificates.Add(item);
 			}
 
-			if (scrollViewer != null && savedHorizontal.HasValue)
+			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
-				_ = scrollViewer.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 			}
 		});
 	}

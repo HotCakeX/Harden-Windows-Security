@@ -245,7 +245,6 @@ DeviceEvents
 	}
 
 
-
 	/// <summary>
 	/// Signs into a tenant
 	/// </summary>
@@ -443,7 +442,6 @@ DeviceEvents
 			}
 		}
 	}
-
 
 
 	/// <summary>

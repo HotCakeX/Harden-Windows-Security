@@ -31,12 +31,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#region
 
 	// To store the FileIdentities displayed on the Local Files ListView
-	private ObservableCollection<FileIdentity> _LocalFilesFileIdentities = [];
 	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities
 	{
-		get => _LocalFilesFileIdentities;
-		set => SetProperty(_LocalFilesFileIdentities, value, newValue => _LocalFilesFileIdentities = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = [];
 
 
 	// Store all outputs for searching, used as a temporary storage for filtering
@@ -62,89 +60,71 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	private Visibility _OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
 	{
-		get => _OpenInPolicyEditorInfoBarActionButtonVisibility;
-		set => SetProperty(_OpenInPolicyEditorInfoBarActionButtonVisibility, value, newValue => _OpenInPolicyEditorInfoBarActionButtonVisibility = newValue);
-	}
+		get; set => SetProperty(ref field, value);
+	} = Visibility.Collapsed;
 
 	/// <summary>
 	/// Holds the state of the Event Logs menu item, indicating whether it is enabled or disabled.
 	/// </summary>
-	private bool _EventLogsMenuItemState;
 	internal bool EventLogsMenuItemState
 	{
-		get => _EventLogsMenuItemState;
-		set => SetProperty(_EventLogsMenuItemState, value, newValue => _EventLogsMenuItemState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Stores the state of the local files menu item as a boolean value. Indicates whether the local files menu item is
 	/// enabled or disabled.
 	/// </summary>
-	private bool _LocalFilesMenuItemState;
 	internal bool LocalFilesMenuItemState
 	{
-		get => _LocalFilesMenuItemState;
-		set => SetProperty(_LocalFilesMenuItemState, value, newValue => _LocalFilesMenuItemState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Stores the count of local files for display in an info badge. Used to track and indicate the number of local files.
 	/// </summary>
-	private int _LocalFilesCountInfoBadgeValue;
 	internal int LocalFilesCountInfoBadgeValue
 	{
-		get => _LocalFilesCountInfoBadgeValue;
-		set => SetProperty(_LocalFilesCountInfoBadgeValue, value, newValue => _LocalFilesCountInfoBadgeValue = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Stores the opacity level for the local files count info badge. It is a double value representing transparency.
 	/// </summary>
-	private double _LocalFilesCountInfoBadgeOpacity;
 	internal double LocalFilesCountInfoBadgeOpacity
 	{
-		get => _LocalFilesCountInfoBadgeOpacity;
-		set => SetProperty(_LocalFilesCountInfoBadgeOpacity, value, newValue => _LocalFilesCountInfoBadgeOpacity = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Stores the count of event logs for the info badge. Used to track the number of events for display purposes.
 	/// </summary>
-	private int _EventLogsCountInfoBadgeValue;
 	internal int EventLogsCountInfoBadgeValue
 	{
-		get => _EventLogsCountInfoBadgeValue;
-		set => SetProperty(_EventLogsCountInfoBadgeValue, value, newValue => _EventLogsCountInfoBadgeValue = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Stores the opacity level for the event logs count info badge. It is a double value representing transparency.
 	/// </summary>
-	private double _EventLogsCountInfoBadgeOpacity;
 	internal double EventLogsCountInfoBadgeOpacity
 	{
-		get => _EventLogsCountInfoBadgeOpacity;
-		set => SetProperty(_EventLogsCountInfoBadgeOpacity, value, newValue => _EventLogsCountInfoBadgeOpacity = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
 	/// Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not
 	/// </summary>
-	private bool _DeployPolicy = true;
 	internal bool DeployPolicy
 	{
-		get => _DeployPolicy;
-		set => SetProperty(_DeployPolicy, value, newValue => _DeployPolicy = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
-	private bool _DeployPolicyState = true;
 	internal bool DeployPolicyState
 	{
-		get => _DeployPolicyState;
-		set => SetProperty(_DeployPolicyState, value, newValue => _DeployPolicyState = newValue);
+		get; set => SetProperty(ref field, value);
 	}
 
 	#endregion
@@ -153,151 +133,109 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS FOR EVENT LOGS
 
 	// Properties to hold each columns' width.
-	private GridLength _ColumnWidthEventLogs1;
 	internal GridLength ColumnWidthEventLogs1
 	{
-		get => _ColumnWidthEventLogs1;
-		set { _ColumnWidthEventLogs1 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs2;
 	internal GridLength ColumnWidthEventLogs2
 	{
-		get => _ColumnWidthEventLogs2;
-		set { _ColumnWidthEventLogs2 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs3;
 	internal GridLength ColumnWidthEventLogs3
 	{
-		get => _ColumnWidthEventLogs3;
-		set { _ColumnWidthEventLogs3 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs4;
 	internal GridLength ColumnWidthEventLogs4
 	{
-		get => _ColumnWidthEventLogs4;
-		set { _ColumnWidthEventLogs4 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs5;
 	internal GridLength ColumnWidthEventLogs5
 	{
-		get => _ColumnWidthEventLogs5;
-		set { _ColumnWidthEventLogs5 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs6;
 	internal GridLength ColumnWidthEventLogs6
 	{
-		get => _ColumnWidthEventLogs6;
-		set { _ColumnWidthEventLogs6 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs7;
 	internal GridLength ColumnWidthEventLogs7
 	{
-		get => _ColumnWidthEventLogs7;
-		set { _ColumnWidthEventLogs7 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs8;
 	internal GridLength ColumnWidthEventLogs8
 	{
-		get => _ColumnWidthEventLogs8;
-		set { _ColumnWidthEventLogs8 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs9;
 	internal GridLength ColumnWidthEventLogs9
 	{
-		get => _ColumnWidthEventLogs9;
-		set { _ColumnWidthEventLogs9 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs10;
 	internal GridLength ColumnWidthEventLogs10
 	{
-		get => _ColumnWidthEventLogs10;
-		set { _ColumnWidthEventLogs10 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs11;
 	internal GridLength ColumnWidthEventLogs11
 	{
-		get => _ColumnWidthEventLogs11;
-		set { _ColumnWidthEventLogs11 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs12;
 	internal GridLength ColumnWidthEventLogs12
 	{
-		get => _ColumnWidthEventLogs12;
-		set { _ColumnWidthEventLogs12 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs12)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs13;
 	internal GridLength ColumnWidthEventLogs13
 	{
-		get => _ColumnWidthEventLogs13;
-		set { _ColumnWidthEventLogs13 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs13)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs14;
 	internal GridLength ColumnWidthEventLogs14
 	{
-		get => _ColumnWidthEventLogs14;
-		set { _ColumnWidthEventLogs14 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs14)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs15;
 	internal GridLength ColumnWidthEventLogs15
 	{
-		get => _ColumnWidthEventLogs15;
-		set { _ColumnWidthEventLogs15 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs15)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs16;
 	internal GridLength ColumnWidthEventLogs16
 	{
-		get => _ColumnWidthEventLogs16;
-		set { _ColumnWidthEventLogs16 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs16)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs17;
 	internal GridLength ColumnWidthEventLogs17
 	{
-		get => _ColumnWidthEventLogs17;
-		set { _ColumnWidthEventLogs17 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs17)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs18;
 	internal GridLength ColumnWidthEventLogs18
 	{
-		get => _ColumnWidthEventLogs18;
-		set { _ColumnWidthEventLogs18 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs18)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs19;
 	internal GridLength ColumnWidthEventLogs19
 	{
-		get => _ColumnWidthEventLogs19;
-		set { _ColumnWidthEventLogs19 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs19)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs20;
 	internal GridLength ColumnWidthEventLogs20
 	{
-		get => _ColumnWidthEventLogs20;
-		set { _ColumnWidthEventLogs20 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs20)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthEventLogs21;
 	internal GridLength ColumnWidthEventLogs21
 	{
-		get => _ColumnWidthEventLogs21;
-		set { _ColumnWidthEventLogs21 = value; OnPropertyChanged(nameof(ColumnWidthEventLogs21)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>
@@ -428,130 +366,94 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS FOR LOCAL FILES
 
 	// Properties to hold each columns' width.
-	private GridLength _ColumnWidthLocalFiles1;
 	internal GridLength ColumnWidthLocalFiles1
 	{
-		get => _ColumnWidthLocalFiles1;
-		set { _ColumnWidthLocalFiles1 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles1)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles2;
 	internal GridLength ColumnWidthLocalFiles2
 	{
-		get => _ColumnWidthLocalFiles2;
-		set { _ColumnWidthLocalFiles2 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles2)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles3;
 	internal GridLength ColumnWidthLocalFiles3
 	{
-		get => _ColumnWidthLocalFiles3;
-		set { _ColumnWidthLocalFiles3 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles3)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles4;
 	internal GridLength ColumnWidthLocalFiles4
 	{
-		get => _ColumnWidthLocalFiles4;
-		set { _ColumnWidthLocalFiles4 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles4)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles5;
 	internal GridLength ColumnWidthLocalFiles5
 	{
-		get => _ColumnWidthLocalFiles5;
-		set { _ColumnWidthLocalFiles5 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles5)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles6;
 	internal GridLength ColumnWidthLocalFiles6
 	{
-		get => _ColumnWidthLocalFiles6;
-		set { _ColumnWidthLocalFiles6 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles6)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles7;
 	internal GridLength ColumnWidthLocalFiles7
 	{
-		get => _ColumnWidthLocalFiles7;
-		set { _ColumnWidthLocalFiles7 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles7)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles8;
 	internal GridLength ColumnWidthLocalFiles8
 	{
-		get => _ColumnWidthLocalFiles8;
-		set { _ColumnWidthLocalFiles8 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles8)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles9;
 	internal GridLength ColumnWidthLocalFiles9
 	{
-		get => _ColumnWidthLocalFiles9;
-		set { _ColumnWidthLocalFiles9 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles9)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles10;
 	internal GridLength ColumnWidthLocalFiles10
 	{
-		get => _ColumnWidthLocalFiles10;
-		set { _ColumnWidthLocalFiles10 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles10)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles11;
 	internal GridLength ColumnWidthLocalFiles11
 	{
-		get => _ColumnWidthLocalFiles11;
-		set { _ColumnWidthLocalFiles11 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles11)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles12;
 	internal GridLength ColumnWidthLocalFiles12
 	{
-		get => _ColumnWidthLocalFiles12;
-		set { _ColumnWidthLocalFiles12 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles12)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles13;
 	internal GridLength ColumnWidthLocalFiles13
 	{
-		get => _ColumnWidthLocalFiles13;
-		set { _ColumnWidthLocalFiles13 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles13)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles14;
 	internal GridLength ColumnWidthLocalFiles14
 	{
-		get => _ColumnWidthLocalFiles14;
-		set { _ColumnWidthLocalFiles14 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles14)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles15;
 	internal GridLength ColumnWidthLocalFiles15
 	{
-		get => _ColumnWidthLocalFiles15;
-		set { _ColumnWidthLocalFiles15 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles15)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles16;
 	internal GridLength ColumnWidthLocalFiles16
 	{
-		get => _ColumnWidthLocalFiles16;
-		set { _ColumnWidthLocalFiles16 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles16)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles17;
 	internal GridLength ColumnWidthLocalFiles17
 	{
-		get => _ColumnWidthLocalFiles17;
-		set { _ColumnWidthLocalFiles17 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles17)); }
+		get; set => SetProperty(ref field, value);
 	}
 
-	private GridLength _ColumnWidthLocalFiles18;
 	internal GridLength ColumnWidthLocalFiles18
 	{
-		get => _ColumnWidthLocalFiles18;
-		set { _ColumnWidthLocalFiles18 = value; OnPropertyChanged(nameof(ColumnWidthLocalFiles18)); }
+		get; set => SetProperty(ref field, value);
 	}
 
 	/// <summary>

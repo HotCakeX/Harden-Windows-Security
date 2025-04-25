@@ -72,4 +72,6 @@ Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permissio
 
 * **Actions -> Deploy Policy After Creation**: Use this option to automatically deploy the App Control policy that you create with MDE Advanced Hunting logs to the local system.
 
+* **Only Use Selected Items**: If this button is toggled, only the items in the List View that are highlighted will be added to the Supplemental policy. If this button is not toggled, then everything available in the List View will be added to the Supplemental policy.
+
 <br>

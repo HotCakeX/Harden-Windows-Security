@@ -18,7 +18,7 @@ When you need to install a new application, this page provides an intuitive way 
 
 During Audit mode, AppControl Manager captures all relevant Code Integrity and AppLocker events, analyzes them, and presents detailed insights in an organized view. You can also navigate to the specific folder path(s) where the application was installed, enabling the app to scan and display the contents on a separate page.
 
-The compiled data, scanned files and recorded events, are presented for you to review, filter, sort, and manage. Once you're satisfied, you can seamlessly convert these into a single Supplemental policy ready for deployment.
+The compiled data, scanned files and recorded events, are presented to you for review, filter, sort, and manage. Once you're satisfied, you can seamlessly convert these into a single Supplemental policy ready for deployment.
 
 While much of the process is automated, you remain in full control. With just a few clicks, you can fine-tune and manage your App Control policy efficiently.
 

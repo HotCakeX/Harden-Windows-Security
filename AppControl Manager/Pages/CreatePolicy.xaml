@@ -36,151 +36,148 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <!-- Allow Microsoft -->
-                <controls:SettingsExpander x:Name="AllowMicrosoftSettings"
+                <controls:SettingsExpander
                            x:Uid="AllowMicrosoftSettings"
+                           IsExpanded="{x:Bind ViewModel.AllowMicrosoftSettingsIsExpanded, Mode=TwoWay}"
                            HeaderIcon="{ui:FontIcon Glyph=&#xF0EF;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="AllowMicrosoftSettingsInfoBar"
+                        <InfoBar
                              BorderThickness="0"
                              CornerRadius="0"
                              IsIconVisible="True"
-                             IsOpen="False"
-                             IsClosable="False"
-                             Severity="Informational">
+                             Message="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarMessage, Mode=OneWay}"
+                             IsOpen="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsOpen, Mode=TwoWay}"
+                             IsClosable="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsClosable, Mode=OneWay}"
+                             Severity="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_AllowMicrosoft}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_AllowMicrosoft}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="AllowMicrosoftCreate" x:Uid="AllowMicrosoftCreateButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind AllowMicrosoftCreate_Click}" />
+                        <Button x:Uid="AllowMicrosoftCreateButton"
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
+                                IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.AllowMicrosoftCreate_Click}" />
 
-                        <ToggleButton x:Name="AllowMicrosoftCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.AllowMicrosoftCreateAndDeploy, Mode=TwoWay}"
+
+                             IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch x:Name="AllowMicrosoftAudit" Toggled="AllowMicrosoftAudit_Toggled" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftAudit, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
 
-                            <controls:WrapPanel Orientation="Horizontal">
-
-                                <NumberBox x:Name="AllowMicrosoftLogSizeInput"
-                                    x:Uid="LogSizeNumberBox"
-                                    Value="2"
-                                    SpinButtonPlacementMode="Inline"
-                                    SmallChange="1"
-                                    IsEnabled="False"
-                                    LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
-
-                                <ToggleSwitch x:Name="AllowMicrosoftLogSizeInputEnabled" IsEnabled="False" Toggled="{x:Bind AllowMicrosoftLogSizeInputEnabled_Toggled}" />
-
-                            </controls:WrapPanel>
+                            <NumberBox
+                                x:Uid="LogSizeNumberBox"
+                                Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
+                                SpinButtonPlacementMode="Inline"
+                                SmallChange="1"
+                                IsEnabled="{x:Bind ViewModel.AllowMicrosoftLogSizeInputIsEnabled, Mode=OneWay}"
+                                LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" Margin="0,0,30,0" />
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="RequireEVSignersRuleOption">
-                            <ToggleSwitch x:Name="AllowMicrosoftRequireEVSigners" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftRequireEVSigners, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="EnableScriptEnforcementRuleOption">
-                            <ToggleSwitch x:Name="AllowMicrosoftEnableScriptEnforcement" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftEnableScriptEnforcement, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="TestModeRuleOption">
-                            <ToggleSwitch x:Name="AllowMicrosoftTestMode" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftTestMode, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch x:Name="AllowMicrosoftNoBlockRules" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftNoBlockRules, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
 
                 <!-- Default Windows -->
-                <controls:SettingsExpander x:Name="DefaultWindowsSettings"
+                <controls:SettingsExpander
                            x:Uid="DefaultWindowsSettings"
+                           IsExpanded="{x:Bind ViewModel.DefaultWindowsSettingsIsExpanded, Mode=TwoWay}"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA18;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="DefaultWindowsSettingsInfoBar"
+                        <InfoBar
                              BorderThickness="0"
                              CornerRadius="0"
                              IsIconVisible="True"
-                             IsOpen="False"
-                             IsClosable="False"
-                             Severity="Informational">
+                             Message="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarMessage, Mode=OneWay}"
+                             IsOpen="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsOpen, Mode=TwoWay}"
+                             IsClosable="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsClosable, Mode=OneWay}"
+                             Severity="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_DefaultWindows}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_DefaultWindows}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="DefaultWindowsCreate" x:Uid="DefaultWindowsCreateButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind DefaultWindowsCreate_Click}" />
+                        <Button IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" x:Uid="DefaultWindowsCreateButton"
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.DefaultWindowsCreate_Click}" />
 
-                        <ToggleButton x:Name="DefaultWindowsCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.DefaultWindowsCreateAndDeploy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch x:Name="DefaultWindowsAudit" Toggled="DefaultWindowsAudit_Toggled" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.DefaultWindowsAudit, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
 
-                            <controls:WrapPanel Orientation="Horizontal">
-
-                                <NumberBox x:Name="DefaultWindowsLogSizeInput"
-                                    x:Uid="LogSizeNumberBox"
-                                    IsEnabled="False"
-                                    Value="2"
-                                    SpinButtonPlacementMode="Inline"
-                                    SmallChange="1"
-                                    LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
-
-                                <ToggleSwitch x:Name="DefaultWindowsLogSizeInputEnabled" IsEnabled="False" Toggled="{x:Bind DefaultWindowsLogSizeInputEnabled_Toggled}" />
-
-                            </controls:WrapPanel>
+                            <NumberBox
+                               x:Uid="LogSizeNumberBox"
+                               IsEnabled="{x:Bind ViewModel.DefaultWindowsLogSizeInputIsEnabled, Mode=OneWay}"
+                               Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
+                               SpinButtonPlacementMode="Inline"
+                               SmallChange="1"
+                               LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" Margin="0,0,30,0" />
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="RequireEVSignersRuleOption">
-                            <ToggleSwitch x:Name="DefaultWindowsRequireEVSigners" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsRequireEVSigners,Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="EnableScriptEnforcementRuleOption">
-                            <ToggleSwitch x:Name="DefaultWindowsEnableScriptEnforcement" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsEnableScriptEnforcement,Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="TestModeRuleOption">
-                            <ToggleSwitch x:Name="DefaultWindowsTestMode" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsTestMode,Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch x:Name="DefaultWindowsNoBockRules" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsNoBlockRules,Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
 
                 <!-- Signed and Reputable -->
-                <controls:SettingsExpander x:Name="SignedAndReputableSettings"
+                <controls:SettingsExpander
+                           IsExpanded="{x:Bind ViewModel.SignedAndReputableSettingsIsExpanded, Mode=TwoWay}"
                            x:Uid="SignedAndReputableSettings"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA0D;}">
 
@@ -189,97 +186,98 @@
                              BorderThickness="0"
                              CornerRadius="0"
                              IsIconVisible="True"
-                             IsOpen="False"
-                             IsClosable="False"
-                             Severity="Informational">
+                             Message="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarMessage, Mode=OneWay}"
+                             IsOpen="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsClosable="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsClosable, Mode=OneWay}"
+                             Severity="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_SignedAndReputable}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_SignedAndReputable}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="SignedAndReputableCreate" x:Uid="SignedAndReputableCreateButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind SignedAndReputableCreate_Click}" />
+                        <Button IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" x:Name="SignedAndReputableCreate" x:Uid="SignedAndReputableCreateButton"
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.SignedAndReputableCreate_Click}" />
 
-                        <ToggleButton x:Name="SignedAndReputableCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.SignedAndReputableCreateAndDeploy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch x:Name="SignedAndReputableAudit" Toggled="SignedAndReputableAudit_Toggled" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableAudit, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
 
-                            <controls:WrapPanel Orientation="Horizontal">
-
-                                <NumberBox x:Name="SignedAndReputableLogSizeInput"
-                                    x:Uid="LogSizeNumberBox"
-                                    IsEnabled="False"
-                                    Value="2"
-                                    SpinButtonPlacementMode="Inline"
-                                    SmallChange="1"
-                                    LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
-
-                                <ToggleSwitch x:Name="SignedAndReputableLogSizeInputEnabled" IsEnabled="False" Toggled="{x:Bind SignedAndReputableLogSizeInputEnabled_Toggled}" />
-
-                            </controls:WrapPanel>
+                            <NumberBox
+                                x:Uid="LogSizeNumberBox"
+                                IsEnabled="{x:Bind ViewModel.SignedAndReputableLogSizeInputIsEnabled, Mode=OneWay}"
+                                Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
+                                SpinButtonPlacementMode="Inline"
+                                SmallChange="1"
+                                LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" Margin="0,0,30,0" />
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="RequireEVSignersRuleOption">
-                            <ToggleSwitch x:Name="SignedAndReputableRequireEVSigners" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableRequireEVSigners, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="EnableScriptEnforcementRuleOption">
-                            <ToggleSwitch x:Name="SignedAndReputableEnableScriptEnforcement" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableEnableScriptEnforcement, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="TestModeRuleOption">
-                            <ToggleSwitch x:Name="SignedAndReputableTestMode" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableTestMode, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch x:Name="SignedAndReputableNoBockRules" />
-                        </controls:SettingsCard>
+                        <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableNoBlockRules, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
 
                 <!-- Microsoft Recommended Driver Block Rules -->
-                <controls:SettingsExpander x:Name="RecommendedDriverBlockRulesSettings"
+                <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsIsExpanded, Mode=TwoWay}"
                            x:Uid="RecommendedDriverBlockRulesSettings"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="RecommendedDriverBlockRulesInfoBar"
+                        <InfoBar
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Message="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.MSFTRecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_RecommendedDriverBlockRules}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.RecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedDriverBlockRules}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="RecommendedDriverBlockRulesCreate" x:Uid="RecommendedDriverBlockRulesCreateButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind RecommendedDriverBlockRulesCreate_Click}" />
+                        <Button x:Uid="RecommendedDriverBlockRulesCreateButton"
+                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
+                            IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.RecommendedDriverBlockRulesCreate_Click}" />
 
-                        <ToggleButton x:Name="RecommendedDriverBlockRulesCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.RecommendedDriverBlockRulesCreateAndDeploy, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                                      x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
-                        <Button x:Name="RecommendedDriverBlockRulesScheduledAutoUpdate"
-                                x:Uid="RecommendedDriverBlockRulesScheduledAutoUpdate"
-                            Style="{StaticResource AccentButtonStyle}" Click="{x:Bind RecommendedDriverBlockRulesScheduledAutoUpdate_Click}" Margin="0,0,15,0" />
+                        <Button x:Uid="RecommendedDriverBlockRulesScheduledAutoUpdate"
+                                Style="{StaticResource AccentButtonStyle}"
+                                IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.RecommendedDriverBlockRulesScheduledAutoUpdate_Click}" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
@@ -288,7 +286,7 @@
 
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Uid="VersionLabel" FontWeight="Bold" Margin="0,0,5,0" Foreground="Violet"/>
-                                <TextBlock x:Name="RecommendedDriverBlockRulesVersionTextBlock" IsTextSelectionEnabled="True" Text="N/A" Foreground="Violet"/>
+                                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.RecommendedDriverBlockRulesVersionTextBlock, Mode=OneWay}" Foreground="Violet"/>
                             </StackPanel>
 
                         </controls:SettingsCard>
@@ -303,57 +301,61 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="RecommendedUserModeBlockRulesCreate" x:Uid="RecommendedUserModeBlockRulesCreateButton"
-                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind RecommendedUserModeBlockRulesCreate_Click}" />
+                        <Button IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
+                              x:Uid="RecommendedUserModeBlockRulesCreateButton"
+                              Style="{StaticResource AccentButtonStyle}"
+                              Margin="0,0,15,0"
+                              Click="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreate_Click}" />
 
-                        <ToggleButton x:Name="RecommendedUserModeBlockRulesCreateAndDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
+                                      IsChecked="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreateAndDeploy, Mode=TwoWay}"
+                                      x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
                 <!-- Strict Kernel-mode policy -->
-                <controls:SettingsExpander x:Name="StrictKernelModePolicySection"
+                <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.StrictKernelModesSettingsIsExpanded, Mode=TwoWay}"
                      x:Uid="StrictKernelModePolicySection"
-                     HeaderIcon="{ui:FontIcon Glyph=&#xE945;}" IsExpanded="False">
+                     HeaderIcon="{ui:FontIcon Glyph=&#xE945;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="StrictKernelModePolicyInfoBar"
+                        <InfoBar
                         x:Uid="CurrentStatusInfoBar"
                         BorderThickness="0"
                         CornerRadius="0"
                         IsIconVisible="True"
-                        IsOpen="False"
-                        IsClosable="False"
-                        Severity="Informational">
+                        Message="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_StrictKernelModePolicy}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelModePolicy}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="StrictKernelModePolicyCreateButton" Click="{x:Bind StrictKernelModePolicyCreateButton_Click}"
-                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" x:Uid="StrictKernelModePolicyCreateButton" />
+                        <Button IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.StrictKernelModePolicyCreateButton_Click}"
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" x:Uid="StrictKernelModePolicyCreateButton" />
 
-                        <ToggleButton x:Name="StrictKernelModePolicyToggleButtonForDeploy" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                                      IsChecked="{x:Bind ViewModel.StrictKernelModesCreateAndDeploy, Mode=TwoWay}"
+                                      x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard"
-                                IsClickEnabled="True" IsActionIconVisible="False">
-                            <ToggleSwitch x:Name="StrictKernelModePolicyAudit" />
+                        <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.StrictKernelModesAudit, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Name="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard"
-                             x:Uid="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard"
-                             IsClickEnabled="True" IsActionIconVisible="False">
-
-                            <ToggleSwitch x:Name="StrictKernelModePolicyUseNoFlightRootsToggleSwitch" />
-
+                        <customUI:SettingsCardV2 x:Uid="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.StrictKernelModeNoFlightRoots, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>

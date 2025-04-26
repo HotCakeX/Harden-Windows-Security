@@ -77,9 +77,6 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	private string? AuditModeCIP;
 	private string? EnforcedModeCIP;
 
-	// Save the current log size that is user input from the number box UI element
-	private ulong LogSize;
-
 	// Custom HashSet to store the output of both local files and event logs scans
 	// If the same file is detected in event logs And local file scans, the one with IsECCSigned property set to true will be kept
 	// So that the respective methods will make Hash based rule for that file since AppControl doesn't support ECC Signed files yet
@@ -126,11 +123,6 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 		SetBorderStyles(Step1Border);
 		DisableStep2();
 		DisableStep3();
-
-		// Initially set the log size in the number box to the current size of the Code Integrity Operational log
-		double currentLogSize = EventLogUtility.GetCurrentLogSize();
-		LogSizeNumberBox.Value = currentLogSize;
-		LogSize = Convert.ToUInt64(currentLogSize);
 	}
 
 	/// <summary>
@@ -448,8 +440,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 
 				Logger.Write("The Base policy has been Re-Deployed in Audit Mode");
 
-				EventLogUtility.SetLogSize(LogSize);
-
+				EventLogUtility.SetLogSize(ViewModel.EventLogsUtil.MaxSizeMB);
 			});
 
 			DisableStep1();
@@ -710,8 +701,6 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 			_CertPath = null;
 			_SignToolPath = null;
 			_IsSignedPolicy = false;
-
-			LogSizeNumberBox.Value = EventLogUtility.GetCurrentLogSize();
 
 			// Disable the data grids access
 			ViewModel.EventLogsMenuItemState = false;
@@ -1044,33 +1033,6 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	}
 
 	/// <summary>
-	/// Event handler for the LogSize number box
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	private void LogSizeNumberBox_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-	{
-		// Check if the value changed successfully.
-		if (!double.IsNaN(args.NewValue))
-		{
-			// Handle the new value.
-			double newValue = args.NewValue;
-
-			// Convert the value from megabytes to bytes
-			double bytesValue = newValue * 1024 * 1024;
-
-			// Convert the value to ulong
-			LogSize = Convert.ToUInt64(bytesValue);
-		}
-		else
-		{
-			throw new InvalidOperationException("Invalid input detected.");
-		}
-	}
-
-
-	/// <summary>
 	/// Event handler for the clear button in the base policy path selection button
 	/// </summary>
 	/// <param name="sender"></param>
@@ -1081,7 +1043,6 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 		selectedXMLFilePath = null;
 		tempBasePolicyPath = null;
 	}
-
 
 	/// <summary>
 	/// Handles the right-tap event on a button to display a flyout menu if it is not already open.

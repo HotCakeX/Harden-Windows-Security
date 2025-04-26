@@ -39,55 +39,34 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 	internal HashSet<string> OtherPolicies
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = [];
 
-	internal string? OtherPoliciesString
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? OtherPoliciesString { get; set => SP(ref field, value); }
 
-	internal bool ShouldDeploy
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool ShouldDeploy { get; set => SP(ref field, value); }
 
 	internal bool ShouldDeployToggleState = App.IsElevated;
 
-	internal string? MainPolicy
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainPolicy { get; set => SP(ref field, value); }
 
 	internal bool MergeButtonState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
-	internal bool PolicyMergerInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool PolicyMergerInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal string? PolicyMergerInfoBarMessage
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? PolicyMergerInfoBarMessage { get; set => SP(ref field, value); }
 
 	internal Visibility MergeProgressRingVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal InfoBarSeverity PolicyMergerInfoBarSeverity
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal InfoBarSeverity PolicyMergerInfoBarSeverity { get; set => SP(ref field, value); }
 
-	internal bool PolicyMergerInfoBarIsClosable
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool PolicyMergerInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	#endregion
 

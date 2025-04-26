@@ -15,15 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
-using System.Collections.Generic;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -47,91 +41,7 @@ internal sealed partial class MergePolicies : Page
 	internal MergePolicies()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-
 		this.DataContext = ViewModel;
 	}
-
-
-	private void MainPolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!MainPolicy_Flyout.IsOpen)
-				MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
-	}
-
-	private void MainPolicySettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!MainPolicy_Flyout.IsOpen)
-			MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
-	}
-
-	private void MainPolicyBrowseButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!MainPolicy_Flyout.IsOpen)
-			MainPolicy_Flyout.ShowAt(MainPolicyBrowseButton);
-	}
-
-	private void OtherPoliciesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!OtherPolicies_Flyout.IsOpen)
-				OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
-	}
-
-	private void OtherPoliciesSettingsCard_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!OtherPolicies_Flyout.IsOpen)
-			OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
-	}
-
-	private void OtherPoliciesBrowseButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!OtherPolicies_Flyout.IsOpen)
-			OtherPolicies_Flyout.ShowAt(OtherPoliciesBrowseButton);
-	}
-
-
-	private void MainPolicySettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			ViewModel.MainPolicy = selectedFile;
-
-			// Add the selected main XML policy file path to the flyout's TextBox
-			ViewModel.MainPolicy = selectedFile;
-
-			// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself
-			MainPolicy_Flyout.ShowAt(MainPolicySettingsCard);
-		}
-	}
-
-
-	private void OtherPoliciesSettingsCard_Click(object sender, RoutedEventArgs e)
-	{
-
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (selectedFiles is { Count: > 0 })
-		{
-			foreach (string file in selectedFiles)
-			{
-				if (ViewModel.OtherPolicies.Add(file))
-				{
-					// Append the new file to the TextBox, followed by a newline
-					ViewModel.OtherPoliciesString += file + Environment.NewLine;
-				}
-			}
-
-			// Manually display the Flyout since user clicked/tapped on the Settings card and not the button itself
-			OtherPolicies_Flyout.ShowAt(OtherPoliciesSettingsCard);
-		}
-	}
-
 }

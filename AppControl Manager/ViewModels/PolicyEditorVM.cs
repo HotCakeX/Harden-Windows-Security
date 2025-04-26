@@ -37,115 +37,32 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	#region Column Widths
 
-
 	// ------------ File Based ------------
 
-	internal GridLength FileBasedColumnWidth1
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth2
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth3
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth4
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth5
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth6
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth7
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth8
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth9
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth10
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth11
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth12
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth13
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength FileBasedColumnWidth14
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal GridLength FileBasedColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth3 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth4 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth5 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth6 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth7 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth8 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth9 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth10 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth11 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth12 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth13 { get; set => SP(ref field, value); }
+	internal GridLength FileBasedColumnWidth14 { get; set => SP(ref field, value); }
 
 	// ------------ Signature Based ------------
 
-	internal GridLength SignatureBasedColumnWidth1
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength SignatureBasedColumnWidth2
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength SignatureBasedColumnWidth3
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength SignatureBasedColumnWidth4
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength SignatureBasedColumnWidth5
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength SignatureBasedColumnWidth6
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength SignatureBasedColumnWidth7
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal GridLength SignatureBasedColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength SignatureBasedColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength SignatureBasedColumnWidth3 { get; set => SP(ref field, value); }
+	internal GridLength SignatureBasedColumnWidth4 { get; set => SP(ref field, value); }
+	internal GridLength SignatureBasedColumnWidth5 { get; set => SP(ref field, value); }
+	internal GridLength SignatureBasedColumnWidth6 { get; set => SP(ref field, value); }
+	internal GridLength SignatureBasedColumnWidth7 { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -195,167 +112,122 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	internal Visibility MainInfoBarVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool MainInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal string? MainInfoBarMessage
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = InfoBarSeverity.Informational;
 
-	internal bool MainInfoBarIsClosable
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility ProgressBarVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
 	internal bool UIElementsEnabledState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
-	internal string? SelectedPolicyFile
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? SelectedPolicyFile { get; set => SP(ref field, value); }
 
-	internal bool TextsAreSelectableToggleState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool TextsAreSelectableToggleState { get; set => SP(ref field, value); }
 
 	internal string FileBasedCollectionTabItemHeader
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "File-based Rules - count: 0";
 
 	internal string SignatureBasedCollectionTabItemHeader
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "Signature-based Rules - count: 0";
 
 	internal string PolicyNameTextBox
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = string.Empty;
 
-	internal string? MainTeachingSubTitle
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainTeachingSubTitle { get; set => SP(ref field, value); }
 
-	internal string? MainTeachingTitle
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainTeachingTitle { get; set => SP(ref field, value); }
 
-	internal bool MainTeachingTipIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainTeachingTipIsOpen { get; set => SP(ref field, value); }
 
-	internal string? PolicyIDTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? PolicyIDTextBox { get; set => SP(ref field, value); }
 
-	internal string? PolicyBaseIDTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? PolicyBaseIDTextBox { get; set => SP(ref field, value); }
 
-	internal string? PolicyVersionTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? PolicyVersionTextBox { get; set => SP(ref field, value); }
 
-	internal string? PolicyInfoIDTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? PolicyInfoIDTextBox { get; set => SP(ref field, value); }
 
-	internal PolicyType? PolicyTypeComboBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal PolicyType? PolicyTypeComboBox { get; set => SP(ref field, value); }
 
 	// The valid values for the ItemsSource of the Policy Type ComboBox
 	internal readonly Array ComboBoxSource = Enum.GetValues<PolicyType>();
 
-	internal string? HVCIOptionComboBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? HVCIOptionComboBox { get; set => SP(ref field, value); }
 
-	internal string? SearchTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? SearchTextBox { get; set => SP(ref field, value); }
 
 	#region Counting properties
 
 	internal string? AllowRulesCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• Allow Rules count: 0";
 
 	internal string? DenyRulesCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• Deny Rules count: 0";
 
 	internal string? FileRulesCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• File Rules count: 0";
 
 	internal string? FilePublishersCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "  ⚬ File Publisher Rules count: 0";
 
 	internal string? WHQLFilePublishersCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "  ⚬ WHQL File Publisher Rules count: 0";
 
 	internal string? FileAttributesCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• File Attributes count: 0";
 
 	internal string? WHQLPublishersCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• WHQL Publisher Rules count: 0";
 
 	internal string? GenericSignersCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• Generic Signer Rules count: 0";
 
 	internal string? UpdatePolicySignersCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• Update Policy Signer Rules count: 0";
 
 	internal string? SupplementalPolicySignersCount
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "• Supplemental Policy Signer Rules count: 0";
 
 	#endregion
@@ -410,65 +282,38 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth("ID");
-		double maxWidth2 = ListViewHelper.MeasureTextWidth("Friendly Name");
-		double maxWidth3 = ListViewHelper.MeasureTextWidth("Hash");
-		double maxWidth4 = ListViewHelper.MeasureTextWidth("File Name");
-		double maxWidth5 = ListViewHelper.MeasureTextWidth("Internal Name");
-		double maxWidth6 = ListViewHelper.MeasureTextWidth("File Description");
-		double maxWidth7 = ListViewHelper.MeasureTextWidth("Product Name");
-		double maxWidth8 = ListViewHelper.MeasureTextWidth("File Path");
-		double maxWidth9 = ListViewHelper.MeasureTextWidth("Minimum File Version");
-		double maxWidth10 = ListViewHelper.MeasureTextWidth("Maximum File Version");
-		double maxWidth11 = ListViewHelper.MeasureTextWidth("Package Family Name");
-		double maxWidth12 = ListViewHelper.MeasureTextWidth("Package Version");
-		double maxWidth13 = ListViewHelper.MeasureTextWidth("App IDs");
-		double maxWidth14 = ListViewHelper.MeasureTextWidth("Type");
+		double maxWidth1 = ListViewHelper.MeasureText("ID");
+		double maxWidth2 = ListViewHelper.MeasureText("Friendly Name");
+		double maxWidth3 = ListViewHelper.MeasureText("Hash");
+		double maxWidth4 = ListViewHelper.MeasureText("File Name");
+		double maxWidth5 = ListViewHelper.MeasureText("Internal Name");
+		double maxWidth6 = ListViewHelper.MeasureText("File Description");
+		double maxWidth7 = ListViewHelper.MeasureText("Product Name");
+		double maxWidth8 = ListViewHelper.MeasureText("File Path");
+		double maxWidth9 = ListViewHelper.MeasureText("Minimum File Version");
+		double maxWidth10 = ListViewHelper.MeasureText("Maximum File Version");
+		double maxWidth11 = ListViewHelper.MeasureText("Package Family Name");
+		double maxWidth12 = ListViewHelper.MeasureText("Package Version");
+		double maxWidth13 = ListViewHelper.MeasureText("App IDs");
+		double maxWidth14 = ListViewHelper.MeasureText("Type");
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (PolicyEditor.FileBasedRulesForListView item in FileRulesCollection)
 		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.Id);
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.FriendlyName);
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.Hash);
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.FileName);
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.InternalName);
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.FileDescription);
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.ProductName);
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.FilePath);
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.MinimumFileVersion);
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.MaximumFileVersion);
-			if (w10 > maxWidth10) maxWidth10 = w10;
-
-			double w11 = ListViewHelper.MeasureTextWidth(item.PackageFamilyName);
-			if (w11 > maxWidth11) maxWidth11 = w11;
-
-			double w12 = ListViewHelper.MeasureTextWidth(item.PackageVersion);
-			if (w12 > maxWidth12) maxWidth12 = w12;
-
-			double w13 = ListViewHelper.MeasureTextWidth(item.AppIDs);
-			if (w13 > maxWidth13) maxWidth13 = w13;
-
-			double w14 = ListViewHelper.MeasureTextWidth(item.Type);
-			if (w14 > maxWidth14) maxWidth14 = w14;
+			maxWidth1 = ListViewHelper.MeasureText(item.Id, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.FriendlyName, maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.Hash, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.FileName, maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.InternalName, maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.FileDescription, maxWidth6);
+			maxWidth7 = ListViewHelper.MeasureText(item.ProductName, maxWidth7);
+			maxWidth8 = ListViewHelper.MeasureText(item.FilePath, maxWidth8);
+			maxWidth9 = ListViewHelper.MeasureText(item.MinimumFileVersion, maxWidth9);
+			maxWidth10 = ListViewHelper.MeasureText(item.MaximumFileVersion, maxWidth10);
+			maxWidth11 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth11);
+			maxWidth12 = ListViewHelper.MeasureText(item.PackageVersion, maxWidth12);
+			maxWidth13 = ListViewHelper.MeasureText(item.AppIDs, maxWidth13);
+			maxWidth14 = ListViewHelper.MeasureText(item.Type, maxWidth14);
 		}
 
 		// Set the column width properties.
@@ -500,37 +345,24 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth("ID");
-		double maxWidth2 = ListViewHelper.MeasureTextWidth("Name");
-		double maxWidth3 = ListViewHelper.MeasureTextWidth("Cert Root");
-		double maxWidth4 = ListViewHelper.MeasureTextWidth("Cert Publisher");
-		double maxWidth5 = ListViewHelper.MeasureTextWidth("Cert OEM ID");
-		double maxWidth6 = ListViewHelper.MeasureTextWidth("Cert EKU");
-		double maxWidth7 = ListViewHelper.MeasureTextWidth("Cert Issuer");
+		double maxWidth1 = ListViewHelper.MeasureText("ID");
+		double maxWidth2 = ListViewHelper.MeasureText("Name");
+		double maxWidth3 = ListViewHelper.MeasureText("Cert Root");
+		double maxWidth4 = ListViewHelper.MeasureText("Cert Publisher");
+		double maxWidth5 = ListViewHelper.MeasureText("Cert OEM ID");
+		double maxWidth6 = ListViewHelper.MeasureText("Cert EKU");
+		double maxWidth7 = ListViewHelper.MeasureText("Cert Issuer");
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (PolicyEditor.SignatureBasedRulesForListView item in SignatureRulesCollection)
 		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.Id);
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.Name);
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.CertRoot);
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.CertPublisher);
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.CertOemID);
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.CertificateEKU);
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.CertIssuer);
-			if (w7 > maxWidth7) maxWidth7 = w7;
+			maxWidth1 = ListViewHelper.MeasureText(item.Id, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.Name, maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.CertRoot, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.CertPublisher, maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.CertOemID, maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.CertificateEKU, maxWidth6);
+			maxWidth7 = ListViewHelper.MeasureText(item.CertIssuer, maxWidth7);
 		}
 
 		// Set the column width properties.

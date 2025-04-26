@@ -40,8 +40,7 @@ internal sealed partial class SystemInformation : Page
 	{
 		this.InitializeComponent();
 
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 
 		// Navigate to the CreatePolicy page when the window is loaded
 		_ = ContentFrame.Navigate(typeof(ViewCurrentPolicies));

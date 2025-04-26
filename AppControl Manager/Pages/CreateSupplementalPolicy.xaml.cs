@@ -251,88 +251,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 
 	private bool usingWildCardFilePathRules;
 
-
-	private void FilesAndFoldersBrowseForFilesButton_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
-			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
-	}
-
-	private void FilesAndFoldersBrowseForFilesSettingsCard_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
-			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
-				FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
-				FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
-			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFoldersButton_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
-			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersButton);
-	}
-
-
-	private void FilesAndFoldersBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!FilesAndFoldersBrowseForBasePolicyButton_FlyOut.IsOpen)
-				FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForBasePolicySettingsCard_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForBasePolicyButton_FlyOut.IsOpen)
-			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForBasePolicyButton_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForBasePolicyButton_FlyOut.IsOpen)
-			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicyButton);
-	}
-
-	/// <summary>
-	/// Browse for Files - Settings Card Click
-	/// </summary>
-	private void FilesAndFoldersBrowseForFilesSettingsCard_Click()
-	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
-
-		if (selectedFiles is { Count: > 0 })
-		{
-			foreach (string file in selectedFiles)
-			{
-				_ = filesAndFoldersFilePaths.Add(file);
-
-				// Append the new file to the TextBox, followed by a newline
-				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
-			}
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-		}
-	}
-
-
 	/// <summary>
 	/// Browse for Files - Button Click
 	/// </summary>
@@ -354,29 +272,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 
 
 	/// <summary>
-	/// Browse for Folders - Settings Card Click
-	/// </summary>
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_Click()
-	{
-		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
-
-		if (selectedDirectories is { Count: > 0 })
-		{
-			foreach (string dir in selectedDirectories)
-			{
-				_ = filesAndFoldersFolderPaths.Add(dir);
-
-				// Append the new directory to the TextBox, followed by a newline
-				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
-			}
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
-		}
-	}
-
-
-	/// <summary>
 	/// Browse for Folders - Button Click
 	/// </summary>
 	private void FilesAndFoldersBrowseForFoldersButton_Click()
@@ -392,27 +287,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 				// Append the new directory to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
 			}
-		}
-	}
-
-
-	/// <summary>
-	/// Browse for Base Policy - Settings Card Click
-	/// </summary>
-	private void FilesAndFoldersBrowseForBasePolicySettingsCard_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			filesAndFoldersBasePolicyPath = selectedFile;
-
-			// Add the file path to the GUI's text box
-			FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicySettingsCard);
 		}
 	}
 
@@ -865,25 +739,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	// False = Kernel Mode
 	private bool signingScenario = true;
 
-	private void CertificatesBrowseForBasePolicyButton_RightTapped()
-	{
-		if (!CertificatesBrowseForBasePolicyButton_FlyOut.IsOpen)
-			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicyButton);
-	}
-
-	private void CertificatesBrowseForBasePolicySettingsCard_RightTapped()
-	{
-		if (!CertificatesBrowseForBasePolicyButton_FlyOut.IsOpen)
-			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
-	}
-
-	private void CertificatesBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!CertificatesBrowseForBasePolicyButton_FlyOut.IsOpen)
-				CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
-	}
-
 	/// <summary>
 	/// Deploy button event handler for Certificates-based Supplemental policy
 	/// </summary>
@@ -925,21 +780,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		CertificatesBasedSupplementalPolicyName = ((TextBox)sender).Text;
 	}
 
-
-	private void CertificatesBrowseForBasePolicySettingsCard_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			CertificatesBasedBasePolicyPath = selectedFile;
-
-			CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-
-			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicySettingsCard);
-		}
-	}
 
 	private void CertificatesBrowseForBasePolicyButton_Click()
 	{
@@ -1211,25 +1051,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	// Selected Supplemental policy name
 	private string? ISGBasedSupplementalPolicyName;
 
-	private void ISGBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!ISGBrowseForBasePolicyButton_FlyOut.IsOpen)
-				ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
-	}
-
-	private void ISGBrowseForBasePolicySettingsCard_RightTapped()
-	{
-		if (!ISGBrowseForBasePolicyButton_FlyOut.IsOpen)
-			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
-	}
-
-	private void ISGBrowseForBasePolicyButton_RightTapped()
-	{
-		if (!ISGBrowseForBasePolicyButton_FlyOut.IsOpen)
-			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicyButton);
-	}
-
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental ISG based policy
 	/// </summary>
@@ -1407,23 +1228,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		ISGBasedSupplementalPolicyName = ((TextBox)sender).Text;
 	}
 
-
-	private void ISGBrowseForBasePolicySettingsCard_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			ISGBasedBasePolicyPath = selectedFile;
-
-			ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-
-			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicySettingsCard);
-		}
-	}
-
-
 	private void ISGBrowseForBasePolicyButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -1467,25 +1271,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	// Path to the base policy for the Strict kernel-mode supplemental policy
 	private string? StrictKernelModeBasePolicyPath;
 
-	private void StrictKernelModeBrowseForBasePolicySettingsCard_RightTapped()
-	{
-		if (!StrictKernelModeBrowseForBasePolicyButton_FlyOut.IsOpen)
-			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
-	}
-
-	private void StrictKernelModeBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!StrictKernelModeBrowseForBasePolicyButton_FlyOut.IsOpen)
-				StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
-	}
-
-	private void StrictKernelModeBrowseForBasePolicyButton_RightTapped()
-	{
-		if (!StrictKernelModeBrowseForBasePolicyButton_FlyOut.IsOpen)
-			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicyButton);
-	}
-
 	private void StrictKernelModeScanButton_Click()
 	{
 		StrictKernelModePerformScans(false);
@@ -1494,27 +1279,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	private void DetectedKernelModeFilesDetailsSettingsCard_Click()
 	{
 		MainWindow.Instance.NavView_Navigate(typeof(StrictKernelPolicyScanResults), null);
-	}
-
-
-	/// <summary>
-	/// Browse for Base Policy - Settings Card Click
-	/// </summary>
-	private void StrictKernelModeBrowseForBasePolicySettingsCard_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			StrictKernelModeBasePolicyPath = selectedFile;
-
-			// Add the file path to the GUI's text box
-			StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicySettingsCard);
-		}
 	}
 
 
@@ -1984,26 +1748,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	// Path to the base policy for the PFN based supplemental policy
 	private string? PFNBasePolicyPath;
 
-	private void PFNBrowseForBasePolicySettingsCard_RightTapped()
-	{
-		if (!PFNBrowseForBasePolicyButton_FlyOut.IsOpen)
-			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
-	}
-
-	private void PFNBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!PFNBrowseForBasePolicyButton_FlyOut.IsOpen)
-				PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
-	}
-
-	private void PFNBrowseForBasePolicyButton_RightTapped()
-	{
-		if (!PFNBrowseForBasePolicyButton_FlyOut.IsOpen)
-			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
-	}
-
-
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
 	/// </summary>
@@ -2164,25 +1908,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			}
 		}
 	}
-
-
-	private void PFNBrowseForBasePolicySettingsCard_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			PFNBasePolicyPath = selectedFile;
-
-			// Add the file path to the GUI's text box
-			PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicySettingsCard);
-		}
-	}
-
 
 	private void PFNBrowseForBasePolicyButton_Click()
 	{
@@ -2434,40 +2159,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	private void CustomPatternBasedFileRulePolicyNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
 	{
 		CustomPatternBasedFileRuleBasedSupplementalPolicyName = ((TextBox)sender).Text;
-	}
-
-	private void CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.IsOpen)
-				CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard);
-	}
-
-	private void CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_RightTapped()
-	{
-		if (!CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.IsOpen)
-			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard);
-	}
-
-	private void CustomPatternBasedFileRuleBrowseForBasePolicyButton_RightTapped()
-	{
-		if (!CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.IsOpen)
-			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicyButton);
-	}
-
-	private void CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			CustomPatternBasedFileRuleBasedBasePolicyPath = selectedFile;
-
-			CustomPatternBasedFileRuleBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = selectedFile;
-
-			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard);
-		}
 	}
 
 	private void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click()

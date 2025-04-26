@@ -96,9 +96,10 @@
                     </Button.Content>
                 </Button>
 
-                <ComboBox x:Uid="SwapPolicyComboBox" SelectedItem="{x:Bind ViewModel.SwapPolicyComboBoxSelectedItem, Mode=TwoWay}"
+                <ComboBox x:Uid="SwapPolicyComboBox"
+                          SelectedItem="{x:Bind ViewModel.SwapPolicyComboBoxSelectedItem, Mode=TwoWay}"
                           SelectedIndex="{x:Bind ViewModel.SwapPolicyComboBoxSelectedIndex, Mode=TwoWay}"
-                          IsEnabled="{x:Bind ViewModel.SwapPolicyComboBoxState, Mode=OneWay}" SelectionChanged="{x:Bind ViewModel.SwapPolicyComboBox_SelectionChanged}">
+                          IsEnabled="{x:Bind ViewModel.SwapPolicyComboBoxState, Mode=OneWay}">
                     <x:String>Default Windows</x:String>
                     <x:String>Allow Microsoft</x:String>
                     <x:String>Signed and Reputable</x:String>

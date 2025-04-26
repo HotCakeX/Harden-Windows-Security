@@ -60,7 +60,7 @@ internal static class AppUpdate
 		if (isUpdateAvailable)
 		{
 			// Set the text for the button in the update page
-			UpdateVM.UpdateButtonContent = $"Install version {versionsResponse.ToString().Trim()}";
+			UpdateVM.UpdateButtonContent = $"Install version {onlineAvailableVersion}";
 		}
 		else
 		{

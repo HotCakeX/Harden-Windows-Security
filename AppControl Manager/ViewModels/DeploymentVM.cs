@@ -30,32 +30,23 @@ internal sealed partial class DeploymentVM : ViewModelBase
 
 	internal Visibility MainInfoBarVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool MainInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal string? MainInfoBarMessage
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = InfoBarSeverity.Informational;
 
-	internal bool MainInfoBarIsClosable
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal string LocalOnlineStatusText
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "Local Deployment is Currently Active";
 
 

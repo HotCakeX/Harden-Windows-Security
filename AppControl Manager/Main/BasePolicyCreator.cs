@@ -272,7 +272,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 	/// </summary>
 	/// <param name="StagingArea">The directory to use for temporary files</param>
 	/// <exception cref="Exception"></exception>
-	internal static void DeployDriversBlockRules(string StagingArea)
+	internal static (string?, string) DeployDriversBlockRules(string StagingArea)
 	{
 		// The location where the downloaded zip file will be saved
 		string DownloadSaveLocation = Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
@@ -312,6 +312,17 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		// Make sure to get only one file if there is more than one (which is unexpected)
 		string SiPolicyPath = SiPolicyPaths[0];
 
+		// Get the path of the XML file - just to extract the version
+		string[] XMLFilePaths = Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.xml", SearchOption.AllDirectories);
+
+		// Make sure to get only one file if there is more than one (which is unexpected)
+		string XMLFilePath = XMLFilePaths[0];
+
+		// Instantiate the policy
+		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLFilePath, null);
+
+		string policyVersion = policyObj.VersionEx;
+
 		// If the SiPolicy file already exists, delete it
 		if (File.Exists(SiPolicyFinalDestination))
 		{
@@ -325,6 +336,8 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		CiToolHelper.RefreshPolicy();
 
 		Logger.Write("SiPolicy.p7b has been deployed and policies refreshed.");
+
+		return (null, policyVersion);
 	}
 
 
@@ -413,7 +426,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
 	/// <returns>Returns the path to the created policy</returns>
-	internal static string BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	internal static string BuildAllowMSFT(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -503,7 +516,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID instead of generating a new one.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
 	/// <returns>Returns the path to the created Default Windows base policy</returns>
-	internal static string BuildDefaultWindows(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	internal static string BuildDefaultWindows(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;
@@ -690,7 +703,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 	/// <param name="PolicyIDToUse">Allows the use of a specific policy ID if provided, overriding the generated one.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to retrieve and deploy Microsoft recommended block rules.</param>
 	/// <returns>Returns the signed and reputable base policy file path</returns>
-	internal static string BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	internal static string BuildSignedAndReputable(string StagingArea, bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
 	{
 
 		string policyName;

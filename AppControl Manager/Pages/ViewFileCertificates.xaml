@@ -41,16 +41,12 @@
             <controls:SettingsCard x:Uid="BrowseForFilesSettingsCard" x:Name="BrowseForFilesSettingsCard"
             Click="{x:Bind BrowseForFilesSettingsCard_Click}" IsClickEnabled="True" IsActionIconVisible="False">
 
-                <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="{x:Bind BrowseForFilesButton_Click}"  />
+                <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="{x:Bind BrowseForFilesSettingsCard_Click}"  />
 
             </controls:SettingsCard>
 
-            <customUI:SettingsCardV2
-                x:Name="IncludeSecurityCatalogsSettingsCard" x:Uid="IncludeSecurityCatalogsSettingsCard"
-                 IsClickEnabled="True" IsActionIconVisible="False">
-
+            <customUI:SettingsCardV2 x:Name="IncludeSecurityCatalogsSettingsCard" x:Uid="IncludeSecurityCatalogsSettingsCard">
                 <ToggleSwitch x:Name="IncludeSecurityCatalogsToggleSwitch" IsOn="True" />
-
             </customUI:SettingsCardV2>
 
         </StackPanel>

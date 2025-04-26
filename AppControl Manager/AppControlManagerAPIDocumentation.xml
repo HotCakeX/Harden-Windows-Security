@@ -1474,16 +1474,6 @@
             Displays a ContentDialog with the error message.
             </summary>
         </member>
-        <member name="M:AppControlManager.App.MoveUserConfigDirectory">
-            <summary>
-            This method will move everything from the old user config dir to the new one and deletes the old one at the end
-            This will be removed in few months once all users have installed the new app version and use the new location.
-            The old location was called "WDACConfig" because it was the location of the module i had created. I maintained the
-            same location to provide interoperability for both the module and the new app but the module is now deprecated so
-            it's time to change the user config location name to an appropriate one.
-            GitHub release: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/AppControlManager.v.1.9.2.0
-            </summary>
-        </member>
         <member name="M:AppControlManager.App.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -1718,6 +1708,15 @@
             <summary>
             Extends SettingsCard to automatically invoke its single child element
             (ToggleSwitch, ComboBox or Button) when the card itself is clicked.
+            No click happens on the internal element when the element is disabled.
+            </summary>
+        </member>
+        <member name="T:AppControlManager.CustomUIElements.SettingsCardV3">
+            <summary>
+            A SettingsCard that:
+             - On RightTapped or Holding (on the card), shows its inner Button.Flyout at the card.
+             - On RightTapped (on the Button), shows its Flyout at the button.
+             It has special use case, for when the setting card hosts a button used for browsing for files/folders.
             </summary>
         </member>
         <member name="M:AppControlManager.CustomUIElements.SigningDetailsDialog.CertificateCNAutoSuggestBox_TextChanged(Microsoft.UI.Xaml.Controls.AutoSuggestBox,Microsoft.UI.Xaml.Controls.AutoSuggestBoxTextChangedEventArgs)">
@@ -2863,7 +2862,7 @@
             <param name="StagingArea">The directory where the XML file will be saved to.</param>
             <returns>the path to the Microsoft recommended driver block rules base policy path and the policy version</returns>
         </member>
-        <member name="M:AppControlManager.Main.BasePolicyCreator.BuildAllowMSFT(System.String,System.Boolean,System.Nullable{System.UInt64},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
+        <member name="M:AppControlManager.Main.BasePolicyCreator.BuildAllowMSFT(System.String,System.Boolean,System.Nullable{System.Double},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
             Creates and deploys an AllowMicrosoft policy based on various configurations and parameters.
             </summary>
@@ -2879,7 +2878,7 @@
             <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
             <returns>Returns the path to the created policy</returns>
         </member>
-        <member name="M:AppControlManager.Main.BasePolicyCreator.BuildDefaultWindows(System.String,System.Boolean,System.Nullable{System.UInt64},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
+        <member name="M:AppControlManager.Main.BasePolicyCreator.BuildDefaultWindows(System.String,System.Boolean,System.Nullable{System.Double},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
             Creates and configures a DefaultWindows policy based on various parameters, handling staging and deployment
             options.
@@ -2905,7 +2904,7 @@
             <param name="deploy">Indicates whether the policy should be deployed after processing.</param>
             <exception cref="T:System.InvalidOperationException">Thrown when no XML content is found in the downloaded markdown from the Microsoft GitHub source.</exception>
         </member>
-        <member name="M:AppControlManager.Main.BasePolicyCreator.BuildSignedAndReputable(System.String,System.Boolean,System.Nullable{System.UInt64},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
+        <member name="M:AppControlManager.Main.BasePolicyCreator.BuildSignedAndReputable(System.String,System.Boolean,System.Nullable{System.Double},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
             Creates SignedAndReputable App Control policy which is based on AllowMicrosoft template policy.
             It uses ISG to authorize files with good reputation.
@@ -4216,19 +4215,47 @@
             <param name="ex"></param>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.Others.EventLogUtility.SetLogSize(System.UInt64)">
+        <member name="T:AppControlManager.Others.EventLogUtility">
+            <summary>
+            Monitors the max-size of a Windows Event Log channel via registry notifications
+            and exposes it as a bindable property.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.EventLogUtility.MaxNumberBoxValue">
+            <summary>
+            Bound to the max value of NumberBoxes in the XAML.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Others.EventLogUtility._MaxSizeMB">
+            <summary>
+            Current maximum log size in megabytes (MB).
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.EventLogUtility.ReadMaxSizeBytes">
+            <summary>
+            Reads the 64-bit MaxSize split across two 32-bit values: MaxSize (low) and MaxSizeUpper (high).
+            Handles negative Int32 values by wrapping to the correct uint.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.EventLogUtility.ToUInt32Wrapped(System.Object)">
+            <summary>
+            Safely convert registry raw value (int, long, ulong, uint, byte) to uint,
+            wrapping negative signed values to the corresponding unsigned representation.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.EventLogUtility.SetLogSize(System.Double)">
             <summary>
             Increase Code Integrity Operational Event Logs size from the default 1MB to user-defined size.
             Also automatically increases the log size by 1MB if the current free space is less than 1MB and the current maximum log size is less than or equal to 10MB.
             This is to prevent infinitely expanding the max log size automatically.
+            Caps user-defined sizes at Int64.MaxValue to avoid overflow.
             </summary>
-            <param name="logSize">Size of the Code Integrity Operational Event Log</param>
+            <param name="logSize">Size of the Code Integrity Operational Event Log (in MB)</param>
         </member>
-        <member name="M:AppControlManager.Others.EventLogUtility.GetCurrentLogSize">
+        <member name="M:AppControlManager.Others.EventLogUtility.SafeAdd(System.Int64,System.Int64)">
             <summary>
-            Gets the Code Integrity Operational Log Max capacity in Double
+            Adds two Int64 values safely, capping at Int64.MaxValue to prevent overflow.
             </summary>
-            <returns></returns>
         </member>
         <member name="P:AppControlManager.Others.ExFileInfo.OriginalFileName">
             <summary>
@@ -4584,9 +4611,9 @@
             An offscreen TextBlock for measurement
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.MeasureTextWidth(System.String)">
+        <member name="M:AppControlManager.Others.ListViewHelper.MeasureText(System.String)">
             <summary>
-            Measures the width (in pixels) required to display the given text.
+            Measures the text width (in pixels) required to display the given text.
             </summary>
         </member>
         <member name="M:AppControlManager.Others.ListViewHelper.ConvertRowToText(System.Collections.Generic.IList{System.Object})">
@@ -5438,14 +5465,6 @@
             Event handler for the Create Policy button
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.LogSizeNumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox,Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs)">
-            <summary>
-            Event handler for the LogSize number box
-            </summary>
-            <param name="sender"></param>
-            <param name="args"></param>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Event handler for the clear button in the base policy path selection button
@@ -5676,19 +5695,9 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesSettingsCard_Click">
-            <summary>
-            Browse for Files - Settings Card Click
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Click">
             <summary>
             Browse for Files - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersSettingsCard_Click">
-            <summary>
-            Browse for Folders - Settings Card Click
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Click">
@@ -5899,86 +5908,6 @@
             of various policies.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.#ctor">
-            <summary>
-            Initializes the CreatePolicy component and sets various log size inputs to disabled. Maintains navigation state.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.AllowMicrosoftCreate_Click">
-            <summary>
-            Event handler for creating/deploying AllowMicrosoft policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.AllowMicrosoftLogSizeInputEnabled_Toggled">
-            <summary>
-            Event handler for the ToggleSwitch to enable/disable the log size input
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_AllowMicrosoft">
-            <summary>
-            Event handler to open the created Allow Microsoft policy in the Policy Editor
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.DefaultWindowsCreate_Click">
-            <summary>
-            Event handler for creating/deploying DefaultWindows policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.DefaultWindowsLogSizeInputEnabled_Toggled">
-            <summary>
-            Event handler for the ToggleSwitch to enable/disable the log size input
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_DefaultWindows">
-            <summary>
-            Event handler to open the created Default Windows policy in the Policy Editor
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.SignedAndReputableCreate_Click">
-            <summary>
-            Event handler for creating/deploying SignedAndReputable policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.SignedAndReputableLogSizeInputEnabled_Toggled">
-            <summary>
-            Event handler for the ToggleSwitch to enable/disable the log size input
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_SignedAndReputable">
-            <summary>
-            Event handler to open the created Signed and Reputable policy in the Policy Editor
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesCreate_Click">
-            <summary>
-            Event handler for creating/deploying Microsoft recommended driver block rules policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedDriverBlockRulesScheduledAutoUpdate_Click">
-            <summary>
-            Event handler for Auto Update button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_RecommendedDriverBlockRules">
-            <summary>
-            Event handler to open the created Microsoft Recommended driver block rules policy in the Policy Editor
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.RecommendedUserModeBlockRulesCreate_Click">
-            <summary>
-            Event handler for creating/deploying Microsoft recommended user-mode block rules policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.StrictKernelModePolicyCreateButton_Click">
-            <summary>
-            Event handler to prepare the system for Strict Kernel-mode policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreatePolicy.OpenInPolicyEditor_StrictKernelModePolicy">
-            <summary>
-            Event handler to open the created Strict Kernel-mode policy in the Policy Editor
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreatePolicy.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -6024,29 +5953,14 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesSettingsCard_Click">
-            <summary>
-            Browse for Files - Settings Card Click
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Click">
             <summary>
             Browse for Files - Button Click
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersSettingsCard_Click">
-            <summary>
-            Browse for Folders - Settings Card Click
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Click">
             <summary>
             Browse for Folders - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicySettingsCard_Click">
-            <summary>
-            Browse for Base Policy - Settings Card Click
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Click">
@@ -6151,11 +6065,6 @@
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_ISG">
             <summary>
             Opens a policy editor for ISG using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicySettingsCard_Click">
-            <summary>
-            Browse for Base Policy - Settings Card Click
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Click">
@@ -6666,11 +6575,6 @@
         <member name="M:AppControlManager.Pages.GetCIHashes.#ctor">
             <summary>
             Initializes the component and sets the navigation cache mode to required for the GetCIHashes class.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.GetCIHashes.PickFile_Click">
-            <summary>
-            Event handler for the browse button
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.GetCIHashes.InitializeComponent">
@@ -7335,19 +7239,7 @@
         </member>
         <member name="M:AppControlManager.Pages.CodeIntegrityInfo.#ctor">
             <summary>
-            Initializes a new instance of the CodeIntegrityInfo class. Sets the navigation cache mode to required.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.GetPolicyStatus(System.Nullable{System.Int32})">
-            <summary>
-            Local method to convert numbers to their actual string values
-            </summary>
-            <param name="status"></param>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.Pages.CodeIntegrityInfo.RetrieveCodeIntegrityInfo_Click">
-            <summary>
-            Event handler for the retrieve code integrity information button
+            Initializes a new instance of the CodeIntegrityInfo class.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CodeIntegrityInfo.InitializeComponent">
@@ -7515,13 +7407,6 @@
             data context.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.ConvertRowToText(AppControlManager.Others.FileCertificateInfoCol)">
-            <summary>
-            Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
-            </summary>
-            <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
-            <returns>A formatted string of the row's properties with labels.</returns>
-        </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -7534,16 +7419,6 @@
             Helper method to copy a specified property to clipboard without reflection
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesButton_Click">
-            <summary>
-            Event handler for the Browse button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.BrowseForFilesSettingsCard_Click">
-            <summary>
-            Event handler for the Settings Card click
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.FetchForCIP(System.String)">
             <summary>
@@ -9107,6 +8982,18 @@
             Updates the total logs count displayed on the UI
             </summary>
         </member>
+        <member name="M:AppControlManager.ViewModels.CodeIntegrityInfoVM.GetPolicyStatus(System.Nullable{System.Int32})">
+            <summary>
+            Local method to convert numbers to their actual string values
+            </summary>
+            <param name="status"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CodeIntegrityInfoVM.RetrieveCodeIntegrityInfo_Click">
+            <summary>
+            Event handler for the retrieve code integrity information button
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -9118,6 +9005,66 @@
         <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.UpdateTotalFiles(System.Nullable{System.Boolean})">
             <summary>
             Updates the total logs count displayed on the UI
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.AllowMicrosoftCreate_Click">
+            <summary>
+            Event handler for creating/deploying AllowMicrosoft policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.OpenInPolicyEditor_AllowMicrosoft">
+            <summary>
+            Event handler to open the created Allow Microsoft policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.DefaultWindowsCreate_Click">
+            <summary>
+            Event handler for creating/deploying DefaultWindows policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.OpenInPolicyEditor_DefaultWindows">
+            <summary>
+            Event handler to open the created Default Windows policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.SignedAndReputableCreate_Click">
+            <summary>
+            Event handler for creating/deploying SignedAndReputable policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.OpenInPolicyEditor_SignedAndReputable">
+            <summary>
+            Event handler to open the created Signed and Reputable policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.RecommendedDriverBlockRulesCreate_Click">
+            <summary>
+            Event handler for creating/deploying Microsoft recommended driver block rules policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.RecommendedDriverBlockRulesScheduledAutoUpdate_Click">
+            <summary>
+            Event handler for Auto Update button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.OpenInPolicyEditor_RecommendedDriverBlockRules">
+            <summary>
+            Event handler to open the created Microsoft Recommended driver block rules policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.RecommendedUserModeBlockRulesCreate_Click">
+            <summary>
+            Event handler for creating/deploying Microsoft recommended user-mode block rules policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.StrictKernelModePolicyCreateButton_Click">
+            <summary>
+            Event handler to prepare the system for Strict Kernel-mode policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.OpenInPolicyEditor_StrictKernelModePolicy">
+            <summary>
+            Event handler to open the created Strict Kernel-mode policy in the Policy Editor
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CalculateColumnWidths">
@@ -9218,6 +9165,11 @@
             and assigns the value (with a little extra padding) to the corresponding property.
             It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
             And only after this method, the ItemsSource must be assigned to the ListView.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.GetCIHashesVM.PickFile_Click">
+            <summary>
+            Event handler for the browse button
             </summary>
         </member>
         <member name="T:AppControlManager.ViewModels.MainWindowVM">
@@ -9810,12 +9762,19 @@
             </summary>
             <param name="newSortColumn">The column to sort by.</param>
         </member>
+        <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.ConvertRowToText(AppControlManager.Others.FileCertificateInfoCol)">
+            <summary>
+            Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
+            </summary>
+            <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
+            <returns>A formatted string of the row's properties with labels.</returns>
+        </member>
         <member name="T:AppControlManager.ViewModels.ViewModelBase">
             <summary>
             All of the ViewModel classes must inherit from this class
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewModelBase.SetProperty``1(``0@,``0,System.String)">
+        <member name="M:AppControlManager.ViewModels.ViewModelBase.SP``1(``0@,``0,System.String)">
             <summary>
             Sets the field to <paramref name="newValue"/> if it differs from its current contents,
             raises PropertyChanged, and returns true if a change occurred.

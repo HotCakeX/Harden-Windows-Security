@@ -99,9 +99,10 @@
 
                         <NumberBox x:Name="LogSizeNumberBox"
                             x:Uid="LogSizeNumberBox"
+                            Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
                             SpinButtonPlacementMode="Inline"
                             SmallChange="1"
-                            LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_ValueChanged" />
+                            LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" />
 
                         <Button x:Name="GoToStep2Button" Click="{x:Bind GoToStep2Button_Click}" Margin="0,27,0,0" Content="Go to step 2" ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2" Style="{StaticResource AccentButtonStyle}"/>
 

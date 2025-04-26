@@ -62,12 +62,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// </summary>
 	internal bool CheckForUpdateButtonIsEnabled
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
 	internal bool CheckForUpdateSettingsCardIsClickable
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
 	/// <summary>
@@ -75,7 +75,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// </summary>
 	internal string UpdateButtonContent
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = GlobalVars.Rizz.GetString("UpdateNavItem/ToolTipService/ToolTip");
 
 	/// <summary>
@@ -86,7 +86,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		get;
 		set
 		{
-			if (SetProperty(ref field, value))
+			if (SP(ref field, value))
 			{
 				// Change the update button's text based on the file path
 				UpdateButtonContent = field ? $"Install {Path.GetFileName(LocalPackageFilePath)}" : GlobalVars.Rizz.GetString("UpdateNavItem/ToolTipService/ToolTip");
@@ -102,7 +102,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		get;
 		set
 		{
-			if (SetProperty(ref field, value))
+			if (SP(ref field, value))
 			{
 				bool ok = !string.IsNullOrEmpty(field);
 
@@ -121,63 +121,39 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// <summary>
 	/// Whether the section that provides confirmation ability is enabled or disabled
 	/// </summary>
-	internal bool InstallLocalPackageConfirmationIsEnabled
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool InstallLocalPackageConfirmationIsEnabled { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Whether the installation process must use hardened procedures.
 	/// </summary>
-	internal bool UseHardenedInstallationProcess
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool UseHardenedInstallationProcess { get; set => SP(ref field, value); }
 
 	internal Visibility MainInfoBarVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool MainInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal string? MainInfoBarMessage
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = InfoBarSeverity.Informational;
 
-	internal bool MainInfoBarIsClosable
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility ProgressBarVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal double ProgressBarValue
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal double ProgressBarValue { get; set => SP(ref field, value); }
 
-	internal bool ProgressBarIsIndeterminate
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool ProgressBarIsIndeterminate { get; set => SP(ref field, value); }
 
-	internal bool WhatsNewInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool WhatsNewInfoBarIsOpen { get; set => SP(ref field, value); }
 
 	#endregion
 

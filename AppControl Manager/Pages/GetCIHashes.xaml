@@ -29,7 +29,8 @@
             <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="1">
 
                 <!-- Button to trigger file picker -->
-                <Button x:Name="PickFileButton" Click="{x:Bind PickFile_Click}"
+                <Button Click="{x:Bind ViewModel.PickFile_Click}"
+                    IsEnabled="{x:Bind ViewModel.PickFileButtonIsEnabled, Mode=OneWay}"
                     HorizontalAlignment="Center"
                     x:Uid="FileBrowseButton"
                     Style="{StaticResource AccentButtonStyle}"/>
@@ -43,8 +44,8 @@
                         <!-- Takes space for ProgressRing -->
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA1 Page" x:Name="Sha1PageTextBox" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
-                    <ProgressRing x:Name="Sha1PageProgressRing" Visibility="Collapsed" Grid.Column="1" Margin="0,27,0,0"/>
+                    <TextBox Header="SHA1 Page" Text="{x:Bind ViewModel.Sha1Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha1PageProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
                 <!-- Grid for SHA256 Page -->
@@ -54,8 +55,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA256 Page" x:Name="Sha256PageTextBox" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
-                    <ProgressRing x:Name="Sha256PageProgressRing" Visibility="Collapsed" Grid.Column="1" Margin="0,27,0,0"/>
+                    <TextBox Header="SHA256 Page" Text="{x:Bind ViewModel.Sha256Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha256PageProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
                 <!-- Grid for SHA1 Authenticode -->
@@ -65,8 +66,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA1 Authenticode" x:Name="Sha1AuthenticodeTextBox" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
-                    <ProgressRing x:Name="Sha1AuthenticodeProgressRing" Visibility="Collapsed" Grid.Column="1" Margin="0,27,0,0"/>
+                    <TextBox Header="SHA1 Authenticode" Text="{x:Bind ViewModel.Sha1Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha1AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
                 <!-- Grid for SHA256 Authenticode -->
@@ -76,8 +77,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA256 Authenticode" x:Name="Sha256AuthenticodeTextBox" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
-                    <ProgressRing x:Name="Sha256AuthenticodeProgressRing" Visibility="Collapsed" Grid.Column="1" Margin="0,27,0,0"/>
+                    <TextBox Header="SHA256 Authenticode" Text="{x:Bind ViewModel.Sha256Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha256AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
                 <!-- Grid for SHA3 384 Flat -->
@@ -87,8 +88,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA3 384 Flat" x:Name="SHA3384FlatHash" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
-                    <ProgressRing x:Name="SHA3384FlatHashProgressRing" Visibility="Collapsed" Grid.Column="1" Margin="0,27,0,0"/>
+                    <TextBox Header="SHA3 384 Flat" Text="{x:Bind ViewModel.SHA3384FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <ProgressRing Visibility="{x:Bind ViewModel.SHA3384FlatHashProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
                 <!-- Grid for SHA3 512 Flat -->
@@ -98,8 +99,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA3 512 Flat" x:Name="SHA3512FlatHash" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
-                    <ProgressRing x:Name="SHA3512FlatHashProgressRing" Visibility="Collapsed" Grid.Column="1" Margin="0,27,0,0"/>
+                    <TextBox Header="SHA3 512 Flat" Text="{x:Bind ViewModel.SHA3512FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <ProgressRing Visibility="{x:Bind ViewModel.SHA3512FlatHashProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
             </controls:WrapPanel>

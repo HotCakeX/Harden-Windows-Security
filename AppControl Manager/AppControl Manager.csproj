@@ -78,7 +78,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.15.0</FileVersion>
+    <FileVersion>2.0.16.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -207,6 +207,9 @@
     <AnalysisModePerformance>All</AnalysisModePerformance>
     <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
 
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration-generator -->
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+
   </PropertyGroup>
 
 
@@ -293,7 +296,7 @@
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.4" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.4" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
-    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.18.1" />
+    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.18.2" />
 
   </ItemGroup>
 

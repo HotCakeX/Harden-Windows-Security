@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
@@ -68,14 +69,12 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="BrowseForMainPolicyToMergeSettingsCard" IsClickEnabled="True"
-                               x:Name="MainPolicySettingsCard" Click="MainPolicySettingsCard_Click"
-                               Holding="MainPolicySettingsCard_Holding" RightTapped="MainPolicySettingsCard_RightTapped" IsActionIconVisible="False">
+                        <customUI:SettingsCardV3 x:Uid="BrowseForMainPolicyToMergeSettingsCard">
 
-                            <Button x:Uid="GenericBrowseButton" RightTapped="MainPolicyBrowseButton_RightTapped" x:Name="MainPolicyBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
+                            <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
 
                                 <Button.Flyout>
-                                    <Flyout x:Name="MainPolicy_Flyout">
+                                    <Flyout>
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -94,16 +93,14 @@
 
                             </Button>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Uid="BrowseForOtherPoliciesToMergeSettingsCard" IsClickEnabled="True"
-                            x:Name="OtherPoliciesSettingsCard" Click="OtherPoliciesSettingsCard_Click"
-                            Holding="OtherPoliciesSettingsCard_Holding" RightTapped="OtherPoliciesSettingsCard_RightTapped" IsActionIconVisible="False">
+                        <customUI:SettingsCardV3 x:Uid="BrowseForOtherPoliciesToMergeSettingsCard">
 
-                            <Button x:Uid="GenericBrowseButton" x:Name="OtherPoliciesBrowseButton" RightTapped="OtherPoliciesBrowseButton_RightTapped" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
+                            <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
 
                                 <Button.Flyout>
-                                    <Flyout x:Name="OtherPolicies_Flyout">
+                                    <Flyout>
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -122,7 +119,7 @@
 
                             </Button>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV3>
 
                     </controls:SettingsExpander.Items>
 

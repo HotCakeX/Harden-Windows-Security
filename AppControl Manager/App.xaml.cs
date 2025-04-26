@@ -20,14 +20,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.Hosting;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppLifecycle;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -133,41 +130,54 @@ public partial class App : Application
 
 		this.InitializeComponent();
 
-		AppHost = Host.CreateDefaultBuilder()
-		.ConfigureServices((context, services) =>
+		HostApplicationBuilderSettings builderSettings = new()
 		{
-			// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda when it takes parameters
-			_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
-			_ = services.AddSingleton<ViewCurrentPoliciesVM>();
-			_ = services.AddSingleton<PolicyEditorVM>();
-			_ = services.AddSingleton<SettingsVM>();
-			_ = services.AddSingleton<MergePoliciesVM>();
-			_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
-			_ = services.AddSingleton<AllowNewAppsVM>();
-			_ = services.AddSingleton<CreateDenyPolicyVM>();
-			_ = services.AddSingleton<CreateSupplementalPolicyVM>();
-			_ = services.AddSingleton<EventLogsPolicyCreationVM>();
-			_ = services.AddSingleton<SimulationVM>();
-			_ = services.AddSingleton<MDEAHPolicyCreationVM>();
-			_ = services.AddSingleton<ViewFileCertificatesVM>();
-			_ = services.AddSingleton<MainWindowVM>();
-			_ = services.AddSingleton<CreatePolicyVM>();
-			_ = services.AddSingleton<DeploymentVM>();
-			_ = services.AddSingleton<UpdateVM>();
-			_ = services.AddSingleton<ValidatePolicyVM>();
+			DisableDefaults = true
+		};
 
-			// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
-			// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
-			_ = services.AddSingleton(provider =>
-			{
-				ViewModel graphVM = provider.GetRequiredService<ViewModel>();
-				return new ViewOnlinePoliciesVM(graphVM);
-			});
+		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.hosting.host.createemptyapplicationbuilder
+		HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(builderSettings);
 
-			_ = services.AddSingleton<ViewModel>();
-		})
-		.Build();
+		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.hosting.hostapplicationbuilder.services
+		IServiceCollection services = builder.Services;
 
+		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection
+
+		// App settings
+		_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
+
+		// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda.
+		_ = services.AddSingleton<ViewCurrentPoliciesVM>();
+		_ = services.AddSingleton<PolicyEditorVM>();
+		_ = services.AddSingleton<SettingsVM>();
+		_ = services.AddSingleton<MergePoliciesVM>();
+		_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
+		_ = services.AddSingleton<AllowNewAppsVM>();
+		_ = services.AddSingleton<CreateDenyPolicyVM>();
+		_ = services.AddSingleton<CreateSupplementalPolicyVM>();
+		_ = services.AddSingleton<EventLogsPolicyCreationVM>();
+		_ = services.AddSingleton<SimulationVM>();
+		_ = services.AddSingleton<MDEAHPolicyCreationVM>();
+		_ = services.AddSingleton<ViewFileCertificatesVM>();
+		_ = services.AddSingleton<MainWindowVM>();
+		_ = services.AddSingleton<CreatePolicyVM>();
+		_ = services.AddSingleton<DeploymentVM>();
+		_ = services.AddSingleton<UpdateVM>();
+		_ = services.AddSingleton<ValidatePolicyVM>();
+		_ = services.AddSingleton<CodeIntegrityInfoVM>();
+		_ = services.AddSingleton<GetCIHashesVM>();
+		_ = services.AddSingleton(provider => new EventLogUtility()); // internal ctor.
+
+		// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
+		// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
+		_ = services.AddSingleton<ViewModel>();
+		_ = services.AddSingleton(provider =>
+		{
+			ViewModel graphVM = provider.GetRequiredService<ViewModel>();
+			return new ViewOnlinePoliciesVM(graphVM);
+		});
+
+		AppHost = builder.Build();
 
 		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
 
@@ -197,24 +207,9 @@ public partial class App : Application
 		// https://learn.microsoft.com/windows/apps/design/style/reveal-focus
 		this.FocusVisualKind = FocusVisualKind.Reveal;
 
-		if (IsElevated)
-			MoveUserConfigDirectory();
-
-		#region
-
 		// Check for the SoundSetting in the local settings
-		if (Settings.SoundSetting)
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.On;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
-		}
-		else
-		{
-			ElementSoundPlayer.State = ElementSoundPlayerState.Off;
-			ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
-		}
-
-		#endregion
+		ElementSoundPlayer.State = Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+		ElementSoundPlayer.SpatialAudioMode = Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
 	}
 
 
@@ -480,15 +475,11 @@ public partial class App : Application
 						CurrentlyOpenContentDialog = null;
 					}
 
-					ContentDialog errorDialog = new()
+					CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
 						Title = "An error occurred",
-						BorderBrush = Current.Resources["AccentFillColorDefaultBrush"] as Brush ?? new SolidColorBrush(Colors.Transparent),
-						BorderThickness = new Thickness(1),
 						Content = $"An unexpected error has occurred:\n{ex.Message}",
-						CloseButtonText = "OK",
-						XamlRoot = m_window.Content.XamlRoot, // Ensure dialog is attached to the main window
-						RequestedTheme = string.Equals(Settings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(Settings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default)
+						CloseButtonText = GlobalVars.Rizz.GetString("OK"),
 					};
 
 					// Show the dialog
@@ -502,148 +493,4 @@ public partial class App : Application
 			}
 		}
 	}
-
-	/// <summary>
-	/// This method will move everything from the old user config dir to the new one and deletes the old one at the end
-	/// This will be removed in few months once all users have installed the new app version and use the new location.
-	/// The old location was called "WDACConfig" because it was the location of the module i had created. I maintained the
-	/// same location to provide interoperability for both the module and the new app but the module is now deprecated so
-	/// it's time to change the user config location name to an appropriate one.
-	/// GitHub release: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/AppControlManager.v.1.9.2.0
-	/// </summary>
-	private static void MoveUserConfigDirectory()
-	{
-
-		// Path to the old user config directory
-		string OldUserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
-
-		// Ensure the new user config directory exists
-		if (!Directory.Exists(GlobalVars.UserConfigDir))
-		{
-			_ = Directory.CreateDirectory(GlobalVars.UserConfigDir);
-		}
-
-		// Check if the old user config directory exists
-		if (Directory.Exists(OldUserConfigDir))
-		{
-
-			Logger.Write(@"Moving the user config directory to the new location at 'Program Files\AppControl Manager");
-
-			// Step 1: Recreate the directory structure
-
-			// Get all subdirectories (recursively) from the old config directory
-			string[] directories = Directory.GetDirectories(OldUserConfigDir, "*", SearchOption.AllDirectories);
-
-			foreach (string oldDir in directories)
-			{
-				// Calculate the relative path of the old directory compared to the root of the old config
-				string relativePath = Path.GetRelativePath(OldUserConfigDir, oldDir);
-
-				// Combine the new config directory with the relative path to get the new directory path
-				string newDir = Path.Combine(GlobalVars.UserConfigDir, relativePath);
-
-				// Create the new directory if it does not exist
-				if (!Directory.Exists(newDir))
-				{
-					_ = Directory.CreateDirectory(newDir);
-				}
-			}
-
-			// Step 2: Move all files while preserving their relative positions
-
-			// Get all files (recursively) from the old config directory
-			string[] files = Directory.GetFiles(OldUserConfigDir, "*", SearchOption.AllDirectories);
-
-			foreach (string filePath in files)
-			{
-				// Calculate the file's relative path from the old config directory
-				string relativeFilePath = Path.GetRelativePath(OldUserConfigDir, filePath);
-
-				// Combine with the new config directory to get the target file path
-				string destFilePath = Path.Combine(GlobalVars.UserConfigDir, relativeFilePath);
-
-				// Ensure that the destination subdirectory exists (double-check)
-				string? destSubDir = Path.GetDirectoryName(destFilePath);
-
-				if (!string.IsNullOrEmpty(destSubDir) && !Directory.Exists(destSubDir))
-				{
-					_ = Directory.CreateDirectory(destSubDir);
-				}
-
-				// Move the file to the new directory
-				try
-				{
-					File.Move(filePath, destFilePath, overwrite: true);
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ErrorWriter.FormatException(ex));
-				}
-			}
-
-			// Step 3: Delete the old user config directory
-			Directory.Delete(OldUserConfigDir, recursive: true);
-
-			// Step 4: Get all of the user configurations from the JSON file
-			UserConfiguration config = UserConfiguration.Get();
-
-			string? newSignToolCustomPath = null;
-			string? newCertificatePath = null;
-			string? newUnsignedPolicyPath = null;
-			string? newSignedPolicyPath = null;
-
-			if (!string.IsNullOrEmpty(config.SignToolCustomPath) && config.SignToolCustomPath.Contains(OldUserConfigDir))
-			{
-				newSignToolCustomPath = config.SignToolCustomPath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
-
-				if (!File.Exists(newSignToolCustomPath))
-				{
-					newSignToolCustomPath = null;
-				}
-			}
-			if (!string.IsNullOrEmpty(config.CertificatePath) && config.CertificatePath.Contains(OldUserConfigDir))
-			{
-				newCertificatePath = config.CertificatePath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
-
-				if (!File.Exists(newCertificatePath))
-				{
-					newCertificatePath = null;
-				}
-			}
-			if (!string.IsNullOrEmpty(config.UnsignedPolicyPath) && config.UnsignedPolicyPath.Contains(OldUserConfigDir))
-			{
-				newUnsignedPolicyPath = config.UnsignedPolicyPath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
-
-				if (!File.Exists(newUnsignedPolicyPath))
-				{
-					newUnsignedPolicyPath = null;
-				}
-			}
-			if (!string.IsNullOrEmpty(config.SignedPolicyPath) && config.SignedPolicyPath.Contains(OldUserConfigDir))
-			{
-				newSignedPolicyPath = config.SignedPolicyPath.Replace(OldUserConfigDir, GlobalVars.UserConfigDir);
-
-				if (!File.Exists(newSignedPolicyPath))
-				{
-					newSignedPolicyPath = null;
-				}
-			}
-
-			try
-			{
-				// Replace the "WDACConfig" with "AppControl Manager" in user configurations JSON file
-				_ = UserConfiguration.Set(
-					SignedPolicyPath: newSignedPolicyPath,
-					UnsignedPolicyPath: newUnsignedPolicyPath,
-					SignToolCustomPath: newSignToolCustomPath,
-					CertificatePath: newCertificatePath
-					);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ErrorWriter.FormatException(ex));
-			}
-		}
-	}
-
 }

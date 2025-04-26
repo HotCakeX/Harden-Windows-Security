@@ -64,29 +64,6 @@ internal sealed partial class ViewFileCertificates : Page
 		this.DataContext = ViewModel;
 	}
 
-	/// <summary>
-	/// Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
-	/// </summary>
-	/// <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
-	/// <returns>A formatted string of the row's properties with labels.</returns>
-	private static string ConvertRowToText(FileCertificateInfoCol row)
-	{
-		// Use StringBuilder to format each property with its label for easy reading
-		return new StringBuilder()
-			.AppendLine(GlobalVars.Rizz.GetString("SignerNumberHeader/Text") + ": " + row.SignerNumber)
-			.AppendLine(GlobalVars.Rizz.GetString("TypeHeader/Text") + ": " + row.Type)
-			.AppendLine(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text") + ": " + row.SubjectCN)
-			.AppendLine(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text") + ": " + row.IssuerCN)
-			.AppendLine(GlobalVars.Rizz.GetString("NotBeforeHeader/Text") + ": " + row.NotBefore)
-			.AppendLine(GlobalVars.Rizz.GetString("NotAfterHeader/Text") + ": " + row.NotAfter)
-			.AppendLine(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text") + ": " + row.HashingAlgorithm)
-			.AppendLine(GlobalVars.Rizz.GetString("SerialNumberHeader/Text") + ": " + row.SerialNumber)
-			.AppendLine(GlobalVars.Rizz.GetString("ThumbprintHeader/Text") + ": " + row.Thumbprint)
-			.AppendLine(GlobalVars.Rizz.GetString("TBSHashHeader/Text") + ": " + row.TBSHash)
-			.AppendLine(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text") + ": " + row.OIDs)
-			.ToString();
-	}
-
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -107,7 +84,7 @@ internal sealed partial class ViewFileCertificates : Page
 				if (selectedItem is FileCertificateInfoCol obj)
 
 					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
+					_ = dataBuilder.AppendLine(ViewModel.ConvertRowToText(obj));
 
 				// Add a separator between rows for readability in multi-row copies
 				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
@@ -156,50 +133,6 @@ internal sealed partial class ViewFileCertificates : Page
 	}
 
 
-	/// <summary>
-	/// Event handler for the Browse button
-	/// </summary>
-	private async void BrowseForFilesButton_Click()
-	{
-
-		try
-		{
-			BrowseForFilesSettingsCard.IsEnabled = false;
-			BrowseForFilesButton.IsEnabled = false;
-
-			string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
-
-			if (!string.IsNullOrWhiteSpace(selectedFiles))
-			{
-
-				// Get the results
-				List<FileCertificateInfoCol> result = await Fetch(selectedFiles);
-
-				// Add the results to the collection
-				ViewModel.FileCertificates.Clear();
-				ViewModel.FilteredCertificates.Clear();
-
-				ViewModel.FilteredCertificates.AddRange(result);
-
-				foreach (FileCertificateInfoCol item in result)
-				{
-					item.ParentViewModel = ViewModel;
-					ViewModel.FileCertificates.Add(item);
-				}
-
-				ViewModel.CalculateColumnWidths();
-			}
-		}
-		finally
-		{
-			BrowseForFilesSettingsCard.IsEnabled = true;
-			BrowseForFilesButton.IsEnabled = true;
-		}
-	}
-
-	/// <summary>
-	/// Event handler for the Settings Card click
-	/// </summary>
 	private async void BrowseForFilesSettingsCard_Click()
 	{
 		try
@@ -219,13 +152,13 @@ internal sealed partial class ViewFileCertificates : Page
 				string fileExtension = Path.GetExtension(selectedFiles);
 
 				// Perform different operations for .CIP files
-				if (String.Equals(fileExtension, ".cip", StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(fileExtension, ".cip", StringComparison.OrdinalIgnoreCase))
 				{
 					// Get the results
 					result = await FetchForCIP(selectedFiles);
 				}
 
-				else if (String.Equals(fileExtension, ".cer", StringComparison.OrdinalIgnoreCase))
+				else if (string.Equals(fileExtension, ".cer", StringComparison.OrdinalIgnoreCase))
 				{
 					// Get the results
 					result = await FetchForCER(selectedFiles);
@@ -252,7 +185,6 @@ internal sealed partial class ViewFileCertificates : Page
 
 				ViewModel.CalculateColumnWidths();
 			}
-
 		}
 		finally
 		{

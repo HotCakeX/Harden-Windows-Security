@@ -22,16 +22,18 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Button x:Name="RetrieveCodeIntegrityInfo"
-                x:Uid="RetrieveCodeIntegrityInfoButton"
-                Click="{x:Bind RetrieveCodeIntegrityInfo_Click}"                
+            <Button x:Uid="RetrieveCodeIntegrityInfoButton"
+                Click="{x:Bind ViewModel.RetrieveCodeIntegrityInfo_Click}"                
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Style="{StaticResource AccentButtonStyle}"
                 Margin="0,0,0,10"
                 Grid.Row="0"/>
 
-            <ListView Grid.Row="1" Name="CodeIntegrityInfoListView" HorizontalAlignment="Center" SelectionMode="None">
+            <ListView Grid.Row="1"
+                      ItemsSource="{x:Bind ViewModel.codeIntegrityOptions}"
+                      HorizontalAlignment="Center"
+                      SelectionMode="None">
                 <!-- ListView Headers -->
                 <ListView.Header>
                     <Grid ColumnSpacing="16">
@@ -70,8 +72,8 @@
 
             <controls:WrapPanel Margin="10,10,0,10" HorizontalAlignment="Center" Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="15" Grid.Row="3">
                 <TextBlock x:Uid="AppControlStatusTextBlock" Style="{ThemeResource TitleTextBlockStyle}" />
-                <TextBox x:Name="UMCI" TextWrapping="Wrap" IsReadOnly="True" x:Uid="UMCITextBlock" />
-                <TextBox x:Name="KMCI" TextWrapping="Wrap" IsReadOnly="True" x:Uid="KMCITextBlock" />
+                <TextBox Text="{x:Bind ViewModel.UMCI, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True" x:Uid="UMCITextBlock" />
+                <TextBox Text="{x:Bind ViewModel.KMCI, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True" x:Uid="KMCITextBlock" />
             </controls:WrapPanel>
 
         </Grid>

@@ -44,7 +44,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
 	#endregion
@@ -53,110 +53,27 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	#region LISTVIEW IMPLEMENTATIONS
 
 	// Properties to hold each columns' width.
-	internal GridLength ColumnWidth1
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth2
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth3
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth4
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth5
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth6
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth7
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth8
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth9
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth10
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth11
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth12
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth13
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth14
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth15
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth16
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth17
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth18
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth19
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth20
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth21
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth11 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth12 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth13 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth14 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth15 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth16 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth17 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth18 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth19 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth20 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth21 { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -168,93 +85,52 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TimeCreatedHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ActionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA1FlatHashHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SHA256FlatHashHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
-		double maxWidth19 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
-		double maxWidth20 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
-		double maxWidth21 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ComputerNameHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("TimeCreatedHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ActionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
+		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
+		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
+		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1FlatHashHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256FlatHashHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
+		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
+		double maxWidth19 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
+		double maxWidth20 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
+		double maxWidth21 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ComputerNameHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in FileIdentities)
 		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.FileName);
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.TimeCreated.ToString());
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.SignatureStatus.ToString());
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.Action.ToString());
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.OriginalFileName);
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.InternalName);
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.FileDescription);
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.ProductName);
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.FileVersion?.ToString());
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.PackageFamilyName);
-			if (w10 > maxWidth10) maxWidth10 = w10;
-
-			double w11 = ListViewHelper.MeasureTextWidth(item.SHA256Hash);
-			if (w11 > maxWidth11) maxWidth11 = w11;
-
-			double w12 = ListViewHelper.MeasureTextWidth(item.SHA1Hash);
-			if (w12 > maxWidth12) maxWidth12 = w12;
-
-			double w13 = ListViewHelper.MeasureTextWidth(item.SISigningScenario.ToString());
-			if (w13 > maxWidth13) maxWidth13 = w13;
-
-			double w14 = ListViewHelper.MeasureTextWidth(item.FilePath);
-			if (w14 > maxWidth14) maxWidth14 = w14;
-
-			double w15 = ListViewHelper.MeasureTextWidth(item.SHA1FlatHash);
-			if (w15 > maxWidth15) maxWidth15 = w15;
-
-			double w16 = ListViewHelper.MeasureTextWidth(item.SHA256FlatHash);
-			if (w16 > maxWidth16) maxWidth16 = w16;
-
-			double w17 = ListViewHelper.MeasureTextWidth(item.FilePublishersToDisplay);
-			if (w17 > maxWidth17) maxWidth17 = w17;
-
-			double w18 = ListViewHelper.MeasureTextWidth(item.Opus);
-			if (w18 > maxWidth18) maxWidth18 = w18;
-
-			double w19 = ListViewHelper.MeasureTextWidth(item.PolicyGUID.ToString());
-			if (w19 > maxWidth19) maxWidth19 = w19;
-
-			double w20 = ListViewHelper.MeasureTextWidth(item.PolicyName);
-			if (w20 > maxWidth20) maxWidth20 = w20;
-
-			double w21 = ListViewHelper.MeasureTextWidth(item.ComputerName);
-			if (w21 > maxWidth21) maxWidth21 = w21;
+			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.TimeCreated.ToString(), maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.SignatureStatus.ToString(), maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.Action.ToString(), maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.InternalName, maxWidth6);
+			maxWidth7 = ListViewHelper.MeasureText(item.FileDescription, maxWidth7);
+			maxWidth8 = ListViewHelper.MeasureText(item.ProductName, maxWidth8);
+			maxWidth9 = ListViewHelper.MeasureText(item.FileVersion?.ToString(), maxWidth9);
+			maxWidth10 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth10);
+			maxWidth11 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth11);
+			maxWidth12 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth12);
+			maxWidth13 = ListViewHelper.MeasureText(item.SISigningScenario.ToString(), maxWidth13);
+			maxWidth14 = ListViewHelper.MeasureText(item.FilePath, maxWidth14);
+			maxWidth15 = ListViewHelper.MeasureText(item.SHA1FlatHash, maxWidth15);
+			maxWidth16 = ListViewHelper.MeasureText(item.SHA256FlatHash, maxWidth16);
+			maxWidth17 = ListViewHelper.MeasureText(item.FilePublishersToDisplay, maxWidth17);
+			maxWidth18 = ListViewHelper.MeasureText(item.Opus, maxWidth18);
+			maxWidth19 = ListViewHelper.MeasureText(item.PolicyGUID.ToString(), maxWidth19);
+			maxWidth20 = ListViewHelper.MeasureText(item.PolicyName, maxWidth20);
+			maxWidth21 = ListViewHelper.MeasureText(item.ComputerName, maxWidth21);
 		}
 
 		// Set the column width properties.

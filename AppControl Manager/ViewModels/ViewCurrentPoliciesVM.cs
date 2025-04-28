@@ -26,7 +26,6 @@ using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -41,9 +40,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 {
-
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-
 	// To store the policies displayed on the ListView
 	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];
 
@@ -55,119 +51,65 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	internal bool UIElementsEnabledState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
-	internal bool IncludeSystemPoliciesCheckboxState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool IncludeSystemPoliciesCheckboxState { get; set => SP(ref field, value); }
 
 	internal bool IncludeBasePoliciesCheckboxState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
 	internal bool IncludeSupplementalPoliciesCheckboxState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
-	internal bool IncludeAppControlManagerSupplementalPoliciesCheckboxState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool IncludeAppControlManagerSupplementalPoliciesCheckboxState { get; set => SP(ref field, value); }
 
 	internal string PoliciesCountTextBox
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "Number of Policies: 0";
 
-	internal string? SearchBoxTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
 
-	internal bool RemovePolicyButtonState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool RemovePolicyButtonState { get; set => SP(ref field, value); }
 
-	internal CiPolicyInfo? ListViewSelectedPolicy
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal CiPolicyInfo? ListViewSelectedPolicy { get; set => SP(ref field, value); }
 
-	internal string? SwapPolicyComboBoxSelectedItem
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? SwapPolicyComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 	internal int SwapPolicyComboBoxSelectedIndex
 	{
-		get; set => SetProperty(ref field, value);
+		get;
+		set
+		{   // Instead of attaching the method to the SelectionChanged event of the ComboBox, we check changes in the SelectedItemIndex in here.
+			// Value is set to -1 by the method that retrieves the policies.
+			if (SP(ref field, value) && value != -1)
+			{
+				SwapPolicyComboBox_SelectionChanged();
+			}
+		}
 	}
 
-	internal bool SwapPolicyComboBoxState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool SwapPolicyComboBoxState { get; set => SP(ref field, value); }
 
-	internal int ListViewSelectedIndex
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
 	#region Properties to hold each columns' width.
-	internal GridLength ColumnWidth1
-	{
-		get; set => SetProperty(ref field, value);
-	}
 
-	internal GridLength ColumnWidth2
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth3
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth4
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth5
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth6
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth7
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth8
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth9
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth10
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -180,49 +122,30 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("VersionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsEnforcedHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsOnDiskHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSystemPolicyHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("VersionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsEnforcedHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsOnDiskHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsSystemPolicyHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (CiPolicyInfo item in AllPolicies)
 		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.PolicyID);
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.BasePolicyID);
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.FriendlyName);
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.Version?.ToString());
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.IsAuthorized.ToString());
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.IsEnforced.ToString());
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.IsOnDisk.ToString());
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.IsSignedPolicy.ToString());
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.IsSystemPolicy.ToString());
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.PolicyOptionsDisplay);
-			if (w10 > maxWidth10) maxWidth10 = w10;
+			maxWidth1 = ListViewHelper.MeasureText(item.PolicyID, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.BasePolicyID, maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.FriendlyName, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.Version?.ToString(), maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.IsAuthorized.ToString(), maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.IsEnforced.ToString(), maxWidth6);
+			maxWidth7 = ListViewHelper.MeasureText(item.IsOnDisk.ToString(), maxWidth7);
+			maxWidth8 = ListViewHelper.MeasureText(item.IsSignedPolicy.ToString(), maxWidth8);
+			maxWidth9 = ListViewHelper.MeasureText(item.IsSystemPolicy.ToString(), maxWidth9);
+			maxWidth10 = ListViewHelper.MeasureText(item.PolicyOptionsDisplay, maxWidth10);
 		}
 
 		// Set the column width properties.
@@ -247,6 +170,9 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		try
 		{
 			UIElementsEnabledState = false;
+
+			SwapPolicyComboBoxSelectedIndex = -1;
+			SwapPolicyComboBoxSelectedItem = null;
 
 			// Clear the policies before getting and showing the new ones
 			// They also set the "SelectedItem" property of the ListView to null
@@ -302,7 +228,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Event handler for when the Swap Policy ComboBox's selection changes
 	/// </summary>
-	internal async void SwapPolicyComboBox_SelectionChanged()
+	private async void SwapPolicyComboBox_SelectionChanged()
 	{
 		if (ListViewSelectedPolicy is null)
 		{
@@ -474,7 +400,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			}
 
 			RemovePolicyButtonState = true;
-
 			UIElementsEnabledState = true;
 		}
 	}
@@ -579,9 +504,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				// If there are policies to be removed
 				if (policiesToRemove.Count > 0)
 				{
-
 					DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyRemoval");
-
 
 					foreach (CiPolicyInfo policy in policiesToRemove)
 					{
@@ -654,7 +577,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 									// Sometimes the content dialog lingers on or re-appears so making sure it hides
 									customDialog.Hide();
-
 								}
 								else
 								{
@@ -1020,7 +942,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
 			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
 			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
-			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel") + row.Version)
+			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel/Text") + row.Version)
 			.AppendLine(GlobalVars.Rizz.GetString("IsAuthorizedLabel") + row.IsAuthorized)
 			.AppendLine(GlobalVars.Rizz.GetString("IsEnforcedLabel") + row.IsEnforced)
 			.AppendLine(GlobalVars.Rizz.GetString("IsOnDiskLabel") + row.IsOnDisk)

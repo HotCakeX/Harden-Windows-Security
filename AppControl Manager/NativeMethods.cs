@@ -336,4 +336,15 @@ internal static partial class NativeMethods
 		IntPtr hSCObject
 	);
 
+
+	// https://learn.microsoft.com//windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue
+	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int RegNotifyChangeKeyValue(
+		SafeRegistryHandle hKey,
+		[MarshalAs(UnmanagedType.Bool)] bool watchSubtree,
+		Others.EventLogUtility.RegNotifyFilter notifyFilter,
+		IntPtr hEvent,
+		[MarshalAs(UnmanagedType.Bool)] bool asynchronous);
+
 }

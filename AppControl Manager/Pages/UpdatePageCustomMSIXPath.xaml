@@ -38,7 +38,7 @@
 
                 <customUI:SettingsCardV2 x:Uid="ConfirmUseOfCustomMSIXPathSettingsCard"
                      IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}" IsClickEnabled="True" IsActionIconVisible="False">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
                     <ToggleSwitch IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
                                   IsOn="{x:Bind ViewModel.InstallLocalPackageConfirmation, Mode=TwoWay}" />
                 </customUI:SettingsCardV2>

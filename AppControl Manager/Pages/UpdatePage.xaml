@@ -89,17 +89,11 @@
 
                 </controls:SettingsCard>
 
-                <customUI:SettingsCardV2
-                    x:Uid="AutoUpdateCheckSettingsCard"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE774;}"
-                    IsClickEnabled="True" IsActionIconVisible="False">
+                <customUI:SettingsCardV2 x:Uid="AutoUpdateCheckSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
                     <ToggleSwitch IsOn="{x:Bind AppSettings.AutoCheckForUpdateAtStartup, Mode=TwoWay}"/>
                 </customUI:SettingsCardV2>
 
-                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xF552;}"
-                    IsClickEnabled="True"
-                    IsActionIconVisible="False">
+                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}" />
                 </customUI:SettingsCardV2>
 

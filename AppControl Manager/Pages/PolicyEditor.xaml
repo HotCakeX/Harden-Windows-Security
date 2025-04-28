@@ -477,7 +477,7 @@
                                 <customUI:SettingsCardV2
                                     Description="The Type of the selected App Control policy"
                                     Header="Policy Type" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyType.png}" IsClickEnabled="True" IsActionIconVisible="False">
+                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyType.png}">
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" x:Name="PolicyTypeComboBox" PlaceholderText="Policy Type"
                                               ItemsSource="{x:Bind ViewModel.ComboBoxSource, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.PolicyTypeComboBox, Mode=TwoWay}"/>
@@ -496,7 +496,7 @@
                                 <customUI:SettingsCardV2
                                     Description="The Hypervisor-Protected Code Integrity Level of the selected App Control policy"
                                     Header="HVCI Level" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/HVCIOption.png}" IsClickEnabled="True" IsActionIconVisible="False">
+                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/HVCIOption.png}">
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" x:Name="PolicyHVCIOptionsComboBox"
                                               PlaceholderText="HVCI Level" SelectedItem="{x:Bind ViewModel.HVCIOptionComboBox, Mode=TwoWay}">

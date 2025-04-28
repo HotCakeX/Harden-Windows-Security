@@ -15,8 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Threading.Tasks;
-using AppControlManager.Others;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -31,49 +29,16 @@ internal sealed partial class CodeIntegrityInfo : Page
 {
 #pragma warning disable CA1822
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewModels.CodeIntegrityInfoVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
-	/// Initializes a new instance of the CodeIntegrityInfo class. Sets the navigation cache mode to required.
+	/// Initializes a new instance of the CodeIntegrityInfo class.
 	/// </summary>
 	internal CodeIntegrityInfo()
 	{
 		this.InitializeComponent();
-
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-	}
-
-	/// <summary>
-	/// Local method to convert numbers to their actual string values
-	/// </summary>
-	/// <param name="status"></param>
-	/// <returns></returns>
-	private static string? GetPolicyStatus(int? status) => status switch
-	{
-		0 => GlobalVars.Rizz.GetString("NotRunningOrDisabled"),
-		1 => GlobalVars.Rizz.GetString("AuditMode"),
-		2 => GlobalVars.Rizz.GetString("EnforcedMode"),
-		_ => null
-	};
-
-	/// <summary>
-	/// Event handler for the retrieve code integrity information button
-	/// </summary>
-	private async void RetrieveCodeIntegrityInfo_Click()
-	{
-		// Get the system code integrity information
-		SystemCodeIntegrityInfo codeIntegrityInfoResult = await Task.Run(DetailsRetrieval.Get);
-
-		// Bind the CodeIntegrityDetails (List<CodeIntegrityOption>) to the ListView
-		CodeIntegrityInfoListView.ItemsSource = codeIntegrityInfoResult.CodeIntegrityDetails;
-
-		UMCI.Text = null;
-		KMCI.Text = null;
-
-		// Get the Application Control Status
-		DeviceGuardInteropClass? DGStatus = await Task.Run(DeviceGuardInfo.GetDeviceGuardStatus);
-
-		UMCI.Text = GetPolicyStatus(DGStatus.UsermodeCodeIntegrityPolicyEnforcementStatus);
-		KMCI.Text = GetPolicyStatus(DGStatus.CodeIntegrityPolicyEnforcementStatus);
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		this.DataContext = ViewModel;
 	}
 }

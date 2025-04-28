@@ -82,46 +82,6 @@ internal sealed partial class CreateDenyPolicy : Page
 
 	private bool usingWildCardFilePathRules;
 
-	private void FilesAndFoldersBrowseForFilesSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
-				FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFilesSettingsCard_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
-			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFilesButton_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFilesButton_Flyout.IsOpen)
-			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesButton);
-	}
-
-
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
-				FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
-			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
-	}
-
-	private void FilesAndFoldersBrowseForFoldersButton_RightTapped()
-	{
-		if (!FilesAndFoldersBrowseForFoldersButton_FlyOut.IsOpen)
-			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersButton);
-	}
-
-
 	/// <summary>
 	/// Main button's event handler for files and folder Deny policy creation
 	/// </summary>
@@ -368,28 +328,6 @@ internal sealed partial class CreateDenyPolicy : Page
 	}
 
 	/// <summary>
-	/// Browse for Files - Settings Card Click
-	/// </summary>
-	private void FilesAndFoldersBrowseForFilesSettingsCard_Click()
-	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
-
-		if (selectedFiles is { Count: > 0 })
-		{
-			foreach (string file in selectedFiles)
-			{
-				_ = filesAndFoldersFilePaths.Add(file);
-
-				// Append the new file to the TextBox, followed by a newline
-				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
-			}
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			FilesAndFoldersBrowseForFilesButton_Flyout.ShowAt(FilesAndFoldersBrowseForFilesSettingsCard);
-		}
-	}
-
-	/// <summary>
 	/// Browse for Files - Button Click
 	/// </summary>
 	private void FilesAndFoldersBrowseForFilesButton_Click()
@@ -405,29 +343,6 @@ internal sealed partial class CreateDenyPolicy : Page
 				// Append the new file to the TextBox, followed by a newline
 				FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox.Text += file + Environment.NewLine;
 			}
-		}
-	}
-
-	/// <summary>
-	/// Browse for Folders - Settings Card Click
-	/// </summary>
-	private void FilesAndFoldersBrowseForFoldersSettingsCard_Click()
-	{
-
-		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
-
-		if (selectedDirectories is { Count: > 0 })
-		{
-			foreach (string dir in selectedDirectories)
-			{
-				_ = filesAndFoldersFolderPaths.Add(dir);
-
-				// Append the new directory to the TextBox, followed by a newline
-				FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox.Text += dir + Environment.NewLine;
-			}
-
-			// Display the Flyout manually at SettingsCard element since the click event happened on the Settings card
-			FilesAndFoldersBrowseForFoldersButton_FlyOut.ShowAt(FilesAndFoldersBrowseForFoldersSettingsCard);
 		}
 	}
 

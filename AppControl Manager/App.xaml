@@ -72,24 +72,12 @@
 
 
             <animations:ImplicitAnimationSet x:Name="ShowTransitions">
-                <animations:OffsetAnimation EasingMode="EaseOut"
-                                   From="0,24,0"
-                                   To="0"
-                                   Duration="0:0:0.4" />
-                <animations:OpacityAnimation EasingMode="EaseOut"
-                                    From="0"
-                                    To="1"
-                                    Duration="0:0:0.2" />
+                <animations:OffsetAnimation EasingMode="EaseOut" From="0,24,0" To="0" Duration="0:0:0.4" />
+                <animations:OpacityAnimation EasingMode="EaseOut" From="0" To="1" Duration="0:0:0.2" />
             </animations:ImplicitAnimationSet>
             <animations:ImplicitAnimationSet x:Name="HideTransitions">
-                <animations:OffsetAnimation EasingMode="EaseOut"
-                                   From="0"
-                                   To="0,24,0"
-                                   Duration="0:0:0.2" />
-                <animations:OpacityAnimation EasingMode="EaseOut"
-                                    From="1"
-                                    To="0"
-                                    Duration="0:0:0.1" />
+                <animations:OffsetAnimation EasingMode="EaseOut" From="0" To="0,24,0" Duration="0:0:0.2" />
+                <animations:OpacityAnimation EasingMode="EaseOut" From="1" To="0" Duration="0:0:0.1" />
             </animations:ImplicitAnimationSet>
 
 

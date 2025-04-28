@@ -67,8 +67,7 @@
 
                         <customUI:SettingsCardV2
                             Description="Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions."
-                            Header="Entra ID Sign In"
-                            HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}" IsClickEnabled="True" IsActionIconVisible="False">
+                            Header="Entra ID Sign In" HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}">
 
                             <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 

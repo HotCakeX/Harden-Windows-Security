@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -26,7 +27,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
+#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 {
@@ -40,70 +41,24 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	internal string? SearchBoxTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
 
 	#endregion
 
 	#region LISTVIEW IMPLEMENTATIONS
 
 	// Properties to hold each columns' width.
-	internal GridLength ColumnWidth1
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth2
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth3
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth4
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth5
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth6
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth7
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth8
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth9
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth10
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth11
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth7 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth8 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth11 { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -112,53 +67,32 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	internal void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SignerNumberHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TypeHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("NotBeforeHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("NotAfterHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("SerialNumberHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ThumbprintHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("TBSHashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SignerNumberHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("TypeHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("NotBeforeHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("NotAfterHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SerialNumberHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ThumbprintHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("TBSHashHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileCertificateInfoCol item in FileCertificates)
 		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.SignerNumber.ToString());
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.Type.ToString());
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.SubjectCN);
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.IssuerCN);
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.NotBefore.ToString());
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.NotAfter.ToString());
-			if (w6 > maxWidth6) maxWidth6 = w6;
-
-			double w7 = ListViewHelper.MeasureTextWidth(item.HashingAlgorithm);
-			if (w7 > maxWidth7) maxWidth7 = w7;
-
-			double w8 = ListViewHelper.MeasureTextWidth(item.SerialNumber);
-			if (w8 > maxWidth8) maxWidth8 = w8;
-
-			double w9 = ListViewHelper.MeasureTextWidth(item.Thumbprint);
-			if (w9 > maxWidth9) maxWidth9 = w9;
-
-			double w10 = ListViewHelper.MeasureTextWidth(item.TBSHash);
-			if (w10 > maxWidth10) maxWidth10 = w10;
-
-			double w11 = ListViewHelper.MeasureTextWidth(item.OIDs);
-			if (w11 > maxWidth11) maxWidth11 = w11;
+			maxWidth1 = ListViewHelper.MeasureText(item.SignerNumber.ToString(), maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.Type.ToString(), maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.SubjectCN, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.IssuerCN, maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.NotBefore.ToString(), maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.NotAfter.ToString(), maxWidth6);
+			maxWidth7 = ListViewHelper.MeasureText(item.HashingAlgorithm, maxWidth7);
+			maxWidth8 = ListViewHelper.MeasureText(item.SerialNumber, maxWidth8);
+			maxWidth9 = ListViewHelper.MeasureText(item.Thumbprint, maxWidth9);
+			maxWidth10 = ListViewHelper.MeasureText(item.TBSHash, maxWidth10);
+			maxWidth11 = ListViewHelper.MeasureText(item.OIDs, maxWidth11);
 		}
 
 		// Set the column width properties.
@@ -425,4 +359,27 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 	#endregion
 
+
+	/// <summary>
+	/// Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
+	/// </summary>
+	/// <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
+	/// <returns>A formatted string of the row's properties with labels.</returns>
+	internal string ConvertRowToText(FileCertificateInfoCol row)
+	{
+		// Use StringBuilder to format each property with its label for easy reading
+		return new StringBuilder()
+			.AppendLine(GlobalVars.Rizz.GetString("SignerNumberHeader/Text") + ": " + row.SignerNumber)
+			.AppendLine(GlobalVars.Rizz.GetString("TypeHeader/Text") + ": " + row.Type)
+			.AppendLine(GlobalVars.Rizz.GetString("SubjectCommonNameHeader/Text") + ": " + row.SubjectCN)
+			.AppendLine(GlobalVars.Rizz.GetString("IssuerCommonNameHeader/Text") + ": " + row.IssuerCN)
+			.AppendLine(GlobalVars.Rizz.GetString("NotBeforeHeader/Text") + ": " + row.NotBefore)
+			.AppendLine(GlobalVars.Rizz.GetString("NotAfterHeader/Text") + ": " + row.NotAfter)
+			.AppendLine(GlobalVars.Rizz.GetString("HashingAlgorithmHeader/Text") + ": " + row.HashingAlgorithm)
+			.AppendLine(GlobalVars.Rizz.GetString("SerialNumberHeader/Text") + ": " + row.SerialNumber)
+			.AppendLine(GlobalVars.Rizz.GetString("ThumbprintHeader/Text") + ": " + row.Thumbprint)
+			.AppendLine(GlobalVars.Rizz.GetString("TBSHashHeader/Text") + ": " + row.TBSHash)
+			.AppendLine(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text") + ": " + row.OIDs)
+			.ToString();
+	}
 }

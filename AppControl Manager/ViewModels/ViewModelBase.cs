@@ -42,7 +42,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <param name="field">The existing value.</param>
 	/// <param name="newValue">The new value.</param>
 	/// <param name="propertyName"></param>
-	protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+	protected bool SP<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (EqualityComparer<T>.Default.Equals(field, newValue))
 			return false;

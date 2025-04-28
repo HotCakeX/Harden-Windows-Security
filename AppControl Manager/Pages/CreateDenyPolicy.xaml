@@ -121,11 +121,9 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Name="FilesAndFoldersBrowseForFilesSettingsCard" x:Uid="BrowseForFilesPolicyCreationSettingsCard"
-                               Holding="FilesAndFoldersBrowseForFilesSettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForFilesSettingsCard_RightTapped}"
-                               IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind FilesAndFoldersBrowseForFilesSettingsCard_Click}">
+                        <customUI:SettingsCardV3 x:Name="FilesAndFoldersBrowseForFilesSettingsCard" x:Uid="BrowseForFilesPolicyCreationSettingsCard">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" RightTapped="{x:Bind FilesAndFoldersBrowseForFilesButton_RightTapped}"
+                            <Button x:Name="FilesAndFoldersBrowseForFilesButton"
                                     x:Uid="FileBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFilesButton_Click}">
 
                                 <Button.Flyout>
@@ -148,12 +146,11 @@
 
                             </Button>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Uid="BrowseForFoldersPolicyCreationSettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard" Click="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_Click}"
-                                Holding="FilesAndFoldersBrowseForFoldersSettingsCard_Holding" RightTapped="{x:Bind FilesAndFoldersBrowseForFoldersSettingsCard_RightTapped}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV3 x:Uid="BrowseForFoldersPolicyCreationSettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" RightTapped="{x:Bind FilesAndFoldersBrowseForFoldersButton_RightTapped}" x:Uid="FolderBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Click}">
+                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" x:Uid="FolderBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
@@ -175,14 +172,14 @@
 
                             </Button>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV3>
 
                         <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" PlaceholderText="Deny Policy Name"/>
                         </controls:SettingsCard>
 
                         <customUI:SettingsCardV2 Description="Select the level based on which the detected files will be scanned."
-                        Header="Select Scan Level" x:Name="ScanLevelComboBoxSettingsCard" IsClickEnabled="True" IsActionIconVisible="False">
+                            Header="Select Scan Level" x:Name="ScanLevelComboBoxSettingsCard">
 
                             <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
                                   SelectedIndex="0">

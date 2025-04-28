@@ -119,18 +119,18 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
                             <ToggleSwitch x:Name="NavigationViewBackgroundToggle"/>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
                             <ComboBox x:Name="BackgroundComboBox"
                                 ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
                                 SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
                             <ComboBox x:Name="ThemeComboBox">
                                 <x:String>Use System Setting</x:String>
                                 <x:String>Dark</x:String>
@@ -138,7 +138,7 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
                             <ComboBox x:Name="IconsStyleComboBox">
                                 <x:String>Animated</x:String>
                                 <x:String>Windows Accent</x:String>
@@ -146,7 +146,7 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
-                        <customUI:SettingsCardV2 x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
                             <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
                                 <x:String>Left</x:String>
                                 <x:String>Top</x:String>
@@ -161,13 +161,13 @@
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Behavior" />
                 <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
                     <controls:SettingsExpander.Items>
-                        <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}">
                             <ToggleSwitch x:Name="ListViewsCenterVerticallyUponSelectionToggleSwitch" />
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}">
                             <ToggleSwitch x:Name="CacheSecurityCatalogsScanResultsToggleSwitch" />
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
                             <ToggleSwitch x:Name="PromptForElevationToggleSwitch" />
                         </customUI:SettingsCardV2>
                     </controls:SettingsExpander.Items>
@@ -190,13 +190,13 @@
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:SettingsExpander.Items>
-                        <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF69E;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF69E;}">
                             <ComboBox x:Name="LanguageSelectionComboBox">
                                 <x:String>English</x:String>
                                 <x:String>Hebrew</x:String>
                             </ComboBox>
                         </customUI:SettingsCardV2>
-                        <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}" IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">
                             <ToggleSwitch x:Name="UIFlowDirectionToggleSwitch" x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
                     </controls:SettingsExpander.Items>
@@ -204,7 +204,7 @@
 
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
-                <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}" IsClickEnabled="True" IsActionIconVisible="False">
+                <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
                     <ToggleSwitch x:Name="SoundToggleSwitch" />
                 </customUI:SettingsCardV2>
 

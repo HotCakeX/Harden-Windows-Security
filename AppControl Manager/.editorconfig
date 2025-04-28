@@ -404,7 +404,7 @@ dotnet_diagnostic.SYSLIB0057.severity = error
 dotnet_diagnostic.CS0162.severity = error
 
 # IDE1006: Naming Styles
-dotnet_diagnostic.IDE1006.severity = error
+dotnet_diagnostic.IDE1006.severity = silent
 
 # IDE0057: Use range operator
 dotnet_diagnostic.IDE0057.severity = error

@@ -156,15 +156,20 @@ internal static class ListViewHelper
 	};
 
 	/// <summary>
-	/// Measures the width (in pixels) required to display the given text.
+	/// Measures the text width (in pixels) required to display the given text.
 	/// </summary>
-	internal static double MeasureTextWidth(string? text)
+	internal static double MeasureText(string? text)
 	{
 		tb.Text = text;
-
 		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
 		return tb.DesiredSize.Width;
+	}
+
+	internal static double MeasureText(string? text, double maxWidth)
+	{
+		tb.Text = text;
+		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+		return tb.DesiredSize.Width > maxWidth ? tb.DesiredSize.Width : maxWidth;
 	}
 
 	internal const string DefaultDelimiter = "--------------------------------------------------";

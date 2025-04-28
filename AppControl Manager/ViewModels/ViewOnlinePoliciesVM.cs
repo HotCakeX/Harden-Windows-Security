@@ -76,68 +76,44 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 	internal Visibility MainInfoBarVisibility
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool MainInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal string? MainInfoBarMessage
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 
 	internal InfoBarSeverity MainInfoBarSeverity
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = InfoBarSeverity.Informational;
 
-	internal bool MainInfoBarIsClosable
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal bool ListViewState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
 	internal bool SearchTextBoxState
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
-	internal bool RetrievePoliciesButtonState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool RetrievePoliciesButtonState { get; set => SP(ref field, value); }
 
-	internal CiPolicyInfo? ListViewSelectedPolicy
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal CiPolicyInfo? ListViewSelectedPolicy { get; set => SP(ref field, value); }
 
-	internal int ListViewSelectedIndex
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
 	internal string PoliciesCountTextBox
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = "Number of Policies: 0";
 
-	internal string? SearchBoxTextBox
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
 
-	internal bool RemovePolicyButtonState
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool RemovePolicyButtonState { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -149,35 +125,13 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 
 	#region Properties to hold each columns' width.
-	internal GridLength ColumnWidth1
-	{
-		get; set => SetProperty(ref field, value);
-	}
 
-	internal GridLength ColumnWidth2
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth3
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth4
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth5
-	{
-		get; set => SetProperty(ref field, value);
-	}
-
-	internal GridLength ColumnWidth6
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth4 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth5 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -200,33 +154,22 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("VersionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureTextWidth(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("VersionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (CiPolicyInfo item in AllPolicies)
 		{
-			double w1 = ListViewHelper.MeasureTextWidth(item.PolicyID);
-			if (w1 > maxWidth1) maxWidth1 = w1;
-
-			double w2 = ListViewHelper.MeasureTextWidth(item.BasePolicyID);
-			if (w2 > maxWidth2) maxWidth2 = w2;
-
-			double w3 = ListViewHelper.MeasureTextWidth(item.FriendlyName);
-			if (w3 > maxWidth3) maxWidth3 = w3;
-
-			double w4 = ListViewHelper.MeasureTextWidth(item.VersionString);
-			if (w4 > maxWidth4) maxWidth4 = w4;
-
-			double w5 = ListViewHelper.MeasureTextWidth(item.IsSignedPolicy.ToString());
-			if (w5 > maxWidth5) maxWidth5 = w5;
-
-			double w6 = ListViewHelper.MeasureTextWidth(item.PolicyOptionsDisplay);
-			if (w6 > maxWidth6) maxWidth6 = w6;
+			maxWidth1 = ListViewHelper.MeasureText(item.PolicyID, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.BasePolicyID, maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.FriendlyName, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.VersionString, maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.IsSignedPolicy.ToString(), maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.PolicyOptionsDisplay, maxWidth6);
 		}
 
 		// Set the column width properties.
@@ -605,7 +548,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
 			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
 			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
-			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel") + row.VersionString)
+			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel/Text") + row.VersionString)
 			.AppendLine(GlobalVars.Rizz.GetString("IsSignedPolicyLabel") + row.IsSignedPolicy)
 			.AppendLine(GlobalVars.Rizz.GetString("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
 			.ToString();

@@ -30,34 +30,19 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	internal bool MainInfoBarIsOpen
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
-	internal string? MainInfoBarMessage
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 
-	internal string? MainInfoBarTitle
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal string? MainInfoBarTitle { get; set => SP(ref field, value); }
 
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); }
 
-	internal bool MainInfoBarIsClosable
-	{
-		get; set => SetProperty(ref field, value);
-	}
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal bool ElementsAreEnabled
 	{
-		get; set => SetProperty(ref field, value);
+		get; set => SP(ref field, value);
 	} = true;
 
 	#endregion

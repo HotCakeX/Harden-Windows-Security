@@ -759,6 +759,12 @@ public partial class GUIMain
 									   {
 										   DeploymentResult deploymentResult = deploymentOperation.GetResults();
 										   Logger.LogMessage($"Error code: {deploymentOperation.ErrorCode} - Error Text: {deploymentResult.ErrorText}", LogTypeIntel.Error);
+
+										   if (deploymentOperation.ErrorCode is UnauthorizedAccessException)
+										   {
+											   throw new UnauthorizedAccessException();
+										   }
+
 									   }
 									   else if (deploymentOperation.Status is AsyncStatus.Canceled)
 									   {
@@ -773,6 +779,44 @@ public partial class GUIMain
 										   Logger.LogMessage("Removal status unknown", LogTypeIntel.Information);
 									   }
 								   });
+							}
+							catch (UnauthorizedAccessException)
+							{
+								Logger.LogMessage($"Trying to remove the app with the FullName of '{fullName}' again but for the current user only.", LogTypeIntel.Information);
+
+								await Task.Run(() =>
+								{
+									// Remove the app
+									IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = GUIOptionalFeatures.packageMgr.RemovePackageAsync(fullName, RemovalOptions.None);
+
+									// This event is signaled when the operation completes
+									ManualResetEvent opCompletedEvent = new(false);
+
+									// Define the delegate using a statement lambda
+									deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };
+
+									// Wait until the operation completes
+									_ = opCompletedEvent.WaitOne();
+
+									// Check the status of the operation
+									if (deploymentOperation.Status is AsyncStatus.Error)
+									{
+										DeploymentResult deploymentResult = deploymentOperation.GetResults();
+										Logger.LogMessage($"Error code: {deploymentOperation.ErrorCode} - Error Text: {deploymentResult.ErrorText}", LogTypeIntel.Error);
+									}
+									else if (deploymentOperation.Status is AsyncStatus.Canceled)
+									{
+										Logger.LogMessage("Removal canceled", LogTypeIntel.Information);
+									}
+									else if (deploymentOperation.Status is AsyncStatus.Completed)
+									{
+										Logger.LogMessage($"The app with the FullName of '{fullName}' has been successfully removed.", LogTypeIntel.Information);
+									}
+									else
+									{
+										Logger.LogMessage("Removal status unknown", LogTypeIntel.Information);
+									}
+								});
 							}
 							catch (Exception ex)
 							{

@@ -20,19 +20,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.Globalization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Graphics;
 using Windows.Storage;
-using Microsoft.Extensions.DependencyInjection;
-using AppControlManager.ViewModels;
-using AppControlManager.MicrosoftGraph;
-using Microsoft.Windows.Globalization;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
@@ -118,13 +120,14 @@ public partial class App : Application
 	/// </summary>
 	internal static IHost AppHost { get; private set; } = null!;
 
+	internal static NavigationService _nav { get; private set; } = null!;
+
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
 	/// executed, and as such is the logical equivalent of main() or WinMain().
 	/// </summary>
 	internal App()
 	{
-
 		// Retrieve the app settings early on to check for elevation at startup and to pass it to DI container for the constructor of the Main app settings class
 		ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
@@ -143,12 +146,11 @@ public partial class App : Application
 
 		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection
 
-		// App settings
-		_ = services.AddSingleton(provider => new AppSettings.Main(_localSettings));
-
-		// If a type has a constructor it must either be public, or it can be internal but the value must be supplied to it via lambda.
+		// If a type has a constructor it must either be public so DI can automatically resolve its parameters,
+		// or it can be internal but the value must be supplied to it via lambda factory method.
+		_ = services.AddSingleton(sp => new AppSettings.Main(_localSettings));
+		_ = services.AddSingleton<SidebarVM>();
 		_ = services.AddSingleton<ViewCurrentPoliciesVM>();
-		_ = services.AddSingleton<PolicyEditorVM>();
 		_ = services.AddSingleton<SettingsVM>();
 		_ = services.AddSingleton<MergePoliciesVM>();
 		_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
@@ -159,23 +161,18 @@ public partial class App : Application
 		_ = services.AddSingleton<SimulationVM>();
 		_ = services.AddSingleton<MDEAHPolicyCreationVM>();
 		_ = services.AddSingleton<ViewFileCertificatesVM>();
-		_ = services.AddSingleton<MainWindowVM>();
+		_ = services.AddSingleton(sp => new MainWindowVM());
 		_ = services.AddSingleton<CreatePolicyVM>();
 		_ = services.AddSingleton<DeploymentVM>();
 		_ = services.AddSingleton<UpdateVM>();
 		_ = services.AddSingleton<ValidatePolicyVM>();
 		_ = services.AddSingleton<CodeIntegrityInfoVM>();
 		_ = services.AddSingleton<GetCIHashesVM>();
-		_ = services.AddSingleton(provider => new EventLogUtility()); // internal ctor.
-
-		// In order to keep the visibility of the ViewOnlinePoliciesVM class's constructor as internal instead of public,
-		// We use a lambda factory method to pass in a reference to the ViewModel class manually rather then letting the DI container do it for us automatically because it'd require public constructor.
-		_ = services.AddSingleton<ViewModel>();
-		_ = services.AddSingleton(provider =>
-		{
-			ViewModel graphVM = provider.GetRequiredService<ViewModel>();
-			return new ViewOnlinePoliciesVM(graphVM);
-		});
+		_ = services.AddSingleton(sp => new EventLogUtility());
+		_ = services.AddSingleton<NavigationService>(sp => new(sp.GetRequiredService<MainWindowVM>(), sp.GetRequiredService<SidebarVM>()));
+		_ = services.AddSingleton<ViewModelForMSGraph>();
+		_ = services.AddSingleton<ViewOnlinePoliciesVM>(sp => new(sp.GetRequiredService<ViewModelForMSGraph>()));
+		_ = services.AddSingleton<PolicyEditorVM>();
 
 		AppHost = builder.Build();
 
@@ -212,7 +209,6 @@ public partial class App : Application
 		ElementSoundPlayer.SpatialAudioMode = Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
 	}
 
-
 	/*
 
 	/// <summary>
@@ -229,7 +225,6 @@ public partial class App : Application
 	}
 
 	*/
-
 
 	/// <summary>
 	/// Event handler for UnobservedTaskException events.
@@ -248,7 +243,6 @@ public partial class App : Application
 
 		await ShowErrorDialogAsync(e.Exception);
 	}
-
 
 	/// <summary>
 	/// Invoked when the application is launched.
@@ -269,7 +263,6 @@ public partial class App : Application
 		{
 			Logger.Write("There is another instance of the AppControl Manager running. This is just an informational log.");
 		}
-
 
 		// Determines whether the session must prompt for UAC to elevate or not
 		bool requireAdminPrivilege = false;
@@ -316,13 +309,11 @@ public partial class App : Application
 					Logger.Write("App was launched via File activation but without any file activation arguments");
 				}
 			}
-
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ErrorWriter.FormatException(ex));
 		}
-
 
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// if (!IsElevated && _localSettings.Values.TryGetValue("PromptForElevationOnStartup", out object? value) && value is bool typedValue && typedValue)
@@ -390,13 +381,12 @@ public partial class App : Application
 			{
 				Logger.Write("Elevation request was denied by the user");
 			}
-
 		}
-
 
 		m_window = new MainWindow();
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
+		_nav = AppHost.Services.GetRequiredService<NavigationService>(); // Retrieve the navigation instance
 	}
 
 	private Window? m_window;
@@ -422,7 +412,6 @@ public partial class App : Application
 		await ShowErrorDialogAsync(e.Exception);
 	}
 
-
 	private async void App_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
 	{
 		Exception ex = (Exception)e.ExceptionObject;
@@ -432,7 +421,6 @@ public partial class App : Application
 		// Show error dialog to the user
 		await ShowErrorDialogAsync(ex);
 	}
-
 
 	/// <summary>
 	/// Event handler for when the window is closed.
@@ -445,10 +433,34 @@ public partial class App : Application
 			Directory.Delete(GlobalVars.StagingArea, true);
 		}
 
+		if (m_window is not null)
+		{
+			try
+			{
+				// Get the current size of the window
+				SizeInt32 size = m_window.AppWindow.Size;
+
+				// Save to window width and height to the app settings
+				Settings.MainWindowWidth = size.Width;
+				Settings.MainWindowHeight = size.Height;
+
+				Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
+
+				// Check if the window is maximized
+				_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+
+				// Save the maximized status of the window before closing to the app settings
+				Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
+			}
+			catch (Exception ex)
+			{
+				Logger.Write($"There was a program saving the window size when closing the app: {ex.Message}");
+			}
+		}
+
 		// Release the Mutex
 		_mutex?.Dispose();
 	}
-
 
 	/// <summary>
 	/// Displays a ContentDialog with the error message.

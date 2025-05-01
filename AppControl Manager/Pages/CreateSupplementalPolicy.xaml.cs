@@ -27,6 +27,7 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
@@ -45,13 +46,13 @@ namespace AppControlManager.Pages;
 /// <summary>
 /// Represents a page for creating supplemental policies, managing data display and user interactions.
 /// </summary>
-internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager
 {
 
 	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
 	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-
+	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 
 	/// <summary>
 	/// Constructor for the CreateSupplementalPolicy class. Initializes components, sets navigation cache mode, and assigns
@@ -66,7 +67,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 
 		this.DataContext = ViewModel;
 	}
-
 
 	#region Merge With Existing Policy Section
 
@@ -97,29 +97,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 
 	#endregion
 
-
 	#region Augmentation Interface
 
-	private string? unsignedBasePolicyPathFromSidebar;
-
-	/// <summary>
-	/// Implement the SetVisibility method required by IAnimatedIconsManager
-	/// </summary>
-	/// <param name="visibility"></param>
-	/// <param name="unsignedBasePolicyPath"></param>
-	/// <param name="button1"></param>
-	/// <param name="button2"></param>
-	/// <param name="button3"></param>
-	/// <param name="button4"></param>
-	/// <param name="button5"></param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
+	public void SetVisibility(Visibility visibility)
 	{
-		ArgumentNullException.ThrowIfNull(button1);
-		ArgumentNullException.ThrowIfNull(button2);
-		ArgumentNullException.ThrowIfNull(button3);
-		ArgumentNullException.ThrowIfNull(button4);
-		ArgumentNullException.ThrowIfNull(button5);
-
 		// Light up the local page's button icons
 		FilesAndFoldersBasePolicyLightAnimatedIcon.Visibility = visibility;
 		CertificatesBasePolicyPathLightAnimatedIcon.Visibility = visibility;
@@ -127,52 +108,19 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 		StrictKernelModeBasePolicyLightAnimatedIcon.Visibility = visibility;
 		PFNBasePolicyPathLightAnimatedIcon.Visibility = visibility;
 
-		// Light up the sidebar buttons' icons
-		button1.Visibility = visibility;
-		button2.Visibility = visibility;
-		button3.Visibility = visibility;
-		button4.Visibility = visibility;
-		button5.Visibility = visibility;
-
-		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
-		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
-
-		if (visibility is Visibility.Visible)
-		{
-			// Assign sidebar buttons' content texts
-			button1.Content = "Files And Folders Supplemental Policy";
-			button2.Content = "Certificates Based Supplemental Policy";
-			button3.Content = "ISG Supplemental Policy";
-			button4.Content = "Strict Kernel-Mode Supplemental Policy";
-			button5.Content = "PFN-Based Supplemental Policy";
-
-			// Assign a local event handler to the sidebar button
-			button1.Click += LightUp1;
-			// Save a reference to the event handler we just set for tracking
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp1;
-
-			// Assign a local event handler to the sidebar button
-			button2.Click += LightUp2;
-			// Save a reference to the event handler we just set for tracking
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect2EventHandler = LightUp2;
-
-			button3.Click += LightUp3;
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect3EventHandler = LightUp3;
-
-			button4.Click += LightUp4;
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect4EventHandler = LightUp4;
-
-			button5.Click += LightUp5;
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect5EventHandler = LightUp5;
-		}
+		sideBarVM.AssignActionPacks(
+			(param => LightUp1(), "Files And Folders Supplemental Policy"),
+			(param => LightUp2(), "Certificates Supplemental Policy"),
+			(param => LightUp3(), "ISG Supplemental Policy"),
+			(param => LightUp4(), "Strict Kernel Mode Supplemental Policy"),
+			(param => LightUp5(), "PFN Supplemental Policy")
+		);
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void LightUp1(object sender, RoutedEventArgs e)
+	private void LightUp1()
 	{
 		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
 		if (FilesAndFoldersBrowseForBasePolicyButton.XamlRoot is not null)
@@ -180,10 +128,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			FilesAndFoldersBrowseForBasePolicyButton_FlyOut.ShowAt(FilesAndFoldersBrowseForBasePolicyButton);
 		}
 
-		FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
-		filesAndFoldersBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+		FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		filesAndFoldersBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
-	private void LightUp2(object sender, RoutedEventArgs e)
+	private void LightUp2()
 	{
 		// Make sure the element has XamlRoot. When it's in a settings card that is not expanded yet, it won't have it
 		if (CertificatesBrowseForBasePolicyButton.XamlRoot is not null)
@@ -191,40 +139,40 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 			CertificatesBrowseForBasePolicyButton_FlyOut.ShowAt(CertificatesBrowseForBasePolicyButton);
 		}
 
-		CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
-		CertificatesBasedBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+		CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		CertificatesBasedBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
-	private void LightUp3(object sender, RoutedEventArgs e)
+	private void LightUp3()
 	{
 		if (ISGBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			ISGBrowseForBasePolicyButton_FlyOut.ShowAt(ISGBrowseForBasePolicyButton);
 		}
 
-		ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
-		ISGBasedBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+		ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		ISGBasedBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
-	private void LightUp4(object sender, RoutedEventArgs e)
+	private void LightUp4()
 	{
 		if (StrictKernelModeBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			StrictKernelModeBrowseForBasePolicyButton_FlyOut.ShowAt(StrictKernelModeBrowseForBasePolicyButton);
 		}
 
-		StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
-		StrictKernelModeBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+		StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		StrictKernelModeBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
-	private void LightUp5(object sender, RoutedEventArgs e)
+	private void LightUp5()
 	{
 		if (PFNBrowseForBasePolicyButton.XamlRoot is not null)
 		{
 			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
 		}
 
-		PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
-		PFNBasePolicyPath = unsignedBasePolicyPathFromSidebar;
+		PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		PFNBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
 	#endregion
@@ -314,7 +262,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 	/// </summary>
 	private void FilesAndFoldersViewFileDetailsSettingsCard_Click()
 	{
-		MainWindow.Instance.NavView_Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
+		App._nav.Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
 	}
 
 
@@ -1278,7 +1226,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, Sidebar.IAnimated
 
 	private void DetectedKernelModeFilesDetailsSettingsCard_Click()
 	{
-		MainWindow.Instance.NavView_Navigate(typeof(StrictKernelPolicyScanResults), null);
+		App._nav.Navigate(typeof(StrictKernelPolicyScanResults), null);
 	}
 
 

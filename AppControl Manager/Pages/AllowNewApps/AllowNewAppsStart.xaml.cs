@@ -28,6 +28,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,13 +46,14 @@ namespace AppControlManager.Pages;
 /// AllowNewAppsStart is a page that manages the process of allowing new applications through policy management. It
 /// handles user interactions for selecting policies, scanning directories, and creating supplemental policies.
 /// </summary>
-internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 {
 
 #pragma warning disable CA1822
 	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
 	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 #pragma warning restore CA1822
 
 
@@ -130,9 +132,7 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	/// </summary>
 	public static AllowNewAppsStart Instance => _instance ?? throw new InvalidOperationException("AllowNewAppsStart is not initialized.");
 
-
 	#region Augmentation Interface
-
 
 	// Exposing the AnimatedIcon via class instance since this is an internal page managed by AllowNewApps page's own NavigationView
 	internal AnimatedIcon BrowseForXMLPolicyButtonLightAnimatedIconPub => BrowseForXMLPolicyButtonLightAnimatedIcon;
@@ -142,65 +142,27 @@ internal sealed partial class AllowNewAppsStart : Page, Sidebar.IAnimatedIconsMa
 	internal Button BrowseForXMLPolicyButtonPub => BrowseForXMLPolicyButton;
 	internal TextBox BrowseForXMLPolicyButton_SelectedBasePolicyTextBoxPub => BrowseForXMLPolicyButton_SelectedBasePolicyTextBox;
 
-
-	private string? unsignedBasePolicyPathFromSidebar;
-
-
-	/// <summary>
-	/// Sets the visibility of various UI elements and updates button content and event handlers based on the provided
-	/// visibility state.
-	/// </summary>
-	/// <param name="visibility">Controls the visibility state of the UI elements.</param>
-	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar.</param>
-	/// <param name="button1">Represents the first button whose visibility and content are updated.</param>
-	/// <param name="button2">Represents the second button, though it is not modified in this context.</param>
-	/// <param name="button3">Represents the third button, though it is not modified in this context.</param>
-	/// <param name="button4">Represents the fourth button, though it is not modified in this context.</param>
-	/// <param name="button5">Represents the fifth button, though it is not modified in this context.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
+	public void SetVisibility(Visibility visibility)
 	{
-
-		ArgumentNullException.ThrowIfNull(button1);
-
 		// Light up the local page's button icons
 		BrowseForXMLPolicyButtonLightAnimatedIcon.Visibility = visibility;
 
-		// Light up the sidebar buttons' icons
-		button1.Visibility = visibility;
-
-		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
-		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
-
-
-		if (visibility is Visibility.Visible)
-		{
-			// Assign sidebar buttons' content texts
-			button1.Content = "Allow New Apps Base Policy";
-
-			// Assign a local event handler to the sidebar button
-			button1.Click += LightUp1;
-			// Save a reference to the event handler we just set for tracking
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp1;
-
-		}
-
+		sideBarVM.AssignActionPacks(
+		(param => LightUp1(), "Allow New Apps Base Policy"),
+		null, null, null, null);
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void LightUp1(object sender, RoutedEventArgs e)
+	private void LightUp1()
 	{
 		BrowseForXMLPolicyButton_FlyOut.ShowAt(BrowseForXMLPolicyButton);
-		BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = unsignedBasePolicyPathFromSidebar;
-		selectedXMLFilePath = unsignedBasePolicyPathFromSidebar;
+		BrowseForXMLPolicyButton_SelectedBasePolicyTextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		selectedXMLFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
-
 	#endregion
-
 
 	#region Steps management
 

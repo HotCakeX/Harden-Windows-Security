@@ -22,6 +22,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using AppControlManager.WindowComponents;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
@@ -1642,7 +1643,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal async Task OpenInPolicyEditor(string? policyFile)
 	{
 		// Navigate to the policy editor page
-		MainWindow.Instance.NavView_Navigate(typeof(Pages.PolicyEditor), null);
+		App._nav.Navigate(typeof(Pages.PolicyEditor), null);
 
 		// Assign the policy file path to the local variable
 		SelectedPolicyFile = policyFile;

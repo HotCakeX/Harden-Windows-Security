@@ -1503,18 +1503,14 @@
         <member name="M:AppControlManager.AppSettings.Main.ReadValue``1(System.String,``0)">
             <summary>
             Generic helper method to read a value from local storage.
+            If T is an enum type, expects the stored value to be its string name.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="key"></param>
-            <param name="defaultValue"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.AppSettings.Main.SaveValue(System.String,System.Object)">
             <summary>
             Helper method to immediately persist the new value to local storage.
+            TODO: Add logic for Enums that will be added in the future.
             </summary>
-            <param name="key"></param>
-            <param name="value"></param>
         </member>
         <member name="P:AppControlManager.AppSettings.Main.SoundSetting">
             <summary>
@@ -1601,22 +1597,6 @@
             The argument received if the app is launched via file activation.
             This allows us to have access to this after app has been relaunched with Admin privileges.
             </summary>
-        </member>
-        <member name="T:AppControlManager.Crumb">
-            <summary>
-            https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
-            Represents an item in the BreadCrumBar's ItemsSource collection
-            </summary>
-            <param name="label"></param>
-            <param name="page"></param>
-        </member>
-        <member name="M:AppControlManager.Crumb.#ctor(System.String,System.Type)">
-            <summary>
-            https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
-            Represents an item in the BreadCrumBar's ItemsSource collection
-            </summary>
-            <param name="label"></param>
-            <param name="page"></param>
         </member>
         <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.InitializeComponent">
             <summary>
@@ -2623,23 +2603,6 @@
             event handling.
             </summary>
         </member>
-        <member name="T:AppControlManager.MainWindow.PageTitleMap">
-            <summary>
-            Used for the BreadCrumBar's data to define valid navigational paths in the app
-            </summary>
-        </member>
-        <member name="F:AppControlManager.MainWindow.UnelevatedPages">
-            <summary>
-            Pages that are allowed to run when running without Administrator privileges
-            </summary>
-        </member>
-        <member name="F:AppControlManager.MainWindow.breadCrumbMappingsV2">
-            <summary>
-            Every page in the application must be defined in this dictionary.
-            It is used by the BreadCrumbBar.
-            Sub-pages must use the same value as their main page in the dictionary.
-            </summary>
-        </member>
         <member name="M:AppControlManager.MainWindow.BreadcrumbBar_ItemClicked(Microsoft.UI.Xaml.Controls.BreadcrumbBar,Microsoft.UI.Xaml.Controls.BreadcrumbBarItemClickedEventArgs)">
             <summary>
             Event handler for the BreadCrumbBar's ItemClicked event
@@ -2647,60 +2610,16 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="F:AppControlManager.MainWindow.NavigationPageToItemContentMap">
-            <summary>
-            Dictionary of all the main pages in the app, used for the main navigation.
-            Keys are the Navigation Item tags (non-localized) and values are the page types.
-            Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
-            </summary>
-        </member>
-        <member name="F:AppControlManager.MainWindow.NavigationPageToItemContentMapForSearch">
-            <summary>
-            Dictionary of all the main pages in the app, used for the search bar.
-            Keys are page contents which are localized and values are page types.
-            </summary>
-        </member>
-        <member name="F:AppControlManager.MainWindow._instance">
-            <summary>
-            A static instance of the MainWindow class which will hold the single, shared instance of it
-            </summary>
-        </member>
         <member name="M:AppControlManager.MainWindow.#ctor">
             <summary>
             Initializes the main window, sets up event handlers, and configures UI elements like the title bar and navigation
             items.
             </summary>
         </member>
-        <member name="P:AppControlManager.MainWindow.Instance">
-            <summary>
-            internal property to access the singleton instance from other classes
-            </summary>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AppTitleBar_Loaded(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for when the AppTitleBar Grid is loaded
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AppTitleBar_SizeChanged(System.Object,Microsoft.UI.Xaml.SizeChangedEventArgs)">
-            <summary>
-            Event handler for when the AppTitleBar Grid's size changes
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.MainWindow.SetRegionsForCustomTitleBar">
             <summary>
-            Specifies the interactive regions of the title bar in the AppTitleBar Grid
+            Specifies the interactive regions of the title bar in the AppTitleBar Grid.
             </summary>
-        </member>
-        <member name="M:AppControlManager.MainWindow.MainWindow_Closed(System.Object,Microsoft.UI.Xaml.WindowEventArgs)">
-            <summary>
-            Main Window close event
-            </summary>
-            <param name="sender"></param>
-            <param name="args"></param>
         </member>
         <member name="M:AppControlManager.MainWindow.RestoreWindowSize">
             <summary>
@@ -2755,15 +2674,6 @@
             <param name="sender"></param>
             <param name="args"></param>
         </member>
-        <member name="M:AppControlManager.MainWindow.NavView_Navigate(System.Type,Microsoft.UI.Xaml.Media.Animation.NavigationTransitionInfo,System.String)">
-            <summary>
-            Main navigation method that is used by the search bar, direct clicks on the main navigation items
-            And by other methods throughout the app in order to navigate to sub-pages
-            </summary>
-            <param name="navPageType"></param>
-            <param name="transitionInfo"></param>
-            <param name="navItemTag"></param>
-        </member>
         <member name="M:AppControlManager.MainWindow.BackButtonTitleBar_Click">
             <summary>
             Event handler for when the back button is pressed
@@ -2775,25 +2685,6 @@
             </summary>
             <param name="sender"></param>
             <param name="args"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AffectPagesAnimatedIconsVisibilities(System.Boolean)">
-            <summary>
-            Event handler to change visibility of the AnimatedIcons on the currently visible page in the frame
-            It is called by the Sidebar's Browse/Clear buttons' event handlers
-            </summary>
-            <param name="on"></param>
-        </member>
-        <member name="M:AppControlManager.MainWindow.AffectPagesAnimatedIconsVisibilities(Microsoft.UI.Xaml.Controls.Frame)">
-            <summary>
-            This method is called via the methods responsible for Navigations.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.MainWindow.SidebarOnUnsignedPolicyChanged(System.Object,AppControlManager.Sidebar.Events.UnsignedPolicyInUserConfigChangedEventArgs)">
-            <summary>
-            Event handler for when the event that changes unsigned policy path in user configurations is fired
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.MainWindow.InitializeComponent">
             <summary>
@@ -3178,12 +3069,12 @@
             To determine the visibility of the Shimmer/ListView based on the availability of elements in the AuthenticatedAccounts ObservableCollection
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._AuthenticatedAccountsListViewVisibility">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.AuthenticatedAccountsListViewVisibility">
             <summary>
             Visibility of the ListView that contains the list of the Authenticated Accounts
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._AuthenticatedAccountsShimmerVisibility">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.AuthenticatedAccountsShimmerVisibility">
             <summary>
             Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts 
             </summary>
@@ -3193,22 +3084,22 @@
             Helper method to update computed properties when CurrentActiveAccount changes.
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountUsername">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.CurrentActiveAccountUsername">
             <summary>
             Computed property for Username.
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountTenantID">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.CurrentActiveAccountTenantID">
             <summary>
             Computed property for TenantID.
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountAccountIdentifier">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.CurrentActiveAccountAccountIdentifier">
             <summary>
             Computed property for Account Identifier.
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._currentActiveAccountPermissions">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.CurrentActiveAccountPermissions">
             <summary>
             Computed property for Permissions.
             </summary>
@@ -3244,7 +3135,7 @@
             Sign In methods ComboBox source
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._SignInMethodsComboBoxSelectedItem">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.SignInMethodsComboBoxSelectedItem">
             <summary>
             Bound to the ComboBox's SelectedItem property with the default value
             </summary>
@@ -3264,18 +3155,6 @@
             <summary>
             Signs into the Microsoft tenant
             </summary>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="T:AppControlManager.MicrosoftGraph.AuthenticationContext">
             <summary>
@@ -3710,22 +3589,10 @@
             Different methods for the sign in process
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.ViewModel.AuthenticatedAccounts">
+        <member name="F:AppControlManager.MicrosoftGraph.ViewModelForMSGraph.AuthenticatedAccounts">
             <summary>
             Collection bound to the ListViews that display the authenticated accounts in every page
             </summary>
-        </member>
-        <member name="M:AppControlManager.MicrosoftGraph.ViewModel.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="T:AppControlManager.MicrosoftGraph.Windows10CustomConfiguration">
             <summary>
@@ -5183,24 +5050,10 @@
             </summary>
             <param name="e">The navigation event data.</param>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewApps.SetVisibility(Microsoft.UI.Xaml.Visibility,System.String,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button)">
-            <summary>
-            Sets the visibility of a button and updates related UI elements based on the provided parameters.
-            </summary>
-            <param name="visibility">Controls the visibility state of the buttons and icons in the UI.</param>
-            <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar into a local variable.</param>
-            <param name="button1">Represents the first button whose visibility and content are updated based on the visibility state.</param>
-            <param name="button2">Represents the second button, though its visibility is not directly modified in this context.</param>
-            <param name="button3">Represents the third button, though its visibility is not directly modified in this context.</param>
-            <param name="button4">Represents the fourth button, though its visibility is not directly modified in this context.</param>
-            <param name="button5">Represents the fifth button, though its visibility is not directly modified in this context.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewApps.LightUp1(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewApps.LightUp1">
             <summary>
             Local event handlers that are assigned to the sidebar button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewApps.NavigationView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView,Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs)">
             <summary>
@@ -5400,25 +5253,10 @@
             Public property to access the singleton instance from other classes
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.SetVisibility(Microsoft.UI.Xaml.Visibility,System.String,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button)">
-            <summary>
-            Sets the visibility of various UI elements and updates button content and event handlers based on the provided
-            visibility state.
-            </summary>
-            <param name="visibility">Controls the visibility state of the UI elements.</param>
-            <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar.</param>
-            <param name="button1">Represents the first button whose visibility and content are updated.</param>
-            <param name="button2">Represents the second button, though it is not modified in this context.</param>
-            <param name="button3">Represents the third button, though it is not modified in this context.</param>
-            <param name="button4">Represents the fourth button, though it is not modified in this context.</param>
-            <param name="button5">Represents the fifth button, though it is not modified in this context.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.LightUp1(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.AllowNewAppsStart.LightUp1">
             <summary>
             Local event handlers that are assigned to the sidebar button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep2Button_Click">
             <summary>
@@ -5580,24 +5418,10 @@
             settings cards.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.SetVisibility(Microsoft.UI.Xaml.Visibility,System.String,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button)">
-            <summary>
-            Sets the visibility of button icons and manages the content and event handlers for specified buttons.Implement the SetVisibility method required by IAnimatedIconsManager
-            </summary>
-            <param name="visibility">Controls the visibility state of the button icons.</param>
-            <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar.</param>
-            <param name="button1">Manages the visibility and content of the first button.</param>
-            <param name="button2">Handles the visibility of the second button.</param>
-            <param name="button3">Controls the visibility of the third button.</param>
-            <param name="button4">Sets the visibility of the fourth button.</param>
-            <param name="button5">Manages the visibility of the fifth button.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.LightUp1(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.LightUp1">
             <summary>
             Local event handlers that are assigned to the sidebar button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.GenerateSettingsCards">
             <summary>
@@ -5934,24 +5758,10 @@
             the data context.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.SetVisibility(Microsoft.UI.Xaml.Visibility,System.String,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button)">
-            <summary>
-            Implement the SetVisibility method required by IAnimatedIconsManager
-            </summary>
-            <param name="visibility"></param>
-            <param name="unsignedBasePolicyPath"></param>
-            <param name="button1"></param>
-            <param name="button2"></param>
-            <param name="button3"></param>
-            <param name="button4"></param>
-            <param name="button5"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.LightUp1(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.LightUp1">
             <summary>
             Local event handlers that are assigned to the sidebar button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Click">
             <summary>
@@ -6281,25 +6091,10 @@
             than Windows 11 24H2.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.SetVisibility(Microsoft.UI.Xaml.Visibility,System.String,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button,Microsoft.UI.Xaml.Controls.Button)">
-            <summary>
-            Controls the visibility of button icons and manages their content and event handlers based on the provided
-            visibility state.
-            </summary>
-            <param name="visibility">Determines the visibility state for the button icons and sidebar buttons.</param>
-            <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar into a local variable.</param>
-            <param name="button1">Sets the visibility and content for the first sidebar button.</param>
-            <param name="button2">Sets the visibility and content for the second sidebar button.</param>
-            <param name="button3">Sets the visibility for the third sidebar button, though it is not used for content assignment.</param>
-            <param name="button4">Sets the visibility for the fourth sidebar button, though it is not used for content assignment.</param>
-            <param name="button5">Sets the visibility for the fifth sidebar button, though it is not used for content assignment.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.LightUp1(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.DeploymentPage.LightUp1">
             <summary>
             Local event handlers that are assigned to the sidebar button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.DeployUnsignedXMLButton_Click">
             <summary>
@@ -7004,53 +6799,6 @@
             GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
-        <member name="T:AppControlManager.Pages.Settings">
-            <summary>
-            The Settings class manages user configurations and UI elements for a settings page. It initializes settings, handles
-            events, and updates the UI.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.#ctor">
-            <summary>
-            Initializes the settings page, loading user configurations into UI elements and setting up event handlers for user
-            interactions.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.IconsStyleComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
-            <summary>
-            Event handler for the IconsStyle ComboBox selection change event.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.NavigationViewLocationComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
-            <summary>
-            Event handler for the NavigationViewLocation ComboBox selection change event.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.ThemeComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
-            <summary>
-            Event handler for the Theme ComboBox selection change event.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.NavigationViewBackground_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the NavigationViewBackground toggle switch change event.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.Settings.SoundToggleSwitch_Toggled(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the Sound toggle switch change event.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
         <member name="M:AppControlManager.Pages.Settings.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -7545,23 +7293,6 @@
         <member name="T:AppControlManager.PolicyEditor.SignatureBasedRuleType">
             <summary>
             Levels used by the Policy Editor
-            </summary>
-        </member>
-        <member name="T:AppControlManager.Sidebar.EventHandlersTracking">
-            <summary>
-            Each page that implements the IAnimatedIconsManager interface assigns local event handlers to the sidebar buttons
-            And after method assignment, sets the same method to one of the static variables defined in this class so the main Window class
-            Will use it for un-subscription
-            </summary>
-        </member>
-        <member name="T:AppControlManager.Sidebar.Events">
-            <summary>
-            The Events class encapsulates event-related logic for Sidebar
-            </summary>
-        </member>
-        <member name="T:AppControlManager.Sidebar.IAnimatedIconsManager">
-            <summary>
-            The interface that all of the pages that host AnimatedIcons in order to be able to accept policy paths from the Sidebar use
             </summary>
         </member>
         <member name="M:AppControlManager.SimulationMethods.Arbitrator.Compare(AppControlManager.Others.SimulationInput)">
@@ -9177,6 +8908,36 @@
             ViewModel for the MainWindow
             </summary>
         </member>
+        <member name="P:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyPathTextBoxText">
+            <summary>
+            The text in the SidebarPolicyPathTextBox
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM.UnelevatedPages">
+            <summary>
+            Pages that are allowed to run when running without Administrator privileges
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM.breadCrumbMappingsV2">
+            <summary>
+            Every page in the application must be defined in this dictionary.
+            It is used by the BreadCrumbBar.
+            Sub-pages must use the same value as their main page in the dictionary.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM.NavigationPageToItemContentMap">
+            <summary>
+            Dictionary of all the main pages in the app, used for the main navigation.
+            Keys are the Navigation Item tags (non-localized) and values are the page types.
+            Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.MainWindowVM.NavigationPageToItemContentMapForSearch">
+            <summary>
+            Dictionary of all the main pages in the app, used for the search bar.
+            Keys are page contents which are localized and values are page types.
+            </summary>
+        </member>
         <member name="T:AppControlManager.ViewModels.MainWindowVM.BackDropComboBoxItems">
             <summary>
             Values for back drop combo box in the settings page
@@ -9229,11 +8990,6 @@
         <member name="P:AppControlManager.ViewModels.MainWindowVM.AutomaticAssignmentSidebarToggleSwitchToggledState">
             <summary>
             Indicates whether the automatic assignment sidebar toggle switch is in a toggled state. It stores a boolean value.
-            </summary>
-        </member>
-        <member name="P:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyPathTextBoxText">
-            <summary>
-            The text in the SidebarBasePolicyPathTextBox
             </summary>
         </member>
         <member name="P:AppControlManager.ViewModels.MainWindowVM.BorderTranslation">
@@ -9391,16 +9147,6 @@
             </summary>
             <param name="unsignedPolicyPath"></param>
         </member>
-        <member name="M:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyBrowseButton_Click">
-            <summary>
-            Event handler for the sidebar base policy browse button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.ViewModels.MainWindowVM.SidebarBasePolicyClearButton_Click">
-            <summary>
-            Event handler for the clear button in the sidebar for unsigned policy path
-            </summary>
-        </member>
         <member name="M:AppControlManager.ViewModels.MainWindowVM.HamburgerMenuButton_Click">
             <summary>
             Event handler for the hamburger/main menu button click
@@ -9533,6 +9279,16 @@
             Used by various methods internally to open a created/modified policy in the Policy Editor
             </summary>
             <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
+        </member>
+        <member name="F:AppControlManager.ViewModels.SettingsVM.VersionTextBlockText">
+            <summary>
+            Set the version in the settings card to the current app version
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.SettingsVM.CopyRightSettingsExpanderDescription">
+            <summary>
+            Set the year for the copyright section
+            </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.SettingsVM.FetchLatestCertificateCNsPrivate">
             <summary>
@@ -9791,12 +9547,24 @@
             </summary>
             <param name="propertyName">The name of the property that changed.</param>
         </member>
+        <member name="M:AppControlManager.ViewModels.ViewModelBase.SetProperty``1(``0,``0,System.Action{``0},System.String)">
+            <summary>
+            Sets the property and raises the PropertyChanged event if the value has changed.
+            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="currentValue"></param>
+            <param name="newValue"></param>
+            <param name="setter"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
         <member name="F:AppControlManager.ViewModels.ViewOnlinePoliciesVM._ViewModelMSGraph">
             <summary>
             To store the view model of the MS Graph that is retrieved from the constructor
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.#ctor(AppControlManager.MicrosoftGraph.ViewModel)">
+        <member name="M:AppControlManager.ViewModels.ViewOnlinePoliciesVM.#ctor(AppControlManager.MicrosoftGraph.ViewModelForMSGraph)">
             <summary>
             Automatically provided via constructor injection by the DI container during build.
             </summary>
@@ -9857,6 +9625,68 @@
             Helper method to copy a specified property to clipboard without reflection
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
+        </member>
+        <member name="T:AppControlManager.WindowComponents.Crumb">
+            <summary>
+            https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
+            Represents an item in the BreadCrumBar's ItemsSource collection
+            </summary>
+            <param name="label"></param>
+            <param name="page"></param>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.Crumb.#ctor(System.String,System.Type)">
+            <summary>
+            https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
+            Represents an item in the BreadCrumBar's ItemsSource collection
+            </summary>
+            <param name="label"></param>
+            <param name="page"></param>
+        </member>
+        <member name="T:AppControlManager.WindowComponents.IAnimatedIconsManager">
+            <summary>
+            This interface tags certain pages that interact with the Sidebar.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.NavigationService.Initialize(Microsoft.UI.Xaml.Controls.Frame,Microsoft.UI.Xaml.Controls.NavigationView)">
+            <summary>
+            Called once (from MainWindow) to supply the necessary elements.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.NavigationService.AffectPagesAnimatedIconsVisibilitiesEx(System.Boolean)">
+            <summary>
+            Event handler to change visibility of the AnimatedIcons on the currently visible page in the frame
+            It is called by the Sidebar's Browse/Clear buttons' event handlers
+            </summary>
+            <param name="on"></param>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.NavigationService.AffectPagesAnimatedIconsVisibilities(Microsoft.UI.Xaml.Controls.Frame)">
+            <summary>
+            This method is called via the methods responsible for Navigations.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.NavigationService.Navigate(System.Type,Microsoft.UI.Xaml.Media.Animation.NavigationTransitionInfo,System.String)">
+            <summary>
+            Main navigation method that is used by the search bar, direct clicks on the main navigation items
+            And by other methods throughout the app in order to navigate to sub-pages
+            </summary>
+            <param name="navPageType"></param>
+            <param name="transitionInfo"></param>
+            <param name="navItemTag"></param>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.NavigationService.SidebarBasePolicyBrowseButton_Click">
+            <summary>
+            Event handler for the sidebar base policy browse button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.WindowComponents.NavigationService.SidebarBasePolicyClearButton_Click">
+            <summary>
+            Event handler for the clear button in the sidebar for unsigned policy path
+            </summary>
+        </member>
+        <member name="T:AppControlManager.WindowComponents.PageTitleMap">
+            <summary>
+            Used for the BreadCrumBar's data to define valid navigational paths in the app
+            </summary>
         </member>
         <member name="M:AppControlManager.XMLOps.CheckForAllowAll.Check(System.String)">
             <summary>

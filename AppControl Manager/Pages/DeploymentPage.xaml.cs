@@ -29,6 +29,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
@@ -43,14 +44,15 @@ namespace AppControlManager.Pages;
 /// DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
 /// user interactions for file selection and deployment status updates.
 /// </summary>
-internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManager, INotifyPropertyChanged
+internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INotifyPropertyChanged
 {
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
-	private ViewModel ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModel>();
+	private ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private DeploymentVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<DeploymentVM>();
+	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 
 
 	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
@@ -113,88 +115,51 @@ internal sealed partial class DeploymentPage : Page, Sidebar.IAnimatedIconsManag
 			() => ViewModel.MainInfoBarSeverity, value => ViewModel.MainInfoBarSeverity = value,
 			() => ViewModel.MainInfoBarIsClosable, value => ViewModel.MainInfoBarIsClosable = value), AuthenticationContext.Intune);
 
-
 		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 	}
 
 
 	#region Augmentation Interface
 
-	private string? unsignedBasePolicyPathFromSidebar;
-
-	/// <summary>
-	/// Controls the visibility of button icons and manages their content and event handlers based on the provided
-	/// visibility state.
-	/// </summary>
-	/// <param name="visibility">Determines the visibility state for the button icons and sidebar buttons.</param>
-	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar into a local variable.</param>
-	/// <param name="button1">Sets the visibility and content for the first sidebar button.</param>
-	/// <param name="button2">Sets the visibility and content for the second sidebar button.</param>
-	/// <param name="button3">Sets the visibility for the third sidebar button, though it is not used for content assignment.</param>
-	/// <param name="button4">Sets the visibility for the fourth sidebar button, though it is not used for content assignment.</param>
-	/// <param name="button5">Sets the visibility for the fifth sidebar button, though it is not used for content assignment.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
+	public void SetVisibility(Visibility visibility)
 	{
-
-		ArgumentNullException.ThrowIfNull(button1);
-		ArgumentNullException.ThrowIfNull(button2);
-
 		// Light up the local page's button icons
 		UnsignedXMLFilesLightAnimatedIcon.Visibility = visibility;
 		SignedXMLFilesLightAnimatedIcon.Visibility = visibility;
 
-		// Light up the sidebar buttons' icons
-		button1.Visibility = visibility;
-		button2.Visibility = visibility;
-
-		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
-		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
-
-		if (visibility is Visibility.Visible)
-		{
-			// Assign sidebar buttons' content texts
-			button1.Content = GlobalVars.Rizz.GetString("DeployUnsignedPolicy");
-			button2.Content = GlobalVars.Rizz.GetString("DeploySignedPolicy");
-
-			// Assign a local event handler to the sidebar button
-			button1.Click += LightUp1;
-			button2.Click += LightUp2;
-
-			// Save a reference to the event handler we just set for tracking
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp1;
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp2;
-		}
+		sideBarVM.AssignActionPacks(
+			(param => LightUp1(), GlobalVars.Rizz.GetString("DeployUnsignedPolicy")),
+			(param => LightUp2(), GlobalVars.Rizz.GetString("DeploySignedPolicy")),
+			null, null, null);
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void LightUp1(object sender, RoutedEventArgs e)
+	private void LightUp1()
 	{
 
-		if (!string.IsNullOrWhiteSpace(unsignedBasePolicyPathFromSidebar))
+		if (!string.IsNullOrWhiteSpace(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic))
 		{
-			if (XMLFiles.Add(unsignedBasePolicyPathFromSidebar))
+			if (XMLFiles.Add(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic))
 			{
 				// Append the new file to the TextBox, followed by a newline
-				BrowseForXMLPolicyFilesButton_SelectedFilesTextBox.Text += unsignedBasePolicyPathFromSidebar + Environment.NewLine;
+				BrowseForXMLPolicyFilesButton_SelectedFilesTextBox.Text += MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic + Environment.NewLine;
 			}
 
 			BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
 		}
 	}
 
-	private void LightUp2(object sender, RoutedEventArgs e)
+	private void LightUp2()
 	{
 
-		if (!string.IsNullOrWhiteSpace(unsignedBasePolicyPathFromSidebar))
+		if (!string.IsNullOrWhiteSpace(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic))
 		{
-			if (SignedXMLFiles.Add(unsignedBasePolicyPathFromSidebar))
+			if (SignedXMLFiles.Add(MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic))
 			{
 				// Append the new file to the TextBox, followed by a newline
-				BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox.Text += unsignedBasePolicyPathFromSidebar + Environment.NewLine;
+				BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox.Text += MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic + Environment.NewLine;
 			}
 
 			BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);

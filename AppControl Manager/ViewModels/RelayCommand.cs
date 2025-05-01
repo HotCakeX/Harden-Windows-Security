@@ -15,15 +15,26 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Windows.Input;
 
-namespace AppControlManager.Sidebar;
+namespace AppControlManager.ViewModels;
 
-/// <summary>
-/// The interface that all of the pages that host AnimatedIcons in order to be able to accept policy paths from the Sidebar use
-/// </summary>
-internal interface IAnimatedIconsManager
+internal sealed partial class RelayCommand : ICommand
 {
-	void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button button1, Button button2, Button button3, Button button4, Button button5);
+	private readonly Action<object?> _execute;
+	private readonly Func<object?, bool>? _canExecute;
+
+	internal RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
+	{
+		_execute = execute ?? throw new ArgumentNullException(nameof(execute));
+		_canExecute = canExecute;
+	}
+
+	public bool CanExecute(object? parameter) => _canExecute?.Invoke(parameter) ?? true;
+
+	public void Execute(object? parameter) => _execute(parameter);
+
+	public event EventHandler? CanExecuteChanged;
+	internal void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }

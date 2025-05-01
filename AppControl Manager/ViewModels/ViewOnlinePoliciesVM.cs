@@ -41,7 +41,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	/// <summary>
 	/// To store the view model of the MS Graph that is retrieved from the constructor
 	/// </summary>
-	private readonly ViewModel _ViewModelMSGraph;
+	private readonly ViewModelForMSGraph _ViewModelMSGraph;
 
 	internal readonly AuthenticationCompanion AuthCompanionCLS;
 
@@ -55,7 +55,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	/// Automatically provided via constructor injection by the DI container during build.
 	/// </summary>
 	/// <param name="GraphVM">The view model instance used to manage data and state related to Microsoft Graph.</param>
-	internal ViewOnlinePoliciesVM(ViewModel GraphVM)
+	internal ViewOnlinePoliciesVM(ViewModelForMSGraph GraphVM)
 	{
 		_ViewModelMSGraph = GraphVM;
 

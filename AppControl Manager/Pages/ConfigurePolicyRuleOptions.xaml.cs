@@ -24,6 +24,7 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Input;
@@ -38,7 +39,7 @@ namespace AppControlManager.Pages;
 /// Configures policy rules and manages UI interactions for policy templates. Initializes components, handles file
 /// selection, and updates settings dynamically.
 /// </summary>
-internal sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager
 {
 	// To store the selected policy path
 	private string? SelectedFilePath;
@@ -46,6 +47,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimat
 #pragma warning disable CA1822
 	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -70,55 +72,24 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, Sidebar.IAnimat
 
 	#region Augmentation Interface
 
-	private string? unsignedBasePolicyPathFromSidebar;
-
-	/// <summary>
-	/// Sets the visibility of button icons and manages the content and event handlers for specified buttons.Implement the SetVisibility method required by IAnimatedIconsManager
-	/// </summary>
-	/// <param name="visibility">Controls the visibility state of the button icons.</param>
-	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar.</param>
-	/// <param name="button1">Manages the visibility and content of the first button.</param>
-	/// <param name="button2">Handles the visibility of the second button.</param>
-	/// <param name="button3">Controls the visibility of the third button.</param>
-	/// <param name="button4">Sets the visibility of the fourth button.</param>
-	/// <param name="button5">Manages the visibility of the fifth button.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
+	public void SetVisibility(Visibility visibility)
 	{
-		ArgumentNullException.ThrowIfNull(button1);
-
 		// Light up the local page's button icons
 		PickPolicyFileButtonAnimatedIconLight.Visibility = visibility;
 
-		// Light up the sidebar buttons' icons
-		button1.Visibility = visibility;
-
-		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
-		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
-
-
-		if (visibility is Visibility.Visible)
-		{
-			// Assign sidebar buttons' content texts
-			button1.Content = GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent");
-
-			// Assign a local event handler to the sidebar button
-			button1.Click += LightUp1;
-			// Save a reference to the event handler we just set for tracking
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp1;
-		}
-
+		sideBarVM.AssignActionPacks(
+		(param => LightUp1(), GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent")),
+		null, null, null, null);
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void LightUp1(object sender, RoutedEventArgs e)
+	private async void LightUp1()
 	{
 		PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
-		PickPolicyFileButton_TextBox.Text = unsignedBasePolicyPathFromSidebar;
-		SelectedFilePath = unsignedBasePolicyPathFromSidebar;
+		PickPolicyFileButton_TextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 
 		await LoadPolicyOptionsFromXML(SelectedFilePath);
 

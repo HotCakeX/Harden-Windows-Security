@@ -18,6 +18,7 @@
 using System;
 using System.Linq;
 using AppControlManager.ViewModels;
+using AppControlManager.WindowComponents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -29,12 +30,14 @@ namespace AppControlManager.Pages;
 /// Represents a page for managing app permissions with navigation capabilities. It initializes the view model and
 /// handles navigation events.
 /// </summary>
-internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
+internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 {
 
 #pragma warning disable CA1822
 	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
+	private NavigationService nav { get; } = App.AppHost.Services.GetRequiredService<NavigationService>();
 #pragma warning restore CA1822
 
 	/// <summary>
@@ -58,9 +61,7 @@ internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 			.First(item => string.Equals(item.Tag.ToString(), "Start", StringComparison.OrdinalIgnoreCase));
 	}
 
-
 	#region Augmentation Interface
-
 
 	/// <summary>
 	/// Called when the page is navigated to. Invokes the base navigation logic
@@ -70,7 +71,7 @@ internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);
-		MainWindow.Instance.AffectPagesAnimatedIconsVisibilities(ContentFrame);
+		nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 	}
 
 	/// <summary>
@@ -81,67 +82,30 @@ internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 	protected override void OnNavigatedFrom(NavigationEventArgs e)
 	{
 		base.OnNavigatedFrom(e);
-		MainWindow.Instance.AffectPagesAnimatedIconsVisibilities(ContentFrame);
+		nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 	}
 
-
-	private string? unsignedBasePolicyPathFromSidebar;
-
-
-	/// <summary>
-	/// Sets the visibility of a button and updates related UI elements based on the provided parameters.
-	/// </summary>
-	/// <param name="visibility">Controls the visibility state of the buttons and icons in the UI.</param>
-	/// <param name="unsignedBasePolicyPath">Stores the path for the unsigned policy from the sidebar into a local variable.</param>
-	/// <param name="button1">Represents the first button whose visibility and content are updated based on the visibility state.</param>
-	/// <param name="button2">Represents the second button, though its visibility is not directly modified in this context.</param>
-	/// <param name="button3">Represents the third button, though its visibility is not directly modified in this context.</param>
-	/// <param name="button4">Represents the fourth button, though its visibility is not directly modified in this context.</param>
-	/// <param name="button5">Represents the fifth button, though its visibility is not directly modified in this context.</param>
-	public void SetVisibility(Visibility visibility, string? unsignedBasePolicyPath, Button? button1, Button? button2, Button? button3, Button? button4, Button? button5)
+	public void SetVisibility(Visibility visibility)
 	{
-
-		ArgumentNullException.ThrowIfNull(button1);
-
 		// Light up the local page's button icons
 		AllowNewAppsStart.Instance.BrowseForXMLPolicyButtonLightAnimatedIconPub.Visibility = visibility;
 
-		// Light up the sidebar buttons' icons
-		button1.Visibility = visibility;
-
-		// Set the incoming text which is from sidebar for unsigned policy path to a local private variable
-		unsignedBasePolicyPathFromSidebar = unsignedBasePolicyPath;
-
-
-		if (visibility is Visibility.Visible)
-		{
-			// Assign sidebar buttons' content texts
-			button1.Content = "Allow New Apps Base Policy";
-
-			// Assign a local event handler to the sidebar button
-			button1.Click += LightUp1;
-			// Save a reference to the event handler we just set for tracking
-			Sidebar.EventHandlersTracking.SidebarUnsignedBasePolicyConnect1EventHandler = LightUp1;
-
-		}
-
+		sideBarVM.AssignActionPacks(
+		(param => LightUp1(), "Allow New Apps Base Policy"),
+		null, null, null, null);
 	}
 
 	/// <summary>
 	/// Local event handlers that are assigned to the sidebar button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void LightUp1(object sender, RoutedEventArgs e)
+	private static void LightUp1()
 	{
 		AllowNewAppsStart.Instance.BrowseForXMLPolicyButton_FlyOutPub.ShowAt(AllowNewAppsStart.Instance.BrowseForXMLPolicyButtonPub);
-		AllowNewAppsStart.Instance.BrowseForXMLPolicyButton_SelectedBasePolicyTextBoxPub.Text = unsignedBasePolicyPathFromSidebar;
-		AllowNewAppsStart.Instance.selectedXMLFilePath = unsignedBasePolicyPathFromSidebar;
+		AllowNewAppsStart.Instance.BrowseForXMLPolicyButton_SelectedBasePolicyTextBoxPub.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		AllowNewAppsStart.Instance.selectedXMLFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
-
 	#endregion
-
 
 	/// <summary>
 	/// Handles changes in the navigation menu and navigates to different pages based on the selected item's tag.
@@ -173,7 +137,7 @@ internal sealed partial class AllowNewApps : Page, Sidebar.IAnimatedIconsManager
 
 			// The same method that runs for the main Navigation in the MainWindow class must run here
 			// Since this is a 2nd nested NavigationView and has different frame
-			MainWindow.Instance.AffectPagesAnimatedIconsVisibilities(ContentFrame);
+			nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 		}
 	}
 }

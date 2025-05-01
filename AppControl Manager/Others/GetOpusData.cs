@@ -39,7 +39,7 @@ internal static partial class Opus
 	/// </summary>
 	private const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
 
-	// Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
+	// Returns a List of OpusInfoObj, taking a SignedCms parameter
 	// https://learn.microsoft.com/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
 	// https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
 	internal static List<OpusInfoObj> GetOpusData(SignedCms signature)

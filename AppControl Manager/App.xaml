@@ -3,6 +3,8 @@
     x:Class="AppControlManager.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:local="using:AppControlManager">
     <Application.Resources>
@@ -80,6 +82,7 @@
                 <animations:OpacityAnimation EasingMode="EaseOut" From="1" To="0" Duration="0:0:0.1" />
             </animations:ImplicitAnimationSet>
 
+            <media:AttachedCardShadow x:Key="BorderShadow" Offset="0" Color="Violet" BlurRadius="10" Opacity="50" CornerRadius="18" />
 
         </ResourceDictionary>
     </Application.Resources>

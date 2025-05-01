@@ -3,7 +3,7 @@
     x:Class="AppControlManager.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppControlManager"
+    xmlns:WindowComponents="using:AppControlManager.WindowComponents"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -74,7 +74,7 @@
 
         <!-- Titlebar -->
         <!-- https://learn.microsoft.com/windows/apps/develop/title-bar#full-customization-example -->
-        <Grid x:Name="AppTitleBar" Height="48" Grid.Row="0">
+        <Grid x:Name="AppTitleBar" Loaded="{x:Bind SetRegionsForCustomTitleBar}" SizeChanged="{x:Bind SetRegionsForCustomTitleBar}" Height="48" Grid.Row="0">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
@@ -145,6 +145,8 @@
                     IsBackEnabled="False"
                     AlwaysShowHeader="False"
                     Grid.Row="1"
+                    Margin="{x:Bind ViewModel.NavViewMargin, Mode=OneWay}"
+                    SelectedItem="{x:Bind ViewModel.NavViewSelectedItem, Mode=TwoWay}"
                     IsTitleBarAutoPaddingEnabled="False"
                     IsPaneToggleButtonVisible="False">
 
@@ -282,7 +284,7 @@
                                             Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}" x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
                                             Width="150" />
 
-                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Uid="SidebarBrowseButton" Click="{x:Bind ViewModel.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Uid="SidebarBrowseButton" Click="{x:Bind nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -293,7 +295,7 @@
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" x:Uid="SidebarClearButton" Grid.Row="2" Click="{x:Bind ViewModel.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" x:Uid="SidebarClearButton" Grid.Row="2" Click="{x:Bind nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -308,7 +310,7 @@
                                             <Button.Content>
                                                 <controls:WrapPanel Orientation="Horizontal">
 
-                                                    <AnimatedIcon x:Name="SidebarBasePolicySelectButtonLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20" Visibility="Collapsed">
+                                                    <AnimatedIcon Height="20" Margin="0,0,5,0" Width="20" Visibility="{x:Bind sidebarVM.SidebarBasePolicySelectButtonLightAnimatedIconVisibility, Mode=OneWay}">
                                                         <AnimatedIcon.Source>
                                                             <animatedvisuals:Light/>
                                                         </AnimatedIcon.Source>
@@ -322,11 +324,11 @@
                                             <Button.Flyout>
                                                 <Flyout Placement="Bottom">
                                                     <StackPanel Orientation="Vertical" Spacing="10">
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect1" HorizontalAlignment="Stretch" Content="Select 1" Visibility="Collapsed" />
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect2" HorizontalAlignment="Stretch" Content="Select 2" Visibility="Collapsed" />
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect3" HorizontalAlignment="Stretch" Content="Select 3" Visibility="Collapsed" />
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect4" HorizontalAlignment="Stretch" Content="Select 4" Visibility="Collapsed" />
-                                                        <Button x:Name="SidebarUnsignedBasePolicyConnect5" HorizontalAlignment="Stretch" Content="Select 5" Visibility="Collapsed" />
+                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect1Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect1Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}" />
+                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect2Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect2Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}" />
+                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect3Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect3Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect3Command, Mode=OneWay}" />
+                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect4Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect4Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect4Command, Mode=OneWay}" />
+                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect5Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect5Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect5Command, Mode=OneWay}" />
                                                     </StackPanel>
                                                 </Flyout>
                                             </Button.Flyout>
@@ -376,11 +378,11 @@
                         Grid.Row="0"
                         Padding="10"
                         Margin="20,10,0,10"
-                        ItemsSource="{x:Bind Breadcrumbs}"
+                        ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
                         ItemClicked="BreadcrumbBar_ItemClicked">
 
                         <BreadcrumbBar.ItemTemplate>
-                            <DataTemplate x:DataType="local:Crumb">
+                            <DataTemplate x:DataType="WindowComponents:Crumb">
                                 <TextBlock Text="{x:Bind Label}" TextWrapping="Wrap" Style="{StaticResource TitleTextBlockStyle}" />
                             </DataTemplate>
                         </BreadcrumbBar.ItemTemplate>

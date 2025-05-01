@@ -80,60 +80,64 @@
 
             </controls:WrapPanel>
 
-            <Border Grid.Row="1" Height="60" BorderBrush="Gray" Background="{StaticResource SystemControlChromeMediumLowAcrylicWindowMediumBrush}" BorderThickness="0.4" CornerRadius="14">
+            <Border Grid.Row="1" ui:Effects.Shadow="{StaticResource BorderShadow}" BorderThickness="0" Margin="15,0,15,0">
 
-                <Grid Margin="10,0,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="230" Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <Border Height="60" Background="{StaticResource SmokeFillColorDefaultBrush}" BorderThickness="0" CornerRadius="18">
 
-                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="1" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <Grid Margin="10,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="230" Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Mode:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" Foreground="LightGray" />
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="1" Margin="0,0,10,0" VerticalAlignment="Center">
 
-                        <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
+                            <TextBlock Text="Mode:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
+
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
                                   ToolTipService.ToolTip="Choose between creating a new supplemental policy or adding the rules that will be created to an existing policy">
-                            <x:String>Create New Policy</x:String>
-                            <x:String>Add to Existing Policy</x:String>
-                        </ComboBox>
+                                <x:String>Create New Policy</x:String>
+                                <x:String>Add to Existing Policy</x:String>
+                            </ComboBox>
 
-                    </StackPanel>
+                        </StackPanel>
 
-                    <Border Grid.Column="1" Grid.ColumnSpan="1" BorderBrush="Gray" Background="{StaticResource SystemChromeBlackMediumLowColor}" BorderThickness="0.4" CornerRadius="14">
+                        <Border Grid.Column="1" Grid.ColumnSpan="1" Background="Transparent" BorderThickness="0" CornerRadius="18">
 
-                        <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
+                            <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
 
-                            <Button x:Name="PolicyFileToMergeWithButton" Content="Select a policy file" Margin="15,0,0,0"
+                                <Button x:Name="PolicyFileToMergeWithButton" Content="Select a policy file" Margin="15,0,0,0"
                                     ToolTipService.ToolTip="Browse for an App Control policy to add all of the rules you created in this page to it."
                                     Click="{x:Bind PolicyFileToMergeWithButton_Click}" IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}"
                                     Holding="PolicyFileToMergeWithButton_Holding" RightTapped="{x:Bind PolicyFileToMergeWithButton_RightTapped}">
 
-                                <Button.Flyout>
-                                    <Flyout x:Name="PolicyFileToMergeWithButton_FlyOut">
+                                    <Button.Flyout>
+                                        <Flyout x:Name="PolicyFileToMergeWithButton_FlyOut">
 
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}" />
+                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}" />
 
-                                            <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
+                                                <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
-                                        </controls:WrapPanel>
+                                            </controls:WrapPanel>
 
-                                    </Flyout>
-                                </Button.Flyout>
+                                        </Flyout>
+                                    </Button.Flyout>
 
-                            </Button>
+                                </Button>
 
-                        </controls:WrapPanel>
+                            </controls:WrapPanel>
 
-                    </Border>
+                        </Border>
 
-                </Grid>
+                    </Grid>
+                </Border>
+
             </Border>
 
             <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">

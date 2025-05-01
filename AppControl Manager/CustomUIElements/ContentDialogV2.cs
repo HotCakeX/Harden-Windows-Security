@@ -32,7 +32,7 @@ internal partial class ContentDialogV2 : ContentDialog
 		BorderThickness = new Thickness(1);
 		XamlRoot = App.MainWindow?.Content.XamlRoot;
 		RequestedTheme = string.Equals(App.Settings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(App.Settings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
-		CornerRadius = new CornerRadius(8);
+		CornerRadius = new CornerRadius(14);
 	}
 
 	internal new IAsyncOperation<ContentDialogResult> ShowAsync()

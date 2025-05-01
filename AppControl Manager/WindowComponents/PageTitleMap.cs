@@ -15,20 +15,16 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Xaml;
+using System;
+using System.Collections.Generic;
 
-namespace AppControlManager.Sidebar;
+namespace AppControlManager.WindowComponents;
 
 /// <summary>
-/// Each page that implements the IAnimatedIconsManager interface assigns local event handlers to the sidebar buttons
-/// And after method assignment, sets the same method to one of the static variables defined in this class so the main Window class
-/// Will use it for un-subscription
+/// Used for the BreadCrumBar's data to define valid navigational paths in the app
 /// </summary>
-internal static class EventHandlersTracking
+internal sealed class PageTitleMap
 {
-	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect1EventHandler;
-	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect2EventHandler;
-	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect3EventHandler;
-	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect4EventHandler;
-	internal static RoutedEventHandler? SidebarUnsignedBasePolicyConnect5EventHandler;
+	internal required List<string> Titles { get; set; }
+	internal required List<Type> Pages { get; set; }
 }

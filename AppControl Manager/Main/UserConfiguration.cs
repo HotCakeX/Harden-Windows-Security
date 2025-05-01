@@ -23,7 +23,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
-using AppControlManager.Sidebar;
 
 namespace AppControlManager.Main;
 
@@ -152,17 +151,7 @@ internal sealed partial class UserConfiguration(
 
 		// Modify the properties based on the input
 		if (!string.IsNullOrWhiteSpace(SignedPolicyPath)) UserConfiguration.SignedPolicyPath = SignedPolicyPath;
-
-
-		if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath))
-		{
-			UserConfiguration.UnsignedPolicyPath = UnsignedPolicyPath;
-
-			// This will raise the event and notify all subscribers that the unsigned policy path in user configurations has been changed/set
-			Events.UnsignedPolicyManager.OnUnsignedPolicyInUserConfigChanged(UnsignedPolicyPath);
-		}
-
-
+		if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath)) UserConfiguration.UnsignedPolicyPath = UnsignedPolicyPath;
 		if (!string.IsNullOrWhiteSpace(SignToolCustomPath)) UserConfiguration.SignToolCustomPath = SignToolCustomPath;
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName)) UserConfiguration.CertificateCommonName = CertificateCommonName;
 		if (!string.IsNullOrWhiteSpace(CertificatePath)) UserConfiguration.CertificatePath = CertificatePath;

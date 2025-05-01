@@ -15,8 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.ComponentModel;
+using System;
 using System.Threading;
+using AppControlManager.ViewModels;
+using Microsoft.UI.Xaml;
 using Windows.Storage;
 
 namespace AppControlManager.AppSettings;
@@ -27,83 +29,67 @@ namespace AppControlManager.AppSettings;
 /// A thread-safe, unified settings manager for the application.
 /// Properties are strongly typed and any change is immediately persisted to local storage.
 /// </summary>
-internal sealed partial class Main : INotifyPropertyChanged
+internal sealed partial class Main : ViewModelBase
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
 	private readonly Lock _syncRoot = new();
 
 	private readonly ApplicationDataContainer _localSettings;
-
-	// Backing fields for settings with default values.
-	private bool _soundSetting;
-	private bool _navViewBackground;
-	private string _navViewPaneDisplayMode = "Left";
-	private string _appTheme = "Use System Setting";
-	private string _backDropBackground = "MicaAlt";
-	private string _iconsStyle = "Monochromatic";
-	private int _mainWindowWidth = 100; // Setting it to this value initially so that it will be determined naturally in MainWindow class
-	private int _mainWindowHeight = 100; // Setting it to this value initially so that it will be determined naturally in MainWindow class
-	private bool _mainWindowIsMaximized;
-	private bool _listViewsVerticalCentering;
-	private bool _cacheSecurityCatalogsScanResults = true;
-	private bool _promptForElevationOnStartup;
-	private bool _automaticAssignmentSidebar = true;
-	private bool _autoCheckForUpdateAtStartup = true;
-	private string _ApplicationGlobalLanguage = "en-US";
-	private string _ApplicationGlobalFlowDirection = "LeftToRight";
-	private string _fileActivatedLaunchArg = string.Empty;
 
 	internal Main(ApplicationDataContainer LocalSettings)
 	{
 		_localSettings = LocalSettings;
 
 		// Load each setting from App storage (if present) or use the default value.
-		_soundSetting = ReadValue(nameof(SoundSetting), _soundSetting);
-		_navViewBackground = ReadValue(nameof(NavViewBackground), _navViewBackground);
-		_navViewPaneDisplayMode = ReadValue(nameof(NavViewPaneDisplayMode), _navViewPaneDisplayMode);
-		_appTheme = ReadValue(nameof(AppTheme), _appTheme);
-		_backDropBackground = ReadValue(nameof(BackDropBackground), _backDropBackground);
-		_iconsStyle = ReadValue(nameof(IconsStyle), _iconsStyle);
-		_mainWindowWidth = ReadValue(nameof(MainWindowWidth), _mainWindowWidth);
-		_mainWindowHeight = ReadValue(nameof(MainWindowHeight), _mainWindowHeight);
-		_mainWindowIsMaximized = ReadValue(nameof(MainWindowIsMaximized), _mainWindowIsMaximized);
-		_listViewsVerticalCentering = ReadValue(nameof(ListViewsVerticalCentering), _listViewsVerticalCentering);
-		_cacheSecurityCatalogsScanResults = ReadValue(nameof(CacheSecurityCatalogsScanResults), _cacheSecurityCatalogsScanResults);
-		_promptForElevationOnStartup = ReadValue(nameof(PromptForElevationOnStartup), _promptForElevationOnStartup);
-		_automaticAssignmentSidebar = ReadValue(nameof(AutomaticAssignmentSidebar), _automaticAssignmentSidebar);
-		_autoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), _autoCheckForUpdateAtStartup);
-		_ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), _ApplicationGlobalLanguage);
-		_ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), _ApplicationGlobalFlowDirection);
-		_fileActivatedLaunchArg = ReadValue(nameof(FileActivatedLaunchArg), _fileActivatedLaunchArg);
+		SoundSetting = ReadValue(nameof(SoundSetting), SoundSetting);
+		NavViewBackground = ReadValue(nameof(NavViewBackground), NavViewBackground);
+		NavViewPaneDisplayMode = ReadValue(nameof(NavViewPaneDisplayMode), NavViewPaneDisplayMode);
+		AppTheme = ReadValue(nameof(AppTheme), AppTheme);
+		BackDropBackground = ReadValue(nameof(BackDropBackground), BackDropBackground);
+		IconsStyle = ReadValue(nameof(IconsStyle), IconsStyle);
+		MainWindowWidth = ReadValue(nameof(MainWindowWidth), MainWindowWidth);
+		MainWindowHeight = ReadValue(nameof(MainWindowHeight), MainWindowHeight);
+		MainWindowIsMaximized = ReadValue(nameof(MainWindowIsMaximized), MainWindowIsMaximized);
+		ListViewsVerticalCentering = ReadValue(nameof(ListViewsVerticalCentering), ListViewsVerticalCentering);
+		CacheSecurityCatalogsScanResults = ReadValue(nameof(CacheSecurityCatalogsScanResults), CacheSecurityCatalogsScanResults);
+		PromptForElevationOnStartup = ReadValue(nameof(PromptForElevationOnStartup), PromptForElevationOnStartup);
+		AutomaticAssignmentSidebar = ReadValue(nameof(AutomaticAssignmentSidebar), AutomaticAssignmentSidebar);
+		AutoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), AutoCheckForUpdateAtStartup);
+		ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), ApplicationGlobalLanguage);
+		ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), ApplicationGlobalFlowDirection);
+		FileActivatedLaunchArg = ReadValue(nameof(FileActivatedLaunchArg), FileActivatedLaunchArg);
 	}
-
 
 	/// <summary>
 	/// Generic helper method to read a value from local storage.
+	/// If T is an enum type, expects the stored value to be its string name.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="key"></param>
-	/// <param name="defaultValue"></param>
-	/// <returns></returns>
 	private T ReadValue<T>(string key, T defaultValue)
 	{
-		if (_localSettings.Values.TryGetValue(key, out object? value) && value is T typedValue)
+		if (_localSettings.Values.TryGetValue(key, out object? value))
 		{
-			return typedValue;
+			// Handle enums stored as strings
+			if (typeof(T).IsEnum)
+			{
+				if (value is string stringValue
+					&& Enum.TryParse(typeof(T), stringValue, ignoreCase: true, out object? enumParsed))
+				{
+					return (T)enumParsed;
+				}
+			}
+			// Handle direct-typed values
+			else if (value is T typedValue)
+			{
+				return typedValue;
+			}
 		}
 		return defaultValue;
 	}
 
-
 	/// <summary>
 	/// Helper method to immediately persist the new value to local storage.
+	/// TODO: Add logic for Enums that will be added in the future.
 	/// </summary>
-	/// <param name="key"></param>
-	/// <param name="value"></param>
 	private void SaveValue(string key, object value) => _localSettings.Values[key] = value;
-
 
 	/// <summary>
 	/// Whether the app emits sounds during navigation or not
@@ -114,23 +100,24 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _soundSetting;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_soundSetting != value)
+				if (SP(ref field, value))
 				{
-					_soundSetting = value;
-					SaveValue(nameof(SoundSetting), value);
-					OnPropertyChanged(nameof(SoundSetting));
+					SaveValue(nameof(SoundSetting), field);
+
+					// Set the sound settings
+					ElementSoundPlayer.State = field ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+					ElementSoundPlayer.SpatialAudioMode = field ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
 				}
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// If on, the extra layer is removed from the NavigationView's background, giving the entire app a darker look.
@@ -141,23 +128,23 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _navViewBackground;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_navViewBackground != value)
+				if (SP(ref field, value))
 				{
-					_navViewBackground = value;
-					SaveValue(nameof(NavViewBackground), value);
-					OnPropertyChanged(nameof(NavViewBackground));
+					SaveValue(nameof(NavViewBackground), field);
+
+					// Notify NavigationBackgroundManager
+					NavigationBackgroundManager.OnNavigationBackgroundChanged(field);
 				}
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// The display mode of the main NavigationView, whether it's on top or on the left side
@@ -168,23 +155,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _navViewPaneDisplayMode;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_navViewPaneDisplayMode != value)
+				if (SP(ref field, value))
 				{
-					_navViewPaneDisplayMode = value;
-					SaveValue(nameof(NavViewPaneDisplayMode), value);
-					OnPropertyChanged(nameof(NavViewPaneDisplayMode));
+					SaveValue(nameof(NavViewPaneDisplayMode), field);
 				}
 			}
 		}
-	}
-
+	} = "Left";
 
 	/// <summary>
 	/// Light, Dark or System
@@ -195,23 +179,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _appTheme;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_appTheme != value)
+				if (SP(ref field, value))
 				{
-					_appTheme = value;
-					SaveValue(nameof(AppTheme), value);
-					OnPropertyChanged(nameof(AppTheme));
+					SaveValue(nameof(AppTheme), field);
 				}
 			}
 		}
-	}
-
+	} = "Use System Setting";
 
 	/// <summary>
 	/// Mica, MicaAlt or Acrylic
@@ -222,23 +203,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _backDropBackground;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_backDropBackground != value)
+				if (SP(ref field, value))
 				{
-					_backDropBackground = value;
-					SaveValue(nameof(BackDropBackground), value);
-					OnPropertyChanged(nameof(BackDropBackground));
+					SaveValue(nameof(BackDropBackground), field);
 				}
 			}
 		}
-	}
-
+	} = "MicaAlt";
 
 	/// <summary>
 	/// MonoChrome, Animated or accent based
@@ -249,23 +227,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _iconsStyle;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_iconsStyle != value)
+				if (SP(ref field, value))
 				{
-					_iconsStyle = value;
-					SaveValue(nameof(IconsStyle), value);
-					OnPropertyChanged(nameof(IconsStyle));
+					SaveValue(nameof(IconsStyle), field);
 				}
 			}
 		}
-	}
-
+	} = "Monochromatic";
 
 	/// <summary>
 	/// Width of the main window
@@ -276,23 +251,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _mainWindowWidth;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_mainWindowWidth != value)
+				if (SP(ref field, value))
 				{
-					_mainWindowWidth = value;
-					SaveValue(nameof(MainWindowWidth), value);
-					OnPropertyChanged(nameof(MainWindowWidth));
+					SaveValue(nameof(MainWindowWidth), field);
 				}
 			}
 		}
-	}
-
+	} = 100; // Setting it to this value initially so that it will be determined naturally in MainWindow class
 
 	/// <summary>
 	/// Height of the main window
@@ -303,23 +275,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _mainWindowHeight;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_mainWindowHeight != value)
+				if (SP(ref field, value))
 				{
-					_mainWindowHeight = value;
-					SaveValue(nameof(MainWindowHeight), value);
-					OnPropertyChanged(nameof(MainWindowHeight));
+					SaveValue(nameof(MainWindowHeight), field);
 				}
 			}
 		}
-	}
-
+	} = 100; // Setting it to this value initially so that it will be determined naturally in MainWindow class
 
 	/// <summary>
 	/// Whether the main window is maximized prior to closing the app.
@@ -330,23 +299,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _mainWindowIsMaximized;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_mainWindowIsMaximized != value)
+				if (SP(ref field, value))
 				{
-					_mainWindowIsMaximized = value;
-					SaveValue(nameof(MainWindowIsMaximized), value);
-					OnPropertyChanged(nameof(MainWindowIsMaximized));
+					SaveValue(nameof(MainWindowIsMaximized), field);
 				}
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Whether clicks/taps on ListView items will cause the selected row to be vertically centered.
@@ -357,23 +323,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _listViewsVerticalCentering;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_listViewsVerticalCentering != value)
+				if (SP(ref field, value))
 				{
-					_listViewsVerticalCentering = value;
-					SaveValue(nameof(ListViewsVerticalCentering), value);
-					OnPropertyChanged(nameof(ListViewsVerticalCentering));
+					SaveValue(nameof(ListViewsVerticalCentering), field);
 				}
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Cache the security catalog scan results to speed up various components of the app that use them.
@@ -384,23 +347,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _cacheSecurityCatalogsScanResults;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_cacheSecurityCatalogsScanResults != value)
+				if (SP(ref field, value))
 				{
-					_cacheSecurityCatalogsScanResults = value;
-					SaveValue(nameof(CacheSecurityCatalogsScanResults), value);
-					OnPropertyChanged(nameof(CacheSecurityCatalogsScanResults));
+					SaveValue(nameof(CacheSecurityCatalogsScanResults), field);
 				}
 			}
 		}
-	}
-
+	} = true;
 
 	/// <summary>
 	/// Whether the app will prompt for elevation and display a UAC on startup.
@@ -411,23 +371,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _promptForElevationOnStartup;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_promptForElevationOnStartup != value)
+				if (SP(ref field, value))
 				{
-					_promptForElevationOnStartup = value;
-					SaveValue(nameof(PromptForElevationOnStartup), value);
-					OnPropertyChanged(nameof(PromptForElevationOnStartup));
+					SaveValue(nameof(PromptForElevationOnStartup), field);
 				}
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Automatically assign the generated base policies to the Sidebar's selected policy field for easy usage in pages that support the augmentation.
@@ -438,23 +395,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _automaticAssignmentSidebar;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_automaticAssignmentSidebar != value)
+				if (SP(ref field, value))
 				{
-					_automaticAssignmentSidebar = value;
-					SaveValue(nameof(AutomaticAssignmentSidebar), value);
-					OnPropertyChanged(nameof(AutomaticAssignmentSidebar));
+					SaveValue(nameof(AutomaticAssignmentSidebar), field);
 				}
 			}
 		}
-	}
-
+	} = true;
 
 	/// <summary>
 	/// Automatically check for updates on app startup.
@@ -465,23 +419,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _autoCheckForUpdateAtStartup;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_autoCheckForUpdateAtStartup != value)
+				if (SP(ref field, value))
 				{
-					_autoCheckForUpdateAtStartup = value;
-					SaveValue(nameof(AutoCheckForUpdateAtStartup), value);
-					OnPropertyChanged(nameof(AutoCheckForUpdateAtStartup));
+					SaveValue(nameof(AutoCheckForUpdateAtStartup), field);
 				}
 			}
 		}
-	}
-
+	} = true;
 
 	/// <summary>
 	/// Selected language for the application
@@ -492,23 +443,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _ApplicationGlobalLanguage;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_ApplicationGlobalLanguage != value)
+				if (SP(ref field, value))
 				{
-					_ApplicationGlobalLanguage = value;
-					SaveValue(nameof(ApplicationGlobalLanguage), value);
-					OnPropertyChanged(nameof(ApplicationGlobalLanguage));
+					SaveValue(nameof(ApplicationGlobalLanguage), field);
 				}
 			}
 		}
-	}
-
+	} = "en-US";
 
 	/// <summary>
 	/// Whether the User Interface flow direction is Left-to-Right or Right-to-Left
@@ -519,22 +467,20 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _ApplicationGlobalFlowDirection;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_ApplicationGlobalFlowDirection != value)
+				if (SP(ref field, value))
 				{
-					_ApplicationGlobalFlowDirection = value;
-					SaveValue(nameof(ApplicationGlobalFlowDirection), value);
-					OnPropertyChanged(nameof(ApplicationGlobalFlowDirection));
+					SaveValue(nameof(ApplicationGlobalFlowDirection), field);
 				}
 			}
 		}
-	}
+	} = "LeftToRight";
 
 	/// <summary>
 	/// The argument received if the app is launched via file activation.
@@ -546,24 +492,18 @@ internal sealed partial class Main : INotifyPropertyChanged
 		{
 			lock (_syncRoot)
 			{
-				return _fileActivatedLaunchArg;
+				return field;
 			}
 		}
 		set
 		{
 			lock (_syncRoot)
 			{
-				if (_fileActivatedLaunchArg != value)
+				if (SP(ref field, value))
 				{
-					_fileActivatedLaunchArg = value;
-					SaveValue(nameof(FileActivatedLaunchArg), value);
-					OnPropertyChanged(nameof(FileActivatedLaunchArg));
+					SaveValue(nameof(FileActivatedLaunchArg), field);
 				}
 			}
 		}
-	}
-
-
-	private void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	} = string.Empty;
 }

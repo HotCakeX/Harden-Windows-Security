@@ -35,7 +35,7 @@ namespace AppControlManager.MicrosoftGraph;
 internal static class Main
 {
 
-	private static ViewModel ViewModelMSGraph { get; } = AppControlManager.App.AppHost.Services.GetRequiredService<ViewModel>();
+	private static ViewModelForMSGraph ViewModelMSGraph { get; } = AppControlManager.App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
 
 	/// <summary>
 	/// For Microsoft Graph Command Line Tools

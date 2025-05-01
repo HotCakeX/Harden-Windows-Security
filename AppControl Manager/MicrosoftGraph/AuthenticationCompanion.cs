@@ -16,12 +16,10 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -31,13 +29,13 @@ namespace AppControlManager.MicrosoftGraph;
 /// <summary>
 /// Encapsulates the logic shared among the pages and ViewModels that implement Microsoft Graph functionality
 /// </summary>
-internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
+internal sealed partial class AuthenticationCompanion : ViewModelBase
 {
 	private readonly Action<bool> _UpdateButtons;
 	private readonly InfoBarSettings _InfoBar;
 	private readonly AuthenticationContext _AuthContext;
 
-	private ViewModel ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModel>();
+	private ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
 
 	/// <summary>
 	/// The constructor needs methods to run when the Active Account is updated
@@ -57,8 +55,6 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
 	}
-
-	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
 	/// To subscribe to the Saved Accounts Observable Collection's events to update the local instances automatically
@@ -118,43 +114,24 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 		}
 	}
 
-
 	/// <summary>
 	/// Visibility of the ListView that contains the list of the Authenticated Accounts
 	/// </summary>
-	private Visibility _AuthenticatedAccountsListViewVisibility = Visibility.Collapsed;
-	internal Visibility AuthenticatedAccountsListViewVisibility
-	{
-		get => _AuthenticatedAccountsListViewVisibility;
-		set => SetProperty(_AuthenticatedAccountsListViewVisibility, value, newValue => _AuthenticatedAccountsListViewVisibility = newValue);
-	}
+	internal Visibility AuthenticatedAccountsListViewVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts 
 	/// </summary>
-	private Visibility _AuthenticatedAccountsShimmerVisibility = Visibility.Visible;
-	internal Visibility AuthenticatedAccountsShimmerVisibility
-	{
-		get => _AuthenticatedAccountsShimmerVisibility;
-		set => SetProperty(_AuthenticatedAccountsShimmerVisibility, value, newValue => _AuthenticatedAccountsShimmerVisibility = newValue);
-	}
+	internal Visibility AuthenticatedAccountsShimmerVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
+	internal AuthenticatedAccounts? ListViewSelectedAccount { get; set => SP(ref field, value); }
 
-	private AuthenticatedAccounts? _ListViewSelectedAccount;
-	internal AuthenticatedAccounts? ListViewSelectedAccount
-	{
-		get => _ListViewSelectedAccount;
-		set => SetProperty(_ListViewSelectedAccount, value, newValue => _ListViewSelectedAccount = newValue);
-	}
-
-
-	private AuthenticatedAccounts? _currentActiveAccount;
 	internal AuthenticatedAccounts? CurrentActiveAccount
 	{
-		get => _currentActiveAccount;
+		get;
 		set
 		{
-			if (SetProperty(_currentActiveAccount, value, newValue => _currentActiveAccount = newValue))
+			if (SP(ref field, value))
 			{
 				// When the current account changes, update the 4 dependent properties.
 				UpdateAccountDetails();
@@ -163,7 +140,6 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Helper method to update computed properties when CurrentActiveAccount changes.
@@ -190,63 +166,31 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 	/// <summary>
 	/// Computed property for Username.
 	/// </summary>
-	private string? _currentActiveAccountUsername;
-	internal string? CurrentActiveAccountUsername
-	{
-		get => _currentActiveAccountUsername;
-		set => SetProperty(_currentActiveAccountUsername, value, newValue => _currentActiveAccountUsername = newValue);
-	}
+	internal string? CurrentActiveAccountUsername { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Computed property for TenantID.
 	/// </summary>
-	private string? _currentActiveAccountTenantID;
-	internal string? CurrentActiveAccountTenantID
-	{
-		get => _currentActiveAccountTenantID;
-		set => SetProperty(_currentActiveAccountTenantID, value, newValue => _currentActiveAccountTenantID = newValue);
-	}
+	internal string? CurrentActiveAccountTenantID { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Computed property for Account Identifier.
 	/// </summary>
-	private string? _currentActiveAccountAccountIdentifier;
-	internal string? CurrentActiveAccountAccountIdentifier
-	{
-		get => _currentActiveAccountAccountIdentifier;
-		set => SetProperty(_currentActiveAccountAccountIdentifier, value, newValue => _currentActiveAccountAccountIdentifier = newValue);
-	}
+	internal string? CurrentActiveAccountAccountIdentifier { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Computed property for Permissions.
 	/// </summary>
-	private string? _currentActiveAccountPermissions;
-	internal string? CurrentActiveAccountPermissions
-	{
-		get => _currentActiveAccountPermissions;
-		set => SetProperty(_currentActiveAccountPermissions, value, newValue => _currentActiveAccountPermissions = newValue);
-	}
+	internal string? CurrentActiveAccountPermissions { get; set => SP(ref field, value); }
 
-	private bool _SignInButtonState = true;
-	internal bool SignInButtonState
-	{
-		get => _SignInButtonState;
-		set => SetProperty(_SignInButtonState, value, newValue => _SignInButtonState = newValue);
-	}
+	internal bool SignInButtonState { get; set => SP(ref field, value); } = true;
 
-	private bool _SignOutButtonState = true;
-	internal bool SignOutButtonState
-	{
-		get => _SignOutButtonState;
-		set => SetProperty(_SignOutButtonState, value, newValue => _SignOutButtonState = newValue);
-	}
-
+	internal bool SignOutButtonState { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// To save the cancellation token source for sign in operation
 	/// </summary>
 	internal CancellationTokenSource? cancellationTokenSource;
-
 
 	/// <summary>
 	/// Event handler for the Cancel Sign In button
@@ -315,7 +259,7 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 		{
 			_InfoBar.Visibility = Visibility.Visible;
 			_InfoBar.IsOpen = true;
-			_InfoBar.Message = $"Successfully set the account with the username ({CurrentActiveAccount?.Username}) as the Active Account for the current page.";
+			_InfoBar.Message = $"Successfully set the account with the username ({CurrentActiveAccount.Username}) as the Active Account for the current page.";
 			_InfoBar.Severity = InfoBarSeverity.Success;
 			_InfoBar.IsClosable = true;
 		}
@@ -340,19 +284,12 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 	/// <summary>
 	/// Bound to the ComboBox's SelectedItem property with the default value
 	/// </summary>
-	private SignInMethods _SignInMethodsComboBoxSelectedItem = SignInMethods.WebAccountManager;
-	internal SignInMethods SignInMethodsComboBoxSelectedItem
-	{
-		get => _SignInMethodsComboBoxSelectedItem;
-		set => SetProperty(_SignInMethodsComboBoxSelectedItem, value, newValue => _SignInMethodsComboBoxSelectedItem = newValue);
-	}
-
+	internal SignInMethods SignInMethodsComboBoxSelectedItem { get; set => SP(ref field, value); } = SignInMethods.WebAccountManager;
 
 	/// <summary>
 	/// Authentication context ComboBox source
 	/// </summary>
 	internal readonly Array AuthenticationContextComboBoxSource = Enum.GetValues<AuthenticationContext>();
-
 
 	/// <summary>
 	/// Bound to the ComboBox's SelectedItem property.
@@ -364,7 +301,6 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 		get => _AuthenticationContextComboBoxSelectedItem;
 		set => SetProperty(_AuthenticationContextComboBoxSelectedItem, value, newValue => _AuthenticationContextComboBoxSelectedItem = newValue);
 	}
-
 
 	/// <summary>
 	/// Signs into the Microsoft tenant
@@ -396,7 +332,6 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 		{
 			Logger.Write("Sign in to MSGraph was cancelled by the user");
 
-
 			_InfoBar.Message = "Sign in to MSGraph was cancelled by the user";
 			_InfoBar.Severity = InfoBarSeverity.Warning;
 		}
@@ -414,30 +349,5 @@ internal sealed partial class AuthenticationCompanion : INotifyPropertyChanged
 
 			SignInButtonState = true;
 		}
-	}
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

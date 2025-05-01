@@ -17,7 +17,7 @@
 
 using System;
 
-namespace AppControlManager;
+namespace AppControlManager.WindowComponents;
 
 /// <summary>
 /// https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
@@ -25,7 +25,7 @@ namespace AppControlManager;
 /// </summary>
 /// <param name="label"></param>
 /// <param name="page"></param>
-internal readonly struct Crumb(String label, Type page)
+internal readonly struct Crumb(string label, Type page)
 {
 	internal string Label { get; } = label;
 	internal Type Page { get; } = page;

@@ -38,10 +38,10 @@
 
                 <controls:SettingsExpander x:Uid="UserConfigsSettingsExpander"
                                            IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}"
-                                           x:Name="MainUserConfigurationsSettingsExpander"
+                                           IsExpanded="{x:Bind ViewModel.MainUserConfigurationsSettingsExpanderIsExpanded, Mode=TwoWay}"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
-                    <Button x:Uid="RetrieveTheUserConfigurationsButton" Click="GetConfigurationButton_Click"
+                    <Button x:Uid="RetrieveTheUserConfigurationsButton" Click="{x:Bind ViewModel.GetConfigurationButton}"
                             Style="{StaticResource AccentButtonStyle}" />
 
                     <controls:SettingsExpander.Items>
@@ -50,38 +50,38 @@
 
                                 <!-- Signed Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="SignedPolicyPathTextBox" x:Name="SignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="SignedPolicyPathTextBox" Text="{x:Bind ViewModel.SignedPolicyPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="SignedPolicyPath"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="SignedPolicyPath"/>
-                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="SignedPolicyPath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_SignedPolicyPath_Click}"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_SignedPolicyPath_Click}"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_SignedPolicyPath_Click}"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
 
                                 <!-- Unsigned Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="UnsignedPolicyPathTextBox" x:Name="UnsignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="UnsignedPolicyPathTextBox" Text="{x:Bind ViewModel.UnsignedPolicyPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="UnsignedPolicyPath"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="UnsignedPolicyPath"/>
-                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="UnsignedPolicyPath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_UnsignedPolicyPath_Click}"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_UnsignedPolicyPath_Click}"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_UnsignedPolicyPath_Click}"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
 
                                 <!-- Custom Sign Tool Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="SignToolCustomPathTextBox" x:Name="SignToolCustomPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="SignToolCustomPathTextBox" Text="{x:Bind ViewModel.SignToolCustomPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="SignToolCustomPath"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="SignToolCustomPath"/>
-                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="SignToolCustomPath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_SignToolCustomPath_Click}"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_SignToolCustomPath_Click}"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_SignToolCustomPath_Click}"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
 
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
 
-                                    <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
+                                    <AutoSuggestBox
                                         x:Uid="CertificateCommonNameAutoSuggestBox"
                                         QueryIcon="Find"
                                         GotFocus="{x:Bind ViewModel.CertificateCommonNameAutoSuggestBox_GotFocus}"
@@ -92,19 +92,19 @@
                                         MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
 
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="CertificateCommonName"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="CertificateCommonName"/>
-                                        <AppBarButton Icon="Refresh" x:Uid="RefreshAppBarButton" Click="{x:Bind ViewModel.FetchLatestCertificateCNs}" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_CertificateCommonName_Click}"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_CertificateCommonName_Click}"/>
+                                        <AppBarButton Icon="Refresh" x:Uid="RefreshAppBarButton" Click="{x:Bind ViewModel.FetchLatestCertificateCNs}"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
 
                                 <!-- Certificate Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="CertificatePathTextBox" x:Name="CertificatePathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="CertificatePathTextBox" Text="{x:Bind ViewModel.CertificatePathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
-                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="EditButton_Click" Tag="CertificatePath"/>
-                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="ClearButton_Click" Tag="CertificatePath"/>
-                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="BrowseButton_Click" Tag="CertificatePath"/>
+                                        <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_CertificatePath_Click}"/>
+                                        <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_CertificatePath_Click}"/>
+                                        <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_CertificatePath_Click}"/>
                                     </CommandBar>
                                 </controls:WrapPanel>
 
@@ -120,18 +120,17 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
-                            <ToggleSwitch x:Name="NavigationViewBackgroundToggle"/>
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.NavViewBackground, Mode=TwoWay}"/>
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
-                            <ComboBox x:Name="BackgroundComboBox"
+                            <ComboBox
                                 ItemsSource="{x:Bind ViewModelMainWindow.BackDropOptions, Mode=OneTime}"
                                 SelectedIndex="{x:Bind ViewModelMainWindow.BackDropComboBoxSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="AppThemeSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
-                            <ComboBox x:Name="ThemeComboBox">
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.AppThemeComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>Use System Setting</x:String>
                                 <x:String>Dark</x:String>
                                 <x:String>Light</x:String>
@@ -139,7 +138,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="MainNavigationIconsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
-                            <ComboBox x:Name="IconsStyleComboBox">
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.IconsStylesComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>Animated</x:String>
                                 <x:String>Windows Accent</x:String>
                                 <x:String>Monochromatic</x:String>
@@ -147,7 +146,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="MainNavigationLocationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
-                            <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.NavigationMenuLocationComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>Left</x:String>
                                 <x:String>Top</x:String>
                             </ComboBox>
@@ -162,13 +161,13 @@
                 <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
                     <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}">
-                            <ToggleSwitch x:Name="ListViewsCenterVerticallyUponSelectionToggleSwitch" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.ListViewsVerticalCentering, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}">
-                            <ToggleSwitch x:Name="CacheSecurityCatalogsScanResultsToggleSwitch" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.CacheSecurityCatalogsScanResults, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
-                            <ToggleSwitch x:Name="PromptForElevationToggleSwitch" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.PromptForElevationOnStartup, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -179,11 +178,10 @@
 
                     <controls:SettingsExpander.ItemsHeader>
                         <InfoBar
-                            x:Name="LanguageSectionSettingsExpanderInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
+                            IsOpen="{x:Bind ViewModel.LanguageSectionSettingsExpanderInfoBarIsOpen, Mode=TwoWay}"
                             IsClosable="True"
                             x:Uid="LanguageSectionSettingsExpanderInfoBar"
                             Severity="Warning" />
@@ -191,13 +189,13 @@
 
                     <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF69E;}">
-                            <ComboBox x:Name="LanguageSelectionComboBox">
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.LanguageComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>English</x:String>
                                 <x:String>Hebrew</x:String>
                             </ComboBox>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">
-                            <ToggleSwitch x:Name="UIFlowDirectionToggleSwitch" x:Uid="UIFlowDirectionToggleSwitch" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.UIFlowDirectionToggleSwitch, Mode=TwoWay}" x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -205,14 +203,13 @@
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
                 <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
-                    <ToggleSwitch x:Name="SoundToggleSwitch" />
+                    <ToggleSwitch IsOn="{x:Bind AppSettings.SoundSetting, Mode=TwoWay}" />
                 </customUI:SettingsCardV2>
 
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            x:Uid="About" />
-                <controls:SettingsExpander x:Name="CopyRightSettingsExpander"
-                                           Header="AppControl Manager"
+                <controls:SettingsExpander Header="AppControl Manager"
                                            IsExpanded="True"
                                            Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">

@@ -17,15 +17,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Numerics;
-using AnimatedVisuals;
-using AppControlManager.Main;
+using AppControlManager.WindowComponents;
 using AppControlManager.Others;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using AnimatedVisuals;
 
 namespace AppControlManager.ViewModels;
 
@@ -37,6 +38,252 @@ namespace AppControlManager.ViewModels;
 /// </summary>
 internal sealed partial class MainWindowVM : ViewModelBase
 {
+
+	internal object? NavViewSelectedItem { get; set => SP(ref field, value); }
+	internal Thickness NavViewMargin { get; } = new Thickness(0);
+
+	/// <summary>
+	/// The text in the SidebarPolicyPathTextBox
+	/// </summary>
+	internal string? SidebarBasePolicyPathTextBoxText
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SidebarBasePolicyPathTextBoxTextStatic = field;
+			}
+		}
+	}
+	internal static string? SidebarBasePolicyPathTextBoxTextStatic { get; private set; }
+
+	// a list of all the NavigationViewItem in the Main NavigationViewItem
+	// It is populated in the class initializer
+	// Since the app uses it multiple times, we only populate this list once to reuse it in subsequent calls
+	internal IEnumerable<NavigationViewItem> allNavigationItems = [];
+
+	/// <summary>
+	/// Pages that are allowed to run when running without Administrator privileges
+	/// </summary>
+	internal IEnumerable<Type> UnelevatedPages = [
+		typeof(Pages.ValidatePolicy),
+		typeof(Pages.GitHubDocumentation),
+		typeof(Pages.MicrosoftDocumentation),
+		typeof(Pages.Logs),
+		typeof(Pages.GetCIHashes),
+		typeof(Pages.PolicyEditor),
+		typeof(Pages.MergePolicies),
+		typeof(Pages.Settings),
+		typeof(Pages.ConfigurePolicyRuleOptions)
+		];
+
+
+	/// <summary>
+	/// Every page in the application must be defined in this dictionary.
+	/// It is used by the BreadCrumbBar.
+	/// Sub-pages must use the same value as their main page in the dictionary.
+	/// </summary>
+	internal readonly Dictionary<Type, PageTitleMap> breadCrumbMappingsV2 = new()
+	{
+		[typeof(Pages.CreatePolicy)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content")],
+			Pages = [typeof(Pages.CreatePolicy)]
+		},
+		[typeof(Pages.GetCIHashes)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content")],
+			Pages = [typeof(Pages.GetCIHashes)]
+		},
+		[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content")],
+			Pages = [typeof(Pages.GitHubDocumentation)]
+		},
+		[typeof(Pages.MicrosoftDocumentation)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content")],
+			Pages = [typeof(Pages.MicrosoftDocumentation)]
+		},
+		[typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content")],
+			Pages = [typeof(Pages.GetSecurePolicySettings)]
+		},
+		[typeof(Pages.Settings)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("SettingsNavItem/Content")],
+			Pages = [typeof(Pages.Settings)]
+		},
+		[typeof(Pages.SystemInformation)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("SystemInformationNavItem/Content")],
+			Pages = [typeof(Pages.SystemInformation)]
+		},
+		[typeof(Pages.ConfigurePolicyRuleOptions)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content")],
+			Pages = [typeof(Pages.ConfigurePolicyRuleOptions)]
+		},
+		[typeof(Pages.Logs)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("LogsNavItem/Content")],
+			Pages = [typeof(Pages.Logs)]
+		},
+		[typeof(Pages.Simulation)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("SimulationNavItem/Content")],
+			Pages = [typeof(Pages.Simulation)]
+		},
+		[typeof(Pages.UpdatePage)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
+			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
+		},
+		[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
+		{
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
+			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
+		},
+		[typeof(Pages.DeploymentPage)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("DeploymentNavItem/Content")],
+			Pages = [typeof(Pages.DeploymentPage)]
+		},
+		[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")],
+			Pages = [typeof(Pages.EventLogsPolicyCreation)]
+		},
+		[typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")],
+			Pages = [typeof(Pages.MDEAHPolicyCreation)]
+		},
+		[typeof(Pages.AllowNewApps)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")],
+			Pages = [typeof(Pages.AllowNewApps)]
+		},
+		[typeof(Pages.BuildNewCertificate)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")],
+			Pages = [typeof(Pages.BuildNewCertificate)]
+		},
+		[typeof(Pages.MergePolicies)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content")],
+			Pages = [typeof(Pages.MergePolicies)]
+		},
+		[typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
+			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
+		},
+		[typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)] = new PageTitleMap // sub-page
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
+			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
+		},
+		[typeof(Pages.StrictKernelPolicyScanResults)] = new PageTitleMap // sub-page
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
+			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.StrictKernelPolicyScanResults)]
+		},
+		[typeof(Pages.CreateDenyPolicy)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
+			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
+		},
+		[typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
+			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
+		},
+		[typeof(Pages.ValidatePolicy)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content")],
+			Pages = [typeof(Pages.ValidatePolicy)]
+		},
+		[typeof(Pages.ViewFileCertificates)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")],
+			Pages = [typeof(Pages.ViewFileCertificates)]
+		},
+		[typeof(Pages.PolicyEditor)] = new PageTitleMap
+		{
+			Titles = [GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content")],
+			Pages = [typeof(Pages.PolicyEditor)]
+		}
+	};
+
+
+	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
+	// initially adding the default page that loads when the app is loaded to the collection
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy))] :
+		[new Crumb(GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor))];
+
+	/// <summary>
+	/// Dictionary of all the main pages in the app, used for the main navigation.
+	/// Keys are the Navigation Item tags (non-localized) and values are the page types.
+	/// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
+	/// </summary>
+	internal readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
+	{
+		{ "CreatePolicy", typeof(Pages.CreatePolicy) },
+		{ "GetCodeIntegrityHashes", typeof(Pages.GetCIHashes) },
+		{ "GitHubDocs", typeof(Pages.GitHubDocumentation) },
+		{ "MSFTDocs", typeof(Pages.MicrosoftDocumentation) },
+		{ "GetSecurePolicySettings", typeof(Pages.GetSecurePolicySettings) },
+		{ "Settings", typeof(Pages.Settings) },
+		{ "SystemInformation", typeof(Pages.SystemInformation) },
+		{ "ConfigurePolicyRuleOptions", typeof(Pages.ConfigurePolicyRuleOptions) },
+		{ "Logs", typeof(Pages.Logs) },
+		{ "Simulation", typeof(Pages.Simulation) },
+		{ "Deployment", typeof(Pages.DeploymentPage) },
+		{ "CreatePolicyFromEventLogs", typeof(Pages.EventLogsPolicyCreation) },
+		{ "CreatePolicyFromMDEAH", typeof(Pages.MDEAHPolicyCreation) },
+		{ "AllowNewApps", typeof(Pages.AllowNewApps) },
+		{ "BuildNewCertificate", typeof(Pages.BuildNewCertificate) },
+		{ "CreateSupplementalPolicy", typeof(Pages.CreateSupplementalPolicy) },
+		{ "MergePolicies", typeof(Pages.MergePolicies) },
+		{ "CreateDenyPolicy", typeof(Pages.CreateDenyPolicy) },
+		{ "ValidatePolicies", typeof(Pages.ValidatePolicy) },
+		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
+		{ "PolicyEditor", typeof(Pages.PolicyEditor) },
+		{ "Update", typeof(Pages.UpdatePage) }
+	};
+
+
+	/// <summary>
+	/// Dictionary of all the main pages in the app, used for the search bar.
+	/// Keys are page contents which are localized and values are page types.
+	/// </summary>
+	internal readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = new()
+	{
+		{ GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy) },
+		{ GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content"), typeof(Pages.GetCIHashes) },
+		{ GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content"), typeof(Pages.GitHubDocumentation) },
+		{ GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content"), typeof(Pages.MicrosoftDocumentation) },
+		{ GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content"), typeof(Pages.GetSecurePolicySettings) },
+		{ GlobalVars.Rizz.GetString("SettingsNavItem/Content"), typeof(Pages.Settings) },
+		{ GlobalVars.Rizz.GetString("SystemInformationNavItem/Content"), typeof(Pages.SystemInformation) },
+		{ GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content"), typeof(Pages.ConfigurePolicyRuleOptions) },
+		{ GlobalVars.Rizz.GetString("LogsNavItem/Content"), typeof(Pages.Logs) },
+		{ GlobalVars.Rizz.GetString("SimulationNavItem/Content"), typeof(Pages.Simulation) },
+		{ GlobalVars.Rizz.GetString("DeploymentNavItem/Content"), typeof(Pages.DeploymentPage) },
+		{ GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content"), typeof(Pages.EventLogsPolicyCreation) },
+		{ GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content"), typeof(Pages.MDEAHPolicyCreation) },
+		{ GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content"), typeof(Pages.AllowNewApps) },
+		{ GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content"), typeof(Pages.BuildNewCertificate) },
+		{ GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), typeof(Pages.CreateSupplementalPolicy) },
+		{ GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content"), typeof(Pages.MergePolicies) },
+		{ GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), typeof(Pages.CreateDenyPolicy) },
+		{ GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content"), typeof(Pages.ValidatePolicy) },
+		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) },
+		{ GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor) }
+	};
 
 	/// <summary>
 	/// Values for back drop combo box in the settings page
@@ -56,17 +303,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Constructor initializes the ViewModel and subscribes to various events, sets initial values of some variables.
 	/// </summary>
-	public MainWindowVM()
+	internal MainWindowVM()
 	{
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
 
 		// Set the status of the sidebar toggle switch for auto assignment by getting it from saved app settings
 		AutomaticAssignmentSidebarToggleSwitchToggledState = App.Settings.AutomaticAssignmentSidebar;
-
-		if (App.IsElevated)
-			// Get the user configuration for unsigned policy path and fill in the text box for sidebar
-			SidebarBasePolicyPathTextBoxText = UserConfiguration.Get().UnsignedPolicyPath;
 
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
@@ -130,11 +373,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Indicates whether the automatic assignment sidebar toggle switch is in a toggled state. It stores a boolean value.
 	/// </summary>
 	internal bool AutomaticAssignmentSidebarToggleSwitchToggledState { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// The text in the SidebarBasePolicyPathTextBox
-	/// </summary>
-	internal string? SidebarBasePolicyPathTextBoxText { get; set => SP(ref field, value); }
 
 	/// <summary>
 	///  Adjust the elevation of the border to achieve the shadow effect
@@ -348,39 +586,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		});
 	}
 
-
-	/// <summary>
-	/// Event handler for the sidebar base policy browse button
-	/// </summary>
-	internal void SidebarBasePolicyBrowseButton_Click()
-	{
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			SidebarBasePolicyPathTextBoxText = selectedFile;
-
-			// Show the animated icons on the currently visible page
-			MainWindow.Instance.AffectPagesAnimatedIconsVisibilities(true);
-		}
-	}
-
-
-	/// <summary>
-	/// Event handler for the clear button in the sidebar for unsigned policy path
-	/// </summary>
-	internal void SidebarBasePolicyClearButton_Click()
-	{
-		// Clear the Sidebar text box
-		SidebarBasePolicyPathTextBoxText = null;
-
-		// Hide the animated icons on the currently visible page
-		MainWindow.Instance.AffectPagesAnimatedIconsVisibilities(false);
-	}
-
-
 	/// <summary>
 	/// Event handler for the hamburger/main menu button click
 	/// </summary>
@@ -389,15 +594,16 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		MainNavigationIsPaneOpen = !MainNavigationIsPaneOpen;
 	}
 
-
 	/// <summary>
 	/// Event handler for the global Icons Style change event
 	/// </summary>
 	/// <param name="style"></param>
 	internal void OnIconsStylesChanged(string? style)
 	{
+		if (MainWindow.RootGridPub is null) throw new InvalidOperationException("RootGrid is null");
+
 		// Get the current theme from your RootGrid or another element.
-		ElementTheme currentTheme = MainWindow.Instance.RootGridPub.ActualTheme;
+		ElementTheme currentTheme = MainWindow.RootGridPub.ActualTheme;
 
 		switch (style)
 		{
@@ -714,7 +920,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				}
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the Background ComboBox selection change event in the Settings page.

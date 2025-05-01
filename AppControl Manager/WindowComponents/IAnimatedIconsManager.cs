@@ -15,16 +15,14 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.ViewModels;
+using Microsoft.UI.Xaml;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace AppControlManager.WindowComponents;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
-internal sealed partial class ViewModelForMSGraph : ViewModelBase
+/// <summary>
+/// This interface tags certain pages that interact with the Sidebar.
+/// </summary>
+internal interface IAnimatedIconsManager
 {
-	/// <summary>
-	/// Collection bound to the ListViews that display the authenticated accounts in every page
-	/// </summary>
-	internal readonly ThreadSafeObservableCollection<AuthenticatedAccounts> AuthenticatedAccounts = [];
+	void SetVisibility(Visibility visibility);
 }

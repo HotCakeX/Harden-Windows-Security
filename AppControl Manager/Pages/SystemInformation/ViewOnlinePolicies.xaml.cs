@@ -27,7 +27,7 @@ internal sealed partial class ViewOnlinePolicies : Page
 
 #pragma warning disable CA1822
 	private ViewOnlinePoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewOnlinePoliciesVM>();
-	private MicrosoftGraph.ViewModel ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<MicrosoftGraph.ViewModel>();
+	private MicrosoftGraph.ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<MicrosoftGraph.ViewModelForMSGraph>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 

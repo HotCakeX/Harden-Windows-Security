@@ -123,7 +123,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 	public void SetVisibility(Visibility visibility)
 	{
 		// Light up the local page's button icons
-		ViewModel.UnsignedXMLFilesLightAnimatedIcoVisibility = visibility;
+		ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility = visibility;
 		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(

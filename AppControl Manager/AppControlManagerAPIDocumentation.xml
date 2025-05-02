@@ -1598,6 +1598,17 @@
             This allows us to have access to this after app has been relaunched with Admin privileges.
             </summary>
         </member>
+        <member name="T:AppControlManager.CustomUIElements.ButtonV2">
+            <summary>
+            This button displays its inner Flyout when it's RightTapped (e.g., Right-clicked) or Holding on it with touch.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.ButtonV2.TryShowFlyout">
+            <summary>
+            If a Flyout is attached to this Button and it isn't open, shows it.
+            Returns true if there was a Flyout to show, false otherwise.
+            </summary>
+        </member>
         <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -2423,13 +2434,13 @@
             <param name="certCN"></param>
             <returns></returns>
         </member>
-        <member name="M:AppControlManager.IntelGathering.LocalFilesScan.Scan``1(System.ValueTuple{System.Collections.Generic.IEnumerable{System.IO.FileInfo},System.Int32},System.UInt16,Microsoft.UI.Xaml.Controls.ProgressRing,``0,System.Action{AppControlManager.IntelGathering.FileIdentity,``0})">
+        <member name="M:AppControlManager.IntelGathering.LocalFilesScan.Scan``1(System.ValueTuple{System.Collections.Generic.IEnumerable{System.IO.FileInfo},System.Int32},System.UInt16,System.IProgress{System.Double},``0,System.Action{AppControlManager.IntelGathering.FileIdentity,``0})">
             <summary>
             Scans the local files and returns the scan results
             </summary>
             <param name="files">File paths to scan</param>
             <param name="scalability">How many parallel tasks to use during the scan</param>
-            <param name="UIProgressRing">ProgressRing UI element that will display the scan progress in real time</param>
+            <param name="progressReporter">A callback method that will run to display the scan progress in real time and updates the value of its associated ProgressRing UI element.</param>
             <param name="assignVMRef">Assigns the reference to the ViewModel reference to each instance of the FileIdentity class so we can use it via compiled binding in XAML to navigate our way into the ViewModel Class in the ItemTemplate of the ListView and use it for XAML compiled binding of column widths.</param>
             <param name="VMRef">The reference to the ViewModel class.</param>
             <typeparam name="TReference">The generic type used for ViewModel class reference. There are mode than 1 type.</typeparam>
@@ -4511,21 +4522,21 @@
             Used to store sorting states of columns in ListViews
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},Microsoft.UI.Xaml.Controls.TextBox,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String,AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
+        <member name="M:AppControlManager.Others.ListViewHelper.SortColumn``1(System.Func{AppControlManager.IntelGathering.FileIdentity,``0},System.String,System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},AppControlManager.Others.ListViewHelper.SortState,System.String,AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
             <summary>
             Sorts the ObservableCollection using the given key selector.
             The SortState parameter toggles sort order when the same column is pressed.
             </summary>
             <typeparam name="T">The type returned by the key selector.</typeparam>
             <param name="keySelector">Function to obtain the sort key from the FileIdentity.</param>
-            <param name="searchBox">The TextBox used for filtering.</param>
+            <param name="searchBoxText">The Text used for filtering.</param>
             <param name="originalList">The full list (if no filter is active).</param>
             <param name="observableCollection">The observable collection to update.</param>
             <param name="sortState">An object that holds the current sort state.</param>
             <param name="newKey">The key for the column being sorted (from the button’s Tag).</param>
             <param name="regKey">used to find the ListView in the cache.</param>
         </member>
-        <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},Microsoft.UI.Xaml.Controls.TextBox,Microsoft.UI.Xaml.Controls.CalendarDatePicker,AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
+        <member name="M:AppControlManager.Others.ListViewHelper.ApplyFilters(System.Collections.Generic.IEnumerable{AppControlManager.IntelGathering.FileIdentity},System.Collections.ObjectModel.ObservableCollection{AppControlManager.IntelGathering.FileIdentity},System.String,Microsoft.UI.Xaml.Controls.CalendarDatePicker,AppControlManager.Others.ListViewHelper.ListViewsRegistry)">
             <summary>
             Applies the search (and optional date) filters to the provided data.
             </summary>
@@ -4535,8 +4546,8 @@
             <param name="filteredCollection">
             The ObservableCollection that will be populated with the filtered results.
             </param>
-            <param name="searchTextBox">
-            The TextBox containing the search term.
+            <param name="searchText">
+            The search term.
             </param>
             <param name="datePicker">
             An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
@@ -5030,12 +5041,6 @@
             handles navigation events.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewApps.#ctor">
-            <summary>
-            Initializes the AllowNewApps page, sets up navigation caching, binds the data context, and navigates to the
-            AllowNewAppsStart page.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.AllowNewApps.OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs)">
             <summary>
             Called when the page is navigated to. Invokes the base navigation logic
@@ -5049,11 +5054,6 @@
             and updates the animated icons' visibility on the main window for the current content frame.
             </summary>
             <param name="e">The navigation event data.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewApps.LightUp1">
-            <summary>
-            Local event handlers that are assigned to the sidebar button
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewApps.NavigationView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView,Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs)">
             <summary>
@@ -5083,53 +5083,9 @@
             items.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.#ctor">
-            <summary>
-            Initializes the AllowNewAppsEventLogsDataGrid component. Sets the navigation cache mode to enabled and assigns the
-            ViewModel as the data context.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-            </summary>
-            <param name="sender">The event sender.</param>
-            <param name="e">The event arguments.</param>
-        </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.ApplyFilters">
-            <summary>
-            Applies the date and search filters to the data grid
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            De-selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsEventLogsDataGrid.ListViewFlyoutMenuDelete_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Deletes the selected row from the results
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -5158,57 +5114,12 @@
         </member>
         <member name="T:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid">
             <summary>
-            Represents a page for managing local files with functionalities like copying, selecting, and deleting
-            items.
+            Represents a page for managing local files.
             </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.#ctor">
-            <summary>
-            Constructor for AllowNewAppsLocalFilesDataGrid that initializes the component and sets the navigation cache mode to
-            enabled. It also assigns the DataContext to the ViewModel.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-            </summary>
-            <param name="sender">The event sender.</param>
-            <param name="e">The event arguments.</param>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.ApplyFilters">
-            <summary>
-            Applies the date and search filters to the data grid
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            De-selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsLocalFilesDataGrid.ListViewFlyoutMenuDelete_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Deletes the selected row from the results
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -5241,113 +5152,12 @@
             handles user interactions for selecting policies, scanning directories, and creating supplemental policies.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.#ctor">
-            <summary>
-            Initializes the AllowNewAppsStart instance, setting up the navigation cache mode, data context, and UI elements. It
-            also retrieves the shared shadow resource and configures initial states for UI components.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">Thrown if the sharedShadow resource cannot be found in the XAML.</exception>
-        </member>
-        <member name="P:AppControlManager.Pages.AllowNewAppsStart.Instance">
-            <summary>
-            Public property to access the singleton instance from other classes
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.LightUp1">
-            <summary>
-            Local event handlers that are assigned to the sidebar button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep2Button_Click">
-            <summary>
-            Step 1 validation
-            </summary>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.GoToStep3Button_Click">
-            <summary>
-            Step 2 validation
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.ResetStepsButton_Click">
-            <summary>
-            Steps Reset
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.ClearSelectedDirectoriesButton_Click">
-            <summary>
-            Clears the text box and the list of selected directories when the button is clicked.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.ScanLevelComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
             Handles the selection change event for a ComboBox, updating the scan level based on the selected item.
             </summary>
             <param name="sender">Represents the source of the event, allowing access to the ComboBox that triggered the selection change.</param>
             <param name="e">Contains event data related to the selection change, providing information about the new selection.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForFoldersButton_Click">
-            <summary>
-            Handles the click event for a button to browse and select multiple folders. Selected folders are added to a
-            collection and displayed in the UI.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Click">
-            <summary>
-            Handles the click event for a button to browse and select an XML policy file.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.CreatePolicyButton_Click">
-            <summary>
-            Event handler for the Create Policy button - Step 3
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the clear button in the base policy path selection button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_RightTapped(System.Object,Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs)">
-            <summary>
-            Handles the right-tap event on a button to display a flyout menu if it is not already open.
-            </summary>
-            <param name="sender">Represents the source of the right-tap event.</param>
-            <param name="e">Contains data related to the right-tap event.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Holding(System.Object,Microsoft.UI.Xaml.Input.HoldingRoutedEventArgs)">
-            <summary>
-            Handles the holding event for a button to display a flyout if the holding state has started and the flyout is not
-            already open.
-            </summary>
-            <param name="sender">Represents the source of the event, typically the UI element that was interacted with.</param>
-            <param name="e">Contains data related to the holding event, including the current state of the hold action.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForFoldersButton_RightTapped(System.Object,Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs)">
-            <summary>
-            Handles the right-tap event on a button to display a flyout menu if it is not already open.
-            </summary>
-            <param name="sender">Represents the source of the right-tap event.</param>
-            <param name="e">Contains data related to the right-tap event.</param>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForFoldersButton_Holding(System.Object,Microsoft.UI.Xaml.Input.HoldingRoutedEventArgs)">
-            <summary>
-            Handles the holding gesture on a button to display a flyout menu if it is not already open.
-            </summary>
-            <param name="sender">Represents the source of the event, typically the button being held.</param>
-            <param name="e">Contains data related to the holding gesture, including its current state.</param>
-        </member>
-        <member name="F:AppControlManager.Pages.AllowNewAppsStart.finalSupplementalPolicyPath">
-            <summary>
-            Path of the Supplemental policy that is created
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.AllowNewAppsStart.OpenInPolicyEditor">
-            <summary>
-            Event handler to open the supplemental policy in the Policy Editor
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.InitializeComponent">
             <summary>
@@ -7529,6 +7339,57 @@
             Generates a hash code for a WHQLPublisher object.
             </summary>
         </member>
+        <member name="T:AppControlManager.SiPolicy.AppManifest">
+            <remarks/>
+        </member>
+        <member name="P:AppControlManager.SiPolicy.AppManifest.SettingDefinition">
+            <remarks/>
+        </member>
+        <member name="P:AppControlManager.SiPolicy.AppManifest.Id">
+            <remarks/>
+        </member>
+        <member name="T:AppControlManager.SiPolicy.SettingDefinition">
+            <remarks/>
+        </member>
+        <member name="P:AppControlManager.SiPolicy.SettingDefinition.Name">
+            <remarks/>
+        </member>
+        <member name="P:AppControlManager.SiPolicy.SettingDefinition.Type">
+            <remarks/>
+        </member>
+        <member name="P:AppControlManager.SiPolicy.SettingDefinition.IgnoreAuditPolicies">
+            <remarks/>
+        </member>
+        <member name="T:AppControlManager.SiPolicy.SettingType">
+            <remarks/>
+        </member>
+        <member name="F:AppControlManager.SiPolicy.SettingType.Bool">
+            <remarks/>
+        </member>
+        <member name="F:AppControlManager.SiPolicy.SettingType.StringList">
+            <remarks/>
+        </member>
+        <member name="F:AppControlManager.SiPolicy.SettingType.StringSet">
+            <remarks/>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.CustomAppManifestLogics.DeserializeAppManifest(System.String,System.IO.MemoryStream)">
+            <summary>
+            Deserializes an Application Manifest from either a file path or a MemoryStream into an AppManifest object.
+            </summary>
+            <param name="filePath">The path to the XML file containing the Application Manifest.</param>
+            <param name="stream">The MemoryStream containing the Application Manifest XML.</param>
+            <returns>An AppManifest object populated with data from the provided XML.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when neither a valid file path nor a stream is provided, or if the XML does not conform to the schema.</exception>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.CustomAppManifestLogics.CreateXmlFromAppManifest(AppControlManager.SiPolicy.AppManifest)">
+            <summary>
+            Serializes an AppManifest object into an XML document.
+            </summary>
+            <param name="manifest">The AppManifest object to serialize.</param>
+            <returns>An XmlDocument representing the Application Manifest.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when the manifest or its required properties are null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when the manifest contains invalid data per the schema.</exception>
+        </member>
         <member name="M:AppControlManager.SiPolicy.CustomDeserialization.DeserializeSiPolicy(System.String,System.Xml.XmlDocument)">
             <summary>
             Deserializes a security policy from either a file path or an XML document into a SiPolicy object.
@@ -7537,6 +7398,21 @@
             <param name="Xml">Provides an XML document to deserialize the policy if the file path is not used.</param>
             <returns>Returns a SiPolicy object populated with data from the provided XML.</returns>
             <exception cref="T:System.InvalidOperationException">Thrown when neither a valid file path nor an XML document is provided for deserialization.</exception>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.CustomDeserialization.ValidateVersionRange(System.String,System.String,System.String)">
+            <summary>
+            If both <paramref name="minimumVersion"/> and <paramref name="maximumVersion"/> are non-null
+            and non-empty, parses them and ensures minimum ≤ maximum.  Otherwise, returns immediately.
+            </summary>
+            <param name="minimumVersion">The lower bound version string (nullable).</param>
+            <param name="maximumVersion">The upper bound version string (nullable).</param>
+            <param name="id">An identifier to include in any exception message.</param>
+            <exception cref="T:System.ArgumentException">
+                Thrown if either version string cannot be parsed when both are provided.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                Thrown if the parsed minimum version is greater than the parsed maximum version.
+            </exception>
         </member>
         <member name="M:AppControlManager.SiPolicy.CustomSerialization.CreateXmlFromSiPolicy(AppControlManager.SiPolicy.SiPolicy)">
             <summary>
@@ -8611,6 +8487,59 @@
             <param name="completed">Represents the amount of work completed towards the total task.</param>
             <param name="total">Indicates the total amount of work to be completed.</param>
         </member>
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.selectedXMLFilePath">
+            <summary>
+            The user selected XML base policy path.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.selectedSupplementalPolicyName">
+            <summary>
+            The user selected Supplemental policy name.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM.selectedDirectoriesToScan">
+            <summary>
+            The user selected directories to scan
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM.fileIdentities">
+            <summary>
+            Custom HashSet to store the output of both local files and event logs scans
+            If the same file is detected in event logs And local file scans, the one with IsECCSigned property set to true will be kept
+            So that the respective methods will make Hash based rule for that file since AppControl doesn't support ECC Signed files yet
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._IsSignedPolicy">
+            <summary>
+            Will determine whether the user selected XML policy file is signed or unsigned
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.SupplementalPolicyNameTextBoxIsEnabled">
+            <summary>
+            Gets or sets a value indicating whether the supplemental policy name text box is enabled.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM.scanLevel">
+            <summary>
+            The user selected scan level
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM.LogsScanStartTime">
+            <summary>
+            Only the logs generated after this time will be shown
+            It will be set when user moves from Step1 to Step2
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM._BasePolicyObject">
+            <summary>
+            The base policy XML objectified
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.finalSupplementalPolicyPath">
+            <summary>
+            Path of the Supplemental policy that is created
+            </summary>
+        </member>
         <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.EventLogsMenuItemState">
             <summary>
             Holds the state of the Event Logs menu item, indicating whether it is enabled or disabled.
@@ -8652,6 +8581,16 @@
             The Enabled/Disabled state of the DeployPolicy button.
             </summary>
         </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM.linearGradientBrush">
+            <summary>
+            Gradient color used for the active border.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.AllowNewAppsVM.ThemeShadow">
+            <summary>
+            Create a ThemeShadow used to highlight the active section/border.
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.CalculateColumnWidthEventLogs">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -8686,6 +8625,111 @@
         <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.UpdateTotalLogs(System.Nullable{System.Boolean})">
             <summary>
             Updates the total logs count displayed on the UI
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.OpenInPolicyEditor">
+            <summary>
+            Event handler to open the supplemental policy in the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.BrowseForXMLPolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Event handler for the clear button in the base policy path selection button
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.CreatePolicyButton_Click">
+            <summary>
+            Event handler for the Create Policy button - Step 3
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.BrowseForXMLPolicyButton_Click">
+            <summary>
+            Handles the click event for a button to browse and select an XML policy file.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.BrowseForFoldersButton_Click">
+            <summary>
+            Handles the click event for a button to browse and select multiple folders. Selected folders are added to a
+            collection and displayed in the UI.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ClearSelectedDirectoriesButton_Click">
+            <summary>
+            Clears the text box and the list of selected directories when the button is clicked.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ListViewFlyoutMenuCopy_Click_LocalFiles">
+            <summary>
+            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ApplyFiltersLocalFiles">
+            <summary>
+            Applies the date and search filters to the data grid
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.SelectAll_Click_LocalFiles">
+            <summary>
+            Selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.DeSelectAll_Click_LocalFiles">
+            <summary>
+            De-selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ListViewFlyoutMenuDelete_Click_LocalFiles">
+            <summary>
+            Deletes the selected row from the results
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ApplyFiltersEventLogs">
+            <summary>
+            Applies the date and search filters to the data grid
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ListViewFlyoutMenuCopy_Click_EventLogs">
+            <summary>
+            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.SelectAll_Click_EventLogs">
+            <summary>
+            Selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.DeSelectAll_Click_EventLogs">
+            <summary>
+            De-selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ListViewFlyoutMenuDelete_Click_EventLogs">
+            <summary>
+            Deletes the selected row from the results
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.LightUp1">
+            <summary>
+            Local event handler that are assigned to the sidebar button.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.GoToStep2Button_Click">
+            <summary>
+            Step 1 validation
+            </summary>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.GoToStep3Button_Click">
+            <summary>
+            Step 2 validation
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ResetStepsButton_Click">
+            <summary>
+            Steps Reset
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CodeIntegrityInfoVM.GetPolicyStatus(System.Nullable{System.Int32})">
@@ -9663,13 +9707,12 @@
             This method is called via the methods responsible for Navigations.
             </summary>
         </member>
-        <member name="M:AppControlManager.WindowComponents.NavigationService.Navigate(System.Type,Microsoft.UI.Xaml.Media.Animation.NavigationTransitionInfo,System.String)">
+        <member name="M:AppControlManager.WindowComponents.NavigationService.Navigate(System.Type,System.String)">
             <summary>
             Main navigation method that is used by the search bar, direct clicks on the main navigation items
             And by other methods throughout the app in order to navigate to sub-pages
             </summary>
             <param name="navPageType"></param>
-            <param name="transitionInfo"></param>
             <param name="navItemTag"></param>
         </member>
         <member name="M:AppControlManager.WindowComponents.NavigationService.SidebarBasePolicyBrowseButton_Click">

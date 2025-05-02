@@ -29,7 +29,6 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -228,7 +227,7 @@ DeviceEvents
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox,
+					SearchBox.Text,
 					ViewModel.AllFileIdentities,
 					ViewModel.FileIdentities,
 					ViewModel.SortState,
@@ -265,7 +264,7 @@ DeviceEvents
 		ListViewHelper.ApplyFilters(
 		   allFileIdentities: ViewModel.AllFileIdentities.AsEnumerable(),
 		   filteredCollection: ViewModel.FileIdentities,
-		   searchTextBox: SearchBox,
+		   searchText: SearchBox.Text,
 		   datePicker: FilterByDateCalendarPicker,
 		   regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting
 	   );
@@ -808,25 +807,11 @@ DeviceEvents
 		scanLevel = Enum.Parse<ScanLevels>(selectedText);
 	}
 
-	private void BrowseForLogs_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!BrowseForLogs_Flyout.IsOpen)
-				BrowseForLogs_Flyout.ShowAt(BrowseForLogs);
-	}
-
-	private void BrowseForLogs_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!BrowseForLogs_Flyout.IsOpen)
-			BrowseForLogs_Flyout.ShowAt(BrowseForLogs);
-	}
-
 	private void BrowseForLogs_Flyout_Clear_Click(object sender, RoutedEventArgs e)
 	{
 		BrowseForLogs_SelectedFilesTextBox.Text = null;
 		MDEAdvancedHuntingLogs = null;
 	}
-
 
 	/// <summary>
 	/// Event handler for the button that retrieves the logs

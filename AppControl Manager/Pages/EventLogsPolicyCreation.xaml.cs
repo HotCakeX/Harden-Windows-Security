@@ -116,7 +116,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox,
+					SearchBox.Text,
 					ViewModel.AllFileIdentities,
 					ViewModel.FileIdentities,
 					ViewModel.SortState,
@@ -144,7 +144,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 		ListViewHelper.ApplyFilters(
 		allFileIdentities: ViewModel.AllFileIdentities.AsEnumerable(),
 		filteredCollection: ViewModel.FileIdentities,
-		searchTextBox: SearchBox,
+		searchText: SearchBox.Text,
 		datePicker: FilterByDateCalendarPicker,
 		regKey: ListViewHelper.ListViewsRegistry.Event_Logs
 		);

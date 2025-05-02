@@ -89,10 +89,9 @@
                     </Button.Content>
                 </Button>
 
-                <Button x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="{x:Bind BrowseForLogs_Click}"
-                        Holding="BrowseForLogs_Holding" RightTapped="BrowseForLogs_RightTapped">
+                <customUI:ButtonV2 x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="{x:Bind BrowseForLogs_Click}">
 
-                    <Button.Flyout>
+                    <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="BrowseForLogs_Flyout">
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -108,15 +107,15 @@
                             </controls:WrapPanel>
 
                         </Flyout>
-                    </Button.Flyout>
+                    </customUI:ButtonV2.Flyout>
 
-                    <Button.Content>
+                    <customUI:ButtonV2.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
                             <TextBlock Text="Browse for MDE Advanced Hunting logs" Margin="5,0,0,0" />
                         </StackPanel>
-                    </Button.Content>
-                </Button>
+                    </customUI:ButtonV2.Content>
+                </customUI:ButtonV2>
 
 
             </controls:WrapPanel>

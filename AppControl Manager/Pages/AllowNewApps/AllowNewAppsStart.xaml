@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -13,7 +14,7 @@
 
     <ScrollView>
 
-        <Grid x:Name="RootGrid">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -21,9 +22,6 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <ThemeShadow x:Name="SharedShadow" />
-            </Grid.Resources>
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,5">
 
@@ -32,15 +30,23 @@
                 <HyperlinkButton Margin="0,-8,0,8" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 
                 <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
-                    <Button x:Name="ResetStepsButton" Click="{x:Bind ResetStepsButton_Click}" Style="{StaticResource AccentButtonStyle}" x:Uid="ResetStepsButton" />
-                    <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
+                    <Button
+                        Click="{x:Bind ViewModel.ResetStepsButton_Click}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        IsEnabled="{x:Bind ViewModel.ResetStepsButtonIsEnabled, Mode=OneWay}"
+                        x:Uid="ResetStepsButton" />
+                    <ProgressRing IsActive="{x:Bind ViewModel.ResetProgressRingIsActive, Mode=OneWay}"/>
                 </StackPanel>
 
             </controls:WrapPanel>
 
-            <Border x:Name="Step1Border" Grid.Row="1" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
+            <Border BorderBrush="{x:Bind ViewModel.Step1Border_Brush, Mode=OneWay}"
+                    BorderThickness="{x:Bind ViewModel.Step1Border_Thickness, Mode=OneWay}"
+                    Translation="{x:Bind ViewModel.Step1Border_Translation, Mode=OneWay}"
+                    Shadow="{x:Bind ViewModel.Step1Border_Shadow, Mode=OneWay}"
+                    Grid.Row="1" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
 
-                <Grid x:Name="Step1Grid">
+                <Grid Opacity="{x:Bind ViewModel.Step1GridOpacity, Mode=OneWay}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -51,7 +57,7 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 1" Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing x:Name="Step1ProgressRing" IsActive="False" Margin="0,0,15,0"/>
+                            <ProgressRing IsActive="{x:Bind ViewModel.Step1ProgressRingIsActive, Mode=OneWay}" Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep1Text" TextWrapping="WrapWholeWords" />
@@ -59,29 +65,37 @@
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="15" HorizontalSpacing="15">
 
-                        <TextBox x:Name="SupplementalPolicyNameTextBox" Header="Supplemental Policy Name" PlaceholderText="Enter a name for the Supplemental Policy" />
-                        <Button x:Name="BrowseForXMLPolicyButton" Click="{x:Bind BrowseForXMLPolicyButton_Click}" Margin="0,27,0,0"
-                               RightTapped="BrowseForXMLPolicyButton_RightTapped" Holding="BrowseForXMLPolicyButton_Holding" ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
+                        <TextBox
+                            Text="{x:Bind ViewModel.selectedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Header="Supplemental Policy Name"
+                            PlaceholderText="Enter a name for the Supplemental Policy"
+                            IsEnabled="{x:Bind ViewModel.SupplementalPolicyNameTextBoxIsEnabled, Mode=OneWay}" />
 
-                            <Button.Flyout>
+                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicyButton"
+                               IsEnabled="{x:Bind ViewModel.BrowseForXMLPolicyButtonIsEnabled, Mode=OneWay}"
+                               Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Click}"
+                               Margin="0,27,0,0"
+                               ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
+
+                            <customUI:ButtonV2.Flyout>
                                 <Flyout x:Name="BrowseForXMLPolicyButton_FlyOut">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="BrowseForXMLPolicyButton_Flyout_Clear_Click" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Flyout_Clear_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox x:Name="BrowseForXMLPolicyButton_SelectedBasePolicyTextBox"
+                                        <TextBox Text="{x:Bind ViewModel.selectedXMLFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                             MinWidth="400" IsReadOnly="True" />
 
                                     </controls:WrapPanel>
 
                                 </Flyout>
-                            </Button.Flyout>
+                            </customUI:ButtonV2.Flyout>
 
-                            <Button.Content>
+                            <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
                                     <AnimatedIcon Visibility="{x:Bind ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -93,18 +107,24 @@
                                     <TextBlock x:Uid="BrowseForBasePolicyTextBlock" />
 
                                 </controls:WrapPanel>
-                            </Button.Content>
+                            </customUI:ButtonV2.Content>
 
-                        </Button>
+                        </customUI:ButtonV2>
 
-                        <NumberBox x:Name="LogSizeNumberBox"
+                        <NumberBox
                             x:Uid="LogSizeNumberBox"
+                            IsEnabled="{x:Bind ViewModel.LogSizeNumberBoxIsEnabled, Mode=OneWay}"
                             Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
                             SpinButtonPlacementMode="Inline"
                             SmallChange="1"
                             LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" />
 
-                        <Button x:Name="GoToStep2Button" Click="{x:Bind GoToStep2Button_Click}" Margin="0,27,0,0" Content="Go to step 2" ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button IsEnabled="{x:Bind ViewModel.GoToStep2ButtonIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.GoToStep2Button_Click}"
+                                Margin="0,27,0,0"
+                                Content="Go to step 2"
+                                ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2"
+                                Style="{StaticResource AccentButtonStyle}"/>
 
                     </controls:WrapPanel>
 
@@ -117,9 +137,14 @@
                 </Grid>
             </Border>
 
-            <Border x:Name="Step2Border" Grid.Row="2" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
+            <Border
+                BorderBrush="{x:Bind ViewModel.Step2Border_Brush, Mode=OneWay}"
+                BorderThickness="{x:Bind ViewModel.Step2Border_Thickness, Mode=OneWay}"
+                Translation="{x:Bind ViewModel.Step2Border_Translation, Mode=OneWay}"
+                Shadow="{x:Bind ViewModel.Step2Border_Shadow, Mode=OneWay}"
+                Grid.Row="2" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
 
-                <Grid x:Name="Step2Grid">
+                <Grid Opacity="{x:Bind ViewModel.Step2GridOpacity, Mode=OneWay}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -130,7 +155,11 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 2" Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing x:Name="Step2ProgressRing" IsActive="False" Margin="0,0,15,0"/>
+                            <ProgressRing
+                                Value="{x:Bind ViewModel.Step2ProgressRingValue,Mode=OneWay}"
+                                IsActive="{x:Bind ViewModel.Step2ProgressRingIsActive, Mode=OneWay}"
+                                IsIndeterminate="{x:Bind ViewModel.Step2ProgressRingIsIndeterminate, Mode=OneWay}"
+                                Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep2Text" TextWrapping="WrapWholeWords" />
@@ -138,30 +167,36 @@
 
                     <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
 
-                        <Button x:Name="BrowseForFoldersButton" RightTapped="BrowseForFoldersButton_RightTapped"
-                               Holding="BrowseForFoldersButton_Holding" Click="{x:Bind BrowseForFoldersButton_Click}" Content="Browse for folders" ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
+                        <customUI:ButtonV2
+                                IsEnabled="{x:Bind ViewModel.BrowseForFoldersButtonIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.BrowseForFoldersButton_Click}"
+                                Content="Browse for folders"
+                                ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
 
-                            <Button.Flyout>
-                                <Flyout x:Name="BrowseForFoldersButton_FlyOut">
+                            <customUI:ButtonV2.Flyout>
+                                <Flyout>
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ClearSelectedDirectoriesButton_Click}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedDirectoriesButton_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" Width="400" />
 
-                                        <TextBox x:Name="SelectedDirectoriesTextBox"
-                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"
-                                            MinWidth="400" IsReadOnly="True" />
+                                        <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedDirectoriesToScan_Observable, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
                                 </Flyout>
-                            </Button.Flyout>
+                            </customUI:ButtonV2.Flyout>
 
-                        </Button>
+                        </customUI:ButtonV2>
 
-                        <Button x:Name="GoToStep3Button" Click="{x:Bind GoToStep3Button_Click}" Content="Go to step 3" ToolTipService.ToolTip="Start scanning the event logs and the selected directories (if any) and go to step 3" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button
+                            Click="{x:Bind ViewModel.GoToStep3Button_Click}"
+                            IsEnabled="{x:Bind ViewModel.GoToStep3ButtonIsEnabled, Mode=OneWay}"
+                            Content="Go to step 3"
+                            ToolTipService.ToolTip="Start scanning the event logs and the selected directories (if any) and go to step 3"
+                            Style="{StaticResource AccentButtonStyle}"/>
 
                     </controls:WrapPanel>
 
@@ -174,9 +209,14 @@
                 </Grid>
             </Border>
 
-            <Border x:Name="Step3Border" Grid.Row="3" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
+            <Border
+                BorderBrush="{x:Bind ViewModel.Step3Border_Brush, Mode=OneWay}"
+                BorderThickness="{x:Bind ViewModel.Step3Border_Thickness, Mode=OneWay}"
+                Translation="{x:Bind ViewModel.Step3Border_Translation, Mode=OneWay}"
+                Shadow="{x:Bind ViewModel.Step3Border_Shadow, Mode=OneWay}"
+                Grid.Row="3" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
 
-                <Grid x:Name="Step3Grid">
+                <Grid Opacity="{x:Bind ViewModel.Step3GridOpacity, Mode=OneWay}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -187,7 +227,6 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 3" Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing x:Name="Step3ProgressRing" IsActive="False" Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep3Text" TextWrapping="WrapWholeWords" />
@@ -197,13 +236,24 @@
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.DeployPolicy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DeployPolicyState, Mode=OneWay}" x:Uid="DeployAfterCreationButton" />
 
-                        <ComboBox SelectedIndex="0" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" Header="Scan level" Margin="0,0,0,27">
+                        <ComboBox
+                            IsEnabled="{x:Bind ViewModel.ScanLevelComboBoxIsEnabled, Mode=OneWay}"
+                            SelectedIndex="{x:Bind ViewModel.ScanLevelComboBoxSelectedIndex, Mode=TwoWay}"
+                            SelectionChanged="ScanLevelComboBox_SelectionChanged"
+                            x:Name="ScanLevelComboBox"
+                            x:Uid="ScanLevelComboBox"
+                            Header="Scan level"
+                            Margin="0,0,0,27">
                             <x:String>FilePublisher</x:String>
                             <x:String>Publisher</x:String>
                             <x:String>Hash</x:String>
                         </ComboBox>
 
-                        <Button x:Name="CreatePolicyButton" Click="{x:Bind CreatePolicyButton_Click}" x:Uid="AllowNewAppsCreatePolicyButton" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button
+                            Click="{x:Bind ViewModel.CreatePolicyButton_Click}"
+                            IsEnabled="{x:Bind ViewModel.CreatePolicyButtonIsEnabled, Mode=OneWay}"
+                            x:Uid="AllowNewAppsCreatePolicyButton"
+                            Style="{StaticResource AccentButtonStyle}"/>
                     </controls:WrapPanel>
 
                     <InfoBar Severity="{x:Bind ViewModel.Step3InfoBar_Severity, Mode=OneWay}"
@@ -212,7 +262,7 @@
                             Message="{x:Bind ViewModel.Step3InfoBar_Message, Mode=OneWay}"
                             Margin="0,20,0,0" Grid.Row="2">
                         <InfoBar.ActionButton>
-                            <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
+                            <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor}" />
                         </InfoBar.ActionButton>
                     </InfoBar>
                 </Grid>

@@ -617,6 +617,20 @@ If a policy lacks that setting, the resulting Code Integrity event logs—for in
 
 <br>
 
+## Unsafe Practices
+
+* Only use Signer or Hash based rule types in signed policies, other levels do not provide the kind of high security protection that matches the signed nature of App Control policies.
+
+* Using Managed Installer or ISG policy rule options can reduce security and lead to over authorization, making them unsuitable for signed policy scenarios. 
+
+* If using a FilePath rule level and the file path contains a UNC path, **ensure** [UNC hardening is enabled and secure](https://learn.microsoft.com/en-us/archive/blogs/leesteve/demystifying-the-unc-hardening-dilemma).
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using App Control for Business"> [Continue reading about BYOVD protection with App Control for Business](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [App Control policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection

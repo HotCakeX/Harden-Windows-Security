@@ -27,6 +27,7 @@ namespace AppControlManager.SiPolicy;
 
 internal static class CustomDeserialization
 {
+
 	/// <summary>
 	/// Deserializes a security policy from either a file path or an XML document into a SiPolicy object.
 	/// </summary>
@@ -85,9 +86,28 @@ internal static class CustomDeserialization
 		string platformID = GetElementText(root, "PlatformID");
 		policy.PlatformID = string.IsNullOrEmpty(platformID) ? "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}" : platformID;
 
+		if (string.IsNullOrEmpty(policy.PolicyID) || string.IsNullOrEmpty(policy.BasePolicyID))
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("NeedBothIDsValidationError"));
+		}
+
+		if (
+			(policy.PolicyType is PolicyType.BasePolicy && !string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase)) ||
+			(policy.PolicyType is not PolicyType.BasePolicy && string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
+			)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("IDsMismatchValidationError"));
+		}
+
+		// PolicyTypeID used to be for old version of WDAC policies that didn't have support for Supplemental policies.
+		// Now policies have BasePolicyID and PolicyID values instead.
+		// A policy cannot have a PolicyTypeID and also have PolicyID or BasePolicyID. In such situations, the value of the PolicyTypeID must be used for both PolicyID and BasePolicyID. These situations only happen when parsing very old WDAC policies.
+		policy.PolicyTypeID = null;
+
 		// Deserialize Rules
 		// Make sure it exists even empty
 		policy.Rules = [];
+		HashSet<OptionType> policyRules = [];
 		XmlElement? rulesElement = root["Rules", GlobalVars.SiPolicyNamespace];
 		if (rulesElement is not null)
 		{
@@ -96,15 +116,29 @@ internal static class CustomDeserialization
 			{
 				string optionText = GetElementText(ruleElem, "Option");
 				OptionType opt = ConvertStringToOptionType(optionText);
+
+				if (!policyRules.Add(opt))
+				{
+					throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DuplicateRuleOptionValidationError")}: {opt}");
+				}
+
 				RuleType rule = new() { Item = opt };
 				rules.Add(rule);
 			}
 			policy.Rules = [.. rules];
 		}
 
+		if (policy.PolicyType is PolicyType.SupplementalPolicy && policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies))
+		{
+			throw new InvalidOperationException($"The policy type is {PolicyType.SupplementalPolicy} and it has {OptionType.EnabledAllowSupplementalPolicies} rule option which is invalid. Only {PolicyType.BasePolicy} can have that.");
+		}
+
 		// Deserialize EKUs
 		// Make sure it exists even empty
 		policy.EKUs = [];
+
+		HashSet<string> EKUIDsCol = [];
+
 		XmlElement? ekusElement = root["EKUs", GlobalVars.SiPolicyNamespace];
 		if (ekusElement is not null)
 		{
@@ -119,6 +153,11 @@ internal static class CustomDeserialization
 				if (ekuElem.HasAttribute("Value"))
 					eku.Value = ConvertHexStringToByteArray(ekuElem.GetAttribute("Value"));
 				ekus.Add(eku);
+
+				if (!EKUIDsCol.Add(eku.ID))
+				{
+					throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DuplicateEKUIDsValidationError")}: {eku.ID}");
+				}
 			}
 			policy.EKUs = [.. ekus];
 		}
@@ -126,6 +165,12 @@ internal static class CustomDeserialization
 		// Deserialize FileRules
 		// Make sure it exists even empty
 		policy.FileRules = [];
+
+		HashSet<string> AllowRulesIDsCol = [];
+		HashSet<string> DenyRulesIDsCol = [];
+		HashSet<string> FileAttribRulesIDsCol = [];
+		HashSet<string> FileRulesIDsCol = [];
+
 		XmlElement? fileRulesElement = root["FileRules", GlobalVars.SiPolicyNamespace];
 		if (fileRulesElement is not null)
 		{
@@ -135,16 +180,16 @@ internal static class CustomDeserialization
 				switch (ruleElem.LocalName)
 				{
 					case "Allow":
-						fileRules.Add(DeserializeAllow(ruleElem));
+						fileRules.Add(DeserializeAllow(ruleElem, AllowRulesIDsCol));
 						break;
 					case "Deny":
-						fileRules.Add(DeserializeDeny(ruleElem));
+						fileRules.Add(DeserializeDeny(ruleElem, DenyRulesIDsCol));
 						break;
 					case "FileAttrib":
-						fileRules.Add(DeserializeFileAttrib(ruleElem));
+						fileRules.Add(DeserializeFileAttrib(ruleElem, FileAttribRulesIDsCol));
 						break;
 					case "FileRule":
-						fileRules.Add(DeserializeFileRule(ruleElem));
+						fileRules.Add(DeserializeFileRule(ruleElem, FileRulesIDsCol));
 						break;
 					default:
 						break;
@@ -156,13 +201,16 @@ internal static class CustomDeserialization
 		// Deserialize Signers
 		// Make sure it exists even empty
 		policy.Signers = [];
+
+		HashSet<string> SignersIDsCol = [];
+
 		XmlElement? signersElement = root["Signers", GlobalVars.SiPolicyNamespace];
 		if (signersElement is not null)
 		{
 			List<Signer> signers = [];
 			foreach (XmlElement signerElem in signersElement.ChildNodes.OfType<XmlElement>())
 			{
-				signers.Add(DeserializeSigner(signerElem));
+				signers.Add(DeserializeSigner(signerElem, SignersIDsCol));
 			}
 			policy.Signers = [.. signers];
 		}
@@ -170,13 +218,32 @@ internal static class CustomDeserialization
 		// Deserialize SigningScenarios
 		// Make sure it exists even empty
 		policy.SigningScenarios = [];
+
+		// Used to store the SigningScenarios IDs to ensure they are unique.
+		HashSet<string> SigningScenariosIDs = [];
+
 		XmlElement? signingScenariosElement = root["SigningScenarios", GlobalVars.SiPolicyNamespace];
 		if (signingScenariosElement is not null)
 		{
 			List<SigningScenario> scenarios = [];
 			foreach (XmlElement scenarioElem in signingScenariosElement.ChildNodes.OfType<XmlElement>())
 			{
-				scenarios.Add(DeserializeSigningScenario(scenarioElem));
+				SigningScenario signingScenario = DeserializeSigningScenario(scenarioElem, SigningScenariosIDs);
+
+				if (policy.PolicyType is PolicyType.AppIDTaggingPolicy)
+				{
+					if (signingScenario.Value != 12)
+					{
+						throw new InvalidOperationException($"The policy type is {PolicyType.AppIDTaggingPolicy} but there is a Signing Scenario with the ID {signingScenario.Value} which is invalid because this policy type currently only supports User-Mode Signing Scenarios.");
+					}
+
+					if (signingScenario.AppIDTags is null || signingScenario.AppIDTags.AppIDTag is null || signingScenario.AppIDTags.AppIDTag.Length == 0)
+					{
+						throw new InvalidOperationException($"The policy type is {PolicyType.AppIDTaggingPolicy} but the Signing Scenario doesn't have any AppIDTags defined in it.");
+					}
+				}
+
+				scenarios.Add(signingScenario);
 			}
 			policy.SigningScenarios = [.. scenarios];
 		}
@@ -196,6 +263,12 @@ internal static class CustomDeserialization
 				upsList.Add(ups);
 			}
 			policy.UpdatePolicySigners = [.. upsList];
+		}
+
+		// If policy requires to be Signed
+		if (!policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy) && policy.UpdatePolicySigners.Length == 0)
+		{
+			throw new InvalidOperationException($"The policy doesn't have the {OptionType.EnabledUnsignedSystemIntegrityPolicy} indicating it needs to be signed, but no UpdatePolicySigner has been found.");
 		}
 
 		// Deserialize CiSigners
@@ -237,9 +310,17 @@ internal static class CustomDeserialization
 			policy.Settings = [.. settings];
 		}
 
+		if (policy.Settings.Length > ushort.MaxValue)
+		{
+			throw new InvalidOperationException($"The total count of the Settings + AppID tags shouldn't be more than {ushort.MaxValue}");
+		}
+
 		// Deserialize Macros
 		// Make sure it exists even empty
 		policy.Macros = [];
+
+		HashSet<string> MacrosIDsCol = [];
+
 		XmlElement? macrosElem = root["Macros", GlobalVars.SiPolicyNamespace];
 		if (macrosElem is not null)
 		{
@@ -252,6 +333,11 @@ internal static class CustomDeserialization
 				if (macroElem.HasAttribute("Value"))
 					macro.Value = macroElem.GetAttribute("Value");
 				macros.Add(macro);
+
+				if (!MacrosIDsCol.Add(macro.Id))
+				{
+					throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DuplicateMacroIDsValidationError")}: {macro.Id}");
+				}
 			}
 			policy.Macros = [.. macros];
 		}
@@ -271,6 +357,26 @@ internal static class CustomDeserialization
 				spsList.Add(sps);
 			}
 			policy.SupplementalPolicySigners = [.. spsList];
+		}
+
+		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Length != 0)
+		{
+			throw new InvalidOperationException($"The policy type is {PolicyType.SupplementalPolicy} and it has Supplemental Policy Signers. Only Base policies can have them.");
+		}
+
+		// If it's supposed to be a Signed Base policy
+		if (policy.PolicyType is PolicyType.BasePolicy && !policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy))
+		{
+			// If it allows for Supplemental policies but no Supplemental policy Signers have been specified
+			if (policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies) && policy.SupplementalPolicySigners.Length == 0)
+			{
+				// If policy ID is not "{5951A96A-E0B5-4D3D-8FB8-3E5B61030784}" which is for S-Mode in Windows.
+				// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/inbox-appcontrol-policies
+				if (!string.Equals(policy.PolicyID, "{5951A96A-E0B5-4D3D-8FB8-3E5B61030784}", StringComparison.OrdinalIgnoreCase))
+				{
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("MissingSupPolSignersValidationError"));
+				}
+			}
 		}
 
 		// Deserialize AppSettings
@@ -377,7 +483,7 @@ internal static class CustomDeserialization
 
 	// Deserialization methods for nested types
 
-	private static Allow DeserializeAllow(XmlElement elem)
+	private static Allow DeserializeAllow(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Allow allow = new();
 		if (elem.HasAttribute("ID"))
@@ -406,10 +512,54 @@ internal static class CustomDeserialization
 			allow.AppIDs = elem.GetAttribute("AppIDs");
 		if (elem.HasAttribute("FilePath"))
 			allow.FilePath = elem.GetAttribute("FilePath");
+
+		if (allow.ID is null)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AllowRuleNoIDValidationError"));
+		}
+
+		if (!IDsCollection.Add(allow.ID))
+		{
+			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("AllowRuleDupIDValidationError")}: {allow.ID}");
+		}
+
+		bool HashExists = allow.Hash is not null;
+
+		bool APropertyExists = allow.FileName is not null
+						 || allow.PackageFamilyName is not null
+						 || allow.PackageVersion is not null
+						 || allow.InternalName is not null
+						 || allow.ProductName is not null
+						 || allow.MinimumFileVersion is not null
+						 || allow.MaximumFileVersion is not null
+						 || allow.FileDescription is not null
+						 || allow.FilePath is not null;
+
+		bool NoPropertyExists = allow.FileName is null
+						&& allow.FileDescription is null
+						&& allow.PackageFamilyName is null
+						&& allow.InternalName is null
+						&& allow.ProductName is null
+						&& allow.FilePath is null;
+
+		if (HashExists)
+		{
+			if (APropertyExists)
+			{
+				throw new InvalidOperationException($"The Allow rule with the ID {allow.ID} has Hash property but also has other file properties, making it invalid.");
+			}
+		}
+		else if (NoPropertyExists)
+		{
+			throw new InvalidOperationException($"The Allow rule with the ID {allow.ID} neither has Hash nor does it have any other file properties, making it invalid.");
+		}
+
+		ValidateVersionRange(allow.MinimumFileVersion, allow.MaximumFileVersion, allow.ID);
+
 		return allow;
 	}
 
-	private static Deny DeserializeDeny(XmlElement elem)
+	private static Deny DeserializeDeny(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Deny deny = new();
 		if (elem.HasAttribute("ID"))
@@ -438,10 +588,54 @@ internal static class CustomDeserialization
 			deny.AppIDs = elem.GetAttribute("AppIDs");
 		if (elem.HasAttribute("FilePath"))
 			deny.FilePath = elem.GetAttribute("FilePath");
+
+		if (deny.ID is null)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("DenyRuleNoIDValidationError"));
+		}
+
+		if (!IDsCollection.Add(deny.ID))
+		{
+			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DenyRuleDupIDValidationError")}: {deny.ID}");
+		}
+
+		bool HashExists = deny.Hash is not null;
+
+		bool APropertyExists = deny.FileName is not null
+						 || deny.FileDescription is not null
+						 || deny.PackageFamilyName is not null
+						 || deny.InternalName is not null
+						 || deny.ProductName is not null
+						 || deny.PackageVersion is not null
+						 || deny.MinimumFileVersion is not null
+						 || deny.MaximumFileVersion is not null
+						 || deny.FilePath is not null;
+
+		bool NoPropertyExists = deny.FileName is null
+						&& deny.PackageFamilyName is null
+						&& deny.FileDescription is null
+						&& deny.InternalName is null
+						&& deny.ProductName is null
+						&& deny.FilePath is null;
+
+		if (HashExists)
+		{
+			if (APropertyExists)
+			{
+				throw new InvalidOperationException($"The Deny rule with the ID {deny.ID} has Hash property but also has other file properties, making it invalid.");
+			}
+		}
+		else if (NoPropertyExists)
+		{
+			throw new InvalidOperationException($"The Deny rule with the ID {deny.ID} neither has Hash nor does it have any other file properties, making it invalid.");
+		}
+
+		ValidateVersionRange(deny.MinimumFileVersion, deny.MaximumFileVersion, deny.ID);
+
 		return deny;
 	}
 
-	private static FileAttrib DeserializeFileAttrib(XmlElement elem)
+	private static FileAttrib DeserializeFileAttrib(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		FileAttrib fa = new();
 		if (elem.HasAttribute("ID"))
@@ -470,10 +664,54 @@ internal static class CustomDeserialization
 			fa.AppIDs = elem.GetAttribute("AppIDs");
 		if (elem.HasAttribute("FilePath"))
 			fa.FilePath = elem.GetAttribute("FilePath");
+
+		if (fa.ID is null)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileAttribNoIDValidationError"));
+		}
+
+		if (!IDsCollection.Add(fa.ID))
+		{
+			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("FileAttribDupIDValidationError")}: {fa.ID}");
+		}
+
+		bool HashExists = fa.Hash is not null;
+
+		bool APropertyExists = fa.FileName is not null
+						|| fa.FileDescription is not null
+						 || fa.PackageFamilyName is not null
+						 || fa.MinimumFileVersion is not null
+						 || fa.MaximumFileVersion is not null
+						 || fa.ProductName is not null
+						 || fa.PackageVersion is not null
+						 || fa.FilePath is not null
+						 || fa.InternalName is not null;
+
+		bool NoPropertyExists = fa.FilePath is null
+						&& fa.FileName is null
+						&& fa.InternalName is null
+						&& fa.FileDescription is null
+						&& fa.PackageFamilyName is null
+						&& fa.ProductName is null;
+
+		if (HashExists)
+		{
+			if (APropertyExists)
+			{
+				throw new InvalidOperationException($"The FileAttrib rule with the ID {fa.ID} has Hash property but also has other file properties, making it invalid.");
+			}
+		}
+		else if (NoPropertyExists)
+		{
+			throw new InvalidOperationException($"The FileAttrib rule with the ID {fa.ID} neither has Hash nor does it have any other file properties, making it invalid.");
+		}
+
+		ValidateVersionRange(fa.MinimumFileVersion, fa.MaximumFileVersion, fa.ID);
+
 		return fa;
 	}
 
-	private static FileRule DeserializeFileRule(XmlElement elem)
+	private static FileRule DeserializeFileRule(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		FileRule fr = new();
 		if (elem.HasAttribute("ID"))
@@ -504,21 +742,45 @@ internal static class CustomDeserialization
 			fr.FilePath = elem.GetAttribute("FilePath");
 		if (elem.HasAttribute("Type"))
 			fr.Type = ConvertStringToRuleTypeType(elem.GetAttribute("Type"));
+
+		if (fr.ID is null)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleNoIDValidationError"));
+		}
+
+		if (!(IDsCollection.Add(fr.ID)))
+		{
+			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("FileRuleDupIDValidationError")}: {fr.ID}");
+		}
+
 		return fr;
 	}
 
-	private static Signer DeserializeSigner(XmlElement elem)
+	private static Signer DeserializeSigner(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Signer signer = new();
 		if (elem.HasAttribute("ID"))
 			signer.ID = elem.GetAttribute("ID");
+
+		if (signer.ID is null)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SignerNoIDValidationError"));
+		}
+
+		if (!IDsCollection.Add(signer.ID))
+		{
+			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("SignerDupIDValidationError")}: {signer.ID}");
+		}
+
 		if (elem.HasAttribute("Name"))
 			signer.Name = elem.GetAttribute("Name");
+
 		if (elem.HasAttribute("SignTimeAfter"))
 		{
 			signer.SignTimeAfter = DateTime.Parse(elem.GetAttribute("SignTimeAfter"), null, DateTimeStyles.RoundtripKind);
 			signer.SignTimeAfterSpecified = true;
 		}
+
 		XmlElement? certRootElem = elem["CertRoot", GlobalVars.SiPolicyNamespace];
 		if (certRootElem is not null)
 		{
@@ -527,8 +789,19 @@ internal static class CustomDeserialization
 				cr.Type = ConvertStringToCertEnumType(certRootElem.GetAttribute("Type"));
 			if (certRootElem.HasAttribute("Value"))
 				cr.Value = ConvertHexStringToByteArray(certRootElem.GetAttribute("Value"));
+
+			if (cr.Type is not CertEnumType.TBS && cr.Type is not CertEnumType.Wellknown)
+			{
+				throw new InvalidOperationException("Encountered a Cert Root that neither has TBS nor WellKnown type, making it invalid.");
+			}
+
 			signer.CertRoot = cr;
 		}
+		else
+		{
+			throw new InvalidOperationException($"The Signer with the ID {signer.ID} has no Cert Root element, making it invalid.");
+		}
+
 		XmlNodeList certEkuNodes = elem.GetElementsByTagName("CertEKU", GlobalVars.SiPolicyNamespace);
 		if (certEkuNodes.Count > 0)
 		{
@@ -542,6 +815,7 @@ internal static class CustomDeserialization
 			}
 			signer.CertEKU = [.. ekus];
 		}
+
 		XmlElement? certIssuerElem = elem["CertIssuer", GlobalVars.SiPolicyNamespace];
 		if (certIssuerElem is not null)
 		{
@@ -550,6 +824,7 @@ internal static class CustomDeserialization
 				ci.Value = certIssuerElem.GetAttribute("Value");
 			signer.CertIssuer = ci;
 		}
+
 		XmlElement? certPublisherElem = elem["CertPublisher", GlobalVars.SiPolicyNamespace];
 		if (certPublisherElem is not null)
 		{
@@ -558,6 +833,7 @@ internal static class CustomDeserialization
 				cp.Value = certPublisherElem.GetAttribute("Value");
 			signer.CertPublisher = cp;
 		}
+
 		XmlElement? certOemIDElem = elem["CertOemID", GlobalVars.SiPolicyNamespace];
 		if (certOemIDElem is not null)
 		{
@@ -566,6 +842,7 @@ internal static class CustomDeserialization
 				co.Value = certOemIDElem.GetAttribute("Value");
 			signer.CertOemID = co;
 		}
+
 		XmlNodeList farNodes = elem.GetElementsByTagName("FileAttribRef", GlobalVars.SiPolicyNamespace);
 		if (farNodes.Count > 0)
 		{
@@ -579,18 +856,36 @@ internal static class CustomDeserialization
 			}
 			signer.FileAttribRef = [.. fars];
 		}
+
 		return signer;
 	}
 
-	private static SigningScenario DeserializeSigningScenario(XmlElement elem)
+	private static SigningScenario DeserializeSigningScenario(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		SigningScenario scenario = new();
 		if (elem.HasAttribute("ID"))
 			scenario.ID = elem.GetAttribute("ID");
+
+		if (scenario.ID is null)
+		{
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SigningScenarioNoIDValidationError"));
+		}
+
+		if (!IDsCollection.Add(scenario.ID))
+		{
+			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("SigningScenarioDupIDValidationError")}: {scenario.ID}");
+		}
+
 		if (elem.HasAttribute("FriendlyName"))
 			scenario.FriendlyName = elem.GetAttribute("FriendlyName");
+
 		if (elem.HasAttribute("Value"))
 			scenario.Value = byte.Parse(elem.GetAttribute("Value"), CultureInfo.InvariantCulture);
+		if (scenario.Value == 0)
+		{
+			throw new InvalidOperationException($"The SigningScenario with the ID {scenario.ID} has a value of 0, making it invalid.");
+		}
+
 		if (elem.HasAttribute("InheritedScenarios"))
 			scenario.InheritedScenarios = elem.GetAttribute("InheritedScenarios");
 		if (elem.HasAttribute("MinimumHashAlgorithm"))
@@ -599,7 +894,7 @@ internal static class CustomDeserialization
 			scenario.MinimumHashAlgorithmSpecified = true;
 		}
 
-		// Make sure it exists even empty
+		// Make sure it exists even empty - Without a ProductSigners in a SigningScenario it would be invalid.
 		scenario.ProductSigners = new ProductSigners();
 		XmlElement? prodSignersElem = elem["ProductSigners", GlobalVars.SiPolicyNamespace];
 		if (prodSignersElem is not null)
@@ -615,7 +910,14 @@ internal static class CustomDeserialization
 
 		XmlElement? appIDTagsElem = elem["AppIDTags", GlobalVars.SiPolicyNamespace];
 		if (appIDTagsElem is not null)
+		{
+			if (scenario.Value != 12)
+			{
+				throw new InvalidOperationException("AppIDTags were found in a SigningScenario that is not User-Mode, they only belong to the User-Mode SigningScenario with the value 12 at the moment.");
+			}
+
 			scenario.AppIDTags = DeserializeAppIDTags(appIDTagsElem);
+		}
 
 		return scenario;
 	}
@@ -902,10 +1204,13 @@ internal static class CustomDeserialization
 		Setting setting = new();
 		if (elem.HasAttribute("Provider"))
 			setting.Provider = elem.GetAttribute("Provider");
+
 		if (elem.HasAttribute("Key"))
 			setting.Key = elem.GetAttribute("Key");
+
 		if (elem.HasAttribute("ValueName"))
 			setting.ValueName = elem.GetAttribute("ValueName");
+
 		XmlElement? valueElem = elem["Value", GlobalVars.SiPolicyNamespace];
 		if (valueElem is not null)
 		{
@@ -941,7 +1246,17 @@ internal static class CustomDeserialization
 				};
 				setting.Value = sv;
 			}
+			else
+			{
+				throw new InvalidOperationException("Encountered a Policy Setting that doesn't have a valid Value element.");
+			}
 		}
+
+		if (string.IsNullOrEmpty(setting.Key) || string.IsNullOrEmpty(setting.Provider) || string.IsNullOrEmpty(setting.ValueName))
+		{
+			throw new InvalidOperationException("Encountered a Policy Setting that doesn't have the necessary Provider, Key or ValueName elements.");
+		}
+
 		return setting;
 	}
 
@@ -976,6 +1291,44 @@ internal static class CustomDeserialization
 		appIDTags.AppIDTag = [.. tags];
 
 		return appIDTags;
+	}
+
+	/// <summary>
+	/// If both <paramref name="minimumVersion"/> and <paramref name="maximumVersion"/> are non-null
+	/// and non-empty, parses them and ensures minimum ≤ maximum.  Otherwise, returns immediately.
+	/// </summary>
+	/// <param name="minimumVersion">The lower bound version string (nullable).</param>
+	/// <param name="maximumVersion">The upper bound version string (nullable).</param>
+	/// <param name="id">An identifier to include in any exception message.</param>
+	/// <exception cref="ArgumentException">
+	///     Thrown if either version string cannot be parsed when both are provided.
+	/// </exception>
+	/// <exception cref="ArgumentOutOfRangeException">
+	///     Thrown if the parsed minimum version is greater than the parsed maximum version.
+	/// </exception>
+	private static void ValidateVersionRange(string? minimumVersion, string? maximumVersion, string id)
+	{
+		// If either version is null or empty, do nothing.
+		if (string.IsNullOrEmpty(minimumVersion) || string.IsNullOrEmpty(maximumVersion))
+			return;
+
+		// At this point both are non-null/non-empty, so attempt to parse:
+		if (!Version.TryParse(minimumVersion, out var minVer))
+			throw new ArgumentException(
+				$"ID '{id}': invalid minimumVersion '{minimumVersion}'.",
+				nameof(minimumVersion));
+
+		if (!Version.TryParse(maximumVersion, out var maxVer))
+			throw new ArgumentException(
+				$"ID '{id}': invalid maximumVersion '{maximumVersion}'.",
+				nameof(maximumVersion));
+
+		// Compare and throw if out of order:
+		if (minVer > maxVer)
+			throw new ArgumentOutOfRangeException(
+				nameof(minimumVersion),
+				minVer,
+				$"ID '{id}': minimumVersion ({minVer}) cannot be greater than maximumVersion ({maxVer}).");
 	}
 
 }

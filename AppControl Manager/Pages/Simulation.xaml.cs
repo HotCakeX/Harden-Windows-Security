@@ -27,7 +27,6 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -168,12 +167,10 @@ internal sealed partial class Simulation : Page
 
 	#endregion
 
-
 	private List<string> filePaths; // For selected file paths
 	private readonly List<string> folderPaths; // For selected folder paths
 	private string? xmlFilePath; // For selected XML file path
 	private List<string> catRootPaths; // For selected Cat Root paths
-
 
 	/// <summary>
 	/// Event handler for the Begin Simulation button
@@ -284,7 +281,6 @@ internal sealed partial class Simulation : Page
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the Select XML File button
 	/// </summary>
@@ -338,7 +334,6 @@ internal sealed partial class Simulation : Page
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the Cat Root Paths button
 	/// </summary>
@@ -351,7 +346,6 @@ internal sealed partial class Simulation : Page
 			catRootPaths = selectedCatRoots;
 		}
 	}
-
 
 	// Event handler for RadialGauge ValueChanged
 	private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -372,64 +366,23 @@ internal sealed partial class Simulation : Page
 		TotalCountOfTheFilesTextBox.Text = "0";
 	}
 
-
-	private void SelectXmlFileButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!SelectXmlFileButton_Flyout.IsOpen)
-				SelectXmlFileButton_Flyout.ShowAt(SelectXmlFileButton);
-	}
-
-	private void SelectXmlFileButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!SelectXmlFileButton_Flyout.IsOpen)
-			SelectXmlFileButton_Flyout.ShowAt(SelectXmlFileButton);
-	}
-
-	private void SelectXmlFileButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void SelectXmlFileButton_Flyout_Clear_Click()
 	{
 		SelectXmlFileButton_SelectedFilesTextBox.Text = null;
 		xmlFilePath = null;
 	}
 
-	private void SelectFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!SelectFilesButton_Flyout.IsOpen)
-			SelectFilesButton_Flyout.ShowAt(SelectFilesButton);
-	}
-
-	private void SelectFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!SelectFilesButton_Flyout.IsOpen)
-				SelectFilesButton_Flyout.ShowAt(SelectFilesButton);
-	}
-
-	private void SelectFilesButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void SelectFilesButton_Flyout_Clear_Click()
 	{
 		SelectFilesButton_SelectedFilesTextBox.Text = null;
 		filePaths.Clear();
 	}
 
-	private void SelectFoldersButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	private void SelectFoldersButton_Flyout_Clear_Click()
 	{
 		SelectFoldersButton_SelectedFilesTextBox.Text = null;
 		folderPaths.Clear();
 	}
-
-	private void SelectFoldersButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!SelectFoldersButton_Flyout.IsOpen)
-				SelectFoldersButton_Flyout.ShowAt(SelectFoldersButton);
-	}
-
-	private void SelectFoldersButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!SelectFoldersButton_Flyout.IsOpen)
-			SelectFoldersButton_Flyout.ShowAt(SelectFoldersButton);
-	}
-
 
 	/// <summary>
 	/// CTRL + C shortcuts event handler

@@ -15,21 +15,46 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.IntelGathering;
+using AppControlManager.Main;
 using AppControlManager.Others;
-using Microsoft.Extensions.DependencyInjection;
+using AppControlManager.Pages;
+using AppControlManager.SiPolicy;
+using AppControlManager.SiPolicyIntel;
+using AppControlManager.XMLOps;
+using CommunityToolkit.WinUI;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
+#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
 // It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class AllowNewAppsVM : ViewModelBase
 {
-	internal EventLogUtility EventLogsUtil { get; } = App.AppHost.Services.GetRequiredService<EventLogUtility>();
+
+	internal readonly EventLogUtility EventLogsUtil;
+	private readonly PolicyEditorVM PolicyEditorViewModel;
+
+	internal AllowNewAppsVM(EventLogUtility _EventLogUtility, PolicyEditorVM _PolicyEditorVM)
+	{
+		Step1Border_Brush = linearGradientBrush;
+
+		Step2ProgressRingProgress = new Progress<double>(p => Step2ProgressRingValue = p);
+
+		EventLogsUtil = _EventLogUtility;
+		PolicyEditorViewModel = _PolicyEditorVM;
+	}
 
 	#region
 
@@ -57,6 +82,116 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 
 	#region UI-Bound Properties
+
+	/// <summary>
+	/// The user selected XML base policy path.
+	/// </summary>
+	internal string? selectedXMLFilePath { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// The user selected Supplemental policy name.
+	/// </summary>
+	internal string? selectedSupplementalPolicyName { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// The user selected directories to scan
+	/// </summary>
+	private readonly HashSet<string> selectedDirectoriesToScan = [];
+
+	internal readonly ObservableCollection<string> SelectedDirectoriesToScan_Observable = [];
+
+	private void ManageHashSet(string? path, bool add)
+	{
+		if (add && path is not null)
+		{
+			if (selectedDirectoriesToScan.Add(path))
+				SelectedDirectoriesToScan_Observable.Add(path);
+		}
+		else
+		{
+			selectedDirectoriesToScan.Clear();
+			SelectedDirectoriesToScan_Observable.Clear();
+		}
+	}
+
+	/// <summary>
+	/// Custom HashSet to store the output of both local files and event logs scans
+	/// If the same file is detected in event logs And local file scans, the one with IsECCSigned property set to true will be kept
+	/// So that the respective methods will make Hash based rule for that file since AppControl doesn't support ECC Signed files yet
+	/// </summary>
+	internal readonly FileIdentityECCBasedHashSet fileIdentities = new();
+
+	/// <summary>
+	/// Will determine whether the user selected XML policy file is signed or unsigned
+	/// </summary>
+	private bool _IsSignedPolicy;
+
+	/// <summary>
+	/// Gets or sets a value indicating whether the supplemental policy name text box is enabled.
+	/// </summary>
+	internal bool SupplementalPolicyNameTextBoxIsEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// The user selected scan level
+	/// </summary>
+	internal ScanLevels scanLevel = ScanLevels.FilePublisher;
+
+	/// <summary>
+	/// Only the logs generated after this time will be shown
+	/// It will be set when user moves from Step1 to Step2
+	/// </summary>
+	internal DateTime? LogsScanStartTime;
+
+	/// <summary>
+	/// The base policy XML objectified
+	/// </summary>
+	internal SiPolicy.SiPolicy? _BasePolicyObject;
+
+	// To hold the necessary details for policy signing if the selected base policy is signed
+	// They will be retrieved from the content dialog
+	private string? _CertCN;
+	private string? _CertPath;
+	private string? _SignToolPath;
+
+	// Paths for the entire operation of this page
+	private DirectoryInfo? stagingArea;
+	private string? tempBasePolicyPath;
+	private string? AuditModeCIP;
+	private string? EnforcedModeCIP;
+
+	internal bool BrowseForXMLPolicyButtonIsEnabled { get; set => SP(ref field, value); } = true;
+	internal bool GoToStep2ButtonIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal double Step1GridOpacity { get; set => SP(ref field, value); } = 1;
+
+	internal bool LogSizeNumberBoxIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal bool ResetStepsButtonIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal bool ResetProgressRingIsActive { get; set => SP(ref field, value); }
+
+	internal bool Step1ProgressRingIsActive { get; set => SP(ref field, value); }
+
+	internal bool Step2ProgressRingIsActive { get; set => SP(ref field, value); }
+
+	internal bool Step2ProgressRingIsIndeterminate { get; set => SP(ref field, value); }
+
+	internal bool GoToStep3ButtonIsEnabled { get; set => SP(ref field, value); }
+
+	internal double Step2GridOpacity { get; set => SP(ref field, value); } = 0.5;
+
+	internal double Step3GridOpacity { get; set => SP(ref field, value); } = 0.5;
+
+	internal bool CreatePolicyButtonIsEnabled { get; set => SP(ref field, value); }
+
+	internal bool ScanLevelComboBoxIsEnabled { get; set => SP(ref field, value); }
+
+	internal bool BrowseForFoldersButtonIsEnabled { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Path of the Supplemental policy that is created
+	/// </summary>
+	internal string? finalSupplementalPolicyPath { get; set => SP(ref field, value); }
 
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -118,7 +253,157 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal bool Step3InfoBar_IsClosable { get; set => SP(ref field, value); }
 	internal string? Step3InfoBar_Message { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// Gradient color used for the active border.
+	/// </summary>
+	internal LinearGradientBrush linearGradientBrush = new()
+	{
+		StartPoint = new Windows.Foundation.Point(0, 0),
+		EndPoint = new Windows.Foundation.Point(1, 1),
+		GradientStops = new GradientStopCollection
+		{
+			new GradientStop { Color = Colors.HotPink, Offset = 0.0 },
+			new GradientStop { Color = Colors.Wheat,  Offset = 1.0 }
+		}
+	};
+
+	/// <summary>
+	/// Create a ThemeShadow used to highlight the active section/border.
+	/// </summary>
+	internal static Shadow? ThemeShadow = new ThemeShadow();
+
+	// The default styles when the page is first constructed.
+	internal Brush? Step1Border_Brush { get; set => SP(ref field, value); }
+	internal Thickness Step1Border_Thickness { get; set => SP(ref field, value); } = new Thickness(1);
+	internal Vector3 Step1Border_Translation { get; set => SP(ref field, value); } = new Vector3(0, 0, 40);
+	internal Shadow? Step1Border_Shadow { get; set => SP(ref field, value); } = ThemeShadow;
+
+	internal Brush? Step2Border_Brush { get; set => SP(ref field, value); }
+	internal Thickness Step2Border_Thickness { get; set => SP(ref field, value); } = new Thickness(0);
+	internal Vector3 Step2Border_Translation { get; set => SP(ref field, value); } = new Vector3(0, 0, 0);
+	internal Shadow? Step2Border_Shadow { get; set => SP(ref field, value); }
+
+	internal Brush? Step3Border_Brush { get; set => SP(ref field, value); }
+	internal Thickness Step3Border_Thickness { get; set => SP(ref field, value); } = new Thickness(0);
+	internal Vector3 Step3Border_Translation { get; set => SP(ref field, value); } = new Vector3(0, 0, 0);
+	internal Shadow? Step3Border_Shadow { get; set => SP(ref field, value); }
+
+	internal void Step1Border_SetStyles()
+	{
+		Step1Border_Brush = linearGradientBrush;
+		Step1Border_Thickness = new Thickness(1);
+		Step1Border_Translation += new Vector3(0, 0, 40);
+		Step1Border_Shadow = ThemeShadow;
+	}
+
+	internal void Step2Border_SetStyles()
+	{
+		Step2Border_Brush = linearGradientBrush;
+		Step2Border_Thickness = new Thickness(1);
+		Step2Border_Translation += new Vector3(0, 0, 40);
+		Step2Border_Shadow = ThemeShadow;
+	}
+
+	internal void Step3Border_SetStyles()
+	{
+		Step3Border_Brush = linearGradientBrush;
+		Step3Border_Thickness = new Thickness(1);
+		Step3Border_Translation += new Vector3(0, 0, 40);
+		Step3Border_Shadow = ThemeShadow;
+	}
+
+	internal void Step1Border_ResetStyles()
+	{
+		// Reset the BorderBrush and BorderThickness to their default values
+		Step1Border_Brush = null;
+		Step1Border_Thickness = new Thickness(0);
+		Step1Border_Translation = new Vector3(0, 0, 0); // Reset the border depth
+		Step1Border_Shadow = null;
+	}
+
+	internal void Step2Border_ResetStyles()
+	{
+		Step2Border_Brush = null;
+		Step2Border_Thickness = new Thickness(0);
+		Step2Border_Translation = new Vector3(0, 0, 0); // Reset the border depth
+		Step2Border_Shadow = null;
+	}
+
+	internal void Step3Border_ResetStyles()
+	{
+		Step3Border_Brush = null;
+		Step3Border_Thickness = new Thickness(0);
+		Step3Border_Translation = new Vector3(0, 0, 0); // Reset the border depth
+		Step3Border_Shadow = null;
+	}
+
 	#endregion
+
+
+	#region Steps management
+
+	internal void DisableStep1()
+	{
+		BrowseForXMLPolicyButtonIsEnabled = false;
+		GoToStep2ButtonIsEnabled = false;
+		SupplementalPolicyNameTextBoxIsEnabled = false;
+		Step1GridOpacity = 0.5;
+		Step1Border_ResetStyles();
+		Step1InfoBar_IsOpen = false;
+		Step1InfoBar_Message = null;
+		LogSizeNumberBoxIsEnabled = false;
+	}
+
+	internal void EnableStep1()
+	{
+		BrowseForXMLPolicyButtonIsEnabled = true;
+		GoToStep2ButtonIsEnabled = true;
+		SupplementalPolicyNameTextBoxIsEnabled = true;
+		Step1GridOpacity = 1;
+		Step1Border_SetStyles();
+		LogSizeNumberBoxIsEnabled = true;
+	}
+
+	internal void DisableStep2()
+	{
+		BrowseForFoldersButtonIsEnabled = false;
+		GoToStep3ButtonIsEnabled = false;
+		Step2GridOpacity = 0.5;
+		Step2Border_ResetStyles();
+		Step2InfoBar_IsOpen = false;
+		Step2InfoBar_Message = null;
+	}
+
+	internal void EnableStep2()
+	{
+		BrowseForFoldersButtonIsEnabled = true;
+		Step2GridOpacity = 1;
+		GoToStep3ButtonIsEnabled = true;
+		Step2Border_SetStyles();
+	}
+
+	internal void DisableStep3()
+	{
+		DeployPolicyState = false;
+		ScanLevelComboBoxIsEnabled = false;
+		CreatePolicyButtonIsEnabled = false;
+		Step3GridOpacity = 0.5;
+		Step3Border_ResetStyles();
+		Step3InfoBar_IsOpen = false;
+		Step3InfoBar_Message = null;
+	}
+
+	internal void EnableStep3()
+	{
+		DeployPolicyState = true;
+		ScanLevelComboBoxIsEnabled = true;
+		CreatePolicyButtonIsEnabled = true;
+		Step3GridOpacity = 1;
+		Step3Border_SetStyles();
+	}
+
+	#endregion
+
 
 	#region LISTVIEW IMPLEMENTATIONS FOR EVENT LOGS
 
@@ -386,4 +671,935 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			EventLogsCountInfoBadgeValue = EventLogsFileIdentities.Count;
 		}
 	}
+
+	/// <summary>
+	/// Event handler to open the supplemental policy in the Policy Editor
+	/// </summary>
+	internal async void OpenInPolicyEditor()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	}
+
+	/// <summary>
+	/// Event handler for the clear button in the base policy path selection button
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void BrowseForXMLPolicyButton_Flyout_Clear_Click(object sender, RoutedEventArgs e)
+	{
+		selectedXMLFilePath = null;
+		tempBasePolicyPath = null;
+	}
+
+	/// <summary>
+	/// Event handler for the Create Policy button - Step 3
+	/// </summary>
+	internal async void CreatePolicyButton_Click()
+	{
+		try
+		{
+			// Disable the CreatePolicy button for the duration of the operation
+			CreatePolicyButtonIsEnabled = false;
+
+			ResetStepsButtonIsEnabled = false;
+
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			Step3InfoBar_IsOpen = true;
+			Step3InfoBar_Severity = InfoBarSeverity.Informational;
+			Step3InfoBar_Message = "Creating the policy using any available event logs or file scan results in other tabs.";
+			Step3InfoBar_IsClosable = false;
+
+			// Check if there are items for the local file scans ListView
+			if (LocalFilesAllFileIdentities.Count > 0)
+			{
+				// convert every selected item to FileIdentity and store it in the list
+				foreach (FileIdentity item in LocalFilesAllFileIdentities)
+				{
+					_ = fileIdentities.Add(item);
+				}
+			}
+
+			// Check if there are selected items for the Event Logs scan ListView
+			if (EventLogsAllFileIdentities.Count > 0)
+			{
+				// convert every selected item to FileIdentity and store it in the list
+				foreach (FileIdentity item in EventLogsAllFileIdentities)
+				{
+					_ = fileIdentities.Add(item);
+				}
+			}
+
+			// If there are no logs to create a Supplemental policy with
+			if (fileIdentities.Count is 0)
+			{
+				Step3InfoBar_Severity = InfoBarSeverity.Warning;
+				Step3InfoBar_Message = "There are no logs or files in any data grids to create a Supplemental policy for.";
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+
+				if (stagingArea is null)
+				{
+					throw new InvalidOperationException("Staging Area wasn't found");
+				}
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: scanLevel);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, Authorization.Allow);
+
+				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{selectedSupplementalPolicyName}.xml");
+
+				// Set the BasePolicyID of our new policy to the one from user selected policy
+				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, _BasePolicyObject!.BasePolicyID, null);
+
+				// Configure policy rule options
+				if (!_IsSignedPolicy)
+				{
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+				}
+				else
+				{
+					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+				}
+
+				// Set policy version
+				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				if (_IsSignedPolicy)
+				{
+					// Add certificate's details to the supplemental policy
+					_ = AddSigningDetails.Add(EmptyPolicyPath, _CertPath!);
+				}
+
+				// Copying the policy file to the User Config directory - outside of the temporary staging area
+				File.Copy(EmptyPolicyPath, OutputPath, true);
+
+				string CIPPath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip");
+
+				// This path is only used if the policy is signed
+				string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip.p7");
+
+				// Convert the XML file to CIP
+				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+
+				// Add the supplemental policy path to the class variable
+				finalSupplementalPolicyPath = OutputPath;
+
+				if (_IsSignedPolicy)
+				{
+					// Sign the CIP
+					SignToolHelper.Sign(new FileInfo(CIPPath), new FileInfo(_SignToolPath!), _CertCN!);
+
+					// Rename the .p7 signed file to .cip
+					File.Move(CIPp7SignedFilePath, CIPPath, true);
+				}
+				else
+				{
+					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				}
+
+				// If user selected to deploy the policy
+				if (DeployPolicy)
+				{
+#if !DEBUG
+					CiToolHelper.UpdatePolicy(CIPPath);
+#endif
+				}
+
+				// If not deploying it, copy the CIP file to the user config directory, just like the XML policy file
+				else
+				{
+					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
+					File.Copy(CIPPath, finalCIPPath, true);
+				}
+			});
+
+			Step3InfoBar_Severity = InfoBarSeverity.Success;
+			Step3InfoBar_Message = DeployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.";
+
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
+		}
+		catch (Exception ex)
+		{
+			Step3InfoBar_Message = ex.Message;
+			Step3InfoBar_Severity = InfoBarSeverity.Error;
+
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+		finally
+		{
+			CreatePolicyButtonIsEnabled = true;
+			ResetStepsButtonIsEnabled = true;
+			Step3InfoBar_IsClosable = true;
+
+			// Clear the private variable after the policy is created. This allows the user to remove some items from the logs and recreate the policy with less data if needed.
+			fileIdentities.FileIdentitiesInternal.Clear();
+		}
+	}
+
+	/// <summary>
+	/// Handles the click event for a button to browse and select an XML policy file.
+	/// </summary>
+	/// <exception cref="InvalidOperationException">Thrown when the selected file path is not a valid XML file.</exception>
+	internal void BrowseForXMLPolicyButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrWhiteSpace(selectedFile))
+		{
+			// The extra validations are required since user can provide path in the text box directly
+			if (File.Exists(selectedFile) && (Path.GetExtension(selectedFile).Equals(".xml", StringComparison.OrdinalIgnoreCase)))
+			{
+				// Store the selected XML file path
+				selectedXMLFilePath = selectedFile;
+			}
+			else
+			{
+				throw new InvalidOperationException($"Selected item '{selectedFile}' is not a valid XML file path");
+			}
+		}
+	}
+
+	/// <summary>
+	/// Handles the click event for a button to browse and select multiple folders. Selected folders are added to a
+	/// collection and displayed in the UI.
+	/// </summary>
+	internal void BrowseForFoldersButton_Click()
+	{
+		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+
+		if (selectedFolders is { Count: > 0 })
+		{
+			// Add each folder to the HashSet of the selected directories
+			foreach (string folder in selectedFolders)
+			{
+				ManageHashSet(folder, true);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Clears the text box and the list of selected directories when the button is clicked.
+	/// </summary>
+	internal void ClearSelectedDirectoriesButton_Click()
+	{
+		// Clear the list of selected directories
+		ManageHashSet(null, false);
+	}
+
+	#region Local Files Section
+
+	internal string? LocalFilesAllFileIdentitiesSearchText
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ApplyFiltersLocalFiles();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	internal void ListViewFlyoutMenuCopy_Click_LocalFiles()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
+		if (lv is null) return;
+
+		// Check if there are selected items in the ListView
+		if (lv.SelectedItems.Count > 0)
+		{
+			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+		}
+	}
+
+	/// <summary>
+	/// Applies the date and search filters to the data grid
+	/// </summary>
+	private void ApplyFiltersLocalFiles()
+	{
+		ListViewHelper.ApplyFilters(
+			allFileIdentities: LocalFilesAllFileIdentities.AsEnumerable(),
+			filteredCollection: LocalFilesFileIdentities,
+			searchText: LocalFilesAllFileIdentitiesSearchText,
+			datePicker: null,
+			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults
+		);
+
+		UpdateTotalFiles();
+	}
+
+	/// <summary>
+	/// Selects all of the displayed rows on the ListView
+	/// </summary>
+	internal void SelectAll_Click_LocalFiles()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
+		if (lv is null) return;
+
+		lv.SelectedItems.Clear();
+
+		foreach (FileIdentity item in LocalFilesFileIdentities)
+		{
+			// Select each item
+			lv.SelectedItems.Add(item);
+		}
+	}
+
+	/// <summary>
+	/// De-selects all of the displayed rows on the ListView
+	/// </summary>
+	internal void DeSelectAll_Click_LocalFiles()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
+		if (lv is null) return;
+
+		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+	}
+
+	/// <summary>
+	/// Deletes the selected row from the results
+	/// </summary>
+	internal void ListViewFlyoutMenuDelete_Click_LocalFiles()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
+		if (lv is null) return;
+
+		// Collect the selected items to delete
+		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
+
+		// Remove each selected item from the FileIdentities collection
+		foreach (FileIdentity item in itemsToDelete)
+		{
+			_ = LocalFilesFileIdentities.Remove(item);
+			_ = LocalFilesAllFileIdentities.Remove(item);
+		}
+
+		UpdateTotalFiles();
+	}
+
+	#endregion
+
+	#region Event Logs Section
+
+	internal string? EventLogsAllFileIdentitiesSearchText
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ApplyFiltersEventLogs();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Applies the date and search filters to the data grid
+	/// </summary>
+	private void ApplyFiltersEventLogs()
+	{
+		ListViewHelper.ApplyFilters(
+			allFileIdentities: EventLogsAllFileIdentities.AsEnumerable(),
+			filteredCollection: EventLogsFileIdentities,
+			searchText: EventLogsAllFileIdentitiesSearchText,
+			datePicker: null,
+			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults
+		);
+
+		UpdateTotalLogs();
+	}
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	internal void ListViewFlyoutMenuCopy_Click_EventLogs()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+		if (lv is null) return;
+
+		// Check if there are selected items in the ListView
+		if (lv.SelectedItems.Count > 0)
+		{
+			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+		}
+	}
+
+	/// <summary>
+	/// Selects all of the displayed rows on the ListView
+	/// </summary>
+	internal void SelectAll_Click_EventLogs()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+		if (lv is null) return;
+
+		lv.SelectedItems.Clear();
+
+		foreach (FileIdentity item in EventLogsFileIdentities)
+		{
+			// Select each item
+			lv.SelectedItems.Add(item);
+		}
+	}
+
+	/// <summary>
+	/// De-selects all of the displayed rows on the ListView
+	/// </summary>
+	internal void DeSelectAll_Click_EventLogs()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+		if (lv is null) return;
+
+		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+	}
+
+	/// <summary>
+	/// Deletes the selected row from the results
+	/// </summary>
+	internal void ListViewFlyoutMenuDelete_Click_EventLogs()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+		if (lv is null) return;
+
+		// Collect the selected items to delete
+		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
+
+		// Remove each selected item from the FileIdentities collection
+		foreach (FileIdentity item in itemsToDelete)
+		{
+			_ = EventLogsFileIdentities.Remove(item);
+			_ = EventLogsAllFileIdentities.Remove(item);
+		}
+
+		UpdateTotalLogs();
+	}
+
+	#endregion
+
+	/// <summary>
+	/// Local event handler that are assigned to the sidebar button.
+	/// </summary>
+	internal void LightUp1()
+	{
+		if (AllowNewAppsStart.BrowseForXMLPolicyButtonPub is not null && AllowNewAppsStart.BrowseForXMLPolicyButton_FlyOutPub is not null)
+			AllowNewAppsStart.BrowseForXMLPolicyButton_FlyOutPub.ShowAt(AllowNewAppsStart.BrowseForXMLPolicyButtonPub);
+		selectedXMLFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+	}
+
+
+	internal double Step2ProgressRingValue { get; set => SP(ref field, value); }
+
+	// A Progress<double> so Report() callbacks run on the UI thread
+	internal IProgress<double> Step2ProgressRingProgress;
+
+	internal int ScanLevelComboBoxSelectedIndex { get; set => SP(ref field, value); }
+
+
+	/// <summary>
+	/// Step 1 validation
+	/// </summary>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal async void GoToStep2Button_Click()
+	{
+		bool errorOccurred = false;
+
+		try
+		{
+			Step1ProgressRingIsActive = true;
+			GoToStep2ButtonIsEnabled = false;
+			ResetStepsButtonIsEnabled = false;
+
+			Step1InfoBar_IsOpen = true;
+			Step1InfoBar_IsClosable = false;
+			Step1InfoBar_Severity = InfoBarSeverity.Informational;
+			Step1InfoBar_Message = GlobalVars.Rizz.GetString("Starting");
+
+			// Ensure the text box for policy file name is filled
+			if (string.IsNullOrWhiteSpace(selectedSupplementalPolicyName))
+			{
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("ErrorSelectSupplementalPolicyName"));
+			}
+
+			// Ensure user selected a XML policy file path
+			if (string.IsNullOrWhiteSpace(selectedXMLFilePath))
+			{
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("ErrorSelectXMLPolicyFile"));
+			}
+
+			// Ensure the selected XML file path exists on the disk
+			if (!File.Exists(selectedXMLFilePath))
+			{
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("ErrorXMLFileDoesNotExist") + ": " + selectedXMLFilePath);
+			}
+
+			await Task.Run(() =>
+			{
+				// Instantiate the selected policy file
+				_BasePolicyObject = Management.Initialize(selectedXMLFilePath, null);
+
+				if (_BasePolicyObject.PolicyType is not PolicyType.BasePolicy)
+				{
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("ErrorPolicyMustBeBase") + _BasePolicyObject.PolicyType);
+				}
+
+				// Get all deployed base policies
+				List<CiPolicyInfo> allDeployedBasePolicies = CiToolHelper.GetPolicies(false, true, false);
+
+				// Get all the deployed base policyIDs
+				List<string?> CurrentlyDeployedBasePolicyIDs = [.. allDeployedBasePolicies.Select(p => p.BasePolicyID)];
+
+				// Trim the curly braces from the policyID
+				string trimmedPolicyID = _BasePolicyObject.PolicyID.TrimStart('{').TrimEnd('}');
+
+				// Make sure the selected policy is deployed on the system
+				if (!CurrentlyDeployedBasePolicyIDs.Any(id => string.Equals(id, trimmedPolicyID, StringComparison.OrdinalIgnoreCase)))
+				{
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("ErrorPolicyNotDeployed"));
+				}
+
+				// If the policy doesn't have any rule options or it doesn't have the EnabledUnsignedSystemIntegrityPolicy rule option then it is signed
+				_IsSignedPolicy = !_BasePolicyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy);
+			});
+
+			if (_IsSignedPolicy)
+			{
+
+				Logger.Write(GlobalVars.Rizz.GetString("SignedPolicyDetected"));
+
+				#region Signing Details acquisition
+
+				// Instantiate the Content Dialog
+				SigningDetailsDialog customDialog = new(_BasePolicyObject);
+
+				// Show the dialog and await its result
+				ContentDialogResult result = await customDialog.ShowAsync();
+
+				// Ensure primary button was selected
+				if (result is ContentDialogResult.Primary)
+				{
+					_SignToolPath = customDialog.SignToolPath!;
+					_CertPath = customDialog.CertificatePath!;
+					_CertCN = customDialog.CertificateCommonName!;
+				}
+				else
+				{
+					GoToStep2ButtonIsEnabled = true;
+
+					return;
+				}
+
+				#endregion
+			}
+
+			// Execute the main tasks of step 1
+			await Task.Run(() =>
+			{
+
+				// Create the required directory and file paths in step 1
+				stagingArea = StagingArea.NewStagingArea("AllowNewApps");
+				tempBasePolicyPath = Path.Combine(stagingArea.FullName, "BasePolicy.XML");
+				AuditModeCIP = Path.Combine(stagingArea.FullName, "BaseAudit.cip");
+
+				// Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
+				EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7().ToString("N")}.cip");
+
+				_ = Dispatcher.TryEnqueue(() =>
+				{
+					Step1InfoBar_Message = GlobalVars.Rizz.GetString("DeployingInAuditWait");
+				});
+
+				// Creating a copy of the original policy in the Staging Area so that the original one will be unaffected
+				File.Copy(selectedXMLFilePath, tempBasePolicyPath, true);
+
+				// If the policy is Unsigned
+				if (!_IsSignedPolicy)
+				{
+					// Create audit mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode]);
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
+
+					// Create Enforced mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode]);
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
+				}
+				// If the policy is Signed
+				else
+				{
+					// Create audit mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode], rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+
+					string CIPp7SignedFilePathAudit = Path.Combine(stagingArea.FullName, "BaseAudit.cip.p7");
+
+					// Convert the XML file to CIP
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
+
+					// Sign the CIP
+					SignToolHelper.Sign(new FileInfo(AuditModeCIP), new FileInfo(_SignToolPath!), _CertCN!);
+
+					// Rename the .p7 signed file to .cip
+					File.Move(CIPp7SignedFilePathAudit, AuditModeCIP, true);
+
+					// Create Enforced mode CIP
+					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+
+					string CIPp7SignedFilePathEnforced = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip.p7");
+
+					string tempEnforcedModeCIPPath = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip");
+
+					// Convert the XML file to CIP
+					PolicyToCIPConverter.Convert(tempBasePolicyPath, tempEnforcedModeCIPPath);
+
+					// Sign the CIP
+					SignToolHelper.Sign(new FileInfo(tempEnforcedModeCIPPath), new FileInfo(_SignToolPath!), _CertCN!);
+
+					// Rename the .p7 signed file to .cip
+					File.Move(CIPp7SignedFilePathEnforced, EnforcedModeCIP, true);
+				}
+
+				Logger.Write(GlobalVars.Rizz.GetString("CreatingSnapBackGuarantee"));
+				SnapBackGuarantee.Create(EnforcedModeCIP);
+
+#if !DEBUG
+				Logger.Write(GlobalVars.Rizz.GetString("DeployingAuditModePolicy"));
+				CiToolHelper.UpdatePolicy(AuditModeCIP);
+#endif
+
+				Logger.Write("The Base policy has been Re-Deployed in Audit Mode");
+
+				EventLogUtility.SetLogSize(EventLogsUtil.MaxSizeMB);
+			});
+
+			DisableStep1();
+			EnableStep2();
+			DisableStep3();
+
+			// Capture the current time so that the audit logs that will be displayed will be newer than that
+			LogsScanStartTime = DateTime.Now;
+		}
+		catch (Exception ex)
+		{
+			errorOccurred = true;
+
+			Step1InfoBar_Message = ex.Message;
+			Step1InfoBar_Severity = InfoBarSeverity.Error;
+
+			Logger.Write(ErrorWriter.FormatException(ex)); // Log the full exception details
+		}
+		finally
+		{
+			Step1ProgressRingIsActive = false;
+			ResetStepsButtonIsEnabled = true;
+			Step1InfoBar_IsClosable = true;
+
+			// Only re-enable the button if errors occurred, otherwise we don't want to override the work that DisableStep1() method does
+			if (errorOccurred)
+			{
+				GoToStep2ButtonIsEnabled = true;
+
+				// Clear the variables if errors occurred in step 1
+				_BasePolicyObject = null;
+				_CertCN = null;
+				_CertPath = null;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Step 2 validation
+	/// </summary>
+	internal async void GoToStep3Button_Click()
+	{
+
+		bool errorsOccurred = false;
+
+		try
+		{
+			Step2ProgressRingIsActive = true;
+			GoToStep3ButtonIsEnabled = false;
+			ResetStepsButtonIsEnabled = false;
+
+			Step2InfoBar_IsClosable = false;
+			Step2InfoBar_IsOpen = true;
+			Step2InfoBar_Severity = InfoBarSeverity.Informational;
+
+			// While the base policy is being deployed is audit mode, set the progress ring as indeterminate
+			Step2ProgressRingIsIndeterminate = true;
+
+			// Enable the ListView pages so user can select the logs
+			EventLogsMenuItemState = true;
+			LocalFilesMenuItemState = true;
+
+			await Task.Run(async () =>
+			{
+
+				// Deploy the base policy in enforced mode before proceeding with scans
+				if (EnforcedModeCIP is null)
+				{
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("ErrorEnforcedModeCIPNotFound"));
+				}
+
+				_ = Dispatcher.TryEnqueue(() =>
+				{
+					Step2InfoBar_Message = GlobalVars.Rizz.GetString("DeployingEnforceMode");
+				});
+
+#if !DEBUG
+				Logger.Write(GlobalVars.Rizz.GetString("DeployingEnforceMode"));
+				CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+#endif
+
+				// Delete the enforced mode CIP file after deployment
+				File.Delete(EnforcedModeCIP);
+
+				// Remove the snap back guarantee task and related .bat file after successfully re-deploying the Enforced mode policy
+				SnapBackGuarantee.Remove();
+
+				// Check if user selected directories to be scanned
+				if (selectedDirectoriesToScan.Count > 0)
+				{
+
+					_ = Dispatcher.TryEnqueue(() =>
+					{
+						Step2InfoBar_Message = GlobalVars.Rizz.GetString("ScanningSelectedDirectories");
+
+						// Set the progress ring to no longer be indeterminate since file scan will take control of its value
+						Step2ProgressRingIsIndeterminate = false;
+					});
+
+					DirectoryInfo[] selectedDirectories = [];
+
+					// Convert user selected folder paths that are strings to DirectoryInfo objects
+					selectedDirectories = [.. selectedDirectoriesToScan.Select(dir => new DirectoryInfo(dir))];
+
+					// Get all of the AppControl compatible files from user selected directories
+					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
+
+					// If any App Control compatible files were found in the user selected directories
+					if (DetectedFilesInSelectedDirectories.Item2 > 0)
+					{
+
+						_ = Dispatcher.TryEnqueue(() =>
+						{
+							Step2InfoBar_Message = $"Scanning {DetectedFilesInSelectedDirectories.Item2} files found in the selected directories";
+
+							// Set the progress ring to no longer be indeterminate since file scan will take control of its value
+							Step2ProgressRingIsIndeterminate = false;
+						});
+
+						// Scan all of the detected files from the user selected directories
+						// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
+						IEnumerable<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(
+							DetectedFilesInSelectedDirectories,
+							2,
+							Step2ProgressRingProgress,
+							this,
+							(fi, vm) => fi.ParentViewModelAllowNewApps = vm);
+
+						// Add the results to the backing list
+						LocalFilesAllFileIdentities.Clear();
+						LocalFilesAllFileIdentities.AddRange(LocalFilesResults);
+
+						await Dispatcher.EnqueueAsync(() =>
+						{
+							// Add the results of the Files/Directories scans to the ObservableCollection
+							LocalFilesFileIdentities = new(LocalFilesResults);
+
+							CalculateColumnWidthLocalFiles();
+						});
+					}
+				}
+			});
+
+			// Update the InfoBadge for the top menu
+			LocalFilesCountInfoBadgeValue = LocalFilesFileIdentities.Count;
+			LocalFilesCountInfoBadgeOpacity = 1;
+
+			Step2InfoBar_Message = GlobalVars.Rizz.GetString("ScanningEventLogs");
+
+			// Log scanning doesn't produce determinate real time progress so setting it as indeterminate
+			Step2ProgressRingIsIndeterminate = true;
+
+			// Check for available logs
+
+			// Grab the App Control Logs
+			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents();
+
+#if !DEBUG
+
+			// Filter the logs and keep only ones generated after audit mode policy was deployed
+			await Task.Run(() =>
+			{
+				Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= LogsScanStartTime)];
+			});
+
+#endif
+
+			Step2InfoBar_Message = $"{Output.Count} log(s) were generated during the Audit phase";
+
+			// If any logs were generated since audit mode policy was deployed
+			if (Output.Count > 0)
+			{
+				// Add the results to the backing list
+				EventLogsAllFileIdentities.Clear();
+				EventLogsAllFileIdentities.AddRange(Output);
+
+				await Dispatcher.EnqueueAsync(() =>
+				{
+					EventLogsFileIdentities.Clear();
+
+					// Add the event logs to the ObservableCollection
+					foreach (FileIdentity item in Output)
+					{
+						// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
+						item.ParentViewModelAllowNewApps = this;
+						EventLogsFileIdentities.Add(item);
+					}
+
+					CalculateColumnWidthEventLogs();
+				});
+			}
+
+			// Update the InfoBadge for the top menu
+			EventLogsCountInfoBadgeValue = EventLogsFileIdentities.Count;
+			EventLogsCountInfoBadgeOpacity = 1;
+
+			DisableStep1();
+			DisableStep2();
+			EnableStep3();
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+
+			Step2InfoBar_Message = ex.Message;
+
+			Step2InfoBar_Severity = InfoBarSeverity.Error;
+
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+		finally
+		{
+			Step2ProgressRingIsActive = false;
+			ResetStepsButtonIsEnabled = true;
+			Step2InfoBar_IsClosable = true;
+
+			if (errorsOccurred)
+			{
+				// Re-enable the button allowing the user to fix any potential issues.
+				GoToStep3ButtonIsEnabled = true;
+			}
+		}
+	}
+
+
+	/// <summary>
+	/// Steps Reset
+	/// </summary>
+	internal async void ResetStepsButton_Click()
+	{
+		try
+		{
+			ResetStepsButtonIsEnabled = false;
+			ResetProgressRingIsActive = true;
+
+			// Disable all steps
+			DisableStep1();
+			DisableStep2();
+			DisableStep3();
+
+			Step1InfoBar_IsOpen = true;
+			Step1InfoBar_IsClosable = false;
+			Step1InfoBar_Severity = InfoBarSeverity.Informational;
+			Step1InfoBar_Message = GlobalVars.Rizz.GetString("Resetting");
+
+			// Hide the action button for InfoBar in Step 3 that offers to open the supplemental policy in the Policy Editor
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			// Clear the path to the supplemental policy
+			finalSupplementalPolicyPath = null;
+
+			// Clear the ListViews and their respective search/filter-related lists
+			LocalFilesFileIdentities.Clear();
+			LocalFilesAllFileIdentities.Clear();
+			EventLogsFileIdentities.Clear();
+			EventLogsAllFileIdentities.Clear();
+
+			// reset the class variables back to their default states
+			fileIdentities.FileIdentitiesInternal.Clear();
+			ManageHashSet(null, false);
+			DeployPolicy = true;
+			selectedSupplementalPolicyName = null;
+			LogsScanStartTime = null;
+			tempBasePolicyPath = null;
+			_BasePolicyObject = null;
+			_CertCN = null;
+			_CertPath = null;
+			_SignToolPath = null;
+			_IsSignedPolicy = false;
+
+			// Disable the data grids access
+			EventLogsMenuItemState = false;
+			LocalFilesMenuItemState = false;
+
+
+			// Update the InfoBadges for the top menu
+			LocalFilesCountInfoBadgeValue = 0;
+			LocalFilesCountInfoBadgeOpacity = 0;
+			EventLogsCountInfoBadgeOpacity = 0;
+			EventLogsCountInfoBadgeValue = 0;
+
+			// Reset the UI inputs back to their default states
+			DeployPolicy = true;
+			ScanLevelComboBoxSelectedIndex = 0;
+
+			// Run the main reset tasks on a different thread
+			await Task.Run(() =>
+			{
+
+				// Deploy the base policy in enforced mode if user advanced to that step
+				if (Path.Exists(EnforcedModeCIP))
+				{
+
+#if !DEBUG
+					Logger.Write(GlobalVars.Rizz.GetString("DeployingEnforceModeCuzReset"));
+					CiToolHelper.UpdatePolicy(EnforcedModeCIP);
+#endif
+
+					// Delete the enforced mode CIP file from the user config directory after deploying it
+					File.Delete(EnforcedModeCIP);
+				}
+
+				// Remove the snap back guarantee task and .bat file if it exists
+				SnapBackGuarantee.Remove();
+			});
+
+			Step1InfoBar_Severity = InfoBarSeverity.Success;
+			Step1InfoBar_Message = GlobalVars.Rizz.GetString("ResetSuccessful");
+		}
+		catch (Exception ex)
+		{
+			Step1InfoBar_Message = ex.Message;
+			Step1InfoBar_Severity = InfoBarSeverity.Error;
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+		finally
+		{
+			// Enable the step1 for new operation
+			EnableStep1();
+			ResetProgressRingIsActive = false;
+			ResetStepsButtonIsEnabled = true;
+
+			Step1InfoBar_IsClosable = true;
+		}
+	}
+
 }

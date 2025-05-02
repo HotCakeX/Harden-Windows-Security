@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -28,11 +29,11 @@
 
             </controls:WrapPanel>
 
-            <Button Grid.Row="1" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="{x:Bind PickPolicyFileButton_Click}"
-                     HorizontalAlignment="Center" RightTapped="PickPolicyFileButton_RightTapped" Holding="PickPolicyFileButton_Holding"
+            <customUI:ButtonV2 Grid.Row="1" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="{x:Bind PickPolicyFileButton_Click}"
+                     HorizontalAlignment="Center"
                      x:Uid="PickPolicyFileButton">
 
-                <Button.Flyout>
+                <customUI:ButtonV2.Flyout>
                     <Flyout x:Name="PickPolicyFileButton_FlyOut">
 
                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -48,9 +49,9 @@
                         </controls:WrapPanel>
 
                     </Flyout>
-                </Button.Flyout>
+                </customUI:ButtonV2.Flyout>
 
-                <Button.Content>
+                <customUI:ButtonV2.Content>
                     <controls:WrapPanel Orientation="Horizontal">
 
                         <AnimatedIcon Visibility="{x:Bind ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -62,9 +63,9 @@
                         <TextBlock x:Uid="BrowseForPolicyTextBlock" />
 
                     </controls:WrapPanel>
-                </Button.Content>
+                </customUI:ButtonV2.Content>
 
-            </Button>
+            </customUI:ButtonV2>
 
             <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,20,0,0">
 

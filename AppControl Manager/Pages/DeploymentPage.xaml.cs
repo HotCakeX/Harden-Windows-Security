@@ -32,10 +32,8 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -744,47 +742,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupIDs, policyName, policyID, descriptionText);
 	}
 
-
-	private void BrowseForXMLPolicyFilesButton_RightTapped()
-	{
-		if (!BrowseForXMLPolicyFilesButton_Flyout.IsOpen)
-			BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
-	}
-
-	private void BrowseForXMLPolicyFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!BrowseForXMLPolicyFilesButton_Flyout.IsOpen)
-				BrowseForXMLPolicyFilesButton_Flyout.ShowAt(BrowseForXMLPolicyFilesButton);
-	}
-
-	private void BrowseForSignedXMLPolicyFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!BrowseForSignedXMLPolicyFilesButton_Flyout.IsOpen)
-			BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
-	}
-
-	private void BrowseForSignedXMLPolicyFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!BrowseForSignedXMLPolicyFilesButton_Flyout.IsOpen)
-				BrowseForSignedXMLPolicyFilesButton_Flyout.ShowAt(BrowseForSignedXMLPolicyFilesButton);
-	}
-
-	private void BrowseForCIPBinaryFilesButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!BrowseForCIPBinaryFilesButton_Flyout.IsOpen)
-				BrowseForCIPBinaryFilesButton_Flyout.ShowAt(BrowseForCIPBinaryFilesButton);
-	}
-
-	private void BrowseForCIPBinaryFilesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!BrowseForCIPBinaryFilesButton_Flyout.IsOpen)
-			BrowseForCIPBinaryFilesButton_Flyout.ShowAt(BrowseForCIPBinaryFilesButton);
-	}
-
-
 	private readonly HashSet<string> XMLFilesToConvertToCIP = [];
 
 	/// <summary>
@@ -806,21 +763,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			}
 		}
 	}
-
-
-	private void BrowseForXMLPolicesButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!BrowseForXMLPolicesButton_Flyout.IsOpen)
-				BrowseForXMLPolicesButton_Flyout.ShowAt(BrowseForXMLPolicesButton);
-	}
-
-	private void BrowseForXMLPolicesButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!BrowseForXMLPolicesButton_Flyout.IsOpen)
-			BrowseForXMLPolicesButton_Flyout.ShowAt(BrowseForXMLPolicesButton);
-	}
-
 
 	/// <summary>
 	/// Handles the click event for converting XML files to CIP format.

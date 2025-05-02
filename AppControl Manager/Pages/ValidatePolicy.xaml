@@ -6,6 +6,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
@@ -27,15 +28,21 @@
 
             </controls:WrapPanel>
 
-            <InfoBar
+            <controls:WrapPanel Grid.Row="1" HorizontalAlignment="Center">
+
+                <InfoBar 
                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"                
                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"                
                 Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
-                IsIconVisible="True"
-                Grid.Row="1">
-            </InfoBar>
+                IsIconVisible="True">
+                </InfoBar>
+
+                <ProgressRing IsIndeterminate="True" Margin="20,0,0,0" 
+                    Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}" />
+
+            </controls:WrapPanel>
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
@@ -52,6 +59,26 @@
                     <Button x:Uid="BrowseButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ValidateXML}" />
 
                 </controls:SettingsCard>
+
+                <!-- Schema -->
+                <controls:SettingsCard x:Uid="SchemaValidationSettingsCard">
+                    <ToggleSwitch IsOn="True" IsEnabled="False"/>
+                </controls:SettingsCard>
+
+                <!-- Deserialize -->
+                <customUI:SettingsCardV2 x:Uid="DeserializeValidationSettingsCard">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level2Test, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                </customUI:SettingsCardV2>
+
+                <!-- Serialize -->
+                <customUI:SettingsCardV2 x:Uid="SerializeValidationSettingsCard">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level3Test, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                </customUI:SettingsCardV2>
+
+                <!-- Binary creation -->
+                <customUI:SettingsCardV2 x:Uid="BinaryValidationSettingsCard">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level4Test, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                </customUI:SettingsCardV2>
 
             </StackPanel>
 

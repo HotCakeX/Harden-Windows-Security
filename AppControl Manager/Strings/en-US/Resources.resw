@@ -3203,4 +3203,218 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
     <value>Policy Path</value>
   </data>
+  <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
+    <value>You need to select a name for the Supplemental Policy</value>
+  </data>
+  <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
+    <value>You need to select a XML policy file path</value>
+  </data>
+  <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
+    <value>The selected XML file path doesn't exist</value>
+  </data>
+  <data name="Starting" xml:space="preserve">
+    <value>Starting...</value>
+  </data>
+  <data name="ErrorPolicyMustBeBase" xml:space="preserve">
+    <value>The selected XML policy file must be Base policy type, but its type is: </value>
+  </data>
+  <data name="ErrorPolicyNotDeployed" xml:space="preserve">
+    <value>The selected policy file is not deployed on the system.</value>
+  </data>
+  <data name="SignedPolicyDetected" xml:space="preserve">
+    <value>Signed policy detected</value>
+  </data>
+  <data name="DeployingInAuditWait" xml:space="preserve">
+    <value>Deploying the selected policy in Audit mode, please wait</value>
+  </data>
+  <data name="CreatingSnapBackGuarantee" xml:space="preserve">
+    <value>Creating Enforced Mode SnapBack guarantee</value>
+  </data>
+  <data name="DeployingAuditModePolicy" xml:space="preserve">
+    <value>Deploying the Audit mode policy</value>
+  </data>
+  <data name="ScanningSelectedDirectories" xml:space="preserve">
+    <value>Scanning the selected directories</value>
+  </data>
+  <data name="ScanningEventLogs" xml:space="preserve">
+    <value>Scanning the event logs</value>
+  </data>
+  <data name="Resetting" xml:space="preserve">
+    <value>Resetting...</value>
+  </data>
+  <data name="ResetSuccessful" xml:space="preserve">
+    <value>Reset was successful.</value>
+  </data>
+  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+    <value>Deploying the Enforced mode policy because user decided to reset the operation</value>
+  </data>
+  <data name="DeployingEnforceMode" xml:space="preserve">
+    <value>Deploying the Enforced mode policy.</value>
+  </data>
+  <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
+    <value>Enforced mode CIP file could not be found</value>
+  </data>
+  <data name="BrowseForAppControlPolicy" xml:space="preserve">
+    <value>Browse for an App Control XML policy file</value>
+  </data>
+  <data name="Validating" xml:space="preserve">
+    <value>Performing Validation</value>
+  </data>
+  <data name="IsValid" xml:space="preserve">
+    <value>The selected policy is valid.</value>
+  </data>
+  <data name="Valid" xml:space="preserve">
+    <value>Valid</value>
+  </data>
+  <data name="SuitableForIntuneDeployment" xml:space="preserve">
+    <value>It is suitable for Intune policy deployment.</value>
+  </data>
+  <data name="ReduceSizeForIntuneDeployment" xml:space="preserve">
+    <value>You will need to edit the policy in order to reduce its size to below 350 KB to make it suitable for Intune deployment.</value>
+  </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>Invalid</value>
+  </data>
+  <data name="IsNotValid" xml:space="preserve">
+    <value>The selected policy file failed validations.</value>
+  </data>
+  <data name="CIPFileSize" xml:space="preserve">
+    <value>The CIP binary file size is</value>
+  </data>
+  <data name="SchemaValidationSettingsCard.Header" xml:space="preserve">
+    <value>Level 1 - Required and always used</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+    <data name="SchemaValidationSettingsCard.Description" xml:space="preserve">
+    <value>Ensures the policy is valid based on the Code Integrity Schema.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="SchemaValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ensures the policy is valid based on the Code Integrity Schema.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="SchemaValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ensures the policy is valid based on the Code Integrity Schema.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="DeserializeValidationSettingsCard.Header" xml:space="preserve">
+    <value>Level 2</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+    <data name="DeserializeValidationSettingsCard.Description" xml:space="preserve">
+    <value>Deeper analysis of the policy content.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="DeserializeValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deeper analysis of the policy content.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="DeserializeValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deeper analysis of the policy content.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="SerializeValidationSettingsCard.Header" xml:space="preserve">
+    <value>Level 3</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="SerializeValidationSettingsCard.Description" xml:space="preserve">
+    <value>Extended tests on the policy content to make sure they are valid.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="SerializeValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Extended tests on the policy content to make sure they are valid.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="SerializeValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Extended tests on the policy content to make sure they are valid.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+    <data name="BinaryValidationSettingsCard.Header" xml:space="preserve">
+    <value>Level 4</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+    <data name="BinaryValidationSettingsCard.Description" xml:space="preserve">
+    <value>Performs final tests and attempt to generate a temporary CIP binary based on the policy to make sure it can be done successfully.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="BinaryValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Performs final tests and attempt to generate a temporary CIP binary based on the policy to make sure it can be done successfully.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="BinaryValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Performs final tests and attempt to generate a temporary CIP binary based on the policy to make sure it can be done successfully.</value>
+    <comment>Policy Validation Page</comment>
+  </data>
+  <data name="NeedBothIDsValidationError" xml:space="preserve">
+    <value>The policy must have a PolicyID and a BasePolicyID.</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="IDsMismatchValidationError" xml:space="preserve">
+    <value>A base policy must have the same values for its PolicyID and BasePolicyID. A Supplemental policy must have different values for its PolicyID and BasePolicyID.</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="DuplicateRuleOptionValidationError" xml:space="preserve">
+    <value>The following policy rule option is being used twice</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="DuplicateEKUIDsValidationError" xml:space="preserve">
+    <value>There are more than 1 EKUs with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="DuplicateMacroIDsValidationError" xml:space="preserve">
+    <value>There are more than 1 Macros with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="MissingSupPolSignersValidationError" xml:space="preserve">
+    <value>Signed base policy detected, it allows to have Supplemental policies, but no Supplemental Policy Signers were found in it.</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="AllowRuleNoIDValidationError" xml:space="preserve">
+    <value>There is an Allow rule without an ID!</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="AllowRuleDupIDValidationError" xml:space="preserve">
+    <value>There are more than 1 Allow rules with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
+    <value>There is a Deny rule without an ID!</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="DenyRuleDupIDValidationError" xml:space="preserve">
+    <value>There are more than 1 Deny rules with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="FileAttribNoIDValidationError" xml:space="preserve">
+    <value>There is a FileAttrib without an ID!</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="FileAttribDupIDValidationError" xml:space="preserve">
+    <value>There are more than 1 FileAttribs with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="FileRuleNoIDValidationError" xml:space="preserve">
+    <value>There is a FileRule without an ID!</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="FileRuleDupIDValidationError" xml:space="preserve">
+    <value>There are more than 1 FileRules with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="SignerNoIDValidationError" xml:space="preserve">
+    <value>There is a Signer without an ID!</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="SignerDupIDValidationError" xml:space="preserve">
+    <value>There are more than 1 Signers with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="SigningScenarioNoIDValidationError" xml:space="preserve">
+    <value>There is a SigningScenario without an ID!</value>
+    <comment>Policy validation error</comment>
+  </data>
+  <data name="SigningScenarioDupIDValidationError" xml:space="preserve">
+    <value>There are more than 1 SigningScenarios with the same ID</value>
+    <comment>Policy validation error</comment>
+  </data>
 </root>

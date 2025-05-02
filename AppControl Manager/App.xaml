@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:local="using:AppControlManager">
     <Application.Resources>
@@ -83,6 +84,9 @@
             </animations:ImplicitAnimationSet>
 
             <media:AttachedCardShadow x:Key="BorderShadow" Offset="0" Color="Violet" BlurRadius="10" Opacity="50" CornerRadius="18" />
+
+            <!-- Ensure the custom button maintains the regular button styles -->
+            <Style TargetType="customUI:ButtonV2" BasedOn="{StaticResource DefaultButtonStyle}" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -4,7 +4,11 @@
   <PolicyID>{7AE40A06-9CFC-47E7-A74C-0B6BC71E3B93}</PolicyID>
   <BasePolicyID>{7AE40A06-9CFC-47E7-A74C-0B6BC71E3B93}</BasePolicyID>
   <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
-  <Rules/>
+  <Rules>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+  </Rules>
   <EKUs/>
   <FileRules/>
   <Signers/>

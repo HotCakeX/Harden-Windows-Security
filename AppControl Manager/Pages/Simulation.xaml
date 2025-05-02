@@ -54,15 +54,15 @@
                 </Button>
 
                 <!-- Select XML File Button -->
-                <Button Click="{x:Bind SelectXmlFileButton_Click}" x:Name="SelectXmlFileButton"
-                 Holding="SelectXmlFileButton_Holding" RightTapped="SelectXmlFileButton_RightTapped" ToolTipService.ToolTip="Browse for the App Control policy XML file">
+                <customUI:ButtonV2 Click="{x:Bind SelectXmlFileButton_Click}" x:Name="SelectXmlFileButton"
+                  ToolTipService.ToolTip="Browse for the App Control policy XML file">
 
-                    <Button.Flyout>
+                    <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="SelectXmlFileButton_Flyout">
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="SelectXmlFileButton_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind SelectXmlFileButton_Flyout_Clear_Click}" />
 
                                 <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -73,25 +73,25 @@
                             </controls:WrapPanel>
 
                         </Flyout>
-                    </Button.Flyout>
+                    </customUI:ButtonV2.Flyout>
 
-                    <Button.Content>
+                    <customUI:ButtonV2.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
                             <TextBlock x:Uid="SelectXMLFileTextBlock" Margin="5,0,0,0"/>
                         </StackPanel>
-                    </Button.Content>
-                </Button>
+                    </customUI:ButtonV2.Content>
+                </customUI:ButtonV2>
 
                 <!-- Select Files Button -->
-                <Button Click="{x:Bind SelectFilesButton_Click}" x:Name="SelectFilesButton" RightTapped="SelectFilesButton_RightTapped" Holding="SelectFilesButton_Holding" ToolTipService.ToolTip="Browse for files to include in the simulation">
+                <customUI:ButtonV2 Click="{x:Bind SelectFilesButton_Click}" x:Name="SelectFilesButton" ToolTipService.ToolTip="Browse for files to include in the simulation">
 
-                    <Button.Flyout>
+                    <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="SelectFilesButton_Flyout">
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="SelectFilesButton_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind SelectFilesButton_Flyout_Clear_Click}" />
 
                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -102,26 +102,26 @@
                             </controls:WrapPanel>
 
                         </Flyout>
-                    </Button.Flyout>
+                    </customUI:ButtonV2.Flyout>
 
-                    <Button.Content>
+                    <customUI:ButtonV2.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
                             <TextBlock x:Uid="SelectFilesTextBlock" Margin="5,0,0,0"/>
                         </StackPanel>
-                    </Button.Content>
-                </Button>
+                    </customUI:ButtonV2.Content>
+                </customUI:ButtonV2>
 
                 <!-- Select Folders Button -->
-                <Button Click="{x:Bind SelectFoldersButton_Click}" x:Name="SelectFoldersButton"
-                 Holding="SelectFoldersButton_Holding" RightTapped="SelectFoldersButton_RightTapped" ToolTipService.ToolTip="Browse for a folder to include in the simulation">
+                <customUI:ButtonV2 Click="{x:Bind SelectFoldersButton_Click}" x:Name="SelectFoldersButton"
+                  ToolTipService.ToolTip="Browse for a folder to include in the simulation">
 
-                    <Button.Flyout>
+                    <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="SelectFoldersButton_Flyout">
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="SelectFoldersButton_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind SelectFoldersButton_Flyout_Clear_Click}" />
 
                                 <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -132,15 +132,15 @@
                             </controls:WrapPanel>
 
                         </Flyout>
-                    </Button.Flyout>
+                    </customUI:ButtonV2.Flyout>
 
-                    <Button.Content>
+                    <customUI:ButtonV2.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xED25;" />
                             <TextBlock x:Uid="SelectFoldersTextBlock" Margin="5,0,0,0"/>
                         </StackPanel>
-                    </Button.Content>
-                </Button>
+                    </customUI:ButtonV2.Content>
+                </customUI:ButtonV2>
 
                 <DropDownButton Content="Options" ToolTipService.ToolTip="Multiple Extra Options">
                     <DropDownButton.Flyout>

@@ -106,12 +106,11 @@
 
                             <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
 
-                                <Button x:Name="PolicyFileToMergeWithButton" Content="Select a policy file" Margin="15,0,0,0"
+                                <customUI:ButtonV2 x:Name="PolicyFileToMergeWithButton" Content="Select a policy file" Margin="15,0,0,0"
                                     ToolTipService.ToolTip="Browse for an App Control policy to add all of the rules you created in this page to it."
-                                    Click="{x:Bind PolicyFileToMergeWithButton_Click}" IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}"
-                                    Holding="PolicyFileToMergeWithButton_Holding" RightTapped="{x:Bind PolicyFileToMergeWithButton_RightTapped}">
+                                    Click="{x:Bind PolicyFileToMergeWithButton_Click}" IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
-                                    <Button.Flyout>
+                                    <customUI:ButtonV2.Flyout>
                                         <Flyout x:Name="PolicyFileToMergeWithButton_FlyOut">
 
                                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -127,9 +126,9 @@
                                             </controls:WrapPanel>
 
                                         </Flyout>
-                                    </Button.Flyout>
+                                    </customUI:ButtonV2.Flyout>
 
-                                </Button>
+                                </customUI:ButtonV2>
 
                             </controls:WrapPanel>
 
@@ -298,7 +297,10 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
-                                <ProgressRing x:Name="FilesAndFoldersProgressRing" IsIndeterminate="False" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
+                                <ProgressRing
+                                    IsIndeterminate="False"
+                                    Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}"
+                                    ToolTipService.ToolTip="The Supplemental policy creation progress" />
 
                                 <!-- Scalability Button with RadialGauge Flyout -->
                                 <Button x:Name="ScalabilityButton" x:Uid="ScalabilityButton">
@@ -575,7 +577,10 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
-                                <ProgressRing x:Name="DriverAutoDetectionProgressRing" IsIndeterminate="False" Value="0" ToolTipService.ToolTip="The Supplemental policy creation progress" />
+                                <ProgressRing
+                                    IsIndeterminate="False"
+                                    Value="{x:Bind ViewModel.DriverAutoDetectionProgressRingValue,Mode=OneWay}"
+                                    ToolTipService.ToolTip="The Supplemental policy creation progress" />
 
                                 <Button x:Name="StrictKernelModeAutoDetectAllDriversButton" Content="Begin" Click="{x:Bind DriverAutoDetector}" />
 

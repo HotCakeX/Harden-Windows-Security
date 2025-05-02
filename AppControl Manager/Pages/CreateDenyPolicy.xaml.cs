@@ -95,7 +95,7 @@ internal sealed partial class CreateDenyPolicy : Page
 		ViewModel.FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 		// Reset the progress ring from previous runs or in case an error occurred
-		FilesAndFoldersProgressRing.Value = 0;
+		ViewModel.FilesAndFoldersProgressRingValue = 0;
 
 		FilesAndFoldersInfoBar.IsClosable = true;
 
@@ -198,7 +198,7 @@ internal sealed partial class CreateDenyPolicy : Page
 					LocalFilesResults = LocalFilesScan.Scan(
 						DetectedFilesInSelectedDirectories,
 						(ushort)radialGaugeValue,
-						FilesAndFoldersProgressRing,
+						ViewModel.FilesAndFoldersProgressRingValueProgress,
 						ViewModel,
 						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm);
 

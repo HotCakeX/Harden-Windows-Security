@@ -18,8 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.Pkcs;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -381,5 +385,101 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			.AppendLine(GlobalVars.Rizz.GetString("TBSHashHeader/Text") + ": " + row.TBSHash)
 			.AppendLine(GlobalVars.Rizz.GetString("ExtensionOIDsHeader/Text") + ": " + row.OIDs)
 			.ToString();
+	}
+
+
+	/// <summary>
+	/// Get the certificates of the .CIP files
+	/// </summary>
+	/// <param name="file"></param>
+	/// <returns></returns>
+	internal static async Task<List<FileCertificateInfoCol>> FetchForCIP(string file)
+	{
+		List<FileCertificateInfoCol> output = [];
+
+		await Task.Run(() =>
+		{
+
+			// Create a new SignedCms object to store the signed message
+			SignedCms signedCms = new();
+
+			// Decode the signed message from the file specified by cipFilePath
+			// The file is read as a byte array because the SignedCms.Decode() method expects a byte array as input
+			// https://learn.microsoft.com/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
+			signedCms.Decode(File.ReadAllBytes(file));
+
+			X509Certificate2Collection certificates = signedCms.Certificates;
+			X509Certificate2[] certificateArray = new X509Certificate2[certificates.Count];
+			certificates.CopyTo(certificateArray, 0);
+
+			// Counter (in case the CIP file is signed by multiple certificates)
+			int i = 1;
+
+			// Loop over the array of X509Certificate2 objects that represent the certificates used to sign the message
+			foreach (X509Certificate2 signer in certificateArray)
+			{
+				output.Add(new FileCertificateInfoCol
+				{
+					SignerNumber = i,
+					Type = CertificateType.Leaf,
+					SubjectCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
+					IssuerCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
+					NotBefore = signer.NotBefore,
+					NotAfter = signer.NotAfter,
+					HashingAlgorithm = signer.SignatureAlgorithm.FriendlyName,
+					SerialNumber = signer.SerialNumber,
+					Thumbprint = signer.Thumbprint,
+					TBSHash = CertificateHelper.GetTBSCertificate(signer),
+					OIDs = string.Join(", ", signer.Extensions
+							.Select(ext =>
+								ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+							.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+				});
+
+				i++;
+			}
+
+		});
+
+		return output;
+	}
+
+
+	/// <summary>
+	/// Fetch for the .cer files
+	/// </summary>
+	/// <param name="file"></param>
+	/// <returns></returns>
+	internal static async Task<List<FileCertificateInfoCol>> FetchForCER(string file)
+	{
+		List<FileCertificateInfoCol> output = [];
+
+		await Task.Run(() =>
+		{
+			// Create a certificate object from the .cer file
+			X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(file);
+
+			// Add the certificate as leaf certificate
+			output.Add(new FileCertificateInfoCol
+			{
+				SignerNumber = 1,
+				Type = CertificateType.Leaf,
+				SubjectCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
+				IssuerCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
+				NotBefore = CertObject.NotBefore,
+				NotAfter = CertObject.NotAfter,
+				HashingAlgorithm = CertObject.SignatureAlgorithm.FriendlyName,
+				SerialNumber = CertObject.SerialNumber,
+				Thumbprint = CertObject.Thumbprint,
+				TBSHash = CertificateHelper.GetTBSCertificate(CertObject),
+				OIDs = string.Join(", ", CertObject.Extensions
+						.Select(ext =>
+							ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+						.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+			});
+
+		});
+
+		return output;
 	}
 }

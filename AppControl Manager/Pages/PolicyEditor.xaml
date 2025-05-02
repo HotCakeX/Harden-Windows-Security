@@ -272,7 +272,7 @@
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="FileBasedRulesListView_DeleteItems">
+                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModel.FileBasedRulesListView_DeleteItems}">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE74D;" />
                                                     </MenuFlyoutItem.Icon>
@@ -380,7 +380,7 @@
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="SignatureBasedRulesListView_DeleteItems">
+                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModel.SignatureBasedRulesListView_DeleteItems}">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE74D;" />
                                                     </MenuFlyoutItem.Icon>

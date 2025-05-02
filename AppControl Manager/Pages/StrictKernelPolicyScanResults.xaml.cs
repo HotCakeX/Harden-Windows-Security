@@ -54,7 +54,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 		// And we will lose the data that was previously displayed. We'd have to run the CalculateColumnWidths() method and then assignment of ItemsSource of ListView
 		// Inside of the OnNavigatedTo method of this class.
 		// Or better option is to move the column bindings from this class and put them in a separate ViewModel class that won't be affected nor requires navigation caching
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		this.DataContext = ViewModel;
 	}

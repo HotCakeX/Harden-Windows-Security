@@ -53,7 +53,7 @@
                 <Button.Content>
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <AnimatedIcon x:Name="PickPolicyFileButtonAnimatedIconLight" Height="20" Margin="0,0,5,0" Width="20" Visibility="Collapsed">
+                        <AnimatedIcon Visibility="{x:Bind ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
                             <AnimatedIcon.Source>
                                 <animatedvisuals:Light/>
                             </AnimatedIcon.Source>

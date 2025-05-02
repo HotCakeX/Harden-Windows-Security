@@ -21,6 +21,7 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
@@ -28,17 +29,12 @@ namespace AppControlManager.ViewModels;
 // It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class AllowNewAppsVM : ViewModelBase
 {
-
 	internal EventLogUtility EventLogsUtil { get; } = App.AppHost.Services.GetRequiredService<EventLogUtility>();
 
 	#region
 
 	// To store the FileIdentities displayed on the Local Files ListView
-	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities
-	{
-		get; set => SP(ref field, value);
-	} = [];
-
+	internal ObservableCollection<FileIdentity> LocalFilesFileIdentities { get; set => SP(ref field, value); } = [];
 
 	// Store all outputs for searching, used as a temporary storage for filtering
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
@@ -46,7 +42,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
 
 	internal ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
-
 
 	// To store the FileIdentities displayed on the Event Logs ListView
 	internal readonly ObservableCollection<FileIdentity> EventLogsFileIdentities = [];
@@ -63,10 +58,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Holds the state of the Event Logs menu item, indicating whether it is enabled or disabled.
@@ -100,14 +94,31 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal double EventLogsCountInfoBadgeOpacity { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not
+	/// Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not.
 	/// </summary>
 	internal bool DeployPolicy { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// The Enabled/Disabled state of the DeployPolicy button.
+	/// </summary>
 	internal bool DeployPolicyState { get; set => SP(ref field, value); }
 
-	#endregion
+	internal InfoBarSeverity Step1InfoBar_Severity { get; set => SP(ref field, value); }
+	internal bool Step1InfoBar_IsOpen { get; set => SP(ref field, value); }
+	internal bool Step1InfoBar_IsClosable { get; set => SP(ref field, value); }
+	internal string? Step1InfoBar_Message { get; set => SP(ref field, value); }
 
+	internal InfoBarSeverity Step2InfoBar_Severity { get; set => SP(ref field, value); }
+	internal bool Step2InfoBar_IsOpen { get; set => SP(ref field, value); }
+	internal bool Step2InfoBar_IsClosable { get; set => SP(ref field, value); }
+	internal string? Step2InfoBar_Message { get; set => SP(ref field, value); }
+
+	internal InfoBarSeverity Step3InfoBar_Severity { get; set => SP(ref field, value); }
+	internal bool Step3InfoBar_IsOpen { get; set => SP(ref field, value); }
+	internal bool Step3InfoBar_IsClosable { get; set => SP(ref field, value); }
+	internal string? Step3InfoBar_Message { get; set => SP(ref field, value); }
+
+	#endregion
 
 	#region LISTVIEW IMPLEMENTATIONS FOR EVENT LOGS
 
@@ -327,7 +338,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		UpdateTotalFiles(true);
 	}
 
-
 	/// <summary>
 	/// Updates the total logs count displayed on the UI
 	/// </summary>
@@ -346,7 +356,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			LocalFilesCountInfoBadgeValue = LocalFilesFileIdentities.Count;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the Clear Data button

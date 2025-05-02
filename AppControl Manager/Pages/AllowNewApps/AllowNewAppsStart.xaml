@@ -84,7 +84,7 @@
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
-                                    <AnimatedIcon x:Name="BrowseForXMLPolicyButtonLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20" Visibility="Collapsed">
+                                    <AnimatedIcon Visibility="{x:Bind ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
                                         <AnimatedIcon.Source>
                                             <animatedvisuals:Light/>
                                         </AnimatedIcon.Source>
@@ -108,7 +108,11 @@
 
                     </controls:WrapPanel>
 
-                    <InfoBar x:Name="Step1InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
+                    <InfoBar Severity="{x:Bind ViewModel.Step1InfoBar_Severity, Mode=OneWay}"
+                             IsOpen="{x:Bind ViewModel.Step1InfoBar_IsOpen, Mode=TwoWay}"
+                             IsClosable='{x:Bind ViewModel.Step1InfoBar_IsClosable, Mode=OneWay}'
+                             Message="{x:Bind ViewModel.Step1InfoBar_Message, Mode=OneWay}"
+                             Margin="0,20,0,0" Grid.Row="2"/>
 
                 </Grid>
             </Border>
@@ -161,7 +165,11 @@
 
                     </controls:WrapPanel>
 
-                    <InfoBar x:Name="Step2InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
+                    <InfoBar Severity="{x:Bind ViewModel.Step2InfoBar_Severity, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.Step2InfoBar_IsOpen, Mode=TwoWay}"
+                        IsClosable='{x:Bind ViewModel.Step2InfoBar_IsClosable, Mode=OneWay}'
+                        Message="{x:Bind ViewModel.Step2InfoBar_Message, Mode=OneWay}"
+                        Margin="0,20,0,0" Grid.Row="2"/>
 
                 </Grid>
             </Border>
@@ -197,7 +205,12 @@
 
                         <Button x:Name="CreatePolicyButton" Click="{x:Bind CreatePolicyButton_Click}" x:Uid="AllowNewAppsCreatePolicyButton" Style="{StaticResource AccentButtonStyle}"/>
                     </controls:WrapPanel>
-                    <InfoBar x:Name="Step3InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2">
+
+                    <InfoBar Severity="{x:Bind ViewModel.Step3InfoBar_Severity, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.Step3InfoBar_IsOpen, Mode=TwoWay}"
+                            IsClosable='{x:Bind ViewModel.Step3InfoBar_IsClosable, Mode=OneWay}'
+                            Message="{x:Bind ViewModel.Step3InfoBar_Message, Mode=OneWay}"
+                            Margin="0,20,0,0" Grid.Row="2">
                         <InfoBar.ActionButton>
                             <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
                         </InfoBar.ActionButton>

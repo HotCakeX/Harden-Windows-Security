@@ -49,7 +49,7 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 		this.InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Required;
 
 		this.DataContext = ViewModel;
 	}

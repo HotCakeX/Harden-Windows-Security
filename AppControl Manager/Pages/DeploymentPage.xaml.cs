@@ -118,14 +118,13 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 	}
 
-
 	#region Augmentation Interface
 
 	public void SetVisibility(Visibility visibility)
 	{
 		// Light up the local page's button icons
-		UnsignedXMLFilesLightAnimatedIcon.Visibility = visibility;
-		SignedXMLFilesLightAnimatedIcon.Visibility = visibility;
+		ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility = visibility;
+		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
 			(param => LightUp1(), GlobalVars.Rizz.GetString("DeployUnsignedPolicy")),

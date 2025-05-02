@@ -16,9 +16,9 @@
 //
 
 using System;
-using AppControlManager.Others;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using AppControlManager.Others;
 
 namespace AppControlManager.ViewModels;
 

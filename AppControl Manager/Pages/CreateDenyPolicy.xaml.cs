@@ -25,7 +25,6 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using AppControlManager.WindowComponents;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;

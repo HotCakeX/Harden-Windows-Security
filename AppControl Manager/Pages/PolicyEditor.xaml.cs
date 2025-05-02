@@ -15,19 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-using System.Linq;
 using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
 /// <summary>
-/// The PolicyEditor class manages the UI for editing policies, including handling item deletions and enhancing ListView
-/// interactions.
+/// The PolicyEditor class manages the UI for editing policies.
 /// </summary>
 internal sealed partial class PolicyEditor : Page
 {
@@ -38,13 +34,12 @@ internal sealed partial class PolicyEditor : Page
 #pragma warning restore CA1822
 
 	/// <summary>
-	/// Initializes a new instance of the PolicyEditor class. Sets up the component, enables navigation caching, and
-	/// assigns the data context.
+	/// Initializes a new instance of the PolicyEditor class.
 	/// </summary>
 	internal PolicyEditor()
 	{
 		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
 
@@ -52,40 +47,5 @@ internal sealed partial class PolicyEditor : Page
 	{
 		if (!BrowseForPolicyButton_Flyout.IsOpen)
 			BrowseForPolicyButton_Flyout.ShowAt(BrowseForPolicyButton);
-	}
-
-	/// <summary>
-	/// Event handler for deleting selected items from the FileBasedRulesListView's Items Source
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void FileBasedRulesListView_DeleteItems(object sender, RoutedEventArgs e)
-	{
-		// Collect the selected items to delete - without ToList() or [.. ], only half of the selected items are removed from the collection
-		IEnumerable<AppControlManager.PolicyEditor.FileBasedRulesForListView> itemsToDelete = [.. FileBasedRulesListView.SelectedItems.Cast<AppControlManager.PolicyEditor.FileBasedRulesForListView>()];
-
-		// Iterate over the copy to remove each item
-		foreach (AppControlManager.PolicyEditor.FileBasedRulesForListView item in itemsToDelete)
-		{
-			ViewModel.RemoveFileRuleFromCollection(item);
-		}
-	}
-
-
-	/// <summary>
-	/// Event handler for deleting selected items from the SignatureBasedRulesListView's Items Source
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SignatureBasedRulesListView_DeleteItems(object sender, RoutedEventArgs e)
-	{
-		// Collect the selected items to delete - without ToList() or [.. ], only half of the selected items are removed from the collection
-		IEnumerable<AppControlManager.PolicyEditor.SignatureBasedRulesForListView> itemsToDelete = [.. SignatureBasedRulesListView.SelectedItems.Cast<AppControlManager.PolicyEditor.SignatureBasedRulesForListView>()];
-
-		// Iterate over the copy to remove each item
-		foreach (AppControlManager.PolicyEditor.SignatureBasedRulesForListView item in itemsToDelete)
-		{
-			ViewModel.RemoveSignatureRuleFromCollection(item);
-		}
 	}
 }

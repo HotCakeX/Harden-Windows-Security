@@ -202,7 +202,13 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			if (result is not null && result.Value is not null)
 			{
 
-				foreach (DeviceConfigurationPolicy item in result.Value)
+				// Only keep App Control policies
+				IEnumerable<DeviceConfigurationPolicy> filteredResults = result.Value.Where(policy =>
+				policy.OmaSettings != null
+				&& policy.OmaSettings.Any(setting => setting.OmaUri?.Contains(@"Vendor/MSFT/ApplicationControl", StringComparison.OrdinalIgnoreCase) == true
+				));
+
+				foreach (DeviceConfigurationPolicy item in filteredResults)
 				{
 
 					(bool, CiPolicyInfo?) policyResult = CiPolicyInfo.FromJson(item.Description);
@@ -259,7 +265,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 					// If the custom Intune policy doesn't have the necessary details in its description then create an entry with its name only
 					else
 					{
-
 						CiPolicyInfo policy = new(
 											policyID: null,
 											basePolicyID: null,

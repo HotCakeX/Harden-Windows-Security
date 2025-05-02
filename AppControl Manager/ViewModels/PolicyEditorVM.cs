@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
-using AppControlManager.WindowComponents;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
@@ -848,13 +847,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			await Dispatcher.EnqueueAsync(() =>
 			{
-
 				MainInfoBarVisibility = Visibility.Visible;
 				MainInfoBarIsOpen = true;
 				MainInfoBarMessage = $"There was a problem loading the selected policy file: {ex.Message}";
 				MainInfoBarSeverity = InfoBarSeverity.Error;
 				MainInfoBarIsClosable = true;
-
 			});
 
 			Logger.Write(ErrorWriter.FormatException(ex));
@@ -1652,5 +1649,45 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	}
 
 #pragma warning restore CA1822
+
+	/// <summary>
+	/// Event handler for deleting selected items from the FileBasedRulesListView's Items Source
+	/// </summary>
+	internal void FileBasedRulesListView_DeleteItems()
+	{
+		// Get the ListView ScrollViewer info
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.PolicyEditor_FileBasedRules);
+
+		if (lv is null) return;
+
+		// Collect the selected items to delete - without ToList() or [.. ], only half of the selected items are removed from the collection
+		IEnumerable<PolicyEditor.FileBasedRulesForListView> itemsToDelete = [.. lv.SelectedItems.Cast<PolicyEditor.FileBasedRulesForListView>()];
+
+		// Iterate over the copy to remove each item
+		foreach (PolicyEditor.FileBasedRulesForListView item in itemsToDelete)
+		{
+			RemoveFileRuleFromCollection(item);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for deleting selected items from the SignatureBasedRulesListView's Items Source
+	/// </summary>
+	internal void SignatureBasedRulesListView_DeleteItems()
+	{
+		// Get the ListView ScrollViewer info
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.PolicyEditor_SignatureBasedRules);
+
+		if (lv is null) return;
+
+		// Collect the selected items to delete - without ToList() or [.. ], only half of the selected items are removed from the collection
+		IEnumerable<PolicyEditor.SignatureBasedRulesForListView> itemsToDelete = [.. lv.SelectedItems.Cast<PolicyEditor.SignatureBasedRulesForListView>()];
+
+		// Iterate over the copy to remove each item
+		foreach (PolicyEditor.SignatureBasedRulesForListView item in itemsToDelete)
+		{
+			RemoveSignatureRuleFromCollection(item);
+		}
+	}
 
 }

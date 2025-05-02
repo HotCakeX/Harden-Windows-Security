@@ -28,6 +28,9 @@ internal sealed partial class DeploymentVM : ViewModelBase
 
 	#region UI-Bound Properties
 
+	internal Visibility UnsignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility SignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
 	internal Visibility MainInfoBarVisibility
 	{
 		get; set => SP(ref field, value);

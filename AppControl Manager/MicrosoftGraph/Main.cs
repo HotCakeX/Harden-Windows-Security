@@ -633,7 +633,10 @@ DeviceEvents
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Use GET instead of POST as the endpoint expects a GET request.
-		HttpResponseMessage response = await httpClient.GetAsync(new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations"));
+		// HttpResponseMessage response = await httpClient.GetAsync(new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations"));
+
+		// Applying a filter to retrieve only the policies for Windows custom configurations
+		HttpResponseMessage response = await httpClient.GetAsync(new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')"));
 
 		if (response.IsSuccessStatusCode)
 		{

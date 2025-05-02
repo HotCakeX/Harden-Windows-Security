@@ -102,11 +102,11 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 	public void SetVisibility(Visibility visibility)
 	{
 		// Light up the local page's button icons
-		FilesAndFoldersBasePolicyLightAnimatedIcon.Visibility = visibility;
-		CertificatesBasePolicyPathLightAnimatedIcon.Visibility = visibility;
-		ISGBasePolicyPathLightAnimatedIcon.Visibility = visibility;
-		StrictKernelModeBasePolicyLightAnimatedIcon.Visibility = visibility;
-		PFNBasePolicyPathLightAnimatedIcon.Visibility = visibility;
+		ViewModel.FilesAndFoldersBasePolicyLightAnimatedIconVisibility = visibility;
+		ViewModel.CertificatesBasePolicyPathLightAnimatedIconVisibility = visibility;
+		ViewModel.ISGBasePolicyPathLightAnimatedIconVisibility = visibility;
+		ViewModel.StrictKernelModeBasePolicyLightAnimatedIconVisibility = visibility;
+		ViewModel.PFNBasePolicyPathLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
 			(param => LightUp1(), "Files And Folders Supplemental Policy"),

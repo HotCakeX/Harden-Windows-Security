@@ -425,7 +425,7 @@
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
-                                    <AnimatedIcon x:Name="UnsignedXMLFilesLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                                    <AnimatedIcon Visibility="{x:Bind ViewModel.UnsignedXMLFilesLightAnimatedIcoVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
                                         <AnimatedIcon.Source>
                                             <animatedvisuals:Light/>
                                         </AnimatedIcon.Source>
@@ -492,7 +492,7 @@
                             <Button.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
-                                    <AnimatedIcon x:Name="SignedXMLFilesLightAnimatedIcon" Visibility="Collapsed" Height="20" Margin="0,0,5,0" Width="20">
+                                    <AnimatedIcon Visibility="{x:Bind ViewModel.SignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
                                         <AnimatedIcon.Source>
                                             <animatedvisuals:Light/>
                                         </AnimatedIcon.Source>

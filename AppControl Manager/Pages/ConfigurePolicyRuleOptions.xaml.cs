@@ -69,13 +69,12 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		SetPolicyTemplate.Click += SetPolicyTemplate_Click;
 	}
 
-
 	#region Augmentation Interface
 
 	public void SetVisibility(Visibility visibility)
 	{
 		// Light up the local page's button icons
-		PickPolicyFileButtonAnimatedIconLight.Visibility = visibility;
+		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
 		(param => LightUp1(), GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent")),

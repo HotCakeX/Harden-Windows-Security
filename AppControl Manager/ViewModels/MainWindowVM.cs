@@ -20,13 +20,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Numerics;
-using AppControlManager.WindowComponents;
+using AnimatedVisuals;
 using AppControlManager.Others;
+using AppControlManager.WindowComponents;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using AnimatedVisuals;
 
 namespace AppControlManager.ViewModels;
 

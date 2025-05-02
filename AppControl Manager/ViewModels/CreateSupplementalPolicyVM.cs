@@ -28,6 +28,12 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 {
 
+	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility CertificatesBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility ISGBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility StrictKernelModeBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal Visibility PFNBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
 
 	#region Files and Folders scan
 

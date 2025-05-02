@@ -88,7 +88,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 	public void SetVisibility(Visibility visibility)
 	{
 		// Light up the local page's button icons
-		AllowNewAppsStart.Instance.BrowseForXMLPolicyButtonLightAnimatedIconPub.Visibility = visibility;
+		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
 		(param => LightUp1(), "Allow New Apps Base Policy"),

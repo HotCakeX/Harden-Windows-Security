@@ -5300,7 +5300,7 @@
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.CreatePolicyButton_Click">
             <summary>
-            Event handler for the Create Policy button
+            Event handler for the Create Policy button - Step 3
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.AllowNewAppsStart.BrowseForXMLPolicyButton_Flyout_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
@@ -6760,29 +6760,13 @@
         </member>
         <member name="T:AppControlManager.Pages.PolicyEditor">
             <summary>
-            The PolicyEditor class manages the UI for editing policies, including handling item deletions and enhancing ListView
-            interactions.
+            The PolicyEditor class manages the UI for editing policies.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.PolicyEditor.#ctor">
             <summary>
-            Initializes a new instance of the PolicyEditor class. Sets up the component, enables navigation caching, and
-            assigns the data context.
+            Initializes a new instance of the PolicyEditor class.
             </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.PolicyEditor.FileBasedRulesListView_DeleteItems(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for deleting selected items from the FileBasedRulesListView's Items Source
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.PolicyEditor.SignatureBasedRulesListView_DeleteItems(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for deleting selected items from the SignatureBasedRulesListView's Items Source
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.PolicyEditor.InitializeComponent">
             <summary>
@@ -7167,20 +7151,6 @@
             Helper method to copy a specified property to clipboard without reflection
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.FetchForCIP(System.String)">
-            <summary>
-            Get the certificates of the .CIP files
-            </summary>
-            <param name="file"></param>
-            <returns></returns>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewFileCertificates.FetchForCER(System.String)">
-            <summary>
-            Fetch for the .cer files
-            </summary>
-            <param name="file"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.Pages.ViewFileCertificates.Fetch(System.String)">
             <summary>
@@ -8674,7 +8644,12 @@
         </member>
         <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.DeployPolicy">
             <summary>
-            Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not
+            Toggle button to determine whether the new Supplemental policy should be deployed on the system after creation or not.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.AllowNewAppsVM.DeployPolicyState">
+            <summary>
+            The Enabled/Disabled state of the DeployPolicy button.
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.CalculateColumnWidthEventLogs">
@@ -9280,6 +9255,16 @@
             </summary>
             <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
         </member>
+        <member name="M:AppControlManager.ViewModels.PolicyEditorVM.FileBasedRulesListView_DeleteItems">
+            <summary>
+            Event handler for deleting selected items from the FileBasedRulesListView's Items Source
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.PolicyEditorVM.SignatureBasedRulesListView_DeleteItems">
+            <summary>
+            Event handler for deleting selected items from the SignatureBasedRulesListView's Items Source
+            </summary>
+        </member>
         <member name="F:AppControlManager.ViewModels.SettingsVM.VersionTextBlockText">
             <summary>
             Set the version in the settings card to the current app version
@@ -9524,6 +9509,20 @@
             </summary>
             <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
             <returns>A formatted string of the row's properties with labels.</returns>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.FetchForCIP(System.String)">
+            <summary>
+            Get the certificates of the .CIP files
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.ViewModels.ViewFileCertificatesVM.FetchForCER(System.String)">
+            <summary>
+            Fetch for the .cer files
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
         </member>
         <member name="T:AppControlManager.ViewModels.ViewModelBase">
             <summary>

@@ -420,9 +420,8 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForXMLPolicyFilesButton" Click="{x:Bind BrowseForXMLPolicyFilesButton_Click}"
-                                RightTapped="{x:Bind BrowseForXMLPolicyFilesButton_RightTapped}" Holding="BrowseForXMLPolicyFilesButton_Holding">
-                            <Button.Content>
+                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton" Click="{x:Bind BrowseForXMLPolicyFilesButton_Click}">
+                            <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
                                     <AnimatedIcon Visibility="{x:Bind ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -434,9 +433,9 @@
                                     <TextBlock x:Uid="BrowseTextBlock" />
 
                                 </controls:WrapPanel>
-                            </Button.Content>
+                            </customUI:ButtonV2.Content>
 
-                            <Button.Flyout>
+                            <customUI:ButtonV2.Flyout>
                                 <Flyout x:Name="BrowseForXMLPolicyFilesButton_Flyout">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -452,9 +451,9 @@
                                     </controls:WrapPanel>
 
                                 </Flyout>
-                            </Button.Flyout>
+                            </customUI:ButtonV2.Flyout>
 
-                        </Button>
+                        </customUI:ButtonV2>
 
                         <Button HorizontalAlignment="Center" x:Name="DeployUnsignedXMLButton"
                         HorizontalContentAlignment="Center" Click="{x:Bind DeployUnsignedXMLButton_Click}">
@@ -487,9 +486,8 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForSignedXMLPolicyFilesButton" Click="{x:Bind BrowseForSignedXMLPolicyFilesButton_Click}"
-                            RightTapped="BrowseForSignedXMLPolicyFilesButton_RightTapped" Holding="BrowseForSignedXMLPolicyFilesButton_Holding">
-                            <Button.Content>
+                        <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton" Click="{x:Bind BrowseForSignedXMLPolicyFilesButton_Click}">
+                            <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
                                     <AnimatedIcon Visibility="{x:Bind ViewModel.SignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -501,9 +499,9 @@
                                     <TextBlock x:Uid="BrowseTextBlock" />
 
                                 </controls:WrapPanel>
-                            </Button.Content>
+                            </customUI:ButtonV2.Content>
 
-                            <Button.Flyout>
+                            <customUI:ButtonV2.Flyout>
                                 <Flyout x:Name="BrowseForSignedXMLPolicyFilesButton_Flyout">
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -519,9 +517,9 @@
                                     </controls:WrapPanel>
 
                                 </Flyout>
-                            </Button.Flyout>
+                            </customUI:ButtonV2.Flyout>
 
-                        </Button>
+                        </customUI:ButtonV2>
 
                         <Button HorizontalAlignment="Center" x:Name="DeploySignedXMLButton"
                             HorizontalContentAlignment="Center" Click="{x:Bind DeploySignedXMLButton_Click}">
@@ -569,11 +567,10 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForCIPBinaryFilesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForCIPBinaryFilesButton_Click}"
-                                Holding="BrowseForCIPBinaryFilesButton_Holding" RightTapped="BrowseForCIPBinaryFilesButton_RightTapped">
+                        <customUI:ButtonV2 x:Name="BrowseForCIPBinaryFilesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForCIPBinaryFilesButton_Click}">
 
-                            <Button.Flyout>
-                                <Flyout x:Name="BrowseForCIPBinaryFilesButton_Flyout">
+                            <customUI:ButtonV2.Flyout>
+                                <Flyout>
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -588,9 +585,9 @@
                                     </controls:WrapPanel>
 
                                 </Flyout>
-                            </Button.Flyout>
+                            </customUI:ButtonV2.Flyout>
 
-                        </Button>
+                        </customUI:ButtonV2>
 
                         <Button HorizontalAlignment="Center" x:Name="DeployCIPButton"
                             HorizontalContentAlignment="Center" Click="{x:Bind DeployCIPButton_Click}">
@@ -625,11 +622,10 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <Button x:Name="BrowseForXMLPolicesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForXMLPolicesButton_Click}"
-                            Holding="BrowseForXMLPolicesButton_Holding" RightTapped="BrowseForXMLPolicesButton_RightTapped">
+                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForXMLPolicesButton_Click}">
 
-                            <Button.Flyout>
-                                <Flyout x:Name="BrowseForXMLPolicesButton_Flyout">
+                            <customUI:ButtonV2.Flyout>
+                                <Flyout>
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -644,9 +640,9 @@
                                     </controls:WrapPanel>
 
                                 </Flyout>
-                            </Button.Flyout>
+                            </customUI:ButtonV2.Flyout>
 
-                        </Button>
+                        </customUI:ButtonV2>
 
                         <Button HorizontalAlignment="Center" x:Name="ConvertXMLToCIPButton"
                                 HorizontalContentAlignment="Center" Click="{x:Bind ConvertXMLToCIPButton_Click}">

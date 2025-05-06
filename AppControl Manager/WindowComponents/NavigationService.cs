@@ -110,9 +110,8 @@ internal sealed class NavigationService
 	/// And by other methods throughout the app in order to navigate to sub-pages
 	/// </summary>
 	/// <param name="navPageType"></param>
-	/// <param name="transitionInfo"></param>
 	/// <param name="navItemTag"></param>
-	internal async void Navigate(Type? navPageType, NavigationTransitionInfo? transitionInfo = null, string? navItemTag = null)
+	internal async void Navigate(Type? navPageType, string? navItemTag = null)
 	{
 
 		if (_frame is null || MainNavigation is null)
@@ -255,7 +254,7 @@ internal sealed class NavigationService
 		ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
 
 		// Navigate to the new page
-		_ = _frame.Navigate(nextNavPageType, null, transitionInfo);
+		_ = _frame.Navigate(nextNavPageType, null, new DrillInNavigationTransitionInfo());
 
 		// For page Interface and light augmentation
 		AffectPagesAnimatedIconsVisibilities(_frame);

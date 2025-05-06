@@ -154,9 +154,9 @@ public partial class App : Application
 		_ = services.AddSingleton<SettingsVM>();
 		_ = services.AddSingleton<MergePoliciesVM>();
 		_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
-		_ = services.AddSingleton<AllowNewAppsVM>();
-		_ = services.AddSingleton<CreateDenyPolicyVM>();
-		_ = services.AddSingleton<CreateSupplementalPolicyVM>();
+		_ = services.AddSingleton<AllowNewAppsVM>(sp => new(sp.GetRequiredService<EventLogUtility>(), sp.GetRequiredService<PolicyEditorVM>()));
+		_ = services.AddSingleton(sp => new CreateDenyPolicyVM());
+		_ = services.AddSingleton(sp => new CreateSupplementalPolicyVM());
 		_ = services.AddSingleton<EventLogsPolicyCreationVM>();
 		_ = services.AddSingleton<SimulationVM>();
 		_ = services.AddSingleton<MDEAHPolicyCreationVM>();

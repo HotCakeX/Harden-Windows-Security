@@ -42,10 +42,4 @@ internal sealed partial class PolicyEditor : Page
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
-
-	private void BrowseForPolicyButton_RightTappedOrHolding()
-	{
-		if (!BrowseForPolicyButton_Flyout.IsOpen)
-			BrowseForPolicyButton_Flyout.ShowAt(BrowseForPolicyButton);
-	}
 }

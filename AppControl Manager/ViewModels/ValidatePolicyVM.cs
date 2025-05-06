@@ -16,9 +16,12 @@
 //
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using System.Xml;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
@@ -42,37 +45,143 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 	internal bool ElementsAreEnabled
 	{
-		get; set => SP(ref field, value);
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ProgressRingVisibility = field ? Visibility.Collapsed : Visibility.Visible;
+				MainInfoBarIsClosable = field;
+			}
+		}
 	} = true;
 
-	#endregion
+	internal Visibility ProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
+	// Level 2
+	internal bool Level2Test
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				// אם כיבינו את רמת 2 ⇒ ממטירים את 3 ו־4
+				if (!field)
+				{
+					Level3Test = false;
+					Level4Test = false;
+				}
+			}
+		}
+	} = true;
+
+	// Level 3
+	internal bool Level3Test
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				if (field)
+				{
+					// אם הדלקנו רמת 3 ⇒ נבטיח שרמת 2 דולקת
+					Level2Test = true;
+				}
+				else
+				{
+					// אם כיבינו רמת 3 ⇒ נבטיח שרמת 4 כבוייה
+					Level4Test = false;
+				}
+			}
+		}
+	} = true;
+
+	// Level 4
+	internal bool Level4Test
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				if (field)
+				{
+					// אם הדלקנו רמת 4 ⇒ נדאג שגם 2 וגם 3 דלוקים
+					Level2Test = true;
+					Level3Test = true;
+				}
+				// אם כיבינו רמת 4 ⇒ אין פעולות נוספות
+			}
+		}
+	} = true;
+
+
+	#endregion
 
 	/// <summary>
 	/// Validates an App Control XML policy file by allowing the user to select a file and checking its validity.
 	/// </summary>
 	internal async void ValidateXML()
 	{
+		string? stagingArea = null;
 
 		try
 		{
-			MainInfoBarMessage = "Browse for an App Control XML policy file";
+			MainInfoBarMessage = GlobalVars.Rizz.GetString("BrowseForAppControlPolicy");
 			MainInfoBarSeverity = InfoBarSeverity.Informational;
 			MainInfoBarIsOpen = true;
-			MainInfoBarIsClosable = false;
-			MainInfoBarTitle = "Status";
+			MainInfoBarTitle = GlobalVars.Rizz.GetString("CurrentStatusInfoBar/Title");
 
 			ElementsAreEnabled = false;
 
+			double CIPSize = 0;
+
 			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-			bool isValid = false;
+			bool IsValid = false;
+
+			MainInfoBarMessage = GlobalVars.Rizz.GetString("Validating");
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
 				await Task.Run(() =>
 				{
-					isValid = CiPolicyTest.TestCiPolicy(selectedFile);
+					IsValid = CiPolicyTest.TestCiPolicy(selectedFile);
+
+					if (IsValid && Level2Test)
+					{
+						SiPolicy.SiPolicy temp = SiPolicy.CustomDeserialization.DeserializeSiPolicy(selectedFile, null);
+
+						if (Level3Test)
+						{
+							XmlDocument xmlObj = SiPolicy.CustomSerialization.CreateXmlFromSiPolicy(temp);
+
+							if (!App.IsElevated)
+							{
+								string tempDir = Path.GetTempPath();
+								string randomFolderName = Path.GetRandomFileName();
+								string fullPath = Path.Combine(tempDir, randomFolderName);
+
+								stagingArea = Directory.CreateDirectory(fullPath).FullName;
+							}
+							else
+							{
+								stagingArea = StagingArea.NewStagingArea("Level4Validation").FullName;
+							}
+
+							string tempPolicyCIPPath = Path.Combine(stagingArea, $"test.cip");
+							string tempPolicyXMLPath = Path.Combine(stagingArea, $"test.xml");
+
+							xmlObj.Save(tempPolicyXMLPath);
+
+							if (Level4Test)
+							{
+								PolicyToCIPConverter.Convert(tempPolicyXMLPath, tempPolicyCIPPath);
+
+								FileInfo fileInfo = new(tempPolicyCIPPath);
+
+								CIPSize = Math.Round(fileInfo.Length / 1024.0, 2);
+							}
+						}
+					}
 				});
 			}
 			else
@@ -81,30 +190,47 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 				return;
 			}
 
-			if (isValid)
+			if (IsValid)
 			{
-				MainInfoBarMessage = $"The selected policy file '{selectedFile}' is valid.";
+				MainInfoBarMessage = GlobalVars.Rizz.GetString("IsValid") + selectedFile;
 				MainInfoBarSeverity = InfoBarSeverity.Success;
-				MainInfoBarTitle = "Valid";
+				MainInfoBarTitle = GlobalVars.Rizz.GetString("Valid");
+
+				if (Level4Test)
+				{
+					MainInfoBarMessage += $"\n{GlobalVars.Rizz.GetString("CIPFileSize")}: {CIPSize} KB";
+
+					if (CIPSize < 350)
+					{
+						MainInfoBarMessage += $"\n{GlobalVars.Rizz.GetString("SuitableForIntuneDeployment")}";
+					}
+					else
+					{
+						MainInfoBarMessage += $"\n{GlobalVars.Rizz.GetString("ReduceSizeForIntuneDeployment")}";
+					}
+				}
 			}
 			else
 			{
-				MainInfoBarMessage = $"The selected policy file '{selectedFile}' is not valid.";
+				MainInfoBarMessage = GlobalVars.Rizz.GetString("IsNotValid") + selectedFile;
 				MainInfoBarSeverity = InfoBarSeverity.Warning;
-				MainInfoBarTitle = "Invalid";
+				MainInfoBarTitle = GlobalVars.Rizz.GetString("Invalid");
 			}
 		}
 		catch (Exception ex)
 		{
 			MainInfoBarMessage = ex.Message;
 			MainInfoBarSeverity = InfoBarSeverity.Error;
-			MainInfoBarTitle = "Invalid";
+			MainInfoBarTitle = GlobalVars.Rizz.GetString("Invalid");
 		}
 		finally
 		{
-			MainInfoBarIsClosable = true;
 			ElementsAreEnabled = true;
+
+			if (Directory.Exists(stagingArea))
+			{
+				Directory.Delete(stagingArea, true);
+			}
 		}
 	}
-
 }

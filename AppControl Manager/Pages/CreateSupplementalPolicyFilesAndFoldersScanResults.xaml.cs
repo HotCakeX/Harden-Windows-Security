@@ -93,7 +93,7 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox,
+					SearchBox.Text,
 					ViewModel.filesAndFoldersScanResultsList,
 					ViewModel.FilesAndFoldersScanResults,
 					ViewModel.SortStateFilesAndFolders,
@@ -119,7 +119,7 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 		ListViewHelper.ApplyFilters(
 			allFileIdentities: ViewModel.filesAndFoldersScanResultsList.AsEnumerable(),
 			filteredCollection: ViewModel.FilesAndFoldersScanResults,
-			searchTextBox: SearchBox,
+			searchText: SearchBox.Text,
 			datePicker: null,
 			regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults
 		);

@@ -27,10 +27,8 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -393,7 +391,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the flyout's clear button
 	/// </summary>
@@ -404,19 +401,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		PickPolicyFileButton_TextBox.Text = null;
 		SelectedFilePath = null;
 		ClearAllCheckBoxes();
-	}
-
-	private void PickPolicyFileButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (!PickPolicyFileButton_FlyOut.IsOpen)
-			PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
-	}
-
-	private void PickPolicyFileButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!PickPolicyFileButton_FlyOut.IsOpen)
-				PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
 	}
 
 	/// <summary>

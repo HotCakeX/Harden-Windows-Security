@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.IntelGathering;
 
@@ -43,12 +42,12 @@ internal static class LocalFilesScan
 	/// </summary>
 	/// <param name="files">File paths to scan</param>
 	/// <param name="scalability">How many parallel tasks to use during the scan</param>
-	/// <param name="UIProgressRing">ProgressRing UI element that will display the scan progress in real time</param>
+	/// <param name="progressReporter">A callback method that will run to display the scan progress in real time and updates the value of its associated ProgressRing UI element.</param>
 	/// <param name="assignVMRef">Assigns the reference to the ViewModel reference to each instance of the FileIdentity class so we can use it via compiled binding in XAML to navigate our way into the ViewModel Class in the ItemTemplate of the ListView and use it for XAML compiled binding of column widths.</param>
 	/// <param name="VMRef">The reference to the ViewModel class.</param>
 	/// <typeparam name="TReference">The generic type used for ViewModel class reference. There are mode than 1 type.</typeparam>
 	/// <returns></returns>
-	internal static IEnumerable<FileIdentity> Scan<TReference>((IEnumerable<FileInfo>, int) files, ushort scalability, ProgressRing UIProgressRing, TReference VMRef, Action<FileIdentity, TReference> assignVMRef)
+	internal static IEnumerable<FileIdentity> Scan<TReference>((IEnumerable<FileInfo>, int) files, ushort scalability, IProgress<double> progressReporter, TReference VMRef, Action<FileIdentity, TReference> assignVMRef)
 	{
 
 		// Make sure scalability is always at least 2
@@ -85,12 +84,7 @@ internal static class LocalFilesScan
 				// Cap the percentage at 100
 				int percentageToUse = Math.Min(currentPercentage, 100);
 
-				// Update the UI element
-				_ = UIProgressRing.DispatcherQueue.TryEnqueue(() =>
-				{
-					// The value is set to the calculated percentage
-					UIProgressRing.Value = percentageToUse;
-				});
+				progressReporter.Report(percentageToUse);
 
 				// Update the taskbar progress
 				Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
@@ -376,7 +370,7 @@ internal static class LocalFilesScan
 			Task.WaitAll(tasks.ToArray());
 
 			// update the progress ring to 100%
-			_ = UIProgressRing.DispatcherQueue.TryEnqueue(() => UIProgressRing.Value = 100);
+			progressReporter.Report(100);
 
 			return MainOutput.Keys;
 

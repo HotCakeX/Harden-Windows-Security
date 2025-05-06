@@ -51,11 +51,10 @@
 
                 <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}" />
 
-                <Button x:Name="BrowseForPolicyButton" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
-                    VerticalAlignment="Center" HorizontalAlignment="Center" RightTapped="{x:Bind BrowseForPolicyButton_RightTappedOrHolding}" Holding="{x:Bind BrowseForPolicyButton_RightTappedOrHolding}"
-                        ToolTipService.ToolTip="Browse for an App Control XML policy file">
+                <customUI:ButtonV2 x:Name="BrowseForPolicyButton" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
+                    VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Browse for an App Control XML policy file">
 
-                    <Button.Flyout>
+                    <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="BrowseForPolicyButton_Flyout">
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -71,9 +70,9 @@
                             </controls:WrapPanel>
 
                         </Flyout>
-                    </Button.Flyout>
+                    </customUI:ButtonV2.Flyout>
 
-                    <Button.Content>
+                    <customUI:ButtonV2.Content>
                         <StackPanel Orientation="Horizontal">
                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
                                 <AnimatedIcon.Source>
@@ -82,9 +81,9 @@
                             </AnimatedIcon>
                             <TextBlock Text="Browse For Policy" Margin="5,0,0,0" />
                         </StackPanel>
-                    </Button.Content>
+                    </customUI:ButtonV2.Content>
 
-                </Button>
+                </customUI:ButtonV2>
 
                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"
                        ToolTipService.ToolTip="Load the selected App Control policy to the user interface" Click="{x:Bind ViewModel.ProcessData}">

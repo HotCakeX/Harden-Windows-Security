@@ -31,6 +31,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Windows.ApplicationModel;
 using Windows.Graphics;
 using WinRT;
@@ -629,11 +630,11 @@ internal sealed partial class MainWindow : Window
 			// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
 			if (args.IsSettingsInvoked)
 			{
-				nav.Navigate(typeof(Pages.Settings), args?.RecommendedNavigationTransitionInfo, null);
+				nav.Navigate(typeof(Pages.Settings), null);
 			}
 			else
 			{
-				nav.Navigate(null, args?.RecommendedNavigationTransitionInfo, args?.InvokedItemContainer.Tag.ToString());
+				nav.Navigate(null, args?.InvokedItemContainer.Tag.ToString());
 			}
 		}
 	}
@@ -658,7 +659,7 @@ internal sealed partial class MainWindow : Window
 			ElementSoundPlayer.Play(ElementSoundKind.GoBack);
 
 			// Go back to the previous page
-			ContentFrame.GoBack();
+			ContentFrame.GoBack(new DrillInNavigationTransitionInfo());
 
 			// Get the current page after navigating back
 			Type currentPage = ContentFrame.CurrentSourcePageType;

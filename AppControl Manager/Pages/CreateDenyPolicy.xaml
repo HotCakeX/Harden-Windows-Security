@@ -196,7 +196,10 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
-                                <ProgressRing x:Name="FilesAndFoldersProgressRing" IsIndeterminate="False" Value="0" ToolTipService.ToolTip="The Deny policy creation progress" />
+                                <ProgressRing
+                                    IsIndeterminate="False"
+                                    Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}"
+                                    ToolTipService.ToolTip="The Deny policy creation progress" />
 
                                 <!-- Scalability Button with RadialGauge Flyout -->
                                 <Button x:Name="ScalabilityButton" x:Uid="ScalabilityButton">

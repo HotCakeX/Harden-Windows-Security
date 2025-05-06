@@ -98,7 +98,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox,
+					SearchBox.Text,
 					ViewModel.StrictKernelModeScanResultsList,
 					ViewModel.StrictKernelModeScanResults,
 					ViewModel.SortStateStrictKernelMode,
@@ -126,7 +126,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 		ListViewHelper.ApplyFilters(
 		allFileIdentities: ViewModel.StrictKernelModeScanResultsList.AsEnumerable(),
 		filteredCollection: ViewModel.StrictKernelModeScanResults,
-		searchTextBox: SearchBox,
+		searchText: SearchBox.Text,
 		datePicker: null,
 		regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults
 		);

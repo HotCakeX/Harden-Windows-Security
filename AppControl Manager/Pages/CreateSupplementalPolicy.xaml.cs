@@ -70,20 +70,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 	#region Merge With Existing Policy Section
 
-	private void PolicyFileToMergeWithButton_RightTapped()
-	{
-		if (!PolicyFileToMergeWithButton_FlyOut.IsOpen)
-			PolicyFileToMergeWithButton_FlyOut.ShowAt(PolicyFileToMergeWithButton);
-	}
-
-	private void PolicyFileToMergeWithButton_Holding(object sender, HoldingRoutedEventArgs e)
-	{
-		if (e.HoldingState is HoldingState.Started)
-			if (!PolicyFileToMergeWithButton_FlyOut.IsOpen)
-				PolicyFileToMergeWithButton_FlyOut.ShowAt(PolicyFileToMergeWithButton);
-	}
-
-
 	private void PolicyFileToMergeWithButton_Click()
 	{
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
@@ -359,7 +345,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		FilesAndFoldersInfoBar.IsOpen = false;
 
 		// Reset the progress ring from previous runs or in case an error occurred
-		FilesAndFoldersProgressRing.Value = 0;
+		ViewModel.FilesAndFoldersProgressRingValue = 0;
 
 		if (filesAndFoldersFilePaths.Count is 0 && filesAndFoldersFolderPaths.Count is 0)
 		{
@@ -479,7 +465,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 					LocalFilesResults = LocalFilesScan.Scan(
 						DetectedFilesInSelectedDirectories,
 						(ushort)radialGaugeValue,
-						FilesAndFoldersProgressRing,
+						ViewModel.FilesAndFoldersProgressRingValueProgress,
 						ViewModel,
 						(fi, vm) => fi.ParentViewModelCreateSupplementalPolicyVM = vm);
 
@@ -1570,7 +1556,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			StrictKernelModeInfoBar.Message = "Scanning the system for drivers";
 			StrictKernelModeSection.IsExpanded = true;
 
-			DriverAutoDetectionProgressRing.Value = 0;
+			ViewModel.DriverAutoDetectionProgressRingValue = 0;
 
 			List<FileInfo> kernelModeDriversList = [];
 
@@ -1620,7 +1606,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				LocalFilesResults = LocalFilesScan.Scan(
 					(kernelModeDriversList, kernelModeDriversList.Count),
 					3,
-					DriverAutoDetectionProgressRing,
+					ViewModel.DriverAutoDetectionProgressRingValueProgress,
 					ViewModel,
 					(fi, vm) => fi.ParentViewModelCreateSupplementalPolicyVM = vm);
 

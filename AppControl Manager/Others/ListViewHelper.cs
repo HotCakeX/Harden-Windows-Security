@@ -313,7 +313,7 @@ internal static class ListViewHelper
 	/// </summary>
 	/// <typeparam name="T">The type returned by the key selector.</typeparam>
 	/// <param name="keySelector">Function to obtain the sort key from the FileIdentity.</param>
-	/// <param name="searchBox">The TextBox used for filtering.</param>
+	/// <param name="searchBoxText">The Text used for filtering.</param>
 	/// <param name="originalList">The full list (if no filter is active).</param>
 	/// <param name="observableCollection">The observable collection to update.</param>
 	/// <param name="sortState">An object that holds the current sort state.</param>
@@ -321,7 +321,7 @@ internal static class ListViewHelper
 	/// <param name="regKey">used to find the ListView in the cache.</param>
 	internal static void SortColumn<T>(
 		Func<FileIdentity, T> keySelector,
-		TextBox searchBox,
+		string? searchBoxText,
 		List<FileIdentity> originalList,
 		ObservableCollection<FileIdentity> observableCollection,
 		SortState sortState,
@@ -349,7 +349,7 @@ internal static class ListViewHelper
 			sortState.IsDescending = true;
 		}
 
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBox.Text);
+		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBoxText);
 		List<FileIdentity> sourceData = isSearchEmpty ? originalList : observableCollection.ToList();
 
 		List<FileIdentity> sortedData = sortState.IsDescending
@@ -379,8 +379,8 @@ internal static class ListViewHelper
 	/// <param name="filteredCollection">
 	/// The ObservableCollection that will be populated with the filtered results.
 	/// </param>
-	/// <param name="searchTextBox">
-	/// The TextBox containing the search term.
+	/// <param name="searchText">
+	/// The search term.
 	/// </param>
 	/// <param name="datePicker">
 	/// An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
@@ -389,7 +389,7 @@ internal static class ListViewHelper
 	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,
-		TextBox searchTextBox,
+		string? searchText,
 		CalendarDatePicker? datePicker,
 		ListViewsRegistry regKey
 		)
@@ -405,7 +405,7 @@ internal static class ListViewHelper
 		}
 
 		// Get the search term from the SearchBox, converting it to lowercase for case-insensitive searching
-		string searchTerm = searchTextBox.Text.Trim();
+		string? searchTerm = searchText?.Trim();
 
 		// Start with the full list.
 		// This list is used as the base set for filtering to preserve original data

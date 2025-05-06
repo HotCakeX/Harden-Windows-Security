@@ -3203,4 +3203,218 @@
   <data name="SidebarPolicyPathPlaceHolder.PlaceholderText" xml:space="preserve">
     <value>נתיב מדיניות</value>
   </data>
+  <data name="ErrorSelectSupplementalPolicyName" xml:space="preserve">
+  <value>יש לבחור שם למדיניות המשלים</value>
+</data>
+<data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
+  <value>יש לבחור נתיב לקובץ מדיניות XML</value>
+</data>
+<data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
+  <value>נתיב הקובץ XML הנבחר אינו קיים</value>
+</data>
+<data name="Starting" xml:space="preserve">
+  <value>מתחיל...</value>
+</data>
+<data name="ErrorPolicyMustBeBase" xml:space="preserve">
+  <value>סוג קובץ המדיניות XML הנבחר חייב להיות מסוג בסיס, אך סוגו הוא: </value>
+</data>
+<data name="ErrorPolicyNotDeployed" xml:space="preserve">
+  <value>קובץ המדיניות הנבחר לא הותקן במערכת.</value>
+</data>
+<data name="SignedPolicyDetected" xml:space="preserve">
+  <value>התגלתה מדיניות חתומה</value>
+</data>
+<data name="DeployingInAuditWait" xml:space="preserve">
+  <value>פורסת את המדיניות הנבחרת במצב ביקורת, אנא המתן</value>
+</data>
+<data name="CreatingSnapBackGuarantee" xml:space="preserve">
+  <value>יוצר ערבות SnapBack במצב אכיפה</value>
+</data>
+<data name="DeployingAuditModePolicy" xml:space="preserve">
+  <value>פורסת את מדיניות מצב הביקורת</value>
+</data>
+<data name="ScanningSelectedDirectories" xml:space="preserve">
+  <value>סורקת את הספריות הנבחרות</value>
+</data>
+<data name="ScanningEventLogs" xml:space="preserve">
+  <value>סורקת את יומני האירועים</value>
+</data>
+<data name="Resetting" xml:space="preserve">
+  <value>מאתחלת...</value>
+</data>
+<data name="ResetSuccessful" xml:space="preserve">
+  <value>האתחול בוצע בהצלחה.</value>
+</data>
+<data name="DeployingEnforceModeCuzReset" xml:space="preserve">
+  <value>פורסת את מדיניות מצב האכיפה מכיוון שהמשתמש החליט לאתחל את הפעולה</value>
+</data>
+<data name="DeployingEnforceMode" xml:space="preserve">
+  <value>פורסת את מדיניות מצב האכיפה.</value>
+</data>
+<data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
+  <value>קובץ CIP למצב אכיפה לא נמצא</value>
+</data>
+<data name="BrowseForAppControlPolicy" xml:space="preserve">
+  <value>עיין ובחר קובץ מדיניות XML של App Control</value>
+</data>
+<data name="Validating" xml:space="preserve">
+  <value>מבצע אימות</value>
+</data>
+<data name="IsValid" xml:space="preserve">
+  <value>המדיניות הנבחרת תקינה.</value>
+</data>
+<data name="Valid" xml:space="preserve">
+  <value>תקין</value>
+</data>
+<data name="SuitableForIntuneDeployment" xml:space="preserve">
+  <value>מתאים לפריסת המדיניות ב-Intune.</value>
+</data>
+<data name="ReduceSizeForIntuneDeployment" xml:space="preserve">
+  <value>יש לערוך את המדיניות כדי להקטין את גודלה מתחת ל-350 KB כדי שתהיה מתאימה לפריסת מדיניות ב-Intune.</value>
+</data>
+<data name="Invalid" xml:space="preserve">
+  <value>לא תקין</value>
+</data>
+<data name="IsNotValid" xml:space="preserve">
+  <value>קובץ המדיניות הנבחר נכשל בתהליך האימות.</value>
+</data>
+<data name="CIPFileSize" xml:space="preserve">
+  <value>גודל קובץ ה-CIP הבינארי הוא </value>
+</data>
+<data name="SchemaValidationSettingsCard.Header" xml:space="preserve">
+  <value>רמה 1 - נדרשת ומשמשת תמיד</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SchemaValidationSettingsCard.Description" xml:space="preserve">
+  <value>מבטיחה שהמדיניות תקינה על פי סכמת שלמות הקוד.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SchemaValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+  <value>מבטיחה שהמדיניות תקינה על פי סכמת שלמות הקוד.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SchemaValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+  <value>מבטיחה שהמדיניות תקינה על פי סכמת שלמות הקוד.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="DeserializeValidationSettingsCard.Header" xml:space="preserve">
+  <value>רמה 2</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="DeserializeValidationSettingsCard.Description" xml:space="preserve">
+  <value>ניתוח מעמיק יותר של תוכן המדיניות.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="DeserializeValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+  <value>ניתוח מעמיק יותר של תוכן המדיניות.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="DeserializeValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+  <value>ניתוח מעמיק יותר של תוכן המדיניות.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SerializeValidationSettingsCard.Header" xml:space="preserve">
+  <value>רמה 3</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SerializeValidationSettingsCard.Description" xml:space="preserve">
+  <value>בדיקות מורחבות של תוכן המדיניות כדי לוודא שהן תקינות.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SerializeValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+  <value>בדיקות מורחבות של תוכן המדיניות כדי לוודא שהן תקינות.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="SerializeValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+  <value>בדיקות מורחבות של תוכן המדיניות כדי לוודא שהן תקינות.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="BinaryValidationSettingsCard.Header" xml:space="preserve">
+  <value>רמה 4</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="BinaryValidationSettingsCard.Description" xml:space="preserve">
+  <value>מבצע בדיקות סופיות ומנסה ליצור קובץ בינארי זמני של CIP לפי המדיניות כדי לוודא שניתן לבצע זאת בהצלחה.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="BinaryValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+  <value>מבצע בדיקות סופיות ומנסה ליצור קובץ בינארי זמני של CIP לפי המדיניות כדי לוודא שניתן לבצע זאת בהצלחה.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="BinaryValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+  <value>מבצע בדיקות סופיות ומנסה ליצור קובץ בינארי זמני של CIP לפי המדיניות כדי לוודא שניתן לבצע זאת בהצלחה.</value>
+  <comment>Policy Validation Page</comment>
+</data>
+<data name="NeedBothIDsValidationError" xml:space="preserve">
+  <value>המדיניות חייבת לכלול PolicyID ו-BasePolicyID.</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="IDsMismatchValidationError" xml:space="preserve">
+  <value>מדיניות בסיס חייבת לכלול ערכים זהים ל-PolicyID ול-BasePolicyID שלה. מדיניות משלימה חייבת לכלול ערכים שונים ל-PolicyID ול-BasePolicyID שלה.</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="DuplicateRuleOptionValidationError" xml:space="preserve">
+  <value>אפשרות חוק המדיניות הבאה נמצאת בשימוש פעמיים</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="DuplicateEKUIDsValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 EKU עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="DuplicateMacroIDsValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 Macro עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="MissingSupPolSignersValidationError" xml:space="preserve">
+  <value>זוהתה מדיניות בסיס חתומה, המאפשרת מדיניות משלימה, אך לא נמצאו חתמי מדיניות משלימה בה.</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="AllowRuleNoIDValidationError" xml:space="preserve">
+  <value>קיים כלל Allow ללא מזהה!</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="AllowRuleDupIDValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 כלל Allow עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="DenyRuleNoIDValidationError" xml:space="preserve">
+  <value>קיים כלל Deny ללא מזהה!</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="DenyRuleDupIDValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 כלל Deny עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="FileAttribNoIDValidationError" xml:space="preserve">
+  <value>קיים FileAttrib ללא מזהה!</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="FileAttribDupIDValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 FileAttrib עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="FileRuleNoIDValidationError" xml:space="preserve">
+  <value>קיים FileRule ללא מזהה!</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="FileRuleDupIDValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 FileRule עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="SignerNoIDValidationError" xml:space="preserve">
+  <value>קיים Signer ללא מזהה!</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="SignerDupIDValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 Signer עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="SigningScenarioNoIDValidationError" xml:space="preserve">
+  <value>קיים SigningScenario ללא מזהה!</value>
+  <comment>Policy validation error</comment>
+</data>
+<data name="SigningScenarioDupIDValidationError" xml:space="preserve">
+  <value>יש יותר מ-1 SigningScenario עם אותו מזהה</value>
+  <comment>Policy validation error</comment>
+</data>
 </root>

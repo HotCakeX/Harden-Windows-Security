@@ -31,19 +31,13 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	internal Visibility UnsignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility SignedXMLFilesLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal Visibility MainInfoBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+	internal Visibility MainInfoBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SP(ref field, value);
-	} = InfoBarSeverity.Informational;
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 

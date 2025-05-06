@@ -16,8 +16,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -41,33 +39,11 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
-	/// <summary>
-	/// Initializes the AllowNewAppsEventLogsDataGrid component. Sets the navigation cache mode to enabled and assigns the
-	/// ViewModel as the data context.
-	/// </summary>
 	internal AllowNewAppsEventLogsDataGrid()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
-	}
-
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the ListView
-		if (FileIdentitiesListView.SelectedItems.Count > 0)
-		{
-			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems);
-		}
 	}
 
 	/// <summary>
@@ -85,7 +61,6 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 		}
 	}
 
-
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -94,7 +69,7 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(mapping.Getter,
-										  SearchBox,
+										  ViewModel.EventLogsAllFileIdentitiesSearchText,
 										  ViewModel.EventLogsAllFileIdentities,
 										  ViewModel.EventLogsFileIdentities,
 										  ViewModel.SortStateEventLogs,
@@ -104,78 +79,6 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 		}
 	}
 
-
-	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		ApplyFilters();
-	}
-
-	/// <summary>
-	/// Applies the date and search filters to the data grid
-	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-			allFileIdentities: ViewModel.EventLogsAllFileIdentities.AsEnumerable(),
-			filteredCollection: ViewModel.EventLogsFileIdentities,
-			searchTextBox: SearchBox,
-			datePicker: null,
-			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults
-		);
-
-		ViewModel.UpdateTotalLogs();
-	}
-
-
-	/// <summary>
-	/// Selects all of the displayed rows on the ListView
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
-	{
-		FileIdentitiesListView.SelectedItems.Clear();
-
-		foreach (FileIdentity item in ViewModel.EventLogsFileIdentities)
-		{
-			// Select each item
-			FileIdentitiesListView.SelectedItems.Add(item);
-		}
-	}
-
-	/// <summary>
-	/// De-selects all of the displayed rows on the ListView
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeSelectAll_Click(object sender, RoutedEventArgs e)
-	{
-		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
-	}
-
-	/// <summary>
-	/// Deletes the selected row from the results
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ListViewFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
-	{
-		// Collect the selected items to delete
-		List<FileIdentity> itemsToDelete = [.. FileIdentitiesListView.SelectedItems.Cast<FileIdentity>()];
-
-		// Remove each selected item from the FileIdentities collection
-		foreach (FileIdentity item in itemsToDelete)
-		{
-			_ = ViewModel.EventLogsFileIdentities.Remove(item);
-			_ = ViewModel.EventLogsAllFileIdentities.Remove(item);
-		}
-
-		ViewModel.UpdateTotalLogs();
-	}
-
 	/// <summary>
 	/// CTRL + C shortcuts event handler
 	/// </summary>
@@ -183,8 +86,7 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 	/// <param name="args"></param>
 	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
-		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		ViewModel.ListViewFlyoutMenuCopy_Click_EventLogs();
 		args.Handled = true;
 	}
-
 }

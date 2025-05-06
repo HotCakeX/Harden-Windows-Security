@@ -40,17 +40,10 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 	private NavigationService nav { get; } = App.AppHost.Services.GetRequiredService<NavigationService>();
 #pragma warning restore CA1822
 
-	/// <summary>
-	/// Initializes the AllowNewApps page, sets up navigation caching, binds the data context, and navigates to the
-	/// AllowNewAppsStart page.
-	/// </summary>
 	internal AllowNewApps()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
 
 		// Navigate to the AllowNewAppsStart page when the window is loaded
@@ -91,18 +84,8 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-		(param => LightUp1(), "Allow New Apps Base Policy"),
+		(param => ViewModel.LightUp1(), "Allow New Apps Base Policy"),
 		null, null, null, null);
-	}
-
-	/// <summary>
-	/// Local event handlers that are assigned to the sidebar button
-	/// </summary>
-	private static void LightUp1()
-	{
-		AllowNewAppsStart.Instance.BrowseForXMLPolicyButton_FlyOutPub.ShowAt(AllowNewAppsStart.Instance.BrowseForXMLPolicyButtonPub);
-		AllowNewAppsStart.Instance.BrowseForXMLPolicyButton_SelectedBasePolicyTextBoxPub.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
-		AllowNewAppsStart.Instance.selectedXMLFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
 	#endregion

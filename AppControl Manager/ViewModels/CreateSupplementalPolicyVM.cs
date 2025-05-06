@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AppControlManager.IntelGathering;
@@ -27,6 +28,20 @@ namespace AppControlManager.ViewModels;
 // It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 {
+
+	internal CreateSupplementalPolicyVM()
+	{
+		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
+		DriverAutoDetectionProgressRingValueProgress = new Progress<double>(p => DriverAutoDetectionProgressRingValue = p);
+	}
+
+
+	internal double FilesAndFoldersProgressRingValue { get; set => SP(ref field, value); }
+	internal double DriverAutoDetectionProgressRingValue { get; set => SP(ref field, value); }
+
+	// A Progress<double> so Report() callbacks run on the UI thread
+	internal IProgress<double> FilesAndFoldersProgressRingValueProgress;
+	internal IProgress<double> DriverAutoDetectionProgressRingValueProgress;
 
 	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility CertificatesBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;

@@ -16,8 +16,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -30,8 +28,7 @@ using Microsoft.UI.Xaml.Navigation;
 namespace AppControlManager.Pages;
 
 /// <summary>
-/// Represents a page for managing local files with functionalities like copying, selecting, and deleting
-/// items.
+/// Represents a page for managing local files.
 /// </summary>
 internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 {
@@ -41,33 +38,11 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 #pragma warning restore CA1822
 
-	/// <summary>
-	/// Constructor for AllowNewAppsLocalFilesDataGrid that initializes the component and sets the navigation cache mode to
-	/// enabled. It also assigns the DataContext to the ViewModel.
-	/// </summary>
 	internal AllowNewAppsLocalFilesDataGrid()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
-	}
-
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the ListView
-		if (FileIdentitiesListView.SelectedItems.Count > 0)
-		{
-			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems);
-		}
 	}
 
 	/// <summary>
@@ -85,7 +60,6 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 		}
 	}
 
-
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -95,7 +69,7 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox,
+					ViewModel.LocalFilesAllFileIdentitiesSearchText,
 					ViewModel.LocalFilesAllFileIdentities,
 					ViewModel.LocalFilesFileIdentities,
 					ViewModel.SortStateLocalFiles,
@@ -105,78 +79,6 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 		}
 	}
 
-
-	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		ApplyFilters();
-	}
-
-	/// <summary>
-	/// Applies the date and search filters to the data grid
-	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-			allFileIdentities: ViewModel.LocalFilesAllFileIdentities.AsEnumerable(),
-			filteredCollection: ViewModel.LocalFilesFileIdentities,
-			searchTextBox: SearchBox,
-			datePicker: null,
-			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults
-		);
-
-		ViewModel.UpdateTotalFiles();
-	}
-
-
-	/// <summary>
-	/// Selects all of the displayed rows on the ListView
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
-	{
-		FileIdentitiesListView.SelectedItems.Clear();
-
-		foreach (FileIdentity item in ViewModel.LocalFilesFileIdentities)
-		{
-			// Select each item
-			FileIdentitiesListView.SelectedItems.Add(item);
-		}
-	}
-
-	/// <summary>
-	/// De-selects all of the displayed rows on the ListView
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeSelectAll_Click(object sender, RoutedEventArgs e)
-	{
-		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
-	}
-
-	/// <summary>
-	/// Deletes the selected row from the results
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ListViewFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
-	{
-		// Collect the selected items to delete
-		List<FileIdentity> itemsToDelete = [.. FileIdentitiesListView.SelectedItems.Cast<FileIdentity>()];
-
-		// Remove each selected item from the FileIdentities collection
-		foreach (FileIdentity item in itemsToDelete)
-		{
-			_ = ViewModel.LocalFilesFileIdentities.Remove(item);
-			_ = ViewModel.LocalFilesAllFileIdentities.Remove(item);
-		}
-
-		ViewModel.UpdateTotalFiles();
-	}
-
 	/// <summary>
 	/// CTRL + C shortcuts event handler
 	/// </summary>
@@ -184,8 +86,7 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 	/// <param name="args"></param>
 	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
-		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		ViewModel.ListViewFlyoutMenuCopy_Click_LocalFiles();
 		args.Handled = true;
 	}
-
 }

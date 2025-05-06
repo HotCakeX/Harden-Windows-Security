@@ -929,9 +929,7 @@ DeviceEvents
 		MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage queryItem = (MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage)copyButton.DataContext;
 
 		// Copy the query text to the clipboard.
-		DataPackage dataPackage = new();
-		dataPackage.SetText(queryItem.Query);
-		Clipboard.SetContent(dataPackage);
+		ClipboardManagement.CopyText(queryItem.Query);
 
 		// Retrieve the Grid that is the button's content.
 		if (copyButton.Content is Grid grid)

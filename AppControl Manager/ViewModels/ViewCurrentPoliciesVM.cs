@@ -969,14 +969,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Add a separator between rows for readability in multi-row copies
 			_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
 
-			// Create a DataPackage to hold the text data
-			DataPackage dataPackage = new();
-
-			// Set the formatted text as the content of the DataPackage
-			dataPackage.SetText(dataBuilder.ToString());
-
-			// Copy the DataPackage content to the clipboard
-			Clipboard.SetContent(dataPackage);
+			ClipboardManagement.CopyText(dataBuilder.ToString());
 		}
 	}
 
@@ -1006,9 +999,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		string? propertyValue = getProperty(ListViewSelectedPolicy);
 		if (propertyValue is not null)
 		{
-			DataPackage dataPackage = new();
-			dataPackage.SetText(propertyValue);
-			Clipboard.SetContent(dataPackage);
+			ClipboardManagement.CopyText(propertyValue);
 		}
 	}
 

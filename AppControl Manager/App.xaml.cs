@@ -173,6 +173,7 @@ public partial class App : Application
 		_ = services.AddSingleton<ViewModelForMSGraph>();
 		_ = services.AddSingleton<ViewOnlinePoliciesVM>(sp => new(sp.GetRequiredService<ViewModelForMSGraph>()));
 		_ = services.AddSingleton<PolicyEditorVM>();
+		_ = services.AddSingleton<BuildNewCertificateVM>();
 
 		AppHost = builder.Build();
 
@@ -250,6 +251,20 @@ public partial class App : Application
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
+		// Register the Jump List tasks
+		/*
+		_ = Task.Run(async () =>
+		{
+			try
+			{
+				await Taskbar.JumpListMgr.RegisterJumpListTasksAsync();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+			}
+		});
+		*/
 
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 

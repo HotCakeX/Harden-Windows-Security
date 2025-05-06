@@ -88,14 +88,7 @@ internal sealed partial class ViewFileCertificates : Page
 				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
 			}
 
-			// Create a DataPackage to hold the text data
-			DataPackage dataPackage = new();
-
-			// Set the formatted text as the content of the DataPackage
-			dataPackage.SetText(dataBuilder.ToString());
-
-			// Copy the DataPackage content to the clipboard
-			Clipboard.SetContent(dataPackage);
+			ClipboardManagement.CopyText(dataBuilder.ToString());
 		}
 	}
 
@@ -123,9 +116,7 @@ internal sealed partial class ViewFileCertificates : Page
 			string? propertyValue = getProperty(selectedItem);
 			if (propertyValue is not null)
 			{
-				DataPackage dataPackage = new();
-				dataPackage.SetText(propertyValue);
-				Clipboard.SetContent(dataPackage);
+				ClipboardManagement.CopyText(propertyValue);
 			}
 		}
 	}

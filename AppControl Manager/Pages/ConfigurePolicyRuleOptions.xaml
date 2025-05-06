@@ -38,11 +38,11 @@
 
                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                            <Button x:Uid="ClearButton" Click="PickPolicyFileButton_FlyOut_Clear_Click" />
+                            <Button x:Uid="ClearButton" Click="{x:Bind PickPolicyFileButton_FlyOut_Clear_Click}" />
 
                             <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
 
-                            <TextBox x:Name="PickPolicyFileButton_TextBox"
+                            <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
                              TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                              MinWidth="400" IsReadOnly="True" />
 
@@ -97,7 +97,7 @@
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <Button x:Name="SetPolicyTemplate" x:Uid="SetPolicyTemplateButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <Button x:Name="SetPolicyTemplate" Click="{x:Bind SetPolicyTemplate_Click}" x:Uid="SetPolicyTemplateButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                         <ComboBox x:Name="PolicyTemplatesComboBox" SelectedIndex="0">
                             <x:String>Base</x:String>

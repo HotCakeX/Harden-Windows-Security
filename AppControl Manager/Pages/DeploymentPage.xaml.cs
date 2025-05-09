@@ -228,7 +228,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 					});
 
 					// Convert the XML file to CIP
-					PolicyToCIPConverter.Convert(file, CIPFilePath);
+					Management.ConvertXMLToBinary(file, null, CIPFilePath);
 
 					if (deployToIntune)
 					{
@@ -378,7 +378,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 					string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
 
 					// Convert the XML file to CIP, overwriting the unsigned one
-					PolicyToCIPConverter.Convert(file, CIPFilePath);
+					Management.ConvertXMLToBinary(file, null, CIPFilePath);
 
 					// Sign the CIP
 					SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
@@ -811,7 +811,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 					}
 
 					// Convert the XML file to CIP
-					PolicyToCIPConverter.Convert(file, XMLSavePath);
+					Management.ConvertXMLToBinary(file, null, XMLSavePath);
 				}
 			});
 		}

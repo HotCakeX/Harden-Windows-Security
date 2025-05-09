@@ -30,8 +30,6 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 {
 
@@ -587,8 +585,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	internal void CopyIsSignedPolicy_Click() => CopyToClipboard((item) => item.IsSignedPolicy.ToString());
 	internal void CopyPolicyOptionsDisplay_Click() => CopyToClipboard((item) => item.PolicyOptionsDisplay);
 
-#pragma warning disable CA1822
-
 	/// <summary>
 	/// Helper method to copy a specified property to clipboard without reflection
 	/// </summary>
@@ -604,7 +600,4 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			ClipboardManagement.CopyText(propertyValue);
 		}
 	}
-
-#pragma warning restore CA1822
-
 }

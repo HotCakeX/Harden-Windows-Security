@@ -33,11 +33,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 {
 
-#pragma warning disable CA1822
 	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
-#pragma warning restore CA1822
 
 	internal AllowNewAppsStart()
 	{

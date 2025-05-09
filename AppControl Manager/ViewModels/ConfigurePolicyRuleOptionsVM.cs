@@ -21,8 +21,6 @@ using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 {
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;

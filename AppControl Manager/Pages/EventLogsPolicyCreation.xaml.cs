@@ -40,12 +40,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class EventLogsPolicyCreation : Page
 {
-
-#pragma warning disable CA1822
 	private EventLogsPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<EventLogsPolicyCreationVM>();
 	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Initializes the EventLogsPolicyCreation component, sets navigation cache mode, and binds the DataContext to the
@@ -542,7 +539,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
-									PolicyToCIPConverter.Convert(PolicyToAddLogsTo, CIPPath);
+									SiPolicy.Management.ConvertXMLToBinary(PolicyToAddLogsTo, null, CIPPath);
 
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}
@@ -582,7 +579,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
-									PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}
@@ -620,7 +617,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
-									PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}

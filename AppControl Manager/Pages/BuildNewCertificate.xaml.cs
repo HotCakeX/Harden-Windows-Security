@@ -27,10 +27,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class BuildNewCertificate : Page
 {
-#pragma warning disable CA1822
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private ViewModels.BuildNewCertificateVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewModels.BuildNewCertificateVM>();
-#pragma warning restore CA1822
 
 	internal BuildNewCertificate()
 	{

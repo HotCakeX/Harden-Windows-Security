@@ -3417,4 +3417,12 @@
   <value>יש יותר מ-1 SigningScenario עם אותו מזהה</value>
   <comment>Policy validation error</comment>
 </data>
+<data name="ProvideCNOrPassErrorMsg" xml:space="preserve">
+    <value>אנא ספק גם את השם המשותף וגם את הסיסמה.</value>
+    <comment>Certificate creation page</comment>
+</data>
+<data name="ProvideCNOrPassErrorTitle" xml:space="preserve">
+    <value>חסרים פרטים נדרשים</value>
+    <comment>Certificate creation page</comment>
+</data>
 </root>

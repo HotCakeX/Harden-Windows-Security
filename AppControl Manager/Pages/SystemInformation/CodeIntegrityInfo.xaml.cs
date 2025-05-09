@@ -27,10 +27,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class CodeIntegrityInfo : Page
 {
-#pragma warning disable CA1822
+
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewModels.CodeIntegrityInfoVM>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Initializes a new instance of the CodeIntegrityInfo class.

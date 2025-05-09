@@ -790,7 +790,7 @@ internal static class CustomDeserialization
 			if (certRootElem.HasAttribute("Value"))
 				cr.Value = ConvertHexStringToByteArray(certRootElem.GetAttribute("Value"));
 
-			if (cr.Type is not CertEnumType.TBS && cr.Type is not CertEnumType.Wellknown)
+			if (cr.Type is not CertEnumType.TBS and not CertEnumType.Wellknown)
 			{
 				throw new InvalidOperationException("Encountered a Cert Root that neither has TBS nor WellKnown type, making it invalid.");
 			}

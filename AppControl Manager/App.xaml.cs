@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.MicrosoftGraph;
@@ -121,6 +122,9 @@ public partial class App : Application
 	internal static IHost AppHost { get; private set; } = null!;
 
 	internal static NavigationService _nav { get; private set; } = null!;
+
+	private static MainWindowVM ViewModelForMainWindow { get; set; } = null!;
+	private static PolicyEditorVM PolicyEditorViewModel { get; set; } = null!;
 
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
@@ -237,7 +241,7 @@ public partial class App : Application
 	private async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
 	{
 		// Log the unobserved task exception details.
-		Logger.Write($"UnobservedTaskException caught: {e.Exception.Message}");
+		Logger.Write(ErrorWriter.FormatException(e.Exception));
 
 		// Mark the exception as observed to prevent the process from terminating.
 		e.SetObserved();
@@ -402,9 +406,67 @@ public partial class App : Application
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
 		_nav = AppHost.Services.GetRequiredService<NavigationService>(); // Retrieve the navigation instance
+
+		ViewModelForMainWindow = AppHost.Services.GetRequiredService<MainWindowVM>();
+		PolicyEditorViewModel = AppHost.Services.GetRequiredService<PolicyEditorVM>();
+
+		#region Initial navigation and file activation processing
+
+		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
+		{
+			Logger.Write($"The app was launched with file activation for the following file: '{Settings.FileActivatedLaunchArg}'");
+
+			// Set the "Policy Editor" item as selected in the NavigationView
+			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
+
+			try
+			{
+				_ = PolicyEditorViewModel.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write($"There was an error launching the Policy Editor with the selected file: {ex.Message}");
+
+				// Continue doing the normal navigation if there was a problem
+				InitialNav();
+			}
+			finally
+			{
+				// Clear the file activated launch args after it's been used
+				Settings.FileActivatedLaunchArg = string.Empty;
+			}
+		}
+		else
+		{
+			InitialNav();
+		}
+
+		#endregion
 	}
 
 	private Window? m_window;
+
+	private static void InitialNav()
+	{
+		if (IsElevated)
+		{
+			// Navigate to the CreatePolicy page when the window is loaded
+			_nav.Navigate(typeof(Pages.CreatePolicy));
+
+			// Set the "Create Policy" item as selected in the NavigationView
+			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+				.First(item => string.Equals(item.Tag.ToString(), "CreatePolicy", StringComparison.OrdinalIgnoreCase));
+		}
+		else
+		{
+			_nav.Navigate(typeof(Pages.PolicyEditor));
+
+			// Set the "Policy Editor" item as selected in the NavigationView
+			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
+		}
+	}
 
 	/// <summary>
 	/// Exposes the main application window as a static property. It retrieves the window from the current application

@@ -24,7 +24,6 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812
 internal sealed partial class BuildNewCertificateVM : ViewModelBase
 {
 	/// <summary>

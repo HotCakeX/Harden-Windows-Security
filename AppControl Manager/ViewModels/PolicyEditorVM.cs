@@ -18,20 +18,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class PolicyEditorVM : ViewModelBase
 {
 
@@ -131,10 +132,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal bool UIElementsEnabledState
-	{
-		get; set => SP(ref field, value);
-	} = true;
+	internal bool UIElementsEnabledState { get; set => SP(ref field, value); } = true;
 
 	internal string? SelectedPolicyFile { get; set => SP(ref field, value); }
 
@@ -154,12 +152,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		get; set => SP(ref field, value);
 	} = string.Empty;
-
-	internal string? MainTeachingSubTitle { get; set => SP(ref field, value); }
-
-	internal string? MainTeachingTitle { get; set => SP(ref field, value); }
-
-	internal bool MainTeachingTipIsOpen { get; set => SP(ref field, value); }
 
 	internal string? PolicyIDTextBox { get; set => SP(ref field, value); }
 
@@ -375,6 +367,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		SignatureBasedColumnWidth7 = new GridLength(maxWidth7);
 	}
 
+	/// <summary>
+	/// The file type based on extension.
+	/// 0 -> CIP
+	/// 1 -> XML
+	/// </summary>
+	private uint? fileType;
 
 	/// <summary>
 	/// Extracts the data from the user selected policy XML file and puts them in the UI elements such as the ListViews
@@ -383,7 +381,36 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		if (SelectedPolicyFile is null)
+		{
+			MainInfoBarVisibility = Visibility.Visible;
+			MainInfoBarIsOpen = true;
+			MainInfoBarMessage = "You need to select an App Control policy file first.";
+			MainInfoBarSeverity = InfoBarSeverity.Warning;
+			MainInfoBarIsClosable = true;
+
 			return;
+		}
+
+		string fileExt = Path.GetExtension(SelectedPolicyFile);
+
+		if (string.Equals(fileExt, ".cip", StringComparison.OrdinalIgnoreCase))
+		{
+			fileType = 0;
+		}
+		else if (string.Equals(fileExt, ".xml", StringComparison.OrdinalIgnoreCase))
+		{
+			fileType = 1;
+		}
+		else
+		{
+			MainInfoBarVisibility = Visibility.Visible;
+			MainInfoBarIsOpen = true;
+			MainInfoBarMessage = "Only XML and CIP binary files are currently supported.";
+			MainInfoBarSeverity = InfoBarSeverity.Warning;
+			MainInfoBarIsClosable = true;
+
+			return;
+		}
 
 		bool error = false;
 
@@ -395,18 +422,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				ProgressBarVisibility = Visibility.Visible;
 
-				MainTeachingTipIsOpen = false;
-
 				UIElementsEnabledState = false;
-
-				if (SelectedPolicyFile is null)
-				{
-					MainTeachingTitle = "No policy file selected";
-					MainTeachingSubTitle = "Please select a policy file to view its contents.";
-					MainTeachingTipIsOpen = true;
-
-					return;
-				}
 
 				MainInfoBarVisibility = Visibility.Visible;
 				MainInfoBarIsOpen = true;
@@ -445,12 +461,19 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				// Close the empty rules in the main policy
-				CloseEmptyXmlNodesSemantic.Close(SelectedPolicyFile);
 
-				// Instantiate the policy
-				PolicyObj = Management.Initialize(SelectedPolicyFile, null);
+				if (fileType == 0)
+				{
+					PolicyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(SelectedPolicyFile);
+				}
+				else
+				{
+					// Close the empty rules in the main policy
+					CloseEmptyXmlNodesSemantic.Close(SelectedPolicyFile);
 
+					// Instantiate the policy
+					PolicyObj = Management.Initialize(SelectedPolicyFile, null);
+				}
 
 				#region Extract policy details
 
@@ -840,6 +863,16 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				}
 
 			});
+
+			await Dispatcher.EnqueueAsync(() =>
+			{
+				try
+				{
+					if (Pages.PolicyEditor._DiamondButtonFlyout is not null && Pages.PolicyEditor._DiamondButton is not null && Pages.PolicyEditor._DiamondButtonFlyout.XamlRoot is not null)
+						Pages.PolicyEditor._DiamondButtonFlyout.ShowAt(Pages.PolicyEditor._DiamondButton);
+				}
+				catch { }
+			});
 		}
 		catch (Exception ex)
 		{
@@ -920,13 +953,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForPolicyButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLAndCIPFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
 			SelectedPolicyFile = selectedFile;
-
-			MainTeachingTipIsOpen = false;
 		}
 	}
 
@@ -1042,23 +1073,22 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal async void SaveChanges()
 	{
-
 		try
 		{
-			MainTeachingTipIsOpen = false;
-
 			UIElementsEnabledState = false;
 
 			if (SelectedPolicyFile is null || PolicyObj is null)
 			{
-				MainTeachingTitle = "No policy file selected";
-				MainTeachingSubTitle = "Please select a policy file first before using the save feature.";
-				MainTeachingTipIsOpen = true;
+				MainInfoBarVisibility = Visibility.Visible;
+				MainInfoBarIsOpen = true;
+				MainInfoBarMessage = "Please select a policy file and load it before using the save feature.";
+				MainInfoBarSeverity = InfoBarSeverity.Warning;
+				MainInfoBarIsClosable = true;
 
 				return;
 			}
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
 
 				// Collections we will populate to be passed to the policy generator method
@@ -1384,9 +1414,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainTeachingTitle = "Invalid Policy ID";
-						MainTeachingSubTitle = $"{policyIDCheckResult.Item2} is not valid for Policy ID";
-						MainTeachingTipIsOpen = true;
+						MainInfoBarVisibility = Visibility.Visible;
+						MainInfoBarIsOpen = true;
+						MainInfoBarMessage = $"{policyIDCheckResult.Item2} is not valid for Policy ID";
+						MainInfoBarSeverity = InfoBarSeverity.Warning;
+						MainInfoBarIsClosable = true;
 					});
 					return;
 				}
@@ -1398,9 +1430,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainTeachingTitle = "Invalid Base Policy ID";
-						MainTeachingSubTitle = $"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID";
-						MainTeachingTipIsOpen = true;
+						MainInfoBarVisibility = Visibility.Visible;
+						MainInfoBarIsOpen = true;
+						MainInfoBarMessage = $"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID";
+						MainInfoBarSeverity = InfoBarSeverity.Warning;
+						MainInfoBarIsClosable = true;
 					});
 					return;
 				}
@@ -1409,9 +1443,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainTeachingTitle = "Enter policy version";
-						MainTeachingSubTitle = "Policy Version cannot be empty";
-						MainTeachingTipIsOpen = true;
+						MainInfoBarVisibility = Visibility.Visible;
+						MainInfoBarIsOpen = true;
+						MainInfoBarMessage = "please enter a policy version, it cannot be empty.";
+						MainInfoBarSeverity = InfoBarSeverity.Warning;
+						MainInfoBarIsClosable = true;
 					});
 					return;
 				}
@@ -1472,9 +1508,34 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				#endregion
 
+
+				string? fileToSaveTheChangesTo = null;
+
+				// Save the CIP file in a XML file with the same name, different extension
+				if (fileType == 0)
+				{
+
+					string cipFileName = Path.GetFileNameWithoutExtension(SelectedPolicyFile);
+
+					// Save it to User Config dir when elevated
+					if (App.IsElevated)
+					{
+						fileToSaveTheChangesTo = Path.Combine(GlobalVars.UserConfigDir, $"{cipFileName}.xml");
+					}
+					// Save it to the same location file is being read from if non-elevated since we already check if we have write permission in that location
+					else
+					{
+						fileToSaveTheChangesTo = Path.Combine(Path.GetDirectoryName(SelectedPolicyFile)!, $"{cipFileName}.xml");
+					}
+				}
+				else
+				{
+					fileToSaveTheChangesTo = SelectedPolicyFile;
+				}
+
 				// Generate the policy
 				Merger.PolicyGenerator(
-				   SelectedPolicyFile, // The user selected XML file path
+				   fileToSaveTheChangesTo, // The user selected XML file path
 				   PolicyObj, // The deserialized policy object
 				   ekusToUse, // The deserialized EKUs
 				   fileRulesNode,
@@ -1488,8 +1549,57 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				   updatePolicySignersCol,
 				   kernelModeFileRulesRefs,
 				   userModeFileRulesRefs);
-			});
 
+
+				await Dispatcher.EnqueueAsync(async () =>
+				{
+
+					if (fileType == 0)
+					{
+						ContentDialogV2 dialog = new()
+						{
+							Title = "Success! ✅",
+							Content = new WrapPanel
+							{
+								Orientation = Orientation.Vertical,
+								HorizontalAlignment = HorizontalAlignment.Center,
+								HorizontalSpacing = 8,
+								VerticalSpacing = 8,
+								Children =
+								{
+									new TextBlock
+									{
+										Text = "The CIP binary has been successfully converted to XML and the file has been saved to:",
+										HorizontalAlignment = HorizontalAlignment.Center,
+										TextWrapping = TextWrapping.WrapWholeWords
+									},
+									new TextBox
+									{
+										TextWrapping = TextWrapping.Wrap,
+										Text = fileToSaveTheChangesTo,
+										IsReadOnly = true,
+										HorizontalAlignment = HorizontalAlignment.Center
+									}
+								}
+							},
+							CloseButtonText = GlobalVars.Rizz.GetString("Ok"),
+						};
+
+						_ = await dialog.ShowAsync();
+					}
+
+				});
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBarVisibility = Visibility.Visible;
+			MainInfoBarIsOpen = true;
+			MainInfoBarMessage = ex.Message;
+			MainInfoBarSeverity = InfoBarSeverity.Error;
+			MainInfoBarIsClosable = true;
+
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -1535,6 +1645,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		GenericSignersCount = "• Generic Signer Rules count: 0";
 		UpdatePolicySignersCount = "• Update Policy Signer Rules count: 0";
 		SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
+
+		MainInfoBarVisibility = Visibility.Visible;
+		MainInfoBarIsOpen = true;
+		MainInfoBarMessage = "All of the data has been successfully cleared.";
+		MainInfoBarSeverity = InfoBarSeverity.Informational;
+		MainInfoBarIsClosable = true;
 	}
 
 
@@ -1545,32 +1661,35 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal async void SearchBox_TextChanged()
 	{
 
-		if (SearchTextBox is null)
-			return;
-
-		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv1 = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.PolicyEditor_FileBasedRules);
-		double? savedHorizontal1 = null;
-		if (Sv1 != null)
+		try
 		{
-			savedHorizontal1 = Sv1.HorizontalOffset;
-		}
 
-		ScrollViewer? Sv2 = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.PolicyEditor_SignatureBasedRules);
-		double? savedHorizontal2 = null;
-		if (Sv2 != null)
-		{
-			savedHorizontal2 = Sv2.HorizontalOffset;
-		}
+			if (SearchTextBox is null)
+				return;
 
-		string searchTerm = SearchTextBox.Trim();
+			// Get the ListView ScrollViewer info
+			ScrollViewer? Sv1 = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.PolicyEditor_FileBasedRules);
+			double? savedHorizontal1 = null;
+			if (Sv1 != null)
+			{
+				savedHorizontal1 = Sv1.HorizontalOffset;
+			}
 
-		List<PolicyEditor.FileBasedRulesForListView> filteredResults = [];
+			ScrollViewer? Sv2 = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.PolicyEditor_SignatureBasedRules);
+			double? savedHorizontal2 = null;
+			if (Sv2 != null)
+			{
+				savedHorizontal2 = Sv2.HorizontalOffset;
+			}
 
-		await Task.Run(() =>
-		{
-			// Perform a case-insensitive search in all relevant fields
-			filteredResults = [.. FileRulesCollectionList.Where(p =>
+			string searchTerm = SearchTextBox.Trim();
+
+			List<PolicyEditor.FileBasedRulesForListView> filteredResults = [];
+
+			await Task.Run(() =>
+			{
+				// Perform a case-insensitive search in all relevant fields
+				filteredResults = [.. FileRulesCollectionList.Where(p =>
 			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -1581,30 +1700,30 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 			)];
-		});
+			});
 
-		FileRulesCollection.Clear();
+			FileRulesCollection.Clear();
 
-		foreach (PolicyEditor.FileBasedRulesForListView item in filteredResults)
-		{
-			FileRulesCollection.Add(item);
-		}
+			foreach (PolicyEditor.FileBasedRulesForListView item in filteredResults)
+			{
+				FileRulesCollection.Add(item);
+			}
 
-		UpdateFileBasedCollectionsCount();
+			UpdateFileBasedCollectionsCount();
 
-		if (Sv1 != null && savedHorizontal1.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv1.ChangeView(savedHorizontal1, null, null, disableAnimation: false);
-		}
+			if (Sv1 != null && savedHorizontal1.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = Sv1.ChangeView(savedHorizontal1, null, null, disableAnimation: false);
+			}
 
 
-		List<PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [];
+			List<PolicyEditor.SignatureBasedRulesForListView> filteredResults2 = [];
 
-		await Task.Run(() =>
-		{
-			// Perform a case-insensitive search in all relevant fields
-			filteredResults2 = [.. SignatureRulesCollectionList.Where(p =>
+			await Task.Run(() =>
+			{
+				// Perform a case-insensitive search in all relevant fields
+				filteredResults2 = [.. SignatureRulesCollectionList.Where(p =>
 			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -1613,26 +1732,37 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 			(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 			)];
-		});
+			});
 
-		SignatureRulesCollection.Clear();
+			SignatureRulesCollection.Clear();
 
-		foreach (PolicyEditor.SignatureBasedRulesForListView item in filteredResults2)
-		{
-			SignatureRulesCollection.Add(item);
+			foreach (PolicyEditor.SignatureBasedRulesForListView item in filteredResults2)
+			{
+				SignatureRulesCollection.Add(item);
+			}
+
+			UpdateSignatureBasedCollectionsCount();
+
+			if (Sv2 != null && savedHorizontal2.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = Sv2.ChangeView(savedHorizontal2, null, null, disableAnimation: false);
+			}
+
 		}
-
-		UpdateSignatureBasedCollectionsCount();
-
-		if (Sv2 != null && savedHorizontal2.HasValue)
+		catch (Exception ex)
 		{
-			// restore horizontal scroll position
-			_ = Sv2.ChangeView(savedHorizontal2, null, null, disableAnimation: false);
+			MainInfoBarVisibility = Visibility.Visible;
+			MainInfoBarIsOpen = true;
+			MainInfoBarMessage = ex.Message;
+			MainInfoBarSeverity = InfoBarSeverity.Error;
+			MainInfoBarIsClosable = true;
+
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 	}
 
 
-#pragma warning disable CA1822
 	/// <summary>
 	/// Used by various methods internally to open a created/modified policy in the Policy Editor
 	/// </summary>
@@ -1645,10 +1775,21 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		// Assign the policy file path to the local variable
 		SelectedPolicyFile = policyFile;
 
-		await Task.Run(ProcessData);
-	}
+		try
+		{
+			await Task.Run(ProcessData);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBarVisibility = Visibility.Visible;
+			MainInfoBarIsOpen = true;
+			MainInfoBarMessage = ex.Message;
+			MainInfoBarSeverity = InfoBarSeverity.Error;
+			MainInfoBarIsClosable = true;
 
-#pragma warning restore CA1822
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+	}
 
 	/// <summary>
 	/// Event handler for deleting selected items from the FileBasedRulesListView's Items Source

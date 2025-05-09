@@ -3962,6 +3962,12 @@
             <returns>A list of policy options as strings. Returns an empty list if no options are found
             or if the element is not formatted correctly.</returns>
         </member>
+        <member name="M:AppControlManager.Others.ClipboardManagement.CopyText(System.String)">
+            <summary>
+            Takes a text and copies it to the OS clipboard.
+            </summary>
+            <param name="text">The text to be copied.</param>
+        </member>
         <member name="F:AppControlManager.Others.DetailsRetrieval.codeIntegrityFlags">
             <summary>
             Define a dictionary to map option flags to their corresponding descriptions
@@ -4663,13 +4669,6 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.Others.PolicyToCIPConverter.Convert(System.String,System.String)">
-            <summary>
-            Converts a XML policy file to CIP binary file using the ConvertFrom-CIPolicy cmdlet of the ConfigCI module
-            </summary>
-            <param name="XmlFilePath"></param>
-            <param name="BinaryFilePath"></param>
-        </member>
         <member name="M:AppControlManager.Others.ProcessStarter.RunCommand(System.String,System.String)">
             <summary>
             Executes an executable with arguments
@@ -5180,27 +5179,6 @@
             the certificate creation process.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.#ctor">
-            <summary>
-            Initializes a new instance of the BuildNewCertificate class. Sets the navigation cache mode and checks field
-            contents.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.KeySizeSettingsCard_Click">
-            <summary>
-            Handle the open/close style of the ComboBox via SettingsCard touch/click event
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.CheckFieldContents">
-            <summary>
-            Method to ensure all the required fields are filled with content before the build button will be enabled
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.BuildNewCertificate.BuildCertificateButton_Click">
-            <summary>
-            Event handler for the main build button
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.BuildNewCertificate.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -5254,12 +5232,10 @@
             Event handler for when the Apply button is pressed
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.SetPolicyTemplate_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.SetPolicyTemplate_Click">
             <summary>
             Event handler for the Set button click in the PolicyTemplate section
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.ManageButtonStates(System.Boolean)">
             <summary>
@@ -5278,12 +5254,10 @@
             Uncheck all of the rule options check boxes in the UI
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.PickPolicyFileButton_FlyOut_Clear_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+        <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.PickPolicyFileButton_FlyOut_Clear_Click">
             <summary>
             Event handler for the flyout's clear button
             </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
         </member>
         <member name="M:AppControlManager.Pages.ConfigurePolicyRuleOptions.RefreshRuleOptionsState_Click">
             <summary>
@@ -6804,12 +6778,6 @@
             SystemInformation page
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.SystemInformation.#ctor">
-            <summary>
-            Initializes the SystemInformation page, maintains its navigation state, and navigates to the ViewCurrentPolicies
-            page on load.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.SystemInformation.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -6829,12 +6797,6 @@
             <summary>
             Represents a page for viewing current policies with data binding and navigation state management. It includes event
             handlers for menu and list interactions.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.ViewCurrentPolicies.#ctor">
-            <summary>
-            Initializes the component and sets the DataContext for data binding in XAML. Ensures navigation maintains the
-            page's state.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.ViewCurrentPolicies.MenuFlyout_Closing(Microsoft.UI.Xaml.Controls.Primitives.FlyoutBase,Microsoft.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs)">
@@ -7372,6 +7334,155 @@
         <member name="F:AppControlManager.SiPolicy.SettingType.StringSet">
             <remarks/>
         </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.MacroRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>\\$\\(([^()]+)\\)</code><br/>
+            Options:<br/>
+            <code>RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match the string "$(".<br/>
+            ○ 1st capture group.<br/>
+                ○ Match a character in the set [^()] atomically at least once.<br/>
+            ○ Match ')'.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WriteOptionalStringValue(System.String)">
+            <summary>
+            Writes a string value to the binary writer, with a trailing zero terminator.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WritePaddedCountedBytes(System.Byte[])">
+            <summary>
+            Writes a counted array of bytes, padded to next 4-byte boundary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertFileRuleToBinary(System.Collections.Generic.Dictionary{System.String,System.UInt32}@,System.Object,System.UInt32)">
+            <summary>
+            Writes a file rule as binary (for main file rules block).
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ParseStringMacros(System.String,System.Collections.Generic.Dictionary{System.String,System.String}@)">
+            <summary>
+            Writes a string or macro value (for AppIDs) to the binary writer.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WriteAppIdsAndMaxFileVersion(System.Collections.Generic.Dictionary{System.String,System.String}@,System.Object)">
+            <summary>
+            Writes AppIDs and MaximumFileVersion for file rules (AppIDs block).
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WriteFileMetadata(System.Object)">
+            <summary>
+            Writes InternalName, FileDescription, ProductName for file rules.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WritePackageInfo(System.Object)">
+            <summary>
+            Writes PackageFamilyName and PackageVersion for file rules.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WriteFilePath(System.Object)">
+            <summary>
+            Writes FilePath for file rules.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertSignerToBinary(AppControlManager.SiPolicy.Signer,System.Collections.Generic.Dictionary{System.String,System.UInt32},System.Collections.Generic.Dictionary{System.String,System.UInt32},System.Object[])">
+            <summary>
+            Serializes a Signer into binary format.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertScenarioToBinary(AppControlManager.SiPolicy.SigningScenario,System.Collections.Generic.Dictionary{System.String,System.UInt32})">
+            <summary>
+            Serializes a SigningScenario to binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertAllowedSignersToBinary(AppControlManager.SiPolicy.AllowedSigners,System.Collections.Generic.Dictionary{System.String,System.UInt32},System.Collections.Generic.Dictionary{System.String,System.UInt32},System.Object[])">
+            <summary>
+            Serializes AllowedSigners to binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertDeniedSignersToBinary(AppControlManager.SiPolicy.DeniedSigners,System.Collections.Generic.Dictionary{System.String,System.UInt32},System.Collections.Generic.Dictionary{System.String,System.UInt32},System.Object[])">
+            <summary>
+            Serializes DeniedSigners to binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertSecureSettingsToBinary(AppControlManager.SiPolicy.Setting[])">
+            <summary>
+            Serializes secure settings to binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.ConvertRequiredFileRulesToBinary(AppControlManager.SiPolicy.FileRulesRef,System.Collections.Generic.Dictionary{System.String,System.UInt32})">
+            <summary>
+            Serializes required file rules to binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WriteStringSetAppSetting(AppControlManager.SiPolicy.AppSetting)">
+            <summary>
+            Writes app settings as binary.
+            </summary>
+            <param name="setting"></param>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsForward.WriteAppSettings(AppControlManager.SiPolicy.AppSettingRegion)">
+            <summary>
+            Writes application settings region to binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ConvertBinaryToXmlFile(System.String)">
+            <summary>
+            Entry point to convert a binary .cip file into its XML representation.
+            Reads, parses, and serializes the policy object.
+            </summary>
+            <param name="binaryFilePath">Input CIP file path</param>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ParseSiPolicy(System.IO.BinaryReader)">
+            <summary>
+            Parses the binary .cip file content to reconstruct the SiPolicy C# object.
+            Handles all versioned blocks and structure.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ParseSigner(System.IO.BinaryReader,System.String[],System.String[])">
+            <summary>
+            Parse a Signer structure from binary, including EKU and file attribute references.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ParseAllowedSigners(System.IO.BinaryReader,System.String[],System.String[])">
+            <summary>
+            Parse an AllowedSigners structure from binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ParseDeniedSigners(System.IO.BinaryReader,System.String[],System.String[])">
+            <summary>
+            Parse a DeniedSigners structure from binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ParseFileRulesRef(System.IO.BinaryReader,System.String[])">
+            <summary>
+            Parse a FileRulesRef structure from binary.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ParseAppSettings(System.IO.BinaryReader)">
+            <summary>
+            Parse the AppSettings region from the binary policy.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ReadStringValue(System.IO.BinaryReader)">
+            <summary>
+            Reads a length-prefixed and 4-byte aligned Unicode string from the binary reader.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.ReadCountedAlignedBytes(System.IO.BinaryReader)">
+            <summary>
+            Reads a length-prefixed and 4-byte aligned byte array from the binary reader.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.BinaryOpsReverse.NumberToStringVersionFixed(System.UInt64)">
+            <summary>
+            Converts a 64-bit version number to a 4-part dot-separated version string.
+            </summary>
+        </member>
         <member name="M:AppControlManager.SiPolicy.CustomAppManifestLogics.DeserializeAppManifest(System.String,System.IO.MemoryStream)">
             <summary>
             Deserializes an Application Manifest from either a file path or a MemoryStream into an AppManifest object.
@@ -7443,6 +7554,70 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.CompareSettingObjects(System.Object,System.Object)">
+            <summary>
+            Compare two settings for ordering (Provider, Key, ValueName).
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.CompareByteArrays(System.Byte[],System.Byte[])">
+            <summary>
+            Compare two byte arrays lexicographically, then by length.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.CompareFileRuleObjects(System.Object,System.Object)">
+            <summary>
+            Compare two file rule objects for ordering.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.AdaptGenericFileRule(AppControlManager.SiPolicy.FileRule)">
+            <summary>
+            Converts a generic FileRule object into a typed file rule (Allow, Deny, FileAttrib).
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.CreateDefaultPolicySettingForAppIdTagging">
+            <summary>
+            Returns a Setting object for the default policy for AppId Tagging.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.MapAppIdTagsToSecureSettings(AppControlManager.SiPolicy.AppIDTags)">
+            <summary>
+            Converts AppIDTags into a list of secure Settings.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.ProjectSignerToCiSigner(AppControlManager.SiPolicy.Signer)">
+            <summary>
+            Converts a Signer object to a CiSigner object.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.ConvertStringVersionToUInt64(System.String)">
+            <summary>
+            Converts a version string of up to four "."-separated numeric segments
+            into a single 64-bit integer by packing each segment into 16 bits.
+            Returns 0 if <paramref name="version"/> is null.
+            Throws InvalidOperationException if there are more than four segments,
+            or FormatException/OverflowException if any segment is not a valid UInt16.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.CalculateScenarioValueArray(AppControlManager.SiPolicy.SiPolicy,System.UInt32[]@)">
+            <summary>
+            Populates scenarioIndex2Value with the Value field of each scenario in siPolicy.SigningScenarios.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.ComputeOptionFlags(AppControlManager.SiPolicy.SiPolicy)">
+            <summary>
+            Computes the policy option flags from the rules in the policy.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.AppendSettingFromRule(System.Collections.Generic.List{AppControlManager.SiPolicy.Setting},AppControlManager.SiPolicy.SiPolicy)">
+            <summary>
+            Adds settings which are mapped from rules in the policy to the provided SettingsList.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Helper.RetrieveApplicationManifest(System.Net.Http.HttpClient,System.Uri)">
+            <summary>
+            Loads and parses an application manifest from a URI (file or web).
+            </summary>
+        </member>
         <member name="M:AppControlManager.SiPolicy.Management.Initialize(System.String,System.Xml.XmlDocument)">
              <summary>
              This class uses the auto-generated code from the XSD schema to initialize the SiPolicy object
@@ -7456,6 +7631,14 @@
              <param name="XmlObj"></param>
              <returns></returns>
              <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:AppControlManager.SiPolicy.Management.ConvertXMLToBinary(System.String,System.Xml.XmlDocument,System.String)">
+            <summary>
+            Converts a Code Integrity policy to CIP binary file.
+            </summary>
+            <param name="xmlFilePath"></param>
+            <param name="XmlObj"></param>
+            <param name="BinPath"></param>
         </member>
         <member name="M:AppControlManager.SiPolicy.Management.SavePolicyToFile(AppControlManager.SiPolicy.SiPolicy,System.String)">
             <summary>
@@ -7789,6 +7972,9 @@
             <remarks/>
         </member>
         <member name="F:AppControlManager.SiPolicy.OptionType.EnabledConditionalWindowsLockdownPolicy">
+            <remarks/>
+        </member>
+        <member name="F:AppControlManager.SiPolicy.OptionType.DisabledDefaultWindowsCertificateRemapping">
             <remarks/>
         </member>
         <member name="T:AppControlManager.SiPolicy.SettingValueType">
@@ -8385,6 +8571,17 @@
         <member name="F:AppControlManager.SiPolicy.PolicyType.AppIDTaggingPolicy">
             <remarks/>
         </member>
+        <member name="T:AppControlManager.Taskbar.Badge">
+            <summary>
+            Manages the badging system.
+            https://learn.microsoft.com/windows/apps/design/shell/tiles-and-notifications/badges
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Taskbar.Badge.ClearBadge">
+            <summary>
+            Clears any badge on the taskbar icon.
+            </summary>
+        </member>
         <member name="T:AppControlManager.Taskbar.ITaskbarList3">
             <summary>
             Defining the COM interface, since we're manually wrapping we don't need [GeneratedComInterface]
@@ -8403,6 +8600,11 @@
             <param name="completed">the current progress value.</param>
             <param name="total">the total or maximum progress value.</param>
             <returns></returns>
+        </member>
+        <member name="T:AppControlManager.Taskbar.JumpListMgr">
+            <summary>
+            https://learn.microsoft.com/uwp/api/windows.ui.startscreen.jumplistitem
+            </summary>
         </member>
         <member name="T:AppControlManager.Taskbar.TaskbarListWrapper">
             <summary>
@@ -8732,6 +8934,36 @@
             Steps Reset
             </summary>
         </member>
+        <member name="P:AppControlManager.ViewModels.BuildNewCertificateVM.generatedCertThumbPrint">
+            <summary>
+            To save the generated certificate's thumb print
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.BuildNewCertificateVM.ProgressRingVisibility">
+            <summary>
+            Gets or sets the visibility state of the progress ring.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.BuildNewCertificateVM.CopyInfoBarToClipboardButtonVisibility">
+            <summary>
+            Gets or sets the visibility of the "Copy to Clipboard" button in the information bar.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.BuildNewCertificateVM.ElementsAreEnabled">
+            <summary>
+            Enables/Disables the UI elements during an ongoing operation.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.BuildNewCertificateVM.BuildCertificateButton_Click">
+            <summary>
+            Event handler for the main build button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.BuildNewCertificateVM.CopyInfoBarToClipboardButton_Click">
+            <summary>
+            Copies the thumbprint of the generated certificate to the clipboard.
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CodeIntegrityInfoVM.GetPolicyStatus(System.Nullable{System.Int32})">
             <summary>
             Local method to convert numbers to their actual string values
@@ -8742,6 +8974,11 @@
         <member name="M:AppControlManager.ViewModels.CodeIntegrityInfoVM.RetrieveCodeIntegrityInfo_Click">
             <summary>
             Event handler for the retrieve code integrity information button
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.ConfigurePolicyRuleOptionsVM.SelectedFilePath">
+            <summary>
+            To store the selected policy path
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CalculateColumnWidths">
@@ -9235,6 +9472,13 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
+        <member name="F:AppControlManager.ViewModels.PolicyEditorVM.fileType">
+            <summary>
+            The file type based on extension.
+            0 -> CIP
+            1 -> XML
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.PolicyEditorVM.ProcessData">
             <summary>
             Extracts the data from the user selected policy XML file and puts them in the UI elements such as the ListViews
@@ -9521,7 +9765,7 @@
         </member>
         <member name="M:AppControlManager.ViewModels.ViewCurrentPoliciesVM.CopyToClipboard(System.Func{AppControlManager.Others.CiPolicyInfo,System.String})">
             <summary>
-            Helper method to copy a specified property to clipboard without reflection
+            Helper method to copy a specified property to clipboard.
             </summary>
             <param name="getProperty">Function that retrieves the desired property value as a string</param>
         </member>
@@ -12587,66 +12831,98 @@
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_3">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the AppPFNRegex method.</summary>
+        <member name="T:System.Text.RegularExpressions.Generated.MacroRegex_3">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the MacroRegex method.</summary>
         </member>
-        <member name="F:System.Text.RegularExpressions.Generated.AppPFNRegex_3.Instance">
+        <member name="F:System.Text.RegularExpressions.Generated.MacroRegex_3.Instance">
             <summary>Cached, thread-safe singleton instance.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.#ctor">
+        <member name="M:System.Text.RegularExpressions.Generated.MacroRegex_3.#ctor">
             <summary>Initializes the instance.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory">
+        <member name="T:System.Text.RegularExpressions.Generated.MacroRegex_3.RunnerFactory">
             <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.CreateInstance">
+        <member name="M:System.Text.RegularExpressions.Generated.MacroRegex_3.RunnerFactory.CreateInstance">
             <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner">
+        <member name="T:System.Text.RegularExpressions.Generated.MacroRegex_3.RunnerFactory.Runner">
             <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.MacroRegex_3.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
             <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.MacroRegex_3.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
             <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if a possible match was found; false if no more matches are possible.</returns>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_3.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.MacroRegex_3.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
             <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_4">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the MyRegex method.</summary>
+        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_4">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the AppPFNRegex method.</summary>
         </member>
-        <member name="F:System.Text.RegularExpressions.Generated.MyRegex_4.Instance">
+        <member name="F:System.Text.RegularExpressions.Generated.AppPFNRegex_4.Instance">
             <summary>Cached, thread-safe singleton instance.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_4.#ctor">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_4.#ctor">
             <summary>Initializes the instance.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_4.RunnerFactory">
+        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_4.RunnerFactory">
             <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_4.RunnerFactory.CreateInstance">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_4.RunnerFactory.CreateInstance">
             <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
         </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_4.RunnerFactory.Runner">
+        <member name="T:System.Text.RegularExpressions.Generated.AppPFNRegex_4.RunnerFactory.Runner">
             <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_4.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_4.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
             <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_4.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_4.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
             <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if a possible match was found; false if no more matches are possible.</returns>
         </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_4.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+        <member name="M:System.Text.RegularExpressions.Generated.AppPFNRegex_4.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_5">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the MyRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.MyRegex_5.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_5.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_5.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_5.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_5.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_5.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_5.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_5.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
             <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
             <param name="inputSpan">The text being scanned by the regular expression.</param>
             <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
@@ -12668,6 +12944,9 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_A88A2EBD06A58EBE771063690D211CDDA189B45254E287D33DBB6981B3B0B2DC">
             <summary>Supports searching for the string "&lt;VersionEx&gt;".</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString_F66C3F9F4E8219C51023A190C7E7DBB850FA066D270BB26FB4889AE31C52AEE1">
+            <summary>Supports searching for the string "$(".</summary>
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_indexOfString____Ordinal">
             <summary>Supports searching for the string "__".</summary>

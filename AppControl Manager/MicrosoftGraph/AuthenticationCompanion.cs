@@ -66,9 +66,9 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		// Determine the Shimmer/ListView visibility on every collection change event that is fired
 		ShimmerListViewVisibilityConfig();
 
-		if (e.Action == NotifyCollectionChangedAction.Remove ||
-			e.Action == NotifyCollectionChangedAction.Reset ||
-			e.Action == NotifyCollectionChangedAction.Replace)
+		if (e.Action is NotifyCollectionChangedAction.Remove or
+			NotifyCollectionChangedAction.Reset or
+			NotifyCollectionChangedAction.Replace)
 		{
 			// For Remove or Replace actions, check the items that were removed
 			if (e.OldItems != null)

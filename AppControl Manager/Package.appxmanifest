@@ -76,6 +76,7 @@
           </uap3:AppExecutionAlias>
         </uap3:Extension>
 
+        <!-- XML Policy File Association -->
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="appcontrolforbusinesspolicies" DesiredView="default">
             <uap:SupportedFileTypes>
@@ -84,6 +85,20 @@
             <uap:DisplayName>App Control Policy XML File</uap:DisplayName>
             <uap:InfoTip>Open App Control XML policy file in the Policy Editor</uap:InfoTip>
             <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\External\XML.png</uap:Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+
+        <!-- CIP Binary File Association -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="appcontrol.cippolicy" DesiredView="default">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/cip">.cip</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>Code Integrity Binary</uap:DisplayName>
+            <uap:InfoTip>Open a .cip binary in the Policy Editor</uap:InfoTip>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\External\CIPIcon.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
 

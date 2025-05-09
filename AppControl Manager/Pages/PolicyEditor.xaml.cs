@@ -28,10 +28,11 @@ namespace AppControlManager.Pages;
 internal sealed partial class PolicyEditor : Page
 {
 
-#pragma warning disable CA1822
 	private PolicyEditorVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
+
+	internal static Flyout? _DiamondButtonFlyout { get; set; }
+	internal static Button? _DiamondButton { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the PolicyEditor class.
@@ -41,5 +42,7 @@ internal sealed partial class PolicyEditor : Page
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
+		_DiamondButtonFlyout = DiamondButtonFlyout;
+		_DiamondButton = DiamondButton;
 	}
 }

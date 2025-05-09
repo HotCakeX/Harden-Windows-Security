@@ -60,6 +60,7 @@ internal static class GlobalVars
 
 	// The filters for the file pickers dialogs to select files based on specific extensions
 	internal const string XMLFilePickerFilter = "XML file|*.xml";
+	internal const string XMLAndCIPFilePickerFilter = "XML and CIP files (*.xml;*.cip)|*.xml;*.cip";
 	internal const string AnyFilePickerFilter = "Any file (*.*)|*.*";
 	internal const string ExecutablesPickerFilter = "Executable file|*.exe";
 	internal const string CertificatePickerFilter = "Certificate file|*.cer";

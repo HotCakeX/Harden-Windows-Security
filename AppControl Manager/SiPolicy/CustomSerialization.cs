@@ -161,7 +161,7 @@ internal static class CustomSerialization
 					signerElement.SetAttribute("SignTimeAfter", signer.SignTimeAfter.ToString("o"));
 
 				// CertRoot
-				if (signer.CertRoot is not null)
+				if (signer.CertRoot is not null && signer.CertRoot.Value is not null)
 				{
 					XmlElement certRootElement = xmlDoc.CreateElement("CertRoot", GlobalVars.SiPolicyNamespace);
 					certRootElement.SetAttribute("Type", signer.CertRoot.Type.ToString());
@@ -181,21 +181,21 @@ internal static class CustomSerialization
 				}
 
 				// CertIssuer, CertPublisher, CertOemID
-				if (signer.CertIssuer is not null)
+				if (signer.CertIssuer is not null && signer.CertIssuer.Value is not null)
 				{
 					if (!AppendAttributeElement(xmlDoc, signerElement, "CertIssuer", "Value", signer.CertIssuer.Value))
 					{
 						throw new InvalidOperationException("Could not get the CertIssuer value");
 					}
 				}
-				if (signer.CertPublisher is not null)
+				if (signer.CertPublisher is not null && signer.CertPublisher.Value is not null)
 				{
 					if (!AppendAttributeElement(xmlDoc, signerElement, "CertPublisher", "Value", signer.CertPublisher.Value))
 					{
 						throw new InvalidOperationException("Could not get the CertPublisher value");
 					}
 				}
-				if (signer.CertOemID is not null)
+				if (signer.CertOemID is not null && signer.CertOemID.Value is not null)
 				{
 					if (!AppendAttributeElement(xmlDoc, signerElement, "CertOemID", "Value", signer.CertOemID.Value))
 					{
@@ -985,6 +985,5 @@ internal static class CustomSerialization
 		// After processing all bytes, return the constructed hexadecimal string.
 		return result;
 	}
-
 
 }

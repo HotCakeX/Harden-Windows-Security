@@ -487,7 +487,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		{
 			Logger.Write("Converting the policy file to .CIP binary");
 
-			PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
 
 			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
 		}
@@ -578,7 +578,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		{
 			Logger.Write("Converting the policy file to .CIP binary");
 
-			PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
 
 			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
 		}
@@ -677,7 +677,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 			}
 
 			// Convert it to CIP
-			PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
 
 			// Deploy the CIP file
 			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
@@ -769,7 +769,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 			Logger.Write("Converting the policy file to .CIP binary");
 
-			PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
 
 			CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
 		}
@@ -840,7 +840,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
 
 			// Convert the XML to CiP
-			PolicyToCIPConverter.Convert(policyPath, cipPath);
+			SiPolicy.Management.ConvertXMLToBinary(policyPath, null, cipPath);
 
 			// Deploy the CiP file
 			CiToolHelper.UpdatePolicy(cipPath);

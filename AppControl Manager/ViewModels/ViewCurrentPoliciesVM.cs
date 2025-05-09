@@ -31,12 +31,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace AppControlManager.ViewModels;
-
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 
 internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 {
@@ -599,7 +595,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
 
 								// Convert the XML file to CIP, overwriting the unsigned one
-								PolicyToCIPConverter.Convert(XMLPolicyPath, CIPFilePath);
+								SiPolicy.Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
 
 								// Sign the CIP
 								SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
@@ -985,10 +981,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	internal void CopyIsSystemPolicy_Click() => CopyToClipboard((item) => item.IsSystemPolicy.ToString());
 	internal void CopyPolicyOptionsDisplay_Click() => CopyToClipboard((item) => item.PolicyOptionsDisplay);
 
-#pragma warning disable CA1822
-
 	/// <summary>
-	/// Helper method to copy a specified property to clipboard without reflection
+	/// Helper method to copy a specified property to clipboard.
 	/// </summary>
 	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
 	private void CopyToClipboard(Func<CiPolicyInfo, string?> getProperty)
@@ -1002,7 +996,5 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			ClipboardManagement.CopyText(propertyValue);
 		}
 	}
-
-#pragma warning restore CA1822
 
 }

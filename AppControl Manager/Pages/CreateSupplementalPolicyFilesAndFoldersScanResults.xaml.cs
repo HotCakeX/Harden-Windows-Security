@@ -35,10 +35,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page
 {
 
-#pragma warning disable CA1822
 	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Constructor for the CreateSupplementalPolicyFilesAndFoldersScanResults class. Initializes components, maintains

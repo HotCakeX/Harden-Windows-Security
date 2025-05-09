@@ -35,10 +35,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 {
 
-#pragma warning disable CA1822
 	private CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Constructor for the CreateDenyPolicyFilesAndFoldersScanResults class. Initializes components, maintains navigation

@@ -39,13 +39,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager
 {
-
-
-#pragma warning disable CA1822
 	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Initializes the ConfigurePolicyRuleOptions class, sets up navigation caching, binds the data context, and generates
@@ -241,7 +237,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 						return;
 					}
 
-					PolicyToCIPConverter.Convert(ViewModel.SelectedFilePath, cipPath);
+					Management.ConvertXMLToBinary(ViewModel.SelectedFilePath, null, cipPath);
 
 					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(policyObj, ViewModel.SelectedFilePath))

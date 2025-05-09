@@ -28,11 +28,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class MergePolicies : Page
 {
-
-#pragma warning disable CA1822
 	private MergePoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MergePoliciesVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Initializes a new instance of the MergePolicies class. Sets up the navigation cache mode and binds the data context

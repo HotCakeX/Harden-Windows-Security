@@ -206,6 +206,8 @@ internal static class AppControlSimulation
 
 		try
 		{
+			Taskbar.Badge.SetBadgeAsActive();
+
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
 			IEnumerable<FileInfo[]> SplitArrays = CollectedFiles.Item1.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
 
@@ -511,6 +513,8 @@ internal static class AppControlSimulation
 		finally
 		{   // Dispose of the timer
 			progressTimer?.Dispose();
+
+			Taskbar.Badge.ClearBadge();
 		}
 
 		return FinalSimulationResults;

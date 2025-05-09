@@ -23,11 +23,8 @@ using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
-
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
 	internal readonly ObservableCollection<FileIdentity> FileIdentities = [];
@@ -36,7 +33,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	// If ObservableCollection were used directly, any filtering or modification could remove items permanently
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> AllFileIdentities = [];
-
 
 	internal ListViewHelper.SortState SortState { get; set; } = new();
 

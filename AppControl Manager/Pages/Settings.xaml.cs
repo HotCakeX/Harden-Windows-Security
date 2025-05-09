@@ -25,11 +25,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class Settings : Page
 {
 
-#pragma warning disable CA1822
 	private SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
-#pragma warning restore CA1822
 
 	internal Settings()
 	{

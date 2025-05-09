@@ -82,7 +82,7 @@ internal static class SupplementalForSelf
 		{
 			Logger.Write($"Supplemental policy named {GlobalVars.AppControlManagerSpecialPolicyName} is not deployed for the base policy with the BasePolicyID {basePolicyID}, deploying it now.");
 
-			PolicyToCIPConverter.Convert(savePath, cipPath);
+			SiPolicy.Management.ConvertXMLToBinary(savePath, null, cipPath);
 
 			CiToolHelper.UpdatePolicy(cipPath);
 		}
@@ -164,7 +164,7 @@ internal static class SupplementalForSelf
 		string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
 
 		// Convert the XML file to CIP
-		PolicyToCIPConverter.Convert(savePath, CIPFilePath);
+		Management.ConvertXMLToBinary(savePath, null, CIPFilePath);
 
 		// Sign the CIP
 		SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);

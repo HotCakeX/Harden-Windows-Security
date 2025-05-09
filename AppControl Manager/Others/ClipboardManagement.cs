@@ -15,31 +15,25 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using Windows.ApplicationModel.DataTransfer;
+
 namespace AppControlManager.Others;
 
-internal static class PolicyToCIPConverter
+internal static class ClipboardManagement
 {
 	/// <summary>
-	/// Converts a XML policy file to CIP binary file using the ConvertFrom-CIPolicy cmdlet of the ConfigCI module
+	/// Takes a text and copies it to the OS clipboard.
 	/// </summary>
-	/// <param name="XmlFilePath"></param>
-	/// <param name="BinaryFilePath"></param>
-	internal static void Convert(string XmlFilePath, string BinaryFilePath)
+	/// <param name="text">The text to be copied.</param>
+	internal static void CopyText(string? text)
 	{
+		// Create a DataPackage to hold the text data
+		DataPackage dataPackage = new();
 
-		// Escape the output policy path for PowerShell
-		string escapedXMLFile = $"\\\"{XmlFilePath}\\\"";
+		// Set the text as the content of the DataPackage
+		dataPackage.SetText(text);
 
-		// Escape the output policy path for PowerShell
-		string escapedOutputCIP = $"\\\"{BinaryFilePath}\\\"";
-
-		// Construct the PowerShell script
-		string script = $"ConvertFrom-CIPolicy -XmlFilePath {escapedXMLFile} -BinaryFilePath {escapedOutputCIP}";
-
-		Logger.Write($"PowerShell code that will be executed: {script}");
-
-		// Execute the command
-		_ = ProcessStarter.RunCommand("powershell.exe", $"-NoProfile -Command \"{script}\"");
+		// Copy the DataPackage content to the clipboard
+		Clipboard.SetContent(dataPackage);
 	}
-
 }

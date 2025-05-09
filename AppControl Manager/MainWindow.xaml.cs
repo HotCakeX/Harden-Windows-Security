@@ -168,42 +168,6 @@ internal sealed partial class MainWindow : Window
 
 		#endregion
 
-
-		#region Initial navigation and file activation processing
-
-
-		if (!string.IsNullOrWhiteSpace(AppSettings.FileActivatedLaunchArg))
-		{
-			Logger.Write($"The app was launched with file activation for the following file: {AppSettings.FileActivatedLaunchArg}");
-
-			// Set the "Policy Editor" item as selected in the NavigationView
-			ViewModel.NavViewSelectedItem = ViewModel.allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
-
-			try
-			{
-				_ = PolicyEditorViewModel.OpenInPolicyEditor(AppSettings.FileActivatedLaunchArg);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write($"There was an error launching the Policy Editor with the selected file: {ex.Message}");
-
-				// Continue doing the normal navigation if there was a problem
-				InitialNav();
-			}
-			finally
-			{
-				// Clear the file activated launch args after it's been used
-				AppSettings.FileActivatedLaunchArg = string.Empty;
-			}
-		}
-		else
-		{
-			InitialNav();
-		}
-
-		#endregion
-
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));
 
@@ -216,28 +180,6 @@ internal sealed partial class MainWindow : Window
 		// Set the initial Icons styles abased on the user's settings
 		ViewModel.OnIconsStylesChanged(App.Settings.IconsStyle);
 	}
-
-	private void InitialNav()
-	{
-		if (App.IsElevated)
-		{
-			// Navigate to the CreatePolicy page when the window is loaded
-			_ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
-
-			// Set the "Create Policy" item as selected in the NavigationView
-			ViewModel.NavViewSelectedItem = ViewModel.allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "CreatePolicy", StringComparison.OrdinalIgnoreCase));
-		}
-		else
-		{
-			_ = ContentFrame.Navigate(typeof(Pages.PolicyEditor));
-
-			// Set the "Policy Editor" item as selected in the NavigationView
-			ViewModel.NavViewSelectedItem = ViewModel.allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
-		}
-	}
-
 
 	/// <summary>
 	/// Specifies the interactive regions of the title bar in the AppTitleBar Grid.

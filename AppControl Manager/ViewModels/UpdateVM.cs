@@ -36,8 +36,7 @@ using Windows.Management.Deployment;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812, CA1822, IDE0063
-// an internal class that is apparently never instantiated, It's handled by Dependency Injection so this warning is a false-positive.
+#pragma warning disable IDE0063
 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
 internal sealed partial class UpdateVM : ViewModelBase

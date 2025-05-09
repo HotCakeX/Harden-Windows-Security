@@ -41,8 +41,6 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-#pragma warning disable CA1822
-
 /// <summary>
 /// Represents a page for creating supplemental policies, managing data display and user interactions.
 /// </summary>
@@ -550,7 +548,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
@@ -887,7 +885,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (CertificatesBasedDeployButton)
@@ -1091,7 +1089,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
@@ -1478,7 +1476,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
@@ -2001,7 +1999,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
@@ -2230,7 +2228,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)

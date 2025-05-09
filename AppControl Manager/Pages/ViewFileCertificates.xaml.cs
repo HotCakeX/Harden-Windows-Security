@@ -32,7 +32,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel.DataTransfer;
 
 namespace AppControlManager.Pages;
 
@@ -43,10 +42,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class ViewFileCertificates : Page
 {
 
-#pragma warning disable CA1822
 	private ViewFileCertificatesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Constructor for the ViewFileCertificates class. Initializes components, sets navigation cache mode, and assigns the
@@ -88,14 +85,7 @@ internal sealed partial class ViewFileCertificates : Page
 				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
 			}
 
-			// Create a DataPackage to hold the text data
-			DataPackage dataPackage = new();
-
-			// Set the formatted text as the content of the DataPackage
-			dataPackage.SetText(dataBuilder.ToString());
-
-			// Copy the DataPackage content to the clipboard
-			Clipboard.SetContent(dataPackage);
+			ClipboardManagement.CopyText(dataBuilder.ToString());
 		}
 	}
 
@@ -123,9 +113,7 @@ internal sealed partial class ViewFileCertificates : Page
 			string? propertyValue = getProperty(selectedItem);
 			if (propertyValue is not null)
 			{
-				DataPackage dataPackage = new();
-				dataPackage.SetText(propertyValue);
-				Clipboard.SetContent(dataPackage);
+				ClipboardManagement.CopyText(propertyValue);
 			}
 		}
 	}

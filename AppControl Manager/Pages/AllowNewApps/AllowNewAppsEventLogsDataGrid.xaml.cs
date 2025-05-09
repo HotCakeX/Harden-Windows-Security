@@ -34,10 +34,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 {
 
-#pragma warning disable CA1822
 	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	internal AllowNewAppsEventLogsDataGrid()
 	{

@@ -21,8 +21,6 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class DeploymentVM : ViewModelBase
 {
 

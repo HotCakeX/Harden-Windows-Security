@@ -19,8 +19,7 @@ using AppControlManager.ViewModels;
 
 namespace AppControlManager.MicrosoftGraph;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
+#pragma warning disable CA1812
 internal sealed partial class ViewModelForMSGraph : ViewModelBase
 {
 	/// <summary>

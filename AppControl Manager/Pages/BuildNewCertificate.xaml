@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
@@ -29,12 +30,19 @@
 
             </controls:WrapPanel>
 
-            <Button Grid.Row="1" HorizontalAlignment="Center" x:Name="BuildCertificateButton"
-                    HorizontalContentAlignment="Center" Margin="15" Click="{x:Bind BuildCertificateButton_Click}"
+            <Button Grid.Row="1" HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Margin="15"
+                    Click="{x:Bind ViewModel.BuildCertificateButton_Click}"
                     x:Uid="BuildCertificateButton">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
-                        <ProgressRing Visibility="Collapsed" x:Name="ProgressRing" Margin="5,5,15,5" Value="0" IsIndeterminate="True" Minimum="0" Maximum="100"/>
+                        <ProgressRing Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}"
+                                      Margin="5,5,15,5"
+                                      Value="0"
+                                      IsIndeterminate="True"
+                                      Minimum="0"
+                                      Maximum="100"/>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xEB77;" Margin="5" />
@@ -46,58 +54,70 @@
             </Button>
 
             <InfoBar
-                x:Name="StatusInfoBar"
-                IsOpen="False"
-                Visibility="Collapsed"
-                Severity="Informational"
+                IsOpen="{x:Bind ViewModel.StatusInfoBarIsOpen, Mode=OneWay}"
+                Severity="{x:Bind ViewModel.StatusInfoBarSeverity, Mode=OneWay}"
+                IsClosable="{x:Bind ViewModel.StatusInfoBarIsClosable, Mode=TwoWay}"
+                Message="{x:Bind ViewModel.StatusInfoBarMessage, Mode=OneWay}"
+                Title="{x:Bind ViewModel.StatusInfoBarTitle, Mode=OneWay}"
                 Grid.Row="2">
                 <InfoBar.ActionButton>
-                    <Button Visibility="Collapsed" x:Name="CopyInfoBarToClipboardButton" x:Uid="CopyThumbPrintToClipboardButton" Click="{x:Bind CopyInfoBarToClipboardButton_Click}" />
+                    <Button Visibility="{x:Bind ViewModel.CopyInfoBarToClipboardButtonVisibility, Mode=OneWay}"
+                            x:Uid="CopyThumbPrintToClipboardButton"
+                            Click="{x:Bind ViewModel.CopyInfoBarToClipboardButton_Click}" />
                 </InfoBar.ActionButton>
-
             </InfoBar>
 
-            <StackPanel HorizontalAlignment="Stretch"
-             Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
+            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Name="KeySizeSettingsCard" Click="{x:Bind KeySizeSettingsCard_Click}"
-                x:Uid="KeySizeSettingsCard"
-                HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}" IsClickEnabled="True" IsActionIconVisible="False">
+                <customUI:SettingsCardV2 x:Uid="KeySizeSettingsCard"
+                                         HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}"
+                                         IsClickEnabled="True"
+                                         IsActionIconVisible="False">
 
-                    <ComboBox SelectedIndex="0" x:Name="KeySizeComboBox">
+                    <ComboBox SelectedItem="{x:Bind ViewModel.KeySizeComboBoxSelectedItem, Mode=TwoWay}">
                         <x:String>4096</x:String>
                     </ComboBox>
 
-                </controls:SettingsCard>
+                </customUI:SettingsCardV2>
 
-                <controls:SettingsCard x:Name="CommonNameSettingsCard"
-                x:Uid="CommonNameSettingsCard"              
-                HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}" IsClickEnabled="False" IsActionIconVisible="False">
+                <controls:SettingsCard x:Uid="CommonNameSettingsCard"              
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}"
+                                       IsClickEnabled="False"
+                                       IsActionIconVisible="False">
 
-                    <TextBox x:Name="CommonNameTextBox" x:Uid="CommonNameTextBox" TextChanged="{x:Bind CheckFieldContents}" MinWidth="200"/>
-
-                </controls:SettingsCard>
-
-                <controls:SettingsCard x:Name="ValiditySettingsCard"
-                x:Uid="ValiditySettingsCard"         
-                HeaderIcon="{ui:FontIcon Glyph=&#xE787;}" IsClickEnabled="False" IsActionIconVisible="False">
-
-                    <NumberBox x:Name="ValidityNumberBox" Value="100" SpinButtonPlacementMode="Inline"
-                        SmallChange="10" LargeChange="100" Minimum="1" MaxHeight="3000"/>
+                    <TextBox x:Uid="CommonNameTextBox" Text="{x:Bind ViewModel.CommonName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200"/>
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Name="PFXPasswordSettingsCard"
-                x:Uid="PFXPasswordSettingsCard"
-                HeaderIcon="{ui:FontIcon Glyph=&#xF78D;}" IsClickEnabled="False" IsActionIconVisible="False">
+                <controls:SettingsCard x:Uid="ValiditySettingsCard"         
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE787;}"
+                                       IsClickEnabled="False"
+                                       IsActionIconVisible="False">
 
-                    <PasswordBox x:Name="PFXEncryptionPasswordBox" PasswordChanged="{x:Bind CheckFieldContents}"
-                        MinWidth="250" PasswordChar="#" PasswordRevealMode="Peek" x:Uid="PFXEncryptionPasswordBox" />
+                    <NumberBox Value="{x:Bind ViewModel.Validity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                               SpinButtonPlacementMode="Inline"
+                               SmallChange="10"
+                               LargeChange="100"
+                               Minimum="1"
+                               MaxHeight="3000"/>
+
+                </controls:SettingsCard>
+
+                <controls:SettingsCard x:Uid="PFXPasswordSettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xF78D;}"
+                                       IsClickEnabled="False"
+                                       IsActionIconVisible="False">
+
+                    <PasswordBox MinWidth="250"
+                                 PasswordChar="#"
+                                 PasswordRevealMode="Peek"
+                                 Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                                 x:Uid="PFXEncryptionPasswordBox" />
 
                 </controls:SettingsCard>
 

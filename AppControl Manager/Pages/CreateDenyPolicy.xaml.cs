@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using AppControlManager.ViewModels;
 using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
@@ -37,8 +38,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
-
-#pragma warning disable CA1822
 
 /// <summary>
 /// CreateDenyPolicy is a page for creating deny policies for files and folders. It initializes components and manages
@@ -257,7 +256,7 @@ internal sealed partial class CreateDenyPolicy : Page
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
@@ -723,7 +722,7 @@ internal sealed partial class CreateDenyPolicy : Page
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{PFNBasedDenyPolicyName}.cip");
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (shouldDeploy)
@@ -888,7 +887,7 @@ internal sealed partial class CreateDenyPolicy : Page
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.cip");
 
 				// Convert the XML file to CIP and save it in the defined path
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)

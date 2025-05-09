@@ -28,14 +28,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class SystemInformation : Page
 {
-#pragma warning disable CA1822
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
-	/// <summary>
-	/// Initializes the SystemInformation page, maintains its navigation state, and navigates to the ViewCurrentPolicies
-	/// page on load.
-	/// </summary>
 	internal SystemInformation()
 	{
 		this.InitializeComponent();

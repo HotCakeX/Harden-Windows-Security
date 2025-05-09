@@ -3417,4 +3417,12 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>There are more than 1 SigningScenarios with the same ID</value>
     <comment>Policy validation error</comment>
   </data>
+  <data name="ProvideCNOrPassErrorMsg" xml:space="preserve">
+    <value>Please provide both Common Name and Password.</value>
+    <comment>Certificate creation page</comment>
+  </data>
+  <data name="ProvideCNOrPassErrorTitle" xml:space="preserve">
+    <value>Missing required details</value>
+    <comment>Certificate creation page</comment>
+  </data>
 </root>

@@ -335,6 +335,10 @@ namespace AppControlManager.SiPolicy
 		/// <remarks/>
 		[System.Xml.Serialization.XmlEnumAttribute("Enabled:Conditional Windows Lockdown Policy")]
 		EnabledConditionalWindowsLockdownPolicy,
+
+		/// <remarks/>
+		[System.Xml.Serialization.XmlEnumAttribute("Disabled:Default Windows Certificate Remapping")]
+		DisabledDefaultWindowsCertificateRemapping
 	}
 
 	/// <remarks/>

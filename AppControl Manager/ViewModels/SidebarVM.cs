@@ -21,8 +21,6 @@ using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812
-
 internal sealed partial class SidebarVM : ViewModelBase
 {
 

@@ -26,8 +26,6 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812
-
 internal sealed partial class ValidatePolicyVM : ViewModelBase
 {
 
@@ -174,7 +172,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 							if (Level4Test)
 							{
-								PolicyToCIPConverter.Convert(tempPolicyXMLPath, tempPolicyCIPPath);
+								SiPolicy.Management.ConvertXMLToBinary(tempPolicyXMLPath, null, tempPolicyCIPPath);
 
 								FileInfo fileInfo = new(tempPolicyCIPPath);
 

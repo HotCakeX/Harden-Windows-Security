@@ -38,8 +38,6 @@ using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class AllowNewAppsVM : ViewModelBase
 {
 
@@ -788,7 +786,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip.p7");
 
 				// Convert the XML file to CIP
-				PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
 				// Add the supplemental policy path to the class variable
 				finalSupplementalPolicyPath = OutputPath;
@@ -803,7 +801,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 				else
 				{
-					PolicyToCIPConverter.Convert(OutputPath, CIPPath);
+					Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 				}
 
 				// If user selected to deploy the policy
@@ -1225,11 +1223,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				{
 					// Create audit mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode]);
-					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
+					Management.ConvertXMLToBinary(tempBasePolicyPath, null, AuditModeCIP);
 
 					// Create Enforced mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode]);
-					PolicyToCIPConverter.Convert(tempBasePolicyPath, EnforcedModeCIP);
+					Management.ConvertXMLToBinary(tempBasePolicyPath, null, EnforcedModeCIP);
 				}
 				// If the policy is Signed
 				else
@@ -1240,7 +1238,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					string CIPp7SignedFilePathAudit = Path.Combine(stagingArea.FullName, "BaseAudit.cip.p7");
 
 					// Convert the XML file to CIP
-					PolicyToCIPConverter.Convert(tempBasePolicyPath, AuditModeCIP);
+					Management.ConvertXMLToBinary(tempBasePolicyPath, null, AuditModeCIP);
 
 					// Sign the CIP
 					SignToolHelper.Sign(new FileInfo(AuditModeCIP), new FileInfo(_SignToolPath!), _CertCN!);
@@ -1256,7 +1254,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					string tempEnforcedModeCIPPath = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip");
 
 					// Convert the XML file to CIP
-					PolicyToCIPConverter.Convert(tempBasePolicyPath, tempEnforcedModeCIPPath);
+					Management.ConvertXMLToBinary(tempBasePolicyPath, null, tempEnforcedModeCIPPath);
 
 					// Sign the CIP
 					SignToolHelper.Sign(new FileInfo(tempEnforcedModeCIPPath), new FileInfo(_SignToolPath!), _CertCN!);

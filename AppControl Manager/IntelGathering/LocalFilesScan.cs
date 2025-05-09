@@ -58,6 +58,7 @@ internal static class LocalFilesScan
 
 		try
 		{
+			Taskbar.Badge.SetBadgeAsActive();
 
 			// Get the security catalog data to include in the scan
 			ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, scalability);
@@ -379,6 +380,7 @@ internal static class LocalFilesScan
 		{
 			// Clear the taskbar progress
 			Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
+			Taskbar.Badge.ClearBadge();
 		}
 	}
 

@@ -28,11 +28,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class CreatePolicy : Page
 {
-
-#pragma warning disable CA1822
 	private CreatePolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreatePolicyVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
 	internal CreatePolicy()
 	{

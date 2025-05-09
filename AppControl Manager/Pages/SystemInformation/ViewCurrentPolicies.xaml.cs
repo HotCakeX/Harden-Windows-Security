@@ -31,21 +31,13 @@ namespace AppControlManager.Pages;
 internal sealed partial class ViewCurrentPolicies : Page
 {
 
-#pragma warning disable CA1822
 	private ViewCurrentPoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewCurrentPoliciesVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-#pragma warning restore CA1822
 
-	/// <summary>
-	/// Initializes the component and sets the DataContext for data binding in XAML. Ensures navigation maintains the
-	/// page's state.
-	/// </summary>
 	internal ViewCurrentPolicies()
 	{
 		this.InitializeComponent();
-
 		DataContext = ViewModel; // Set the DataContext for x:Bind references in the header in XAML
-
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 

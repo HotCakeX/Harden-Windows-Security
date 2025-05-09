@@ -29,7 +29,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 
 namespace AppControlManager.Others;
@@ -249,14 +248,7 @@ internal static class ListViewHelper
 			_ = sb.AppendLine(DefaultDelimiter);
 		}
 
-		// Create a DataPackage to hold the text data
-		DataPackage dataPackage = new();
-
-		// Set the formatted text as the content of the DataPackage
-		dataPackage.SetText(sb.ToString());
-
-		// Copy the DataPackage content to the clipboard
-		Clipboard.SetContent(dataPackage);
+		ClipboardManagement.CopyText(sb.ToString());
 	}
 
 
@@ -272,9 +264,7 @@ internal static class ListViewHelper
 			string? propertyValue = getProperty(selectedItem);
 			if (propertyValue is not null)
 			{
-				DataPackage dataPackage = new();
-				dataPackage.SetText(propertyValue);
-				Clipboard.SetContent(dataPackage);
+				ClipboardManagement.CopyText(propertyValue);
 			}
 		}
 	}

@@ -25,15 +25,10 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class MergePoliciesVM : ViewModelBase
 {
 
-#pragma warning disable CA1822 // Mark members as static
 	internal bool IsElevated => App.IsElevated;
-#pragma warning restore CA1822
-
 
 	#region UI-Bound Properties
 
@@ -126,7 +121,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 					string CIPPath = Path.Combine(stagingArea, GlobalVars.Rizz.GetString("MergePolicies_MergedPolicyFileName"));
 
-					PolicyToCIPConverter.Convert(MainPolicy, CIPPath);
+					SiPolicy.Management.ConvertXMLToBinary(MainPolicy, null, CIPPath);
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}

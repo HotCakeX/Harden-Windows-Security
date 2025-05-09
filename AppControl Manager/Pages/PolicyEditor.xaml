@@ -43,7 +43,7 @@
           Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
           IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Border x:Name="MainBorder"
+        <Border
             Grid.Row="2"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
@@ -51,11 +51,11 @@
 
                 <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}" />
 
-                <customUI:ButtonV2 x:Name="BrowseForPolicyButton" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
+                <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
                     VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Browse for an App Control XML policy file">
 
                     <customUI:ButtonV2.Flyout>
-                        <Flyout x:Name="BrowseForPolicyButton_Flyout">
+                        <Flyout>
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -63,7 +63,7 @@
 
                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox x:Name="BrowseForPolicyButton_SelectedFilesTextBox" Text="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
+                                <TextBox Text="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                     MinWidth="400" IsReadOnly="True" />
 
@@ -113,9 +113,6 @@
                     </Button.Content>
                 </Button>
 
-                <TeachingTip IsOpen="{x:Bind ViewModel.MainTeachingTipIsOpen, Mode=TwoWay}" Title="{x:Bind ViewModel.MainTeachingTitle, Mode=OneWay}"
-                             Subtitle="{x:Bind ViewModel.MainTeachingSubTitle, Mode=OneWay}"  Target="{x:Bind MainBorder}" />
-
                 <TextBox HorizontalAlignment="Center" VerticalAlignment="Center"
                          IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
                          Text="{x:Bind ViewModel.SearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search the data...  " />
@@ -151,7 +148,7 @@
             -->
 
             <TabView.TabStripFooter>
-                <Button x:Name="tabheaderimage" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"
+                <Button x:Name="DiamondButton" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"
                         ToolTipService.ToolTip="View the total count of each rule type and other details about the loaded policy" Margin="0,0,3,-6" Padding="0" BorderThickness="0">
                     <Button.Content>
                         <AnimatedIcon Height="28" Width="28" Margin="0">
@@ -161,7 +158,7 @@
                         </AnimatedIcon>
                     </Button.Content>
                     <Button.Flyout>
-                        <Flyout>
+                        <Flyout x:Name="DiamondButtonFlyout">
                             <ScrollViewer VerticalScrollBarVisibility="Visible" VerticalScrollMode="Enabled" Padding="8" IsVerticalRailEnabled="True">
                                 <StackPanel MaxWidth="400">
                                     <TextBlock Text="File-based Rules" Margin="0,0,0,10" TextWrapping="Wrap" Style="{StaticResource SubtitleTextBlockStyle}" />
@@ -215,7 +212,7 @@
                             <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                         </win:Grid.ChildrenTransitions>
 
-                        <customUI:ListViewV2 x:Name="FileBasedRulesListView"
+                        <customUI:ListViewV2
                         RegistryKey="PolicyEditor_FileBasedRules"
                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                         SelectionMode="Extended"
@@ -337,7 +334,7 @@
                             <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                         </win:Grid.ChildrenTransitions>
 
-                        <customUI:ListViewV2 x:Name="SignatureBasedRulesListView"
+                        <customUI:ListViewV2
                         RegistryKey="PolicyEditor_SignatureBasedRules"
                         SelectionMode="Extended"
                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
@@ -478,7 +475,7 @@
                                     Header="Policy Type" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                     HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyType.png}">
 
-                                    <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" x:Name="PolicyTypeComboBox" PlaceholderText="Policy Type"
+                                    <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Policy Type"
                                               ItemsSource="{x:Bind ViewModel.ComboBoxSource, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.PolicyTypeComboBox, Mode=TwoWay}"/>
 
                                 </customUI:SettingsCardV2>
@@ -497,7 +494,7 @@
                                     Header="HVCI Level" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                     HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/HVCIOption.png}">
 
-                                    <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" x:Name="PolicyHVCIOptionsComboBox"
+                                    <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                               PlaceholderText="HVCI Level" SelectedItem="{x:Bind ViewModel.HVCIOptionComboBox, Mode=TwoWay}">
                                         <ComboBox.Items>
                                             <x:String>Enabled - Strict</x:String>

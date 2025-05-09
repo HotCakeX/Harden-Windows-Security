@@ -29,8 +29,6 @@ using Microsoft.Windows.Globalization;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812, CA1822 // an internal class that is apparently never instantiated
-// It's handled by Dependency Injection so this warning is a false-positive.
 internal sealed partial class SettingsVM : ViewModelBase
 {
 	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();

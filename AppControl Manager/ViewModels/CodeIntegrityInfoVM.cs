@@ -22,7 +22,6 @@ using AppControlManager.Others;
 
 namespace AppControlManager.ViewModels;
 
-#pragma warning disable CA1812
 internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 {
 

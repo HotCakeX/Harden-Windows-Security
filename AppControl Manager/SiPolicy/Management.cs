@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.IO;
 using System.Xml;
 using AppControlManager.Main;
 using AppControlManager.XMLOps;
@@ -70,6 +71,21 @@ internal static class Management
 		return CustomDeserialization.DeserializeSiPolicy(xmlFilePath, XmlObj);
 	}
 
+	/// <summary>
+	/// Converts a Code Integrity policy to CIP binary file.
+	/// </summary>
+	/// <param name="xmlFilePath"></param>
+	/// <param name="XmlObj"></param>
+	/// <param name="BinPath"></param>
+	internal static void ConvertXMLToBinary(string? xmlFilePath, XmlDocument? XmlObj, string BinPath)
+	{
+		if (File.Exists(BinPath))
+			File.Delete(BinPath);
+
+		SiPolicy policyObj = Initialize(xmlFilePath, XmlObj);
+		using FileStream honeyStream = new(BinPath, FileMode.Create, FileAccess.ReadWrite);
+		BinaryOpsForward.ConvertPolicyToBinary(policyObj, honeyStream);
+	}
 
 	/// <summary>
 	/// Saves the SiPolicy object to a XML file.
@@ -79,7 +95,6 @@ internal static class Management
 	/// <param name="filePath"></param>
 	internal static void SavePolicyToFile(SiPolicy policy, string filePath)
 	{
-
 		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
 
 		xmlObj.Save(filePath);
@@ -112,7 +127,6 @@ internal static class Management
 		{
 			throw new InvalidOperationException($"The XML file '{filePath}' created at the end is not compliant with the CI policy schema");
 		}
-
 	}
 
 }

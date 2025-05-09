@@ -39,14 +39,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager
 {
-	// To store the selected policy path
-	private string? SelectedFilePath;
-
-#pragma warning disable CA1822
 	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ConfigurePolicyRuleOptionsVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
-#pragma warning restore CA1822
 
 	/// <summary>
 	/// Initializes the ConfigurePolicyRuleOptions class, sets up navigation caching, binds the data context, and generates
@@ -62,9 +57,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 		// Call the method to generate SettingsCards dynamically
 		GenerateSettingsCards();
-
-		// Register the click event for the new Set button in the PolicyTemplate section
-		SetPolicyTemplate.Click += SetPolicyTemplate_Click;
 	}
 
 	#region Augmentation Interface
@@ -85,10 +77,9 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 	private async void LightUp1()
 	{
 		PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
-		PickPolicyFileButton_TextBox.Text = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
-		SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		ViewModel.SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 
-		await LoadPolicyOptionsFromXML(SelectedFilePath);
+		await LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
 
 		// Expand the settings expander when user selects a policy
 		PolicyRuleExpander.IsExpanded = true;
@@ -96,41 +87,12 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 	#endregion
 
-
-	private static readonly Dictionary<string, string> RuleOptions = new()
-	{
-		{ "Enabled:UMCI", GlobalVars.Rizz.GetString("RuleOption_EnabledUMCI") },
-		{ "Enabled:Boot Menu Protection", GlobalVars.Rizz.GetString("RuleOption_EnabledBootMenuProtection") },
-		{ "Required:WHQL", GlobalVars.Rizz.GetString("RuleOption_RequiredWHQL") },
-		{ "Enabled:Audit Mode", GlobalVars.Rizz.GetString("RuleOption_EnabledAuditMode") },
-		{ "Disabled:Flight Signing", GlobalVars.Rizz.GetString("RuleOption_DisabledFlightSigning") },
-		{ "Enabled:Inherit Default Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledInheritDefaultPolicy") },
-		{ "Enabled:Unsigned System Integrity Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
-		{ "Required:EV Signers", GlobalVars.Rizz.GetString("RuleOption_RequiredEVSigners") },
-		{ "Enabled:Advanced Boot Options Menu", GlobalVars.Rizz.GetString("RuleOption_EnabledAdvancedBootOptionsMenu") },
-		{ "Enabled:Boot Audit On Failure", GlobalVars.Rizz.GetString("RuleOption_EnabledBootAuditOnFailure") },
-		{ "Disabled:Script Enforcement", GlobalVars.Rizz.GetString("RuleOption_DisabledScriptEnforcement") },
-		{ "Required:Enforce Store Applications", GlobalVars.Rizz.GetString("RuleOption_RequiredEnforceStoreApplications") },
-		{ "Enabled:Managed Installer", GlobalVars.Rizz.GetString("RuleOption_EnabledManagedInstaller") },
-		{ "Enabled:Intelligent Security Graph Authorization", GlobalVars.Rizz.GetString("RuleOption_EnabledIntelligentSecurityGraphAuthorization") },
-		{ "Enabled:Invalidate EAs on Reboot", GlobalVars.Rizz.GetString("RuleOption_EnabledInvalidateEAsOnReboot") },
-		{ "Enabled:Update Policy No Reboot", GlobalVars.Rizz.GetString("RuleOption_EnabledUpdatePolicyNoReboot") },
-		{ "Enabled:Allow Supplemental Policies", GlobalVars.Rizz.GetString("RuleOption_EnabledAllowSupplementalPolicies") },
-		{ "Disabled:Runtime FilePath Rule Protection", GlobalVars.Rizz.GetString("RuleOption_DisabledRuntimeFilePathRuleProtection") },
-		{ "Enabled:Dynamic Code Security",GlobalVars.Rizz.GetString("RuleOption_EnabledDynamicCodeSecurity") },
-		{ "Enabled:Revoked Expired As Unsigned", GlobalVars.Rizz.GetString("RuleOption_EnabledRevokedExpiredAsUnsigned") },
-		{ "Enabled:Developer Mode Dynamic Code Trust", GlobalVars.Rizz.GetString("RuleOption_EnabledDeveloperModeDynamicCodeTrust") },
-		{ "Enabled:Secure Setting Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledSecureSettingPolicy") },
-		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
-	};
-
-
 	/// <summary>
 	/// Method to dynamically create SettingsCards based on the dictionary keys
 	/// </summary>
 	private void GenerateSettingsCards()
 	{
-		foreach (KeyValuePair<string, string> key in RuleOptions)
+		foreach (KeyValuePair<string, string> key in ViewModel.RuleOptions)
 		{
 			// Create a new SettingsCard
 			SettingsCard settingsCard = new()
@@ -172,7 +134,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the browse button
 	/// </summary>
@@ -182,10 +143,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 		if (!string.IsNullOrWhiteSpace(selectedFile))
 		{
-			// Display the file in the flyout's text box
-			PickPolicyFileButton_TextBox.Text = selectedFile;
-
-			SelectedFilePath = selectedFile;
+			ViewModel.SelectedFilePath = selectedFile;
 
 			// Expand the settings expander when user selects a policy
 			PolicyRuleExpander.IsExpanded = true;
@@ -232,7 +190,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for when the Apply button is pressed
 	/// </summary>
@@ -244,7 +201,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 			ManageButtonStates(false);
 			MainTeachingTip.IsOpen = false;
 
-			if (string.IsNullOrWhiteSpace(SelectedFilePath))
+			if (string.IsNullOrWhiteSpace(ViewModel.SelectedFilePath))
 			{
 				MainTeachingTip.IsOpen = true;
 				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyFileBeforeAddingOptions");
@@ -256,7 +213,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 			await Task.Run(() =>
 			{
-				CiRuleOptions.Set(SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
+				CiRuleOptions.Set(ViewModel.SelectedFilePath, rulesToAdd: selectedOptions, RemoveAll: true);
 			});
 
 			if (DeployAfterApplyingToggleButton.IsChecked == true)
@@ -265,9 +222,9 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 				{
 					DirectoryInfo stagingArea = StagingArea.NewStagingArea("ConfigurePolicyRuleOptionsDeployment");
 
-					string cipPath = Path.Combine(stagingArea.FullName, $"{Path.GetFileName(SelectedFilePath)}.cip");
+					string cipPath = Path.Combine(stagingArea.FullName, $"{Path.GetFileName(ViewModel.SelectedFilePath)}.cip");
 
-					SiPolicy.SiPolicy policyObj = Management.Initialize(SelectedFilePath, null);
+					SiPolicy.SiPolicy policyObj = Management.Initialize(ViewModel.SelectedFilePath, null);
 
 					if (!policyObj.Rules.Any(x => x.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
@@ -280,10 +237,10 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 						return;
 					}
 
-					PolicyToCIPConverter.Convert(SelectedFilePath, cipPath);
+					Management.ConvertXMLToBinary(ViewModel.SelectedFilePath, null, cipPath);
 
 					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
-					if (SupplementalForSelf.IsEligible(policyObj, SelectedFilePath))
+					if (SupplementalForSelf.IsEligible(policyObj, ViewModel.SelectedFilePath))
 						SupplementalForSelf.Deploy(stagingArea.FullName, policyObj.PolicyID);
 
 					CiToolHelper.UpdatePolicy(cipPath);
@@ -296,21 +253,17 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the Set button click in the PolicyTemplate section
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void SetPolicyTemplate_Click(object sender, RoutedEventArgs e)
+	private async void SetPolicyTemplate_Click()
 	{
-
 		try
 		{
 			ManageButtonStates(false);
 			MainTeachingTip.IsOpen = false;
 
-			if (string.IsNullOrWhiteSpace(SelectedFilePath))
+			if (string.IsNullOrWhiteSpace(ViewModel.SelectedFilePath))
 			{
 				MainTeachingTip.IsOpen = true;
 				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyFileBeforeSettingTemplate");
@@ -326,11 +279,11 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 			// Call the Set method with only the filePath and template parameters
 			await Task.Run(() =>
 			{
-				CiRuleOptions.Set(SelectedFilePath, template: template);
+				CiRuleOptions.Set(ViewModel.SelectedFilePath, template: template);
 			});
 
 			// Refresh the UI check boxes
-			await LoadPolicyOptionsFromXML(SelectedFilePath);
+			await LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
 		}
 		finally
 		{
@@ -348,7 +301,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		RefreshRuleOptionsState.IsEnabled = Enable;
 		ApplyTheChangesButton.IsEnabled = Enable;
 	}
-
 
 	/// <summary>
 	/// Helper method to get selected policy rule options from the UI checkboxes
@@ -375,7 +327,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		return selectedRules;
 	}
 
-
 	/// <summary>
 	/// Uncheck all of the rule options check boxes in the UI
 	/// </summary>
@@ -394,12 +345,9 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 	/// <summary>
 	/// Event handler for the flyout's clear button
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void PickPolicyFileButton_FlyOut_Clear_Click(object sender, RoutedEventArgs e)
+	private void PickPolicyFileButton_FlyOut_Clear_Click()
 	{
-		PickPolicyFileButton_TextBox.Text = null;
-		SelectedFilePath = null;
+		ViewModel.SelectedFilePath = null;
 		ClearAllCheckBoxes();
 	}
 
@@ -413,9 +361,9 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 			ManageButtonStates(false);
 			MainTeachingTip.IsOpen = false;
 
-			if (SelectedFilePath is not null)
+			if (ViewModel.SelectedFilePath is not null)
 			{
-				await LoadPolicyOptionsFromXML(SelectedFilePath);
+				await LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
 			}
 			else
 			{

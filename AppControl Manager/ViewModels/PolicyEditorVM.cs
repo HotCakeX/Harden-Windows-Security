@@ -379,12 +379,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal async void ProcessData()
 	{
-
 		if (SelectedPolicyFile is null)
 		{
 			MainInfoBarVisibility = Visibility.Visible;
 			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = "You need to select an App Control policy file first.";
+			MainInfoBarMessage = GlobalVars.Rizz.GetString("SelectAppControlPolicyFirstMessage");
 			MainInfoBarSeverity = InfoBarSeverity.Warning;
 			MainInfoBarIsClosable = true;
 
@@ -405,7 +404,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		{
 			MainInfoBarVisibility = Visibility.Visible;
 			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = "Only XML and CIP binary files are currently supported.";
+			MainInfoBarMessage = GlobalVars.Rizz.GetString("OnlyXmlCipSupportedMessage");
 			MainInfoBarSeverity = InfoBarSeverity.Warning;
 			MainInfoBarIsClosable = true;
 
@@ -416,17 +415,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		try
 		{
-
 			await Dispatcher.EnqueueAsync(() =>
 			{
-
 				ProgressBarVisibility = Visibility.Visible;
-
 				UIElementsEnabledState = false;
 
 				MainInfoBarVisibility = Visibility.Visible;
 				MainInfoBarIsOpen = true;
-				MainInfoBarMessage = "Loading the policy";
+				MainInfoBarMessage = GlobalVars.Rizz.GetString("LoadingPolicyMessage");
 				MainInfoBarSeverity = InfoBarSeverity.Informational;
 				MainInfoBarIsClosable = false;
 
@@ -440,7 +436,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				FileRulesCollectionList.Clear();
 				SignatureRulesCollection.Clear();
 				SignatureRulesCollectionList.Clear();
-
 			});
 
 			// Collections to deserialize the policy object into
@@ -461,7 +456,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-
 				if (fileType == 0)
 				{
 					PolicyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(SelectedPolicyFile);
@@ -480,12 +474,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				foreach (Setting item in PolicyObj.Settings)
 				{
 					if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
+						string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+						string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
 					{
-
 						if (item.Value.Item is not null)
-
 							_ = Dispatcher.TryEnqueue(() =>
 							{
 								PolicyNameTextBox = (string)item.Value.Item;
@@ -508,8 +500,8 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				foreach (Setting item in PolicyObj.Settings)
 				{
 					if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
+						string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+						string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
 					{
 
 						if (item.Value.Item is not null)
@@ -563,20 +555,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					ref userModeFileRulesRefs);
 			});
 
-
 			await Dispatcher.EnqueueAsync(() =>
 			{
-
 				// Process the Allow rules
-
 				uint _AllowRulesCount = 0;
-
 				foreach (AllowRule allowRule in allowRules)
 				{
-
 					_AllowRulesCount++;
-
-
 					PolicyEditor.FileBasedRulesForListView temp1 = new
 					(
 						id: allowRule.AllowElement.ID,
@@ -598,7 +583,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						parentViewModel: this
 					);
 
-
 					FileRulesCollection.Add(temp1);
 					FileRulesCollectionList.Add(temp1);
 				}
@@ -606,14 +590,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				AllowRulesCount = $"• Allow Rules count: {_AllowRulesCount}";
 
 				// Process the Deny rules
-
 				uint _DenyRulesCount = 0;
-
 				foreach (DenyRule denyRule in denyRules)
 				{
-
 					_DenyRulesCount++;
-
 					PolicyEditor.FileBasedRulesForListView temp2 = new
 					(
 						id: denyRule.DenyElement.ID,
@@ -635,7 +615,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						parentViewModel: this
 					);
 
-
 					FileRulesCollection.Add(temp2);
 					FileRulesCollectionList.Add(temp2);
 				}
@@ -643,14 +622,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				DenyRulesCount = $"• Deny Rules count: {_DenyRulesCount}";
 
 				// Process the File rules
-
 				uint _FileRulesCount = 0;
-
 				foreach (FileRuleRule fileRule in fileRules)
 				{
-
 					_FileRulesCount++;
-
 					PolicyEditor.FileBasedRulesForListView temp3 = new
 					(
 						id: fileRule.FileRuleElement.ID,
@@ -672,7 +647,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						parentViewModel: this
 					);
 
-
 					FileRulesCollection.Add(temp3);
 					FileRulesCollectionList.Add(temp3);
 				}
@@ -690,25 +664,25 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				foreach (FileAttrib item in fileAttribs)
 				{
 					PolicyEditor.FileBasedRulesForListView temp4 = new
-								(
-									id: item.ID,
-									friendlyName: item.FriendlyName,
-									fileName: item.FileName,
-									internalName: item.InternalName,
-									fileDescription: item.FileDescription,
-									productName: item.ProductName,
-									packageFamilyName: item.PackageFamilyName,
-									packageVersion: item.PackageVersion,
-									minimumFileVersion: item.MinimumFileVersion,
-									maximumFileVersion: item.MaximumFileVersion,
-									hash: CustomSerialization.ConvertByteArrayToHex(item.Hash),
-									appIDs: item.AppIDs,
-									filePath: item.FilePath,
-									type: null,
-									sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
-									source: item,
-									parentViewModel: this
-								);
+					(
+						id: item.ID,
+						friendlyName: item.FriendlyName,
+						fileName: item.FileName,
+						internalName: item.InternalName,
+						fileDescription: item.FileDescription,
+						productName: item.ProductName,
+						packageFamilyName: item.PackageFamilyName,
+						packageVersion: item.PackageVersion,
+						minimumFileVersion: item.MinimumFileVersion,
+						maximumFileVersion: item.MaximumFileVersion,
+						hash: CustomSerialization.ConvertByteArrayToHex(item.Hash),
+						appIDs: item.AppIDs,
+						filePath: item.FilePath,
+						type: null,
+						sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
+						source: item,
+						parentViewModel: this
+					);
 
 					FileRulesCollection.Add(temp4);
 					FileRulesCollectionList.Add(temp4);
@@ -751,7 +725,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 
 						PolicyEditor.SignatureBasedRulesForListView temp6 = new
-							(
+						(
 							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
@@ -762,7 +736,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							sourceType: PolicyEditor.SignatureBasedRuleType.Signer,
 							source: sig,
 							parentViewModel: this
-							);
+						);
 
 						SignatureRulesCollection.Add(temp6);
 						SignatureRulesCollectionList.Add(temp6);
@@ -771,17 +745,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					GenericSignersCount = $"• Generic Signer Rules count: {_GenericSignerRulesCount}";
 
 					// Process WHQLPublisher rules
-
 					uint _WHQLPublisherRulesCount = 0;
-
 					foreach (WHQLPublisher sig in SignerCollectionCol.WHQLPublishers)
 					{
-
 						_WHQLPublisherRulesCount++;
-
-
 						PolicyEditor.SignatureBasedRulesForListView temp7 = new
-							(
+						(
 							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
@@ -792,8 +761,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							sourceType: PolicyEditor.SignatureBasedRuleType.WHQLPublisher,
 							source: sig,
 							parentViewModel: this
-							);
-
+						);
 
 						SignatureRulesCollection.Add(temp7);
 						SignatureRulesCollectionList.Add(temp7);
@@ -802,17 +770,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					WHQLPublishersCount = $"• WHQL Publisher Rules count: {_WHQLPublisherRulesCount}";
 
 					// Process the UpdatePolicySigner rules
-
 					uint _UpdatePolicySignersCount = 0;
-
 					foreach (UpdatePolicySignerRule sig in SignerCollectionCol.UpdatePolicySigners)
 					{
-
 						_UpdatePolicySignersCount++;
-
-
 						PolicyEditor.SignatureBasedRulesForListView temp8 = new
-							(
+						(
 							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
@@ -823,8 +786,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							sourceType: PolicyEditor.SignatureBasedRuleType.UpdatePolicySigner,
 							source: sig,
 							parentViewModel: this
-							);
-
+						);
 
 						SignatureRulesCollection.Add(temp8);
 						SignatureRulesCollectionList.Add(temp8);
@@ -833,16 +795,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					UpdatePolicySignersCount = $"• Update Policy Signer Rules count: {_UpdatePolicySignersCount}";
 
 					// Process the SupplementalPolicySigner rules
-
 					uint _SupplementalPolicySignersCount = 0;
-
 					foreach (SupplementalPolicySignerRule sig in SignerCollectionCol.SupplementalPolicySigners)
 					{
-
 						_SupplementalPolicySignersCount++;
-
 						SignatureRulesCollection.Add(new PolicyEditor.SignatureBasedRulesForListView
-							(
+						(
 							certRoot: CustomSerialization.ConvertByteArrayToHex(sig.SignerElement.CertRoot?.Value),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
 							certIssuer: sig.SignerElement.CertIssuer?.Value,
@@ -853,7 +811,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							sourceType: PolicyEditor.SignatureBasedRuleType.SupplementalPolicySigner,
 							source: sig,
 							parentViewModel: this
-							));
+						));
 					}
 
 					SupplementalPolicySignersCount = $"• Supplemental Policy Signer Rules count: {_SupplementalPolicySignersCount}";
@@ -877,12 +835,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		catch (Exception ex)
 		{
 			error = true;
-
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				MainInfoBarVisibility = Visibility.Visible;
 				MainInfoBarIsOpen = true;
-				MainInfoBarMessage = $"There was a problem loading the selected policy file: {ex.Message}";
+				MainInfoBarMessage = string.Format(
+					GlobalVars.Rizz.GetString("ErrorLoadingPolicyFileMessage"),
+					ex.Message);
 				MainInfoBarSeverity = InfoBarSeverity.Error;
 				MainInfoBarIsClosable = true;
 			});
@@ -894,21 +853,18 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				UIElementsEnabledState = true;
-
 				UpdateFileBasedCollectionsCount();
 				UpdateSignatureBasedCollectionsCount();
-
 				ProgressBarVisibility = Visibility.Collapsed;
 
 				if (!error)
 				{
 					MainInfoBarVisibility = Visibility.Visible;
 					MainInfoBarIsOpen = true;
-					MainInfoBarMessage = "Successfully loaded the selected policy";
+					MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessLoadedPolicyMessage");
 					MainInfoBarSeverity = InfoBarSeverity.Success;
 					MainInfoBarIsClosable = true;
 				}
-
 			});
 		}
 	}
@@ -922,14 +878,15 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		if (!FileRulesCollection.Remove(item))
 		{
-			Logger.Write($"Could not remove file rule with the ID {item.Id}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("CouldNotRemoveFileRuleMessage"),
+				item.Id));
 		}
 
 		_ = FileRulesCollectionList.Remove(item);
 
 		UpdateFileBasedCollectionsCount();
 	}
-
 
 	/// <summary>
 	/// To remove an item from the Signature based rules ListView
@@ -939,7 +896,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		if (!SignatureRulesCollection.Remove(item))
 		{
-			Logger.Write($"Could not remove signature rule with the ID {item.Id}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("CouldNotRemoveSignatureRuleMessage"),
+				item.Id));
 		}
 
 		_ = SignatureRulesCollectionList.Remove(item);

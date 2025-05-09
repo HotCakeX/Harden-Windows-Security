@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root><!--
-    Microsoft ResX Schema
-
-    Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
-    associated with the data types.
-
-    Example:
-
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-
-    There are any number of "resheader" rows that contain simple
-    name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
-    mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
-    extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
-    read any of the formats listed below.
-
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
+<root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -923,9 +865,6 @@
   <data name="RuleOption_EnabledUnsignedSystemIntegrityPolicy" xml:space="preserve">
     <value>Allows the policy to remain unsigned. When this option is removed, the policy must be signed and any supplemental policies must also be signed. The certificates that are trusted for future policy updates must be identified in the UpdatePolicySigners section. Certificates that are trusted for supplemental policies must be identified in the SupplementalPolicySigners section.</value>
   </data>
-  <data name="RuleOption_RequiredEVSigners" xml:space="preserve">
-    <value>This option isn't currently supported.</value>
-  </data>
   <data name="RuleOption_EnabledAdvancedBootOptionsMenu" xml:space="preserve">
     <value>The F8 preboot menu is disabled by default for all App Control policies. Setting this rule option allows the F8 menu to appear to physically present users.</value>
   </data>
@@ -1124,9 +1063,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DeploymentSuccess" xml:space="preserve">
     <value>Successfully deployed all of the selected XML files</value>
   </data>
-  <data name="DeployingSignedXMLFiles" xml:space="preserve">
-    <value>Deploying </value>
-  </data>
   <data name="SignedXMLFiles" xml:space="preserve">
     <value> Signed XML files.</value>
   </data>
@@ -1138,9 +1074,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="SignedDeploymentSuccess" xml:space="preserve">
     <value>Successfully deployed all of the selected XML files as Signed policies</value>
-  </data>
-  <data name="DeployingCIPFiles" xml:space="preserve">
-    <value>Deploying </value>
   </data>
   <data name="CIPFiles" xml:space="preserve">
     <value> CIP binary files.</value>
@@ -1161,9 +1094,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Cloud Deployment is Currently Active</value>
   </data>
   <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>Sign in to Intune was cancelled by the user</value>
-  </data>
-  <data name="IntuneSignInCancelledMessage" xml:space="preserve">
     <value>Sign in to Intune was cancelled by the user</value>
   </data>
   <data name="IntuneSignInError" xml:space="preserve">
@@ -1299,9 +1229,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="VersionHeader.Text" xml:space="preserve">
     <value>Version</value>
   </data>
-  <data name="IsAuthorizedHeader.Text" xml:space="preserve">
-    <value>Is Authorized</value>
-  </data>
   <data name="IsEnforcedHeader.Text" xml:space="preserve">
     <value>Is Enforced</value>
   </data>
@@ -1330,9 +1257,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="VersionColumnHeaderBtn.Content" xml:space="preserve">
     <value>Version</value>
-  </data>
-  <data name="IsAuthorizedColumnHeaderBtn.Content" xml:space="preserve">
-    <value>Is Authorized</value>
   </data>
   <data name="IsEnforcedColumnHeaderBtn.Content" xml:space="preserve">
     <value>Is Enforced</value>
@@ -1483,9 +1407,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SigningScenarioHeader.Text" xml:space="preserve">
     <value>Signing Scenario</value>
   </data>
-  <data name="FilePathHeader.Text" xml:space="preserve">
-    <value>File Path</value>
-  </data>
   <data name="ComputerNameHeader.Text" xml:space="preserve">
     <value>Computer Name</value>
   </data>
@@ -1559,9 +1480,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="SigningScenarioColumnHeaderBtn.Content" xml:space="preserve">
     <value>Signing Scenario</value>
-  </data>
-  <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
-    <value>File Path</value>
   </data>
   <data name="ComputerNameColumnHeaderBtn.Content" xml:space="preserve">
     <value>Computer Name</value>
@@ -2891,7 +2809,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ErrorOccurredCreatingPolicy" xml:space="preserve">
     <value>An error occurred while creating the policy.</value>
-  </data>  
+  </data>
  <data name="BasePolicyFileSelectionSettingsCard.Header" xml:space="preserve">
     <value>Base Policy File</value>
   </data>
@@ -3193,7 +3111,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>Use the sidebar to pin XML file paths and reuse them in different parts of the AppControl Manager.</value>
-  </data>  
+  </data>
   <data name="SidebarTextBlock.Text" xml:space="preserve">
     <value>Sidebar</value>
   </data>
@@ -3377,10 +3295,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>There are more than 1 Allow rules with the same ID</value>
     <comment>Policy validation error</comment>
   </data>
-  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>There is a Deny rule without an ID!</value>
-    <comment>Policy validation error</comment>
-  </data>
   <data name="DenyRuleDupIDValidationError" xml:space="preserve">
     <value>There are more than 1 Deny rules with the same ID</value>
     <comment>Policy validation error</comment>
@@ -3424,5 +3338,474 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ProvideCNOrPassErrorTitle" xml:space="preserve">
     <value>Missing required details</value>
     <comment>Certificate creation page</comment>
+  </data>
+  <data name="TheAppIsUpToDate" xml:space="preserve">
+    <value>The AppControl Manager application is up to date.</value>
+  </data>
+  <data name="CheckingForUpdateStore" xml:space="preserve">
+    <value>Checking for update in the Microsoft Store...</value>
+  </data>
+  <data name="NewUpdateIsAvailableStore" xml:space="preserve">
+    <value>A new update is available. Opening the Microsoft Store so you can proceed with updating the app in there.</value>
+  </data>
+  <data name="ProblemOpeningMSStore" xml:space="preserve">
+    <value>There was a problem opening the Microsoft Store page of the AppControl Manager.</value>
+  </data>
+  <data name="InstallLatestVer" xml:space="preserve">
+    <value>Install the latest version</value>
+  </data>
+  <data name="FileNotExists" xml:space="preserve">
+    <value>The file does not exist.</value>
+  </data>
+  <data name="CISchemaNotFound" xml:space="preserve">
+    <value>The Code Integrity Schema file could not be found on the system, most likely because this is a Home edition of the OS. Please navigate to the Settings page to browse for it manually.</value>
+  </data>
+  <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
+    <value>Invalid XML: Missing root element.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="NoFilePathOrStreamProvidedValidationError" xml:space="preserve">
+    <value>Either filePath or stream must be provided for deserialization.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="InvalidXmlRootElementNamespaceValidationError" xml:space="preserve">
+    <value>Invalid XML: Root element must be 'AppManifest' in the correct namespace.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestMissingIdAttributeValidationError" xml:space="preserve">
+    <value>Missing required 'Id' attribute in AppManifest element.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestEmptyIdAttributeValidationError" xml:space="preserve">
+    <value>The 'Id' attribute in AppManifest cannot be empty.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionMissingNameAttributeValidationError" xml:space="preserve">
+    <value>Missing required 'Name' attribute in SettingDefinition element.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionEmptyNameAttributeValidationError" xml:space="preserve">
+    <value>The 'Name' attribute in SettingDefinition cannot be empty.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionMissingTypeAttributeValidationError" xml:space="preserve">
+    <value>Missing required 'Type' attribute in SettingDefinition element.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError" xml:space="preserve">
+    <value>Missing required 'IgnoreAuditPolicies' attribute in SettingDefinition element.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
+    <value>The AppManifest object cannot be null.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
+    <value>The 'Id' property of AppManifest is required and cannot be null or empty.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
+    <value>SettingDefinition array contains a null element.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
+    <value>The 'Name' property of SettingDefinition is required and cannot be null or empty.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+    <data name="EncounteredInvalidFileRule" xml:space="preserve">
+    <value>Encountered invalid File Rule</value>
+  </data>
+  <data name="InvalidUrlDetectedForAppManifest" xml:space="preserve">
+    <value>Invalid URL detected for the App Manifest: {0}</value>
+  </data>
+  <data name="MalformedVersionDetected" xml:space="preserve">
+    <value>Malformed version detected: {0}.</value>
+  </data>
+  <data name="StringFormatIncorrect" xml:space="preserve">
+    <value>The string format was incorrect: '{0}'.</value>
+  </data>
+    <data name="FindingAllAppControlFilesMessage" xml:space="preserve">
+    <value>Finding all App Control compatible files among {0} files and {1} folders you selected...</value>
+  </data>
+  <data name="ScanningTotalAppControlFilesMessage" xml:space="preserve">
+    <value>Scanning a total of {0} AppControl compatible files...</value>
+  </data>
+  <data name="SelectedScanLevelMessage" xml:space="preserve">
+    <value>The selected scan level is {0}, adding 'Disabled: Runtime FilePath Rule Protection' rule option to the Supplemental policy so non-admin protected file paths will work.'</value>
+  </data>
+  <data name="SuccessfullyCreatedSupplementalPolicyMessage" xml:space="preserve">
+    <value>Successfully created a Supplemental policy named '{0}'</value>
+  </data>
+    <data name="SelectCertificatesTitle" xml:space="preserve">
+    <value>Select certificates</value>
+  </data>
+  <data name="SelectCertificatesSubtitle" xml:space="preserve">
+    <value>You need to select some certificates first to create Supplemental policy</value>
+  </data>
+  <data name="CreatingCertificatesPolicyMessage" xml:space="preserve">
+    <value>Creating the Certificates-based Supplemental policy for {0} certificates</value>
+  </data>
+  <data name="NoCertificateDetailsFoundCreatingPolicy" xml:space="preserve">
+    <value>No certificate details could be found for creating the policy</value>
+  </data>
+  <data name="SuccessfullyCreatedCertificatePolicyMessage" xml:space="preserve">
+    <value>Successfully created a certificate-based Supplemental policy named {0}.</value>
+  </data>
+  <data name="CreatingISGBasedSupplementalPolicyMessage" xml:space="preserve">
+    <value>Creating the ISG-based Supplemental policy.</value>
+  </data>
+  <data name="SuccessfullyCreatedISGBasedSupplementalPolicyMessage" xml:space="preserve">
+    <value>Successfully created an ISG-based Supplemental policy.</value>
+  </data>
+    <data name="ScanningSystemForEvents" xml:space="preserve">
+    <value>Scanning the system for events</value>
+  </data>
+  <data name="NoLogsGeneratedDuringAuditPhase" xml:space="preserve">
+    <value>No logs were generated during the Audit phase</value>
+  </data>
+  <data name="GeneratedLogsDuringAuditPhase" xml:space="preserve">
+    <value>{0} log(s) were generated during the Audit phase</value>
+  </data>
+  <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
+    <value>An error occurred while scanning the system: {0}</value>
+  </data>
+  <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
+    <value>Successfully scanned the system for events</value>
+  </data>
+  <data name="StrictKernelModeTeachingTipTitle" xml:space="preserve">
+    <value>Strict Kernel-mode Supplemental policy</value>
+  </data>
+  <data name="StrictKernelModeTeachingTipSubtitleNoItems" xml:space="preserve">
+    <value>No item exists in the detected Kernel-mode files data grid</value>
+  </data>
+  <data name="CreatingStrictKernelModePolicyMessage" xml:space="preserve">
+    <value>Creating Strict Kernel-mode supplemental policy for {0} files</value>
+  </data>
+  <data name="SuccessfullyCreatedStrictKernelModePolicyMessage" xml:space="preserve">
+    <value>Successfully created strict Kernel-mode supplemental policy</value>
+  </data>
+    <data name="ScanningSystemForDrivers" xml:space="preserve">
+    <value>Scanning the system for drivers</value>
+  </data>
+  <data name="NoKernelModeDriversDetected" xml:space="preserve">
+    <value>No kernel-mode drivers could be detected</value>
+  </data>
+  <data name="ScanningKernelModeFilesCount" xml:space="preserve">
+    <value>Scanning {0} files</value>
+  </data>
+  <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
+    <value>There was an error: {0}</value>
+  </data>
+  <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
+    <value>Successfully scanned the system for drivers</value>
+  </data>
+    <data name="PFNBasedSupplementalPolicyTitle" xml:space="preserve">
+    <value>PFN based Supplemental policy</value>
+  </data>
+  <data name="PFNBasedSupplementalPolicySubtitle" xml:space="preserve">
+    <value>No app was selected to create a supplemental policy for</value>
+  </data>
+  <data name="CreatingPFNSupplementalPolicyMessage" xml:space="preserve">
+    <value>Creating the Supplemental policy based on Package Family Names</value>
+  </data>
+  <data name="SuccessfullyCreatedPFNSupplementalPolicyMessage" xml:space="preserve">
+    <value>Successfully created the supplemental policy</value>
+  </data>
+    <data name="EnterCustomPatternTitle" xml:space="preserve">
+    <value>Enter a custom pattern</value>
+  </data>
+  <data name="EnterCustomPatternSubtitle" xml:space="preserve">
+    <value>You need to enter a custom pattern for the file rule.</value>
+  </data>
+  <data name="CreatingPatternBasedFileRuleMessage" xml:space="preserve">
+    <value>Creating the Pattern-based File Path rule Supplemental policy.</value>
+  </data>
+  <data name="SuccessfullyCreatedPatternBasedFileRuleMessage" xml:space="preserve">
+    <value>Successfully created Pattern-based File Path rule Supplemental policy.</value>
+  </data>
+  <data name="SelectedAppsCount" xml:space="preserve">
+    <value>Selected Apps: {0}</value>
+  </data>
+    <data name="FilesAndFoldersSupplementalPolicyLabel" xml:space="preserve">
+    <value>Files And Folders Supplemental Policy</value>
+  </data>
+  <data name="CertificatesSupplementalPolicyLabel" xml:space="preserve">
+    <value>Certificates Supplemental Policy</value>
+  </data>
+  <data name="ISGSupplementalPolicyLabel" xml:space="preserve">
+    <value>ISG Supplemental Policy</value>
+  </data>
+  <data name="StrictKernelModeSupplementalPolicyLabel" xml:space="preserve">
+    <value>Strict Kernel Mode Supplemental Policy</value>
+  </data>
+  <data name="PFNSupplementalPolicyLabel" xml:space="preserve">
+    <value>PFN Supplemental Policy</value>
+  </data>
+  <data name="ConvertingFileToCIPMessage" xml:space="preserve">
+    <value>Converting {0} to CIP</value>
+  </data>
+  <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
+    <value>There was a problem converting the XML files to CIP: {0}</value>
+  </data>
+  <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
+    <value>Successfully converted all of the selected XML files to CIP binaries</value>
+  </data>
+    <data name="ScanningEventLogsMessage" xml:space="preserve">
+    <value>Scanning the event logs...</value>
+  </data>
+  <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
+    <value>There was an error during logs scan: {0}</value>
+  </data>
+  <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
+    <value>Scan complete. {0} logs were found.</value>
+  </data>
+  <data name="SelectedCodeIntegrityEvtxForScanning" xml:space="preserve">
+    <value>Selected {0} for Code Integrity EVTX log scanning</value>
+  </data>
+  <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
+    <value>Selected {0} for AppLocker EVTX log scanning</value>
+  </data>
+  <data name="TotalLogsZeroMessage" xml:space="preserve">
+    <value>Total logs: 0</value>
+  </data>
+  <data name="TotalLogsCountMessage" xml:space="preserve">
+    <value>Total logs: {0}</value>
+  </data>
+  <data name="SelectedFileToAddLogsToMessage" xml:space="preserve">
+    <value>Selected {0} to add the logs to.</value>
+  </data>
+  <data name="SelectedBasePolicyFileMessage" xml:space="preserve">
+    <value>Selected {0} to associate the Supplemental policy with.</value>
+  </data>
+  <data name="InvalidGuidMessage" xml:space="preserve">
+    <value>Invalid GUID</value>
+  </data>
+  <data name="ProcessingLogsMessage" xml:space="preserve">
+    <value>Processing the logs...</value>
+  </data>
+  <data name="NoLogsUseScanButtonMessage" xml:space="preserve">
+    <value>There are no logs. Use the scan button first.</value>
+  </data>
+  <data name="MustSelectOptionMessage" xml:space="preserve">
+    <value>You must select an option from the policy creation list</value>
+  </data>
+  <data name="DefaultPolicyNameFormat" xml:space="preserve">
+    <value>Supplemental policy from event logs - {0}</value>
+  </data>
+  <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
+    <value>No policy file was selected to add the logs to.</value>
+  </data>
+  <data name="NoPolicySelectedToAssociateSupplementalMessage" xml:space="preserve">
+    <value>No policy file was selected to associate the Supplemental policy with.</value>
+  </data>
+  <data name="NoBasePolicyGuidProvidedMessage" xml:space="preserve">
+    <value>No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.</value>
+  </data>
+  <data name="ErrorProcessingLogsMessage" xml:space="preserve">
+    <value>There was an error while processing the logs: {0}.</value>
+  </data>
+  <data name="SuccessProcessedLogsMessage" xml:space="preserve">
+    <value>Successfully processed the logs and included them in the policy.</value>
+  </data>
+  <data name="AddLogsToSelectedPolicy" xml:space="preserve">
+    <value>Add logs to the selected policy</value>
+  </data>
+  <data name="CreatePolicyForSelectedBase" xml:space="preserve">
+    <value>Create Policy for Selected Base</value>
+  </data>
+  <data name="CreatePolicyForBaseGuid" xml:space="preserve">
+    <value>Create Policy for Base GUID</value>
+  </data>
+  <data name="DefaultCreatePolicy" xml:space="preserve">
+    <value>Create Policy</value>
+  </data>
+  <data name="SelectExistingXmlPolicyFileMessage" xml:space="preserve">
+    <value>You need to select an existing XML policy file</value>
+  </data>
+  <data name="PerformingSimulationMessage" xml:space="preserve">
+    <value>Performing the Simulation</value>
+  </data>
+  <data name="ErrorDuringSimulationMessage" xml:space="preserve">
+    <value>There was a problem during the simulation: {0}</value>
+  </data>
+  <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
+    <value>Simulation completed successfully.</value>
+  </data>
+    <data name="SelectAppControlPolicyFirstMessage" xml:space="preserve">
+    <value>You need to select an App Control policy file first.</value>
+  </data>
+  <data name="OnlyXmlCipSupportedMessage" xml:space="preserve">
+    <value>Only XML and CIP binary files are currently supported.</value>
+  </data>
+  <data name="LoadingPolicyMessage" xml:space="preserve">
+    <value>Loading the policy</value>
+  </data>
+  <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
+    <value>There was a problem loading the selected policy file: {0}</value>
+  </data>
+  <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
+    <value>Successfully loaded the selected policy</value>
+  </data>
+    <data name="CouldNotRemoveFileRuleMessage" xml:space="preserve">
+    <value>Could not remove file rule with the ID {0}</value>
+  </data>
+  <data name="CouldNotRemoveSignatureRuleMessage" xml:space="preserve">
+    <value>Could not remove signature rule with the ID {0}</value>
+  </data>
+  <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
+    <value>Intune policy was deserialized successfully but the relevant object is empty.</value>
+  </data>
+  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
+    <value>There was an error parsing {0} rule option number to its string value: {1}</value>
+  </data>
+  <data name="NumberOfPoliciesMessage" xml:space="preserve">
+    <value>Number of policies: {0}</value>
+  </data>
+  <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
+    <value>Intune policy object ID was null for the selected policy to be deleted</value>
+  </data>
+  <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
+    <value>File path or XML document must be provided for deserialization</value>
+  </data>
+  <data name="DenyRuleNoIDValidationError" xml:space="preserve">
+    <value>Deny rule must have an ID.</value>
+  </data>
+  <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
+    <value>The Deny rule with the ID {0} has a Hash property but also has other file properties, making it invalid.</value>
+  </data>
+  <data name="DenyRuleNoPropsError" xml:space="preserve">
+    <value>The Deny rule with the ID {0} neither has a Hash nor any other file properties, making it invalid.</value>
+  </data>
+  <data name="FileAttribHashWithOtherPropsError" xml:space="preserve">
+    <value>The FileAttrib rule with the ID {0} has a Hash property but also has other file properties, making it invalid.</value>
+  </data>
+  <data name="FileAttribNoPropsError" xml:space="preserve">
+    <value>The FileAttrib rule with the ID {0} neither has a Hash nor any other file properties, making it invalid.</value>
+  </data>
+    <data name="InvalidCertRootTypeError" xml:space="preserve">
+    <value>Encountered a Cert Root that neither has TBS nor WellKnown type, making it invalid.</value>
+  </data>
+  <data name="SignerNoCertRootError" xml:space="preserve">
+    <value>The Signer with the ID {0} has no Cert Root element, making it invalid.</value>
+  </data>
+    <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
+    <value>Encountered a Policy Setting that doesn't have a valid Value element.</value>
+  </data>
+  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
+    <value>Encountered a Policy Setting that doesn't have the necessary Provider, Key or ValueName elements.</value>
+  </data>
+  <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
+    <value>ID '{0}': invalid minimumVersion '{1}'.</value>
+  </data>
+  <data name="ValidateVersionRangeInvalidMaxVersionMessage" xml:space="preserve">
+    <value>ID '{0}': invalid maximumVersion '{1}'.</value>
+  </data>
+  <data name="ValidateVersionRangeMinGreaterThanMaxMessage" xml:space="preserve">
+    <value>ID '{0}': minimumVersion ({1}) cannot be greater than maximumVersion ({2}).</value>
+  </data>
+  <data name="MacroNotDefinedMessage" xml:space="preserve">
+    <value>There is no macro defined for the token {0}, referenced in the {1}.</value>
+  </data>
+  <data name="NoMacroFoundMessage" xml:space="preserve">
+    <value>No macro has been found for the reference: '{0}'.</value>
+  </data>
+  <data name="FileRuleHasInvalidTypeMessage" xml:space="preserve">
+    <value>File rule has an invalid type other than Deny, Allow, or FileAttrib.</value>
+  </data>
+  <data name="SignerCertEkuReferenceError" xml:space="preserve">
+    <value>The Signer with the ID {0} has a CertEKU with the ID {1} that doesn't point to any specified EKU in the policy.</value>
+  </data>
+  <data name="SignerFileAttribRefNotFoundError" xml:space="preserve">
+    <value>The Signer with the ID {0} references a nonexistent FileAttribRef with the ID rule ID {1}.</value>
+  </data>
+  <data name="FileAttribRefTypeInvalidError" xml:space="preserve">
+    <value>The FileAttribRef with the RuleID {0} is invalid. A FileAttribRef must reference a 'fileattrib' or 'attribute'.</value>
+  </data>
+  <data name="AllowedSignersSignerIdNotFoundMessage" xml:space="preserve">
+    <value>Signer ID '{0}' at position {1} was not found in the signer index map.</value>
+  </data>
+  <data name="AllowedSignersDenyRuleNotFoundMessage" xml:space="preserve">
+    <value>Deny rule ID '{0}' for signer '{1}' exception at index {2} was not found in the file rule index map.</value>
+  </data>
+  <data name="AllowedSignersExceptDenyRuleTypeInvalidMessage" xml:space="preserve">
+    <value>Referenced rule at index {0} (DenyRuleID '{1}') is not a Deny rule. Each ExceptDenyRule entry must reference a valid Deny rule.</value>
+  </data>
+  <data name="DeniedSignersSignerIdNotFoundMessage" xml:space="preserve">
+    <value>Signer ID '{0}' at deniedSigners.DeniedSigner[{1}] was not found in the signer index map.</value>
+  </data>
+  <data name="DeniedSignersExceptAllowRuleNotFoundMessage" xml:space="preserve">
+    <value>ExceptAllowRule ID '{0}' for denied signer '{1}' at ExceptAllowRule[{2}] was not found in the file rule index map.</value>
+  </data>
+  <data name="DeniedSignersExceptAllowRuleTypeInvalidMessage" xml:space="preserve">
+    <value>Referenced rule at fileRuleArray[{0}] for AllowRuleID '{1}' is type '{2}', not an Allow rule. Each ExceptAllowRule entry must reference a valid Allow rule.</value>
+  </data>
+  <data name="BoolAppSettingMultipleValuesError" xml:space="preserve">
+    <value>Encountered more than 1 value for the bool setting type.</value>
+  </data>
+  <data name="StringAppSettingMultipleValuesError" xml:space="preserve">
+    <value>Encountered more than 1 value for the string setting type.</value>
+  </data>
+  <data name="AppSettingsMissingDefinitionsMessage" xml:space="preserve">
+    <value>Encountered missing definitions for the app manifest settings: {0}</value>
+  </data>
+  <data name="AppSettingsUnknownSettingTypeMessage" xml:space="preserve">
+    <value>Encountered an unknown type for the Application Setting: {0}</value>
+  </data>
+  <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>Checking if a certificate with the common name '{0}' already exists in the personal user store.</value>
+  </data>
+  <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} certificates with the common name '{1}' already exist on the system. Removing them</value>
+  </data>
+  <data name="GetAuthenticodeHashAcquireContextError" xml:space="preserve">
+    <value>Could not acquire context for {0}</value>
+  </data>
+  <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
+    <value>Could not hash {0} using {1}</value>
+  </data>
+    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
+    <value>SystemDrive environment variable is null</value>
+  </data>
+  <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
+    <value>Refreshing the system App Control policies</value>
+  </data>
+  <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
+    <value>SiPolicy.p7b has been deployed and policies refreshed.</value>
+  </data>
+  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for the Code Integrity Schema XSD file.</value>
+  </data>
+  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for the Code Integrity Schema XSD file.</value>
+  </data>
+  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for the Code Integrity Schema XSD file.</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for the Code Integrity Schema XSD file.</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
+    <value>Custom Schema Path</value>
+  </data>
+    <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
+    <value>Browse for a custom location for the Code Integrity Schema XSD file.</value>
+  </data>
+  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
+    <value>Code Integrity Schema Path Override</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the Microsoft Store mini page where you can rate and optionally write a review for the AppControl Manager.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
+    <value>Rate and Review</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
+    <value>Opens the Microsoft Store mini page where you can rate and optionally write a review for the AppControl Manager.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the Microsoft Store mini page where you can rate and optionally write a review for the AppControl Manager.</value>
   </data>
 </root>

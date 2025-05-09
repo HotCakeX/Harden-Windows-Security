@@ -292,14 +292,16 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		}
 		else
 		{
-			throw new InvalidOperationException("SystemDrive environment variable is null");
+			throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("DeployDriversBlockRulesSystemDriveNullMessage"));
 		}
 
 		// Download the zip file
 		using (HttpClient client = new())
 		{
 			// Download the file synchronously
-			byte[] fileBytes = client.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
+			byte[] fileBytes = client.GetByteArrayAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL)
+									 .GetAwaiter().GetResult();
 			File.WriteAllBytes(DownloadSaveLocation, fileBytes);
 		}
 
@@ -307,13 +309,19 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
 
 		// Get the path of the SiPolicy file
-		string[] SiPolicyPaths = Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.p7b", SearchOption.AllDirectories);
+		string[] SiPolicyPaths = Directory.GetFiles(
+			ZipExtractionDir,
+			"SiPolicy_Enforced.p7b",
+			SearchOption.AllDirectories);
 
 		// Make sure to get only one file if there is more than one (which is unexpected)
 		string SiPolicyPath = SiPolicyPaths[0];
 
 		// Get the path of the XML file - just to extract the version
-		string[] XMLFilePaths = Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.xml", SearchOption.AllDirectories);
+		string[] XMLFilePaths = Directory.GetFiles(
+			ZipExtractionDir,
+			"SiPolicy_Enforced.xml",
+			SearchOption.AllDirectories);
 
 		// Make sure to get only one file if there is more than one (which is unexpected)
 		string XMLFilePath = XMLFilePaths[0];
@@ -332,10 +340,10 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		// Move the SiPolicy file to the final destination, renaming it in the process
 		File.Move(SiPolicyPath, SiPolicyFinalDestination);
 
-		Logger.Write("Refreshing the system App Control policies");
+		Logger.Write(GlobalVars.Rizz.GetString("DeployDriversBlockRulesRefreshPoliciesMessage"));
 		CiToolHelper.RefreshPolicy();
 
-		Logger.Write("SiPolicy.p7b has been deployed and policies refreshed.");
+		Logger.Write(GlobalVars.Rizz.GetString("DeployDriversBlockRulesDeployedMessage"));
 
 		return (null, policyVersion);
 	}

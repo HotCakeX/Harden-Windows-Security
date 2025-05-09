@@ -57,6 +57,7 @@ internal sealed partial class Main : ViewModelBase
 		ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), ApplicationGlobalLanguage);
 		ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), ApplicationGlobalFlowDirection);
 		FileActivatedLaunchArg = ReadValue(nameof(FileActivatedLaunchArg), FileActivatedLaunchArg);
+		CiPolicySchemaPath = ReadValue(nameof(CiPolicySchemaPath), CiPolicySchemaPath);
 	}
 
 	/// <summary>
@@ -506,4 +507,30 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// The path to the Code Integrity Schema XSD file.
+	/// User can optionally provide a custom path to it. E.g., on Home edition where this file doesn't exist by default.
+	/// </summary>
+	internal string CiPolicySchemaPath
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return field;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (SP(ref field, value))
+				{
+					SaveValue(nameof(CiPolicySchemaPath), field);
+				}
+			}
+		}
+	} = string.Empty;
+
 }

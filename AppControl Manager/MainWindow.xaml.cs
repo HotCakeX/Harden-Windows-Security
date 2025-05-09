@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AnimatedVisuals;
 using AppControlManager.AppSettings;
 using AppControlManager.Others;
@@ -77,12 +76,6 @@ internal sealed partial class MainWindow : Window
 	/// </summary>
 	internal MainWindow()
 	{
-		// Only make the update page available through search if the app was installed from GitHub source
-		if (App.PackageSource is 0)
-		{
-			ViewModel.NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
-		}
-
 		this.InitializeComponent();
 
 		// Grab the singleton navigation-service and give it the Frame
@@ -137,36 +130,6 @@ internal sealed partial class MainWindow : Window
 
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = this;
-
-		#region Start up update check
-
-		if (App.PackageSource is 0)
-		{
-			_ = Task.Run(() =>
-			{
-				try
-				{
-
-					// If AutoCheckForUpdateAtStartup is enabled in the app settings, checks for updates on startup and displays a dot on the Update page in the navigation
-					// If a new version is available.
-					// Will also check for update if it's null meaning user hasn't configured the auto update check yet
-					if (App.Settings.AutoCheckForUpdateAtStartup)
-					{
-
-						Logger.Write("Checking for update on startup");
-
-						// Start the update check
-						UpdateCheckResponse updateCheckResponse = AppUpdate.Check();
-					}
-				}
-				catch (Exception ex)
-				{
-					Logger.Write("Error checking for update on startup: " + ex.Message);
-				}
-			});
-		}
-
-		#endregion
 
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));

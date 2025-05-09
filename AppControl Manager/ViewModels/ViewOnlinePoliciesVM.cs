@@ -201,9 +201,9 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 				// Only keep App Control policies
 				IEnumerable<DeviceConfigurationPolicy> filteredResults = result.Value.Where(policy =>
-				policy.OmaSettings != null
-				&& policy.OmaSettings.Any(setting => setting.OmaUri?.Contains(@"Vendor/MSFT/ApplicationControl", StringComparison.OrdinalIgnoreCase) == true
-				));
+					policy.OmaSettings != null
+					&& policy.OmaSettings.Any(setting => setting.OmaUri?.Contains(@"Vendor/MSFT/ApplicationControl", StringComparison.OrdinalIgnoreCase) == true
+					));
 
 				foreach (DeviceConfigurationPolicy item in filteredResults)
 				{
@@ -216,7 +216,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 						if (policyResult.Item2 is null)
 						{
-							throw new InvalidOperationException("Intune policy was deserialized successfully but the relevant object is empty.");
+							throw new InvalidOperationException(
+								GlobalVars.Rizz.GetString("IntunePolicyDeserializedButEmptyMessage"));
 						}
 
 						if (policyResult.Item2.PolicyOptions is not null)
@@ -240,7 +241,10 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 								}
 								catch (Exception ex)
 								{
-									Logger.Write($"There was an error parsing {item2} rule option number to its string value: {ex.Message}");
+									Logger.Write(string.Format(
+										GlobalVars.Rizz.GetString("ErrorParsingRuleOptionMessage"),
+										item2,
+										ex.Message));
 
 									continue;
 								}
@@ -250,7 +254,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 							policyResult.Item2.PolicyOptions = optionsToReplaceWith;
 
 							policyResult.Item2.OnlineParentViewModel = this;
-
 
 							policyResult.Item2.IntunePolicyObjectID = item.Id;
 
@@ -263,18 +266,18 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 					else
 					{
 						CiPolicyInfo policy = new(
-											policyID: null,
-											basePolicyID: null,
-											friendlyName: item.DisplayName,
-											version: null,
-											versionString: null,
-											isSystemPolicy: false,
-											isSignedPolicy: false,
-											isOnDisk: false,
-											isEnforced: false,
-											isAuthorized: false,
-											policyOptions: null
-										)
+							policyID: null,
+							basePolicyID: null,
+							friendlyName: item.DisplayName,
+							version: null,
+							versionString: null,
+							isSystemPolicy: false,
+							isSignedPolicy: false,
+							isOnDisk: false,
+							isEnforced: false,
+							isAuthorized: false,
+							policyOptions: null
+						)
 						{
 							OnlineParentViewModel = this,
 							IntunePolicyObjectID = item.Id
@@ -291,7 +294,9 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		finally
 		{
 			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+			PoliciesCountTextBox = string.Format(
+				GlobalVars.Rizz.GetString("NumberOfPoliciesMessage"),
+				AllPolicies.Count);
 
 			ManageButtonsStates(true);
 		}
@@ -515,21 +520,25 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 		if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
 		{
-			throw new InvalidOperationException("Intune policy object ID was null for the selected policy to be deleted");
+			throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("IntunePolicyObjectIdNullMessage"));
 		}
 
 		try
 		{
 			ManageButtonsStates(false);
 
-			await MicrosoftGraph.Main.DeletePolicy(AuthCompanionCLS.CurrentActiveAccount, ListViewSelectedPolicy.IntunePolicyObjectID);
+			await MicrosoftGraph.Main.DeletePolicy(
+				AuthCompanionCLS.CurrentActiveAccount,
+				ListViewSelectedPolicy.IntunePolicyObjectID);
 
 			// Remove the policy from the Lists after removal from Intune
 			_ = AllPolicies.Remove(ListViewSelectedPolicy);
 			_ = AllPoliciesOutput.Remove(ListViewSelectedPolicy);
 
 			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+			PoliciesCountTextBox =
+				GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
 		}
 		finally
 		{

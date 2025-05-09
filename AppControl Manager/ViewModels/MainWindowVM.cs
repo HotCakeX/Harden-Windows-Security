@@ -63,7 +63,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Pages that are allowed to run when running without Administrator privileges
 	/// </summary>
-	internal IEnumerable<Type> UnelevatedPages = [
+	internal List<Type> UnelevatedPages = [
 		typeof(Pages.ValidatePolicy),
 		typeof(Pages.GitHubDocumentation),
 		typeof(Pages.MicrosoftDocumentation),
@@ -279,7 +279,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), typeof(Pages.CreateDenyPolicy) },
 		{ GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content"), typeof(Pages.ValidatePolicy) },
 		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) },
-		{ GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor) }
+		{ GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor) },
+		{ GlobalVars.Rizz.GetString("UpdateNavItem/Content"), typeof(Pages.UpdatePage) }
 	};
 
 	/// <summary>
@@ -310,16 +311,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
+
+		// If the App is installed from the Microsoft Store source
+		// Then make the update page available for non-elevated usage.
+		if (App.PackageSource is 1)
+			UnelevatedPages.Add(typeof(Pages.UpdatePage));
 	}
 
-
 	#region UI-Bound Properties
-
-	/// <summary>
-	/// The visibility of the Update page in the main NavigationView.
-	/// Only make it visible if the app is installed from the GitHub source.
-	/// </summary>	
-	internal Visibility UpdatePageNavItemVisibility = App.PackageSource is 0 ? Visibility.Visible : Visibility.Collapsed;
 
 	/// <summary>
 	/// Sets the initial value of the back drop. if it's null, Mica Alt will be used.

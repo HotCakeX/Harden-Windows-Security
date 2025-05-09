@@ -58,8 +58,12 @@ internal static class GlobalVars
 	// Handle of the main Window - acquired in the MainWindow.xaml.cs
 	internal static nint hWnd;
 
+	// Product ID of the application when installed from the Microsoft Store
+	internal static string StoreProductID = "9PNG1JDDTGP8";
+
 	// The filters for the file pickers dialogs to select files based on specific extensions
 	internal const string XMLFilePickerFilter = "XML file|*.xml";
+	internal const string XSDFilePickerFilter = "XSD file|*.xsd";
 	internal const string XMLAndCIPFilePickerFilter = "XML and CIP files (*.xml;*.cip)|*.xml;*.cip";
 	internal const string AnyFilePickerFilter = "Any file (*.*)|*.*";
 	internal const string ExecutablesPickerFilter = "Executable file|*.exe";

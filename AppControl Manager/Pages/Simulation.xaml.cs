@@ -169,7 +169,7 @@ internal sealed partial class Simulation : Page
 		{
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = "You need to select an existing XML policy file";
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SelectExistingXmlPolicyFileMessage");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 			ViewModel.MainInfoBarIsClosable = true;
 
@@ -189,7 +189,7 @@ internal sealed partial class Simulation : Page
 
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = "Performing the Simulation";
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("PerformingSimulationMessage");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
 
@@ -247,7 +247,10 @@ internal sealed partial class Simulation : Page
 
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = $"There was a problem during the simulation: {ex.Message}";
+			ViewModel.MainInfoBarMessage = string.Format(
+				GlobalVars.Rizz.GetString("ErrorDuringSimulationMessage"),
+				ex.Message
+			);
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
 			ViewModel.MainInfoBarIsClosable = true;
 
@@ -262,7 +265,7 @@ internal sealed partial class Simulation : Page
 			{
 				ViewModel.MainInfoBarVisibility = Visibility.Visible;
 				ViewModel.MainInfoBarIsOpen = true;
-				ViewModel.MainInfoBarMessage = "Simulation completed successfully.";
+				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SimulationCompletedSuccessfullyMessage");
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
 				ViewModel.MainInfoBarIsClosable = true;
 			}

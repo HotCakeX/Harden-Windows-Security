@@ -93,11 +93,11 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.PFNBasePolicyPathLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			(param => LightUp1(), "Files And Folders Supplemental Policy"),
-			(param => LightUp2(), "Certificates Supplemental Policy"),
-			(param => LightUp3(), "ISG Supplemental Policy"),
-			(param => LightUp4(), "Strict Kernel Mode Supplemental Policy"),
-			(param => LightUp5(), "PFN Supplemental Policy")
+			(param => LightUp1(), GlobalVars.Rizz.GetString("FilesAndFoldersSupplementalPolicyLabel")),
+			(param => LightUp2(), GlobalVars.Rizz.GetString("CertificatesSupplementalPolicyLabel")),
+			(param => LightUp3(), GlobalVars.Rizz.GetString("ISGSupplementalPolicyLabel")),
+			(param => LightUp4(), GlobalVars.Rizz.GetString("StrictKernelModeSupplementalPolicyLabel")),
+			(param => LightUp5(), GlobalVars.Rizz.GetString("PFNSupplementalPolicyLabel"))
 		);
 	}
 
@@ -401,7 +401,11 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 			FilesAndFoldersInfoBar.IsOpen = true;
 			FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
-			string msg1 = $"Finding all App Control compatible files among {filesAndFoldersFilePaths.Count} files and {filesAndFoldersFolderPaths.Count} folders you selected...";
+			string msg1 = string.Format(
+				GlobalVars.Rizz.GetString("FindingAllAppControlFilesMessage"),
+				filesAndFoldersFilePaths.Count,
+				filesAndFoldersFolderPaths.Count
+			);
 			FilesAndFoldersInfoBar.Message = msg1;
 			Logger.Write(msg1);
 
@@ -449,7 +453,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 						return;
 					}
 
-					string msg2 = $"Scanning a total of {DetectedFilesInSelectedDirectories.Item2} AppControl compatible files...";
+					string msg2 = string.Format(
+						GlobalVars.Rizz.GetString("ScanningTotalAppControlFilesMessage"),
+						DetectedFilesInSelectedDirectories.Item2
+					);
 					Logger.Write(msg2);
 
 					_ = DispatcherQueue.TryEnqueue(() =>
@@ -523,7 +530,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 					// Configure policy rule options
 					if (filesAndFoldersScanLevel is ScanLevels.FilePath || filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
 					{
-						Logger.Write($"The selected scan level is {filesAndFoldersScanLevel}, adding 'Disabled: Runtime FilePath Rule Protection' rule option to the Supplemental policy so non-admin protected file paths will work.'");
+						Logger.Write(string.Format(
+							GlobalVars.Rizz.GetString("SelectedScanLevelMessage"),
+							filesAndFoldersScanLevel
+						));
 
 						CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
 					}
@@ -587,7 +597,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			if (!errorsOccurred)
 			{
 				FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Success;
-				FilesAndFoldersInfoBar.Message = $"Successfully created a Supplemental policy named '{filesAndFoldersSupplementalPolicyName}'";
+				FilesAndFoldersInfoBar.Message = string.Format(
+					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
+					filesAndFoldersSupplementalPolicyName
+				);
 
 				ViewModel.FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -616,14 +629,12 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		}
 	}
 
-
 	// Event handler for RadialGauge ValueChanged
 	private void ScalabilityRadialGauge_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 	{
 		// Update the button content with the current value of the gauge
 		ScalabilityButton.Content = $"Scalability: {((RadialGauge)sender).Value:N0}";
 	}
-
 
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
@@ -634,12 +645,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox.Text = null;
 	}
 
-
 	/// <summary>
 	/// Path to the Files and Folders Supplemental policy XML file
 	/// </summary>
 	private string? _FilesAndFoldersSupplementalPolicyPath;
-
 
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified supplemental policy path.
@@ -754,8 +763,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (CertificatesBasedCertFilePaths.Count is 0)
 		{
 			CreateCertificateBasedSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = "Select certificates";
-			CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = "You need to select some certificates first to create Supplemental policy";
+			CreateCertificateBasedSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("SelectCertificatesTitle");
+			CreateCertificateBasedSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectCertificatesSubtitle");
 			return;
 		}
 
@@ -802,13 +811,15 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 			CertificatesInfoBar.IsOpen = true;
 			CertificatesInfoBar.IsClosable = false;
-			CertificatesInfoBar.Message = $"Creating the Certificates-based Supplemental policy for {CertificatesBasedCertFilePaths.Count} certificates";
+			CertificatesInfoBar.Message = string.Format(
+				GlobalVars.Rizz.GetString("CreatingCertificatesPolicyMessage"),
+				CertificatesBasedCertFilePaths.Count
+			);
 			CertificatesInfoBar.Severity = InfoBarSeverity.Informational;
 
 
 			await Task.Run(() =>
 			{
-
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("CertificatesSupplementalPolicy");
 
 				// Get the path to an empty policy file
@@ -838,11 +849,11 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				else
 				{
 					_ = DispatcherQueue.TryEnqueue(() =>
-					 {
-						 CertificatesInfoBar.IsOpen = true;
-						 CertificatesInfoBar.Message = "No certificate details could be found for creating the policy";
-						 CertificatesInfoBar.Severity = InfoBarSeverity.Warning;
-					 });
+					{
+						CertificatesInfoBar.IsOpen = true;
+						CertificatesInfoBar.Message = GlobalVars.Rizz.GetString("NoCertificateDetailsFoundCreatingPolicy");
+						CertificatesInfoBar.Severity = InfoBarSeverity.Warning;
+					});
 
 					errorsOccurred = true;
 					return;
@@ -850,7 +861,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 				Merger.Merge(EmptyPolicyPath, [EmptyPolicyPath]);
 
-				string OutputPath = ViewModel.OperationModeComboBoxSelectedIndex is 1 ? ViewModel.PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{CertificatesBasedSupplementalPolicyName}.xml");
+				string OutputPath = ViewModel.OperationModeComboBoxSelectedIndex is 1
+					? ViewModel.PolicyFileToMergeWith!
+					: Path.Combine(GlobalVars.UserConfigDir, $"{CertificatesBasedSupplementalPolicyName}.xml");
 
 				if (ViewModel.OperationModeComboBoxSelectedIndex is 1)
 				{
@@ -859,7 +872,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 				}
 				else
 				{
-
 					// Instantiate the user selected Base policy
 					SiPolicy.SiPolicy policyObj = Management.Initialize(CertificatesBasedBasePolicyPath, null);
 
@@ -874,14 +886,14 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 					// Copying the policy file to the User Config directory - outside of the temporary staging area
 					File.Copy(EmptyPolicyPath, OutputPath, true);
-
 				}
 
 				_CertificatesSupplementalPolicyPath = OutputPath;
 
-
 				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
-				string CIPName = ViewModel.OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(ViewModel.PolicyFileToMergeWith!)}.cip" : $"{CertificatesBasedSupplementalPolicyName}.cip";
+				string CIPName = ViewModel.OperationModeComboBoxSelectedIndex is 1
+					? $"{Path.GetFileNameWithoutExtension(ViewModel.PolicyFileToMergeWith!)}.cip"
+					: $"{CertificatesBasedSupplementalPolicyName}.cip";
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
@@ -907,10 +919,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
 					File.Copy(CIPPath, finalCIPPath, true);
 				}
-
 			});
 		}
-
 		catch (Exception ex)
 		{
 			CertificatesInfoBar.Severity = InfoBarSeverity.Error;
@@ -925,8 +935,10 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			if (!errorsOccurred)
 			{
 				CertificatesInfoBar.Severity = InfoBarSeverity.Success;
-
-				CertificatesInfoBar.Message = $"Successfully created a certificate-based Supplemental policy named {CertificatesBasedSupplementalPolicyName}.";
+				CertificatesInfoBar.Message = string.Format(
+					GlobalVars.Rizz.GetString("SuccessfullyCreatedCertificatePolicyMessage"),
+					CertificatesBasedSupplementalPolicyName
+				);
 
 				ViewModel.CertificatesInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -942,9 +954,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 			CertificatesInfoBar.IsClosable = true;
 		}
-
 	}
-
 
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
@@ -1026,7 +1036,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 			ISGInfoBar.IsOpen = true;
 			ISGInfoBar.IsClosable = false;
-			ISGInfoBar.Message = "Creating the ISG-based Supplemental policy.";
+			ISGInfoBar.Message = GlobalVars.Rizz.GetString("CreatingISGBasedSupplementalPolicyMessage");
 			ISGInfoBar.Severity = InfoBarSeverity.Informational;
 
 			await Task.Run(() =>
@@ -1056,9 +1066,9 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 					{
 						// Finding the policy name in the settings
 						List<Setting> nameSettings = [.. supplementalPolicyObj.Settings.Where(x =>
-						string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase))];
+					string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase))];
 
 						SettingValueType settingVal = new()
 						{
@@ -1134,7 +1144,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			{
 				ISGInfoBar.Severity = InfoBarSeverity.Success;
 
-				ISGInfoBar.Message = "Successfully created an ISG-based Supplemental policy.";
+				ISGInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyCreatedISGBasedSupplementalPolicyMessage");
 
 				ViewModel.ISGInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -1261,7 +1271,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			StrictKernelModeInfoBar.IsClosable = false;
 			StrictKernelModeInfoBar.IsOpen = true;
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
-			StrictKernelModeInfoBar.Message = "Scanning the system for events";
+			StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("ScanningSystemForEvents");
 			StrictKernelModeSection.IsExpanded = true;
 
 			// Clear variables responsible for the ListView
@@ -1293,13 +1303,13 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count is 0)
 			{
-				StrictKernelModeInfoBar.Message = "No logs were generated during the Audit phase";
+				StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("NoLogsGeneratedDuringAuditPhase");
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Warning;
 				ErrorsOccurred = true;
 				return;
 			}
 
-			StrictKernelModeInfoBar.Message = $"{Output.Count} log(s) were generated during the Audit phase";
+			StrictKernelModeInfoBar.Message = string.Format(GlobalVars.Rizz.GetString("GeneratedLogsDuringAuditPhase"), Output.Count);
 
 			// Add the event logs to the List
 			ViewModel.StrictKernelModeScanResultsList.AddRange(Output);
@@ -1318,13 +1328,12 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 			DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = true;
 		}
-
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
 
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
-			StrictKernelModeInfoBar.Message = $"An error occurred while scanning the system: {ex.Message}";
+			StrictKernelModeInfoBar.Message = string.Format(GlobalVars.Rizz.GetString("ErrorOccurredWhileScanningSystem"), ex.Message);
 
 			Logger.Write(ErrorWriter.FormatException(ex));
 		}
@@ -1336,7 +1345,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
-				StrictKernelModeInfoBar.Message = "Successfully scanned the system for events";
+				StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyScannedSystemForEvents");
 			}
 
 			StrictKernelModeInfoBar.IsClosable = true;
@@ -1361,8 +1370,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (ViewModel.StrictKernelModeScanResults.Count is 0)
 		{
 			StrictKernelModeCreateButtonTeachingTip.IsOpen = true;
-			StrictKernelModeCreateButtonTeachingTip.Title = "Strict Kernel-mode Supplemental policy";
-			StrictKernelModeCreateButtonTeachingTip.Subtitle = "No item exists in the detected Kernel-mode files data grid";
+			StrictKernelModeCreateButtonTeachingTip.Title = GlobalVars.Rizz.GetString("StrictKernelModeTeachingTipTitle");
+			StrictKernelModeCreateButtonTeachingTip.Subtitle = GlobalVars.Rizz.GetString("StrictKernelModeTeachingTipSubtitleNoItems");
 			return;
 		}
 
@@ -1412,9 +1421,11 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			StrictKernelModeInfoBar.IsClosable = false;
 			StrictKernelModeInfoBar.IsOpen = true;
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
-			StrictKernelModeInfoBar.Message = $"Creating Strict Kernel-mode supplemental policy for {ViewModel.StrictKernelModeScanResults.Count} files";
+			StrictKernelModeInfoBar.Message = string.Format(
+				GlobalVars.Rizz.GetString("CreatingStrictKernelModePolicyMessage"),
+				ViewModel.StrictKernelModeScanResults.Count
+			);
 			StrictKernelModeSection.IsExpanded = true;
-
 
 			bool shouldDeploy = StrictKernelModeDeployToggleButton.IsChecked ?? false;
 
@@ -1515,7 +1526,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
-				StrictKernelModeInfoBar.Message = "Successfully created strict Kernel-mode supplemental policy";
+				StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyCreatedStrictKernelModePolicyMessage");
 
 				ViewModel.StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -1551,7 +1562,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			StrictKernelModeInfoBar.IsClosable = false;
 			StrictKernelModeInfoBar.IsOpen = true;
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Informational;
-			StrictKernelModeInfoBar.Message = "Scanning the system for drivers";
+			StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("ScanningSystemForDrivers");
 			StrictKernelModeSection.IsExpanded = true;
 
 			ViewModel.DriverAutoDetectionProgressRingValue = 0;
@@ -1586,14 +1597,14 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 			if (kernelModeDriversList.Count is 0)
 			{
-				StrictKernelModeInfoBar.Message = "No kernel-mode drivers could be detected";
+				StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("NoKernelModeDriversDetected");
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Warning;
 				DetectedKernelModeFilesDetailsSettingsCard.IsEnabled = false;
 				ErrorsOccurred = true;
 				return;
 			}
 
-			StrictKernelModeInfoBar.Message = $"Scanning {kernelModeDriversList.Count} files";
+			StrictKernelModeInfoBar.Message = string.Format(GlobalVars.Rizz.GetString("ScanningKernelModeFilesCount"), kernelModeDriversList.Count);
 
 			IEnumerable<FileIdentity> LocalFilesResults = [];
 
@@ -1632,7 +1643,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			ErrorsOccurred = true;
 
 			StrictKernelModeInfoBar.Severity = InfoBarSeverity.Error;
-			StrictKernelModeInfoBar.Message = $"There was an error: {ex.Message}";
+			StrictKernelModeInfoBar.Message = string.Format(GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"), ex.Message);
 
 			throw;
 		}
@@ -1641,7 +1652,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBar.Severity = InfoBarSeverity.Success;
-				StrictKernelModeInfoBar.Message = "Successfully scanned the system for drivers";
+				StrictKernelModeInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyScannedSystemForDrivers");
 			}
 
 			StrictKernelModeAutoDetectAllDriversButton.IsEnabled = true;
@@ -1778,7 +1789,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 	private void PFNPackagedAppsListView_SelectionChanged()
 	{
 		int selectedCount = PFNPackagedAppsListView.SelectedItems.Count;
-		PFNSelectedItemsCount.Text = $"Selected Apps: {selectedCount}";
+		PFNSelectedItemsCount.Text = string.Format(GlobalVars.Rizz.GetString("SelectedAppsCount"), selectedCount);
 	}
 
 
@@ -1885,8 +1896,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (PFNPackagedAppsListView.SelectedItems.Count is 0)
 		{
 			CreatePFNSupplementalPolicyTeachingTip.IsOpen = true;
-			CreatePFNSupplementalPolicyTeachingTip.Title = "PFN based Supplemental policy";
-			CreatePFNSupplementalPolicyTeachingTip.Subtitle = "No app was selected to create a supplemental policy for";
+			CreatePFNSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("PFNBasedSupplementalPolicyTitle");
+			CreatePFNSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("PFNBasedSupplementalPolicySubtitle");
 			return;
 		}
 
@@ -1934,7 +1945,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			PFNInfoBar.IsClosable = false;
 			PFNInfoBar.IsOpen = true;
 			PFNInfoBar.Severity = InfoBarSeverity.Informational;
-			PFNInfoBar.Message = "Creating the Supplemental policy based on Package Family Names";
+			PFNInfoBar.Message = GlobalVars.Rizz.GetString("CreatingPFNSupplementalPolicyMessage");
 			PFNSettingsCard.IsExpanded = true;
 
 			// A list to store the selected PackagedAppView items
@@ -2040,7 +2051,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			if (!ErrorsOccurred)
 			{
 				PFNInfoBar.Severity = InfoBarSeverity.Success;
-				PFNInfoBar.Message = "Successfully created the supplemental policy";
+				PFNInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyCreatedPFNSupplementalPolicyMessage");
 
 				ViewModel.PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -2149,8 +2160,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		if (string.IsNullOrWhiteSpace(SupplementalPolicyCustomPatternBasedCustomPatternTextBox.Text))
 		{
 			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.IsOpen = true;
-			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = "Enter a custom pattern";
-			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = "You need to enter a custom pattern for the file rule.";
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("EnterCustomPatternTitle");
+			CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("EnterCustomPatternSubtitle");
 			return;
 		}
 
@@ -2174,7 +2185,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			SupplementalPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
 
 			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
-			CustomPatternBasedFileRuleInfoBar.Message = "Creating the Pattern-based File Path rule Supplemental policy.";
+			CustomPatternBasedFileRuleInfoBar.Message = GlobalVars.Rizz.GetString("CreatingPatternBasedFileRuleMessage");
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
 			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
 
@@ -2268,7 +2279,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			{
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
-				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Supplemental policy.";
+				CustomPatternBasedFileRuleInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyCreatedPatternBasedFileRuleMessage");
 
 				ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -2281,7 +2292,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			CustomPatternBasedFileRuleInfoBar.IsClosable = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler to display the content dialog for more info about patterns

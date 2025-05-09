@@ -342,7 +342,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingSignedXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
 
@@ -481,7 +481,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingCIPFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
 
@@ -797,7 +797,10 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 					{
 						ViewModel.MainInfoBarVisibility = Visibility.Visible;
 						ViewModel.MainInfoBarIsOpen = true;
-						ViewModel.MainInfoBarMessage = $"Converting {file} to XML";
+						ViewModel.MainInfoBarMessage = string.Format(
+							GlobalVars.Rizz.GetString("ConvertingFileToCIPMessage"),
+							file
+						);
 						ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 						ViewModel.MainInfoBarIsClosable = false;
 						MainProgressRing.Visibility = Visibility.Visible;
@@ -820,14 +823,17 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			ErrorsOccurred = true;
 
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarMessage = $"There was a problem converting the XML files to CIP: {ex.Message}";
+			ViewModel.MainInfoBarMessage = string.Format(
+				GlobalVars.Rizz.GetString("ErrorConvertingXMLToCIPMessage"),
+				ex.Message
+			);
 		}
 		finally
 		{
 			if (!ErrorsOccurred)
 			{
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarMessage = "Successfully converted all of the selected XML files to CIP binaries";
+				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessfullyConvertedXMLFilesToCIPMessage");
 			}
 
 			ViewModel.MainInfoBarIsClosable = true;

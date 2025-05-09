@@ -169,6 +169,17 @@
                         <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
                             <ToggleSwitch IsOn="{x:Bind AppSettings.PromptForElevationOnStartup, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 x:Uid="BrowseForCISchemaSettingsCard">
+                            <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
+
+                                <TextBox IsReadOnly="True" Text="{x:Bind AppSettings.CiPolicySchemaPath, Mode=OneWay}" x:Uid="CustomCISchemaPathTextBox"/>
+
+                                <Button Click="{x:Bind ViewModel.BrowseForCISchemaPath}" x:Uid="BrowseForCISchemaButton" />
+
+                            </controls:WrapPanel>
+                        </customUI:SettingsCardV2>
+
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
@@ -192,6 +203,7 @@
                             <ComboBox SelectedIndex="{x:Bind ViewModel.LanguageComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>English</x:String>
                                 <x:String>Hebrew</x:String>
+                                <x:String>Greek</x:String>
                             </ComboBox>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">

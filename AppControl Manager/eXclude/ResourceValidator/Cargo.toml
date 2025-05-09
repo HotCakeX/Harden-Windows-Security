@@ -1,0 +1,32 @@
+[package]
+name = "ResourceValidator"
+version = "1.0.0"
+edition = "2024"
+authors = ["Violet Hansen"]
+description = "Performs thorough validation on resource files and related logics. See comments in the code for more info."
+license = "MIT"
+homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
+repository = "https://github.com/HotCakeX/Harden-Windows-Security"
+publish = false
+rust-version = "1.86.0" # Enforces minimum required installed Rust version
+
+[profile.release]
+opt-level = 3
+overflow-checks = true
+lto = "fat"
+incremental = true
+
+[dependencies]
+regex = "1.11"
+quick-xml = "0.37"
+anyhow = "1.0"
+
+[[bin]]
+# Binary for X64 target.
+name = "ResourceValidator-X64"
+path = "src/main.rs"
+
+[[bin]]
+# Binary for ARM64 target.
+name = "ResourceValidator-ARM64"
+path = "src/main.rs"

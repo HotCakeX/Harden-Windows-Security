@@ -14,13 +14,13 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using AppControlManager.Others;
 
 namespace AppControlManager.SiPolicy;
 
@@ -42,7 +42,7 @@ internal static class Helper
 		{ OptionType.EnabledRevokedExpiredAsUnsigned, 8192U  },
 		{ OptionType.EnabledAuditMode, 65536U  },
 		{ OptionType.DisabledFlightSigning, 131072U },
-		{ OptionType.EnabledInheritDefaultPolicy, 262144U },
+		{ OptionType.EnabledInheritDefaultPolicy, 262144U  },
 		{ OptionType.EnabledUnsignedSystemIntegrityPolicy, 524288U },
 		{ OptionType.EnabledDynamicCodeSecurity, 1048576U  },
 		{ OptionType.RequiredEVSigners, 2097152U  },
@@ -137,7 +137,7 @@ internal static class Helper
 					Deny d => (0, d.FileName, d.InternalName, d.FileDescription, d.ProductName, d.PackageFamilyName, d.FilePath, d.Hash),
 					Allow a => (1, a.FileName, a.InternalName, a.FileDescription, a.ProductName, a.PackageFamilyName, a.FilePath, a.Hash),
 					FileAttrib f => (2, f.FileName, f.InternalName, f.FileDescription, f.ProductName, f.PackageFamilyName, f.FilePath, f.Hash),
-					_ => throw new InvalidOperationException("Encountered invalid File Rule")
+					_ => throw new InvalidOperationException(GlobalVars.Rizz.GetString("EncounteredInvalidFileRule"))
 				};
 
 		var r1 = DeconstructRule(x);
@@ -226,7 +226,7 @@ internal static class Helper
 				AppIDs = rule.AppIDs,
 				FilePath = rule.FilePath
 			},
-			_ => throw new InvalidOperationException("Encountered invalid File Rule")
+			_ => throw new InvalidOperationException(GlobalVars.Rizz.GetString("EncounteredInvalidFileRule"))
 		};
 	}
 
@@ -335,7 +335,7 @@ internal static class Helper
 
 			// Too many segments → malformed version
 			if (segmentCount > MaxSegments)
-				throw new InvalidOperationException($"Malformed version detected: {version}.");
+				throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("MalformedVersionDetected"), version));
 
 			//
 			// Second pass: extract, parse, and pack each segment into 'result'
@@ -353,7 +353,7 @@ internal static class Helper
 
 				// If we already parsed MaxSegments, any extra data is an error
 				if (segmentsParsed >= MaxSegments)
-					throw new InvalidOperationException($"Malformed version detected: {version}.");
+					throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("MalformedVersionDetected"), version));
 
 				// Mark the beginning of this segment
 				char* partStart = ptr;
@@ -371,7 +371,7 @@ internal static class Helper
 				if (!ushort.TryParse(part, NumberStyles.None, CultureInfo.InvariantCulture, out ushort segment))
 				{
 					// Parsing failed (non‐numeric / overflow) → invalid format
-					throw new InvalidOperationException($"The string format was incorrect: '{part}'.");
+					throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("StringFormatIncorrect"), part));
 				}
 
 				// Determine how many bits this segment occupies in the 64-bit result:

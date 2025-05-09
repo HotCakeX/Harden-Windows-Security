@@ -154,15 +154,13 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// </summary>
 	private async void ScanLogs_Click()
 	{
-
 		bool error = false;
 
 		try
 		{
-
 			MainInfoBar.Visibility = Visibility.Visible;
 			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = "Scanning the event logs...";
+			MainInfoBar.Message = GlobalVars.Rizz.GetString("ScanningEventLogsMessage");
 			MainInfoBar.Severity = InfoBarSeverity.Informational;
 			MainInfoBar.IsClosable = false;
 
@@ -179,7 +177,10 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			UpdateTotalLogs(true);
 
 			// Grab the App Control Logs
-			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(CodeIntegrityEvtxFilePath: CodeIntegrityEVTX, AppLockerEvtxFilePath: AppLockerEVTX);
+			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(
+				CodeIntegrityEvtxFilePath: CodeIntegrityEVTX,
+				AppLockerEvtxFilePath: AppLockerEVTX
+			);
 
 			ViewModel.AllFileIdentities.Clear();
 
@@ -196,7 +197,6 @@ internal sealed partial class EventLogsPolicyCreation : Page
 				ViewModel.FileIdentities.Add(item);
 			}
 
-
 			UpdateTotalLogs();
 
 			ViewModel.CalculateColumnWidths();
@@ -207,7 +207,10 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			MainInfoBar.Visibility = Visibility.Visible;
 			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = $"There was an error during logs scan: {ex.Message}";
+			MainInfoBar.Message = string.Format(
+				GlobalVars.Rizz.GetString("ErrorDuringLogsScanMessage"),
+				ex.Message
+			);
 			MainInfoBar.Severity = InfoBarSeverity.Error;
 			MainInfoBar.IsClosable = true;
 
@@ -233,7 +236,10 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			{
 				MainInfoBar.Visibility = Visibility.Visible;
 				MainInfoBar.IsOpen = true;
-				MainInfoBar.Message = $"Scan complete. {ViewModel.AllFileIdentities.Count} logs were found.";
+				MainInfoBar.Message = string.Format(
+					GlobalVars.Rizz.GetString("ScanCompleteLogsFoundMessage"),
+					ViewModel.AllFileIdentities.Count
+				);
 				MainInfoBar.Severity = InfoBarSeverity.Success;
 				MainInfoBar.IsClosable = true;
 			}
@@ -255,10 +261,14 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// Store the selected evtx file path
 			CodeIntegrityEVTX = selectedFile;
 
-			Logger.Write($"Selected {selectedFile} for Code Integrity EVTX log scanning");
+			// Log the selection with a localized message
+			string msg = string.Format(
+				GlobalVars.Rizz.GetString("SelectedCodeIntegrityEvtxForScanning"),
+				selectedFile
+			);
+			Logger.Write(msg);
 
 			SelectedCodeIntegrityEVTXFilesFlyout_TextBox.Text = selectedFile;
-
 			SelectedCodeIntegrityEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
 		}
 	}
@@ -283,10 +293,14 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// Store the selected EVTX file path
 			AppLockerEVTX = selectedFile;
 
-			Logger.Write($"Selected {selectedFile} for AppLocker EVTX log scanning");
+			// Log the selection with a localized message
+			string msg = string.Format(
+				GlobalVars.Rizz.GetString("SelectedAppLockerEvtxForScanning"),
+				selectedFile
+			);
+			Logger.Write(msg);
 
 			SelectedAppLockerEVTXFilesFlyout_TextBox.Text = selectedFile;
-
 			SelectedAppLockerEVTXFilesFlyout.ShowAt(BrowseForEVTXDropDownButton);
 		}
 	}
@@ -356,14 +370,16 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: 0";
+			TotalCountOfTheFilesTextBox.Text =
+				GlobalVars.Rizz.GetString("TotalLogsZeroMessage");
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: {ViewModel.FileIdentities.Count}";
+			TotalCountOfTheFilesTextBox.Text = string.Format(
+				GlobalVars.Rizz.GetString("TotalLogsCountMessage"),
+				ViewModel.FileIdentities.Count);
 		}
 	}
-
 
 	/// <summary>
 	/// The button that browses for XML file the logs will be added to
@@ -377,10 +393,11 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// Store the selected XML file path
 			PolicyToAddLogsTo = selectedFile;
 
-			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedFileToAddLogsToMessage"),
+				PolicyToAddLogsTo));
 		}
 	}
-
 
 	/// <summary>
 	/// The button to browse for the XML file the supplemental policy that will be created will belong to
@@ -394,13 +411,15 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// Store the selected XML file path
 			BasePolicyXMLFile = selectedFile;
 
-			Logger.Write($"Selected {BasePolicyXMLFile} to associate the Supplemental policy with.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedBasePolicyFileMessage"),
+				BasePolicyXMLFile));
 		}
 	}
 
-
 	/// <summary>
-	/// The button to submit a base policy GUID that will be used to set the base policy ID in the Supplemental policy file that will be created.
+	/// The button to submit a base policy GUID that will be used to set the base policy ID
+	/// in the Supplemental policy file that will be created.
 	/// </summary>
 	/// <exception cref="ArgumentException"></exception>
 	private void BaseGUIDSubmitButton_Click()
@@ -411,7 +430,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 		}
 		else
 		{
-			throw new ArgumentException("Invalid GUID");
+			throw new ArgumentException(
+				GlobalVars.Rizz.GetString("InvalidGuidMessage"));
 		}
 	}
 
@@ -420,12 +440,10 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	/// </summary>
 	private async void CreatePolicyButton_Click()
 	{
-
 		bool error = false;
 
 		try
 		{
-
 			// Disable the policy creator button
 			CreatePolicyButton.IsEnabled = false;
 
@@ -440,26 +458,25 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			MainInfoBar.Visibility = Visibility.Visible;
 			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = "Processing the logs...";
+			MainInfoBar.Message = GlobalVars.Rizz.GetString("ProcessingLogsMessage");
 			MainInfoBar.Severity = InfoBarSeverity.Informational;
 			MainInfoBar.IsClosable = false;
 
-
 			if (ViewModel.FileIdentities.Count is 0)
 			{
-				throw new InvalidOperationException("There are no logs. Use the scan button first.");
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("NoLogsUseScanButtonMessage"));
 			}
-
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
-				throw new InvalidOperationException("You must select an option from the policy creation list");
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("MustSelectOptionMessage"));
 			}
 
 			// Create a policy name if it wasn't provided
 			DateTime now = DateTime.Now;
 			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
-
 
 			// Get the policy name from the UI text box
 			string? policyName = PolicyNameTextBox.Text;
@@ -467,16 +484,16 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// If the UI text box was empty or whitespace then set policy name manually
 			if (string.IsNullOrWhiteSpace(policyName))
 			{
-				policyName = $"Supplemental policy from event logs - {formattedDate}";
+				policyName = string.Format(
+					GlobalVars.Rizz.GetString("DefaultPolicyNameFormat"),
+					formattedDate);
 			}
 
 			// If user selected to deploy the policy
-			// Need to retrieve it while we're still at the UI thread
 			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
 
 			// See which section of the Segmented control is selected for policy creation
 			int selectedCreationMethod = segmentedControl.SelectedIndex;
-
 
 			// All of the File Identities that will be used to put in the policy XML file
 			List<FileIdentity> SelectedLogs = [];
@@ -501,7 +518,6 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			await Task.Run(() =>
 			{
-
 				// Create a new Staging Area
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyCreator");
 
@@ -520,7 +536,6 @@ internal sealed partial class EventLogsPolicyCreation : Page
 						{
 							if (PolicyToAddLogsTo is not null)
 							{
-
 								// Set policy name and reset the policy ID of our new policy
 								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
 
@@ -538,15 +553,14 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								if (DeployAtTheEnd)
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
 									SiPolicy.Management.ConvertXMLToBinary(PolicyToAddLogsTo, null, CIPPath);
-
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}
 							}
 							else
 							{
-								throw new InvalidOperationException("No policy file was selected to add the logs to.");
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoPolicySelectedToAddLogsMessage"));
 							}
 
 							break;
@@ -578,22 +592,20 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								if (DeployAtTheEnd)
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
 									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}
 							}
 							else
 							{
-								throw new InvalidOperationException("No policy file was selected to associate the Supplemental policy with.");
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoPolicySelectedToAssociateSupplementalMessage"));
 							}
 
 							break;
 						}
 					case 2:
 						{
-
 							if (BasePolicyGUID is not null)
 							{
 								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
@@ -616,15 +628,14 @@ internal sealed partial class EventLogsPolicyCreation : Page
 								if (DeployAtTheEnd)
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
 									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}
 							}
 							else
 							{
-								throw new InvalidOperationException("No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.");
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoBasePolicyGuidProvidedMessage"));
 							}
 
 							break;
@@ -634,7 +645,6 @@ internal sealed partial class EventLogsPolicyCreation : Page
 							break;
 						}
 				}
-
 			});
 		}
 		catch (Exception ex)
@@ -643,7 +653,9 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			MainInfoBar.Visibility = Visibility.Visible;
 			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = $"There was an error while processing the logs: {ex.Message}.";
+			MainInfoBar.Message = string.Format(
+				GlobalVars.Rizz.GetString("ErrorProcessingLogsMessage"),
+				ex.Message);
 			MainInfoBar.Severity = InfoBarSeverity.Error;
 			MainInfoBar.IsClosable = true;
 
@@ -657,7 +669,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			// enable the scan logs button again
 			ScanLogs.IsEnabled = true;
 
-			// Display the progress ring on the ScanLogs button
+			// Hide the progress ring
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
 
@@ -665,7 +677,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			{
 				MainInfoBar.Visibility = Visibility.Visible;
 				MainInfoBar.IsOpen = true;
-				MainInfoBar.Message = "Successfully processed the logs and included them in the policy.";
+				MainInfoBar.Message = GlobalVars.Rizz.GetString("SuccessProcessedLogsMessage");
 				MainInfoBar.Severity = InfoBarSeverity.Success;
 				MainInfoBar.IsClosable = true;
 
@@ -730,12 +742,11 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	{
 		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
 		{
-			0 => "Add logs to the selected policy",
-			1 => "Create Policy for Selected Base",
-			2 => "Create Policy for Base GUID",
-			_ => "Create Policy"
+			0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicy"),
+			1 => GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase"),
+			2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGuid"),
+			_ => GlobalVars.Rizz.GetString("DefaultCreatePolicy")
 		};
-
 	}
 
 	/// <summary>

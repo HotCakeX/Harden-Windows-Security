@@ -225,8 +225,7 @@
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}" Tag="Update"
-                                    Visibility="{x:Bind ViewModel.UpdatePageNavItemVisibility}">
+                <NavigationViewItem x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}" Tag="Update">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
                                Style="{ThemeResource AttentionIconInfoBadgeStyle}">
@@ -266,25 +265,16 @@
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
 
-                                    <Grid Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
+                                    <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="15" Orientation="Vertical" Padding="20" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,15" TextWrapping="Wrap" HorizontalAlignment="Center" x:Uid="SidebarPinnedPolicyPathTextBlock" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                                        <TextBlock TextWrapping="WrapWholeWords" HorizontalAlignment="Center" x:Uid="SidebarPinnedPolicyPathTextBlock" Style="{ThemeResource BodyStrongTextBlockStyle}" />
 
-                                        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,15" IsReadOnly="True"
-                                            Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}" x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
-                                            Width="150" />
+                                        <TextBox IsReadOnly="True"
+                                                 Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}"
+                                                 x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
+                                                 Width="150" />
 
-                                        <Button Grid.Column="0" Margin="0,0,10,0" Grid.ColumnSpan="1" Grid.Row="2" x:Uid="SidebarBrowseButton" Click="{x:Bind nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button x:Uid="SidebarBrowseButton" HorizontalAlignment="Center" Click="{x:Bind nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -295,7 +285,7 @@
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Grid.Column="1" Margin="10,0,0,0" Grid.ColumnSpan="1" x:Uid="SidebarClearButton" Grid.Row="2" Click="{x:Bind nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button x:Uid="SidebarClearButton" HorizontalAlignment="Center" Click="{x:Bind nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -306,7 +296,7 @@
                                             </Button.Content>
                                         </Button>
 
-                                        <Button Margin="0,15,0,0" Grid.ColumnSpan="2" Grid.Row="3" x:Uid="SidebarPolicySelectAssignmentButton" HorizontalAlignment="Center">
+                                        <Button x:Uid="SidebarPolicySelectAssignmentButton" HorizontalAlignment="Center">
                                             <Button.Content>
                                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -334,7 +324,7 @@
                                             </Button.Flyout>
                                         </Button>
 
-                                    </Grid>
+                                    </controls:WrapPanel>
 
                                 </Border>
 

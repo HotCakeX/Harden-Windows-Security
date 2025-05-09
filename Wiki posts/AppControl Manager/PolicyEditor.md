@@ -16,15 +16,18 @@ Eliminate the need for error-prone, manual editing in a text editor. When you mo
 
 This feature also deduplicates any redundant rules or signers within the policy file.
 
+> [!TIP]\
+> You can use this feature to convert CIP binary files back to XML too.
+
 <br>
 
 ### Configuration Details
 
-* **Browse for Policy**: Click this button to locate an App Control policy XML file. You can right-click or tap and hold on this button to preview the selected policy file.
+* **Browse for Policy**: Click this button to locate an App Control policy XML or CIP file. You can right-click or tap and hold on this button to preview the selected policy file.
 
 * **Load Policy**: Use this button to import the details of the chosen App Control policy into the user interface.
 
-* **Save the Changes**: Click this button to commit any modifications back to the selected App Control policy.
+* **Save the Changes**: Click this button to commit any modifications back to the selected App Control policy. If the file you are working with is a `CIP` binary policy, then using this button will save it as XML file with the same name in the `AppControl Manager` directory in Program Files (if the app is running elevated), or it will save the XML in the same location as the CIP file (if the app is running with standard privilege).
 
 * **Clear the Data**: Use this button to reset all data loaded in the interface as a consequence of loading the policy.
 

@@ -16,15 +16,17 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
+using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Windows.Services.Store;
 
 namespace AppControlManager.Others;
 
 /// <summary>
 /// AppUpdate class is responsible for checking for application updates.
-/// This class is implemented as a Singleton to ensure only one instance is created and used throughout the app.
-/// Providing a single access point for update-related operations.
 /// </summary>
 internal static class AppUpdate
 {
@@ -36,12 +38,14 @@ internal static class AppUpdate
 
 	private static ViewModels.UpdateVM UpdateVM { get; } = App.AppHost.Services.GetRequiredService<ViewModels.UpdateVM>();
 
+	internal static StoreContext? _StoreContext;
+
 	/// <summary>
 	/// Downloads the version file from GitHub,
 	/// Checks the online version against the current app version,
 	/// and raises the UpdateAvailable event if an update is found.
 	/// </summary>
-	internal static UpdateCheckResponse Check()
+	internal static UpdateCheckResponse CheckGitHub()
 	{
 		using HttpClient client = new SecHttpClient();
 
@@ -64,7 +68,7 @@ internal static class AppUpdate
 		}
 		else
 		{
-			Logger.Write("No new version of the AppControl Manager is available.");
+			Logger.Write(GlobalVars.Rizz.GetString("TheAppIsUpToDate"));
 		}
 
 		return new UpdateCheckResponse(
@@ -72,4 +76,74 @@ internal static class AppUpdate
 			onlineAvailableVersion
 		);
 	}
+
+	/// <summary>
+	/// Checks for update based on the Store Context.
+	/// </summary>
+	/// <returns></returns>
+	internal async static Task<UpdateCheckResponse> CheckStore()
+	{
+		_StoreContext = StoreContext.GetDefault();
+
+		// Initialize the dialog using wrapper function for IInitializeWithWindow
+		WinRT.Interop.InitializeWithWindow.Initialize(_StoreContext, GlobalVars.hWnd);
+
+		// Find any available updates to the currently running package
+		IReadOnlyList<StorePackageUpdate> updates = await _StoreContext.GetAppAndOptionalStorePackageUpdatesAsync();
+
+		bool isUpdateAvailable = false;
+		Version latestVersion = new(0, 0, 0, 0);
+
+		if (updates.Count is 0)
+		{
+			Logger.Write(GlobalVars.Rizz.GetString("TheAppIsUpToDate"));
+		}
+		else
+		{
+			isUpdateAvailable = true;
+
+			// Raise the UpdateAvailable event if there are subscribers
+			UpdateAvailable?.Invoke(
+				null,
+				new UpdateAvailableEventArgs(isUpdateAvailable, latestVersion)
+			);
+
+			// Set the text for the button in the update page
+			UpdateVM.UpdateButtonContent = GlobalVars.Rizz.GetString("InstallLatestVer");
+		}
+
+		return new UpdateCheckResponse(
+			isUpdateAvailable,
+			latestVersion
+		);
+	}
+
+	/// <summary>
+	/// Runs at startup to perform update check.
+	/// </summary>
+	internal static void CheckAtStartup()
+	{
+		_ = Task.Run(async () =>
+		{
+			try
+			{
+				if (App.Settings.AutoCheckForUpdateAtStartup)
+				{
+					if (App.PackageSource is 0)
+					{
+						_ = CheckGitHub();
+					}
+					else
+					{
+						_ = await CheckStore();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+			}
+		});
+	}
+
 }

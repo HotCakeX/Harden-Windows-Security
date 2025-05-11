@@ -1453,6 +1453,11 @@
             </summary>
             <param name="args">Details about the launch request and process.</param>
         </member>
+        <member name="M:AppControlManager.App.InitialNav">
+            <summary>
+            Perform initial navigation.
+            </summary>
+        </member>
         <member name="P:AppControlManager.App.MainWindow">
             <summary>
             Exposes the main application window as a static property. It retrieves the window from the current application
@@ -1596,6 +1601,12 @@
             <summary>
             The argument received if the app is launched via file activation.
             This allows us to have access to this after app has been relaunched with Admin privileges.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.AppSettings.Main.CiPolicySchemaPath">
+            <summary>
+            The path to the Code Integrity Schema XSD file.
+            User can optionally provide a custom path to it. E.g., on Home edition where this file doesn't exist by default.
             </summary>
         </member>
         <member name="T:AppControlManager.CustomUIElements.ButtonV2">
@@ -3657,8 +3668,6 @@
         <member name="T:AppControlManager.Others.AppUpdate">
             <summary>
             AppUpdate class is responsible for checking for application updates.
-            This class is implemented as a Singleton to ensure only one instance is created and used throughout the app.
-            Providing a single access point for update-related operations.
             </summary>
         </member>
         <member name="E:AppControlManager.Others.AppUpdate.UpdateAvailable">
@@ -3667,11 +3676,22 @@
             Includes details about the availability status and the version.
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.AppUpdate.Check">
+        <member name="M:AppControlManager.Others.AppUpdate.CheckGitHub">
             <summary>
             Downloads the version file from GitHub,
             Checks the online version against the current app version,
             and raises the UpdateAvailable event if an update is found.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.AppUpdate.CheckStore">
+            <summary>
+            Checks for update based on the Store Context.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.Others.AppUpdate.CheckAtStartup">
+            <summary>
+            Runs at startup to perform update check.
             </summary>
         </member>
         <member name="M:AppControlManager.Others.CertificateGenerator.BuildAppControlCertificate(System.String,System.String,System.Int32,System.Int32)">
@@ -6089,7 +6109,8 @@
         </member>
         <member name="M:AppControlManager.Pages.EventLogsPolicyCreation.BaseGUIDSubmitButton_Click">
             <summary>
-            The button to submit a base policy GUID that will be used to set the base policy ID in the Supplemental policy file that will be created.
+            The button to submit a base policy GUID that will be used to set the base policy ID
+            in the Supplemental policy file that will be created.
             </summary>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
@@ -9209,12 +9230,6 @@
             Constructor initializes the ViewModel and subscribes to various events, sets initial values of some variables.
             </summary>
         </member>
-        <member name="F:AppControlManager.ViewModels.MainWindowVM.UpdatePageNavItemVisibility">
-            <summary>
-            The visibility of the Update page in the main NavigationView.
-            Only make it visible if the app is installed from the GitHub source.
-            </summary>	
-        </member>
         <member name="P:AppControlManager.ViewModels.MainWindowVM.BackDropComboBoxSelectedIndex">
             <summary>
             Sets the initial value of the back drop. if it's null, Mica Alt will be used.
@@ -9553,6 +9568,11 @@
             Event handler for deleting selected items from the SignatureBasedRulesListView's Items Source
             </summary>
         </member>
+        <member name="M:AppControlManager.ViewModels.SettingsVM.BrowseForCISchemaPath">
+            <summary>
+            Opens a file picker for Code Integrity Schema path.
+            </summary>
+        </member>
         <member name="F:AppControlManager.ViewModels.SettingsVM.VersionTextBlockText">
             <summary>
             Set the version in the settings card to the current app version
@@ -9693,6 +9713,11 @@
         <member name="M:AppControlManager.ViewModels.UpdateVM.BrowseForCustomMSIXPathButton_Click">
             <summary>
             Opens a file picker to select a MSIX/MSIXBundle package file.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.UpdateVM.LaunchRating">
+            <summary>
+            Launches the Microsoft Store mini page of the app where user can review and rate.
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.ValidatePolicyVM.ValidateXML">

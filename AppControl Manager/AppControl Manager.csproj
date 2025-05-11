@@ -78,7 +78,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.19.0</FileVersion>
+    <FileVersion>2.0.20.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -456,9 +456,9 @@
     <Content Remove="Animated Icon Sources\**" />
     <None Remove="Animated Icon Sources\**" />
 
-    <Compile Remove="Excluded Code\**" />
-    <Content Remove="Excluded Code\**" />
-    <None Remove="Excluded Code\**" />
+    <Compile Remove="eXclude\**" />
+    <Content Remove="eXclude\**" />
+    <None Remove="eXclude\**" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">

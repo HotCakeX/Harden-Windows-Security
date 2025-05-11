@@ -44,18 +44,23 @@ internal static class CustomDeserialization
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(filePath);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
+			root = xmlDoc.DocumentElement
+				   ?? throw new InvalidOperationException(
+					   GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
 
 			// Make sure the policy file is valid
 			_ = CiPolicyTest.TestCiPolicy(filePath);
 		}
 		else if (Xml is not null)
 		{
-			root = Xml.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
+			root = Xml.DocumentElement
+				   ?? throw new InvalidOperationException(
+					   GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
 		}
 		else
 		{
-			throw new InvalidOperationException("file path or XML document must be provided for deserialization");
+			throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("FilePathOrXmlRequiredMessage"));
 		}
 
 		SiPolicy policy = new();
@@ -591,43 +596,50 @@ internal static class CustomDeserialization
 
 		if (deny.ID is null)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("DenyRuleNoIDValidationError"));
+			throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("DenyRuleNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(deny.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DenyRuleDupIDValidationError")}: {deny.ID}");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("DenyRuleDupIDValidationError"),
+				deny.ID));
 		}
 
 		bool HashExists = deny.Hash is not null;
 
 		bool APropertyExists = deny.FileName is not null
-						 || deny.FileDescription is not null
-						 || deny.PackageFamilyName is not null
-						 || deny.InternalName is not null
-						 || deny.ProductName is not null
-						 || deny.PackageVersion is not null
-						 || deny.MinimumFileVersion is not null
-						 || deny.MaximumFileVersion is not null
-						 || deny.FilePath is not null;
+							 || deny.FileDescription is not null
+							 || deny.PackageFamilyName is not null
+							 || deny.InternalName is not null
+							 || deny.ProductName is not null
+							 || deny.PackageVersion is not null
+							 || deny.MinimumFileVersion is not null
+							 || deny.MaximumFileVersion is not null
+							 || deny.FilePath is not null;
 
 		bool NoPropertyExists = deny.FileName is null
-						&& deny.PackageFamilyName is null
-						&& deny.FileDescription is null
-						&& deny.InternalName is null
-						&& deny.ProductName is null
-						&& deny.FilePath is null;
+							&& deny.PackageFamilyName is null
+							&& deny.FileDescription is null
+							&& deny.InternalName is null
+							&& deny.ProductName is null
+							&& deny.FilePath is null;
 
 		if (HashExists)
 		{
 			if (APropertyExists)
 			{
-				throw new InvalidOperationException($"The Deny rule with the ID {deny.ID} has Hash property but also has other file properties, making it invalid.");
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("DenyRuleHashWithOtherPropsError"),
+					deny.ID));
 			}
 		}
 		else if (NoPropertyExists)
 		{
-			throw new InvalidOperationException($"The Deny rule with the ID {deny.ID} neither has Hash nor does it have any other file properties, making it invalid.");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("DenyRuleNoPropsError"),
+				deny.ID));
 		}
 
 		ValidateVersionRange(deny.MinimumFileVersion, deny.MaximumFileVersion, deny.ID);
@@ -667,43 +679,50 @@ internal static class CustomDeserialization
 
 		if (fa.ID is null)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileAttribNoIDValidationError"));
+			throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("FileAttribNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(fa.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("FileAttribDupIDValidationError")}: {fa.ID}");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("FileAttribDupIDValidationError"),
+				fa.ID));
 		}
 
 		bool HashExists = fa.Hash is not null;
 
 		bool APropertyExists = fa.FileName is not null
-						|| fa.FileDescription is not null
-						 || fa.PackageFamilyName is not null
-						 || fa.MinimumFileVersion is not null
-						 || fa.MaximumFileVersion is not null
-						 || fa.ProductName is not null
-						 || fa.PackageVersion is not null
-						 || fa.FilePath is not null
-						 || fa.InternalName is not null;
+							|| fa.FileDescription is not null
+							|| fa.PackageFamilyName is not null
+							|| fa.MinimumFileVersion is not null
+							|| fa.MaximumFileVersion is not null
+							|| fa.ProductName is not null
+							|| fa.PackageVersion is not null
+							|| fa.FilePath is not null
+							|| fa.InternalName is not null;
 
 		bool NoPropertyExists = fa.FilePath is null
-						&& fa.FileName is null
-						&& fa.InternalName is null
-						&& fa.FileDescription is null
-						&& fa.PackageFamilyName is null
-						&& fa.ProductName is null;
+							&& fa.FileName is null
+							&& fa.InternalName is null
+							&& fa.FileDescription is null
+							&& fa.PackageFamilyName is null
+							&& fa.ProductName is null;
 
 		if (HashExists)
 		{
 			if (APropertyExists)
 			{
-				throw new InvalidOperationException($"The FileAttrib rule with the ID {fa.ID} has Hash property but also has other file properties, making it invalid.");
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("FileAttribHashWithOtherPropsError"),
+					fa.ID));
 			}
 		}
 		else if (NoPropertyExists)
 		{
-			throw new InvalidOperationException($"The FileAttrib rule with the ID {fa.ID} neither has Hash nor does it have any other file properties, making it invalid.");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("FileAttribNoPropsError"),
+				fa.ID));
 		}
 
 		ValidateVersionRange(fa.MinimumFileVersion, fa.MaximumFileVersion, fa.ID);
@@ -792,14 +811,17 @@ internal static class CustomDeserialization
 
 			if (cr.Type is not CertEnumType.TBS and not CertEnumType.Wellknown)
 			{
-				throw new InvalidOperationException("Encountered a Cert Root that neither has TBS nor WellKnown type, making it invalid.");
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("InvalidCertRootTypeError"));
 			}
 
 			signer.CertRoot = cr;
 		}
 		else
 		{
-			throw new InvalidOperationException($"The Signer with the ID {signer.ID} has no Cert Root element, making it invalid.");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("SignerNoCertRootError"),
+				signer.ID));
 		}
 
 		XmlNodeList certEkuNodes = elem.GetElementsByTagName("CertEKU", GlobalVars.SiPolicyNamespace);
@@ -1248,13 +1270,15 @@ internal static class CustomDeserialization
 			}
 			else
 			{
-				throw new InvalidOperationException("Encountered a Policy Setting that doesn't have a valid Value element.");
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("PolicySettingInvalidValueElementMessage"));
 			}
 		}
 
 		if (string.IsNullOrEmpty(setting.Key) || string.IsNullOrEmpty(setting.Provider) || string.IsNullOrEmpty(setting.ValueName))
 		{
-			throw new InvalidOperationException("Encountered a Policy Setting that doesn't have the necessary Provider, Key or ValueName elements.");
+			throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("PolicySettingMissingProviderKeyValueNameMessage"));
 		}
 
 		return setting;
@@ -1315,12 +1339,18 @@ internal static class CustomDeserialization
 		// At this point both are non-null/non-empty, so attempt to parse:
 		if (!Version.TryParse(minimumVersion, out var minVer))
 			throw new ArgumentException(
-				$"ID '{id}': invalid minimumVersion '{minimumVersion}'.",
+				string.Format(
+					GlobalVars.Rizz.GetString("ValidateVersionRangeInvalidMinVersionMessage"),
+					id,
+					minimumVersion),
 				nameof(minimumVersion));
 
 		if (!Version.TryParse(maximumVersion, out var maxVer))
 			throw new ArgumentException(
-				$"ID '{id}': invalid maximumVersion '{maximumVersion}'.",
+				string.Format(
+					GlobalVars.Rizz.GetString("ValidateVersionRangeInvalidMaxVersionMessage"),
+					id,
+					maximumVersion),
 				nameof(maximumVersion));
 
 		// Compare and throw if out of order:
@@ -1328,7 +1358,11 @@ internal static class CustomDeserialization
 			throw new ArgumentOutOfRangeException(
 				nameof(minimumVersion),
 				minVer,
-				$"ID '{id}': minimumVersion ({minVer}) cannot be greater than maximumVersion ({maxVer}).");
+				string.Format(
+					GlobalVars.Rizz.GetString("ValidateVersionRangeMinGreaterThanMaxMessage"),
+					id,
+					minVer,
+					maxVer));
 	}
 
 }

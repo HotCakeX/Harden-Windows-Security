@@ -105,7 +105,6 @@ namespace AppControlManager
         }
 
 
-
         /// <summary>
         /// Opens a file picker dialog to select multiple files.
         /// </summary>
@@ -223,9 +222,6 @@ namespace AppControlManager
         }
 
 
-
-
-
         /// <summary>
         /// Opens a folder picker dialog to select a single folder.
         /// </summary>
@@ -298,8 +294,6 @@ namespace AppControlManager
             // Return the selected folder path as a managed string.
             return selectedFolderPath;
         }
-
-
 
 
         /// <summary>

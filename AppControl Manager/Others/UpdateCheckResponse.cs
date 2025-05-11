@@ -24,6 +24,6 @@ namespace AppControlManager.Others;
 /// </summary>
 internal sealed class UpdateCheckResponse(bool isNewVersionAvailable, Version onlineVersion)
 {
-	internal bool IsNewVersionAvailable { get; set; } = isNewVersionAvailable;
-	internal Version OnlineVersion { get; set; } = onlineVersion;
+	internal bool IsNewVersionAvailable { get; } = isNewVersionAvailable;
+	internal Version OnlineVersion { get; } = onlineVersion;
 }

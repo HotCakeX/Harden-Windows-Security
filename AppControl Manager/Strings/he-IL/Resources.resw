@@ -1,63 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root><!--
-  Microsoft ResX Schema
-
-  Version 2.0
-
-  The primary goals of this format is to allow a simple XML format
-  that is mostly human readable. The generation and parsing of the
-  various data types are done through the TypeConverter classes
-  associated with the data types.
-
-  Example:
-
-  ... ado.net/XML headers & schema ...
-  <resheader name="resmimetype">text/microsoft-resx</resheader>
-  <resheader name="version">2.0</resheader>
-  <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-  <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-  <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-  <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-  <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>[base64 mime encoded serialized .NET Framework object]</value>
-  </data>
-  <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-    <comment>This is a comment</comment>
-  </data>
-
-  There are any number of "resheader" rows that contain simple
-  name/value pairs.
-
-  Each data row contains a name, and value. The row also contains a
-  type or mimetype. Type corresponds to a .NET class that support
-  text/value conversion through the TypeConverter architecture.
-  Classes that don't support this are serialized and stored with the
-  mimetype set.
-
-  The mimetype is used for serialized objects, and tells the
-  ResXResourceReader how to depersist the object. This is currently not
-  extensible. For a given mimetype the value must be set accordingly:
-
-  Note - application/x-microsoft.net.object.binary.base64 is the format
-  that the ResXResourceWriter will generate, however the reader can
-  read any of the formats listed below.
-
-  mimetype: application/x-microsoft.net.object.binary.base64
-  value   : The object must be serialized with
-      : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-      : and then encoded with base64 encoding.
-
-  mimetype: application/x-microsoft.net.object.soap.base64
-  value   : The object must be serialized with
-      : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-      : and then encoded with base64 encoding.
-
-  mimetype: application/x-microsoft.net.object.bytearray.base64
-  value   : The object must be serialized into a byte array
-      : using a System.ComponentModel.TypeConverter
-      : and then encoded with base64 encoding.
-  -->
+<root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -923,9 +865,6 @@
   <data name="RuleOption_EnabledUnsignedSystemIntegrityPolicy" xml:space="preserve">
     <value>מאפשר למדיניות להישאר לא חתומה. כאשר אפשרות זו מוסרת, המדיניות חייבת להיות חתומה וגם כל המדיניות המשלימות חייבות להיות חתומות. התעודות המהימנות לעדכוני מדיניות עתידיים חייבות להיות מזוהות בסעיף UpdatePolicySigners. תעודות המהימנות למדיניות משלימות חייבות להיות מזוהות בסעיף SupplementalPolicySigners.</value>
   </data>
-  <data name="RuleOption_RequiredEVSigners" xml:space="preserve">
-    <value>אפשרות זו אינה נתמכת כרגע.</value>
-  </data>
   <data name="RuleOption_EnabledAdvancedBootOptionsMenu" xml:space="preserve">
     <value>תפריט ה-F8 לפני האתחול מושבת כברירת מחדל עבור כל מדיניות בקרת אפליקציות. הגדרת אפשרות חוק זו מאפשרת לתפריט F8 להופיע למשתמשים הנוכחים פיזית.</value>
   </data>
@@ -1124,9 +1063,6 @@
   <data name="DeploymentSuccess" xml:space="preserve">
     <value>הפעלתי בהצלחה את כל קבצי ה-XML שנבחרו</value>
   </data>
-  <data name="DeployingSignedXMLFiles" xml:space="preserve">
-    <value>מפעיל </value>
-  </data>
   <data name="SignedXMLFiles" xml:space="preserve">
     <value> קבצי XML חתומים.</value>
   </data>
@@ -1138,9 +1074,6 @@
   </data>
   <data name="SignedDeploymentSuccess" xml:space="preserve">
     <value>הפעלתי בהצלחה את כל קבצי ה-XML שנבחרו כמדיניות חתומות</value>
-  </data>
-  <data name="DeployingCIPFiles" xml:space="preserve">
-    <value>מפעיל </value>
   </data>
   <data name="CIPFiles" xml:space="preserve">
     <value> קבצי CIP בינאריים.</value>
@@ -1161,9 +1094,6 @@
     <value>הפעלה בענן פעילה כעת</value>
   </data>
   <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>ההתחברות ל-Intune בוטלה על ידי המשתמש</value>
-  </data>
-  <data name="IntuneSignInCancelledMessage" xml:space="preserve">
     <value>ההתחברות ל-Intune בוטלה על ידי המשתמש</value>
   </data>
   <data name="IntuneSignInError" xml:space="preserve">
@@ -1299,9 +1229,6 @@
   <data name="VersionHeader.Text" xml:space="preserve">
     <value>גרסה</value>
   </data>
-  <data name="IsAuthorizedHeader.Text" xml:space="preserve">
-    <value>מורשה</value>
-  </data>
   <data name="IsEnforcedHeader.Text" xml:space="preserve">
     <value>אכיפה</value>
   </data>
@@ -1330,9 +1257,6 @@
   </data>
   <data name="VersionColumnHeaderBtn.Content" xml:space="preserve">
     <value>גרסה</value>
-  </data>
-  <data name="IsAuthorizedColumnHeaderBtn.Content" xml:space="preserve">
-    <value>מורשה</value>
   </data>
   <data name="IsEnforcedColumnHeaderBtn.Content" xml:space="preserve">
     <value>אכיפה</value>
@@ -1483,9 +1407,6 @@
   <data name="SigningScenarioHeader.Text" xml:space="preserve">
     <value>תרחיש חתימה</value>
   </data>
-  <data name="FilePathHeader.Text" xml:space="preserve">
-    <value>נתיב קובץ</value>
-  </data>
   <data name="ComputerNameHeader.Text" xml:space="preserve">
     <value>שם מחשב</value>
   </data>
@@ -1559,9 +1480,6 @@
   </data>
   <data name="SigningScenarioColumnHeaderBtn.Content" xml:space="preserve">
     <value>תרחיש חתימה</value>
-  </data>
-  <data name="FilePathColumnHeaderBtn.Content" xml:space="preserve">
-    <value>נתיב קובץ</value>
   </data>
   <data name="ComputerNameColumnHeaderBtn.Content" xml:space="preserve">
     <value>שם מחשב</value>
@@ -3425,4 +3343,471 @@
     <value>חסרים פרטים נדרשים</value>
     <comment>Certificate creation page</comment>
 </data>
+<data name="TheAppIsUpToDate" xml:space="preserve">
+    <value>אפליקציית AppControl Manager מעודכנת.</value>
+  </data>
+  <data name="CheckingForUpdateStore" xml:space="preserve">
+    <value>בודק עדכון ב-Microsoft Store...</value>
+  </data>
+  <data name="NewUpdateIsAvailableStore" xml:space="preserve">
+    <value>יש עדכון חדש זמין. פותח את Microsoft Store כדי שתוכל לעדכן את האפליקציה שם.</value>
+  </data>
+  <data name="ProblemOpeningMSStore" xml:space="preserve">
+    <value>אירעה בעיה בפתיחת דף ה-Microsoft Store של AppControl Manager.</value>
+  </data>
+  <data name="InstallLatestVer" xml:space="preserve">
+    <value>התקן את הגרסה האחרונה</value>
+  </data>
+  <data name="FileNotExists" xml:space="preserve">
+    <value>הקובץ לא קיים.</value>
+  </data>
+  <data name="CISchemaNotFound" xml:space="preserve">
+    <value>לא ניתן למצוא את קובץ סכמה של Code Integrity במערכת, סביר להניח משום שמדובר בגרסת Home של מערכת ההפעלה. יש לעבור לדף ההגדרות כדי לאתרו ידנית.</value>
+  </data>
+  <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
+    <value>XML לא חוקי: חסר תג השורש.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="NoFilePathOrStreamProvidedValidationError" xml:space="preserve">
+    <value>יש לספק filePath או stream עבור הדסיריאליזציה.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="InvalidXmlRootElementNamespaceValidationError" xml:space="preserve">
+    <value>XML לא חוקי: תג השורש חייב להיות 'AppManifest' במרחב השמות הנכון.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestMissingIdAttributeValidationError" xml:space="preserve">
+    <value>חסר המאפיין הנדרש 'Id' באלמנט AppManifest.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestEmptyIdAttributeValidationError" xml:space="preserve">
+    <value>המאפיין 'Id' באלמנט AppManifest לא יכול להיות ריק.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionMissingNameAttributeValidationError" xml:space="preserve">
+    <value>חסר המאפיין הנדרש 'Name' באלמנט SettingDefinition.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionEmptyNameAttributeValidationError" xml:space="preserve">
+    <value>המאפיין 'Name' באלמנט SettingDefinition לא יכול להיות ריק.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionMissingTypeAttributeValidationError" xml:space="preserve">
+    <value>חסר המאפיין הנדרש 'Type' באלמנט SettingDefinition.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError" xml:space="preserve">
+    <value>חסר המאפיין הנדרש 'IgnoreAuditPolicies' באלמנט SettingDefinition.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
+    <value>האובייקט AppManifest לא יכול להיות null.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
+    <value>המאפיין 'Id' של AppManifest נדרש ולא יכול להיות null או ריק.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
+    <value>המערך SettingDefinition מכיל אלמנט null.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
+    <value>המאפיין 'Name' של SettingDefinition נדרש ולא יכול להיות null או ריק.</value>
+    <comment>App Manifest Validation</comment>
+  </data>
+  <data name="EncounteredInvalidFileRule" xml:space="preserve">
+    <value>נתקל בכלל File Rule לא חוקי</value>
+  </data>
+  <data name="InvalidUrlDetectedForAppManifest" xml:space="preserve">
+    <value>התגלתה כתובת URL לא תקינה עבור ה-App Manifest: {0}</value>
+  </data>
+  <data name="MalformedVersionDetected" xml:space="preserve">
+    <value>זוהתה גרסה פגומה: {0}.</value>
+  </data>
+  <data name="StringFormatIncorrect" xml:space="preserve">
+    <value>פורמט המחרוזת אינו תקין: '{0}'.</value>
+  </data>
+  <data name="FindingAllAppControlFilesMessage" xml:space="preserve">
+    <value>מחפש את כל הקבצים התואמים ל-App Control בין {0} קבצים ו-{1} תיקיות שבחרת...</value>
+  </data>
+  <data name="ScanningTotalAppControlFilesMessage" xml:space="preserve">
+    <value>סורק בסך הכל {0} קבצים התואמים ל-AppControl...</value>
+  </data>
+  <data name="SelectedScanLevelMessage" xml:space="preserve">
+    <value>רמת הסריקה הנבחרת היא {0}, מוסיף את אפשרות הכלל 'Disabled: Runtime FilePath Rule Protection' למדיניות המשנית כדי שדרכי קובץ מוגנות ללא הרשאות מנהל יעבדו.</value>
+  </data>
+  <data name="SuccessfullyCreatedSupplementalPolicyMessage" xml:space="preserve">
+    <value>נוצר בהצלחה מדיניות משנית בשם '{0}'</value>
+  </data>
+  <data name="SelectCertificatesTitle" xml:space="preserve">
+    <value>בחר תעודות</value>
+  </data>
+  <data name="SelectCertificatesSubtitle" xml:space="preserve">
+    <value>עליך לבחור מספר תעודות תחילה כדי ליצור מדיניות משנית</value>
+  </data>
+  <data name="CreatingCertificatesPolicyMessage" xml:space="preserve">
+    <value>יוצר את מדיניות המשנית מבוססת התעודות עבור {0} תעודות</value>
+  </data>
+  <data name="NoCertificateDetailsFoundCreatingPolicy" xml:space="preserve">
+    <value>לא נמצאו פרטי תעודה ליצירת המדיניות</value>
+  </data>
+  <data name="SuccessfullyCreatedCertificatePolicyMessage" xml:space="preserve">
+    <value>נוצרה בהצלחה מדיניות משנית מבוססת תעודה בשם {0}.</value>
+  </data>
+  <data name="CreatingISGBasedSupplementalPolicyMessage" xml:space="preserve">
+    <value>יוצר את מדיניות המשנית מבוססת ISG.</value>
+  </data>
+  <data name="SuccessfullyCreatedISGBasedSupplementalPolicyMessage" xml:space="preserve">
+    <value>נוצרה בהצלחה מדיניות משנית מבוססת ISG.</value>
+  </data>
+  <data name="ScanningSystemForEvents" xml:space="preserve">
+    <value>סורק את המערכת לאירועים</value>
+  </data>
+  <data name="NoLogsGeneratedDuringAuditPhase" xml:space="preserve">
+    <value>לא נוצרו יומנים במהלך שלב הביקורת</value>
+  </data>
+  <data name="GeneratedLogsDuringAuditPhase" xml:space="preserve">
+    <value>נוצרו {0} יומנים במהלך שלב הביקורת</value>
+  </data>
+  <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
+    <value>אירעה שגיאה בסריקת המערכת: {0}</value>
+  </data>
+  <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
+    <value>הסריקה של המערכת לאירועים הושלמה בהצלחה</value>
+  </data>
+  <data name="StrictKernelModeTeachingTipTitle" xml:space="preserve">
+    <value>מדיניות משנית במצב Kernel מחמיר</value>
+  </data>
+  <data name="StrictKernelModeTeachingTipSubtitleNoItems" xml:space="preserve">
+    <value>אין פריטים ברשת הנתונים של קבצי Kernel שנתגלו</value>
+  </data>
+  <data name="CreatingStrictKernelModePolicyMessage" xml:space="preserve">
+    <value>יוצר מדיניות משנית במצב Kernel מחמיר עבור {0} קבצים</value>
+  </data>
+  <data name="SuccessfullyCreatedStrictKernelModePolicyMessage" xml:space="preserve">
+    <value>נוצרה בהצלחה מדיניות משנית במצב Kernel מחמיר</value>
+  </data>
+  <data name="ScanningSystemForDrivers" xml:space="preserve">
+    <value>סורק את המערכת עבור דרייברים</value>
+  </data>
+  <data name="NoKernelModeDriversDetected" xml:space="preserve">
+    <value>לא זוהו דרייברים במצב Kernel</value>
+  </data>
+  <data name="ScanningKernelModeFilesCount" xml:space="preserve">
+    <value>סורק {0} קבצים</value>
+  </data>
+  <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
+    <value>אירעה שגיאה: {0}</value>
+  </data>
+  <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
+    <value>הסריקה של המערכת עבור דרייברים הושלמה בהצלחה</value>
+  </data>
+  <data name="PFNBasedSupplementalPolicyTitle" xml:space="preserve">
+    <value>מדיניות משנית מבוססת PFN</value>
+  </data>
+  <data name="PFNBasedSupplementalPolicySubtitle" xml:space="preserve">
+    <value>לא נבחרה אפליקציה ליצירת מדיניות משנית עבורה</value>
+  </data>
+  <data name="CreatingPFNSupplementalPolicyMessage" xml:space="preserve">
+    <value>יוצר את המדיניות המשנית המבוססת על שמות משפחת החבילות</value>
+  </data>
+  <data name="SuccessfullyCreatedPFNSupplementalPolicyMessage" xml:space="preserve">
+    <value>המדיניות המשנית נוצרה בהצלחה</value>
+  </data>
+  <data name="EnterCustomPatternTitle" xml:space="preserve">
+    <value>הזן תבנית מותאמת אישית</value>
+  </data>
+  <data name="EnterCustomPatternSubtitle" xml:space="preserve">
+    <value>עליך להזין תבנית מותאמת אישית לכלל הקובץ.</value>
+  </data>
+  <data name="CreatingPatternBasedFileRuleMessage" xml:space="preserve">
+    <value>יוצר את מדיניות המשנית לכלל נתיב קובץ מבוסס תבנית.</value>
+  </data>
+  <data name="SuccessfullyCreatedPatternBasedFileRuleMessage" xml:space="preserve">
+    <value>מדיניות המשנית לכלל נתיב קובץ מבוסס תבנית נוצרה בהצלחה.</value>
+  </data>
+  <data name="SelectedAppsCount" xml:space="preserve">
+    <value>אפליקציות נבחרות: {0}</value>
+  </data>
+  <data name="FilesAndFoldersSupplementalPolicyLabel" xml:space="preserve">
+    <value>מדיניות משנית לקבצים ולתיקיות</value>
+  </data>
+  <data name="CertificatesSupplementalPolicyLabel" xml:space="preserve">
+    <value>מדיניות משנית לתעודות</value>
+  </data>
+  <data name="ISGSupplementalPolicyLabel" xml:space="preserve">
+    <value>מדיניות משנית מבוססת ISG</value>
+  </data>
+  <data name="StrictKernelModeSupplementalPolicyLabel" xml:space="preserve">
+    <value>מדיניות משנית במצב Kernel מחמיר</value>
+  </data>
+  <data name="PFNSupplementalPolicyLabel" xml:space="preserve">
+    <value>מדיניות משנית מבוססת PFN</value>
+  </data>
+  <data name="ConvertingFileToCIPMessage" xml:space="preserve">
+    <value>ממיר {0} ל-CIP</value>
+  </data>
+  <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
+    <value>אירעה בעיה להמיר את קבצי ה-XML ל-CIP: {0}</value>
+  </data>
+  <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
+    <value>כל קבצי ה-XML הנבחרים הומרו בהצלחה לבינרי CIP</value>
+  </data>
+  <data name="ScanningEventLogsMessage" xml:space="preserve">
+    <value>סורק את יומני האירועים...</value>
+  </data>
+  <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
+    <value>אירעה שגיאה במהלך סריקת היומנים: {0}</value>
+  </data>
+  <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
+    <value>הסריקה הושלמה. נמצאו {0} יומנים.</value>
+  </data>
+  <data name="SelectedCodeIntegrityEvtxForScanning" xml:space="preserve">
+    <value>נבחר {0} לסריקת יומני EVTX של Code Integrity</value>
+  </data>
+  <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
+    <value>נבחר {0} לסריקת יומני EVTX של AppLocker</value>
+  </data>
+  <data name="TotalLogsZeroMessage" xml:space="preserve">
+    <value>סה״כ יומנים: 0</value>
+  </data>
+  <data name="TotalLogsCountMessage" xml:space="preserve">
+    <value>סה״כ יומנים: {0}</value>
+  </data>
+  <data name="SelectedFileToAddLogsToMessage" xml:space="preserve">
+    <value>נבחר {0} להוספת היומנים אליו.</value>
+  </data>
+  <data name="SelectedBasePolicyFileMessage" xml:space="preserve">
+    <value>נבחר {0} לשיוך המדיניות המשנית אליו.</value>
+  </data>
+  <data name="InvalidGuidMessage" xml:space="preserve">
+    <value>GUID לא תקין</value>
+  </data>
+  <data name="ProcessingLogsMessage" xml:space="preserve">
+    <value>מעבד את היומנים...</value>
+  </data>
+  <data name="NoLogsUseScanButtonMessage" xml:space="preserve">
+    <value>אין יומנים. יש להשתמש קודם בכפתור הסריקה.</value>
+  </data>
+  <data name="MustSelectOptionMessage" xml:space="preserve">
+    <value>עליך לבחור אפשרות מתוך רשימת יצירת המדיניות</value>
+  </data>
+  <data name="DefaultPolicyNameFormat" xml:space="preserve">
+    <value>מדיניות משנית מיומני אירועים - {0}</value>
+  </data>
+  <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
+    <value>לא נבחר קובץ מדיניות להוספת היומנים אליו.</value>
+  </data>
+  <data name="NoPolicySelectedToAssociateSupplementalMessage" xml:space="preserve">
+    <value>לא נבחר קובץ מדיניות לשיוך המדיניות המשנית אליו.</value>
+  </data>
+  <data name="NoBasePolicyGuidProvidedMessage" xml:space="preserve">
+    <value>לא סופק GUID של מדיניות בסיס לשימוש כ-BasePolicyID של המדיניות המשנית.</value>
+  </data>
+  <data name="ErrorProcessingLogsMessage" xml:space="preserve">
+    <value>אירעה שגיאה במהלך עיבוד היומנים: {0}.</value>
+  </data>
+  <data name="SuccessProcessedLogsMessage" xml:space="preserve">
+    <value>היומנים עובדו בהצלחה וכללו אותם במדיניות.</value>
+  </data>
+  <data name="AddLogsToSelectedPolicy" xml:space="preserve">
+    <value>הוסף יומנים למדיניות הנבחרת</value>
+  </data>
+  <data name="CreatePolicyForSelectedBase" xml:space="preserve">
+    <value>צור מדיניות עבור הבסיס הנבחר</value>
+  </data>
+  <data name="CreatePolicyForBaseGuid" xml:space="preserve">
+    <value>צור מדיניות עבור GUID הבסיס</value>
+  </data>
+  <data name="DefaultCreatePolicy" xml:space="preserve">
+    <value>צור מדיניות</value>
+  </data>
+  <data name="SelectExistingXmlPolicyFileMessage" xml:space="preserve">
+    <value>עליך לבחור קובץ מדיניות XML קיים</value>
+  </data>
+  <data name="PerformingSimulationMessage" xml:space="preserve">
+    <value>מבצע את הסימולציה</value>
+  </data>
+  <data name="ErrorDuringSimulationMessage" xml:space="preserve">
+    <value>אירעה בעיה במהלך הסימולציה: {0}</value>
+  </data>
+  <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
+    <value>הסימולציה הושלמה בהצלחה.</value>
+  </data>
+  <data name="SelectAppControlPolicyFirstMessage" xml:space="preserve">
+    <value>עליך לבחור קודם קובץ מדיניות App Control.</value>
+  </data>
+  <data name="OnlyXmlCipSupportedMessage" xml:space="preserve">
+    <value>נכון לעתה נתמכים רק קבצי XML ובינרי CIP.</value>
+  </data>
+  <data name="LoadingPolicyMessage" xml:space="preserve">
+    <value>טוען את המדיניות</value>
+  </data>
+  <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
+    <value>אירעה בעיה בטעינת קובץ המדיניות הנבחר: {0}</value>
+  </data>
+  <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
+    <value>המדיניות הנבחרת נטענה בהצלחה</value>
+  </data>
+  <data name="CouldNotRemoveFileRuleMessage" xml:space="preserve">
+    <value>לא ניתן להסיר כלל קובץ עם ה-ID {0}</value>
+  </data>
+  <data name="CouldNotRemoveSignatureRuleMessage" xml:space="preserve">
+    <value>לא ניתן להסיר כלל חתימה עם ה-ID {0}</value>
+  </data>
+  <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
+    <value>מדיניות Intune פורקה בהצלחה אך האובייקט הרלוונטי ריק.</value>
+  </data>
+  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
+    <value>אירעה שגיאה בניתוח מספר אפשרות הכלל {0} לערך המחרוזת שלו: {1}</value>
+  </data>
+  <data name="NumberOfPoliciesMessage" xml:space="preserve">
+    <value>מספר המדיניות: {0}</value>
+  </data>
+  <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
+    <value>מזהה האובייקט של מדיניות Intune היה null עבור המדיניות הנבחרת למחיקה</value>
+  </data>
+  <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
+    <value>יש לספק נתיב קובץ או מסמך XML עבור הדסיריאליזציה</value>
+  </data>
+  <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
+    <value>לכלל Deny עם ה-ID {0} יש מאפיין Hash וכן מאפייני קובץ אחרים, מה שהופך אותו ללא חוקי.</value>
+  </data>
+  <data name="DenyRuleNoPropsError" xml:space="preserve">
+    <value>לכלל Deny עם ה-ID {0} אין מאפיין Hash או מאפייני קובץ אחרים, מה שהופך אותו ללא חוקי.</value>
+  </data>
+  <data name="FileAttribHashWithOtherPropsError" xml:space="preserve">
+    <value>לכלל FileAttrib עם ה-ID {0} יש מאפיין Hash וכן מאפייני קובץ אחרים, מה שהופך אותו ללא חוקי.</value>
+  </data>
+  <data name="FileAttribNoPropsError" xml:space="preserve">
+    <value>לכלל FileAttrib עם ה-ID {0} אין מאפיין Hash או מאפייני קובץ אחרים, מה שהופך אותו ללא חוקי.</value>
+  </data>
+  <data name="InvalidCertRootTypeError" xml:space="preserve">
+    <value>נתגלה Cert Root שאין לו סוג TBS או WellKnown, מה שהופך אותו ללא חוקי.</value>
+  </data>
+  <data name="SignerNoCertRootError" xml:space="preserve">
+    <value>ל-Signer עם ה-ID {0} אין אלמנט Cert Root, מה שהופך אותו ללא חוקי.</value>
+  </data>
+  <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
+    <value>נתגלה הגדרת מדיניות שאין לה אלמנט Value תקין.</value>
+  </data>
+  <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
+    <value>נתגלה הגדרת מדיניות שאין לה את אלמנטים Provider, Key או ValueName הנחוצים.</value>
+  </data>
+  <data name="ValidateVersionRangeInvalidMinVersionMessage" xml:space="preserve">
+    <value>מזהה '{0}': minimumVersion '{1}' אינו חוקי.</value>
+  </data>
+  <data name="ValidateVersionRangeInvalidMaxVersionMessage" xml:space="preserve">
+    <value>מזהה '{0}': maximumVersion '{1}' אינו חוקי.</value>
+  </data>
+  <data name="ValidateVersionRangeMinGreaterThanMaxMessage" xml:space="preserve">
+    <value>מזהה '{0}': minimumVersion ({1}) לא יכול להיות גדול מ-maximumVersion ({2}).</value>
+  </data>
+  <data name="MacroNotDefinedMessage" xml:space="preserve">
+    <value>אין מקרו מוגדר עבור הסמל {0}, המופיע ב-{1}.</value>
+  </data>
+  <data name="NoMacroFoundMessage" xml:space="preserve">
+    <value>לא נמצאה מקרו עבור ההתייחסות: '{0}'.</value>
+  </data>
+  <data name="FileRuleHasInvalidTypeMessage" xml:space="preserve">
+    <value>לכלל הקובץ סוג לא חוקי שאינו Deny, Allow או FileAttrib.</value>
+  </data>
+  <data name="SignerCertEkuReferenceError" xml:space="preserve">
+    <value>ל-Signer עם ה-ID {0} יש CertEKU עם ה-ID {1} שאינו מפנה לשום EKU מצוין במדיניות.</value>
+  </data>
+  <data name="SignerFileAttribRefNotFoundError" xml:space="preserve">
+    <value>ל-Signer עם ה-ID {0} יש הפניה ל-FileAttribRef שלא קיים עם RuleID {1}.</value>
+  </data>
+  <data name="FileAttribRefTypeInvalidError" xml:space="preserve">
+    <value>FileAttribRef עם RuleID {0} אינו חוקי. FileAttribRef חייב להתייחס ל-'fileattrib' או 'attribute'.</value>
+  </data>
+  <data name="AllowedSignersSignerIdNotFoundMessage" xml:space="preserve">
+    <value>Signer ID '{0}' במיקום {1} לא נמצא במפת האינדקס של Signer.</value>
+  </data>
+  <data name="AllowedSignersDenyRuleNotFoundMessage" xml:space="preserve">
+    <value>Deny rule ID '{0}' עבור Signer '{1}' בחריגה במיקום {2} לא נמצא במפת האינדקס של כלל הקובץ.</value>
+  </data>
+  <data name="AllowedSignersExceptDenyRuleTypeInvalidMessage" xml:space="preserve">
+    <value>הכלל המופנה במיקום {0} (DenyRuleID '{1}') אינו כלל Deny. כל כניסה ב-ExceptDenyRule חייבת להתייחס לכלל Deny חוקי.</value>
+  </data>
+  <data name="DeniedSignersSignerIdNotFoundMessage" xml:space="preserve">
+    <value>Signer ID '{0}' ב-deniedSigners.DeniedSigner[{1}] לא נמצא במפת האינדקס של Signer.</value>
+  </data>
+  <data name="DeniedSignersExceptAllowRuleNotFoundMessage" xml:space="preserve">
+    <value>ExceptAllowRule ID '{0}' עבור Signer המושהה '{1}' ב-ExceptAllowRule[{2}] לא נמצא במפת האינדקס של כלל הקובץ.</value>
+  </data>
+  <data name="DeniedSignersExceptAllowRuleTypeInvalidMessage" xml:space="preserve">
+    <value>הכלל המופנה ב-fileRuleArray[{0}] עבור AllowRuleID '{1}' הוא מסוג '{2}', לא כלל Allow. כל כניסה ב-ExceptAllowRule חייבת להתייחס לכלל Allow חוקי.</value>
+  </data>
+  <data name="BoolAppSettingMultipleValuesError" xml:space="preserve">
+    <value>נתקלה ביותר מערך אחד עבור סוג ההגדרה bool.</value>
+  </data>
+  <data name="StringAppSettingMultipleValuesError" xml:space="preserve">
+    <value>נתקלה ביותר מערך אחד עבור סוג ההגדרה string.</value>
+  </data>
+  <data name="AppSettingsMissingDefinitionsMessage" xml:space="preserve">
+    <value>נתקלו בהגדרות חסרות עבור הגדרות App Manifest: {0}</value>
+  </data>
+  <data name="AppSettingsUnknownSettingTypeMessage" xml:space="preserve">
+    <value>נתקל בסוג לא ידוע עבור הגדרת היישום: {0}</value>
+  </data>
+  <data name="AppControlCertCheckExistingMessage" xml:space="preserve">
+    <value>בודק אם תעודה עם השם המשותף '{0}' כבר קיימת בחנות האישית של המשתמש.</value>
+  </data>
+  <data name="AppControlCertExistingCountRemovingMessage" xml:space="preserve">
+    <value>{0} תעודות עם השם המשותף '{1}' כבר קיימות במערכת. מסיר אותן</value>
+  </data>
+  <data name="GetAuthenticodeHashAcquireContextError" xml:space="preserve">
+    <value>לא ניתן לרכוש הקשר עבור {0}</value>
+  </data>
+  <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
+    <value>לא ניתן לבצע Hash ל-{0} באמצעות {1}</value>
+  </data>
+  <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
+    <value>משתנה הסביבה SystemDrive הוא null</value>
+  </data>
+  <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
+    <value>מרענן את מדיניות App Control של המערכת</value>
+  </data>
+  <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
+    <value>SiPolicy.p7b נפרסה והמדיניות רועננה.</value>
+  </data>
+  <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
+  </data>
+  <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
+  </data>
+  <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון בקובץ XSD של Code Integrity Schema.</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
+    <value>נתיב סכמה מותאם אישית</value>
+  </data>
+  <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
+    <value>עיון במיקום מותאם אישית לקובץ XSD של Code Integrity Schema.</value>
+  </data>
+  <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
+    <value>החלפת נתיב של Code Integrity Schema</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את דף המיני של חנות Microsoft, שבו ניתן לדרג ובאופן אופציונלי לכתוב חוות דעת על AppControl Manager.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
+    <value>דרג וכתוב חוות דעת</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
+    <value>פותח את דף המיני של חנות Microsoft, שבו ניתן לדרג ובאופן אופציונלי לכתוב חוות דעת על AppControl Manager.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את דף המיני של חנות Microsoft, שבו ניתן לדרג ובאופן אופציונלי לכתוב חוות דעת על AppControl Manager.</value>
+  </data>
+
 </root>

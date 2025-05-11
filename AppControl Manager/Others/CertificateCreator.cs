@@ -41,14 +41,19 @@ internal static class CertificateGenerator
 		string cerFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.cer");
 		string pfxFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.pfx");
 
-		Logger.Write($"Checking if a certificate with the common name '{CommonName}' already exists in the personal user store.");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("AppControlCertCheckExistingMessage"),
+			CommonName));
 
 		// Check see if there are any certificates in the personal store of User certificates with the selected Common Name
 		List<X509Certificate2> possibleExistingCerts = GetCertificatesFromPersonalStore(CommonName);
 
 		if (possibleExistingCerts.Count > 0)
 		{
-			Logger.Write($"{possibleExistingCerts.Count} certificates with the common name '{CommonName}' already exist on the system. Removing them");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("AppControlCertExistingCountRemovingMessage"),
+				possibleExistingCerts.Count,
+				CommonName));
 
 			using X509Store store = new("My", StoreLocation.CurrentUser);
 			store.Open(OpenFlags.MaxAllowed | OpenFlags.IncludeArchived | OpenFlags.OpenExistingOnly);
@@ -78,7 +83,7 @@ internal static class CertificateGenerator
 		_ = UserConfiguration.Set(
 			CertificatePath: cerFilePath,
 			CertificateCommonName: CommonName
-			);
+		);
 
 		return generatedCertificate;
 	}

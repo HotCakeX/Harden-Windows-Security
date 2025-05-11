@@ -94,8 +94,16 @@
                 </customUI:SettingsCardV2>
 
                 <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}" />
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}" Visibility="{x:Bind ViewModel.HardenedProcedureSectionVisibility, Mode=OneWay}" />
                 </customUI:SettingsCardV2>
+
+                <controls:SettingsCard
+                    Click="{x:Bind ViewModel.LaunchRating}"
+                    Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"
+                    x:Uid="RateAndReviewSettingsCard"
+                    IsClickEnabled="True"
+                    ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+                    IsActionIconVisible="True" />
 
             </StackPanel>
 

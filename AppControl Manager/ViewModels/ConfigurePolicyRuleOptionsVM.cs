@@ -41,7 +41,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		{ "Disabled:Flight Signing", GlobalVars.Rizz.GetString("RuleOption_DisabledFlightSigning") },
 		{ "Enabled:Inherit Default Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledInheritDefaultPolicy") },
 		{ "Enabled:Unsigned System Integrity Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
-		{ "Required:EV Signers", GlobalVars.Rizz.GetString("RuleOption_RequiredEVSigners") },
+		{ "Required:EV Signers", GlobalVars.Rizz.GetString("RuleOption_EnabledBootMenuProtection") },
 		{ "Enabled:Advanced Boot Options Menu", GlobalVars.Rizz.GetString("RuleOption_EnabledAdvancedBootOptionsMenu") },
 		{ "Enabled:Boot Audit On Failure", GlobalVars.Rizz.GetString("RuleOption_EnabledBootAuditOnFailure") },
 		{ "Disabled:Script Enforcement", GlobalVars.Rizz.GetString("RuleOption_DisabledScriptEnforcement") },

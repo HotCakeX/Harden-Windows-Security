@@ -443,10 +443,16 @@ public partial class App : Application
 		}
 
 		#endregion
+
+		// Startup update check
+		AppUpdate.CheckAtStartup();
 	}
 
 	private Window? m_window;
 
+	/// <summary>
+	/// Perform initial navigation.
+	/// </summary>
 	private static void InitialNav()
 	{
 		if (IsElevated)

@@ -62,21 +62,42 @@ internal static class CiFileHash
 
 			if (!WinTrust.CryptCATAdminAcquireContext2(ref contextHandle, nint.Zero, hashAlgorithm, nint.Zero, 0))
 			{
-				throw new InvalidOperationException($"Could not acquire context for {hashAlgorithm}");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("GetAuthenticodeHashAcquireContextError"),
+						hashAlgorithm));
 			}
 
 			int hashSize = 0;
 
-			if (!WinTrust.CryptCATAdminCalcHashFromFileHandle3(contextHandle, fileStreamHandle, ref hashSize, nint.Zero, WinTrust.CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
+			if (!WinTrust.CryptCATAdminCalcHashFromFileHandle3(
+					contextHandle,
+					fileStreamHandle,
+					ref hashSize,
+					nint.Zero,
+					WinTrust.CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
 			{
-				throw new InvalidOperationException($"Could not hash {filePath} using {hashAlgorithm}");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("GetAuthenticodeHashCalcFileHashError"),
+						filePath,
+						hashAlgorithm));
 			}
 
 			hashValue = Marshal.AllocHGlobal(hashSize);
 
-			if (!WinTrust.CryptCATAdminCalcHashFromFileHandle3(contextHandle, fileStreamHandle, ref hashSize, hashValue, WinTrust.CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
+			if (!WinTrust.CryptCATAdminCalcHashFromFileHandle3(
+					contextHandle,
+					fileStreamHandle,
+					ref hashSize,
+					hashValue,
+					WinTrust.CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
 			{
-				throw new InvalidOperationException($"Could not hash {filePath} using {hashAlgorithm}");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("GetAuthenticodeHashCalcFileHashError"),
+						filePath,
+						hashAlgorithm));
 			}
 
 			for (int offset = 0; offset < hashSize; offset++)
@@ -87,7 +108,6 @@ internal static class CiFileHash
 				_ = hashString.Append(b.ToString("X2", CultureInfo.InvariantCulture));
 			}
 		}
-
 		finally
 		{
 			if (hashValue != nint.Zero)

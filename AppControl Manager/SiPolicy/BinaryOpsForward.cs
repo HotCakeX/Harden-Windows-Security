@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using AppControlManager.Others;
 
 namespace AppControlManager.SiPolicy;
 
@@ -146,7 +147,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException("File rule has an invalid type other than Deny, Allow, or FileAttrib.");
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -154,8 +155,8 @@ internal static partial class BinaryOpsForward
 	/// Writes a string or macro value (for AppIDs) to the binary writer.
 	/// </summary>
 	internal static void ParseStringMacros(
-		string strs,
-		ref Dictionary<string, string> mapMacroId2Value)
+	string strs,
+	ref Dictionary<string, string> mapMacroId2Value)
 	{
 		if (strs is null)
 		{
@@ -179,14 +180,21 @@ internal static partial class BinaryOpsForward
 				if (!string.IsNullOrEmpty(token))
 				{
 					if (!mapMacroId2Value.TryGetValue(token, out string? value))
-						throw new InvalidOperationException($"There is no macro defined for the token {token}, referenced in the {strs}.");
+						throw new InvalidOperationException(
+							string.Format(
+								GlobalVars.Rizz.GetString("MacroNotDefinedMessage"),
+								token,
+								strs));
 
 					replacements[count++] = value;
 				}
 			}
 
 			if (count == 0)
-				throw new InvalidOperationException($"No macro has been found for the reference: '{strs}'.");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("NoMacroFoundMessage"),
+						strs));
 
 			BodyWriter.Write(count);
 			for (uint i = 0; i < count; i++)
@@ -256,7 +264,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException("File rule has an invalid type other than Deny, Allow, or FileAttrib.");
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -286,7 +294,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException("File rule has an invalid type other than Deny, Allow, or FileAttrib.");
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -328,7 +336,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException("File rule has an invalid type other than Deny, Allow, or FileAttrib.");
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -352,7 +360,7 @@ internal static partial class BinaryOpsForward
 				break;
 
 			default:
-				throw new InvalidOperationException("File rule has an invalid type other than Deny, Allow, or FileAttrib.");
+				throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleHasInvalidTypeMessage"));
 		}
 	}
 
@@ -360,12 +368,11 @@ internal static partial class BinaryOpsForward
 	/// Serializes a Signer into binary format.
 	/// </summary>
 	internal static void ConvertSignerToBinary(
-		Signer signerData,
-		Dictionary<string, uint> ekuIdToIndexMap,
-		Dictionary<string, uint> fileRuleIdToIndexMap,
-		object[]? fileRuleArray)
+	Signer signerData,
+	Dictionary<string, uint> ekuIdToIndexMap,
+	Dictionary<string, uint> fileRuleIdToIndexMap,
+	object[]? fileRuleArray)
 	{
-
 		ArgumentNullException.ThrowIfNull(fileRuleArray);
 
 		uint tbsCertIndicator = 0;
@@ -392,8 +399,10 @@ internal static partial class BinaryOpsForward
 				if (!ekuIdToIndexMap.TryGetValue(signerData.CertEKU[(int)certEkuIndex].ID, out uint foundEkuIndex))
 				{
 					throw new InvalidOperationException(
-						$"The Signer with the ID {signerData.ID} has a CertEKU with the ID {signerData.CertEKU[(int)certEkuIndex].ID} that doesn't point to any specified EKU in the policy."
-					);
+						string.Format(
+							GlobalVars.Rizz.GetString("SignerCertEkuReferenceError"),
+							signerData.ID,
+							signerData.CertEKU[(int)certEkuIndex].ID));
 				}
 				BodyWriter.Write(foundEkuIndex);
 			}
@@ -438,12 +447,19 @@ internal static partial class BinaryOpsForward
 			{
 				if (!fileRuleIdToIndexMap.TryGetValue(signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID, out uint foundFileRuleIndex))
 				{
-					throw new InvalidOperationException($"The Signer with the ID {signerData.ID} references a nonexistent FileAttribRef with the ID rule ID {signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID}.");
+					throw new InvalidOperationException(
+						string.Format(
+							GlobalVars.Rizz.GetString("SignerFileAttribRefNotFoundError"),
+							signerData.ID,
+							signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID));
 				}
 
 				if (fileRuleArray[(int)foundFileRuleIndex] is not FileAttrib)
 				{
-					throw new InvalidOperationException($"The FileAttribRef with the RuleID {signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID} is invalid. A FileAttribRef must reference a 'fileattrib' or 'attribute'.");
+					throw new InvalidOperationException(
+						string.Format(
+							GlobalVars.Rizz.GetString("FileAttribRefTypeInvalidError"),
+							signerData.FileAttribRef[(int)fileAttribRefIndex].RuleID));
 				}
 
 				BodyWriter.Write(foundFileRuleIndex);
@@ -503,12 +519,11 @@ internal static partial class BinaryOpsForward
 	/// Serializes AllowedSigners to binary.
 	/// </summary>
 	internal static void ConvertAllowedSignersToBinary(
-		AllowedSigners? allowedSigners,
-		Dictionary<string, uint> signerIdToIndexMap,
-		Dictionary<string, uint> fileRuleIdToIndexMap,
-		object[]? fileRuleArray)
+	AllowedSigners? allowedSigners,
+	Dictionary<string, uint> signerIdToIndexMap,
+	Dictionary<string, uint> fileRuleIdToIndexMap,
+	object[]? fileRuleArray)
 	{
-
 		ArgumentNullException.ThrowIfNull(fileRuleArray);
 
 		if (allowedSigners is null || allowedSigners.AllowedSigner is null)
@@ -524,7 +539,10 @@ internal static partial class BinaryOpsForward
 			if (!signerIdToIndexMap.TryGetValue(signer.SignerId, out uint foundSignerIndex))
 			{
 				throw new InvalidOperationException(
-					$"Signer ID '{signer.SignerId}' at position {signerIndex} was not found in the signer index map.");
+					string.Format(
+						GlobalVars.Rizz.GetString("AllowedSignersSignerIdNotFoundMessage"),
+						signer.SignerId,
+						signerIndex));
 			}
 
 			BodyWriter.Write(foundSignerIndex);
@@ -539,14 +557,20 @@ internal static partial class BinaryOpsForward
 					if (!fileRuleIdToIndexMap.TryGetValue(exceptionRule.DenyRuleID, out uint foundDenyRuleIndex))
 					{
 						throw new InvalidOperationException(
-							$"Deny rule ID '{exceptionRule.DenyRuleID}' for signer '{signer.SignerId}' exception at index {denyRuleCounter} was not found in the file rule index map.");
+							string.Format(
+								GlobalVars.Rizz.GetString("AllowedSignersDenyRuleNotFoundMessage"),
+								exceptionRule.DenyRuleID,
+								signer.SignerId,
+								denyRuleCounter));
 					}
 
 					if (fileRuleArray[(int)foundDenyRuleIndex] is not Deny)
 					{
 						throw new InvalidOperationException(
-							$"Referenced rule at index {foundDenyRuleIndex} (DenyRuleID '{exceptionRule.DenyRuleID}') is not a Deny rule. " +
-							"Each ExceptDenyRule entry must reference a valid Deny rule.");
+							string.Format(
+								GlobalVars.Rizz.GetString("AllowedSignersExceptDenyRuleTypeInvalidMessage"),
+								foundDenyRuleIndex,
+								exceptionRule.DenyRuleID));
 					}
 
 					BodyWriter.Write(foundDenyRuleIndex);
@@ -563,12 +587,11 @@ internal static partial class BinaryOpsForward
 	/// Serializes DeniedSigners to binary.
 	/// </summary>
 	internal static void ConvertDeniedSignersToBinary(
-		DeniedSigners deniedSigners,
-		Dictionary<string, uint> signerIdToIndexMap,
-		Dictionary<string, uint> fileRuleIdToIndexMap,
-		object[]? fileRuleArray)
+	DeniedSigners deniedSigners,
+	Dictionary<string, uint> signerIdToIndexMap,
+	Dictionary<string, uint> fileRuleIdToIndexMap,
+	object[]? fileRuleArray)
 	{
-
 		ArgumentNullException.ThrowIfNull(fileRuleArray);
 
 		if (deniedSigners is null || deniedSigners.DeniedSigner is null)
@@ -583,7 +606,10 @@ internal static partial class BinaryOpsForward
 			string currentSignerId = deniedSigners.DeniedSigner[signerIndex].SignerId;
 			if (!signerIdToIndexMap.TryGetValue(currentSignerId, out uint foundSignerIndex))
 				throw new InvalidOperationException(
-					$"Signer ID '{currentSignerId}' at deniedSigners.DeniedSigner[{signerIndex}] was not found in the signer index map.");
+					string.Format(
+						GlobalVars.Rizz.GetString("DeniedSignersSignerIdNotFoundMessage"),
+						currentSignerId,
+						signerIndex));
 
 			BodyWriter.Write(foundSignerIndex);
 
@@ -600,7 +626,11 @@ internal static partial class BinaryOpsForward
 					if (!fileRuleIdToIndexMap.TryGetValue(currentAllowRuleId, out uint foundAllowRuleIndex))
 					{
 						throw new InvalidOperationException(
-							$"ExceptAllowRule ID '{currentAllowRuleId}' for denied signer '{currentSignerId}' at ExceptAllowRule[{allowRuleIndex}] was not found in the file rule index map.");
+							string.Format(
+								GlobalVars.Rizz.GetString("DeniedSignersExceptAllowRuleNotFoundMessage"),
+								currentAllowRuleId,
+								currentSignerId,
+								allowRuleIndex));
 					}
 
 					object referencedRule = fileRuleArray[(int)foundAllowRuleIndex];
@@ -608,7 +638,11 @@ internal static partial class BinaryOpsForward
 					{
 						string actualType = referencedRule?.GetType().Name ?? "null";
 						throw new InvalidOperationException(
-							$"Referenced rule at fileRuleArray[{foundAllowRuleIndex}] for AllowRuleID '{currentAllowRuleId}' is type '{actualType}', not an Allow rule. Each ExceptAllowRule entry must reference a valid Allow rule.");
+							string.Format(
+								GlobalVars.Rizz.GetString("DeniedSignersExceptAllowRuleTypeInvalidMessage"),
+								foundAllowRuleIndex,
+								currentAllowRuleId,
+								actualType));
 					}
 
 					BodyWriter.Write(foundAllowRuleIndex);
@@ -741,7 +775,8 @@ internal static partial class BinaryOpsForward
 		{
 			null => Tag,
 			{ Value: [string rawValue] } => bool.Parse(rawValue) ? (byte)1 : (byte)0,
-			_ => throw new InvalidOperationException("Encountered more than 1 value for the bool setting type.")
+			_ => throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("BoolAppSettingMultipleValuesError"))
 		};
 
 		BodyWriter.Write(valueByte);
@@ -757,7 +792,8 @@ internal static partial class BinaryOpsForward
 		{
 			null => null,
 			{ Value: [string single] } => single,
-			_ => throw new InvalidOperationException("Encountered more than 1 value for the string setting type.")
+			_ => throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("StringAppSettingMultipleValuesError"))
 		};
 
 		WriteOptionalStringValue(rawValue);
@@ -793,7 +829,10 @@ internal static partial class BinaryOpsForward
 				{
 					string missingDefinitions = string.Join(',', missingSettings.Select(s => s.Name));
 
-					throw new InvalidOperationException($"Encountered missing definitions for the app manifest settings: {missingDefinitions}");
+					throw new InvalidOperationException(
+						string.Format(
+							GlobalVars.Rizz.GetString("AppSettingsMissingDefinitionsMessage"),
+							missingDefinitions));
 				}
 			}
 
@@ -804,8 +843,8 @@ internal static partial class BinaryOpsForward
 			foreach (SettingDefinition currentDefinitionInLoop in applicationManifest.SettingDefinition)
 			{
 				AppSetting? foundSetting = appRootItem.Setting?
-				.FirstOrDefault(policySetting =>
-					string.Equals(policySetting.Name, currentDefinitionInLoop.Name, StringComparison.OrdinalIgnoreCase));
+					.FirstOrDefault(policySetting =>
+						string.Equals(policySetting.Name, currentDefinitionInLoop.Name, StringComparison.OrdinalIgnoreCase));
 
 				WriteOptionalStringValue(currentDefinitionInLoop.Name);
 
@@ -821,7 +860,10 @@ internal static partial class BinaryOpsForward
 						WriteStringSetAppSetting(foundSetting);
 						break;
 					default:
-						throw new InvalidOperationException($"Encountered an unknown type for the Application Setting: {currentDefinitionInLoop.Type}");
+						throw new InvalidOperationException(
+							string.Format(
+								GlobalVars.Rizz.GetString("AppSettingsUnknownSettingTypeMessage"),
+								currentDefinitionInLoop.Type));
 				}
 
 				uint auditFlag = 0;

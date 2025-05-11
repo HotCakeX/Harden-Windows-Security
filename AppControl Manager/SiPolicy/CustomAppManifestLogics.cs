@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using AppControlManager.Others;
 
 namespace AppControlManager.SiPolicy;
 
@@ -41,32 +42,33 @@ internal static class CustomAppManifestLogics
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(filePath);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
 		}
 		else if (stream != null)
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(stream);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException("Invalid XML: Missing root element.");
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
 		}
 		else
 		{
-			throw new InvalidOperationException("Either filePath or stream must be provided for deserialization.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("NoFilePathOrStreamProvidedValidationError"));
 		}
 
-		if (!string.Equals(root.LocalName, "AppManifest", StringComparison.OrdinalIgnoreCase) || !string.Equals(root.NamespaceURI, NamespaceUri, StringComparison.OrdinalIgnoreCase))
+		if (!string.Equals(root.LocalName, "AppManifest", StringComparison.OrdinalIgnoreCase) ||
+			!string.Equals(root.NamespaceURI, NamespaceUri, StringComparison.OrdinalIgnoreCase))
 		{
-			throw new InvalidOperationException("Invalid XML: Root element must be 'AppManifest' in the correct namespace.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidXmlRootElementNamespaceValidationError"));
 		}
 
 		if (!root.HasAttribute("Id"))
 		{
-			throw new InvalidOperationException("Missing required 'Id' attribute in AppManifest element.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AppManifestMissingIdAttributeValidationError"));
 		}
 		string id = root.GetAttribute("Id");
 		if (string.IsNullOrEmpty(id))
 		{
-			throw new InvalidOperationException("The 'Id' attribute in AppManifest cannot be empty.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AppManifestEmptyIdAttributeValidationError"));
 		}
 
 		List<SettingDefinition> settings = [];
@@ -88,17 +90,17 @@ internal static class CustomAppManifestLogics
 	{
 		if (!elem.HasAttribute("Name"))
 		{
-			throw new InvalidOperationException("Missing required 'Name' attribute in SettingDefinition element.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionMissingNameAttributeValidationError"));
 		}
 		string name = elem.GetAttribute("Name");
 		if (string.IsNullOrEmpty(name))
 		{
-			throw new InvalidOperationException("The 'Name' attribute in SettingDefinition cannot be empty.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionEmptyNameAttributeValidationError"));
 		}
 
 		if (!elem.HasAttribute("Type"))
 		{
-			throw new InvalidOperationException("Missing required 'Type' attribute in SettingDefinition element.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionMissingTypeAttributeValidationError"));
 		}
 		string typeStr = elem.GetAttribute("Type");
 		if (!Enum.TryParse(typeStr, out SettingType type))
@@ -108,7 +110,7 @@ internal static class CustomAppManifestLogics
 
 		if (!elem.HasAttribute("IgnoreAuditPolicies"))
 		{
-			throw new InvalidOperationException("Missing required 'IgnoreAuditPolicies' attribute in SettingDefinition element.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError"));
 		}
 		string ignoreAuditPoliciesStr = elem.GetAttribute("IgnoreAuditPolicies");
 		if (!bool.TryParse(ignoreAuditPoliciesStr, out bool ignoreAuditPolicies))
@@ -135,12 +137,12 @@ internal static class CustomAppManifestLogics
 	{
 		if (manifest is null)
 		{
-			throw new ArgumentNullException(nameof(manifest), "The AppManifest object cannot be null.");
+			throw new ArgumentNullException(nameof(manifest), GlobalVars.Rizz.GetString("AppManifestObjectNullValidationError"));
 		}
 
 		if (string.IsNullOrEmpty(manifest.Id))
 		{
-			throw new InvalidOperationException("The 'Id' property of AppManifest is required and cannot be null or empty.");
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AppManifestPropertyIdNullOrEmptyValidationError"));
 		}
 
 		XmlDocument xmlDoc = new();
@@ -158,11 +160,11 @@ internal static class CustomAppManifestLogics
 			{
 				if (setting is null)
 				{
-					throw new InvalidOperationException("SettingDefinition array contains a null element.");
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionArrayNullElementValidationError"));
 				}
 				if (string.IsNullOrEmpty(setting.Name))
 				{
-					throw new InvalidOperationException("The 'Name' property of SettingDefinition is required and cannot be null or empty.");
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
 				}
 
 				XmlElement settingElem = xmlDoc.CreateElement("SettingDefinition", NamespaceUri);

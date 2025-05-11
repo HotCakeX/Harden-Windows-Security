@@ -35,6 +35,17 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal bool IsElevated => App.IsElevated;
 
+	/// <summary>
+	/// Opens a file picker for Code Integrity Schema path.
+	/// </summary>
+	internal void BrowseForCISchemaPath()
+	{
+		string? path = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XSDFilePickerFilter);
+
+		if (path is not null)
+			App.Settings.CiPolicySchemaPath = path;
+	}
+
 	internal bool UIFlowDirectionToggleSwitch
 	{
 		get; set
@@ -71,12 +82,14 @@ internal sealed partial class SettingsVM : ViewModelBase
 	private static readonly Dictionary<string, int> SupportedLanguages = new(StringComparer.OrdinalIgnoreCase)
 	{
 		{ "en-US", 0 },
-		{ "he", 1 }
+		{ "he", 1 },
+		{ "el", 2 }
 	};
 	private static readonly Dictionary<int, string> SupportedLanguagesReverse = new()
 	{
 		{ 0, "en-US" },
-		{ 1, "he" }
+		{ 1, "he" },
+		{ 2, "el" }
 	};
 
 	internal bool LanguageSectionSettingsExpanderInfoBarIsOpen { get; set => SP(ref field, value); }

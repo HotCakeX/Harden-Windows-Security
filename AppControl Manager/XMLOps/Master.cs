@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.IO;
 using AppControlManager.Others;
 
@@ -53,12 +52,8 @@ internal static class Master
 			NewFilePathRules.CreateDeny(xmlFilePath, incomingData.FilePaths);
 			NewPFNLevelRules.CreateDeny(xmlFilePath, incomingData.PFNRules);
 
-			// Path to the AllowAll XML file on the system
-			string AllowAllFilePath = Path.Combine(Path.GetPathRoot(Environment.SystemDirectory)!, @"Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml");
-
-			// Copy it to the staging area since it's inaccessible in the system directory
 			string finalAllowAllFilePath = Path.Combine(stagingArea!, "AllowAll.xml");
-			File.Copy(AllowAllFilePath, finalAllowAllFilePath, true);
+			File.Copy(GlobalVars.AllowAllTemplatePolicyPath, finalAllowAllFilePath, true);
 
 			// Merge the policy with the AllowAll XML policy since this is a Deny policy type
 			SiPolicy.Merger.Merge(xmlFilePath, [xmlFilePath, finalAllowAllFilePath]);

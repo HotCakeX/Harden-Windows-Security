@@ -4393,6 +4393,11 @@
             for the SpcSpOpusInfo structure
             </summary>
         </member>
+        <member name="T:AppControlManager.Others.GlobalVars">
+            <summary>
+            This class defines constants and other variables used by the entire application
+            </summary>
+        </member>
         <member name="T:AppControlManager.Others.HashMismatchInCertificateException">
             <summary>
             a class to throw a custom exception when the certificate has HashMismatch

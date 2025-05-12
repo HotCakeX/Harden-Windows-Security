@@ -36,7 +36,7 @@ internal static class AppUpdate
 	/// </summary>
 	internal static event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
 
-	private static ViewModels.UpdateVM UpdateVM { get; } = App.AppHost.Services.GetRequiredService<ViewModels.UpdateVM>();
+	private static UpdateVM UpdateVM { get; } = App.AppHost.Services.GetRequiredService<ViewModels.UpdateVM>();
 
 	internal static StoreContext? _StoreContext;
 

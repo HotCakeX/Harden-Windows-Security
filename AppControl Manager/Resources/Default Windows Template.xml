@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy PolicyType="Base Policy" xmlns="urn:schemas-microsoft-com:sipolicy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PolicyID>{F1DE99D7-CF38-4BBA-8B42-39D0EC3BA26E}</PolicyID>
+  <BasePolicyID>{F1DE99D7-CF38-4BBA-8B42-39D0EC3BA26E}</BasePolicyID>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <Rules>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Audit Mode</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Advanced Boot Options Menu</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:UMCI</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Inherit Default Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Update Policy No Reboot</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Dynamic Code Security</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Revoked Expired As Unsigned</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Allow Supplemental Policies</Option>
+    </Rule>
+  </Rules>
+  <EKUs>
+    <EKU ID="ID_EKU_E_0196C2FB45C776098FC3054E9CE9E1D0" FriendlyName="Windows EKU - 1.3.6.1.4.1.311.10.3.6" Value="010A2B0601040182370A0306" />
+    <EKU ID="ID_EKU_E_0196C2FB45C8734189A2421A2221449A" FriendlyName="Early Launch AntiMalware EKU - 1.3.6.1.4.1.311.61.4.1" Value="010A2B0601040182373D0401" />
+    <EKU ID="ID_EKU_E_0196C2FB45C87A388E1509DF365D2110" FriendlyName="Hardware Abstraction Layer EKU - 1.3.6.1.4.1.311.61.5.1" Value="010A2B0601040182373D0501" />
+    <EKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" FriendlyName="WHQL EKU - 1.3.6.1.4.1.311.10.3.5" Value="010A2B0601040182370A0305" />
+    <EKU ID="ID_EKU_E_0196C2FB45C973BBA6A3F98B08A4D23D" FriendlyName="Windows Store EKU - 1.3.6.1.4.1.311.76.3.1" Value="010A2B0601040182374C0301" />
+    <EKU ID="ID_EKU_E_0196C2FB45C970E582370D042534107F" FriendlyName="Windows RT EKU - 1.3.6.1.4.1.311.10.3.21" Value="010A2B0601040182370A0315" />
+    <EKU ID="ID_EKU_E_0196C2FB45C974CDAB7B56B50CAF4074" FriendlyName="Dynamic Code Generation EKU - 1.3.6.1.4.1.311.76.5.1" Value="010A2B0601040182374C0501" />
+    <EKU ID="ID_EKU_E_0196C2FB45C970C690D92302EAC5A765" FriendlyName="AntiMalware EKU - 1.3.6.1.4.1.311.76.11.1" Value="010A2B0601040182374C0B01" />
+    <EKU ID="ID_EKU_E_0196C2FB45C977BFAA57D217C1949156" FriendlyName="Enclave EKU - 1.3.6.1.4.1.311.10.3.42" Value="010A2B0601040182370A032A" />
+  </EKUs>
+  <FileRules />
+  <Signers>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C876F5926E4522EAC70419" Name="MincryptKnownRootMicrosoftTestRoot2010">
+      <CertRoot Type="Wellknown" Value="0A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C9764AB3FD5124889C23FE" Name="MincryptKnownRootMicrosoftDMDRoot2005">
+      <CertRoot Type="Wellknown" Value="0C" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45CA706F888587E454BB230B" Name="MincryptKnownRootMicrosoftTestRoot2010">
+      <CertRoot Type="Wellknown" Value="0A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C77AD0999BAD667F733174" Name="Microsoft Product Root 2010 Windows EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C776098FC3054E9CE9E1D0" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C870DA913FFF4DD24BEF9D" Name="Microsoft Product Root 2010 ELAM EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8734189A2421A2221449A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C876EF81640E3180E17C33" Name="Microsoft Product Root 2010 HAL EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C87A388E1509DF365D2110" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C879F3B147C69E42433269" Name="Microsoft Product Root 2010 WHQL EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C877C88F721B28C0B6EFD1" Name="Microsoft Product Root WHQL EKU SHA1">
+      <CertRoot Type="Wellknown" Value="05" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C87810BFF73CC26D530C67" Name="Microsoft Product Root WHQL EKU MD5">
+      <CertRoot Type="Wellknown" Value="04" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C87E0CB4D90357D58275A3" Name="Microsoft Flighting Root 2014 Windows EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C776098FC3054E9CE9E1D0" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C877A6BC2F6D6F745061A4" Name="Microsoft Flighting Root 2014 ELAM EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8734189A2421A2221449A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C87061854DF91BD191F31B" Name="Microsoft Flighting Root 2014 HAL EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C87A388E1509DF365D2110" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C87F8A9D9726F627E047B1" Name="Microsoft Flighting Root 2014 WHQL EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97B8D934F0AA75DC7D7EB" Name="Microsoft Product Root 2010 Windows EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C776098FC3054E9CE9E1D0" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97A82980A27B2CA2953BC" Name="Microsoft Product Root 2010 ELAM EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8734189A2421A2221449A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97A77A347D197FF80AD8F" Name="Microsoft Product Root 2010 HAL EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C87A388E1509DF365D2110" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C9784C87D28BAEB2400AAD" Name="Microsoft Product Root 2010 WHQL EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97A9D8FA93547B2A07476" Name="Microsoft Product Root WHQL EKU SHA1">
+      <CertRoot Type="Wellknown" Value="05" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97645951E5D1C199AF919" Name="Microsoft Product Root WHQL EKU MD5">
+      <CertRoot Type="Wellknown" Value="04" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C974FBAD4E070ACCFA36DB" Name="Microsoft Flighting Root 2014 Windows EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C776098FC3054E9CE9E1D0" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97F73BE9F7AD7A9BCF285" Name="Microsoft Flighting Root 2014 ELAM EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8734189A2421A2221449A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97040AB41233F4EB5D43B" Name="Microsoft Flighting Root 2014 HAL EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C87A388E1509DF365D2110" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97E24BC12091E4183A1C0" Name="Microsoft Flighting Root 2014 WHQL EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C8750BBE352CDC384D9B19" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C971448F44DBF408A496FF" Name="Microsoft MarketPlace PCA 2011">
+      <CertRoot Type="TBS" Value="FC9EDE3DCCA09186B2D3BF9B738A2050CB1A554DA2DCADB55F3F72EE17721378" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C973BBA6A3F98B08A4D23D" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C9703882554D18DB2F48E5" Name="Microsoft Flighting Root 2014 Store EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C973BBA6A3F98B08A4D23D" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97396BF1991C4DC0DDC38" Name="Microsoft Product Root 2010 RT EKU">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C970E582370D042534107F" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C977FC98096F4767713696" Name="MincryptKnownRootMicrosoftProductRoot2010">
+      <CertRoot Type="Wellknown" Value="06" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C974CDAB7B56B50CAF4074" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C97FF180D84249283A78D4" Name="MincryptKnownRootMicrosoftStandardRoot2011">
+      <CertRoot Type="Wellknown" Value="07" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C970C690D92302EAC5A765" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C973A8A8525E98782518A5" Name="Microsoft Flighting Root 2014 RT EKU">
+      <CertRoot Type="Wellknown" Value="0E" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C970E582370D042534107F" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C9789B83057B060C2F941F" Name="Microsoft Standard Root 2011 RT EKU">
+      <CertRoot Type="Wellknown" Value="07" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C970E582370D042534107F" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB45C974FC9064AC8F068A4033" Name="Microsoft Standard Root 2011 Enclave EKU">
+      <CertRoot Type="Wellknown" Value="07" />
+      <CertEKU ID="ID_EKU_E_0196C2FB45C977BFAA57D217C1949156" />
+    </Signer>
+  </Signers>
+  <SigningScenarios>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity">
+      <ProductSigners>
+        <AllowedSigners>
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C9764AB3FD5124889C23FE" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45CA706F888587E454BB230B" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97B8D934F0AA75DC7D7EB" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97A82980A27B2CA2953BC" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97A77A347D197FF80AD8F" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C9784C87D28BAEB2400AAD" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97A9D8FA93547B2A07476" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97645951E5D1C199AF919" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C974FBAD4E070ACCFA36DB" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97F73BE9F7AD7A9BCF285" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97040AB41233F4EB5D43B" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97E24BC12091E4183A1C0" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C971448F44DBF408A496FF" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C9703882554D18DB2F48E5" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97396BF1991C4DC0DDC38" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C977FC98096F4767713696" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C97FF180D84249283A78D4" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C973A8A8525E98782518A5" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C9789B83057B060C2F941F" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C974FC9064AC8F068A4033" />
+        </AllowedSigners>
+      </ProductSigners>
+    </SigningScenario>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel Mode Code Integrity">
+      <ProductSigners>
+        <AllowedSigners>
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C876F5926E4522EAC70419" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C77AD0999BAD667F733174" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C870DA913FFF4DD24BEF9D" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C876EF81640E3180E17C33" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C879F3B147C69E42433269" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C877C88F721B28C0B6EFD1" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C87810BFF73CC26D530C67" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C87E0CB4D90357D58275A3" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C877A6BC2F6D6F745061A4" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C87061854DF91BD191F31B" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB45C87F8A9D9726F627E047B1" />
+        </AllowedSigners>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+  <UpdatePolicySigners />
+  <CiSigners>
+    <CiSigner SignerId="ID_SIGNER_A_0196C2FB45C971448F44DBF408A496FF" />
+  </CiSigners>
+  <HvciOptions>2</HvciOptions>
+  <Settings>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
+      <Value>
+        <String>Default Windows Template</String>
+      </Value>
+    </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Id">
+      <Value>
+        <String>04122024</String>
+      </Value>
+    </Setting>
+  </Settings>
+</SiPolicy>

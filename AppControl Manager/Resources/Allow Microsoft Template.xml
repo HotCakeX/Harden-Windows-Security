@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy PolicyType="Base Policy" xmlns="urn:schemas-microsoft-com:sipolicy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PolicyID>{3F257CAD-2E49-4403-90D3-F202232DAE25}</PolicyID>
+  <BasePolicyID>{3F257CAD-2E49-4403-90D3-F202232DAE25}</BasePolicyID>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <Rules>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Advanced Boot Options Menu</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:UMCI</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Inherit Default Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Dynamic Code Security</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Update Policy No Reboot</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Allow Supplemental Policies</Option>
+    </Rule>
+  </Rules>
+  <EKUs>
+    <EKU ID="ID_EKU_E_0196C2FB9D8B7B5D867C49363FD091E0" FriendlyName="Windows Store EKU - 1.3.6.1.4.1.311.76.3.1 Windows Store" Value="010A2B0601040182374C0301" />
+  </EKUs>
+  <FileRules />
+  <Signers>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D897E7285F50F1744180B38" Name="MincryptKnownRootMicrosoftProductRoot1997">
+      <CertRoot Type="Wellknown" Value="04" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7ED1ABF0B3869B5CAED7" Name="MincryptKnownRootMicrosoftProductRoot2001">
+      <CertRoot Type="Wellknown" Value="05" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7DE6B3481387FF1120FC" Name="MincryptKnownRootMicrosoftProductRoot2010">
+      <CertRoot Type="Wellknown" Value="06" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7309AB1D470C8A58E3FC" Name="MincryptKnownRootMicrosoftStandardRoot2011">
+      <CertRoot Type="Wellknown" Value="07" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A709A81CF55481C298BA2" Name="MincryptKnownRootMicrosoftCodeVerificationRoot2006">
+      <CertRoot Type="Wellknown" Value="08" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7CEAA568F084D400C432" Name="MincryptKnownRootMicrosoftDMDRoot2005">
+      <CertRoot Type="Wellknown" Value="0C" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A72479DC26DCE6FB9F142" Name="MincryptKnownRootMicrosoftFlightRoot2014">
+      <CertRoot Type="Wellknown" Value="0E" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A75A69B21B840BD0E87E5" Name="MincryptKnownRootMicrosoftTestRoot2010">
+      <CertRoot Type="Wellknown" Value="0A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7B91B655EE00075DFFC8" Name="MincryptKnownRootMicrosoftProductRoot1997">
+      <CertRoot Type="Wellknown" Value="04" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7183A9C90AE79FCE5692" Name="MincryptKnownRootMicrosoftProductRoot2001">
+      <CertRoot Type="Wellknown" Value="05" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7A248A7AE245DE30C739" Name="MincryptKnownRootMicrosoftProductRoot2010">
+      <CertRoot Type="Wellknown" Value="06" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7152B81CEBFC2F1C6D66" Name="MincryptKnownRootMicrosoftStandardRoot2011">
+      <CertRoot Type="Wellknown" Value="07" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7D6DA3DA1E5D7E3B8C1D" Name="MincryptKnownRootMicrosoftCodeVerificationRoot2006">
+      <CertRoot Type="Wellknown" Value="08" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7DF2B49899EEA3366ECE" Name="MincryptKnownRootMicrosoftDMDRoot2005">
+      <CertRoot Type="Wellknown" Value="0C" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8A7817839E74F749E987F9" Name="MincryptKnownRootMicrosoftFlightRoot2014">
+      <CertRoot Type="Wellknown" Value="0E" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8D78B4BCA648CE2DA91829" Name="MincryptKnownRootMicrosoftTestRoot2010">
+      <CertRoot Type="Wellknown" Value="0A" />
+    </Signer>
+    <Signer ID="ID_SIGNER_A_0196C2FB9D8B7D789FDA15415901E68F" Name="Microsoft MarketPlace PCA 2011">
+      <CertRoot Type="TBS" Value="FC9EDE3DCCA09186B2D3BF9B738A2050CB1A554DA2DCADB55F3F72EE17721378" />
+      <CertEKU ID="ID_EKU_E_0196C2FB9D8B7B5D867C49363FD091E0" />
+    </Signer>
+  </Signers>
+  <SigningScenarios>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity">
+      <ProductSigners>
+        <AllowedSigners>
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7B91B655EE00075DFFC8" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7183A9C90AE79FCE5692" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7A248A7AE245DE30C739" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7152B81CEBFC2F1C6D66" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7D6DA3DA1E5D7E3B8C1D" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7DF2B49899EEA3366ECE" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7817839E74F749E987F9" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8D78B4BCA648CE2DA91829" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8B7D789FDA15415901E68F" />
+        </AllowedSigners>
+      </ProductSigners>
+    </SigningScenario>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel Mode Code Integrity">
+      <ProductSigners>
+        <AllowedSigners>
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D897E7285F50F1744180B38" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7ED1ABF0B3869B5CAED7" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7DE6B3481387FF1120FC" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7309AB1D470C8A58E3FC" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A709A81CF55481C298BA2" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A7CEAA568F084D400C432" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A72479DC26DCE6FB9F142" />
+          <AllowedSigner SignerId="ID_SIGNER_A_0196C2FB9D8A75A69B21B840BD0E87E5" />
+        </AllowedSigners>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+  <UpdatePolicySigners />
+  <CiSigners>
+    <CiSigner SignerId="ID_SIGNER_A_0196C2FB9D8B7D789FDA15415901E68F" />
+  </CiSigners>
+  <HvciOptions>2</HvciOptions>
+  <Settings>
+    <Setting Provider="AllHostIds" Key="{0468C085-CA5B-11D0-AF08-00609797F0E0}" ValueName="EnterpriseDefinedClsId">
+      <Value>
+        <Boolean>true</Boolean>
+      </Value>
+    </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
+      <Value>
+        <String>Allow Microsoft Template</String>
+      </Value>
+    </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Id">
+      <Value>
+        <String>022422</String>
+      </Value>
+    </Setting>
+  </Settings>
+</SiPolicy>

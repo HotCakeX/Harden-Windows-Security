@@ -93,8 +93,8 @@
                     <ToggleSwitch IsOn="{x:Bind AppSettings.AutoCheckForUpdateAtStartup, Mode=TwoWay}"/>
                 </customUI:SettingsCardV2>
 
-                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}" Visibility="{x:Bind ViewModel.HardenedProcedureSectionVisibility, Mode=OneWay}" />
+                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" Visibility="{x:Bind ViewModel.HardenedProcedureSectionVisibility, Mode=OneWay}">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}" />
                 </customUI:SettingsCardV2>
 
                 <controls:SettingsCard

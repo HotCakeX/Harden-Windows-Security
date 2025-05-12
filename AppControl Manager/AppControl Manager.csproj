@@ -361,7 +361,10 @@
     <None Remove="Pages\ValidatePolicy.xaml" />
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
     <None Remove="Pages\ViewFileCertificates.xaml" />
+    <None Remove="Resources\Allow All Policy.xml" />
+    <None Remove="Resources\Allow Microsoft Template.xml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
+    <None Remove="Resources\Default Windows Template.xml" />
     <None Remove="Resources\EmptyPolicy.xml" />
     <None Remove="Resources\ISGBasedSupplementalPolicy.xml" />
     <None Remove="Resources\StrictKernelMode.xml" />
@@ -388,7 +391,16 @@
     <Content Include="CppInterop\ScheduledTaskManager-x64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Allow All Policy.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Allow Microsoft Template.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Default Windows Template.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\EmptyPolicy.xml">

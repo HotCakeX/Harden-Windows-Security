@@ -461,9 +461,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			GetBlockRules(StagingArea, deploy);
 
-		Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
-
-		File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml", tempPolicyPath, true);
+		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
 
 		Logger.Write("Resetting the policy ID and assigning policy name");
 
@@ -551,9 +549,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			GetBlockRules(StagingArea, deploy);
 
-		Logger.Write("Copying the DefaultWindows.xml from Windows directory to the Staging Area");
-
-		File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml", tempPolicyPath, true);
+		File.Copy(GlobalVars.DefaultWindowsTemplatePolicyPath, tempPolicyPath, true);
 
 		Logger.Write("Resetting the policy ID and assigning policy name");
 
@@ -738,10 +734,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
 			GetBlockRules(StagingArea, deploy);
 
-		Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
-
-		File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml", tempPolicyPath, true);
-
+		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
 
 		CiRuleOptions.Set(
 			tempPolicyPath,

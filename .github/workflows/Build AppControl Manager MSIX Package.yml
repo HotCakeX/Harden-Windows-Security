@@ -132,24 +132,24 @@ jobs:
 
           ### ManageDefender
 
-          MSBuild.exe 'Excluded Code\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+          MSBuild.exe 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-          Copy-Item -Path 'Excluded Code\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
+          Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
 
-          MSBuild.exe 'Excluded Code\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+          MSBuild.exe 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-          Copy-Item -Path 'Excluded Code\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
+          Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
 
 
           ### ScheduledTaskManager
 
-          MSBuild.exe 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+          MSBuild.exe 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-          Copy-Item -Path 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
+          Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
 
-          MSBuild.exe 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+          MSBuild.exe 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-          Copy-Item -Path 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
+          Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
 
           #endregion
 

@@ -39,7 +39,6 @@ internal static class CertificatePresence
 	/// <returns></returns>
 	internal static bool InferCertificatePresence(SiPolicy.SiPolicy policyObject, string certificatePath, string certCN)
 	{
-
 		// Create a certificate object from the .cer file
 		X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
 
@@ -49,11 +48,13 @@ internal static class CertificatePresence
 		// Get the Common Name of the certificate
 		string CertCommonName = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false);
 
-
 		// Make sure the certificate that user selected matches the user-selected certificate Common Name
 		if (!string.Equals(certCN, CertCommonName, StringComparison.OrdinalIgnoreCase))
 		{
-			Logger.Write($"The selected common name is {certCN} but the common name of the certificate you selected is {CertCommonName} which doesn't match it.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedCertCommonNameMismatchMessage"),
+				certCN,
+				CertCommonName));
 			return false;
 		}
 
@@ -66,7 +67,6 @@ internal static class CertificatePresence
 		{
 			_ = signerDictionary.TryAdd(signer.ID, signer);
 		}
-
 
 		// Loop over each updatePolicySignerID in the policy
 		foreach (string updatePolicySigner in updatePolicySignerIDs)
@@ -82,7 +82,8 @@ internal static class CertificatePresence
 
 					// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
 					// Also compare the Signer's name with the selected certificate's Common Name
-					if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) && string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
+						string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
 					{
 						return true;
 					}
@@ -90,8 +91,7 @@ internal static class CertificatePresence
 			}
 		}
 
-		Logger.Write("No UpdatePolicySigner found with the same TBS hash and Common Name as the selected certificate in the policy XML file you selected.");
-
+		Logger.Write(GlobalVars.Rizz.GetString("NoMatchingUpdatePolicySignerMessage"));
 		return false;
 	}
 
@@ -109,12 +109,19 @@ internal static class CertificatePresence
 		X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
 
 		// Get the Common Name of the certificate
-		string CertCommonName = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false);
+		string CertCommonName = CryptoAPI.GetNameString(
+			CertObject.Handle,
+			CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE,
+			null,
+			false);
 
 		// Make sure the certificate that user selected matches the user-selected certificate Common Name
 		if (!string.Equals(certCN, CertCommonName, StringComparison.OrdinalIgnoreCase))
 		{
-			Logger.Write($"The selected common name is {certCN} but the common name of the certificate you selected is {CertCommonName} which doesn't match it.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedCertCommonNameMismatchMessage"),
+				certCN,
+				CertCommonName));
 			return false;
 		}
 

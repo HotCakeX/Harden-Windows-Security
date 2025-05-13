@@ -275,7 +275,14 @@ internal static class FileUtility
 		// Get the elapsed time
 		TimeSpan elapsedTime = stopwatch.Elapsed;
 
-		Logger.Write($"File enumeration took {elapsedTime.Hours} hours and {elapsedTime.Minutes} minutes and {elapsedTime.Seconds} seconds to complete.");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("FileEnumerationDurationMessage"),
+				elapsedTime.Hours,
+				elapsedTime.Minutes,
+				elapsedTime.Seconds
+			)
+		);
 
 		return (output, output.Count);
 	}

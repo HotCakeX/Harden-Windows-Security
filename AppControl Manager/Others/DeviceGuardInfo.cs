@@ -179,17 +179,17 @@ internal static class DeviceGuardInfo
 
 		try
 		{
-			Logger.Write("Attempting to deserialize the Device Guard JSON result.");
+			Logger.Write(GlobalVars.Rizz.GetString("AttemptingToDeserializeDeviceGuardJsonResultMessage"));
 
 			DeviceGuardInteropClass? deviceGuardResult = JsonSerializer.Deserialize(jsonResult, DeviceGuardJsonContext.Default.DeviceGuardInteropClass);
 
 			return deviceGuardResult is null
-					? throw new InvalidOperationException($"Device Guard JSON deserialization failed. Raw JSON: {jsonResult}")
+					? throw new InvalidOperationException(GlobalVars.Rizz.GetString("DeviceGuardDeserializationFailedMessage") + jsonResult)
 					: deviceGuardResult;
 		}
 		catch (JsonException ex)
 		{
-			throw new InvalidOperationException($"Device Guard JSON deserialization failed. Raw JSON: {jsonResult}", ex);
+			throw new InvalidOperationException(GlobalVars.Rizz.GetString("DeviceGuardDeserializationFailedMessage") + jsonResult, ex);
 		}
 
 

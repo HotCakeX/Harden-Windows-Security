@@ -42,7 +42,12 @@ internal static class SignToolHelper
 		// Build the arguments for the process
 		string arguments = $"sign /v /n \"{certCN}\" /p7 . /p7co 1.3.6.1.4.1.311.79.1 /fd certHash \"{ciPath.Name}\"";
 
-		Logger.Write($"Signing {ciPath.FullName}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("SigningCodeIntegrityPolicyFileMessage"),
+				ciPath.FullName
+			)
+		);
 
 		// Set up the process start info
 		ProcessStartInfo startInfo = new()
@@ -67,19 +72,31 @@ internal static class SignToolHelper
 		string output = process.StandardOutput.ReadToEnd();
 		string error = process.StandardError.ReadToEnd();
 
-		// Log the output and error
+		// Log the output
 		Logger.Write(output);
 
 		// Check if there is any error and throw an exception if there is
 		if (!string.IsNullOrEmpty(error))
 		{
-			throw new InvalidOperationException($"SignTool failed with exit code {process.ExitCode}. Error: {error}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("SignToolFailedWithExitCodeErrorMessage"),
+					process.ExitCode,
+					error
+				)
+			);
 		}
 
 		// Check the exit code
 		if (process.ExitCode != 0)
 		{
-			throw new InvalidOperationException($"SignTool failed with exit code {process.ExitCode}. Error: {error}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("SignToolFailedWithExitCodeErrorMessage"),
+					process.ExitCode,
+					error
+				)
+			);
 		}
 	}
 
@@ -97,7 +114,9 @@ internal static class SignToolHelper
 
 		string packageName = "microsoft.windows.sdk.buildtools"; // Important that this stays all lower case
 
-		Logger.Write("Finding the latest version of the microsoft.windows.sdk.buildtools package from NuGet");
+		Logger.Write(
+			GlobalVars.Rizz.GetString("FindingLatestVersionOfBuildToolsPackageMessage")
+		);
 
 		// Get the list of versions
 		Uri versionsUrl = new($"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json");
@@ -111,7 +130,13 @@ internal static class SignToolHelper
 		// Construct the download link for the latest version's .nupkg
 		Uri downloadUrl = new($"https://api.nuget.org/v3-flatcontainer/{packageName}/{latestVersion}/{packageName}.{latestVersion}.nupkg");
 
-		Logger.Write($"Downloading the latest .nupkg package file version '{latestVersion}' from the following URL: {downloadUrl}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("DownloadingLatestNuPkgVersionMessage"),
+				latestVersion,
+				downloadUrl
+			)
+		);
 
 		// Download the .nupkg file
 		string filePath = Path.Combine(stagingArea.FullName, $"{packageName}.{latestVersion}.nupkg");
@@ -121,13 +146,23 @@ internal static class SignToolHelper
 			downloadStream.CopyTo(fileStream);
 		}
 
-		Logger.Write($"Downloaded package to {filePath}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("DownloadedNuPkgToMessage"),
+				filePath
+			)
+		);
 
 		// Extract the .nupkg file
 		string extractPath = Path.Combine(stagingArea.FullName, "extracted");
 		ZipFile.ExtractToDirectory(filePath, extractPath, true);
 
-		Logger.Write($"Extracted package to {extractPath}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("ExtractedPackageToMessage"),
+				extractPath
+			)
+		);
 
 
 		string binDirectoryPath = Path.Combine(extractPath, "bin");
@@ -155,10 +190,14 @@ internal static class SignToolHelper
 
 		Directory.Delete(stagingArea.ToString(), true);
 
-		Logger.Write($"Path to signtool.exe: {finalSignToolPath}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("PathToSignToolMessage"),
+				finalSignToolPath
+			)
+		);
 
 		return finalSignToolPath;
-
 	}
 
 
@@ -218,11 +257,11 @@ internal static class SignToolHelper
 		// If Sign tool path wasn't provided by parameter or it doesn't exist on the file system, try to detect it automatically
 		if (string.IsNullOrWhiteSpace(filePath) && !Path.Exists(filePath))
 		{
-
 			try
 			{
-
-				Logger.Write("SignTool.exe path was not provided by parameter, trying to detect it automatically");
+				Logger.Write(
+					GlobalVars.Rizz.GetString("SignToolPathNotProvidedByParameterMessage")
+				);
 
 				string baseDir = @"C:\Program Files (x86)\Windows Kits\10\bin";
 				string targetArchitecture = GetArchitecture();
@@ -243,38 +282,56 @@ internal static class SignToolHelper
 					if (Verify(constructedFinalPath))
 					{
 						signToolPath = constructedFinalPath;
-						Logger.Write($"Successfully detected the SignTool.exe on the system: {constructedFinalPath}");
+						Logger.Write(
+							string.Format(
+								GlobalVars.Rizz.GetString("SuccessfullyDetectedSignToolOnSystemMessage"),
+								constructedFinalPath
+							)
+						);
 					}
 				}
-
 			}
 			catch (Exception ex)
 			{
-				Logger.Write($"Failed to detect SignTool.exe path automatically: {ex.Message}");
+				Logger.Write(
+					string.Format(
+						GlobalVars.Rizz.GetString("FailedToDetectSignToolPathAutomaticallyMessage"),
+						ex.Message
+					)
+				);
 			}
-
 		}
-
 		// If Sign tool path was provided by parameter, use it
 		else
 		{
-			Logger.Write("SignTool.exe path was provided by parameter");
+			Logger.Write(
+				GlobalVars.Rizz.GetString("SignToolPathProvidedByParameterMessage")
+			);
 
 			if (Verify(filePath))
 			{
-				Logger.Write("The provided SignTool.exe is valid");
+				Logger.Write(
+					GlobalVars.Rizz.GetString("ProvidedSignToolIsValidMessage")
+				);
 				signToolPath = filePath;
 			}
 			else
 			{
-				Logger.Write("The provided SignTool.exe is not valid");
+				Logger.Write(
+					GlobalVars.Rizz.GetString("ProvidedSignToolIsNotValidMessage")
+				);
 			}
 		}
 
 		// Download the SignTool.exe if it's still null
 		signToolPath ??= Download();
 
-		Logger.Write($"Setting the SignTool path in the common user configurations to: {signToolPath}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("SettingSignToolPathInUserConfigMessage"),
+				signToolPath
+			)
+		);
 		_ = UserConfiguration.Set(SignToolCustomPath: signToolPath);
 
 		return signToolPath;

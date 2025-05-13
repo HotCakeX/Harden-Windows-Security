@@ -64,7 +64,9 @@ internal static class AppUpdate
 		if (isUpdateAvailable)
 		{
 			// Set the text for the button in the update page
-			UpdateVM.UpdateButtonContent = $"Install version {onlineAvailableVersion}";
+			UpdateVM.UpdateButtonContent = string.Format(
+				GlobalVars.Rizz.GetString("InstallVersionMessage"),
+				onlineAvailableVersion);
 		}
 		else
 		{

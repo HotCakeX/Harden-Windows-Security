@@ -138,7 +138,9 @@ internal static class LocalFilesScan
 							// If the file has HashMismatch, Hash rule will be created for it since the FileSignatureResults will be empty and file will be detected as unsigned
 							catch (HashMismatchInCertificateException)
 							{
-								Logger.Write($"The file '{file.FullName}' has hash mismatch, Hash based rule will be created for it.");
+								Logger.Write(string.Format(
+									GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
+									file.FullName));
 							}
 
 							bool fileIsSigned = false;
@@ -157,7 +159,9 @@ internal static class LocalFilesScan
 								}
 								catch (HashMismatchInCertificateException)
 								{
-									Logger.Write($"The file '{file.FullName}' has hash mismatch.");
+									Logger.Write(string.Format(
+										GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
+										file.FullName));
 								}
 							}
 							else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
@@ -168,7 +172,9 @@ internal static class LocalFilesScan
 								}
 								catch (HashMismatchInCertificateException)
 								{
-									Logger.Write($"The file '{file.FullName}' has hash mismatch.");
+									Logger.Write(string.Format(
+										GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
+										file.FullName));
 								}
 							}
 
@@ -232,7 +238,7 @@ internal static class LocalFilesScan
 									}
 									catch
 									{
-										Logger.Write("Failed to get the Opus data of the current chain package");
+										Logger.Write(GlobalVars.Rizz.GetString("FailedToGetOpusDataMessage"));
 									}
 
 									// If the Leaf Certificate exists in the current package
@@ -277,7 +283,9 @@ internal static class LocalFilesScan
 													// Set it to true so we don't search for ECC Signed certificates in other signers of the file
 													IsECCSigned = true;
 
-													Logger.Write($"ECC Signed File Detected: {currentFileIdentity.FilePath}. Will create Hash rules for it.");
+													Logger.Write(string.Format(
+														GlobalVars.Rizz.GetString("EccSignedFileDetectedMessage"),
+														currentFileIdentity.FilePath));
 												}
 											}
 										}
@@ -322,7 +330,9 @@ internal static class LocalFilesScan
 													// Set it to true so we don't search for ECC Signed certificates in other signers of the file
 													IsECCSigned = true;
 
-													Logger.Write($"ECC Signed File Detected: {currentFileIdentity.FilePath}. Will create Hash rules for it.");
+													Logger.Write(string.Format(
+														GlobalVars.Rizz.GetString("EccSignedFileDetectedMessage"),
+														currentFileIdentity.FilePath));
 												}
 											}
 										}
@@ -340,26 +350,36 @@ internal static class LocalFilesScan
 						}
 						catch (IOException ex) when (ex.HResult == unchecked((int)0x80070020)) // File in use by another process
 						{
-							Logger.Write($"Skipping the file '{file.FullName}' because it is being used by another process.");
+							Logger.Write(string.Format(
+								GlobalVars.Rizz.GetString("SkippingFileInUseMessage"),
+								file.FullName));
 						}
 						catch (IOException ex) when (ex.HResult == unchecked((int)0x80070780)) // File cannot be accessed by the system
 						{
-							Logger.Write($"Skipping the file '{file.FullName}' because it cannot be accessed by the system.");
+							Logger.Write(string.Format(
+								GlobalVars.Rizz.GetString("SkippingFileCannotBeAccessedMessage"),
+								file.FullName));
 						}
 						// Custom "Could not hash file via SHA1" error
 						// Either thrown from CiFileHash.GetCiFileHashes or CiFileHash.GetAuthenticodeHash
 						catch (Exception ex) when (ex.HResult == -2146233079)
 						{
-							Logger.Write($"Skipping the file '{file.FullName}' because it could not be hashed via SHA1.");
+							Logger.Write(string.Format(
+								GlobalVars.Rizz.GetString("SkippingFileHashingFailedMessage"),
+								file.FullName));
 						}
 						catch (IOException ex) when (ex.HResult == -2147024894) // FileNotFoundException (0x80070002)
 						{
-							Logger.Write($"Skipping the file '{file.FullName}' because it could not be found.");
+							Logger.Write(string.Format(
+								GlobalVars.Rizz.GetString("SkippingFileNotFoundMessage"),
+								file.FullName));
 						}
 						// Defender files in Program Data directory can throw this
 						catch (UnauthorizedAccessException)
 						{
-							Logger.Write($"Skipping the file '{file.FullName}' because Access denied.");
+							Logger.Write(string.Format(
+								GlobalVars.Rizz.GetString("SkippingFileAccessDeniedMessage"),
+								file.FullName));
 						}
 
 					}

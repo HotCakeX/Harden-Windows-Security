@@ -129,7 +129,9 @@ internal static class CiRuleOptions
 		)
 	{
 
-		Logger.Write($"Configuring the policy rule options for: {filePath}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("ConfiguringPolicyRuleOptionsForMessage"),
+			filePath));
 
 		// Instantiate the policy
 		SiPolicy.SiPolicy policyObj = Management.Initialize(filePath, null);
@@ -285,11 +287,15 @@ internal static class CiRuleOptions
 
 		foreach (OptionType option in toAdd)
 		{
-			Logger.Write($"Adding Rule Option: {option}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("AddingRuleOptionMessage"),
+				option));
 		}
 		foreach (OptionType option in toRemove)
 		{
-			Logger.Write($"Removing Rule Option: {option}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("RemovingRuleOptionMessage"),
+				option));
 		}
 		#endregion
 

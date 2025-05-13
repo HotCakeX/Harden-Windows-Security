@@ -267,7 +267,7 @@ internal static class CertificateGenerator
 		// List of all known certificate store names
 		string[] allStoreNames =
 		[
-			"My", // Personal / Certificates
+				"My", // Personal / Certificates
                 "Root", // Trusted Root Certification Authorities / Certificates
                 "CA", // Intermediate Certification Authorities / Certificates
                 "AuthRoot", // Third-Party Root Certification Authorities / Certificates
@@ -291,7 +291,10 @@ internal static class CertificateGenerator
 				{
 					// Certificate found with the matching CN, so delete it
 					store.Remove(cert);
-					Logger.Write($"Deleted certificate with CN: {subjectName} from store: {storeName}");
+					Logger.Write(string.Format(
+						GlobalVars.Rizz.GetString("DeletedCertificateFromStoreMessage"),
+						subjectName,
+						storeName));
 				}
 			}
 

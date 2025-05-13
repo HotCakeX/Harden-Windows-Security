@@ -17,7 +17,7 @@
 
 namespace AppControlManager.Others;
 
-// TODO: Incompatible with Native AOT
+// Incompatible with Native AOT
 
 /*
 

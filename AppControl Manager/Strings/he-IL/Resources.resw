@@ -3599,9 +3599,6 @@
   <data name="NoPolicySelectedToAddLogsMessage" xml:space="preserve">
     <value>לא נבחר קובץ מדיניות להוספת היומנים אליו.</value>
   </data>
-  <data name="NoPolicySelectedToAssociateSupplementalMessage" xml:space="preserve">
-    <value>לא נבחר קובץ מדיניות לשיוך המדיניות המשנית אליו.</value>
-  </data>
   <data name="NoBasePolicyGuidProvidedMessage" xml:space="preserve">
     <value>לא סופק GUID של מדיניות בסיס לשימוש כ-BasePolicyID של המדיניות המשנית.</value>
   </data>
@@ -3611,14 +3608,8 @@
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>היומנים עובדו בהצלחה וכללו אותם במדיניות.</value>
   </data>
-  <data name="AddLogsToSelectedPolicy" xml:space="preserve">
-    <value>הוסף יומנים למדיניות הנבחרת</value>
-  </data>
   <data name="CreatePolicyForSelectedBase" xml:space="preserve">
     <value>צור מדיניות עבור הבסיס הנבחר</value>
-  </data>
-  <data name="CreatePolicyForBaseGuid" xml:space="preserve">
-    <value>צור מדיניות עבור GUID הבסיס</value>
   </data>
   <data name="DefaultCreatePolicy" xml:space="preserve">
     <value>צור מדיניות</value>
@@ -3809,5 +3800,568 @@
   <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
     <value>פותח את דף המיני של חנות Microsoft, שבו ניתן לדרג ובאופן אופציונלי לכתוב חוות דעת על AppControl Manager.</value>
   </data>
-
+<data name="VerifyButtonText" xml:space="preserve">
+    <value>אמת</value>
+</data>
+<data name="DownloadingSignToolButtonText" xml:space="preserve">
+    <value>מוריד את SignTool</value>
+</data>
+<data name="VerificationSuccessfulText" xml:space="preserve">
+    <value>האימות הושלם בהצלחה</value>
+</data>
+<data name="PleaseSelectCertificateFileMessage" xml:space="preserve">
+    <value>אנא בחר קובץ תעודה.</value>
+</data>
+<data name="CertificateFilePathNotExistMessage" xml:space="preserve">
+    <value>הנתיב לקובץ התעודה שנבחר אינו קיים</value>
+</data>
+<data name="CertificateExtensionInvalidMessage" xml:space="preserve">
+    <value>עליך לבחור נתיב לקובץ תעודה עם סיומת (.cer).</value>
+</data>
+<data name="PleaseSelectCertificateCommonNameMessage" xml:space="preserve">
+    <value>אנא בחר שם רגיל (Common Name) של תעודה מתוך ההצעות.</value>
+</data>
+<data name="CertificateCommonNameNotFoundMessage" xml:space="preserve">
+    <value>לא נמצאה תעודה בחנות האישית של המשתמש הנוכחי עם שם רגיל זה</value>
+</data>
+<data name="CertificateNotInPolicyMessage" xml:space="preserve">
+    <value>התעודה הנבחרת אינה קיימת בקובץ מדיניות XML כ-UpdatePolicySigner או ששמו הרגיל של הבחירה אינו תואם לשם הרגיל של התעודה, ולכן לא ניתן להשתמש בה לחתימה מחדש של המדיניות. אנא בחר בתעודה הנכונה.</value>
+</data>
+<data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
+    <value>קובץ התעודה ושם הרגיל שנבחר אינם תואמים.</value>
+</data>
+<data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
+    <value>אנא בחר את הנתיב ל-SignTool.exe או אפשר את אפשרות ההורדה האוטומטית.</value>
+</data>
+<data name="SignToolNotExistMessage" xml:space="preserve">
+    <value>SignTool.exe אינו נמצא בנתיב הנבחר. ניתן לאפשר את אפשרות ההורדה האוטומטית אם אין ברשותך אותו.</value>
+</data>
+<data name="SignToolExtensionInvalidMessage" xml:space="preserve">
+    <value>הנתיב ל-SignTool חייב להסתיים ב (.exe). ניתן לאפשר את אפשרות ההורדה האוטומטית אם אין ברשותך אותו.</value>
+</data>
+<data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
+    <value>אנא בחר את קובץ מדיניות ה-XML של המדיניות שמוסרת.</value>
+</data>
+<data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
+    <value>הנתיב לקובץ מדיניות ה-XML שנבחר אינו קיים</value>
+</data>
+<data name="XmlPolicyExtensionInvalidMessage" xml:space="preserve">
+    <value>עליך לבחור נתיב לקובץ XML עם סיומת (.xml).</value>
+</data>
+<data name="XmlPolicyNotDeployedMessage" xml:space="preserve">
+    <value>קובץ מדיניות ה-XML הנבחר לא מותקן במערכת.</value>
+</data>
+<data name="XmlPolicyNotBeingRemovedMessage" xml:space="preserve">
+    <value>קובץ מדיניות ה-XML הנבחר אינו זה שמוסר.</value>
+</data>
+<data name="SupplementalPoliciesRemovalMessage" xml:space="preserve">
+    <value>ניתן להסיר מדיניות משלימה באופן רגיל ללא צורך בחתימה מחדש.</value>
+</data>
+<data name="CertificateNotInPolicyRemovalMessage" xml:space="preserve">
+    <value>התעודה הנבחרת אינה קיימת בקובץ מדיניות ה-XML כ-UpdatePolicySigner או ששמו הרגיל של הבחירה אינו תואם לשם הרגיל של התעודה, ולכן לא ניתן להשתמש בה לחתימה מחדש של המדיניות בתהליך ההסרה. אנא בחר בתעודה הנכונה.</value>
+</data>
+<data name="ReturningCachedSecurityCatalogScanResult" xml:space="preserve">
+    <value>מחזיר תוצאה ממטמון סריקת קטלוג אבטחה</value>
+</data>
+<data name="IncludingSecurityCatalogsScanCountMessage" xml:space="preserve">
+    <value>כולל {0} קטלוגי אבטחה בתהליך הסריקה</value>
+</data>
+<data name="DuplicateCertCommonNameWarning" xml:space="preserve">
+    <value>יש יותר מתעודה אחת עם השם הרגיל '{0}' בחנות האישית של המשתמש הנוכחי. ניתן להשתמש כרגע רק בתעודות ללא שמות רגילים כפולים.</value>
+</data>
+<data name="NoMountpointFoundMessage" xml:space="preserve">
+    <value>לא נמצא נקודת עגינה</value>
+</data>
+<data name="ReplacingECCSignedItemMessage" xml:space="preserve">
+    <value>מחליף פריט FileIdentity עם IsECCSigned == false/null בפריט חדש עם IsECCSigned == true עבור הקובץ בשם {0} וב-hash SHA256 {1}.</value>
+</data>
+<data name="ReplacingUnsignedItemMessage" xml:space="preserve">
+    <value>מחליף פריט FileIdentity לא חתום בפריט חתום עבור הקובץ בשם {0} וב-hash SHA256 {1}.</value>
+</data>
+<data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
+    <value>מחליף פריט FileIdentity ישן בפריט חדש ביומנים עבור הקובץ בשם {0} וב-hash SHA256 {1}.</value>
+</data>
+<data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
+    <value>לא נמצאו יומני שלמות קוד</value>
+</data>
+<data name="TotalCodeIntegrityLogsMessage" xml:space="preserve">
+    <value>סך יומני שלמות הקוד: {0}</value>
+</data>
+<data name="NoAppLockerEventsFoundMessage" xml:space="preserve">
+    <value>לא נמצאו אירועי AppLocker.</value>
+</data>
+<data name="TotalAppLockerLogsMessage" xml:space="preserve">
+    <value>סך יומני AppLocker: {0}</value>
+</data>
+<data name="SelectedCertCommonNameMismatchMessage" xml:space="preserve">
+    <value>השם הרגיל שנבחר הוא {0} אך השם הרגיל של התעודה שבחרת הוא {1} ואינו תואם.</value>
+</data>
+<data name="NoMatchingUpdatePolicySignerMessage" xml:space="preserve">
+    <value>לא נמצא UpdatePolicySigner עם אותו hash TBS ושם רגיל כפי שבחרת בקובץ מדיניות ה-XML</value>
+</data>
+<data name="FileHashMismatchRuleCreationMessage" xml:space="preserve">
+    <value>הקובץ '{0}' לא תואם ב-hash ולא ניתן ליצור עבורו כללי Signer, במקום זאת יווצר כלל מבוסס hash.</value>
+</data>
+<data name="FailedToGetOpusDataMessage" xml:space="preserve">
+    <value>לא הצליח לקבל את נתוני ה-Opus של חבילת השרשרת הנוכחית.</value>
+</data>
+<data name="EccSignedFileDetectedMessage" xml:space="preserve">
+    <value>זוהה קובץ חתום ב-ECC: {0}. יווצרו עבורו כללי hash מכיוון ש-App Control ב-Windows עדיין אינו תומך בקבצים החתומים בתעודות ECC.</value>
+</data>
+<data name="SkippingFileInUseMessage" xml:space="preserve">
+    <value>מדלגים על הקובץ '{0}' מכיוון שהוא בשימוש על-ידי תהליך אחר.</value>
+</data>
+<data name="SkippingFileCannotBeAccessedMessage" xml:space="preserve">
+    <value>מדלגים על הקובץ '{0}' מכיוון שהמערכת אינה יכולה לגשת אליו.</value>
+</data>
+<data name="SkippingFileHashingFailedMessage" xml:space="preserve">
+    <value>מדלגים על הקובץ '{0}' מכיוון שלא ניתן לחשב עבורו hash באמצעות SHA1.</value>
+</data>
+<data name="SkippingFileNotFoundMessage" xml:space="preserve">
+    <value>מדלגים על הקובץ '{0}' מכיוון שלא נמצא.</value>
+</data>
+<data name="SkippingFileAccessDeniedMessage" xml:space="preserve">
+    <value>מדלגים על הקובץ '{0}' מכיוון שהגישה נדחתה.</value>
+</data>
+<data name="RunningAppControlSimulationMessage" xml:space="preserve">
+    <value>מריצים סימולציית App Control עם {0} חוטים</value>
+</data>
+<data name="CheckingFilePathRulesMessage" xml:space="preserve">
+    <value>בודק אם לקובץ מדיניות ה-XML יש כללי FilePath</value>
+</data>
+<data name="SkippingSecurityCatalogsMessage" xml:space="preserve">
+    <value>מדלגים על קטלוגי אבטחה בסימולציה.</value>
+</data>
+<data name="GettingHashValuesOfFileRulesMessage" xml:space="preserve">
+    <value>מקבל את ערכי ה-hash של כל כללי הקבצים המבוססים על hash בקובץ מדיניות ה-XML שסיפקת</value>
+</data>
+<data name="GettingSupportedFilePathsMessage" xml:space="preserve">
+    <value>מקבל את כל נתיבי הקבצים שה-App Control תומך בהם מתוך התיקיה שסיפקת</value>
+</data>
+<data name="NoValidFilesSelectedMessage" xml:space="preserve">
+    <value>אין קבצים בתיקיה הנבחרת הנתמכים על-ידי מנוע ה-App Control.</value>
+</data>
+<data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
+    <value>עושה לולאה על כל קובץ נתמך</value>
+</data>
+<data name="XmlFileAllowsAllFilesMessage" xml:space="preserve">
+    <value>בקובץ ה-XML שסיפקת '{0}' יש כלל שמאפשר את כל הקבצים.</value>
+</data>
+<data name="CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage" xml:space="preserve">
+    <value>יוצר משימה מתוזמנת לעדכון מהיר שבועי של רשימת חסימת דרייברים מומלצת על-ידי Microsoft</value>
+</data>
+<data name="DriversBlockListLastUpdatedMessage" xml:space="preserve">
+    <value>המסמך המכיל את רשימת חסימת הדרייברים ב-GitHub עודכן לאחרונה ב-{0}</value>
+</data>
+<data name="ErrorRetrievingAdditionalDriverBlockRulesInfoMessage" xml:space="preserve">
+    <value>אירעה שגיאה בשליפת מידע נוסף הקשור לכללי חסימת דרייברים מומלצים על-ידי Microsoft.</value>
+</data>
+<data name="PolicyFileCreatedSavedMessage" xml:space="preserve">
+    <value>קובץ המדיניות נוצר ונשמר ב-{0}</value>
+</data>
+<data name="ResettingPolicyIdAndAssigningPolicyNameMessage" xml:space="preserve">
+    <value>מאפס את מזהה המדיניות ומשייך שם למדיניות</value>
+</data>
+<data name="ConvertingPolicyFileToCipBinaryMessage" xml:space="preserve">
+    <value>ממיר את קובץ המדיניות לבינארי בפורמט .CIP</value>
+</data>
+<data name="DeployingStrictKernelModePolicyMessage" xml:space="preserve">
+    <value>מפעיל את מדיניות Strict Kernel-mode עם המזהה {0}</value>
+</data>
+<data name="GettingLatestPolicyFromOfficialRepoMessage" xml:space="preserve">
+    <value>מושך את {0} העדכני ביותר מאחסון GitHub הרשמי של Microsoft</value>
+</data>
+<data name="AssigningPolicyNameAndResettingPolicyIDMessage" xml:space="preserve">
+    <value>משייך שם למדיניות ומאפס את מזהה המדיניות</value>
+</data>
+<data name="CheckingIfPolicyIsAlreadyDeployedMessage" xml:space="preserve">
+    <value>בודק אם מדיניות {0} כבר מותקנת</value>
+</data>
+<data name="PolicyAlreadyDeployedUpdatingUsingSameGuidMessage" xml:space="preserve">
+    <value>מדיניות {0} כבר מותקנת, מעדכן אותה באמצעות אותו GUID שהוא {1}.</value>
+</data>
+<data name="PolicyNotDeployedDeployingNowMessage" xml:space="preserve">
+    <value>מדיניות {0} לא מותקנת, מתקינה אותה כעת.</value>
+</data>
+<data name="NoXmlContentFoundForUserModeBlockRulesErrorMessage" xml:space="preserve">
+    <value>לא נמצא תוכן XML במקור GitHub של Microsoft עבור כללי חסימת מצב משתמש מומלצים.</value>
+</data>
+<data name="ConfiguringPolicyRuleOptionsForMessage" xml:space="preserve">
+    <value>מגדיר את אפשרויות כלל המדיניות עבור: {0}</value>
+</data>
+<data name="AddingRuleOptionMessage" xml:space="preserve">
+    <value>מוסיף אפשרות כלל: {0}</value>
+</data>
+<data name="RemovingRuleOptionMessage" xml:space="preserve">
+    <value>מסיר אפשרות כלל: {0}</value>
+</data>
+<data name="XmlValidationErrorMessage" xml:space="preserve">
+    <value>שגיאת אימות ב-{0}: {1}</value>
+</data>
+<data name="CertificateCommonNameInvalidErrorMessage" xml:space="preserve">
+    <value>{0} אינו חלק מ-Subject CN של אף אחת מהתעודות המופעלות</value>
+</data>
+<data name="PolicyFileNotSignedErrorMessage" xml:space="preserve">
+    <value>קובץ המדיניות שצוין '{0}' אינו חתום. אנא ספק קובץ מדיניות חתום.</value>
+</data>
+<data name="PolicyFileSignedErrorMessage" xml:space="preserve">
+    <value>קובץ המדיניות שצוין '{0}' חתום. אנא ספק קובץ מדיניות לא חתום.</value>
+</data>
+<data name="ReadingUserConfigurationsFileMessage" xml:space="preserve">
+    <value>מנסה לנתח ולקרוא את קובץ הגדרות המשתמש הנוכחי</value>
+</data>
+<data name="AppControlManagerFolderCreatedMessage" xml:space="preserve">
+    <value>תיקיית AppControl Manager בתיקיית Program Files נוצרה מכיוון שלא הייתה קיימת.</value>
+</data>
+<data name="ErrorReadingUserConfigMessage" xml:space="preserve">
+    <value>שגיאה בקריאה או בניתוח קובץ הגדרות המשתמש: {0}. תיווצר הגדרה חדשה עם ערכי ברירת מחדל.</value>
+</data>
+<data name="SpecifiedPropertiesRemovedAndSetToNullMessage" xml:space="preserve">
+    <value>המאפיינים שצוינו הוסרו והוגדרו כ-null בקובץ UserConfigurations.json.</value>
+</data>
+<data name="KeyRemovedFromSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
+    <value>המפתח '{0}' הוסר ממילון SignedPolicyStage1RemovalTimes.</value>
+</data>
+<data name="KeyNotFoundInSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
+    <value>המפתח '{0}' לא נמצא במילון SignedPolicyStage1RemovalTimes.</value>
+</data>
+<data name="UserConfigurationsFileUpdatedSuccessfullyMessage" xml:space="preserve">
+    <value>קובץ UserConfigurations.json עודכן בהצלחה.</value>
+</data>
+<data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">  
+    <value>זוג מפתח-ערך נוסף ל-SignedPolicyStage1RemovalTimes: {0} = {1}</value>
+</data>
+<data name="AuthResultImmutableErrorMessage" xml:space="preserve">
+    <value>AuthResult אינו ניתן לשינוי ולא יש לשנותו לאחר האתחול.</value>
+</data>
+<data name="AccountImmutableErrorMessage" xml:space="preserve">
+    <value>Account אינו ניתן לשינוי ולא יש לשנותו לאחר האתחול.</value>
+</data>
+<data name="SignInProcessCancelledMessage" xml:space="preserve">
+    <value>תהליך הכניסה בוטל</value>
+</data>
+<data name="SuccessfullyLoggedOutSelectedAccountMessage" xml:space="preserve">
+    <value>ניתקת בהצלחה מהחשבון הנבחר.</value>
+</data>
+<data name="SuccessfullySetActiveAccountMessage" xml:space="preserve">
+    <value>חשבון המשתמש ({0}) נקבע בהצלחה כחשבון פעיל עבור הדף הנוכחי.</value>
+</data>
+<data name="SigningIntoMSGraphMessage" xml:space="preserve">
+    <value>מתחבר ל-MSGraph</value>
+</data>
+<data name="SuccessfullySignedIntoMSGraphMessage" xml:space="preserve">
+    <value>ההתחברות ל-MSGraph הושלמה בהצלחה</value>
+</data>
+<data name="SignInProcessCancelledByUserMessage" xml:space="preserve">
+    <value>תהליך ההתחברות ל-MSGraph בוטל על-ידי המשתמש</value>
+</data>
+<data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
+    <value>אירעה שגיאה בהתחברות ל-MSGraph: {0}</value>
+</data>
+<data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
+    <value>השאילתא של MDE Advanced Hunting הושלמה בהצלחה.</value>
+</data>
+<data name="FailedToRunMDEAdvancedHuntingQueryMessage" xml:space="preserve">
+    <value>לא הצליח להפעיל את MDE Advanced Hunting Query. קוד סטטוס: {0}</value>
+</data>
+<data name="ErrorDetailsMessage" xml:space="preserve">
+    <value>פרטי שגיאה: {0}</value>
+</data>
+<data name="SuccessfullyFetchedGroupsMessage" xml:space="preserve">
+    <value>{0} קבוצות הושגו בהצלחה.</value>
+</data>
+<data name="NoGroupsFoundInResponseMessage" xml:space="preserve">
+    <value>לא נמצאו קבוצות בתשובה.</value>
+</data>
+<data name="FailedToFetchGroupsMessage" xml:space="preserve">
+    <value>לא הצליח להוציא את הקבוצות. קוד סטטוס: {0}</value>
+</data>
+<data name="InvalidSignInMethodUsedMessage" xml:space="preserve">
+    <value>שיטת התחברות לא חוקית שימשה.</value>
+</data>
+<data name="SignInOperationCanceledByCallerMessage" xml:space="preserve">
+    <value>פעולת ההתחברות בוטלה על-ידי המבקש.</value>
+</data>
+<data name="DuplicateAccountReplacedMessage" xml:space="preserve">
+    <value>חשבון בשם משתמש {0} עם אותם הרשאות, TenantID ומזהה כבר קיים, מסיר אותו ומחליף אותו בחדש.</value>
+</data>
+<data name="SignedOutAccountMessage" xml:space="preserve">
+    <value>התנתקת מהחשבון: {0}</value>
+</data>
+<data name="PolicyCreatedMessage" xml:space="preserve">
+    <value>{0} הוא המזהה של המדיניות שנוצרה</value>
+</data>
+<data name="PolicyAssignedSuccessfullyToGroupMessage" xml:space="preserve">
+    <value>המדיניות הוקצתה בהצלחה לקבוצה: {0}</value>
+</data>
+<data name="FailedToAssignPolicyToGroupMessage" xml:space="preserve">
+    <value>לא הצליח להקצות מדיניות לקבוצה: {0}. קוד סטטוס: {1}</value>
+</data>
+<data name="ErrorDetailsForGroupMessage" xml:space="preserve">
+    <value>פרטי שגיאה עבור קבוצה {0}: {1}</value>
+</data>
+<data name="CustomPolicyCreatedSuccessMessage" xml:space="preserve">
+    <value>מדיניות מותאמת אישית נוצרה בהצלחה:</value>
+</data>
+<data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
+    <value>לא הצליח ליצור מדיניות מותאמת אישית. קוד סטטוס: {0}</value>
+</data>
+<data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>גודל קובץ מדיניות CIP חורג מהמגבלה של {0} בתים.</value>
+</data>
+<data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+    <value>הקונפיגורציות של המכשירים הושגו בהצלחה.</value>
+</data>
+<data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
+    <value>לא הצליח לקבל את קונפיגורציות המכשירים. קוד סטטוס: {0}</value>
+</data>
+<data name="PolicyDeletedSuccessfullyMessage" xml:space="preserve">
+    <value>המדיניות {0} נמחקה בהצלחה.</value>
+</data>
+<data name="FailedToDeletePolicyExceptionMessage" xml:space="preserve">
+    <value>לא הצליח למחוק את המדיניות {0}. קוד סטטוס: {1}. פרטי שגיאה: {2}</value>
+</data>
+<data name="WinTrustReturnCodeMessage" xml:space="preserve">
+    <value>קוד החזרה של WinTrust: {0}</value>
+</data>
+<data name="FileTamperedHashMismatchMessage" xml:space="preserve">
+    <value>הקובץ '{0}' שונה ויש חוסר התאמה ב-hash.</value>
+</data>
+<data name="InstallVersionMessage" xml:space="preserve">
+    <value>התקן גרסה {0}</value>
+</data>
+<data name="DeletedCertificateFromStoreMessage" xml:space="preserve">
+    <value>נמחקה תעודה עם השם הרגיל: {0} מהחנות: {1}</value>
+</data>
+<data name="CryptAcquireContextFailedMessage" xml:space="preserve">
+    <value>CryptAcquireContext נכשל: {0}</value>
+</data>
+<data name="CryptCreateHashFailedMessage" xml:space="preserve">
+    <value>CryptCreateHash נכשל: {0}</value>
+</data>
+<data name="CryptHashDataFailedMessage" xml:space="preserve">
+    <value>CryptHashData נכשל: {0}</value>
+</data>
+<data name="CryptGetHashParamSizeFailedMessage" xml:space="preserve">
+    <value>CryptGetHashParam (get size) נכשל: {0}</value>
+</data>
+<data name="CryptGetHashParamValueFailedMessage" xml:space="preserve">
+    <value>CryptGetHashParam (get value) נכשל: {0}</value>
+</data>
+<data name="NoHandlerForAlgorithmMessage" xml:space="preserve">
+    <value>אין טיפול עבור האלגוריתם {0}</value>
+</data>
+<data name="HexStringCannotBeNullOrEmptyMessage" xml:space="preserve">
+    <value>מחרוזת Hex לא יכולה להיות null או ריקה</value>
+</data>
+<data name="InputStringNotValidUInt64Message" xml:space="preserve">
+    <value>מחרוזת הקלט אינה מספר 64 ביט ללא סימן חוקי.</value>
+</data>
+<data name="ErrorConvertingNumberToVersionMessage" xml:space="preserve">
+    <value>שגיאה בהמרת מספר לגרסה.</value>
+</data>
+<data name="CommandExecutionFailedMessage" xml:space="preserve">
+    <value>ביצוע הפקודה נכשל עם קוד שגיאה {0}</value>
+</data>
+<data name="PolicyIdCannotBeNullOrEmptyMessage" xml:space="preserve">
+    <value>מזהה המדיניות לא יכול להיות null או ריק.</value>
+</data>
+<data name="CommandExecutionFailedWithOutputMessage" xml:space="preserve">
+    <value>ביצוע הפקודה נכשל עם קוד שגיאה {0}. פלט: {1}</value>
+</data>
+<data name="CipPathCannotBeNullOrEmptyMessage" xml:space="preserve">
+    <value>CipPath לא יכול להיות null או ריק.</value>
+</data>
+<data name="CipFileNotFoundMessage" xml:space="preserve">
+    <value>הקובץ '{0}' אינו קיים.</value>
+</data>
+<data name="DeployingCipFileMessage" xml:space="preserve">
+    <value>מפעיל את קובץ CIP הבא: {0}</value>
+</data>
+<data name="InvalidXmlStructureSiPolicyNodeNotFoundMessage" xml:space="preserve">
+    <value>מבנה XML לא חוקי, לא נמצא צומת SiPolicy</value>
+</data>
+<data name="SignersNodeNotFoundMessage" xml:space="preserve">
+    <value>לא נמצא צומת Signers</value>
+</data>
+<data name="FailedToRetrieveUMCIProductSignersNodeMessage" xml:space="preserve">
+    <value>לא הצליח ליצור או לשלוף את UMCI_ProductSignersNode</value>
+</data>
+<data name="FailedToRetrieveKMCIProductSignersNodeMessage" xml:space="preserve">
+    <value>לא הצליח ליצור או לשלוף את KMCI_ProductSignersNode</value>
+</data>
+<data name="AllowedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
+    <value>צומת AllowedSigners של Product Signers עבור {0} לא נמצא למרות שנוצר.</value>
+</data>
+<data name="FileRulesRefNodeNotFoundDespiteCreationMessage" xml:space="preserve">
+    <value>צומת FileRulesRef של Product Signers עבור {0} לא נמצא למרות שנוצר.</value>
+</data>
+<data name="DeniedSignersNodeNotFoundDespiteCreationMessage" xml:space="preserve">
+    <value>צומת DeniedSigners של Product Signers עבור {0} לא נמצא למרות שנוצר.</value>
+</data>
+<data name="GetPoliciesCiToolExeErrorMessage" xml:space="preserve">
+    <value>הייתה בעיה בהרצת CiTool.exe.</value>
+</data>
+<data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
+    <value>מגדיר ומפעיל את שירותי ISG הדרושים</value>
+</data>
+<data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
+    <value>מנסה לדסיריאליזציה של תוצאת Device Guard JSON.</value>
+</data>
+<data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
+    <value>הדסיריאליזציה של Device Guard JSON נכשלה. JSON גולמי:</value>
+</data>
+<data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>מגדיל את גודל יומן שלמות הקוד ב-1MB מכיוון שהשטח הפנוי הנוכחי קטן מ-1MB.</value>
+</data>
+<data name="ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage" xml:space="preserve">
+    <value>גודל היומן שסופק קטן או שווה ל-1MB. לא בוצעו שינויים.</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>מגדיר את גודל יומן שלמות הקוד ל-{0:N2}MB.</value>
+</data>
+<data name="FileRequiresElevatedPermissionsMessage" xml:space="preserve">
+    <value>הקובץ "{0}" דורש הרשאות מורמות.</value>
+</data>
+<data name="CouldNotGetExFileInfoErrorMessage" xml:space="preserve">
+    <value>לא ניתן לקבל את ExFileInfo של הקובץ: {0} - שגיאה: {1}</value>
+</data>
+<data name="FileEnumerationDurationMessage" xml:space="preserve">
+    <value>מיפוי הקבצים ארך {0} שעות ו-{1} דקות ו-{2} שניות.</value>
+</data>
+<data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
+    <value>הפקודה '{0} {1}' נכשלה עם קוד יציאה {2}. שגיאה: {3}</value>
+</data>
+<data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
+    <value>CoCreateInstance נכשל עם HRESULT: 0x{0:X}</value>
+</data>
+<data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <value>בקשת העלאה בוטלה על-ידי המשתמש.</value>
+</data>
+<data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
+    <value>ActivationManager נכשל עם HRESULT: 0x{0:X}</value>
+</data>
+<data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
+    <value>מסיר את בלוקי SupplementalPolicySigners וה-Signers המתאימים להם.</value>
+</data>
+<data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
+    <value>חותם על {0}</value>
+</data>
+<data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
+    <value>SignTool נכשל עם קוד יציאה {0}. שגיאה: {1}</value>
+</data>
+<data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
+    <value>מוצא את הגרסה העדכנית ביותר של חבילת microsoft.windows.sdk.buildtools מ-NuGet</value>
+</data>
+<data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
+    <value>מוריד את גרסת קובץ .nupkg האחרונה '{0}' מה-URL הבא: {1}</value>
+</data>
+<data name="DownloadedNuPkgToMessage" xml:space="preserve">
+    <value>הוריד את החבילה אל {0}</value>
+</data>
+<data name="ExtractedPackageToMessage" xml:space="preserve">
+    <value>חילץ את החבילה אל {0}</value>
+</data>
+<data name="PathToSignToolMessage" xml:space="preserve">
+    <value>הנתיב ל-signtool.exe: {0}</value>
+</data>
+<data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
+    <value>הנתיב ל-SignTool.exe לא סופק בפרמטר, מנסה לאתר אותו אוטומטית</value>
+</data>
+<data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
+    <value>זיהוי SignTool.exe במערכת הושלם בהצלחה: {0}</value>
+</data>
+<data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
+    <value>לא הצליח לזהות אוטומטית את הנתיב ל-SignTool.exe: {0}</value>
+</data>
+<data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
+    <value>הנתיב ל-SignTool.exe סופק בפרמטר</value>
+</data>
+<data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
+    <value>SignTool.exe שסופק תקין</value>
+</data>
+<data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
+    <value>SignTool.exe שסופק אינו תקין</value>
+</data>
+<data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
+    <value>מגדיר את הנתיב ל-SignTool בהגדרות המשתמש המשותפות ל: {0}</value>
+</data>
+<data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
+    <value>יוצר את משימת התזמון עבור Snap Back Guarantee.</value>
+</data>
+<data name="FileHasHashMismatchMessage" xml:space="preserve">
+    <value>בקובץ '{0}' יש חוסר התאמה ב-hash.</value>
+</data>
+<data name="ScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
+    <value>סורק את יומני MDE Advanced Hunting CSV שנבחרו</value>
+</data>
+<data name="NoMDEAdvancedHuntingLogProvided" xml:space="preserve">
+    <value>לא סופק יומן MDE Advanced Hunting.</value>
+</data>
+<data name="NoResultsInMDEAdvancedHuntingCsvLogs" xml:space="preserve">
+    <value>לא זוהו תוצאות ביומני MDE Advanced Hunting CSV שנבחרו.</value>
+</data>
+<data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
+    <value>אירעה שגיאה במהלך סריקת יומני MDE Advanced Hunting CSV שנבחרו: {0}</value>
+</data>
+<data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
+    <value>הסריקה של יומני MDE Advanced Hunting CSV שנבחרו הושלמה בהצלחה.</value>
+</data>
+<data name="NoLogsErrorMessage" xml:space="preserve">
+    <value>אין יומנים. השתמש בכפתור הסריקה תחילה או התאם את המסננים.</value>
+</data>
+<data name="NoPolicyCreationOptionSelectedErrorMessage" xml:space="preserve">
+    <value>עליך לבחור אפשרות מרשימת יצירת המדיניות.</value>
+</data>
+<data name="DefaultSupplementalPolicyNameFormat" xml:space="preserve">
+    <value>מדיניות משלימה מיומני MDE Advanced Hunting - {0}</value>
+</data>
+<data name="CreatingSupplementalPolicyForFilesMessage" xml:space="preserve">
+    <value>יוצר מדיניות משלימה עבור {0} קבצים.</value>
+</data>
+<data name="NoPolicyFileSelectedToAssociateErrorMessage" xml:space="preserve">
+    <value>לא נבחר קובץ מדיניות לצורך שיוך המדיניות המשלימה.</value>
+</data>
+<data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
+    <value>אירעה שגיאה ביצירת המדיניות המשלימה: {0}</value>
+</data>
+<data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
+    <value>מביא את הנתונים של Microsoft Defender for Endpoint Advanced Hunting</value>
+</data>
+<data name="NoLogsRetrievedMessage" xml:space="preserve">
+    <value>לא היו יומנים לשליפה</value>
+</data>
+<data name="ZeroLogsRetrievedMessage" xml:space="preserve">
+    <value>0 יומנים הושגו</value>
+</data>
+<data name="SuccessfullyRetrievedLogsFromCloudMessage" xml:space="preserve">
+    <value>הושגו בהצלחה {0} יומנים מהענן</value>
+</data>
+<data name="DeserializationCompleteNumberOfRecordsMessage" xml:space="preserve">
+    <value>הדסיריאליזציה הושלמה. מספר הרשומות: {0}</value>
+</data>
+<data name="NoActionableLogsFoundMessage" xml:space="preserve">
+    <value>לא נמצאו יומנים ברי פעולה בין הנתונים שהושגו לצורך יצירת מדיניות משלימה.</value>
+</data>
+<data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
+    <value>אירעה שגיאה בשליפת יומני MDE Advanced Hunting מ-MSGraph: {0}</value>
+</data>
+<data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
+    <value>הוסף יומנים למדיניות הנבחרת</value>
+</data>
+<data name="CreatePolicyForBaseGUIDMessage" xml:space="preserve">
+    <value>צור מדיניות עבור Base GUID</value>
+</data>
+<data name="NoCompatibleFilesDetectedSubtitle" xml:space="preserve">
+    <value>לא זוהו קבצים תאימים ל-AppControl באף אחד מנתיבי הקבצים והתיקיות שבחרת.</value>
+</data>
+<data name="ScanCompletedCreatingSupplementalPolicyMessage" xml:space="preserve">
+    <value>הסריקה הושלמה, יוצר את המדיניות המשלימה.</value>
+</data>
+<data name="CreatingPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
+    <value>יוצר את מדיניות Pattern-based File Path rule Deny.</value>
+</data>
+<data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
+    <value>נוצרה בהצלחה מדיניות Pattern-based File Path rule Deny.</value>
+</data>
 </root>

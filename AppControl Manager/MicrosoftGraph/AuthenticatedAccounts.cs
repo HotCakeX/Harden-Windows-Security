@@ -16,6 +16,7 @@
 //
 
 using System;
+using AppControlManager.Others;
 using Microsoft.Identity.Client;
 
 namespace AppControlManager.MicrosoftGraph;
@@ -36,12 +37,14 @@ internal sealed class AuthenticatedAccounts : Main.IRestrictedAuthenticatedAccou
 	AuthenticationResult Main.IRestrictedAuthenticatedAccounts.AuthResult
 	{
 		get => _authResult;
-		set => throw new InvalidOperationException("AuthResult is immutable and should not be set after initialization.");
+		set => throw new InvalidOperationException(
+			GlobalVars.Rizz.GetString("AuthResultImmutableErrorMessage"));
 	}
 	IAccount Main.IRestrictedAuthenticatedAccounts.Account
 	{
 		get => _account;
-		set => throw new InvalidOperationException("Account is immutable and should not be set after initialization.");
+		set => throw new InvalidOperationException(
+			GlobalVars.Rizz.GetString("AccountImmutableErrorMessage"));
 	}
 
 	internal AuthenticatedAccounts(string accountIdentifier, string userName, string tenantID, string permissions, AuthenticationContext authContext, AuthenticationResult authResult, IAccount account)

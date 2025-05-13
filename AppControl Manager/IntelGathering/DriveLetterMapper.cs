@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AppControlManager.Others;
 
 namespace AppControlManager.IntelGathering;
 
@@ -104,7 +105,7 @@ internal static partial class DriveLetterMapper
 			}
 			else
 			{
-				// Add a new drive mapping with "No mountpoint found" when the path is invalid
+				// Add a new drive mapping with a localized message when the path is invalid
 				drives.Add(new DriveMapping(
 					// No drive letter since the mount point is unavailable
 					driveLetter: null,
@@ -112,8 +113,8 @@ internal static partial class DriveLetterMapper
 					// Assign the current volume name
 					volumeName: volume,
 
-					// Assign a placeholder string indicating no mount point is found
-					devicePath: "No mountpoint found"
+					// Use resource for the "No mountpoint found" message
+					devicePath: GlobalVars.Rizz.GetString("NoMountpointFoundMessage")
 				));
 			}
 

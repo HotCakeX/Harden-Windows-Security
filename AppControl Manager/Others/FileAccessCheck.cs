@@ -52,7 +52,12 @@ internal static class FileAccessCheck
 
 			if (handle.IsInvalid)
 			{
-				Logger.Write($"The file \"{filePath}\" requires elevated permissions.");
+				Logger.Write(
+					string.Format(
+						GlobalVars.Rizz.GetString("FileRequiresElevatedPermissionsMessage"),
+						filePath
+					)
+				);
 
 				return false;
 			}

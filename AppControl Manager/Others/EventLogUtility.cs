@@ -213,7 +213,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				// Only increase by 1MB if there's less than 1MB free and under 10MB max
 				if ((currentLogMaxSize - currentLogFileSize) < (1L * 1024 * 1024) && currentLogMaxSize <= (10L * 1024 * 1024))
 				{
-					Logger.Write("Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.");
+					Logger.Write(GlobalVars.Rizz.GetString("IncreasingCodeIntegrityLogSizeMessage"));
 					logConfig.MaximumSizeInBytes = SafeAdd(currentLogMaxSize, 1L * 1024 * 1024);
 					logConfig.IsEnabled = true;
 					logConfig.SaveChanges();
@@ -232,14 +232,22 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 
 				if (bytesToSet > (1L * 1024 * 1024))
 				{
-					Logger.Write($"Setting Code Integrity log size to {bytesToSet / (1024d * 1024d):N2} MB.");
+					Logger.Write(
+						string.Format(
+							GlobalVars.Rizz.GetString("SettingCodeIntegrityLogSizeMessage"),
+							bytesToSet / (1024d * 1024d)
+						)
+					);
+
 					logConfig.MaximumSizeInBytes = bytesToSet;
 					logConfig.IsEnabled = true;
 					logConfig.SaveChanges();
 				}
 				else
 				{
-					Logger.Write("Provided log size is less than or equal to 1 MB. No changes made.");
+					Logger.Write(
+						GlobalVars.Rizz.GetString("ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage")
+					);
 				}
 			}
 		}

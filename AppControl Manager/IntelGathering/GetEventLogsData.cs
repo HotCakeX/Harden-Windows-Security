@@ -92,7 +92,7 @@ internal static class GetEventLogsData
 		// Make sure there are events to process
 		if (rawEvents.Count is 0)
 		{
-			Logger.Write("No Code Integrity logs found");
+			Logger.Write(GlobalVars.Rizz.GetString("NoCodeIntegrityLogsFoundMessage"));
 			return fileIdentities.FileIdentitiesInternal;
 		}
 
@@ -501,7 +501,9 @@ internal static class GetEventLogsData
 			}
 		}
 
-		Logger.Write($"Total Code Integrity logs: {fileIdentities.Count}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("TotalCodeIntegrityLogsMessage"),
+			fileIdentities.Count));
 
 		// Return the output
 		return fileIdentities.FileIdentitiesInternal;
@@ -559,7 +561,7 @@ internal static class GetEventLogsData
 		// Make sure there are events to process
 		if (rawEvents.Count == 0)
 		{
-			Logger.Write("No AppLocker events found.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoAppLockerEventsFoundMessage"));
 			return fileIdentities.FileIdentitiesInternal;
 		}
 
@@ -906,7 +908,9 @@ internal static class GetEventLogsData
 			}
 		}
 
-		Logger.Write($"Total AppLocker logs: {fileIdentities.Count}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("TotalAppLockerLogsMessage"),
+			fileIdentities.Count));
 
 		// Return the output
 		return fileIdentities.FileIdentitiesInternal;
@@ -1135,7 +1139,9 @@ internal static class GetEventLogsData
 		}
 
 
-		Logger.Write($"Total logs count: {combinedResult.Count}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("TotalLogsCountMessage"),
+			combinedResult.Count));
 
 		// Return the combined set
 		return combinedResult;

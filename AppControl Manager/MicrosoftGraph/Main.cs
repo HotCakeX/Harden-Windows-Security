@@ -174,15 +174,21 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			output = await response.Content.ReadAsStringAsync();
-			Logger.Write("MDE Advanced Hunting Query has been Successful.");
+			Logger.Write(GlobalVars.Rizz.GetString("MDEAdvancedHuntingQuerySuccessfulMessage"));
 
 			return output;
 		}
 		else
 		{
-			Logger.Write($"Failed to run MDE Advanced Hunting Query. Status code: {response.StatusCode}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("FailedToRunMDEAdvancedHuntingQueryMessage"),
+				response.StatusCode));
+
 			string errorContent = await response.Content.ReadAsStringAsync();
-			throw new InvalidOperationException($"Error details: {errorContent}");
+
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				errorContent));
 		}
 	}
 
@@ -227,18 +233,27 @@ DeviceEvents
 					}
 				}
 
-				Logger.Write($"Successfully fetched {output.Count} groups.");
+				Logger.Write(string.Format(
+					GlobalVars.Rizz.GetString("SuccessfullyFetchedGroupsMessage"),
+					output.Count));
 			}
 			else
 			{
-				Logger.Write("No groups found in the response.");
+				Logger.Write(
+					GlobalVars.Rizz.GetString("NoGroupsFoundInResponseMessage"));
 			}
 		}
 		else
 		{
-			Logger.Write($"Failed to fetch groups. Status code: {response.StatusCode}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("FailedToFetchGroupsMessage"),
+				response.StatusCode));
+
 			string errorContent = await response.Content.ReadAsStringAsync();
-			throw new InvalidOperationException($"Error details: {errorContent}");
+
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				errorContent));
 		}
 
 		return output;
@@ -261,7 +276,6 @@ DeviceEvents
 
 		try
 		{
-
 			switch (signInMethod)
 			{
 				case SignInMethods.WebBrowser:
@@ -282,23 +296,21 @@ DeviceEvents
 						break;
 					}
 				default:
-					{
-						throw new InvalidOperationException("Invalid sign in method was used");
-					}
+					throw new InvalidOperationException(
+						GlobalVars.Rizz.GetString("InvalidSignInMethodUsedMessage"));
 			}
-
 		}
 		catch (OperationCanceledException)
 		{
 			error = true;
-			throw new OperationCanceledException("The sign-in operation was canceled by the caller.");
+			throw new OperationCanceledException(
+				GlobalVars.Rizz.GetString("SignInOperationCanceledByCallerMessage"));
 		}
 		finally
 		{
 			// If successful, store the result in SavedAccounts
 			if (!error && authResult is not null)
 			{
-
 				// Add the account that was successfully authenticated to the dictionary
 				newAccount = new(
 					accountIdentifier: authResult.Account.HomeAccountId.Identifier,
@@ -310,23 +322,27 @@ DeviceEvents
 					account: authResult.Account
 				);
 
-
-				AuthenticatedAccounts? possibleDuplicate = ViewModelMSGraph.AuthenticatedAccounts.FirstOrDefault(x => string.Equals(authResult.Account.HomeAccountId.Identifier, x.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
-				string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
-				string.Equals(authResult.TenantId, x.TenantID, StringComparison.OrdinalIgnoreCase) &&
-				string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase));
+				AuthenticatedAccounts? possibleDuplicate =
+					ViewModelMSGraph.AuthenticatedAccounts
+						.FirstOrDefault(x =>
+							string.Equals(authResult.Account.HomeAccountId.Identifier, x.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(authResult.TenantId, x.TenantID, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase)
+						);
 
 				// Check if the account is already authenticated
 				if (possibleDuplicate is not null)
 				{
-					Logger.Write($"An account with the Username {authResult.Account.Username} that has the same permissions, TenantID and Identifier already exists, removing it and replacing it with the new one.");
+					Logger.Write(string.Format(
+						GlobalVars.Rizz.GetString("DuplicateAccountReplacedMessage"),
+						authResult.Account.Username));
 
 					_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(possibleDuplicate);
 				}
 
 				ViewModelMSGraph.AuthenticatedAccounts.Add(newAccount);
 			}
-
 		}
 
 		return (!error, cts, newAccount);
@@ -339,13 +355,14 @@ DeviceEvents
 	/// <returns></returns>
 	internal static async Task SignOut(AuthenticatedAccounts? account)
 	{
-
 		if (account is null)
 			return;
 
 		await App.RemoveAsync(((IRestrictedAuthenticatedAccounts)account).Account);
 		_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(account);
-		Logger.Write($"Signed out account: {account.Username}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("SignedOutAccountMessage"),
+			account.Username));
 	}
 
 
@@ -378,7 +395,9 @@ DeviceEvents
 		// Call Microsoft Graph API to create the custom policy
 		string? policyId = await CreateCustomIntunePolicy(((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken, base64String, policyName, policyID, descriptionText);
 
-		Logger.Write($"{policyId} is the ID of the policy that was created");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("PolicyCreatedMessage"),
+			policyId));
 
 		if (groupIds.Count > 0 && policyId is not null)
 		{
@@ -411,8 +430,8 @@ DeviceEvents
 			AssignmentPayload assignmentPayload = new(
 				target: new Dictionary<string, object>
 				{
-				{ "@odata.type", "#microsoft.graph.groupAssignmentTarget" },
-				{ "groupId", groupId }
+					{ "@odata.type", "#microsoft.graph.groupAssignmentTarget" },
+					{ "groupId", groupId }
 				}
 			);
 
@@ -431,14 +450,24 @@ DeviceEvents
 			if (response.IsSuccessStatusCode)
 			{
 				string responseContent = await response.Content.ReadAsStringAsync();
-				Logger.Write($"Policy assigned successfully to group: {groupId}");
+				Logger.Write(string.Format(
+					GlobalVars.Rizz.GetString("PolicyAssignedSuccessfullyToGroupMessage"),
+					groupId));
 				Logger.Write(responseContent);
 			}
 			else
 			{
 				string errorContent = await response.Content.ReadAsStringAsync();
-				Logger.Write($"Failed to assign policy to group: {groupId}. Status code: {response.StatusCode}");
-				throw new InvalidOperationException($"Error details for group {groupId}: {errorContent}");
+
+				Logger.Write(string.Format(
+					GlobalVars.Rizz.GetString("FailedToAssignPolicyToGroupMessage"),
+					groupId,
+					response.StatusCode));
+
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("ErrorDetailsForGroupMessage"),
+					groupId,
+					errorContent));
 			}
 		}
 	}
@@ -504,7 +533,7 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			string responseContent = await response.Content.ReadAsStringAsync();
-			Logger.Write("Custom policy created successfully:");
+			Logger.Write(GlobalVars.Rizz.GetString("CustomPolicyCreatedSuccessMessage"));
 			Logger.Write(responseContent);
 
 			// Extract the policy ID from the response
@@ -514,9 +543,15 @@ DeviceEvents
 		}
 		else
 		{
-			Logger.Write($"Failed to create custom policy. Status code: {response.StatusCode}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("FailedToCreateCustomPolicyMessage"),
+				response.StatusCode));
+
 			string errorContent = await response.Content.ReadAsStringAsync();
-			throw new InvalidOperationException($"Error details: {errorContent}");
+
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				errorContent));
 		}
 	}
 
@@ -609,7 +644,9 @@ DeviceEvents
 		// Check the file size
 		if (fileInfo.Length > maxSizeInBytes)
 		{
-			throw new InvalidOperationException($"The CIP policy file size exceeds the limit of {maxSizeInBytes} bytes.");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("CipPolicyFileSizeExceedsLimitMessage"),
+				maxSizeInBytes));
 		}
 
 		// Read the file and convert to Base64
@@ -625,35 +662,46 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<DeviceConfigurationPoliciesResponse?> RetrieveDeviceConfigurations(AuthenticatedAccounts account)
 	{
-
 		using SecHttpClient httpClient = new();
 
 		// Set up the HTTP headers for the request.
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken);
-		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
 		// Use GET instead of POST as the endpoint expects a GET request.
 		// HttpResponseMessage response = await httpClient.GetAsync(new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations"));
+		httpClient.DefaultRequestHeaders.Authorization =
+			new AuthenticationHeaderValue(
+				"Bearer",
+				((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken);
+
+		httpClient.DefaultRequestHeaders.Accept
+		.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Applying a filter to retrieve only the policies for Windows custom configurations
-		HttpResponseMessage response = await httpClient.GetAsync(new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')"));
+		HttpResponseMessage response = await httpClient.GetAsync(
+			new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')"));
 
 		if (response.IsSuccessStatusCode)
 		{
 			string jsonResponse = await response.Content.ReadAsStringAsync();
-			Logger.Write("Device configurations retrieved successfully.");
+			Logger.Write(GlobalVars.Rizz.GetString("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 
 			// Deserialize the JSON response using the source-generated context.
 			DeviceConfigurationPoliciesResponse? policies = JsonSerializer.Deserialize(
-				jsonResponse, MSGraphJsonContext.Default.DeviceConfigurationPoliciesResponse);
+				jsonResponse,
+				MSGraphJsonContext.Default.DeviceConfigurationPoliciesResponse);
 
 			return policies;
 		}
 		else
 		{
-			Logger.Write($"Failed to retrieve device configurations. Status code: {response.StatusCode}");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("FailedToRetrieveDeviceConfigurationsMessage"),
+				response.StatusCode));
+
 			string errorContent = await response.Content.ReadAsStringAsync();
-			throw new InvalidOperationException($"Error details: {errorContent}");
+
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				errorContent));
 		}
 	}
 
@@ -686,12 +734,18 @@ DeviceEvents
 		// Process the response.
 		if (response.IsSuccessStatusCode)
 		{
-			Logger.Write($"Policy {policyId} deleted successfully.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("PolicyDeletedSuccessfullyMessage"),
+				policyId));
 		}
 		else
 		{
 			string errorContent = await response.Content.ReadAsStringAsync();
-			throw new InvalidOperationException($"Failed to delete policy {policyId}. Status code: {response.StatusCode}. Error details: {errorContent}");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("FailedToDeletePolicyExceptionMessage"),
+				policyId,
+				response.StatusCode,
+				errorContent));
 		}
 	}
 

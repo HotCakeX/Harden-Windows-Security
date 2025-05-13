@@ -37,7 +37,9 @@ internal static class CiPolicyHandler
 		// Check if SupplementalPolicySigners exists and has child nodes
 		if (policyObj.SupplementalPolicySigners.Length > 0)
 		{
-			Logger.Write("Removing the SupplementalPolicySigners blocks and corresponding Signers");
+			Logger.Write(
+				GlobalVars.Rizz.GetString("RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage")
+			);
 
 			// Store SignerIds to remove
 			HashSet<string> signerIdsToRemove = [];

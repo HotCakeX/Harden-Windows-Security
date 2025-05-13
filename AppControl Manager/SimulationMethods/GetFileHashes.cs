@@ -27,7 +27,7 @@ internal static partial class GetFileHashes
 {
 	/// <summary>
 	/// Takes an App Control XML policy and returns all of the Hashes in the Hash rules.
-	/// The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main cmdlet.
+	/// The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main method.
 	/// </summary>
 	/// <param name="xml"></param>
 	/// <returns></returns>

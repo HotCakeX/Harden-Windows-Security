@@ -47,7 +47,8 @@ internal static class CiToolHelper
 			// Convert the input string to a 64-bit unsigned integer
 			if (!ulong.TryParse(number, out ulong num))
 			{
-				throw new FormatException("Input string is not a valid 64-bit unsigned integer.");
+				throw new FormatException(
+					GlobalVars.Rizz.GetString("InputStringNotValidUInt64Message"));
 			}
 
 			// Split the 64-bit integer into four 16-bit segments for the version parts
@@ -65,7 +66,7 @@ internal static class CiToolHelper
 		catch (Exception ex)
 		{
 			// Handle errors by printing an error message and returning a default version of 0.0.0.0
-			Logger.Write("Error converting number to version.");
+			Logger.Write(GlobalVars.Rizz.GetString("ErrorConvertingNumberToVersionMessage"));
 			Logger.Write(ErrorWriter.FormatException(ex));
 
 			return new Version(0, 0, 0, 0);
@@ -100,7 +101,8 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -110,7 +112,9 @@ internal static class CiToolHelper
 
 		if (process.ExitCode != 0)
 		{
-			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.Rizz.GetString("CommandExecutionFailedMessage"),
+				process.ExitCode));
 		}
 
 		// Parse the JSON into a JsonElement for easy traversal
@@ -168,7 +172,10 @@ internal static class CiToolHelper
 	{
 		if (string.IsNullOrWhiteSpace(policyId))
 		{
-			throw new ArgumentException("Policy ID cannot be null or empty.", nameof(policyId));
+			throw new ArgumentException(
+				GlobalVars.Rizz.GetString("PolicyIdCannotBeNullOrEmptyMessage"),
+				nameof(policyId)
+			);
 		}
 
 		// Remove any curly brackets or double quotes from the policy ID
@@ -190,7 +197,8 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -200,7 +208,13 @@ internal static class CiToolHelper
 
 		if (process.ExitCode != 0)
 		{
-			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					process.ExitCode,
+					jsonOutput
+				)
+			);
 		}
 	}
 
@@ -240,7 +254,8 @@ internal static class CiToolHelper
 			};
 
 			// Start the process and capture the output
-			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the GetPolicies method.");
+			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
 
 			// Read all output as a string
 			string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -250,7 +265,13 @@ internal static class CiToolHelper
 
 			if (process.ExitCode != 0)
 			{
-				throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+				throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					process.ExitCode,
+					jsonOutput
+					)
+				);
 			}
 		}
 	}
@@ -267,18 +288,29 @@ internal static class CiToolHelper
 	{
 		if (string.IsNullOrWhiteSpace(CipPath))
 		{
-			throw new ArgumentException("CipPath cannot be null or empty.", nameof(CipPath));
+			throw new ArgumentException(
+				GlobalVars.Rizz.GetString("CipPathCannotBeNullOrEmptyMessage"),
+				nameof(CipPath));
 		}
 
 		if (!File.Exists(CipPath))
 		{
-			throw new FileNotFoundException($"The file '{CipPath}' does not exist.", CipPath);
+			throw new FileNotFoundException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CipFileNotFoundMessage"),
+					CipPath),
+				CipPath);
 		}
 
 		// Combine the path to CiTool.exe using the system's special folder path
-		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+		string ciToolPath = Path.Combine(
+			Environment.GetFolderPath(Environment.SpecialFolder.System),
+			"CiTool.exe");
 
-		Logger.Write($"Deploying the following CIP file: {CipPath}");
+		Logger.Write(
+			string.Format(
+				GlobalVars.Rizz.GetString("DeployingCipFileMessage"),
+				CipPath));
 
 		// Set up the process start info to run CiTool.exe with necessary arguments
 		ProcessStartInfo processStartInfo = new()
@@ -291,7 +323,8 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the UpdatePolicy method.");
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -301,7 +334,13 @@ internal static class CiToolHelper
 
 		if (process.ExitCode != 0)
 		{
-			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					process.ExitCode,
+					jsonOutput
+					)
+				);
 		}
 	}
 
@@ -326,7 +365,8 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RefreshPolicy method.");
+		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -336,7 +376,13 @@ internal static class CiToolHelper
 
 		if (process.ExitCode != 0)
 		{
-			throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					process.ExitCode,
+					jsonOutput
+					)
+				);
 		}
 	}
 

@@ -104,16 +104,16 @@ internal sealed partial class UserConfiguration(
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static UserConfiguration Set(
-		string? SignedPolicyPath = null,
-		string? UnsignedPolicyPath = null,
-		string? SignToolCustomPath = null,
-		string? CertificateCommonName = null,
-		string? CertificatePath = null,
-		Guid? StrictKernelPolicyGUID = null,
-		DateTime? LastUpdateCheck = null,
-		bool? AutoUpdateCheck = null,
-		Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null
-		)
+	string? SignedPolicyPath = null,
+	string? UnsignedPolicyPath = null,
+	string? SignToolCustomPath = null,
+	string? CertificateCommonName = null,
+	string? CertificatePath = null,
+	Guid? StrictKernelPolicyGUID = null,
+	DateTime? LastUpdateCheck = null,
+	bool? AutoUpdateCheck = null,
+	Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null
+)
 	{
 		// Validate certificateCommonName
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName))
@@ -123,7 +123,10 @@ internal sealed partial class UserConfiguration(
 
 			if (!certCommonNames.Contains(CertificateCommonName))
 			{
-				throw new InvalidOperationException($"{CertificateCommonName} does not belong to a subject CN of any of the deployed certificates");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("CertificateCommonNameInvalidErrorMessage"),
+						CertificateCommonName));
 			}
 		}
 
@@ -132,7 +135,10 @@ internal sealed partial class UserConfiguration(
 		{
 			if (PolicyFileSigningStatusDetection.Check(SignedPolicyPath) is not SignatureStatus.IsSigned)
 			{
-				throw new InvalidOperationException($"The specified policy file '{SignedPolicyPath}' is not signed. Please provide a signed policy file.");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("PolicyFileNotSignedErrorMessage"),
+						SignedPolicyPath));
 			}
 		}
 
@@ -141,12 +147,14 @@ internal sealed partial class UserConfiguration(
 		{
 			if (PolicyFileSigningStatusDetection.Check(UnsignedPolicyPath) is SignatureStatus.IsSigned)
 			{
-				throw new InvalidOperationException($"The specified policy file '{UnsignedPolicyPath}' is signed. Please provide an Unsigned policy file.");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("PolicyFileSignedErrorMessage"),
+						UnsignedPolicyPath));
 			}
 		}
 
-
-		Logger.Write("Trying to parse and read the current user configurations file");
+		Logger.Write(GlobalVars.Rizz.GetString("ReadingUserConfigurationsFileMessage"));
 		UserConfiguration UserConfiguration = ReadUserConfiguration();
 
 		// Modify the properties based on the input
@@ -224,7 +232,7 @@ internal sealed partial class UserConfiguration(
 		// Write the updated configuration back to the JSON file
 		WriteUserConfiguration(currentConfig);
 
-		Logger.Write("The specified properties have been removed and set to null in the UserConfigurations.json file.");
+		Logger.Write(GlobalVars.Rizz.GetString("SpecifiedPropertiesRemovedAndSetToNullMessage"));
 	}
 
 
@@ -236,7 +244,7 @@ internal sealed partial class UserConfiguration(
 			if (!Directory.Exists(GlobalVars.UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(GlobalVars.UserConfigDir);
-				Logger.Write("The AppControl Manager folder in Program Files has been created because it did not exist.");
+				Logger.Write(GlobalVars.Rizz.GetString("AppControlManagerFolderCreatedMessage"));
 			}
 
 			// Create User configuration folder in the AppControl Manager folder if it doesn't already exist
@@ -244,7 +252,7 @@ internal sealed partial class UserConfiguration(
 			if (!Directory.Exists(UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(UserConfigDir);
-				Logger.Write("The AppControl Manager folder in Program Files has been created because it did not exist.");
+				Logger.Write(GlobalVars.Rizz.GetString("AppControlManagerFolderCreatedMessage"));
 			}
 
 			// Read the JSON file
@@ -254,7 +262,9 @@ internal sealed partial class UserConfiguration(
 		catch (Exception ex)
 		{
 			// Log the error if JSON is corrupted or any other error occurs
-			Logger.Write($"Error reading or parsing the user configuration file: {ex.Message} A new configuration with default values will be created.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("ErrorReadingUserConfigMessage"),
+				ex.Message));
 
 			// Create a new configuration with default values and write it to the file
 			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null);
@@ -361,7 +371,7 @@ internal sealed partial class UserConfiguration(
 
 		// Write the JSON string to the file
 		File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
-		Logger.Write("The UserConfigurations.json file has been updated successfully.");
+		Logger.Write(GlobalVars.Rizz.GetString("UserConfigurationsFileUpdatedSuccessfullyMessage"));
 	}
 
 
@@ -384,7 +394,10 @@ internal sealed partial class UserConfiguration(
 		// Write the updated configuration back to the JSON file
 		WriteUserConfiguration(currentConfig);
 
-		Logger.Write($"Key-value pair added to the SignedPolicyStage1RemovalTimes: {key} = {value}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage"),
+			key,
+			value));
 	}
 
 
@@ -428,11 +441,15 @@ internal sealed partial class UserConfiguration(
 			// Write the updated configuration back to the JSON file
 			WriteUserConfiguration(currentConfig);
 
-			Logger.Write($"Key '{key}' removed from the SignedPolicyStage1RemovalTimes dictionary.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("KeyRemovedFromSignedPolicyStage1RemovalTimesMessage"),
+				key));
 		}
 		else
 		{
-			Logger.Write($"Key '{key}' not found in the SignedPolicyStage1RemovalTimes dictionary.");
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("KeyNotFoundInSignedPolicyStage1RemovalTimesMessage"),
+				key));
 		}
 	}
 

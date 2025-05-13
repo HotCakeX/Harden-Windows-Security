@@ -599,7 +599,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoPolicySelectedToAssociateSupplementalMessage"));
+									GlobalVars.Rizz.GetString("NoPolicyFileSelectedToAssociateErrorMessage"));
 							}
 
 							break;
@@ -742,9 +742,9 @@ internal sealed partial class EventLogsPolicyCreation : Page
 	{
 		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
 		{
-			0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicy"),
+			0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicyMessage"),
 			1 => GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase"),
-			2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGuid"),
+			2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGUIDMessage"),
 			_ => GlobalVars.Rizz.GetString("DefaultCreatePolicy")
 		};
 	}

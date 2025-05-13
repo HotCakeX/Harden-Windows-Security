@@ -62,7 +62,10 @@ internal sealed class FileIdentitySignatureBasedHashSet
 			// If an equivalent unsigned item exists, replace it with the signed item
 			if (existingItem.SignatureStatus == SignatureStatus.IsUnsigned && item.SignatureStatus == SignatureStatus.IsSigned)
 			{
-				Logger.Write($"Replacing an unsigned FileIdentity item with a signed one in MDE Advanced Hunting Logs for the file with name {existingItem.FileName} and SHA256 hash {existingItem.SHA256Hash}.");
+				Logger.Write(string.Format(
+					GlobalVars.Rizz.GetString("ReplacingUnsignedItemMessage"),
+					existingItem.FileName,
+					existingItem.SHA256Hash));
 
 				// Remove the existing unsigned item and add the signed one
 				_ = _set.Remove(existingItem);

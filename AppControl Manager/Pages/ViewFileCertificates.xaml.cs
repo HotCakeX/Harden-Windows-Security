@@ -214,7 +214,12 @@ internal sealed partial class ViewFileCertificates : Page
 					}
 					catch (HashMismatchInCertificateException)
 					{
-						Logger.Write($"The file '{file}' has hash mismatch.");
+						Logger.Write(
+							string.Format(
+								GlobalVars.Rizz.GetString("FileHasHashMismatchMessage"),
+								file
+							)
+						);
 					}
 				}
 				else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
@@ -225,10 +230,14 @@ internal sealed partial class ViewFileCertificates : Page
 					}
 					catch (HashMismatchInCertificateException)
 					{
-						Logger.Write($"The file '{file}' has hash mismatch.");
+						Logger.Write(
+							string.Format(
+								GlobalVars.Rizz.GetString("FileHasHashMismatchMessage"),
+								file
+							)
+						);
 					}
 				}
-
 			}
 
 			// Get full chains of all of the file's certificates

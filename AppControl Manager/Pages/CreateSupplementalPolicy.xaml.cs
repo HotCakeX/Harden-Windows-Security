@@ -442,8 +442,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
 							CreateSupplementalPolicyTeachingTip.IsOpen = true;
-							CreateSupplementalPolicyTeachingTip.Title = "No compatible files detected";
-							CreateSupplementalPolicyTeachingTip.Subtitle = "No AppControl compatible files have been detected in any of the files and folder paths you selected";
+							CreateSupplementalPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("NoCompatibleFilesTitle");
+							CreateSupplementalPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("NoCompatibleFilesDetectedSubtitle");
 							errorsOccurred = true;
 							FilesAndFoldersInfoBar.IsOpen = false;
 							FilesAndFoldersInfoBar.Severity = InfoBarSeverity.Informational;
@@ -489,7 +489,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 						ViewModel.UpdateTotalFilesFilesAndFolders();
 					});
 
-					string msg3 = "Scan completed, creating the Supplemental policy";
+					string msg3 = GlobalVars.Rizz.GetString("ScanCompletedCreatingSupplementalPolicyMessage");
 
 					Logger.Write(msg3);
 

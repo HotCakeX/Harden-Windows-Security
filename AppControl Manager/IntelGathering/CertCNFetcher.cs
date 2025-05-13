@@ -52,7 +52,9 @@ internal static class CertCNFetcher
 					// Add the CN to the output set and warn if there is already CN with the same name in the HashSet
 					if (!output.Add(cn))
 					{
-						Logger.Write($"There are more than 1 certificates with the common name '{cn}' in the Personal certificate store of the Current User. Only certificates without duplicate common names can be used at the moment.");
+						Logger.Write(string.Format(
+							GlobalVars.Rizz.GetString("DuplicateCertCommonNameWarning"),
+							cn));
 
 						_ = output.Remove(cn);
 					}

@@ -287,13 +287,11 @@ DeviceEvents
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
-
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = "Scanning the selected MDE Advanced Hunting CSV Logs";
+			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("ScanningMDEAdvancedHuntingCsvLogs");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
-
 
 			// Disable the Policy creator button while scan is being performed
 			CreatePolicyButton.IsEnabled = false;
@@ -310,10 +308,11 @@ DeviceEvents
 			// Grab the App Control Logs
 			await Task.Run(() =>
 			{
-
 				if (MDEAdvancedHuntingLogs is null)
 				{
-					throw new InvalidOperationException("No MDE Advanced Hunting log was provided");
+					throw new InvalidOperationException(
+						GlobalVars.Rizz.GetString("NoMDEAdvancedHuntingLogProvided")
+					);
 				}
 
 				List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(MDEAdvancedHuntingLogs);
@@ -324,11 +323,11 @@ DeviceEvents
 				}
 				else
 				{
-					throw new InvalidOperationException("No results detected in the selected MDE Advanced Hunting CSV logs.");
+					throw new InvalidOperationException(
+						GlobalVars.Rizz.GetString("NoResultsInMDEAdvancedHuntingCsvLogs")
+					);
 				}
-
 			});
-
 
 			// Store all of the data in the List
 			ViewModel.AllFileIdentities.AddRange(Output);
@@ -336,7 +335,8 @@ DeviceEvents
 			// Store all of the data in the ObservableCollection
 			foreach (FileIdentity item in Output)
 			{
-				// Add a reference to the ViewModel class instance to every item so we can use it for navigation in the XAML
+				// Add a reference to the ViewModel class instance to every item
+				// so we can use it for navigation in the XAML
 				item.ParentViewModelMDEAHPolicyCreationVM = ViewModel;
 				ViewModel.FileIdentities.Add(item);
 			}
@@ -351,7 +351,10 @@ DeviceEvents
 
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = $"There was an error while scanning the selected MDE Advanced Hunting CSV Logs: {ex.Message}";
+			ViewModel.MainInfoBarMessage = string.Format(
+				GlobalVars.Rizz.GetString("ErrorScanningMDEAdvancedHuntingCsvLogs"),
+				ex.Message
+			);
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
 			ViewModel.MainInfoBarIsClosable = false;
 
@@ -373,7 +376,7 @@ DeviceEvents
 			{
 				ViewModel.MainInfoBarVisibility = Visibility.Visible;
 				ViewModel.MainInfoBarIsOpen = true;
-				ViewModel.MainInfoBarMessage = "Successfully completed scanning the selected MDE Advanced Hunting CSV Logs.";
+				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs");
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
 				ViewModel.MainInfoBarIsClosable = false;
 			}
@@ -523,15 +526,15 @@ DeviceEvents
 	/// </summary>
 	private async void CreatePolicyButton_Click()
 	{
-
 		bool Error = false;
 
 		// Empty the class variable that stores the policy file path
 		finalSupplementalPolicyPath = null;
 
+		string? policyName = null;
+
 		try
 		{
-
 			// Disable the policy creator button
 			CreatePolicyButton.IsEnabled = false;
 
@@ -546,12 +549,16 @@ DeviceEvents
 
 			if (ViewModel.FileIdentities.Count is 0)
 			{
-				throw new InvalidOperationException("There are no logs. Use the scan button first or adjust the filters.");
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("NoLogsErrorMessage")
+				);
 			}
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
-				throw new InvalidOperationException("You must select an option from the policy creation list");
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("NoPolicyCreationOptionSelectedErrorMessage")
+				);
 			}
 
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
@@ -563,14 +570,16 @@ DeviceEvents
 			DateTime now = DateTime.Now;
 			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
 
-
 			// Get the policy name from the UI text box
-			string? policyName = PolicyNameTextBox.Text;
+			policyName = PolicyNameTextBox.Text;
 
 			// If the UI text box was empty or whitespace then set policy name manually
 			if (string.IsNullOrWhiteSpace(policyName))
 			{
-				policyName = $"Supplemental policy from MDE Advanced Hunting logs - {formattedDate}";
+				policyName = string.Format(
+					GlobalVars.Rizz.GetString("DefaultSupplementalPolicyNameFormat"),
+					formattedDate
+				);
 			}
 
 			// If user selected to deploy the policy
@@ -586,8 +595,10 @@ DeviceEvents
 			// Check if there are selected items in the ListView and user chose to use them only in the policy
 			if ((OnlyIncludeSelectedItemsToggleButton.IsChecked ?? false) && FileIdentitiesListView.SelectedItems.Count > 0)
 			{
-
-				ViewModel.MainInfoBarMessage = $"Creating Supplemental policy for {FileIdentitiesListView.SelectedItems.Count} files.";
+				ViewModel.MainInfoBarMessage = string.Format(
+					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
+					FileIdentitiesListView.SelectedItems.Count
+				);
 
 				// convert every selected item to FileIdentity and store it in the list
 				foreach (var item in FileIdentitiesListView.SelectedItems)
@@ -598,18 +609,19 @@ DeviceEvents
 					}
 				}
 			}
-
 			// If no item was selected from the ListView and user didn't choose to only use the selected items, then use everything in the ObservableCollection
 			else
 			{
 				SelectedLogs = ViewModel.AllFileIdentities;
 
-				ViewModel.MainInfoBarMessage = $"Creating Supplemental policy for {ViewModel.AllFileIdentities.Count} files.";
+				ViewModel.MainInfoBarMessage = string.Format(
+					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
+					ViewModel.AllFileIdentities.Count
+				);
 			}
 
 			await Task.Run(() =>
 			{
-
 				// Create a new Staging Area
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyCreatorMDEAH");
 
@@ -654,11 +666,14 @@ DeviceEvents
 							}
 							else
 							{
-								throw new InvalidOperationException("No policy file was selected to add the logs to.");
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoPolicySelectedToAddLogsMessage")
+								);
 							}
 
 							break;
 						}
+
 					case 1:
 						{
 							if (BasePolicyXMLFile is not null)
@@ -695,25 +710,25 @@ DeviceEvents
 							}
 							else
 							{
-								throw new InvalidOperationException("No policy file was selected to associate the Supplemental policy with.");
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoPolicyFileSelectedToAssociateErrorMessage")
+								);
 							}
 
 							break;
 						}
+
 					case 2:
 						{
-
 							if (BasePolicyGUID is not null)
 							{
 								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
 
 								// Set the BasePolicyID of our new policy to the one supplied by user
 								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
 
 								// Configure policy rule options
 								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
 
 								// Set policy version
 								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
@@ -727,7 +742,6 @@ DeviceEvents
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
-
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
 									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
@@ -737,11 +751,14 @@ DeviceEvents
 							}
 							else
 							{
-								throw new InvalidOperationException("No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.");
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoBasePolicyGuidProvidedMessage")
+								);
 							}
 
 							break;
 						}
+
 					default:
 						{
 							break;
@@ -756,7 +773,10 @@ DeviceEvents
 			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarIsClosable = true;
-			ViewModel.MainInfoBarMessage = $"There was an error creating the Supplemental policy: {ex.Message}";
+			ViewModel.MainInfoBarMessage = string.Format(
+				GlobalVars.Rizz.GetString("ErrorCreatingSupplementalPolicyMessage"),
+				ex.Message
+			);
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
 
 			throw;
@@ -775,7 +795,10 @@ DeviceEvents
 
 			if (!Error)
 			{
-				ViewModel.MainInfoBarMessage = "Successfully created the Supplemental policy.";
+				ViewModel.MainInfoBarMessage = string.Format(
+					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
+					policyName
+				);
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
 				ViewModel.MainInfoBarVisibility = Visibility.Visible;
 				ViewModel.MainInfoBarIsOpen = true;
@@ -817,7 +840,7 @@ DeviceEvents
 	{
 		ViewModel.MainInfoBarVisibility = Visibility.Visible;
 		ViewModel.MainInfoBarIsOpen = true;
-		ViewModel.MainInfoBarMessage = "Retrieving the Microsoft Defender for Endpoint Advanced Hunting data";
+		ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("RetrievingMDEAdvancedHuntingDataMessage");
 		ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 		ViewModel.MainInfoBarIsClosable = false;
 
@@ -839,29 +862,37 @@ DeviceEvents
 
 				if (root is null)
 				{
-					ViewModel.MainInfoBarMessage = "There were no logs to be retrieved";
+					ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("NoLogsRetrievedMessage");
 					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 					return;
 				}
 
 				if (root.Results.Count is 0)
 				{
-					ViewModel.MainInfoBarMessage = "0 logs were retrieved";
+					ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("ZeroLogsRetrievedMessage");
 					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 					return;
 				}
 
-				ViewModel.MainInfoBarMessage = $"Successfully retrieved {root.Results.Count} logs from the cloud";
+				ViewModel.MainInfoBarMessage = string.Format(
+					GlobalVars.Rizz.GetString("SuccessfullyRetrievedLogsFromCloudMessage"),
+					root.Results.Count
+				);
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
 
-				Logger.Write("Deserialization complete. Number of records: " + root.Results.Count);
+				Logger.Write(
+					string.Format(
+						GlobalVars.Rizz.GetString("DeserializationCompleteNumberOfRecordsMessage"),
+						root.Results.Count
+					)
+				);
 
 				// Grab the App Control Logs
 				HashSet<FileIdentity> Output = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
 
 				if (Output.Count is 0)
 				{
-					ViewModel.MainInfoBarMessage = "No actionable logs were found among the retrieved data to create a Supplemental policy with.";
+					ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("NoActionableLogsFoundMessage");
 					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
 				}
 
@@ -885,7 +916,10 @@ DeviceEvents
 		}
 		catch (Exception ex)
 		{
-			ViewModel.MainInfoBarMessage = $"There was an error retrieving the MDE Advanced Hunting logs from MSGraph: {ex.Message}";
+			ViewModel.MainInfoBarMessage = string.Format(
+				GlobalVars.Rizz.GetString("ErrorRetrievingMDEAdvancedHuntingLogsMessage"),
+				ex.Message
+			);
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
 			throw;
 		}
@@ -906,12 +940,11 @@ DeviceEvents
 	{
 		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
 		{
-			0 => "Add logs to the selected policy",
-			1 => "Create Policy for Selected Base",
-			2 => "Create Policy for Base GUID",
-			_ => "Create Policy"
+			0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicyMessage"),
+			1 => GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase"),
+			2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGUIDMessage"),
+			_ => GlobalVars.Rizz.GetString("DefaultCreatePolicy")
 		};
-
 	}
 
 

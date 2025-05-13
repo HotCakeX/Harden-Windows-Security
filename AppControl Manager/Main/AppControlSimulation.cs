@@ -88,7 +88,9 @@ internal static class AppControlSimulation
 		// Ensure threadsCount is at least 1
 		threadsCount = Math.Max((ushort)1, threadsCount);
 
-		Logger.Write($"Running App Control Simulation with {threadsCount} threads count");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("RunningAppControlSimulationMessage"),
+			threadsCount));
 
 		// Read the content of the XML file into a string
 		string xmlContent = File.ReadAllText(xmlFilePath);
@@ -102,13 +104,12 @@ internal static class AppControlSimulation
 		List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
 
 		#region Region FilePath Rule Checking
-		Logger.Write("Checking see if the XML policy has any FilePath rules");
+		Logger.Write(GlobalVars.Rizz.GetString("CheckingFilePathRulesMessage"));
 
 		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(xmlFilePath);
 
 		bool HasFilePathRules = FilePathRules.Count > 0;
 		#endregion
-
 
 		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
 		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
@@ -120,15 +121,15 @@ internal static class AppControlSimulation
 		}
 		else
 		{
-			Logger.Write("Skipping Security Catalogs in the Simulation.");
+			Logger.Write(GlobalVars.Rizz.GetString("SkippingSecurityCatalogsMessage"));
 		}
 
-		Logger.Write("Getting the Hash values of all the file rules based on hash in the supplied xml policy file");
+		Logger.Write(GlobalVars.Rizz.GetString("GettingHashValuesOfFileRulesMessage"));
 
 		// All Hash values of all the file rules based on hash in the supplied xml policy file
 		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(XMLData);
 
-		Logger.Write("Getting all of the file paths of the files that App Control supports, from the user provided directory");
+		Logger.Write(GlobalVars.Rizz.GetString("GettingSupportedFilePathsMessage"));
 
 		(IEnumerable<FileInfo>, int) CollectedFiles = FileUtility.GetFilesFast(
 			folderPaths?.Select(dir => new DirectoryInfo(dir)).ToArray(),
@@ -138,10 +139,11 @@ internal static class AppControlSimulation
 		// Make sure the selected directories and files contain files with the supported extensions
 		if (CollectedFiles.Item2 == 0)
 		{
-			throw new NoValidFilesSelectedException("There are no files in the selected directory that are supported by the App Control engine.");
+			throw new NoValidFilesSelectedException(
+				GlobalVars.Rizz.GetString("NoValidFilesSelectedMessage"));
 		}
 
-		Logger.Write("Looping through each supported file");
+		Logger.Write(GlobalVars.Rizz.GetString("LoopingThroughSupportedFilesMessage"));
 
 		// The counter variable to track processed files
 		int processedFilesCount = 0;
@@ -158,7 +160,9 @@ internal static class AppControlSimulation
 
 		if (CheckForAllowAll.Check(xmlFilePath))
 		{
-			Logger.Write($"The supplied XML file '{xmlFilePath}' contains a rule that allows all files.");
+			Logger.Write(string.Format(
+			  GlobalVars.Rizz.GetString("XmlFileAllowsAllFilesMessage"),
+			  xmlFilePath));
 
 			_ = FinalSimulationResults.TryAdd(xmlFilePath, new SimulationOutput(
 				null,

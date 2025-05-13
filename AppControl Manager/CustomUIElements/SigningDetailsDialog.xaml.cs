@@ -220,7 +220,6 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// </summary>
 	private async void VerifyButton_Click()
 	{
-
 		if (VerificationRunning)
 		{
 			return;
@@ -235,7 +234,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 			// Disable UI elements during verification
 			DisableUIElements();
 
-			VerifyButtonContentTextBlock.Text = "Verify";
+			VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerifyButtonText");
 
 			VerifyButtonProgressRing.Visibility = Visibility.Visible;
 
@@ -247,36 +246,34 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 			// Verify the certificate
 			if (string.IsNullOrWhiteSpace(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip("Please select a certificate file.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectCertificateFileMessage"));
 				return;
 			}
 
 			if (!File.Exists(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip("The selected certificate file path does not exist");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateFilePathNotExistMessage"));
 				return;
 			}
 
 			if (!string.Equals(Path.GetExtension(CertFilePathTextBox.Text), ".cer", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip("You need to select a certificate file path with (.cer) extension.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateExtensionInvalidMessage"));
 				return;
 			}
-
 
 			// Verify Certificate Common Name
 			if (string.IsNullOrWhiteSpace(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip("Please select a certificate common name from the suggestions.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectCertificateCommonNameMessage"));
 				return;
 			}
 
 			if (!CertCommonNames.Contains(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip("No certificate was found in the Current User personal store with the selected Common Name.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateCommonNameNotFoundMessage"));
 				return;
 			}
-
 
 			#region Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
 
@@ -292,47 +289,42 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 					isValid = CertificatePresence.InferCertificatePresence(policyObjectToVerify, certPath, certCN);
 				});
 
-
 				if (!isValid)
 				{
-					ShowTeachingTip("The selected certificate is not present in the XML policy file as an UpdatePolicySigner or the selected common name does not match the selected certificate's common name, thus it cannot be used to re-sign the policy. Please select the correct certificate.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateNotInPolicyMessage"));
 					return;
 				}
-
 			}
-
 			// If cert object is not passed, only ensure cert CN and cert file match
 			else
 			{
 				if (!CertificatePresence.VerifyCertAndCNMatch(certPath, certCN))
 				{
-					ShowTeachingTip("The selected certificate file and common name don't match.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateFileAndCommonNameMismatchMessage"));
 					return;
 				}
 			}
 
 			#endregion
 
-
 			// Verify the SignTool
 			if (!AutoAcquireSignTool.IsOn)
 			{
-
 				if (string.IsNullOrWhiteSpace(SignToolPathTextBox.Text))
 				{
-					ShowTeachingTip("Please select the path to SignTool.exe or enable the auto-acquire option.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectSignToolPathOrEnableAutoAcquireMessage"));
 					return;
 				}
 
 				if (!File.Exists(SignToolPathTextBox.Text))
 				{
-					ShowTeachingTip("SignTool.exe does not exist in the selected path. You can enable the auto-acquire option if you don't have it.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("SignToolNotExistMessage"));
 					return;
 				}
 
 				if (!string.Equals(Path.GetExtension(SignToolPathTextBox.Text), ".exe", StringComparison.OrdinalIgnoreCase))
 				{
-					ShowTeachingTip("The SignTool path must end with (.exe). You can enable the auto-acquire option if you don't have it.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("SignToolExtensionInvalidMessage"));
 					return;
 				}
 			}
@@ -340,7 +332,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 			{
 				try
 				{
-					VerifyButtonContentTextBlock.Text = "Downloading SignTool";
+					VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("DownloadingSignToolButtonText");
 
 					string newSignToolPath;
 
@@ -353,13 +345,11 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 					// Set it to the UI text box
 					SignToolPathTextBox.Text = newSignToolPath;
 				}
-
 				finally
 				{
-					VerifyButtonContentTextBlock.Text = "Verify";
+					VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerifyButtonText");
 				}
 			}
-
 
 			// If everything checks out then enable the Primary button for submission
 			this.IsPrimaryButtonEnabled = true;
@@ -383,7 +373,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 			}
 			else
 			{
-				VerifyButtonContentTextBlock.Text = "Verification Successful";
+				VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerificationSuccessfulText");
 			}
 
 			VerificationRunning = false;

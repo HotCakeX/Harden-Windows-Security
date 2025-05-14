@@ -38,8 +38,8 @@ jobs:
       - name: Updating Winget
         shell: pwsh
         run: |
-          Write-Host -Object "The version of the pre-installed Winget on the Runner:"
-          Write-Host -Object (winget --version)
+          # Write-Host -Object "The version of the pre-installed Winget on the Runner:"
+          # Write-Host -Object (winget --version)
 
           # Retrieve the latest Winget release information
           $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'

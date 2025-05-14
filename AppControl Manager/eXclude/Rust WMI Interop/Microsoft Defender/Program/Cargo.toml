@@ -19,7 +19,7 @@ lto = "fat"
 incremental = true
 
 [dependencies.windows]
-version = "0.61.1"
+version = "0.61.*"
 features = [
     "Win32_Security",
     "Win32_System_Com_StructuredStorage",

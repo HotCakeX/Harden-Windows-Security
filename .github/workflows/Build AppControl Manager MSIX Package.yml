@@ -63,7 +63,7 @@ jobs:
           [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
 
           # Required to update the Winget
-          Stop-Process -Name WindowsTerminal -Force
+          Stop-Process -Name WindowsTerminal -Force -ErrorAction Ignore
 
           Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
 

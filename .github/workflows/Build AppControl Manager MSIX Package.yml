@@ -40,6 +40,9 @@ jobs:
         run: |
           winget source update
 
+          Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
+          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
           Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
           $null = winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install .NET SDK') }
@@ -153,6 +156,22 @@ jobs:
 
           #endregion
 
+
+          #region --- RUST projects ---
+
+          [string]$Current_Location = (Get-Location).Path
+
+          Set-Location -Path ".\eXclude\Rust WMI Interop\Device Guard\Program"
+
+          cargo build_x64
+          Copy-Item -Path ".\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe" -Destination "$Current_Location\RustInterop" -Force
+
+          cargo build_arm64
+          Copy-Item -Path ".\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe" -Destination "$Current_Location\RustInterop" -Force
+
+          Set-Location -Path $Current_Location
+
+          #endregion
 
           # https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
           # https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-command-line-reference

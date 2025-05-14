@@ -62,6 +62,7 @@ jobs:
           # Get the paths to all of the dependencies
           [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
 
+          # Required to update the Winget
           Stop-Process -Name WindowsTerminal -Force
 
           Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
@@ -77,7 +78,7 @@ jobs:
           winget source update
 
           Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
-          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --force --source winget
+          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
 
           Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
@@ -90,6 +91,7 @@ jobs:
 
           Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
           $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Microsoft.VCRedist: $LASTEXITCODE") }
 
       - name: Check out the repository code
         uses: actions/checkout@v4

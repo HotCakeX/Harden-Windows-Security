@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Linq;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -38,33 +37,11 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
-	/// <summary>
-	/// Constructor for the CreateSupplementalPolicyFilesAndFoldersScanResults class. Initializes components, maintains
-	/// navigation state, and sets the DataContext.
-	/// </summary>
 	internal CreateSupplementalPolicyFilesAndFoldersScanResults()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
-	}
-
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the ListView
-		if (FileIdentitiesListView.SelectedItems.Count > 0)
-		{
-			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems);
-		}
 	}
 
 	/// <summary>
@@ -82,7 +59,6 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 		}
 	}
 
-
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -91,7 +67,7 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox.Text,
+					ViewModel.FilesAndFoldersScanResultsSearchTextBox,
 					ViewModel.filesAndFoldersScanResultsList,
 					ViewModel.FilesAndFoldersScanResults,
 					ViewModel.SortStateFilesAndFolders,
@@ -102,69 +78,13 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 	}
 
 	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		ApplyFilters();
-	}
-
-	/// <summary>
-	/// Applies the date and search filters to the data grid
-	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-			allFileIdentities: ViewModel.filesAndFoldersScanResultsList.AsEnumerable(),
-			filteredCollection: ViewModel.FilesAndFoldersScanResults,
-			searchText: SearchBox.Text,
-			datePicker: null,
-			regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults
-		);
-		ViewModel.UpdateTotalFilesFilesAndFolders();
-	}
-
-	/// <summary>
-	/// Event handler for the Clear Data button
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
-	{
-		ViewModel.FilesAndFoldersScanResults.Clear();
-		ViewModel.filesAndFoldersScanResultsList.Clear();
-
-		ViewModel.UpdateTotalFilesFilesAndFolders(true);
-	}
-
-	/// <summary>
-	/// Selects all of the displayed rows on the ListView
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void SelectAll_Click(object sender, RoutedEventArgs e)
-	{
-		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FilesAndFoldersScanResults);
-	}
-
-	/// <summary>
-	/// De-selects all of the displayed rows on the ListView
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void DeSelectAll_Click(object sender, RoutedEventArgs e)
-	{
-		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
-	}
-
-	/// <summary>
 	/// CTRL + C shortcuts event handler
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
 	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
-		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		ViewModel.ListViewFlyoutMenuCopy_Click();
 		args.Handled = true;
 	}
 

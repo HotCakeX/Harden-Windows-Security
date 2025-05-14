@@ -150,6 +150,9 @@ internal static class CertificateHelper
 			"1.2.840.10045.4.3.2" => SHA256.HashData(tbsCertificate.Span),
 			"1.2.840.10045.4.3.3" => SHA384.HashData(tbsCertificate.Span),
 			"1.2.840.10045.4.3.4" => SHA512.HashData(tbsCertificate.Span),
+			"2.16.840.1.101.3.4.3.14" => SHA3_256.HashData(tbsCertificate.Span),
+			"2.16.840.1.101.3.4.3.15" => SHA3_384.HashData(tbsCertificate.Span),
+			"2.16.840.1.101.3.4.3.16" => SHA3_512.HashData(tbsCertificate.Span),
 			_ => throw new InvalidOperationException(string.Format(
 					GlobalVars.Rizz.GetString("NoHandlerForAlgorithmMessage"),
 					algorithmOid)),

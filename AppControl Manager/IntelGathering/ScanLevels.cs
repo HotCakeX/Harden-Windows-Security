@@ -20,11 +20,11 @@ namespace AppControlManager.IntelGathering;
 // The levels used by the BuildSignerAndHashObjects method
 internal enum ScanLevels
 {
-	FilePublisher,
-	Publisher,
-	Hash,
-	FilePath,
-	WildCardFolderPath,
-	PFN,
-	CustomFileRulePattern
+	FilePublisher = 0,
+	Publisher = 1,
+	Hash = 2,
+	FilePath = 3,
+	WildCardFolderPath = 4,
+	PFN = 5,
+	CustomFileRulePattern = 6
 }

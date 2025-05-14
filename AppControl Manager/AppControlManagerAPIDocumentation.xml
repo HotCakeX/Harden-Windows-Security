@@ -1665,6 +1665,28 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
+        <member name="T:AppControlManager.CustomUIElements.ListViewV3">
+            <summary>
+            This custom ListView is suitable for use in a page that already has a ScrollView around it.
+            It will offer proper scrolling functionality for both touch and mouse.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.CustomUIElements.ListViewV3.RegistryKey">
+            <summary>
+            When set in XAML, this key will be used to register/unregister the ScrollViewer inside of the ListView and the ListView itself.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.CustomUIElements.ListViewV3.RegistryKeyProperty">
+            <summary>
+            A DP added to the ListView which is a type Enum, used to register it in the caches.
+            This property is exposed and is available in the XAML just like other native properties of the ListView.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.CustomUIElements.ListViewV3.FindParentScrollView">
+            <summary>
+            Walks up the visual tree to find the first ScrollView ancestor *after* the ListView's own inner ScrollViewer
+            </summary>
+        </member>
         <member name="T:AppControlManager.CustomUIElements.MenuFlyoutV2">
             <summary>
             A custom implementation of MenuFlyout that prevents the flyout from automatically closing
@@ -2885,7 +2907,7 @@
             <param name="filePath">The path to the file that is going to be hashed</param>
             <returns>CodeIntegrityHashes object that contains all 4 kinds of hashes</returns>
         </member>
-        <member name="M:AppControlManager.Main.CiRuleOptions.Set(System.String,System.Nullable{AppControlManager.Main.CiRuleOptions.PolicyTemplate},AppControlManager.SiPolicy.OptionType[],AppControlManager.SiPolicy.OptionType[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
+        <member name="M:AppControlManager.Main.CiRuleOptions.Set(System.String,System.Nullable{AppControlManager.Main.CiRuleOptions.PolicyTemplate},AppControlManager.SiPolicy.OptionType[],AppControlManager.SiPolicy.OptionType[],System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Boolean},AppControlManager.SiPolicy.SiPolicy)">
             <summary>
             Configures the Policy rule options in a given XML file and sets the HVCI to Strict in the output XML file.
             It offers many ways to configure the policy rule options in a given XML file.
@@ -2903,6 +2925,7 @@
             <param name="ScriptEnforcement"> Specifies whether to disable script enforcement </param>
             <param name="TestMode"> Specifies whether to enable test mode </param>
             <param name="RemoveAll"> Removes all the existing rule options from the policy XML file </param>
+            <param name="DirectPolicyObj"> Instead of supplying a policy file, use the de-serialized SiPolicy object. The changes will still be saved to the policy file path that is provided which is a mandatory parameter. </param>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
         <member name="M:AppControlManager.Main.CiPolicyTest.TestCiPolicy(System.String)">
@@ -3353,7 +3376,7 @@
             <returns></returns>
             <exception cref="T:System.InvalidOperationException"></exception>
         </member>
-        <member name="M:AppControlManager.MicrosoftGraph.Main.SignIn(AppControlManager.MicrosoftGraph.AuthenticationContext,AppControlManager.MicrosoftGraph.SignInMethods)">
+        <member name="M:AppControlManager.MicrosoftGraph.Main.SignIn(AppControlManager.MicrosoftGraph.AuthenticationContext,AppControlManager.MicrosoftGraph.SignInMethods,System.Threading.CancellationToken)">
             <summary>
             Signs into a tenant
             </summary>
@@ -3694,7 +3717,7 @@
             Runs at startup to perform update check.
             </summary>
         </member>
-        <member name="M:AppControlManager.Others.CertificateGenerator.BuildAppControlCertificate(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:AppControlManager.Others.CertificateGenerator.BuildAppControlCertificate(System.String,System.String,System.Int32,System.Int32,System.Security.Cryptography.HashAlgorithmName)">
             <summary>
             Generates a self-signed X.509 certificate with specified parameters and saves it to the user's personal store.
             </summary>
@@ -3702,6 +3725,7 @@
             <param name="Password">Sets the password for protecting the private key of the generated certificate.</param>
             <param name="validity">Defines the duration in years for which the certificate will be valid.</param>
             <param name="keySize">Indicates the size of the key used for the certificate, affecting its security level.</param>
+            <param name="hashAlgorithm">The hashing algorithm.</param>
             <returns>Returns the generated X509Certificate2 object representing the newly created certificate.</returns>
         </member>
         <member name="M:AppControlManager.Others.CertificateGenerator.StoreCertificateInStore(System.Security.Cryptography.X509Certificates.X509Certificate2,System.Nullable{AppControlManager.Others.CertificateGenerator.CertificateStoreLocation},System.Boolean)">
@@ -4435,8 +4459,6 @@
             Used to pass ViewModel based properties of an InfoBar element to a class constructor
             in a way that the receiver will be able to modify the original objects.
             </summary>
-            <param name="getVisibility"></param>
-            <param name="setVisibility"></param>
             <param name="getIsOpen"></param>
             <param name="setIsOpen"></param>
             <param name="getMessage"></param>
@@ -4445,14 +4467,14 @@
             <param name="setSeverity"></param>
             <param name="getIsClosable"></param>
             <param name="setIsClosable"></param>
+            <param name="getTitle"></param>
+            <param name="setTitle"></param>
         </member>
-        <member name="M:AppControlManager.Others.InfoBarSettings.#ctor(System.Func{Microsoft.UI.Xaml.Visibility},System.Action{Microsoft.UI.Xaml.Visibility},System.Func{System.Boolean},System.Action{System.Boolean},System.Func{System.String},System.Action{System.String},System.Func{Microsoft.UI.Xaml.Controls.InfoBarSeverity},System.Action{Microsoft.UI.Xaml.Controls.InfoBarSeverity},System.Func{System.Boolean},System.Action{System.Boolean})">
+        <member name="M:AppControlManager.Others.InfoBarSettings.#ctor(System.Func{System.Boolean},System.Action{System.Boolean},System.Func{System.String},System.Action{System.String},System.Func{Microsoft.UI.Xaml.Controls.InfoBarSeverity},System.Action{Microsoft.UI.Xaml.Controls.InfoBarSeverity},System.Func{System.Boolean},System.Action{System.Boolean},System.Func{System.String},System.Action{System.String})">
             <summary>
             Used to pass ViewModel based properties of an InfoBar element to a class constructor
             in a way that the receiver will be able to modify the original objects.
             </summary>
-            <param name="getVisibility"></param>
-            <param name="setVisibility"></param>
             <param name="getIsOpen"></param>
             <param name="setIsOpen"></param>
             <param name="getMessage"></param>
@@ -4461,6 +4483,8 @@
             <param name="setSeverity"></param>
             <param name="getIsClosable"></param>
             <param name="setIsClosable"></param>
+            <param name="getTitle"></param>
+            <param name="setTitle"></param>
         </member>
         <member name="T:AppControlManager.Others.ListViewHelper">
             <summary>
@@ -5003,6 +5027,50 @@
             <param name="policyObj"></param>
             <param name="policyFile"></param>
             <returns></returns>
+        </member>
+        <member name="T:AppControlManager.Others.UniqueStringObservableCollection">
+            <summary>
+            An ObservableCollection of strings that only allows unique items (case-insensitive, ordinal comparison).
+            Duplicate strings will be ignored when added or set.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.UniqueStringObservableCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AppControlManager.Others.UniqueStringObservableCollection"/> class.
+            Uses StringComparer.OrdinalIgnoreCase for uniqueness.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.UniqueStringObservableCollection.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AppControlManager.Others.UniqueStringObservableCollection"/> class that contains elements copied from the specified collection.
+            Only unique items (case-insensitive) will be retained.
+            </summary>
+            <param name="collection">The collection whose elements are copied to the new list.</param>
+        </member>
+        <member name="P:AppControlManager.Others.UniqueStringObservableCollection.UniqueItems">
+            <summary>
+            A read-only view of the internal set of unique items.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.UniqueStringObservableCollection.InsertItem(System.Int32,System.String)">
+            <summary>
+            Inserts an item into the collection at the specified index if it's not already present (case-insensitive).
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.UniqueStringObservableCollection.RemoveItem(System.Int32)">
+            <summary>
+            Removes the item at the specified index and updates the internal lookup.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.UniqueStringObservableCollection.SetItem(System.Int32,System.String)">
+            <summary>
+            Replaces the element at the specified index if the new value is not a duplicate.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Others.UniqueStringObservableCollection.ClearItems">
+            <summary>
+            Removes all items from the collection and clears the internal lookup.
+            </summary>
         </member>
         <member name="T:AppControlManager.Others.UpdateAvailableEventArgs">
             <summary>
@@ -5561,231 +5629,9 @@
             Represents a page for creating supplemental policies, managing data display and user interactions.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.#ctor">
-            <summary>
-            Constructor for the CreateSupplementalPolicy class. Initializes components, sets navigation cache mode, and assigns
-            the data context.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.LightUp1">
             <summary>
             Local event handlers that are assigned to the sidebar button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Click">
-            <summary>
-            Browse for Files - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Click">
-            <summary>
-            Browse for Folders - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Click">
-            <summary>
-            Browse for Base Policy - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersViewFileDetailsSettingsCard_Click">
-            <summary>
-            Link to the page that shows scanned file details
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Deploy policy Toggle Button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.ScanLevelComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
-            <summary>
-            To detect when File Scan Level ComboBox level changes
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersPolicyNameTextBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            When the Supplemental Policy Name Textbox text changes
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click">
-            <summary>
-            Button to clear the list of selected file paths
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
-            <summary>
-            Button to clear the list of selected folder paths
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateFilesAndFoldersSupplementalPolicyButton_Click">
-            <summary>
-            Main button's event handler for files and folder Supplemental policy creation
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click">
-            <summary>
-            Event handler for the clear button for the text box of selected Base policy path
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._FilesAndFoldersSupplementalPolicyPath">
-            <summary>
-            Path to the Files and Folders Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_FilesAndFolders">
-            <summary>
-            Opens a policy editor for files and folders using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CertificatesPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Deploy button event handler for Certificates-based Supplemental policy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateCertificatesSupplementalPolicyButton_Click">
-            <summary>
-            Main Button - Creates the Certificates-based Supplemental policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click">
-            <summary>
-            Event handler for the clear button for the text box of selected Base policy path
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._CertificatesSupplementalPolicyPath">
-            <summary>
-            Path to the Certificates Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_Certificates">
-            <summary>
-            Opens a policy editor for Certificates using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateISGSupplementalPolicyButton_Click">
-            <summary>
-            Event handler for the main button - to create Supplemental ISG based policy
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._ISGSupplementalPolicyPath">
-            <summary>
-            Path to the ISG Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_ISG">
-            <summary>
-            Opens a policy editor for ISG using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Click">
-            <summary>
-            Browse for Base Policy - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click">
-            <summary>
-            Event handler for the clear button for the text box of selected Base policy path
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.StrictKernelModeCreateButton_Click">
-            <summary>
-            Event handler for the create button
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.DriverAutoDetector">
-            <summary>
-            Detects the kernel-mode drivers from the system and scans them
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._StrictKernelModeSupplementalPolicyPath">
-            <summary>
-            Path to the StrictKernelMode Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_StrictKernelMode">
-            <summary>
-            Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRefreshAppsListButton_Click">
-            <summary>
-            Event handler for the Refresh button to get the apps list
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer,Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs)">
-            <summary>
-            Event handler for the touch-initiated refresh action
-            </summary>
-            <param name="sender"></param>
-            <param name="args"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNSelectAllAppsListButton_Click">
-            <summary>
-            Event handler to select all apps in the ListView
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNRemoveSelectionAppsListButton_Click">
-            <summary>
-            Event handler to remove all selections of apps in the ListView
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNPackagedAppsListView_SelectionChanged">
-            <summary>
-            Event handler to display the selected apps count on the UI TextBlock
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNAppFilteringTextBox_TextChanged">
-            <summary>
-            Event handler for when the search box of apps list changes
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.PFNSettingsCard_Expanded">
-            <summary>
-            Event handler to happen only once when the section is expanded and apps list is loaded
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreatePFNSupplementalPolicyButton_Click">
-            <summary>
-            Main button's event handler - Create Supplemental policy based on PFNs
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._PFNSupplementalPolicyPath">
-            <summary>
-            Path to the PFN Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_PFN">
-            <summary>
-            Opens a policy editor for PFN using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click">
-            <summary>
-            Event handler for the main button - to create Supplemental pattern based File path policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click">
-            <summary>
-            Event handler to display the content dialog for more info about patterns
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateSupplementalPolicy._CustomPatternBasedFileRuleSupplementalPolicyPath">
-            <summary>
-            Path to the CustomPatternBasedFileRule Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.OpenInPolicyEditor_CustomPatternBasedFileRule">
-            <summary>
-            Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicy.InitializeComponent">
@@ -5809,53 +5655,9 @@
             interactions.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.#ctor">
-            <summary>
-            Constructor for the CreateSupplementalPolicyFilesAndFoldersScanResults class. Initializes components, maintains
-            navigation state, and sets the DataContext.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-            </summary>
-            <param name="sender">The event sender.</param>
-            <param name="e">The event arguments.</param>
-        </member>
         <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.ApplyFilters">
-            <summary>
-            Applies the date and search filters to the data grid
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.ClearDataButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the Clear Data button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateSupplementalPolicyFilesAndFoldersScanResults.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            De-selects all of the displayed rows on the ListView
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -6693,60 +6495,9 @@
             filtering, and managing data.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.#ctor">
-            <summary>
-            Initializes a new instance of the StrictKernelPolicyScanResults class, setting up navigation caching and data
-            context for the view model.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-            </summary>
-            <param name="sender">The event sender.</param>
-            <param name="e">The event arguments.</param>
-        </member>
         <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Click event handler for copy
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.ApplyFilters">
-            <summary>
-            Applies the date and search filters to the data grid
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.ClearDataButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the Clear Data button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.SelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.DeSelectAll_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            De-selects all of the displayed rows on the ListView
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.StrictKernelPolicyScanResults.ListViewFlyoutMenuDelete_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Deletes the selected row from the results
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
@@ -7758,7 +7509,7 @@
             
              </summary>
         </member>
-        <member name="M:AppControlManager.SiPolicy.Merger.Merge(System.String,System.Collections.Generic.HashSet{System.String})">
+        <member name="M:AppControlManager.SiPolicy.Merger.Merge(System.String,System.Collections.Generic.IReadOnlyCollection{System.String})">
             <summary>
             This is the Main method that is responsible for merging 2 XML files.
             The result will be saved in the first XL file and there will be no duplicate data.
@@ -8884,11 +8635,6 @@
             collection and displayed in the UI.
             </summary>
         </member>
-        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ClearSelectedDirectoriesButton_Click">
-            <summary>
-            Clears the text box and the list of selected directories when the button is clicked.
-            </summary>
-        </member>
         <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ListViewFlyoutMenuCopy_Click_LocalFiles">
             <summary>
             Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -8958,6 +8704,11 @@
         <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ResetStepsButton_Click">
             <summary>
             Steps Reset
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.AllowNewAppsVM.ClearSelectedDirectoriesButton_Click">
+            <summary>
+            Clears the text box and the list of selected directories when the button is clicked.
             </summary>
         </member>
         <member name="P:AppControlManager.ViewModels.BuildNewCertificateVM.generatedCertThumbPrint">
@@ -9080,6 +8831,21 @@
             Event handler to open the created Strict Kernel-mode policy in the Policy Editor
             </summary>
         </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the Files and Folders section is expanded.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM.filesAndFoldersFilePaths">
+            <summary>
+            Selected File Paths
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM.filesAndFoldersFolderPaths">
+            <summary>
+            Selected Folder Paths
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -9088,9 +8854,34 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForBasePolicyIsEnabled">
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBasePolicyPath">
             <summary>
-            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            Selected Base policy path
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersSupplementalPolicyName">
+            <summary>
+            Selected Supplemental policy name
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersElementsAreEnabled">
+            <summary>
+            Whether the UI elements for Files and Folders section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersDeployButton">
+            <summary>
+            Whether the policy should be deployed.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UsingWildCardFilePathRules">
+            <summary>
+            Whether the selected level is Wildcard file paths.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersScalabilityButtonContent">
+            <summary>
+            The content of the button that has the RadialGauge inside it.
             </summary>
         </member>
         <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersScanResults">
@@ -9098,24 +8889,174 @@
             Used to store the scan results and as the source for the results ListViews
             </summary>
         </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._FilesAndFoldersSupplementalPolicyPath">
+            <summary>
+            Path to the Files and Folders Supplemental policy XML file.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click">
+            <summary>
+            Button to clear the list of selected file paths
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
+            <summary>
+            Button to clear the list of selected folder paths
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UpdateTotalFilesFilesAndFolders(System.Nullable{System.Boolean})">
             <summary>
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBrowseForBasePolicyIsEnabled">
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForFilesButton_Click">
             <summary>
-            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            Browse for Files - Button Click
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ISGBrowseForBasePolicyIsEnabled">
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForFoldersButton_Click">
             <summary>
-            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            Browse for Folders - Button Click
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeBrowseForBasePolicyIsEnabled">
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForBasePolicyButton_Click">
             <summary>
-            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            Browse for Base Policy - Button Click
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersViewFileDetailsSettingsCard_Click">
+            <summary>
+            Link to the page that shows scanned file details
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click">
+            <summary>
+            Event handler for the clear button for the text box of selected Base policy path
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OpenInPolicyEditor_FilesAndFolders">
+            <summary>
+            Opens a policy editor for files and folders using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CreateFilesAndFoldersSupplementalPolicyButton_Click">
+            <summary>
+            Main button's event handler for files and folder Supplemental policy creation
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ListViewFlyoutMenuCopy_Click">
+            <summary>
+            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.SelectAll_Click">
+            <summary>
+            Selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.DeSelectAll_Click">
+            <summary>
+            De-selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ClearDataButton_Click">
+            <summary>
+            Event handler for the Clear Data button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ApplyFilters">
+            <summary>
+            Applies the date and search filters to the data grid
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBasedSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the Certificates Based section is expanded.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._CertificatesSupplementalPolicyPath">
+            <summary>
+            Path to the Certificates Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBasedCertFilePaths">
+            <summary>
+            Selected Certificate File Paths
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBasedBasePolicyPath">
+            <summary>
+            Selected Base policy path
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBasedSupplementalPolicyName">
+            <summary>
+            Selected Supplemental policy name,
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBasedDeployButton">
+            <summary>
+            Whether the policy should be deployed or not.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBasedElementsAreEnabled">
+            <summary>
+            Whether the UI elements for Certificates Based section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CreateCertificatesSupplementalPolicyButton_Click">
+            <summary>
+            Main Button - Creates the Certificates-based Supplemental policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click">
+            <summary>
+            Event handler for the clear button for the text box of selected Base policy path
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OpenInPolicyEditor_Certificates">
+            <summary>
+            Opens a policy editor for Certificates using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ISGElementsAreEnabled">
+            <summary>
+            Whether the UI elements for the ISG section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ISGSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the ISG section is expanded.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ISGBasedBasePolicyPath">
+            <summary>
+            Path to the base policy for the ISG based supplemental policy
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ISGBasedSupplementalPolicyName">
+            <summary>
+            Selected Supplemental policy name
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._ISGSupplementalPolicyPath">
+            <summary>
+            Path to the ISG Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CreateISGSupplementalPolicyButton_Click">
+            <summary>
+            Event handler for the main button - to create Supplemental ISG based policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OpenInPolicyEditor_ISG">
+            <summary>
+            Opens a policy editor for ISG using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeElementsAreEnabled">
+            <summary>
+            Whether the UI elements for Strict Kernel Mode section are enabled or disabled.
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CalculateColumnWidthsStrictKernelMode">
@@ -9126,19 +9067,224 @@
             And only after this method, the ItemsSource must be assigned to the ListView.
             </summary>
         </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeBasePolicyPath">
+            <summary>
+            Path to the base policy for the Strict kernel-mode supplemental policy
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeShouldDeploy">
+            <summary>
+            Whether the supplemental policy should be deployed at the end.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModePolicyName">
+            <summary>
+            The name of the supplemental policy for Strict Kernel Mode.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._StrictKernelModeSupplementalPolicyPath">
+            <summary>
+            Path to the StrictKernelMode Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeBrowseForBasePolicyButton_Click">
+            <summary>
+            Browse for Base Policy - Button Click
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click">
+            <summary>
+            Event handler for the clear button for the text box of selected Base policy path
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernelModeCreateButton_Click">
+            <summary>
+            Event handler for the create button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.DriverAutoDetector">
+            <summary>
+            Detects the kernel-mode drivers from the system and scans them
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OpenInPolicyEditor_StrictKernelMode">
+            <summary>
+            Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.UpdateTotalFilesStrictKernelMode(System.Nullable{System.Boolean})">
             <summary>
             Updates the total logs count displayed on the UI
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBrowseForBasePolicyIsEnabled">
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernel_ListViewFlyoutMenuCopy_Click">
             <summary>
-            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
             </summary>
         </member>
-        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled">
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernel_ClearDataButton_Click">
             <summary>
-            Controls enabled/disabled states of the elements that allow browsing for base policy file path
+            Event handler for the Clear Data button
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernel_SelectAll_Click">
+            <summary>
+            Selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernel_DeSelectAll_Click">
+            <summary>
+            De-selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernel_ApplyFilters">
+            <summary>
+            Applies the date and search filters to the data grid
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.StrictKernel_ListViewFlyoutMenuDelete_Click">
+            <summary>
+            Deletes the selected row from the results
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNElementsAreEnabled">
+            <summary>
+            Whether the UI elements for the PFN section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM.packagesLoadedOnExpand">
+            <summary>
+            To track whether the expandable settings section for the PFN supplemental policy has expanded so the apps list can be pre-loaded
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasePolicyPath">
+            <summary>
+            Path to the base policy for the PFN based supplemental policy
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasedSupplementalPolicyName">
+            <summary>
+            The name of the supplemental policy that will be created.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasedShouldDeploy">
+            <summary>
+            Whether the Supplemental policy should be deployed at the end.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateSupplementalPolicyVM._PFNSupplementalPolicyPath">
+            <summary>
+            Path to the PFN Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasedAppsListItemsSource">
+            <summary>
+            Items Source of the ListView that displays the list of the installed packaged apps.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasedSelectedItemsCount">
+            <summary>
+            Displays the count of the selected apps from the ListView.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasedSearchKeywordForAppsList">
+            <summary>
+            The search keyword for filtering the apps list.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNBasedSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the PFN based section is expanded or not.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNRefreshAppsListButton_Click">
+            <summary>
+            Event handler for the Refresh button to get the apps list
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNSelectAllAppsListButton_Click">
+            <summary>
+            Event handler to select all apps in the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNRemoveSelectionAppsListButton_Click">
+            <summary>
+            Event handler to remove all selections of apps in the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNPackagedAppsListView_SelectionChanged">
+            <summary>
+            Event handler to display the selected apps count on the UI TextBlock
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNAppFilteringTextBox_TextChanged">
+            <summary>
+            Event handler for when the search box of apps list changes
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PFNSettingsCard_Expanded">
+            <summary>
+            Event handler to happen only once when the section is expanded and apps list is loaded
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CreatePFNSupplementalPolicyButton_Click">
+            <summary>
+            Main button's event handler - Create Supplemental policy based on PFNs
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OpenInPolicyEditor_PFN">
+            <summary>
+            Opens a policy editor for PFN using a specified supplemental policy path.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomFilePathRulesElementsAreEnabled">
+            <summary>
+            Whether the UI elements for the Custom File Path Rules section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomFilePathRulesSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the Custom File Path Rules section is expanded.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomPatternBasedFileRuleBasedBasePolicyPath">
+            <summary>
+            Path to the base policy for the Custom Pattern-based File Rule supplemental policy
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomPatternBasedFileRuleBasedDeployButton">
+            <summary>
+            Whether the supplemental policy should be deployed at the end.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM._CustomPatternBasedFileRuleSupplementalPolicyPath">
+            <summary>
+            Path to the CustomPatternBasedFileRule Supplemental policy XML file
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.SupplementalPolicyCustomPatternBasedCustomPatternTextBox">
+            <summary>
+            The custom pattern used for file rule.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CustomPatternBasedFileRuleBasedSupplementalPolicyName">
+            <summary>
+            Selected Supplemental policy name
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click">
+            <summary>
+            Event handler for the main button - to create Supplemental pattern based File path policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click">
+            <summary>
+            Event handler to display the content dialog for more info about patterns
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.OpenInPolicyEditor_CustomPatternBasedFileRule">
+            <summary>
+            Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
             </summary>
         </member>
         <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.PolicyFileToMergeWith">
@@ -10189,7 +10335,7 @@
             First item is a bool indicating the string is valid.
             The 2nd item includes the string that can be used in the policy.</returns>
         </member>
-        <member name="M:AppControlManager.XMLOps.SignerAndHashBuilder.BuildSignerAndHashObjects(System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.Generic.HashSet{System.String},System.Collections.Generic.HashSet{System.String},AppControlManager.IntelGathering.ScanLevels,System.Boolean,System.Collections.Generic.List{System.String})">
+        <member name="M:AppControlManager.XMLOps.SignerAndHashBuilder.BuildSignerAndHashObjects(System.Collections.Generic.List{AppControlManager.IntelGathering.FileIdentity},System.Collections.Generic.IReadOnlyCollection{System.String},System.Collections.Generic.HashSet{System.String},AppControlManager.IntelGathering.ScanLevels,System.Boolean,System.Collections.Generic.List{System.String})">
              <summary>
              Creates Signer and Hash objects from the input data
             

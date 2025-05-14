@@ -96,7 +96,7 @@ static string escapeJSON(const string& s) {
 // - Strings are output directly.
 // - Numbers and booleans are output directly.
 // - VT_NULL and VT_EMPTY return null.
-// - When the variant type is a SAFEARRAY (for strings or integers) and the array has no members, 
+// - When the variant type is a SAFEARRAY (for strings or integers) and the array has no members,
 //   it returns an empty string (i.e. nothing is output).
 static string VariantToString(const VARIANT& vt)
 {

@@ -37,7 +37,7 @@
         </controls:WrapPanel>
 
         <InfoBar Grid.Row="1"
-          Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
+          Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
           IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
           Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
           Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"

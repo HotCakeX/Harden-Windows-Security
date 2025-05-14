@@ -23,6 +23,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Text;
+using System.Xml;
 using AppControlManager.Others;
 
 namespace AppControlManager.SiPolicy;
@@ -46,7 +47,12 @@ internal static class BinaryOpsReverse
 		// PolicyTypeID is not needed in the XML, clear it
 		policy.PolicyTypeID = string.Empty;
 
-		return policy;
+		// Serialize it it because we need to pass the SiPolicy obj to
+		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
+
+		// Deserialize it because we need to normalize the content such as empty or whitespaces values for File Rules etc.
+		// The policy will essentially pass from Serialization and Deserialization, each including many layers of checks for correctness.
+		return CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
 	}
 
 	private static byte[] ExtractCipContent(string binaryFilePath)

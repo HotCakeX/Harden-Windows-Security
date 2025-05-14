@@ -16,6 +16,8 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AppControlManager.Others;
@@ -26,6 +28,19 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class BuildNewCertificateVM : ViewModelBase
 {
+
+	internal BuildNewCertificateVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+		() => StatusInfoBarIsOpen, value => StatusInfoBarIsOpen = value,
+		() => StatusInfoBarMessage, value => StatusInfoBarMessage = value,
+		() => StatusInfoBarSeverity, value => StatusInfoBarSeverity = value,
+		() => StatusInfoBarIsClosable, value => StatusInfoBarIsClosable = value,
+		() => StatusInfoBarTitle, value => StatusInfoBarTitle = value);
+	}
+
+	private readonly InfoBarSettings MainInfoBar;
+
 	/// <summary>
 	/// To save the generated certificate's thumb print
 	/// </summary>
@@ -62,24 +77,58 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		}
 	} = true;
 
+	private enum HashAlgorithm
+	{
+		SHA2_256 = 0,
+		SHA2_384 = 1,
+		SHA2_512 = 2,
+		SHA3_256 = 3,
+		SHA3_384 = 4,
+		SHA3_512 = 5
+	}
+
+	private readonly Dictionary<HashAlgorithm, HashAlgorithmName> AlgoCorrelation = new() {
+		{ HashAlgorithm.SHA2_256, HashAlgorithmName.SHA256 },
+		{ HashAlgorithm.SHA2_384, HashAlgorithmName.SHA384 },
+		{ HashAlgorithm.SHA2_512, HashAlgorithmName.SHA512 },
+		{ HashAlgorithm.SHA3_256, HashAlgorithmName.SHA3_256 },
+		{ HashAlgorithm.SHA3_384, HashAlgorithmName.SHA3_384 },
+		{ HashAlgorithm.SHA3_512, HashAlgorithmName.SHA3_512 }
+	};
+
 	internal string? CommonName { get; set => SP(ref field, value); }
 	internal string? Password { get; set => SP(ref field, value); }
 	internal string KeySizeComboBoxSelectedItem { get; set => SP(ref field, value); } = "4096";
 	internal double Validity { get; set => SP(ref field, value); } = 100;
+	internal int SelectedHashAlgorithm
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				if (field > 2)
+				{
+					MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("AlgoNotSupportedByCIWarning"));
+				}
+				else
+				{
+					StatusInfoBarIsOpen = false;
+				}
+			}
+		}
+	} = 2;
 
 	/// <summary>
 	/// Event handler for the main build button
 	/// </summary>
 	internal async void BuildCertificateButton_Click()
 	{
-		StatusInfoBarIsOpen = true;
 		CopyInfoBarToClipboardButtonVisibility = Visibility.Collapsed;
 
 		if (string.IsNullOrEmpty(CommonName) || string.IsNullOrEmpty(Password))
 		{
-			StatusInfoBarSeverity = InfoBarSeverity.Warning;
-			StatusInfoBarMessage = GlobalVars.Rizz.GetString("ProvideCNOrPassErrorMsg");
-			StatusInfoBarTitle = GlobalVars.Rizz.GetString("ProvideCNOrPassErrorTitle");
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ProvideCNOrPassErrorMsg"),
+				GlobalVars.Rizz.GetString("ProvideCNOrPassErrorTitle"));
 			return;
 		}
 
@@ -88,14 +137,12 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 		try
 		{
-			StatusInfoBarSeverity = InfoBarSeverity.Informational;
-
 			generatedCertThumbPrint = null;
 
 			ElementsAreEnabled = false;
 
-			StatusInfoBarTitle = GlobalVars.Rizz.GetString("ProcessingTitle");
-			StatusInfoBarMessage = GlobalVars.Rizz.GetString("BuildingCertificate");
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("BuildingCertificate"),
+				GlobalVars.Rizz.GetString("ProcessingTitle"));
 
 			await Task.Run(() =>
 			{
@@ -103,7 +150,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 					 CommonName,
 					 Password,
 					 (int)Validity,
-					 int.Parse(KeySizeComboBoxSelectedItem)
+					 int.Parse(KeySizeComboBoxSelectedItem),
+					 AlgoCorrelation[(HashAlgorithm)SelectedHashAlgorithm]
 					 );
 
 				generatedCertThumbPrint = generatedCert.Thumbprint;
@@ -111,13 +159,9 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			StatusInfoBarTitle = GlobalVars.Rizz.GetString("ErrorTitle");
-			StatusInfoBarMessage = GlobalVars.Rizz.GetString("CertificateBuildError") + " : " + ex.Message;
-			StatusInfoBarSeverity = InfoBarSeverity.Error;
-
+			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("CertificateBuildError"),
+				GlobalVars.Rizz.GetString("ErrorTitle"));
 			ErrorsOccurred = true;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 
 		finally
@@ -126,10 +170,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			if (!ErrorsOccurred)
 			{
-				StatusInfoBarTitle = GlobalVars.Rizz.GetString("SuccessTitle");
-				StatusInfoBarMessage = GlobalVars.Rizz.GetString("CertificateBuildSuccess") + generatedCertThumbPrint + "'";
-
-				StatusInfoBarSeverity = InfoBarSeverity.Success;
+				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("CertificateBuildSuccess") + generatedCertThumbPrint + "'",
+					GlobalVars.Rizz.GetString("SuccessTitle"));
 
 				CopyInfoBarToClipboardButtonVisibility = Visibility.Visible;
 			}

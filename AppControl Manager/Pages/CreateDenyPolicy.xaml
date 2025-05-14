@@ -14,7 +14,7 @@
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
-    <ScrollView x:Name="MainScrollView" PointerPressed="MainScrollView_PointerPressed">
+    <ScrollView>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -178,11 +178,13 @@
                             <TextBox x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" PlaceholderText="Deny Policy Name"/>
                         </controls:SettingsCard>
 
-                        <customUI:SettingsCardV2 Description="Select the level based on which the detected files will be scanned."
-                            Header="Select Scan Level" x:Name="ScanLevelComboBoxSettingsCard">
+                        <customUI:SettingsCardV2 x:Uid="SelectScanLevelSettingsCard"
+                                                 x:Name="ScanLevelComboBoxSettingsCard">
 
-                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
-                                  SelectedIndex="0">
+                            <ComboBox x:Name="ScanLevelComboBox"
+                                      SelectionChanged="ScanLevelComboBox_SelectionChanged"
+                                      x:Uid="ScanLevelComboBox"
+                                      SelectedIndex="0">
                                 <x:String>File Publisher</x:String>
                                 <x:String>Publisher</x:String>
                                 <x:String>Hash</x:String>
@@ -230,8 +232,7 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="View the details of all of the files that were detected in the file and folder paths you selected."
-                                           Header="View detected file details"
+                        <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
                                            IsClickEnabled="True" IsActionIconVisible="True"
                                            IsEnabled="False"
@@ -282,8 +283,10 @@
                             <TextBox x:Name="PFNPolicyNameTextBox" PlaceholderText="Deny Policy Name"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="Select one or more installed packages to create a Deny policy for"
-                            Header="Package Family Names" x:Name="PFNSelectPackagedAppsSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="PackageFamilyNamesSelectionSettingsCard"
+                                               x:Name="PFNSelectPackagedAppsSettingsCard"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
 
                             <controls:WrapPanel Orientation="Horizontal">
 
@@ -300,8 +303,9 @@
 
                                 <RefreshContainer x:Name="PFNRefreshContainer" RefreshRequested="PFNRefreshContainer_RefreshRequested">
 
-                                    <ListView
+                                    <customUI:ListViewV3
                                         x:Name="PFNPackagedAppsListView"
+                                        RegistryKey="DenyPolicy_PFNBasedRules"
                                         BorderThickness="1"
                                         CornerRadius="5"
                                         ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
@@ -310,17 +314,15 @@
                                         Height="400"
                                         HorizontalAlignment="Left"
                                         SelectionMode="Multiple"
-                                        PointerEntered="PFNPackagedAppsListView_PointerEntered"
-                                        PointerExited="{x:Bind PFNPackagedAppsListView_PointerExited}"
                                         SelectionChanged="{x:Bind PFNPackagedAppsListView_SelectionChanged}"
                                         ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
 
-                                        <ListView.ItemsPanel>
+                                        <customUI:ListViewV3.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <ItemsStackPanel AreStickyGroupHeadersEnabled="True"/>
                                             </ItemsPanelTemplate>
-                                        </ListView.ItemsPanel>
-                                        <ListView.GroupStyle>
+                                        </customUI:ListViewV3.ItemsPanel>
+                                        <customUI:ListViewV3.GroupStyle>
                                             <GroupStyle >
                                                 <GroupStyle.HeaderTemplate>
                                                     <DataTemplate x:DataType="others:GroupInfoListForPackagedAppView">
@@ -330,9 +332,9 @@
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
                                             </GroupStyle>
-                                        </ListView.GroupStyle>
+                                        </customUI:ListViewV3.GroupStyle>
 
-                                    </ListView>
+                                    </customUI:ListViewV3>
 
                                 </RefreshContainer>
 

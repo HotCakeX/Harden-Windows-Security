@@ -264,13 +264,13 @@ DeviceEvents
 	/// Signs into a tenant
 	/// </summary>
 	/// <returns></returns>
-	internal static async Task<(bool, CancellationTokenSource?, AuthenticatedAccounts?)> SignIn(AuthenticationContext context, SignInMethods signInMethod)
+	internal static async Task<(bool, AuthenticatedAccounts?)> SignIn(
+	AuthenticationContext context,
+	SignInMethods signInMethod,
+	CancellationToken cancellationToken)
 	{
 		AuthenticationResult? authResult = null;
 		bool error = false;
-
-		// Create a CancellationTokenSource for this sign-in operation
-		CancellationTokenSource cts = new();
 
 		AuthenticatedAccounts? newAccount = null;
 
@@ -284,14 +284,14 @@ DeviceEvents
 						authResult = await App.AcquireTokenInteractive(Scopes[context])
 							.WithPrompt(Prompt.SelectAccount)
 							.WithUseEmbeddedWebView(false)
-							.ExecuteAsync(cts.Token);
+							.ExecuteAsync(cancellationToken);
 
 						break;
 					}
 				case SignInMethods.WebAccountManager:
 					{
 						authResult = await AppWAMBased.AcquireTokenInteractive(Scopes[context])
-							.ExecuteAsync(cts.Token);
+							.ExecuteAsync(cancellationToken);
 
 						break;
 					}
@@ -345,7 +345,7 @@ DeviceEvents
 			}
 		}
 
-		return (!error, cts, newAccount);
+		return (!error, newAccount);
 	}
 
 

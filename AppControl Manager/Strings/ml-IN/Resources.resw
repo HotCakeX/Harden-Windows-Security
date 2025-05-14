@@ -4363,4 +4363,196 @@
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>പാറ്റേൺ-അധിഷ്ഠിത ഫയൽ പാത്ത് റൂൾ നിഷേധിക്കൽ നയം വിജയകരമായി സൃഷ്ടിച്ചു.</value>
   </data>
+    <data name="TotalFiles" xml:space="preserve">
+    <value>ആകെ ഫയലുകൾ</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>എല്ലാ ഡാറ്റയും വിജയകരമായി ക്ലിയർ ചെയ്തു.</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>സേവ് ഫീച്ചർ ഉപയോഗിക്കുന്നതിന് മുമ്പ് ദയവായി ഒരു പോളിസി ഫയൽ തിരഞ്ഞെടുത്ത് ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>ദയവായി ഒരു പോളിസി പതിപ്പ് നൽകുക, അത് ശൂന്യമായിരിക്കാൻ പാടില്ല.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>അൽഗോരിതം</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>എൻക്രിപ്ഷനായി ഉപയോഗിക്കുന്ന ക്രിപ്റ്റോഗ്രാഫിക് അൽഗോരിതം.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എൻക്രിപ്ഷനായി ഉപയോഗിക്കുന്ന ക്രിപ്റ്റോഗ്രാഫിക് അൽഗോരിതം.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എൻക്രിപ്ഷനായി ഉപയോഗിക്കുന്ന ക്രിപ്റ്റോഗ്രാഫിക് അൽഗോരിതം.</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>കേർണൽ-മോഡ് പോളിസി</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്തോ എല്ലാ പ്രാദേശിക ഡ്രൈവറുകളും സ്കാൻ ചെയ്തോ ഒരു കേർണൽ-മോഡ് പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്തോ എല്ലാ പ്രാദേശിക ഡ്രൈവറുകളും സ്കാൻ ചെയ്തോ ഒരു കേർണൽ-മോഡ് പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്തോ എല്ലാ പ്രാദേശിക ഡ്രൈവറുകളും സ്കാൻ ചെയ്തോ ഒരു കേർണൽ-മോഡ് പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>ഓട്ടോ ഡ്രൈവർ ഡിറ്റക്ഷൻ</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ ഡ്രൈവറുകളും യാന്ത്രികമായി കണ്ടെത്തി ലിസ്റ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ ഡ്രൈവറുകളും യാന്ത്രികമായി കണ്ടെത്തി ലിസ്റ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ ഡ്രൈവറുകളും യാന്ത്രികമായി കണ്ടെത്തി ലിസ്റ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>കേർണൽ-മോഡ് ഫയലുകൾക്കായി മാത്രം ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കേർണൽ-മോഡ് ഫയലുകൾക്കായി മാത്രം ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കേർണൽ-മോഡ് ഫയലുകൾക്കായി മാത്രം ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>കണ്ടെത്തിയ കേർണൽ-മോഡ് ഫയലുകൾ കാണുക</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>കണ്ടെത്തിയ എല്ലാ കേർണൽ-മോഡ് ഫയലുകളുടെയും വിശദാംശങ്ങൾ കാണുക</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കണ്ടെത്തിയ എല്ലാ കേർണൽ-മോഡ് ഫയലുകളുടെയും വിശദാംശങ്ങൾ കാണുക</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കണ്ടെത്തിയ എല്ലാ കേർണൽ-മോഡ് ഫയലുകളുടെയും വിശദാംശങ്ങൾ കാണുക</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>പാക്കേജ് ഫാമിലി നെയിം</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>ഒരു ആപ്പിന്റെ പാക്കേജ് ഫാമിലി നെയിം (PFN) അടിസ്ഥാനമാക്കി ഒരു സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു ആപ്പിന്റെ പാക്കേജ് ഫാമിലി നെയിം (PFN) അടിസ്ഥാനമാക്കി ഒരു സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു ആപ്പിന്റെ പാക്കേജ് ഫാമിലി നെയിം (PFN) അടിസ്ഥാനമാക്കി ഒരു സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>പാക്കേജ് ഫാമിലി നെയിമുകൾ</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>ഒരു പോളിസി ഉണ്ടാക്കുന്നതിനായി ഒന്നോ അതിലധികമോ ഇൻസ്റ്റാൾ ചെയ്ത പാക്കേജുകൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു പോളിസി ഉണ്ടാക്കുന്നതിനായി ഒന്നോ അതിലധികമോ ഇൻസ്റ്റാൾ ചെയ്ത പാക്കേജുകൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു പോളിസി ഉണ്ടാക്കുന്നതിനായി ഒന്നോ അതിലധികമോ ഇൻസ്റ്റാൾ ചെയ്ത പാക്കേജുകൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>കേർണൽ മോഡ്</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>യൂസർ മോഡ്</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>സൈനിംഗ് സിനാരിയോ</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>സൈനിംഗ് സിനാരിയോ</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>ഈ സർട്ടിഫിക്കറ്റ് യൂസർ മോഡ് അല്ലെങ്കിൽ കേർണൽ മോഡ് സൈനിംഗ് സിനാരിയോയിലേക്ക് ചേർക്കണോ എന്ന് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ സർട്ടിഫിക്കറ്റ് യൂസർ മോഡ് അല്ലെങ്കിൽ കേർണൽ മോഡ് സൈനിംഗ് സിനാരിയോയിലേക്ക് ചേർക്കണോ എന്ന് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ സർട്ടിഫിക്കറ്റ് യൂസർ മോഡ് അല്ലെങ്കിൽ കേർണൽ മോഡ് സൈനിംഗ് സിനാരിയോയിലേക്ക് ചേർക്കണോ എന്ന് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>സപ്ലിമെന്റൽ പോളിസിയിൽ സ്കാൻ ചെയ്യാനും ഉൾപ്പെടുത്താനുമുള്ള സർട്ടിഫിക്കറ്റ് ഫയൽ പാത്തുകൾക്കായി ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സപ്ലിമെന്റൽ പോളിസിയിൽ സ്കാൻ ചെയ്യാനും ഉൾപ്പെടുത്താനുമുള്ള സർട്ടിഫിക്കറ്റ് ഫയൽ പാത്തുകൾക്കായി ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സപ്ലിമെന്റൽ പോളിസിയിൽ സ്കാൻ ചെയ്യാനും ഉൾപ്പെടുത്താനുമുള്ള സർട്ടിഫിക്കറ്റ് ഫയൽ പാത്തുകൾക്കായി ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾ</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകളെ അടിസ്ഥാനമാക്കി സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകളെ അടിസ്ഥാനമാക്കി സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകളെ അടിസ്ഥാനമാക്കി സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>കണ്ടെത്തിയ ഫയൽ വിശദാംശങ്ങൾ കാണുക</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫയൽ, ഫോൾഡർ പാത്തുകളിൽ കണ്ടെത്തിയ എല്ലാ ഫയലുകളുടെയും വിശദാംശങ്ങൾ കാണുക.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫയൽ, ഫോൾഡർ പാത്തുകളിൽ കണ്ടെത്തിയ എല്ലാ ഫയലുകളുടെയും വിശദാംശങ്ങൾ കാണുക.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫയൽ, ഫോൾഡർ പാത്തുകളിൽ കണ്ടെത്തിയ എല്ലാ ഫയലുകളുടെയും വിശദാംശങ്ങൾ കാണുക.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>സ്കാൻ ലെവൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>കണ്ടെത്തിയ ഫയലുകൾ സ്കാൻ ചെയ്യേണ്ട ലെവൽ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കണ്ടെത്തിയ ഫയലുകൾ സ്കാൻ ചെയ്യേണ്ട ലെവൽ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കണ്ടെത്തിയ ഫയലുകൾ സ്കാൻ ചെയ്യേണ്ട ലെവൽ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>ഒരു പോളിസി ഫയൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ പേജിൽ നിങ്ങൾ ഉണ്ടാക്കിയ എല്ലാ നിയമങ്ങളും ചേർക്കുന്നതിനായി ഒരു ആപ്പ് കൺട്രോൾ പോളിസിക്കായി ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ പേജിൽ നിങ്ങൾ ഉണ്ടാക്കിയ എല്ലാ നിയമങ്ങളും ചേർക്കുന്നതിനായി ഒരു ആപ്പ് കൺട്രോൾ പോളിസിക്കായി ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു പുതിയ സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുന്നതിനോ അല്ലെങ്കിൽ ഉണ്ടാക്കുന്ന നിയമങ്ങൾ നിലവിലുള്ള ഒരു പോളിസിയിലേക്ക് ചേർക്കുന്നതിനോ ഇടയിൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു പുതിയ സപ്ലിമെന്റൽ പോളിസി ഉണ്ടാക്കുന്നതിനോ അല്ലെങ്കിൽ ഉണ്ടാക്കുന്ന നിയമങ്ങൾ നിലവിലുള്ള ഒരു പോളിസിയിലേക്ക് ചേർക്കുന്നതിനോ ഇടയിൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>മോഡ്:</value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>പുതിയ പോളിസി ഉണ്ടാക്കുക</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>നിലവിലുള്ള പോളിസിയിലേക്ക് ചേർക്കുക</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത അൽഗോരിതം ആപ്പ് കൺട്രോൾ പോളിസികൾ സൈൻ ചെയ്യുന്നതിന് പിന്തുണയ്ക്കുന്നില്ല. ആപ്പ് കൺട്രോൾ സൈനിംഗിനായി ഉണ്ടാക്കിയ സർട്ടിഫിക്കറ്റ് ഉപയോഗിക്കാൻ നിങ്ങൾ ഉദ്ദേശിക്കുന്നുണ്ടെങ്കിൽ, ദയവായി മറ്റൊരു അൽഗോരിതം തിരഞ്ഞെടുക്കുന്നത് പരിഗണിക്കുക.</value>
+  </data>
 </root>

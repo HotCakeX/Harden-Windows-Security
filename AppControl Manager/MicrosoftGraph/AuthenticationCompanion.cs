@@ -18,11 +18,10 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading;
-using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using AppControlManager.Others;
+using AppControlManager.ViewModels;
 
 namespace AppControlManager.MicrosoftGraph;
 
@@ -120,7 +119,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 	internal Visibility AuthenticatedAccountsListViewVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
-	/// Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts 
+	/// Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts
 	/// </summary>
 	internal Visibility AuthenticatedAccountsShimmerVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
@@ -207,15 +206,12 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 				cancellationTokenSource.Dispose();
 				cancellationTokenSource = null;
 
-				_InfoBar.Visibility = Visibility.Visible;
-				_InfoBar.IsOpen = true;
-				_InfoBar.Message = GlobalVars.Rizz.GetString("SignInProcessCancelledMessage");
-				_InfoBar.Severity = InfoBarSeverity.Informational;
-				_InfoBar.IsClosable = true;
+				_InfoBar.WriteInfo(GlobalVars.Rizz.GetString("SignInProcessCancelledMessage"));
 			}
 		}
 		finally
 		{
+			_InfoBar.IsClosable = true;
 			ManageButtonsStates(true);
 		}
 	}
@@ -233,15 +229,12 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 			{
 				await Main.SignOut(ListViewSelectedAccount);
 
-				_InfoBar.Visibility = Visibility.Visible;
-				_InfoBar.IsOpen = true;
-				_InfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyLoggedOutSelectedAccountMessage");
-				_InfoBar.Severity = InfoBarSeverity.Informational;
-				_InfoBar.IsClosable = true;
+				_InfoBar.WriteInfo(GlobalVars.Rizz.GetString("SuccessfullyLoggedOutSelectedAccountMessage"));
 			}
 		}
 		finally
 		{
+			_InfoBar.IsClosable = true;
 			ManageButtonsStates(true);
 		}
 	}
@@ -256,13 +249,9 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 
 		if (CurrentActiveAccount is not null)
 		{
-			_InfoBar.Visibility = Visibility.Visible;
-			_InfoBar.IsOpen = true;
-			_InfoBar.Message = string.Format(
+			_InfoBar.WriteSuccess(string.Format(
 				GlobalVars.Rizz.GetString("SuccessfullySetActiveAccountMessage"),
-				CurrentActiveAccount.Username);
-			_InfoBar.Severity = InfoBarSeverity.Success;
-			_InfoBar.IsClosable = true;
+				CurrentActiveAccount.Username));
 		}
 	}
 
@@ -275,7 +264,6 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		SignInButtonState = on;
 		SignOutButtonState = on;
 	}
-
 
 	/// <summary>
 	/// Sign In methods ComboBox source
@@ -303,46 +291,42 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 	/// </summary>
 	internal async void SignIn()
 	{
+		// create and store the CTS
+		cancellationTokenSource = new CancellationTokenSource();
+
 		try
 		{
 			SignInButtonState = false;
 
-			_InfoBar.Visibility = Visibility.Visible;
-			_InfoBar.IsOpen = true;
-			_InfoBar.Message = GlobalVars.Rizz.GetString("SigningIntoMSGraphMessage");
-			_InfoBar.Severity = InfoBarSeverity.Informational;
-			_InfoBar.IsClosable = false;
+			_InfoBar.WriteInfo(GlobalVars.Rizz.GetString("SigningIntoMSGraphMessage"));
 
-			(bool, CancellationTokenSource?, AuthenticatedAccounts?) signInResult =
-				await Main.SignIn(AuthenticationContextComboBoxSelectedItem, SignInMethodsComboBoxSelectedItem);
+			(bool, AuthenticatedAccounts?) signInResult = await Main.SignIn(
+				AuthenticationContextComboBoxSelectedItem,
+				SignInMethodsComboBoxSelectedItem,
+				cancellationTokenSource.Token);
 
 			if (signInResult.Item1)
 			{
-				cancellationTokenSource = signInResult.Item2;
-				CurrentActiveAccount = signInResult.Item3;
+				CurrentActiveAccount = signInResult.Item2;
 
-				_InfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullySignedIntoMSGraphMessage");
-				_InfoBar.Severity = InfoBarSeverity.Success;
+				_InfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullySignedIntoMSGraphMessage"));
 			}
 		}
 		catch (OperationCanceledException)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
-
-			_InfoBar.Message = GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage");
-			_InfoBar.Severity = InfoBarSeverity.Warning;
+			_InfoBar.WriteWarning(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
 		}
 		catch (Exception ex)
 		{
-			_InfoBar.Message = string.Format(
+			_InfoBar.WriteError(ex, string.Format(
 				GlobalVars.Rizz.GetString("ErrorSigningIntoMSGraphMessage"),
-				ex.Message);
-			_InfoBar.Severity = InfoBarSeverity.Error;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
+				ex.Message));
 		}
 		finally
 		{
+			cancellationTokenSource?.Dispose();
+			cancellationTokenSource = null;
+
 			_InfoBar.IsClosable = true;
 			SignInButtonState = true;
 		}

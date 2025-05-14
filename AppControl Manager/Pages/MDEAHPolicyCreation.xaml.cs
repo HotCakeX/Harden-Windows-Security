@@ -70,7 +70,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 
 	internal readonly AuthenticationCompanion AuthCompanionCLS;
 
-	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️	
+	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
 
 
 	/// <summary>
@@ -90,7 +90,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		this.DataContext = this;
 
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => ViewModel.MainInfoBarVisibility, value => ViewModel.MainInfoBarVisibility = value,
 			() => ViewModel.MainInfoBarIsOpen, value => ViewModel.MainInfoBarIsOpen = value,
 			() => ViewModel.MainInfoBarMessage, value => ViewModel.MainInfoBarMessage = value,
 			() => ViewModel.MainInfoBarSeverity, value => ViewModel.MainInfoBarSeverity = value,
@@ -287,7 +286,6 @@ DeviceEvents
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("ScanningMDEAdvancedHuntingCsvLogs");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
@@ -349,7 +347,6 @@ DeviceEvents
 		{
 			error = true;
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarMessage = string.Format(
 				GlobalVars.Rizz.GetString("ErrorScanningMDEAdvancedHuntingCsvLogs"),
@@ -374,7 +371,6 @@ DeviceEvents
 
 			if (!error)
 			{
-				ViewModel.MainInfoBarVisibility = Visibility.Visible;
 				ViewModel.MainInfoBarIsOpen = true;
 				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs");
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
@@ -561,7 +557,6 @@ DeviceEvents
 				);
 			}
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
@@ -770,7 +765,6 @@ DeviceEvents
 		{
 			Error = true;
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarIsClosable = true;
 			ViewModel.MainInfoBarMessage = string.Format(
@@ -800,7 +794,6 @@ DeviceEvents
 					policyName
 				);
 				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarVisibility = Visibility.Visible;
 				ViewModel.MainInfoBarIsOpen = true;
 				ViewModel.MainInfoBarIsClosable = true;
 
@@ -838,7 +831,6 @@ DeviceEvents
 	/// </summary>
 	private async void RetrieveTheLogsButton_Click()
 	{
-		ViewModel.MainInfoBarVisibility = Visibility.Visible;
 		ViewModel.MainInfoBarIsOpen = true;
 		ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("RetrievingMDEAdvancedHuntingDataMessage");
 		ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;

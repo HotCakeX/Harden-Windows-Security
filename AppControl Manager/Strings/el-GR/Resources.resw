@@ -4363,4 +4363,196 @@
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Η πολιτική Άρνησης κανόνα μοτίβου διαδρομής αρχείου δημιουργήθηκε επιτυχώς.</value>
   </data>
+    <data name="TotalFiles" xml:space="preserve">
+    <value>Συνολικά Αρχεία</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>Όλα τα δεδομένα εκκαθαρίστηκαν επιτυχώς.</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>Παρακαλώ επιλέξτε ένα αρχείο πολιτικής και φορτώστε το πριν χρησιμοποιήσετε τη δυνατότητα αποθήκευσης.</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>παρακαλώ εισαγάγετε μια έκδοση πολιτικής, δεν μπορεί να είναι κενή.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>Αλγόριθμος</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>Ο κρυπτογραφικός αλγόριθμος που χρησιμοποιείται για την κρυπτογράφηση.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο κρυπτογραφικός αλγόριθμος που χρησιμοποιείται για την κρυπτογράφηση.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο κρυπτογραφικός αλγόριθμος που χρησιμοποιείται για την κρυπτογράφηση.</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>Πολιτική λειτουργίας πυρήνα</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>Δημιουργήστε μια πολιτική λειτουργίας πυρήνα σαρώνοντας τα αρχεία καταγραφής συμβάντων ή σαρώνοντας όλους τους τοπικούς οδηγούς</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε μια πολιτική λειτουργίας πυρήνα σαρώνοντας τα αρχεία καταγραφής συμβάντων ή σαρώνοντας όλους τους τοπικούς οδηγούς</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε μια πολιτική λειτουργίας πυρήνα σαρώνοντας τα αρχεία καταγραφής συμβάντων ή σαρώνοντας όλους τους τοπικούς οδηγούς</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>Αυτόματη Ανίχνευση Οδηγών</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>Αυτόματη ανίχνευση και καταγραφή όλων των οδηγών στο σύστημα</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτόματη ανίχνευση και καταγραφή όλων των οδηγών στο σύστημα</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτόματη ανίχνευση και καταγραφή όλων των οδηγών στο σύστημα</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>Σάρωση Αρχείων Καταγραφής Συμβάντων</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>Σαρώστε τα αρχεία καταγραφής συμβάντων μόνο για αρχεία λειτουργίας πυρήνα</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σαρώστε τα αρχεία καταγραφής συμβάντων μόνο για αρχεία λειτουργίας πυρήνα</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Σαρώστε τα αρχεία καταγραφής συμβάντων μόνο για αρχεία λειτουργίας πυρήνα</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Προβολή ανιχνευμένων αρχείων λειτουργίας πυρήνα</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Προβάλετε τις λεπτομέρειες όλων των αρχείων λειτουργίας πυρήνα που βρέθηκαν</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβάλετε τις λεπτομέρειες όλων των αρχείων λειτουργίας πυρήνα που βρέθηκαν</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβάλετε τις λεπτομέρειες όλων των αρχείων λειτουργίας πυρήνα που βρέθηκαν</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>Όνομα Οικογένειας Πακέτων</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>Δημιουργήστε μια συμπληρωματική πολιτική βάσει του Ονόματος Οικογένειας Πακέτων (PFN) μιας εφαρμογής</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε μια συμπληρωματική πολιτική βάσει του Ονόματος Οικογένειας Πακέτων (PFN) μιας εφαρμογής</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε μια συμπληρωματική πολιτική βάσει του Ονόματος Οικογένειας Πακέτων (PFN) μιας εφαρμογής</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Ονόματα Οικογενειών Πακέτων</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε ένα ή περισσότερα εγκατεστημένα πακέτα για να δημιουργήσετε μια πολιτική.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα ή περισσότερα εγκατεστημένα πακέτα για να δημιουργήσετε μια πολιτική.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα ή περισσότερα εγκατεστημένα πακέτα για να δημιουργήσετε μια πολιτική.</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>Λειτουργία Πυρήνα</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>Λειτουργία Χρήστη</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>Σενάριο Υπογραφής</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>Σενάριο Υπογραφής</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε εάν αυτό το πιστοποιητικό θα προστεθεί στο Σενάριο Υπογραφής Λειτουργίας Χρήστη ή Λειτουργίας Πυρήνα</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε εάν αυτό το πιστοποιητικό θα προστεθεί στο Σενάριο Υπογραφής Λειτουργίας Χρήστη ή Λειτουργίας Πυρήνα</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε εάν αυτό το πιστοποιητικό θα προστεθεί στο Σενάριο Υπογραφής Λειτουργίας Χρήστη ή Λειτουργίας Πυρήνα</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>Αναζήτηση Για Πιστοποιητικά</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>Αναζητήστε διαδρομές αρχείων πιστοποιητικών για σάρωση και συμπερίληψη στη Συμπληρωματική πολιτική.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε διαδρομές αρχείων πιστοποιητικών για σάρωση και συμπερίληψη στη Συμπληρωματική πολιτική.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε διαδρομές αρχείων πιστοποιητικών για σάρωση και συμπερίληψη στη Συμπληρωματική πολιτική.</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Πιστοποιητικά</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Δημιουργία Συμπληρωματικής πολιτικής βάσει πιστοποιητικών</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργία Συμπληρωματικής πολιτικής βάσει πιστοποιητικών</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργία Συμπληρωματικής πολιτικής βάσει πιστοποιητικών</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Προβολή λεπτομερειών ανιχνευμένων αρχείων</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Προβάλετε τις λεπτομέρειες όλων των αρχείων που ανιχνεύθηκαν στις διαδρομές αρχείων και φακέλων που επιλέξατε.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβάλετε τις λεπτομέρειες όλων των αρχείων που ανιχνεύθηκαν στις διαδρομές αρχείων και φακέλων που επιλέξατε.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβάλετε τις λεπτομέρειες όλων των αρχείων που ανιχνεύθηκαν στις διαδρομές αρχείων και φακέλων που επιλέξατε.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή Επιπέδου Σάρωσης</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε το επίπεδο βάσει του οποίου θα σαρωθούν τα ανιχνευμένα αρχεία.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε το επίπεδο βάσει του οποίου θα σαρωθούν τα ανιχνευμένα αρχεία.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε το επίπεδο βάσει του οποίου θα σαρωθούν τα ανιχνευμένα αρχεία.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>Επιλέξτε ένα αρχείο πολιτικής</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζητήστε μια πολιτική Ελέγχου Εφαρμογών για να προσθέσετε σε αυτήν όλους τους κανόνες που δημιουργήσατε σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζητήστε μια πολιτική Ελέγχου Εφαρμογών για να προσθέσετε σε αυτήν όλους τους κανόνες που δημιουργήσατε σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε μεταξύ της δημιουργίας μιας νέας συμπληρωματικής πολιτικής ή της προσθήκης των κανόνων που θα δημιουργηθούν σε μια υπάρχουσα πολιτική</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε μεταξύ της δημιουργίας μιας νέας συμπληρωματικής πολιτικής ή της προσθήκης των κανόνων που θα δημιουργηθούν σε μια υπάρχουσα πολιτική</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>Λειτουργία: </value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>Δημιουργία Νέας Πολιτικής</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>Προσθήκη σε Υπάρχουσα Πολιτική</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>Ο επιλεγμένος αλγόριθμος δεν υποστηρίζεται για την υπογραφή πολιτικών Ελέγχου Εφαρμογών. Εάν σκοπεύετε να χρησιμοποιήσετε το παραγόμενο πιστοποιητικό για υπογραφή Ελέγχου Εφαρμογών, παρακαλούμε εξετάστε την επιλογή ενός άλλου αλγορίθμου.</value>
+  </data>
 </root>

@@ -45,7 +45,7 @@
             </InfoBar>
 
             <InfoBar Grid.Row="2"
-                     x:Uid="UpdatePageWhatsNewInfoBar"                
+                     x:Uid="UpdatePageWhatsNewInfoBar"
                      IsOpen="{x:Bind ViewModel.WhatsNewInfoBarIsOpen, Mode=TwoWay}"
                      Severity="Success"
                      IsClosable="True">
@@ -73,7 +73,7 @@
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"                                      
+                        <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
                                       Value="{x:Bind ViewModel.ProgressBarValue, Mode=OneWay}"
                                       IsIndeterminate="{x:Bind ViewModel.ProgressBarIsIndeterminate, Mode=OneWay}"
                                       Minimum="0" Maximum="100" Width="60" Height="60" Margin="5,5,15,5"/>

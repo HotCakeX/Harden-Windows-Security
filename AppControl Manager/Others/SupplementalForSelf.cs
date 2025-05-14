@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AppControlManager.Main;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
@@ -149,12 +148,8 @@ internal static class SupplementalForSelf
 			}
 		}
 
-
 		// Add the certificate's details to the policy
 		_ = AddSigningDetails.Add(savePath, CertPath);
-
-		// Remove the unsigned policy rule option from the policy
-		CiRuleOptions.Set(filePath: savePath, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 		// Define the path for the CIP file
 		string randomString = Guid.CreateVersion7().ToString("N");

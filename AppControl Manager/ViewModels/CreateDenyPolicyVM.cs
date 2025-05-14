@@ -67,7 +67,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal string TotalCountOfTheFilesTextBox
 	{
 		get; set => SP(ref field, value);
-	} = "Total files: 0";
+	} = GlobalVars.Rizz.GetString("TotalFiles") + ": 0";
 
 	#endregion
 
@@ -177,11 +177,11 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox = "Total files: 0";
+			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalFiles") + ": 0";
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox = $"Total files: {FilesAndFoldersScanResults.Count}";
+			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalFiles") + ": " + FilesAndFoldersScanResults.Count;
 		}
 	}
 }

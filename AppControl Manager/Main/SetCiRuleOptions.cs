@@ -113,6 +113,7 @@ internal static class CiRuleOptions
 	/// <param name="ScriptEnforcement"> Specifies whether to disable script enforcement </param>
 	/// <param name="TestMode"> Specifies whether to enable test mode </param>
 	/// <param name="RemoveAll"> Removes all the existing rule options from the policy XML file </param>
+	/// <param name="DirectPolicyObj"> Instead of supplying a policy file, use the de-serialized SiPolicy object. The changes will still be saved to the policy file path that is provided which is a mandatory parameter. </param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void Set(
 		string filePath,
@@ -125,7 +126,8 @@ internal static class CiRuleOptions
 		bool? RequireEVSigners = null,
 		bool? ScriptEnforcement = null,
 		bool? TestMode = null,
-		bool? RemoveAll = null
+		bool? RemoveAll = null,
+		SiPolicy.SiPolicy? DirectPolicyObj = null
 		)
 	{
 
@@ -133,8 +135,8 @@ internal static class CiRuleOptions
 			GlobalVars.Rizz.GetString("ConfiguringPolicyRuleOptionsForMessage"),
 			filePath));
 
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = Management.Initialize(filePath, null);
+		// Instantiate the policy or use the supplied SiPolicy object
+		SiPolicy.SiPolicy policyObj = DirectPolicyObj ?? Management.Initialize(filePath, null);
 
 		// To store the existing rule options in the XML policy file
 		HashSet<OptionType> ExistingRuleOptions = [];

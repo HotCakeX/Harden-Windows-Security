@@ -52,7 +52,7 @@ jobs:
           $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
           Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
-          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --force --source winget
 
       - name: Check out the repository code
         uses: actions/checkout@v4

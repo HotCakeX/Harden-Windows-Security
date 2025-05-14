@@ -198,6 +198,12 @@ jobs:
 
           #region --- RUST projects ---
 
+          rustup target add aarch64-pc-windows-msvc
+
+          rustup target add x86_64-pc-windows-msvc
+
+          rustup update
+
           [string]$Current_Location = (Get-Location).Path
 
           Set-Location -Path ".\eXclude\Rust WMI Interop\Device Guard\Program"

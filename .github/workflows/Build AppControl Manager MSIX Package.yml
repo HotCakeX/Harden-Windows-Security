@@ -35,25 +35,58 @@ jobs:
 
     steps:
 
-      # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
-      - name: Installing the necessary programs
+      - name: Updating Winget
+        shell: pwsh
         run: |
-          winget source update         
+          Write-Host -Object "The version of the pre-installed Winget on the Runner:"
+          Write-Host -Object (winget --version)
+
+          # Retrieve the latest Winget release information
+          $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
+          $LatestRelease = $WingetReleases | Select-Object -First 1
+          # Direct links to the latest Winget release assets
+          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
+          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
+          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
+          [hashtable]$Downloads = @{
+              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
+              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
+              'Winget.msixbundle'                    = $WingetURL
+              'License1.xml'                         = $WingetLicense
+          }
+          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
+              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
+          }
+
+          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
+          # Get the paths to all of the dependencies
+          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
+          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
+
+          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+
+      - name: Installing the necessary programs # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
+        shell: pwsh
+        run: |
+          Write-Host -Object "The version of the Winget currently in use:"
+          Write-Host -Object (winget --version)
+
+          winget source update
 
           Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
           $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --force --source winget
 
           Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
-          $null = winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --force --source winget
+          $null = winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install .NET SDK') }
 
           Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
-          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 --add Microsoft.VisualStudio.Component.UWP.VC.ARM64'
+          $null = winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 --add Microsoft.VisualStudio.Component.UWP.VC.ARM64'
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
 
           Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
-          $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --force --source winget
-  
+          $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
       - name: Check out the repository code
         uses: actions/checkout@v4
 

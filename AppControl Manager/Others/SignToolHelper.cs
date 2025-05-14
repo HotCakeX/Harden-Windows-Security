@@ -112,7 +112,7 @@ internal static class SignToolHelper
 
 		using HttpClient client = new();
 
-		string packageName = "microsoft.windows.sdk.buildtools"; // Important that this stays all lower case
+		const string packageName = "microsoft.windows.sdk.buildtools"; // Important that this stays all lower case
 
 		Logger.Write(
 			GlobalVars.Rizz.GetString("FindingLatestVersionOfBuildToolsPackageMessage")

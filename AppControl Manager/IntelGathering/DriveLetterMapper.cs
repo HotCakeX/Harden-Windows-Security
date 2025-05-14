@@ -49,7 +49,7 @@ internal static partial class DriveLetterMapper
 		List<DriveMapping> drives = [];
 
 		// Maximum buffer size for volume names, paths, and mount points
-		uint max = 65535;
+		const uint max = 65535;
 		// char[] for storing volume names
 		char[] volumeNameBuffer = new char[max];
 		// char[] for storing path names

@@ -208,6 +208,7 @@
                                 <x:String>Polski</x:String>
                                 <x:String>العربية</x:String>
                                 <x:String>Español</x:String>
+                                <x:String>മലയാളം</x:String>
                             </ComboBox>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">

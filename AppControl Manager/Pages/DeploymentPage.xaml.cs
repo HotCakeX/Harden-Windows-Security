@@ -572,7 +572,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 	/// </summary>
 	private void BrowseForCIPBinaryFilesButton_Click()
 	{
-		string filter = "CIP file|*.cip";
+		const string filter = "CIP file|*.cip";
 
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 

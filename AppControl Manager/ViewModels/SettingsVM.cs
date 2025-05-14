@@ -87,7 +87,9 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ "hi", 3 },
 		{ "pl", 4 },
 		{ "ar", 5 },
-		{ "es", 6 }
+		{ "es", 6 },
+		{ "ml", 7 }
+
 	};
 	private static readonly Dictionary<int, string> SupportedLanguagesReverse = new()
 	{
@@ -97,7 +99,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ 3, "hi" },
 		{ 4, "pl" },
 		{ 5, "ar" },
-		{ 6, "es" }
+		{ 6, "es" },
+		{ 7, "ml" }
 	};
 
 	internal bool LanguageSectionSettingsExpanderInfoBarIsOpen { get; set => SP(ref field, value); }

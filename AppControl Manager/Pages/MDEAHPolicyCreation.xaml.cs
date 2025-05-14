@@ -389,7 +389,7 @@ DeviceEvents
 	/// </summary>
 	private void BrowseForLogs_Click()
 	{
-		string filter = "CSV file|*.csv";
+		const string filter = "CSV file|*.csv";
 
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
 

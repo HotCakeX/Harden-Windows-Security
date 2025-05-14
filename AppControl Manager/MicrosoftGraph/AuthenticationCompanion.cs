@@ -50,7 +50,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		_AuthContext = authContext;
 
 		// Initializing the field using the provided authContext
-		_AuthenticationContextComboBoxSelectedItem = _AuthContext;
+		AuthenticationContextComboBoxSelectedItem = _AuthContext;
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
@@ -296,12 +296,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 	/// Bound to the ComboBox's SelectedItem property.
 	/// Default value is supplied via the class constructor.
 	/// </summary>
-	private AuthenticationContext _AuthenticationContextComboBoxSelectedItem;
-	internal AuthenticationContext AuthenticationContextComboBoxSelectedItem
-	{
-		get => _AuthenticationContextComboBoxSelectedItem;
-		set => SetProperty(_AuthenticationContextComboBoxSelectedItem, value, newValue => _AuthenticationContextComboBoxSelectedItem = newValue);
-	}
+	internal AuthenticationContext AuthenticationContextComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Signs into the Microsoft tenant

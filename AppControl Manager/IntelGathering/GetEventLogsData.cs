@@ -56,7 +56,7 @@ internal static class GetEventLogsData
 		// 3076 - Audit
 		// 3077 - Block
 		// 3089 - Correlated
-		string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089)]]";
+		const string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089)]]";
 
 		EventLogQuery eventQuery;
 
@@ -524,7 +524,7 @@ internal static class GetEventLogsData
 		// 8028 - Audit
 		// 8029 - Block
 		// 8038 - Correlated
-		string query = "*[System[(EventID=8028 or EventID=8029 or EventID=8038)]]";
+		const string query = "*[System[(EventID=8028 or EventID=8029 or EventID=8038)]]";
 
 
 		EventLogQuery eventQuery;

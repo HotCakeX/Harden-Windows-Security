@@ -104,9 +104,9 @@ jobs:
           $global:ErrorActionPreference = 'Stop'
 
           # Update the workloads
-          dotnet workload update
-          dotnet workload config --update-mode workload-set
-          dotnet workload update
+          # dotnet workload update
+          # dotnet workload config --update-mode workload-set
+          # dotnet workload update
 
           [System.String]$AppControlManagerDirectory = $PWD.Path
 

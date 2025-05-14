@@ -825,8 +825,8 @@ internal sealed partial class CreateDenyPolicy : Page
 		if (string.IsNullOrWhiteSpace(DenyPolicyCustomPatternBasedCustomPatternTextBox.Text))
 		{
 			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.IsOpen = true;
-			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = "Enter a custom pattern";
-			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = "You need to enter a custom pattern for the file rule.";
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Title = GlobalVars.Rizz.GetString("EnterCustomPatternTitle");
+			CreateCustomPatternBasedFileRuleDenyPolicyTeachingTip.Subtitle = GlobalVars.Rizz.GetString("EnterCustomPatternSubtitle");
 			return;
 		}
 
@@ -848,7 +848,7 @@ internal sealed partial class CreateDenyPolicy : Page
 			DenyPolicyCustomPatternBasedCustomPatternTextBox.IsEnabled = false;
 
 			CustomPatternBasedFileRuleInfoBar.IsOpen = true;
-			CustomPatternBasedFileRuleInfoBar.Message = "Creating the Pattern-based File Path rule Deny policy.";
+			CustomPatternBasedFileRuleInfoBar.Message = GlobalVars.Rizz.GetString("CreatingPatternBasedFilePathRuleDenyPolicyMessage");
 			CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Informational;
 			CustomPatternBasedFileRuleInfoBar.IsClosable = false;
 
@@ -929,7 +929,7 @@ internal sealed partial class CreateDenyPolicy : Page
 			{
 				CustomPatternBasedFileRuleInfoBar.Severity = InfoBarSeverity.Success;
 
-				CustomPatternBasedFileRuleInfoBar.Message = "Successfully created Pattern-based File Path rule Deny policy.";
+				CustomPatternBasedFileRuleInfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage");
 
 				ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}

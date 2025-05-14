@@ -202,8 +202,13 @@
                         <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF69E;}">
                             <ComboBox SelectedIndex="{x:Bind ViewModel.LanguageComboBoxSelectedIndex, Mode=TwoWay}">
                                 <x:String>English</x:String>
-                                <x:String>Hebrew</x:String>
-                                <x:String>Greek</x:String>
+                                <x:String>עברית</x:String>
+                                <x:String>Ελληνικά</x:String>
+                                <x:String>हिंदी</x:String>
+                                <x:String>Polski</x:String>
+                                <x:String>العربية</x:String>
+                                <x:String>Español</x:String>
+                                <x:String>മലയാളം</x:String>
                             </ComboBox>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">

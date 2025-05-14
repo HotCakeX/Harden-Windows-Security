@@ -114,7 +114,7 @@ internal static class GetSignerInfo
 		], StringComparer.OrdinalIgnoreCase);
 
 		// WHQL EKU Hex value
-		string whqlEKUHex = "010A2B0601040182370A0305";
+		const string whqlEKUHex = "010A2B0601040182370A0305";
 
 		// An empty list to store the output
 		List<SignerX> output = [];

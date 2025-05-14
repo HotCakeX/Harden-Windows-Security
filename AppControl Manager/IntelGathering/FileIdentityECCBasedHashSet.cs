@@ -57,7 +57,10 @@ internal sealed class FileIdentityECCBasedHashSet
 			if (item.IsECCSigned == true && (existingItem.IsECCSigned == false || existingItem.IsECCSigned is null))
 			{
 				// Replace the existing item with the new ECC-signed item
-				Logger.Write($"Replacing a FileIdentity item with IsECCSigned == false/null with a new IsECCSigned == true item for the file with name {existingItem.FileName} and SHA256 hash {existingItem.SHA256Hash}.");
+				Logger.Write(string.Format(
+					GlobalVars.Rizz.GetString("ReplacingECCSignedItemMessage"),
+					existingItem.FileName,
+					existingItem.SHA256Hash));
 
 				_ = _set.Remove(existingItem);
 				_ = _set.Add(item);

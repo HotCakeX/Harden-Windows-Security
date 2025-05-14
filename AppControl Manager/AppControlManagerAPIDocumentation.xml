@@ -3167,7 +3167,7 @@
             Authentication context ComboBox source
             </summary>
         </member>
-        <member name="F:AppControlManager.MicrosoftGraph.AuthenticationCompanion._AuthenticationContextComboBoxSelectedItem">
+        <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.AuthenticationContextComboBoxSelectedItem">
             <summary>
             Bound to the ComboBox's SelectedItem property.
             Default value is supplied via the class constructor.
@@ -7086,7 +7086,7 @@
         <member name="M:AppControlManager.SimulationMethods.GetFileHashes.Get(System.Xml.XmlDocument)">
             <summary>
             Takes an App Control XML policy and returns all of the Hashes in the Hash rules.
-            The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main cmdlet.
+            The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main method.
             </summary>
             <param name="xml"></param>
             <returns></returns>
@@ -9863,18 +9863,6 @@
             Raises the PropertyChanged event.
             </summary>
             <param name="propertyName">The name of the property that changed.</param>
-        </member>
-        <member name="M:AppControlManager.ViewModels.ViewModelBase.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="F:AppControlManager.ViewModels.ViewOnlinePoliciesVM._ViewModelMSGraph">
             <summary>

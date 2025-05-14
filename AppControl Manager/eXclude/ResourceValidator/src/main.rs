@@ -1,5 +1,5 @@
 /// [string]$Root = ".\AppControl Manager"
-/// [string]$ExePath = "$Root\Excluded Code\ResourceValidator\target\x86_64-pc-windows-msvc\release\ResourceValidator-X64.exe"
+/// [string]$ExePath = "$Root\eXclude\ResourceValidator\target\x86_64-pc-windows-msvc\release\ResourceValidator-X64.exe"
 /// . $ExePath $Root "$Root\Strings\en-US\Resources.resw" "$Root\Strings"
 use std::{
     collections::{HashMap, HashSet},
@@ -50,13 +50,26 @@ fn main() -> Result<()> {
     // If there are duplicate keys (same key appearing multiple times), report them
     if !resx_info.duplicate_keys.is_empty() {
         println!("Duplicate keys found in resource file:");
-
         for key in &resx_info.duplicate_keys {
-            println!("  - {}", key); // List each duplicate key
+            let values = &resx_info.key_values[key];
+            if values.iter().all(|v| v == &values[0]) {
+                println!("  - '{}' (all values identical: '{}')", key, values[0]);
+            } else {
+                println!("  - '{}' (different values:)", key);
+                for value in values {
+                    println!("    - '{}'", value);
+                }
+            }
         }
     }
 
-    // If there are duplicate values (same value assigned to multiple top-level keys), report and process them
+    // If there are keys with differing values, report and exit without deduplication
+    if !resx_info.differing_values.is_empty() {
+        println!("Keys with differing values found. Please handle manually. No deduplication performed.");
+        exit(1);
+    }
+
+    // Only proceed with deduplication if there are no differing values
     if !resx_info.duplicate_values.is_empty() {
         println!("Duplicate values assigned to multiple no-dot keys:");
 
@@ -289,40 +302,64 @@ fn process_value_duplicates(
     duplicate_values: &Vec<(String, Vec<String>)>, // Groups of (value, [keys]) with duplicates
     cs_dir: &PathBuf,    // Directory containing C# files
 ) -> Result<()> {
-    // Read the entire resource file into a string for manipulation
-    let mut resx_text: String = fs::read_to_string(resx_file)
+    let resx_text: String = fs::read_to_string(resx_file)
         .with_context(|| format!("Cannot read resx file {:?}", resx_file))?;
 
-    // Iterate over each group of keys sharing the same value
+    let data_re = Regex::new(r#"(?s)<data\b[^>]*\bname\s*=\s*"([^"]+)"[^>]*>.*?</data>\s*"#)
+        .expect("Failed to compile data-block regex");
+
+    // Determine which keys to keep and which to remove
+    let mut keep_keys: HashSet<String> = HashSet::new();
+    let mut remove_keys: HashMap<String, String> = HashMap::new(); // Maps removed key to kept key
+
     for (_value, keys) in duplicate_values {
         if keys.len() < 2 {
-            continue; // Skip if there's only one key (no duplicates)
+            continue;
         }
-        // Keep the first key as the canonical one, remove the others
-        let keep_key: &String = &keys[0];
-        let remove_keys: &[String] = &keys[1..];
-
-        // Remove each redundant <data> block from the resource file
-        for rem in remove_keys {
-            // Regex to match the entire <data> block for this key
-            // `(?s)` enables dot to match newlines, ensuring we capture the whole block
-            let data_pattern: String = format!(
-                r#"(?s)<data\s+name\s*=\s*"{}"[^>]*>.*?</data>\s*"#,
-                regex::escape(rem) // Escape the key to handle special characters
-            );
-            let data_re: Regex = Regex::new(&data_pattern)
-                .with_context(|| format!("Invalid regex for removing key `{}`", rem))?;
-            resx_text = data_re.replace_all(&resx_text, "").to_string(); // Remove the block
+        let keep_key = keys[0].clone(); // Keep the first key as requested
+        keep_keys.insert(keep_key.clone());
+        for remove_key in &keys[1..] {
+            remove_keys.insert(remove_key.clone(), keep_key.clone());
         }
+    }
 
-        // Update C# files to replace references to removed keys with the kept key
+    // Rewrite the resx file, keeping only the first occurrence of each key
+    let mut output = String::with_capacity(resx_text.len());
+    let mut last_idx = 0;
+    let mut seen: HashSet<String> = HashSet::new();
+
+    for m in data_re.captures_iter(&resx_text) {
+        let full = m.get(0).unwrap();
+        let key = m.get(1).unwrap().as_str();
+
+        // Write everything before this block
+        output.push_str(&resx_text[last_idx..full.start()]);
+
+        if !seen.contains(key) && (!remove_keys.contains_key(key) || keep_keys.contains(key)) {
+            output.push_str(full.as_str());
+            seen.insert(key.to_string());
+        }
+        // Skip if it's a key to remove (unless it's the kept key)
+
+        last_idx = full.end();
+    }
+    // Write the rest of the file after the last matched block
+    output.push_str(&resx_text[last_idx..]);
+
+    // Write the modified resource file back to disk
+    fs::write(resx_file, output)
+        .with_context(|| format!("Failed to write updated resx file {:?}", resx_file))?;
+
+    // Update C# references for each group of duplicate keys
+    for (_value, keys) in duplicate_values {
+        if keys.len() < 2 {
+            continue;
+        }
+        let keep_key = &keys[0]; // First key is kept
+        let remove_keys = &keys[1..]; // Rest are removed
         update_cs_references(cs_dir, keep_key, remove_keys)
             .with_context(|| format!("Failed to update C# references for key `{}`", keep_key))?;
     }
-
-    // Write the modified resource file back to disk
-    fs::write(resx_file, resx_text)
-        .with_context(|| format!("Failed to write updated resx file {:?}", resx_file))?;
 
     Ok(())
 }
@@ -387,9 +424,8 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
     reader.config_mut().trim_text(true); // Trim whitespace in text nodes
 
     let mut buf: Vec<u8> = Vec::new(); // Buffer for XML events
-    let mut key_values: HashMap<String, String> = HashMap::new(); // Stores key-value pairs
+    let mut key_values: HashMap<String, Vec<String>> = HashMap::new(); // Stores key-value pairs
     let mut key_counts: HashMap<String, usize> = HashMap::new(); // Tracks key occurrences
-    let mut value_map: HashMap<String, Vec<String>> = HashMap::new(); // Maps values to keys
     let mut total_entries = 0; // Counts total <data> elements
 
     // Parse the XML file event by event
@@ -437,16 +473,12 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
                     }
                 }
 
+                // Add to key_values
+                key_values.entry(key.clone()).or_default().push(value_text.clone());
+
                 // Track key occurrences for duplicate detection
                 let cnt: &mut usize = key_counts.entry(key.clone()).or_insert(0);
                 *cnt += 1;
-                if *cnt == 1 {
-                    // Only store the first occurrence in key_values
-                    key_values.insert(key.clone(), value_text.clone());
-                }
-
-                // Map this value to all keys that use it
-                value_map.entry(value_text).or_default().push(key.clone());
             }
             Ok(Event::Eof) => break, // End of file reached
             Ok(_) => {}              // Ignore other events
@@ -467,6 +499,12 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
         .collect();
 
     // Identify values used by multiple top-level keys (no dots in key name)
+    let mut value_map: HashMap<String, Vec<String>> = HashMap::new();
+    for (key, values) in &key_values {
+        if let Some(first_value) = values.first() {
+            value_map.entry(first_value.clone()).or_default().push(key.clone());
+        }
+    }
     let duplicate_values: Vec<(String, Vec<String>)> = value_map
         .into_iter()
         .filter_map(|(value, keys)| {
@@ -479,12 +517,24 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
         })
         .collect();
 
+    let differing_values: Vec<String> = key_values
+        .iter()
+        .filter_map(|(key, values)| {
+            if values.len() > 1 && !values.iter().all(|v| v == &values[0]) {
+                Some(key.clone())
+            } else {
+                None
+            }
+        })
+        .collect();
+
     // Return the parsed data and statistics
     Ok(ResxInfo {
         key_values,
         total_entries,
         duplicate_keys,
         duplicate_values,
+        differing_values,
     })
 }
 
@@ -707,7 +757,7 @@ fn visit_and_normalize(dir: &PathBuf, re: &Regex, modified: &mut Vec<PathBuf>) -
 /// Struct to hold parsed data from a resource file
 struct ResxInfo {
     /// Map of resource keys to their values
-    key_values: HashMap<String, String>,
+    key_values: HashMap<String, Vec<String>>,
 
     /// Total number of <data> entries, including duplicates
     total_entries: usize,
@@ -717,6 +767,9 @@ struct ResxInfo {
 
     /// List of (value, [keys]) where the value is used by multiple top-level keys
     duplicate_values: Vec<(String, Vec<String>)>,
+
+    /// List of keys with differing values
+    differing_values: Vec<String>,
 }
 
 /// Struct to hold results of x:Uid validation in XAML files
@@ -733,7 +786,7 @@ struct XuidValidateReport {
 
 /// Validates that x:Uid usage in XAML files uses allowed properties for each element type
 fn validate_xuid_usage(
-    key_values: &HashMap<String, String>, // English resource keys and values
+    key_values: &HashMap<String, Vec<String>>, // English resource keys and values
     root: &PathBuf,                       // Directory containing XAML files
 ) -> Result<XuidValidateReport> {
     let mut report: XuidValidateReport = XuidValidateReport {
@@ -939,7 +992,7 @@ fn validate_xuid_usage(
 fn visit_xaml(
     dir: &PathBuf,
     re: &Regex,
-    key_values: &HashMap<String, String>,
+    key_values: &HashMap<String, Vec<String>>,
     report: &mut XuidValidateReport,
     allowed: &HashMap<&str, Vec<&str>>,
 ) -> Result<()> {

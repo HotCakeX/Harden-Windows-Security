@@ -49,35 +49,45 @@ internal static class CertificateHelper
 				// If that fails, try specifying "Microsoft Base Cryptographic Provider v1.0"
 				if (!NativeMethods.CryptAcquireContext(out hProv, null, "Microsoft Base Cryptographic Provider v1.0", PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 				{
-					throw new InvalidOperationException($"CryptAcquireContext failed: {Marshal.GetLastWin32Error()}");
+					throw new InvalidOperationException(string.Format(
+						GlobalVars.Rizz.GetString("CryptAcquireContextFailedMessage"),
+						Marshal.GetLastWin32Error()));
 				}
 			}
 
 			// Create an MD2 hash object.
 			if (!NativeMethods.CryptCreateHash(hProv, CALG_MD2, IntPtr.Zero, 0, out hHash))
 			{
-				throw new InvalidOperationException($"CryptCreateHash failed: {Marshal.GetLastWin32Error()}");
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("CryptCreateHashFailedMessage"),
+					Marshal.GetLastWin32Error()));
 			}
 
 			// Feed the data into the hash object.
 			byte[] dataArray = data.ToArray();
 			if (!NativeMethods.CryptHashData(hHash, dataArray, (uint)dataArray.Length, 0))
 			{
-				throw new InvalidOperationException($"CryptHashData failed: {Marshal.GetLastWin32Error()}");
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("CryptHashDataFailedMessage"),
+					Marshal.GetLastWin32Error()));
 			}
 
 			// Determine the size of the hash value.
 			uint hashSize = 0;
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, null, ref hashSize, 0))
 			{
-				throw new InvalidOperationException($"CryptGetHashParam (get size) failed: {Marshal.GetLastWin32Error()}");
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("CryptGetHashParamSizeFailedMessage"),
+					Marshal.GetLastWin32Error()));
 			}
 
 			// Allocate the buffer for the hash value.
 			byte[] hashValue = new byte[hashSize];
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, hashValue, ref hashSize, 0))
 			{
-				throw new InvalidOperationException($"CryptGetHashParam (get value) failed: {Marshal.GetLastWin32Error()}");
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("CryptGetHashParamValueFailedMessage"),
+					Marshal.GetLastWin32Error()));
 			}
 
 			return hashValue;
@@ -140,7 +150,9 @@ internal static class CertificateHelper
 			"1.2.840.10045.4.3.2" => SHA256.HashData(tbsCertificate.Span),
 			"1.2.840.10045.4.3.3" => SHA384.HashData(tbsCertificate.Span),
 			"1.2.840.10045.4.3.4" => SHA512.HashData(tbsCertificate.Span),
-			_ => throw new InvalidOperationException($"No handler for algorithm {algorithmOid}"),
+			_ => throw new InvalidOperationException(string.Format(
+					GlobalVars.Rizz.GetString("NoHandlerForAlgorithmMessage"),
+					algorithmOid)),
 		};
 
 		// Convert the hash to a hex string.
@@ -159,7 +171,9 @@ internal static class CertificateHelper
 	{
 		if (string.IsNullOrEmpty(hex))
 		{
-			throw new ArgumentException("Hex string cannot be null or empty", nameof(hex));
+			throw new ArgumentException(
+				GlobalVars.Rizz.GetString("HexStringCannotBeNullOrEmptyMessage"),
+				nameof(hex));
 		}
 
 		// Convert the hexadecimal string to a byte array by looping through the string in pairs of two characters

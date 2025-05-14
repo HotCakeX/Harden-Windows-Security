@@ -74,24 +74,38 @@ internal static unsafe class ReLaunch
 
 		if (hr < 0)
 		{
-			throw new InvalidOperationException($"CoCreateInstance failed with HRESULT: 0x{(uint)hr:X}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CoCreateInstanceFailedHResultMessage"),
+					(uint)hr
+				)
+			);
 		}
 
 		try
 		{
-			activationManager->ActivateApplication(App.AUMID, arguments, (Windows.Win32.UI.Shell.ACTIVATEOPTIONS)0x20000000, out uint processId);
+			activationManager->ActivateApplication(
+				App.AUMID,
+				arguments,
+				(Windows.Win32.UI.Shell.ACTIVATEOPTIONS)0x20000000,
+				out uint processId);
 		}
 		catch (Exception ex) when (ex.HResult == -2147023673)
 		{
-			Logger.Write("Elevation request cancelled by the user.");
-
+			Logger.Write(
+				GlobalVars.Rizz.GetString("ElevationRequestCancelledByUserMessage")
+			);
 			return false;
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ErrorWriter.FormatException(ex));
-
-			throw new InvalidOperationException($"ActivationManager failed with HRESULT: 0x{(uint)hr:X}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("ActivationManagerFailedWithHRESULTMessage"),
+					(uint)hr
+				)
+			);
 		}
 		finally
 		{

@@ -38,7 +38,9 @@ internal static class SnapBackGuarantee
 			throw new ArgumentNullException(nameof(path), "The path to the EnforcedMode.cip file cannot be null or whitespace.");
 		}
 
-		Logger.Write("Creating the scheduled task for Snap Back Guarantee");
+		Logger.Write(
+			   GlobalVars.Rizz.GetString("CreatingScheduledTaskForSnapBackGuaranteeMessage")
+		   );
 
 		/*
 
@@ -174,7 +176,7 @@ internal static class SnapBackGuarantee
 		*/
 
 
-		string command = """
+		const string command = """
 /c ""C:\Program Files\AppControl Manager\EnforcedModeSnapBack.cmd""
 """;
 
@@ -211,7 +213,7 @@ del ""%~f0""
 	/// </summary>
 	internal static void Remove()
 	{
-		string arg = """
+		const string arg = """
 --delete --name EnforcedModeSnapBack
 """;
 

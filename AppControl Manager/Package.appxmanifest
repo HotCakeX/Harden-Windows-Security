@@ -31,7 +31,7 @@
   <Identity
     Name="AppControlManager"
     Publisher="CN=SelfSignedCertForAppControlManager"
-    Version="2.0.20.0" />
+    Version="2.0.21.0" />
 
   <mp:PhoneIdentity PhoneProductId="199a23ec-7cb6-4ab5-ab50-8baca348bc79" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -55,6 +55,11 @@
     <Resource Language="en-US"/>
     <Resource Language="he-IL"/>
     <Resource Language="el-GR"/>
+    <Resource Language="hi-IN"/>
+    <Resource Language="ml-IN"/>
+    <Resource Language="pl-PL"/>
+    <Resource Language="AR"/>
+    <Resource Language="ES"/>
   </Resources>
 
   <!--

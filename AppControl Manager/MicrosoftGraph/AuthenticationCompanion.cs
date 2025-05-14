@@ -50,7 +50,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		_AuthContext = authContext;
 
 		// Initializing the field using the provided authContext
-		_AuthenticationContextComboBoxSelectedItem = _AuthContext;
+		AuthenticationContextComboBoxSelectedItem = _AuthContext;
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
@@ -209,7 +209,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 
 				_InfoBar.Visibility = Visibility.Visible;
 				_InfoBar.IsOpen = true;
-				_InfoBar.Message = "Sign in process was cancelled";
+				_InfoBar.Message = GlobalVars.Rizz.GetString("SignInProcessCancelledMessage");
 				_InfoBar.Severity = InfoBarSeverity.Informational;
 				_InfoBar.IsClosable = true;
 			}
@@ -235,12 +235,11 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 
 				_InfoBar.Visibility = Visibility.Visible;
 				_InfoBar.IsOpen = true;
-				_InfoBar.Message = "Successfully logged out of the selected account.";
+				_InfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullyLoggedOutSelectedAccountMessage");
 				_InfoBar.Severity = InfoBarSeverity.Informational;
 				_InfoBar.IsClosable = true;
 			}
 		}
-
 		finally
 		{
 			ManageButtonsStates(true);
@@ -259,7 +258,9 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		{
 			_InfoBar.Visibility = Visibility.Visible;
 			_InfoBar.IsOpen = true;
-			_InfoBar.Message = $"Successfully set the account with the username ({CurrentActiveAccount.Username}) as the Active Account for the current page.";
+			_InfoBar.Message = string.Format(
+				GlobalVars.Rizz.GetString("SuccessfullySetActiveAccountMessage"),
+				CurrentActiveAccount.Username);
 			_InfoBar.Severity = InfoBarSeverity.Success;
 			_InfoBar.IsClosable = true;
 		}
@@ -295,12 +296,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 	/// Bound to the ComboBox's SelectedItem property.
 	/// Default value is supplied via the class constructor.
 	/// </summary>
-	private AuthenticationContext _AuthenticationContextComboBoxSelectedItem;
-	internal AuthenticationContext AuthenticationContextComboBoxSelectedItem
-	{
-		get => _AuthenticationContextComboBoxSelectedItem;
-		set => SetProperty(_AuthenticationContextComboBoxSelectedItem, value, newValue => _AuthenticationContextComboBoxSelectedItem = newValue);
-	}
+	internal AuthenticationContext AuthenticationContextComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Signs into the Microsoft tenant
@@ -313,40 +309,41 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 
 			_InfoBar.Visibility = Visibility.Visible;
 			_InfoBar.IsOpen = true;
-			_InfoBar.Message = "Signing into MSGraph";
+			_InfoBar.Message = GlobalVars.Rizz.GetString("SigningIntoMSGraphMessage");
 			_InfoBar.Severity = InfoBarSeverity.Informational;
 			_InfoBar.IsClosable = false;
 
-			(bool, CancellationTokenSource?, AuthenticatedAccounts?) signInResult = await Main.SignIn(AuthenticationContextComboBoxSelectedItem, SignInMethodsComboBoxSelectedItem);
+			(bool, CancellationTokenSource?, AuthenticatedAccounts?) signInResult =
+				await Main.SignIn(AuthenticationContextComboBoxSelectedItem, SignInMethodsComboBoxSelectedItem);
 
 			if (signInResult.Item1)
 			{
 				cancellationTokenSource = signInResult.Item2;
 				CurrentActiveAccount = signInResult.Item3;
 
-				_InfoBar.Message = "Successfully signed into MSGraph";
+				_InfoBar.Message = GlobalVars.Rizz.GetString("SuccessfullySignedIntoMSGraphMessage");
 				_InfoBar.Severity = InfoBarSeverity.Success;
 			}
 		}
 		catch (OperationCanceledException)
 		{
-			Logger.Write("Sign in to MSGraph was cancelled by the user");
+			Logger.Write(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
 
-			_InfoBar.Message = "Sign in to MSGraph was cancelled by the user";
+			_InfoBar.Message = GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage");
 			_InfoBar.Severity = InfoBarSeverity.Warning;
 		}
-
 		catch (Exception ex)
 		{
-			_InfoBar.Message = $"There was an error signing into MSGraph: {ex.Message}";
+			_InfoBar.Message = string.Format(
+				GlobalVars.Rizz.GetString("ErrorSigningIntoMSGraphMessage"),
+				ex.Message);
 			_InfoBar.Severity = InfoBarSeverity.Error;
 
-			throw;
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
 			_InfoBar.IsClosable = true;
-
 			SignInButtonState = true;
 		}
 	}

@@ -226,7 +226,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// </summary>
 	private async void VerifyButton_Click()
 	{
-
 		if (VerificationRunning)
 		{
 			return;
@@ -241,7 +240,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			// Disable UI elements during verification
 			DisableUIElements();
 
-			VerifyButtonContentTextBlock.Text = "Verify";
+			VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerifyButtonText");
 
 			VerifyButtonProgressRing.Visibility = Visibility.Visible;
 
@@ -254,63 +253,59 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (string.IsNullOrWhiteSpace(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip("Please select a certificate file.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectCertificateFileMessage"));
 				return;
 			}
 
 			if (!File.Exists(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip("The selected certificate file path does not exist");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateFilePathNotExistMessage"));
 				return;
 			}
 
 			if (!string.Equals(Path.GetExtension(CertFilePathTextBox.Text), ".cer", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip("You need to select a certificate file path with (.cer) extension.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateExtensionInvalidMessage"));
 				return;
 			}
 
 			#endregion
-
 
 			#region Verify Certificate Common Name
 
 			if (string.IsNullOrWhiteSpace(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip("Please select a certificate common name from the suggestions.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectCertificateCommonNameMessage"));
 				return;
 			}
 
 			if (!CertCommonNames.Contains(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip("No certificate was found in the Current User personal store with the selected Common Name.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateCommonNameNotFoundMessage"));
 				return;
 			}
 
 			#endregion
 
-
 			#region Verify the XML policy path
-
 
 			if (string.IsNullOrWhiteSpace(XMLPolicyFileTextBox.Text))
 			{
-				ShowTeachingTip("Please select the XML policy file of the policy being removed.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectXmlPolicyFileMessage"));
 				return;
 			}
 
 			if (!File.Exists(XMLPolicyFileTextBox.Text))
 			{
-				ShowTeachingTip("The selected XML policy file path does not exist");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyFilePathNotExistMessage"));
 				return;
 			}
 
 			if (!string.Equals(Path.GetExtension(XMLPolicyFileTextBox.Text), ".xml", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip("You need to select a XML file path with (.xml) extension.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyExtensionInvalidMessage"));
 				return;
 			}
-
 
 			string? possibleDeployedPolicy = null;
 			string policyPathFromUI = XMLPolicyFileTextBox.Text;
@@ -329,24 +324,23 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (possibleDeployedPolicy is null)
 			{
-				ShowTeachingTip("The selected XML policy file is not deployed on the system.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyNotDeployedMessage"));
 				return;
 			}
 
 			if (!string.Equals(policyObject!.PolicyID, $"{{{policyIDBeingRemoved}}}", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip("The selected XML policy file is not the one being removed.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyNotBeingRemovedMessage"));
 				return;
 			}
 
 			if (policyObject.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
 			{
-				ShowTeachingTip("Supplemental policies can be removed normally without requiring re-signing.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("SupplementalPoliciesRemovalMessage"));
 				return;
 			}
 
 			#endregion
-
 
 			#region Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
 
@@ -362,34 +356,31 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (!certIsUpdatePolicySigner)
 			{
-				ShowTeachingTip("The selected certificate is not present in the XML policy file as an UpdatePolicySigner or the selected common name does not match the selected certificate's common name, thus it cannot be used to re-sign the policy for the removal process. Please select the correct certificate.");
+				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateNotInPolicyRemovalMessage"));
 				return;
 			}
 
 			#endregion
 
-
 			#region Verify the SignTool
-
 
 			if (!AutoAcquireSignTool.IsOn)
 			{
-
 				if (string.IsNullOrWhiteSpace(SignToolPathTextBox.Text))
 				{
-					ShowTeachingTip("Please select the path to SignTool.exe or enable the auto-acquire option.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectSignToolPathOrEnableAutoAcquireMessage"));
 					return;
 				}
 
 				if (!File.Exists(SignToolPathTextBox.Text))
 				{
-					ShowTeachingTip("SignTool.exe does not exist in the selected path. You can enable the auto-acquire option if you don't have it.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("SignToolNotExistMessage"));
 					return;
 				}
 
 				if (!string.Equals(Path.GetExtension(SignToolPathTextBox.Text), ".exe", StringComparison.OrdinalIgnoreCase))
 				{
-					ShowTeachingTip("The SignTool path must end with (.exe). You can enable the auto-acquire option if you don't have it.");
+					ShowTeachingTip(GlobalVars.Rizz.GetString("SignToolExtensionInvalidMessage"));
 					return;
 				}
 			}
@@ -397,7 +388,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			{
 				try
 				{
-					VerifyButtonContentTextBlock.Text = "Downloading SignTool";
+					VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("DownloadingSignToolButtonText");
 
 					string newSignToolPath;
 
@@ -410,16 +401,13 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 					// Set it to the UI text box
 					SignToolPathTextBox.Text = newSignToolPath;
 				}
-
 				finally
 				{
-					VerifyButtonContentTextBlock.Text = "Verify";
+					VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerifyButtonText");
 				}
 			}
 
-
 			#endregion
-
 
 			// If everything checks out then enable the Primary button for submission
 			this.IsPrimaryButtonEnabled = true;
@@ -432,7 +420,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			// Set certificate details that were verified to the user configurations
 			_ = UserConfiguration.Set(CertificateCommonName: CertificateCommonNameAutoSuggestBox.Text, CertificatePath: CertFilePathTextBox.Text);
 
-
 			// Set the focus on the Primary button after verification has been successful
 			Button? primaryButton = this.GetTemplateChild("PrimaryButton") as Button;
 			if (primaryButton is not null)
@@ -440,7 +427,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 				// Set focus on the primary button
 				_ = await FocusManager.TryFocusAsync(primaryButton, FocusState.Keyboard);
 			}
-
 		}
 		finally
 		{
@@ -453,7 +439,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			}
 			else
 			{
-				VerifyButtonContentTextBlock.Text = "Verification Successful";
+				VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerificationSuccessfulText");
 			}
 
 			VerificationRunning = false;

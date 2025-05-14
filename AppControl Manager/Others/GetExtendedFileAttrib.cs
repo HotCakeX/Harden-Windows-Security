@@ -98,7 +98,13 @@ internal static partial class GetExtendedFileAttrib
 		}
 		catch (Exception ex)
 		{
-			Logger.Write($"Could not get the ExFileInfo of the file: {filePath} - Error: {ex.Message}");
+			Logger.Write(
+				string.Format(
+					GlobalVars.Rizz.GetString("CouldNotGetExFileInfoErrorMessage"),
+					filePath,
+					ex.Message
+				)
+			);
 
 			return BadCaseReturnVal;
 		}

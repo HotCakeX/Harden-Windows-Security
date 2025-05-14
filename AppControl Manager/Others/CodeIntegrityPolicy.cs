@@ -62,11 +62,13 @@ internal sealed class CodeIntegrityPolicy
 
 		// Get SiPolicy node
 		SiPolicyNode = XmlDocument.SelectSingleNode("ns:SiPolicy", NamespaceManager)
-			?? throw new InvalidOperationException("Invalid XML structure, SiPolicy node not found");
+			?? throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("InvalidXmlStructureSiPolicyNodeNotFoundMessage"));
 
 		// Find the Signers Node
 		SignersNode = SiPolicyNode.SelectSingleNode("ns:Signers", NamespaceManager)
-			?? throw new InvalidOperationException("Signers node not found");
+			?? throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("SignersNodeNotFoundMessage"));
 
 		// Find or ensure SigningScenario Node for User Mode
 		UMCI_SigningScenarioNode = EnsureUMCISigningScenario();
@@ -76,11 +78,13 @@ internal sealed class CodeIntegrityPolicy
 
 		// Find ProductSigners Node for User Mode
 		UMCI_ProductSignersNode = UMCI_SigningScenarioNode.SelectSingleNode("ns:ProductSigners", NamespaceManager)
-			?? throw new InvalidOperationException("Failed to create or retrieve UMCI_ProductSignersNode");
+			?? throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("FailedToRetrieveUMCIProductSignersNodeMessage"));
 
 		// Find ProductSigners Node for Kernel Mode
 		KMCI_ProductSignersNode = KMCI_SigningScenarioNode.SelectSingleNode("ns:ProductSigners", NamespaceManager)
-			?? throw new InvalidOperationException("Failed to create or retrieve KMCI_ProductSignersNode");
+			?? throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("FailedToRetrieveKMCIProductSignersNodeMessage"));
 
 		// Ensure FileRulesRef nodes exist
 		UMCI_ProductSigners_FileRulesRef_Node = EnsureFileRulesRefNode(UMCI_ProductSignersNode, "UMCI");
@@ -145,7 +149,10 @@ internal sealed class CodeIntegrityPolicy
 
 			if (fileRulesRefNode is null)
 			{
-				throw new InvalidOperationException($"{mode} Product Signers FileRulesRef node not found despite creating it.");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("FileRulesRefNodeNotFoundDespiteCreationMessage"),
+						mode));
 			}
 		}
 
@@ -167,7 +174,10 @@ internal sealed class CodeIntegrityPolicy
 
 			if (allowedSignersNode is null)
 			{
-				throw new InvalidOperationException($"{mode} Product Signers AllowedSigners node not found despite creating it.");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("AllowedSignersNodeNotFoundDespiteCreationMessage"),
+						mode));
 			}
 		}
 
@@ -189,7 +199,10 @@ internal sealed class CodeIntegrityPolicy
 
 			if (deniedSignersNode is null)
 			{
-				throw new InvalidOperationException($"{mode} Product Signers DeniedSigners node not found despite creating it.");
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("DeniedSignersNodeNotFoundDespiteCreationMessage"),
+						mode));
 			}
 		}
 

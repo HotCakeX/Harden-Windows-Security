@@ -56,7 +56,7 @@ internal static class GetEventLogsData
 		// 3076 - Audit
 		// 3077 - Block
 		// 3089 - Correlated
-		string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089)]]";
+		const string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089)]]";
 
 		EventLogQuery eventQuery;
 
@@ -92,7 +92,7 @@ internal static class GetEventLogsData
 		// Make sure there are events to process
 		if (rawEvents.Count is 0)
 		{
-			Logger.Write("No Code Integrity logs found");
+			Logger.Write(GlobalVars.Rizz.GetString("NoCodeIntegrityLogsFoundMessage"));
 			return fileIdentities.FileIdentitiesInternal;
 		}
 
@@ -501,7 +501,9 @@ internal static class GetEventLogsData
 			}
 		}
 
-		Logger.Write($"Total Code Integrity logs: {fileIdentities.Count}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("TotalCodeIntegrityLogsMessage"),
+			fileIdentities.Count));
 
 		// Return the output
 		return fileIdentities.FileIdentitiesInternal;
@@ -522,7 +524,7 @@ internal static class GetEventLogsData
 		// 8028 - Audit
 		// 8029 - Block
 		// 8038 - Correlated
-		string query = "*[System[(EventID=8028 or EventID=8029 or EventID=8038)]]";
+		const string query = "*[System[(EventID=8028 or EventID=8029 or EventID=8038)]]";
 
 
 		EventLogQuery eventQuery;
@@ -559,7 +561,7 @@ internal static class GetEventLogsData
 		// Make sure there are events to process
 		if (rawEvents.Count == 0)
 		{
-			Logger.Write("No AppLocker events found.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoAppLockerEventsFoundMessage"));
 			return fileIdentities.FileIdentitiesInternal;
 		}
 
@@ -906,7 +908,9 @@ internal static class GetEventLogsData
 			}
 		}
 
-		Logger.Write($"Total AppLocker logs: {fileIdentities.Count}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("TotalAppLockerLogsMessage"),
+			fileIdentities.Count));
 
 		// Return the output
 		return fileIdentities.FileIdentitiesInternal;
@@ -1135,7 +1139,9 @@ internal static class GetEventLogsData
 		}
 
 
-		Logger.Write($"Total logs count: {combinedResult.Count}");
+		Logger.Write(string.Format(
+			GlobalVars.Rizz.GetString("TotalLogsCountMessage"),
+			combinedResult.Count));
 
 		// Return the combined set
 		return combinedResult;

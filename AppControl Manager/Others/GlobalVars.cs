@@ -61,7 +61,7 @@ internal static class GlobalVars
 	internal static nint hWnd;
 
 	// Product ID of the application when installed from the Microsoft Store
-	internal static string StoreProductID = "9PNG1JDDTGP8";
+	internal const string StoreProductID = "9PNG1JDDTGP8";
 
 	// The filters for the file pickers dialogs to select files based on specific extensions
 	internal const string XMLFilePickerFilter = "XML file|*.xml";

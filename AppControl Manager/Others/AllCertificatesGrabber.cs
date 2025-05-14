@@ -246,7 +246,10 @@ internal static partial class AllCertificatesGrabber
 				if (verifyTrustResult == WinTrust.WinVerifyTrustResult.HashMismatch)
 				{
 					// Throw a custom exception
-					throw new HashMismatchInCertificateException($"WinTrust return code: {verifyTrustResult}", $"The file '{FilePath}' is tampered with and there is a Hash Mismatch.");
+					throw new HashMismatchInCertificateException(
+						string.Format(GlobalVars.Rizz.GetString("WinTrustReturnCodeMessage"), verifyTrustResult),
+						string.Format(GlobalVars.Rizz.GetString("FileTamperedHashMismatchMessage"), FilePath)
+					);
 				}
 
 				// If there is valid state data

@@ -75,7 +75,11 @@ internal static class CiPolicyTest
 			// Set the validation event handler
 			settings.ValidationEventHandler += (sender, args) =>
 			{
-				throw new XmlSchemaValidationException($"Validation error in {xmlFilePath}: {args.Message}");
+				throw new XmlSchemaValidationException(
+					string.Format(
+						GlobalVars.Rizz.GetString("XmlValidationErrorMessage"),
+						xmlFilePath,
+						args.Message));
 			};
 
 			// Create an XmlDocument object
@@ -92,7 +96,11 @@ internal static class CiPolicyTest
 		}
 		catch (XmlSchemaValidationException ex)
 		{
-			throw new InvalidOperationException($"Validation error in {xmlFilePath}: {ex.Message}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("XmlValidationErrorMessage"),
+					xmlFilePath,
+					ex.Message));
 		}
 	}
 }

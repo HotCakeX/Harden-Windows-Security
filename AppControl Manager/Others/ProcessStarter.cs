@@ -58,7 +58,15 @@ internal static class ProcessStarter
 
 		if (process.ExitCode is not 0)
 		{
-			throw new InvalidOperationException($"The command '{command} {arguments}' failed with exit code {process.ExitCode}. Error: {error}");
+			throw new InvalidOperationException(
+				string.Format(
+					GlobalVars.Rizz.GetString("CommandFailedWithExitCodeErrorMessage"),
+					command,
+					arguments,
+					process.ExitCode,
+					error
+				)
+			);
 		}
 
 		return output;

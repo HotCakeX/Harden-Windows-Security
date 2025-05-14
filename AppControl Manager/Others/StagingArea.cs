@@ -30,12 +30,8 @@ internal static class StagingArea
 	/// <exception cref="ArgumentException"></exception>
 	internal static DirectoryInfo NewStagingArea(string name)
 	{
-		if (string.IsNullOrWhiteSpace(name))
-		{
-			throw new ArgumentException("CmdletName cannot be null or whitespace", nameof(name));
-		}
 
-		// Define a staging area for the cmdlet
+		// Define a staging area
 		string stagingArea = Path.Combine(GlobalVars.StagingArea, name);
 
 		// Delete it if it already exists with possible content from previous runs
@@ -44,7 +40,7 @@ internal static class StagingArea
 			Directory.Delete(stagingArea, true);
 		}
 
-		// Create the staging area for the cmdlet
+		// Create the staging area
 		DirectoryInfo stagingAreaInfo = Directory.CreateDirectory(stagingArea);
 
 		return stagingAreaInfo;

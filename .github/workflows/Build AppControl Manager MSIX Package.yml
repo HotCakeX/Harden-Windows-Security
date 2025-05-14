@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-2025
 
     # Create outputs for this job where only other job that use "needs" keyword can use them. This job itself cannot access them.
     outputs:
@@ -38,8 +38,8 @@ jobs:
       - name: Updating Winget
         shell: pwsh
         run: |
-          # Write-Host -Object "The version of the pre-installed Winget on the Runner:"
-          # Write-Host -Object (winget --version)
+          Write-Host -Object "The version of the pre-installed Winget on the Runner:"
+          Write-Host -Object (winget --version)
 
           # Retrieve the latest Winget release information
           $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
@@ -63,7 +63,7 @@ jobs:
           [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
 
           # Required to update the Winget
-          # Stop-Process -Name WindowsTerminal -Force
+          Stop-Process -Name WindowsTerminal -Force
 
           Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
 

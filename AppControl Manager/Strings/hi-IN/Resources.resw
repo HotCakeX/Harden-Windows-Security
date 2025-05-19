@@ -4363,4 +4363,196 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>पैटर्न-आधारित फ़ाइल पथ नियम Deny नीति सफलतापूर्वक बनाई गई।</value>
   </data>
+    <data name="TotalFiles" xml:space="preserve">
+    <value>कुल फ़ाइलें</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>सारा डेटा सफलतापूर्वक साफ़ कर दिया गया है।</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>कृपया एक नीति फ़ाइल चुनें और सेव सुविधा का उपयोग करने से पहले इसे लोड करें।</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>कृपया एक नीति संस्करण दर्ज करें, यह खाली नहीं हो सकता।</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>एल्गोरिथ्म</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>एन्क्रिप्शन के लिए उपयोग किया जाने वाला क्रिप्टोग्राफ़िक एल्गोरिथ्म।</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एन्क्रिप्शन के लिए उपयोग किया जाने वाला क्रिप्टोग्राफ़िक एल्गोरिथ्म।</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एन्क्रिप्शन के लिए उपयोग किया जाने वाला क्रिप्टोग्राफ़िक एल्गोरिथ्म।</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>कर्नेल-मोड नीति</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>इवेंट लॉग को स्कैन करके या सभी स्थानीय ड्राइवरों को स्कैन करके कर्नेल-मोड नीति बनाएं</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इवेंट लॉग को स्कैन करके या सभी स्थानीय ड्राइवरों को स्कैन करके कर्नेल-मोड नीति बनाएं</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इवेंट लॉग को स्कैन करके या सभी स्थानीय ड्राइवरों को स्कैन करके कर्नेल-मोड नीति बनाएं</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>ऑटो ड्राइवर डिटेक्शन</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>सिस्टम पर सभी ड्राइवरों का स्वचालित रूप से पता लगाएं और सूचीबद्ध करें</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर सभी ड्राइवरों का स्वचालित रूप से पता लगाएं और सूचीबद्ध करें</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर सभी ड्राइवरों का स्वचालित रूप से पता लगाएं और सूचीबद्ध करें</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>इवेंट लॉग स्कैन करें</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>केवल कर्नेल-मोड फ़ाइलों के लिए इवेंट लॉग को स्कैन करें</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल कर्नेल-मोड फ़ाइलों के लिए इवेंट लॉग को स्कैन करें</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>केवल कर्नेल-मोड फ़ाइलों के लिए इवेंट लॉग को स्कैन करें</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>पहचानी गई कर्नेल-मोड फ़ाइलें देखें</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>पाई गई सभी कर्नेल-मोड फ़ाइलों का विवरण देखें</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पाई गई सभी कर्नेल-मोड फ़ाइलों का विवरण देखें</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पाई गई सभी कर्नेल-मोड फ़ाइलों का विवरण देखें</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>पैकेज फ़ैमिली नेम</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>ऐप के पैकेज फ़ैमिली नेम (PFN) के आधार पर एक पूरक नीति बनाएं</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप के पैकेज फ़ैमिली नेम (PFN) के आधार पर एक पूरक नीति बनाएं</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप के पैकेज फ़ैमिली नेम (PFN) के आधार पर एक पूरक नीति बनाएं</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>पैकेज फ़ैमिली नेम्स</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>एक नीति बनाने के लिए एक या अधिक इंस्टॉल किए गए पैकेज चुनें।</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक नीति बनाने के लिए एक या अधिक इंस्टॉल किए गए पैकेज चुनें।</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक नीति बनाने के लिए एक या अधिक इंस्टॉल किए गए पैकेज चुनें।</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>कर्नेल मोड</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>यूज़र मोड</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>हस्ताक्षर परिदृश्य</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>हस्ताक्षर परिदृश्य</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>चुनें कि यह प्रमाणपत्र यूज़र मोड या कर्नेल मोड हस्ताक्षर परिदृश्य में जोड़ा जाएगा या नहीं</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चुनें कि यह प्रमाणपत्र यूज़र मोड या कर्नेल मोड हस्ताक्षर परिदृश्य में जोड़ा जाएगा या नहीं</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चुनें कि यह प्रमाणपत्र यूज़र मोड या कर्नेल मोड हस्ताक्षर परिदृश्य में जोड़ा जाएगा या नहीं</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>प्रमाणपत्रों के लिए ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>स्कैन करने और पूरक नीति में शामिल करने के लिए प्रमाणपत्र फ़ाइल पथों के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्कैन करने और पूरक नीति में शामिल करने के लिए प्रमाणपत्र फ़ाइल पथों के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>स्कैन करने और पूरक नीति में शामिल करने के लिए प्रमाणपत्र फ़ाइल पथों के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>प्रमाणपत्र</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>प्रमाणपत्रों के आधार पर पूरक नीति बनाएं</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रमाणपत्रों के आधार पर पूरक नीति बनाएं</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>प्रमाणपत्रों के आधार पर पूरक नीति बनाएं</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>पहचानी गई फ़ाइल का विवरण देखें</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>आपके द्वारा चुने गए फ़ाइल और फ़ोल्डर पथों में पहचानी गई सभी फ़ाइलों का विवरण देखें।</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आपके द्वारा चुने गए फ़ाइल और फ़ोल्डर पथों में पहचानी गई सभी फ़ाइलों का विवरण देखें।</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आपके द्वारा चुने गए फ़ाइल और फ़ोल्डर पथों में पहचानी गई सभी फ़ाइलों का विवरण देखें।</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>स्कैन स्तर चुनें</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>वह स्तर चुनें जिसके आधार पर पहचानी गई फ़ाइलें स्कैन की जाएंगी।</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वह स्तर चुनें जिसके आधार पर पहचानी गई फ़ाइलें स्कैन की जाएंगी।</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वह स्तर चुनें जिसके आधार पर पहचानी गई फ़ाइलें स्कैन की जाएंगी।</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>एक नीति फ़ाइल चुनें</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इस पृष्ठ पर आपके द्वारा बनाए गए सभी नियमों को इसमें जोड़ने के लिए एक ऐप कंट्रोल नीति के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इस पृष्ठ पर आपके द्वारा बनाए गए सभी नियमों को इसमें जोड़ने के लिए एक ऐप कंट्रोल नीति के लिए ब्राउज़ करें।</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक नई पूरक नीति बनाने या मौजूदा नीति में बनाए जाने वाले नियमों को जोड़ने के बीच चुनें</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक नई पूरक नीति बनाने या मौजूदा नीति में बनाए जाने वाले नियमों को जोड़ने के बीच चुनें</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>मोड: </value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>नई नीति बनाएं</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>मौजूदा नीति में जोड़ें</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>चयनित एल्गोरिथ्म ऐप कंट्रोल नीतियों पर हस्ताक्षर करने के लिए समर्थित नहीं है। यदि आप ऐप कंट्रोल हस्ताक्षर के लिए उत्पन्न प्रमाणपत्र का उपयोग करना चाहते हैं, तो कृपया दूसरा एल्गोरिथ्म चुनने पर विचार करें।</value>
+  </data>
 </root>

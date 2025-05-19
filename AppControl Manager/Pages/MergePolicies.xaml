@@ -49,6 +49,7 @@
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
+                            Title="{x:Bind ViewModel.PolicyMergerInfoBarTitle, Mode=OneWay}"
                             IsOpen="{x:Bind ViewModel.PolicyMergerInfoBarIsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.PolicyMergerInfoBarMessage, Mode=OneWay}"
                             IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"
@@ -58,8 +59,11 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Uid="MergeButton" IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
-                             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.MergeButton_Click}" />
+                        <Button x:Uid="MergeButton"
+                                IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0"
+                                Click="{x:Bind ViewModel.MergeButton_Click}" />
 
                         <ToggleButton IsEnabled="{x:Bind ViewModel.ShouldDeployToggleState, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
 
@@ -108,9 +112,7 @@
 
                                             <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.OtherPoliciesString, Mode=OneWay}"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                MinWidth="400" IsReadOnly="True" />
+                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
 
                                         </controls:WrapPanel>
 

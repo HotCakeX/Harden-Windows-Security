@@ -55,7 +55,7 @@ internal static class Merger
 	/// </summary>
 	/// <param name="mainXmlFilePath"></param>
 	/// <param name="otherXmlFilePaths"></param>
-	internal static void Merge(string mainXmlFilePath, HashSet<string> otherXmlFilePaths)
+	internal static void Merge(string mainXmlFilePath, IReadOnlyCollection<string> otherXmlFilePaths)
 	{
 		// Close the empty nodes in the main policy
 		CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);

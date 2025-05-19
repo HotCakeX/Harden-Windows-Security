@@ -28,16 +28,23 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class MergePoliciesVM : ViewModelBase
 {
 
+	internal MergePoliciesVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => PolicyMergerInfoBarIsOpen, value => PolicyMergerInfoBarIsOpen = value,
+			() => PolicyMergerInfoBarMessage, value => PolicyMergerInfoBarMessage = value,
+			() => PolicyMergerInfoBarSeverity, value => PolicyMergerInfoBarSeverity = value,
+			() => PolicyMergerInfoBarIsClosable, value => PolicyMergerInfoBarIsClosable = value,
+			() => PolicyMergerInfoBarTitle, value => PolicyMergerInfoBarTitle = value);
+	}
+
+	private readonly InfoBarSettings MainInfoBar;
+
 	internal bool IsElevated => App.IsElevated;
 
 	#region UI-Bound Properties
 
-	internal HashSet<string> OtherPolicies
-	{
-		get; set => SP(ref field, value);
-	} = [];
-
-	internal string? OtherPoliciesString { get; set => SP(ref field, value); }
+	internal readonly UniqueStringObservableCollection OtherPolicies = [];
 
 	internal bool ShouldDeploy { get; set => SP(ref field, value); }
 
@@ -45,26 +52,20 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 	internal string? MainPolicy { get; set => SP(ref field, value); }
 
-	internal bool MergeButtonState
-	{
-		get; set => SP(ref field, value);
-	} = true;
+	internal bool MergeButtonState { get; set => SP(ref field, value); } = true;
 
 	internal bool PolicyMergerInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? PolicyMergerInfoBarMessage { get; set => SP(ref field, value); }
+	internal string? PolicyMergerInfoBarTitle { get; set => SP(ref field, value); }
+	internal InfoBarSeverity PolicyMergerInfoBarSeverity { get; set => SP(ref field, value); }
+	internal bool PolicyMergerInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility MergeProgressRingVisibility
 	{
 		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal InfoBarSeverity PolicyMergerInfoBarSeverity { get; set => SP(ref field, value); }
-
-	internal bool PolicyMergerInfoBarIsClosable { get; set => SP(ref field, value); }
-
 	#endregion
-
 
 	/// <summary>
 	/// Event handler for the main Merge button
@@ -74,19 +75,13 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 		if (string.IsNullOrWhiteSpace(MainPolicy))
 		{
-			PolicyMergerInfoBarIsOpen = true;
-			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicySubtitle");
-			PolicyMergerInfoBarIsClosable = true;
-			PolicyMergerInfoBarSeverity = InfoBarSeverity.Warning;
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("MergePolicies_SelectMainPolicySubtitle"));
 			return;
 		}
 
 		if (OtherPolicies.Count is 0)
 		{
-			PolicyMergerInfoBarIsOpen = true;
-			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPoliciesSubtitle");
-			PolicyMergerInfoBarIsClosable = true;
-			PolicyMergerInfoBarSeverity = InfoBarSeverity.Warning;
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("MergePolicies_SelectOtherPoliciesSubtitle"));
 			return;
 		}
 
@@ -97,24 +92,21 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 			MergeButtonState = false;
 			MergeProgressRingVisibility = Visibility.Visible;
 
-			PolicyMergerInfoBarIsOpen = true;
-			PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_MergingMessage");
 			PolicyMergerInfoBarIsClosable = false;
-			PolicyMergerInfoBarSeverity = InfoBarSeverity.Informational;
+
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("MergePolicies_MergingMessage"));
 
 			await Task.Run(() =>
 			{
-
 				// Perform the merge operation
-				SiPolicy.Merger.Merge(MainPolicy, OtherPolicies);
+				SiPolicy.Merger.Merge(MainPolicy, OtherPolicies.UniqueItems);
 
 				// If user chose to deploy the policy after merge
 				if (ShouldDeploy)
 				{
-
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_DeployingMessage");
+						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("MergePolicies_DeployingMessage"));
 					});
 
 					string stagingArea = StagingArea.NewStagingArea(GlobalVars.Rizz.GetString("MergePolicies_StagingAreaName")).FullName;
@@ -125,32 +117,23 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
-
 			});
 		}
-		catch
+		catch (Exception ex)
 		{
 			errorsOccurred = true;
-			throw;
+			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("MergePolicies_ErrorMessage"));
 		}
 		finally
 		{
-
-			if (errorsOccurred)
+			if (!errorsOccurred)
 			{
-				PolicyMergerInfoBarSeverity = InfoBarSeverity.Error;
-				PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_ErrorMessage");
-			}
-			else
-			{
-				PolicyMergerInfoBarSeverity = InfoBarSeverity.Success;
-				PolicyMergerInfoBarMessage = GlobalVars.Rizz.GetString("MergePolicies_SuccessMessage");
+				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("MergePolicies_SuccessMessage"));
 			}
 
 			PolicyMergerInfoBarIsClosable = true;
 
 			MergeProgressRingVisibility = Visibility.Collapsed;
-
 
 			MergeButtonState = true;
 		}
@@ -162,15 +145,11 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// </summary>
 	internal void MainPolicyBrowseButton_Click()
 	{
-
 		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (!string.IsNullOrEmpty(selectedFile))
 		{
 			// Store the selected XML file path
-			MainPolicy = selectedFile;
-
-			// Add the selected main XML policy file path to the flyout's TextBox
 			MainPolicy = selectedFile;
 		}
 	}
@@ -181,23 +160,16 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// </summary>
 	internal void OtherPoliciesBrowseButton_Click()
 	{
-
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
 		{
 			foreach (string file in selectedFiles)
 			{
-				// Add the file to the display string only if it's unique
-				if (OtherPolicies.Add(file))
-				{
-					// Append the new file to the TextBox, followed by a newline
-					OtherPoliciesString += file + Environment.NewLine;
-				}
+				OtherPolicies.Add(file);
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Clears the text box for the main selected policy
@@ -207,14 +179,11 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 		MainPolicy = null;
 	}
 
-
 	/// <summary>
 	/// Clears the textbox for other selected policies
 	/// </summary>
 	internal void OtherPolicies_Flyout_ClearButton()
 	{
-		OtherPoliciesString = null;
 		OtherPolicies.Clear();
 	}
-
 }

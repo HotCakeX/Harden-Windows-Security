@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
+using AppControlManager.Taskbar;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
@@ -51,7 +52,6 @@ public partial class App : Application
 {
 
 #pragma warning restore CA1515
-
 
 	/// <summary>
 	/// Package Family Name of the application
@@ -156,7 +156,7 @@ public partial class App : Application
 		_ = services.AddSingleton<SidebarVM>();
 		_ = services.AddSingleton<ViewCurrentPoliciesVM>();
 		_ = services.AddSingleton<SettingsVM>();
-		_ = services.AddSingleton<MergePoliciesVM>();
+		_ = services.AddSingleton(sp => new MergePoliciesVM());
 		_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
 		_ = services.AddSingleton<AllowNewAppsVM>(sp => new(sp.GetRequiredService<EventLogUtility>(), sp.GetRequiredService<PolicyEditorVM>()));
 		_ = services.AddSingleton(sp => new CreateDenyPolicyVM());
@@ -176,8 +176,8 @@ public partial class App : Application
 		_ = services.AddSingleton<NavigationService>(sp => new(sp.GetRequiredService<MainWindowVM>(), sp.GetRequiredService<SidebarVM>()));
 		_ = services.AddSingleton<ViewModelForMSGraph>();
 		_ = services.AddSingleton<ViewOnlinePoliciesVM>(sp => new(sp.GetRequiredService<ViewModelForMSGraph>()));
-		_ = services.AddSingleton<PolicyEditorVM>();
-		_ = services.AddSingleton<BuildNewCertificateVM>();
+		_ = services.AddSingleton(sp => new PolicyEditorVM());
+		_ = services.AddSingleton(sp => new BuildNewCertificateVM());
 
 		AppHost = builder.Build();
 
@@ -409,6 +409,9 @@ public partial class App : Application
 
 		ViewModelForMainWindow = AppHost.Services.GetRequiredService<MainWindowVM>();
 		PolicyEditorViewModel = AppHost.Services.GetRequiredService<PolicyEditorVM>();
+
+		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
+		Badge.ClearBadge();
 
 		#region Initial navigation and file activation processing
 

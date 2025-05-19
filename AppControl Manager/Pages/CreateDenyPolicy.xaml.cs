@@ -30,11 +30,9 @@ using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -495,34 +493,6 @@ internal sealed partial class CreateDenyPolicy : Page
 		finally
 		{
 			PFNRefreshAppsListButton.IsEnabled = true;
-		}
-	}
-
-	// Since we have a ScrollView around the page, it captures the mouse Scroll Wheel events.
-	// We have to disable its scrolling ability while pointer is inside of the ListView.
-	// Scrolling via touch or dragging the ListView's scrollbar via mouse doesn't require this and they work either way.
-	private void PFNPackagedAppsListView_PointerEntered(object sender, PointerRoutedEventArgs e)
-	{
-		if (e.Pointer.PointerDeviceType is PointerDeviceType.Mouse)
-		{
-			// Disable vertical scrolling for the outer ScrollView only for mouse input
-			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Disabled;
-		}
-	}
-
-	private void PFNPackagedAppsListView_PointerExited()
-	{
-		// Re-enable vertical scrolling for the outer ScrollView
-		MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
-
-	}
-
-	private void MainScrollView_PointerPressed(object sender, PointerRoutedEventArgs e)
-	{
-		if (e.Pointer.PointerDeviceType is not PointerDeviceType.Mouse)
-		{
-			// Always enable vertical scrolling for input that's not mouse
-			MainScrollView.VerticalScrollMode = ScrollingScrollMode.Enabled;
 		}
 	}
 

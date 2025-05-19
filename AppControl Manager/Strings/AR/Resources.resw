@@ -4363,4 +4363,196 @@
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>تم إنشاء سياسة رفض قاعدة مسار الملف المستندة إلى النمط بنجاح.</value>
   </data>
+    <data name="TotalFiles" xml:space="preserve">
+    <value>إجمالي الملفات</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>تم مسح جميع البيانات بنجاح.</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>يرجى تحديد ملف سياسة وتحميله قبل استخدام ميزة الحفظ.</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>الرجاء إدخال إصدار للسياسة، لا يمكن تركه فارغًا.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>الخوارزمية</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>خوارزمية التشفير المستخدمة.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>خوارزمية التشفير المستخدمة.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>خوارزمية التشفير المستخدمة.</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>سياسة وضع النواة الصارم</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>إنشاء سياسة وضع النواة عن طريق مسح سجلات الأحداث أو مسح جميع برامج التشغيل المحلية</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة وضع النواة عن طريق مسح سجلات الأحداث أو مسح جميع برامج التشغيل المحلية</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة وضع النواة عن طريق مسح سجلات الأحداث أو مسح جميع برامج التشغيل المحلية</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>الكشف التلقائي عن برامج التشغيل</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>الكشف التلقائي عن جميع برامج التشغيل الموجودة على النظام وإدراجها في قائمة</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الكشف التلقائي عن جميع برامج التشغيل الموجودة على النظام وإدراجها في قائمة</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الكشف التلقائي عن جميع برامج التشغيل الموجودة على النظام وإدراجها في قائمة</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>مسح سجلات الأحداث</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>مسح سجلات الأحداث بحثًا عن ملفات وضع النواة فقط</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>مسح سجلات الأحداث بحثًا عن ملفات وضع النواة فقط</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>مسح سجلات الأحداث بحثًا عن ملفات وضع النواة فقط</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>عرض تفاصيل ملفات وضع النواة المكتشفة</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>عرض تفاصيل جميع ملفات وضع النواة التي تم العثور عليها</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض تفاصيل جميع ملفات وضع النواة التي تم العثور عليها</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض تفاصيل جميع ملفات وضع النواة التي تم العثور عليها</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>اسم عائلة الحزمة (PFN)</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>إنشاء سياسة تكميلية بناءً على اسم عائلة الحزمة (PFN) لتطبيق ما</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة تكميلية بناءً على اسم عائلة الحزمة (PFN) لتطبيق ما</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة تكميلية بناءً على اسم عائلة الحزمة (PFN) لتطبيق ما</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>أسماء عائلات الحزم</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>حدد حزمة واحدة أو أكثر من الحزم المثبتة لإنشاء سياسة لها.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد حزمة واحدة أو أكثر من الحزم المثبتة لإنشاء سياسة لها.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد حزمة واحدة أو أكثر من الحزم المثبتة لإنشاء سياسة لها.</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>وضع النواة</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>وضع المستخدم</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>سيناريو التوقيع</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>سيناريو التوقيع</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>اختر ما إذا كانت هذه الشهادة ستُضاف إلى سيناريو توقيع وضع المستخدم أم وضع النواة</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر ما إذا كانت هذه الشهادة ستُضاف إلى سيناريو توقيع وضع المستخدم أم وضع النواة</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر ما إذا كانت هذه الشهادة ستُضاف إلى سيناريو توقيع وضع المستخدم أم وضع النواة</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>استعراض الشهادات</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>استعرض مسارات ملفات الشهادات لمسحها وتضمينها في السياسة التكميلية.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض مسارات ملفات الشهادات لمسحها وتضمينها في السياسة التكميلية.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض مسارات ملفات الشهادات لمسحها وتضمينها في السياسة التكميلية.</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>الشهادات</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>إنشاء سياسة تكميلية بناءً على الشهادات</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة تكميلية بناءً على الشهادات</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة تكميلية بناءً على الشهادات</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>عرض تفاصيل الملفات المكتشفة</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>عرض تفاصيل جميع الملفات التي تم اكتشافها في مسارات الملفات والمجلدات التي حددتها.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض تفاصيل جميع الملفات التي تم اكتشافها في مسارات الملفات والمجلدات التي حددتها.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض تفاصيل جميع الملفات التي تم اكتشافها في مسارات الملفات والمجلدات التي حددتها.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>تحديد مستوى المسح</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>حدد المستوى الذي سيتم على أساسه مسح الملفات المكتشفة.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد المستوى الذي سيتم على أساسه مسح الملفات المكتشفة.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد المستوى الذي سيتم على أساسه مسح الملفات المكتشفة.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>تحديد ملف سياسة</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض بحثًا عن سياسة التحكم في التطبيقات لإضافة جميع القواعد التي أنشأتها في هذه الصفحة إليها.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض بحثًا عن سياسة التحكم في التطبيقات لإضافة جميع القواعد التي أنشأتها في هذه الصفحة إليها.</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر بين إنشاء سياسة تكميلية جديدة أو إضافة القواعد التي سيتم إنشاؤها إلى سياسة موجودة</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر بين إنشاء سياسة تكميلية جديدة أو إضافة القواعد التي سيتم إنشاؤها إلى سياسة موجودة</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>الوضع:</value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>إنشاء سياسة جديدة</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>إضافة إلى سياسة موجودة</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>الخوارزمية المحددة غير مدعومة لتوقيع سياسات التحكم في التطبيقات. إذا كنت تنوي استخدام الشهادة التي تم إنشاؤها لتوقيع التحكم في التطبيقات، فيرجى التفكير في تحديد خوارزمية أخرى.</value>
+  </data>
 </root>

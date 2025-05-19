@@ -108,23 +108,24 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	}
 	*/
 
+	internal PolicyEditorVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
+	}
+
+	private readonly InfoBarSettings MainInfoBar;
 
 	#region UI-Bound Properties
 
-	internal Visibility MainInfoBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SP(ref field, value);
-	} = InfoBarSeverity.Informational;
-
+	internal string? MainInfoBarTitle { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); }
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal Visibility ProgressBarVisibility
@@ -381,12 +382,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		if (SelectedPolicyFile is null)
 		{
-			MainInfoBarVisibility = Visibility.Visible;
-			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = GlobalVars.Rizz.GetString("SelectAppControlPolicyFirstMessage");
-			MainInfoBarSeverity = InfoBarSeverity.Warning;
-			MainInfoBarIsClosable = true;
-
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectAppControlPolicyFirstMessage"));
 			return;
 		}
 
@@ -402,12 +398,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		else
 		{
-			MainInfoBarVisibility = Visibility.Visible;
-			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = GlobalVars.Rizz.GetString("OnlyXmlCipSupportedMessage");
-			MainInfoBarSeverity = InfoBarSeverity.Warning;
-			MainInfoBarIsClosable = true;
-
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OnlyXmlCipSupportedMessage"));
 			return;
 		}
 
@@ -417,14 +408,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		{
 			await Dispatcher.EnqueueAsync(() =>
 			{
+				MainInfoBarIsClosable = false;
+
 				ProgressBarVisibility = Visibility.Visible;
 				UIElementsEnabledState = false;
 
-				MainInfoBarVisibility = Visibility.Visible;
-				MainInfoBarIsOpen = true;
-				MainInfoBarMessage = GlobalVars.Rizz.GetString("LoadingPolicyMessage");
-				MainInfoBarSeverity = InfoBarSeverity.Informational;
-				MainInfoBarIsClosable = false;
+				MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("LoadingPolicyMessage"));
 
 				// Clear the class variables
 				PolicyObj = null;
@@ -837,16 +826,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			error = true;
 			await Dispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBarVisibility = Visibility.Visible;
-				MainInfoBarIsOpen = true;
-				MainInfoBarMessage = string.Format(
+				MainInfoBar.WriteError(ex, string.Format(
 					GlobalVars.Rizz.GetString("ErrorLoadingPolicyFileMessage"),
-					ex.Message);
-				MainInfoBarSeverity = InfoBarSeverity.Error;
-				MainInfoBarIsClosable = true;
+					ex.Message));
 			});
-
-			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -859,12 +842,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				if (!error)
 				{
-					MainInfoBarVisibility = Visibility.Visible;
-					MainInfoBarIsOpen = true;
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessLoadedPolicyMessage");
-					MainInfoBarSeverity = InfoBarSeverity.Success;
-					MainInfoBarIsClosable = true;
+					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessLoadedPolicyMessage"));
 				}
+
+				MainInfoBarIsClosable = true;
 			});
 		}
 	}
@@ -1036,14 +1017,11 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		{
 			UIElementsEnabledState = false;
 
+			MainInfoBarIsClosable = false;
+
 			if (SelectedPolicyFile is null || PolicyObj is null)
 			{
-				MainInfoBarVisibility = Visibility.Visible;
-				MainInfoBarIsOpen = true;
-				MainInfoBarMessage = "Please select a policy file and load it before using the save feature.";
-				MainInfoBarSeverity = InfoBarSeverity.Warning;
-				MainInfoBarIsClosable = true;
-
+				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyBeforeLoad"));
 				return;
 			}
 
@@ -1373,11 +1351,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainInfoBarVisibility = Visibility.Visible;
-						MainInfoBarIsOpen = true;
-						MainInfoBarMessage = $"{policyIDCheckResult.Item2} is not valid for Policy ID";
-						MainInfoBarSeverity = InfoBarSeverity.Warning;
-						MainInfoBarIsClosable = true;
+						MainInfoBar.WriteWarning($"{policyIDCheckResult.Item2} is not valid for Policy ID");
 					});
 					return;
 				}
@@ -1389,11 +1363,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainInfoBarVisibility = Visibility.Visible;
-						MainInfoBarIsOpen = true;
-						MainInfoBarMessage = $"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID";
-						MainInfoBarSeverity = InfoBarSeverity.Warning;
-						MainInfoBarIsClosable = true;
+						MainInfoBar.WriteWarning($"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID");
 					});
 					return;
 				}
@@ -1402,15 +1372,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainInfoBarVisibility = Visibility.Visible;
-						MainInfoBarIsOpen = true;
-						MainInfoBarMessage = "please enter a policy version, it cannot be empty.";
-						MainInfoBarSeverity = InfoBarSeverity.Warning;
-						MainInfoBarIsClosable = true;
+						MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("EnterPolicyVersion"));
 					});
 					return;
 				}
-
 
 				// Other policy details retrieved from the UI elements
 				PolicyObj.PolicyID = policyIDCheckResult.Item2;
@@ -1552,17 +1517,12 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			MainInfoBarVisibility = Visibility.Visible;
-			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = ex.Message;
-			MainInfoBarSeverity = InfoBarSeverity.Error;
-			MainInfoBarIsClosable = true;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
+			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			UIElementsEnabledState = true;
+			MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -1605,10 +1565,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		UpdatePolicySignersCount = "• Update Policy Signer Rules count: 0";
 		SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
 
-		MainInfoBarVisibility = Visibility.Visible;
-		MainInfoBarIsOpen = true;
-		MainInfoBarMessage = "All of the data has been successfully cleared.";
-		MainInfoBarSeverity = InfoBarSeverity.Informational;
+		MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("AllDataClearedMsg"));
 		MainInfoBarIsClosable = true;
 	}
 
@@ -1619,7 +1576,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal async void SearchBox_TextChanged()
 	{
-
 		try
 		{
 
@@ -1711,13 +1667,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			MainInfoBarVisibility = Visibility.Visible;
-			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = ex.Message;
-			MainInfoBarSeverity = InfoBarSeverity.Error;
-			MainInfoBarIsClosable = true;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -1740,13 +1690,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			MainInfoBarVisibility = Visibility.Visible;
-			MainInfoBarIsOpen = true;
-			MainInfoBarMessage = ex.Message;
-			MainInfoBarSeverity = InfoBarSeverity.Error;
-			MainInfoBarIsClosable = true;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
+			MainInfoBar.WriteError(ex);
 		}
 	}
 

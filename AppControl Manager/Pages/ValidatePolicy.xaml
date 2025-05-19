@@ -30,16 +30,16 @@
 
             <controls:WrapPanel Grid.Row="1" HorizontalAlignment="Center">
 
-                <InfoBar 
-                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"                
+                <InfoBar
+                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"                
+                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                 Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
                 IsIconVisible="True">
                 </InfoBar>
 
-                <ProgressRing IsIndeterminate="True" Margin="20,0,0,0" 
+                <ProgressRing IsIndeterminate="True" Margin="20,0,0,0"
                     Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}" />
 
             </controls:WrapPanel>
@@ -52,7 +52,7 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"                   
+                <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"
                    IsClickEnabled="True"
                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ValidateXML}" IsActionIconVisible="False">
 

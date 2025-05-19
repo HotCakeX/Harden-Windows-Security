@@ -68,7 +68,7 @@ internal static class SignerAndHashBuilder
 	/// <returns></returns>
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 		List<FileIdentity>? data = null,
-		HashSet<string>? folderPaths = null,
+		IReadOnlyCollection<string>? folderPaths = null,
 		HashSet<string>? customFileRulePatterns = null,
 		ScanLevels level = ScanLevels.FilePublisher,
 		bool publisherToHash = false,
@@ -95,7 +95,7 @@ internal static class SignerAndHashBuilder
 		List<FileIdentity> signedPublisherData = [];
 		List<FileIdentity> unsignedData = [];
 		List<FileIdentity> filePathData = [];
-		HashSet<string> wildCardFilePathData = [];
+		IReadOnlyCollection<string> wildCardFilePathData = [];
 		List<string> PFNs = [];
 		HashSet<string> customPatternBasedFileRules = [];
 
@@ -262,7 +262,7 @@ internal static class SignerAndHashBuilder
 				authenticodeSHA1: signedData.SHA1Hash,
 				siSigningScenario: signedData.SISigningScenario,
 				packageFamilyName: signedData.PackageFamilyName,
-				certificateDetails: new List<CertificateDetailsCreator>()
+				certificateDetails: []
 				);
 
 			// Loop through each correlated event and process the certificate details
@@ -323,7 +323,7 @@ internal static class SignerAndHashBuilder
 				authenticodeSHA1: signedData.SHA1Hash,
 				authenticodeSHA256: signedData.SHA256Hash,
 				siSigningScenario: signedData.SISigningScenario,
-				certificateDetails: new List<CertificateDetailsCreator>()
+				certificateDetails: []
 				);
 
 			// Process each correlated event

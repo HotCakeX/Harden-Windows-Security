@@ -52,6 +52,27 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 		EventLogsUtil = _EventLogUtility;
 		PolicyEditorViewModel = _PolicyEditorVM;
+
+		Step1InfoBar = new InfoBarSettings(
+			() => Step1InfoBar_IsOpen, value => Step1InfoBar_IsOpen = value,
+			() => Step1InfoBar_Message, value => Step1InfoBar_Message = value,
+			() => Step1InfoBar_Severity, value => Step1InfoBar_Severity = value,
+			() => Step1InfoBar_IsClosable, value => Step1InfoBar_IsClosable = value,
+			() => Step1InfoBar_Title, value => Step1InfoBar_Title = value);
+
+		Step2InfoBar = new InfoBarSettings(
+			() => Step2InfoBar_IsOpen, value => Step2InfoBar_IsOpen = value,
+			() => Step2InfoBar_Message, value => Step2InfoBar_Message = value,
+			() => Step2InfoBar_Severity, value => Step2InfoBar_Severity = value,
+			() => Step2InfoBar_IsClosable, value => Step2InfoBar_IsClosable = value,
+			() => Step2InfoBar_Title, value => Step2InfoBar_Title = value);
+
+		Step3InfoBar = new InfoBarSettings(
+			() => Step3InfoBar_IsOpen, value => Step3InfoBar_IsOpen = value,
+			() => Step3InfoBar_Message, value => Step3InfoBar_Message = value,
+			() => Step3InfoBar_Severity, value => Step3InfoBar_Severity = value,
+			() => Step3InfoBar_IsClosable, value => Step3InfoBar_IsClosable = value,
+			() => Step3InfoBar_Title, value => Step3InfoBar_Title = value);
 	}
 
 	#region
@@ -94,23 +115,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// The user selected directories to scan
 	/// </summary>
-	private readonly HashSet<string> selectedDirectoriesToScan = [];
-
-	internal readonly ObservableCollection<string> SelectedDirectoriesToScan_Observable = [];
-
-	private void ManageHashSet(string? path, bool add)
-	{
-		if (add && path is not null)
-		{
-			if (selectedDirectoriesToScan.Add(path))
-				SelectedDirectoriesToScan_Observable.Add(path);
-		}
-		else
-		{
-			selectedDirectoriesToScan.Clear();
-			SelectedDirectoriesToScan_Observable.Clear();
-		}
-	}
+	internal readonly UniqueStringObservableCollection selectedDirectoriesToScan = [];
 
 	/// <summary>
 	/// Custom HashSet to store the output of both local files and event logs scans
@@ -240,16 +245,25 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal bool Step1InfoBar_IsOpen { get; set => SP(ref field, value); }
 	internal bool Step1InfoBar_IsClosable { get; set => SP(ref field, value); }
 	internal string? Step1InfoBar_Message { get; set => SP(ref field, value); }
+	internal string? Step1InfoBar_Title { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings Step1InfoBar;
 
 	internal InfoBarSeverity Step2InfoBar_Severity { get; set => SP(ref field, value); }
 	internal bool Step2InfoBar_IsOpen { get; set => SP(ref field, value); }
 	internal bool Step2InfoBar_IsClosable { get; set => SP(ref field, value); }
 	internal string? Step2InfoBar_Message { get; set => SP(ref field, value); }
+	internal string? Step2InfoBar_Title { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings Step2InfoBar;
 
 	internal InfoBarSeverity Step3InfoBar_Severity { get; set => SP(ref field, value); }
 	internal bool Step3InfoBar_IsOpen { get; set => SP(ref field, value); }
 	internal bool Step3InfoBar_IsClosable { get; set => SP(ref field, value); }
 	internal string? Step3InfoBar_Message { get; set => SP(ref field, value); }
+	internal string? Step3InfoBar_Title { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings Step3InfoBar;
 
 	/// <summary>
 	/// Gradient color used for the active border.
@@ -703,10 +717,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 
-			Step3InfoBar_IsOpen = true;
-			Step3InfoBar_Severity = InfoBarSeverity.Informational;
-			Step3InfoBar_Message = "Creating the policy using any available event logs or file scan results in other tabs.";
 			Step3InfoBar_IsClosable = false;
+
+			Step3InfoBar.WriteInfo("Creating the policy using any available event logs or file scan results in other tabs.");
 
 			// Check if there are items for the local file scans ListView
 			if (LocalFilesAllFileIdentities.Count > 0)
@@ -731,8 +744,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// If there are no logs to create a Supplemental policy with
 			if (fileIdentities.Count is 0)
 			{
-				Step3InfoBar_Severity = InfoBarSeverity.Warning;
-				Step3InfoBar_Message = "There are no logs or files in any data grids to create a Supplemental policy for.";
+				Step3InfoBar.WriteWarning("There are no logs or files in any data grids to create a Supplemental policy for.");
 				return;
 			}
 
@@ -759,14 +771,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, selectedSupplementalPolicyName, _BasePolicyObject!.BasePolicyID, null);
 
 				// Configure policy rule options
-				if (!_IsSignedPolicy)
-				{
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-				}
-				else
-				{
-					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
-				}
+				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 				// Set policy version
 				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
@@ -820,17 +825,13 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 			});
 
-			Step3InfoBar_Severity = InfoBarSeverity.Success;
-			Step3InfoBar_Message = DeployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.";
+			Step3InfoBar.WriteSuccess(DeployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.");
 
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 		}
 		catch (Exception ex)
 		{
-			Step3InfoBar_Message = ex.Message;
-			Step3InfoBar_Severity = InfoBarSeverity.Error;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Step3InfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -879,18 +880,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// Add each folder to the HashSet of the selected directories
 			foreach (string folder in selectedFolders)
 			{
-				ManageHashSet(folder, true);
+				selectedDirectoriesToScan.Add(folder);
 			}
 		}
-	}
-
-	/// <summary>
-	/// Clears the text box and the list of selected directories when the button is clicked.
-	/// </summary>
-	internal void ClearSelectedDirectoriesButton_Click()
-	{
-		// Clear the list of selected directories
-		ManageHashSet(null, false);
 	}
 
 	#region Local Files Section
@@ -1116,10 +1108,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			GoToStep2ButtonIsEnabled = false;
 			ResetStepsButtonIsEnabled = false;
 
-			Step1InfoBar_IsOpen = true;
 			Step1InfoBar_IsClosable = false;
-			Step1InfoBar_Severity = InfoBarSeverity.Informational;
-			Step1InfoBar_Message = GlobalVars.Rizz.GetString("Starting");
+
+			Step1InfoBar.WriteInfo(GlobalVars.Rizz.GetString("Starting"));
 
 			// Ensure the text box for policy file name is filled
 			if (string.IsNullOrWhiteSpace(selectedSupplementalPolicyName))
@@ -1212,7 +1203,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 				_ = Dispatcher.TryEnqueue(() =>
 				{
-					Step1InfoBar_Message = GlobalVars.Rizz.GetString("DeployingInAuditWait");
+					Step1InfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingInAuditWait"));
 				});
 
 				// Creating a copy of the original policy in the Staging Area so that the original one will be unaffected
@@ -1286,11 +1277,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		catch (Exception ex)
 		{
 			errorOccurred = true;
-
-			Step1InfoBar_Message = ex.Message;
-			Step1InfoBar_Severity = InfoBarSeverity.Error;
-
-			Logger.Write(ErrorWriter.FormatException(ex)); // Log the full exception details
+			Step1InfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -1326,8 +1313,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			ResetStepsButtonIsEnabled = false;
 
 			Step2InfoBar_IsClosable = false;
-			Step2InfoBar_IsOpen = true;
-			Step2InfoBar_Severity = InfoBarSeverity.Informational;
 
 			// While the base policy is being deployed is audit mode, set the progress ring as indeterminate
 			Step2ProgressRingIsIndeterminate = true;
@@ -1347,7 +1332,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 				_ = Dispatcher.TryEnqueue(() =>
 				{
-					Step2InfoBar_Message = GlobalVars.Rizz.GetString("DeployingEnforceMode");
+					Step2InfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingEnforceMode"));
 				});
 
 #if !DEBUG
@@ -1367,7 +1352,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						Step2InfoBar_Message = GlobalVars.Rizz.GetString("ScanningSelectedDirectories");
+						Step2InfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningSelectedDirectories"));
 
 						// Set the progress ring to no longer be indeterminate since file scan will take control of its value
 						Step2ProgressRingIsIndeterminate = false;
@@ -1387,7 +1372,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 						_ = Dispatcher.TryEnqueue(() =>
 						{
-							Step2InfoBar_Message = $"Scanning {DetectedFilesInSelectedDirectories.Item2} files found in the selected directories";
+							Step2InfoBar.WriteInfo($"Scanning {DetectedFilesInSelectedDirectories.Item2} files found in the selected directories");
 
 							// Set the progress ring to no longer be indeterminate since file scan will take control of its value
 							Step2ProgressRingIsIndeterminate = false;
@@ -1421,7 +1406,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			LocalFilesCountInfoBadgeValue = LocalFilesFileIdentities.Count;
 			LocalFilesCountInfoBadgeOpacity = 1;
 
-			Step2InfoBar_Message = GlobalVars.Rizz.GetString("ScanningEventLogs");
+			Step2InfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningEventLogs"));
 
 			// Log scanning doesn't produce determinate real time progress so setting it as indeterminate
 			Step2ProgressRingIsIndeterminate = true;
@@ -1441,7 +1426,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 #endif
 
-			Step2InfoBar_Message = $"{Output.Count} log(s) were generated during the Audit phase";
+			Step2InfoBar.WriteInfo($"{Output.Count} log(s) were generated during the Audit phase");
 
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count > 0)
@@ -1477,12 +1462,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		catch (Exception ex)
 		{
 			errorsOccurred = true;
-
-			Step2InfoBar_Message = ex.Message;
-
-			Step2InfoBar_Severity = InfoBarSeverity.Error;
-
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Step2InfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -1514,10 +1494,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			DisableStep2();
 			DisableStep3();
 
-			Step1InfoBar_IsOpen = true;
 			Step1InfoBar_IsClosable = false;
-			Step1InfoBar_Severity = InfoBarSeverity.Informational;
-			Step1InfoBar_Message = GlobalVars.Rizz.GetString("Resetting");
+
+			Step1InfoBar.WriteInfo(GlobalVars.Rizz.GetString("Resetting"));
 
 			// Hide the action button for InfoBar in Step 3 that offers to open the supplemental policy in the Policy Editor
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -1533,7 +1512,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			// reset the class variables back to their default states
 			fileIdentities.FileIdentitiesInternal.Clear();
-			ManageHashSet(null, false);
+			selectedDirectoriesToScan.Clear();
 			DeployPolicy = true;
 			selectedSupplementalPolicyName = null;
 			LogsScanStartTime = null;
@@ -1580,14 +1559,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				SnapBackGuarantee.Remove();
 			});
 
-			Step1InfoBar_Severity = InfoBarSeverity.Success;
-			Step1InfoBar_Message = GlobalVars.Rizz.GetString("ResetSuccessful");
+			Step1InfoBar.WriteSuccess(GlobalVars.Rizz.GetString("ResetSuccessful"));
 		}
 		catch (Exception ex)
 		{
-			Step1InfoBar_Message = ex.Message;
-			Step1InfoBar_Severity = InfoBarSeverity.Error;
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Step1InfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -1600,4 +1576,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		}
 	}
 
+	/// <summary>
+	/// Clears the text box and the list of selected directories when the button is clicked.
+	/// </summary>
+	internal void ClearSelectedDirectoriesButton_Click()
+	{
+		selectedDirectoriesToScan.Clear();
+	}
 }

@@ -557,7 +557,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	#endregion
 
-	#region Microsoft Recommended Block Rule	
+	#region Microsoft Recommended Block Rule
 
 	internal bool RecommendedUserModeBlockRulesSectionIsEnabled { get; set => SP(ref field, value); } = true;
 

@@ -15,7 +15,7 @@
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
-    <ScrollView x:Name="MainScrollView" PointerPressed="MainScrollView_PointerPressed">
+    <ScrollView>
 
         <Grid>
             <Grid.RowDefinitions>
@@ -27,10 +27,11 @@
             <Grid.Resources>
 
                 <!-- For the Packaged Apps ListView Grouping -->
-                <CollectionViewSource x:Name="PackagedAppsCollectionViewSource" IsSourceGrouped="True"/>
+                <CollectionViewSource x:Name="PackagedAppsCollectionViewSource"
+                                      Source="{x:Bind ViewModel.PFNBasedAppsListItemsSource, Mode=OneWay}"
+                                      IsSourceGrouped="True"/>
 
                 <!-- Defines a single App that is displayed in the ListView -->
-
                 <DataTemplate x:Key="PackagedAppsListViewTemplate" x:DataType="others:PackagedAppView">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -43,30 +44,38 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border CornerRadius="15" VerticalAlignment="Center"
-                            HorizontalAlignment="Center" BorderThickness="0" Grid.RowSpan="3" Grid.Column="0">
-                            <Image Width ="32" Height="32" Margin="6" Source="{x:Bind Logo}" />
+                        <Border CornerRadius="15"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                BorderThickness="0"
+                                Grid.RowSpan="3"
+                                Grid.Column="0">
+                            <Image Width ="32"
+                                   Height="32"
+                                   Margin="6"
+                                   Source="{x:Bind Logo}" />
                         </Border>
 
                         <TextBlock Grid.Column="1"
-                            Grid.Row="0"
-                            Text="{x:Bind DisplayName}"
-                            x:Phase="1"
-                            Style="{ThemeResource BaseTextBlockStyle}"
-                            Margin="12,6,0,0"/>
-                        <TextBlock  Grid.Column="1"
-                            Grid.Row="1"
-                            Text="{x:Bind Version}"
-                            x:Phase="2"
-                            Style="{ThemeResource BodyTextBlockStyle}"
-                            Margin="12,6,0,0"/>
+                                   Grid.Row="0"
+                                   Text="{x:Bind DisplayName}"
+                                   x:Phase="1"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Margin="12,6,0,0"/>
 
-                        <TextBlock  Grid.Column="1"
-                            Grid.Row="2"
-                            Text="{x:Bind PackageFamilyName}"
-                            x:Phase="2"
-                            Style="{ThemeResource BodyTextBlockStyle}"
-                            Margin="12,0,0,6"/>
+                        <TextBlock Grid.Column="1"
+                                   Grid.Row="1"
+                                   Text="{x:Bind Version}"
+                                   x:Phase="2"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   Margin="12,6,0,0"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Grid.Row="2"
+                                   Text="{x:Bind PackageFamilyName}"
+                                   x:Phase="2"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   Margin="12,0,0,6"/>
                     </Grid>
                 </DataTemplate>
 
@@ -92,12 +101,12 @@
 
                         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="1" Margin="0,0,10,0" VerticalAlignment="Center">
 
-                            <TextBlock Text="Mode:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
+                            <TextBlock x:Uid="Mode" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
 
                             <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
-                                  ToolTipService.ToolTip="Choose between creating a new supplemental policy or adding the rules that will be created to an existing policy">
-                                <x:String>Create New Policy</x:String>
-                                <x:String>Add to Existing Policy</x:String>
+                                      x:Uid="PolicyCreationOperationModeComboBox">
+                                <ComboBoxItem x:Uid="CreateNewPolicyComboBoxItem"/>
+                                <ComboBoxItem x:Uid="AddToExistingPolicyComboBoxItem"/>
                             </ComboBox>
 
                         </StackPanel>
@@ -106,12 +115,13 @@
 
                             <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
 
-                                <customUI:ButtonV2 x:Name="PolicyFileToMergeWithButton" Content="Select a policy file" Margin="15,0,0,0"
-                                    ToolTipService.ToolTip="Browse for an App Control policy to add all of the rules you created in this page to it."
-                                    Click="{x:Bind PolicyFileToMergeWithButton_Click}" IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
+                                <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
+                                                   Margin="15,0,0,0"
+                                                   Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
+                                                   IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
                                     <customUI:ButtonV2.Flyout>
-                                        <Flyout x:Name="PolicyFileToMergeWithButton_FlyOut">
+                                        <Flyout>
 
                                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -146,23 +156,24 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-
                 <!-- Files and Folders Scan -->
-                <controls:SettingsExpander x:Name="FilesAndFoldersSettingsCard"
-                    x:Uid="SupplementalFilesAndFoldersSettingsCard"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}" IsExpanded="False">
+                <controls:SettingsExpander x:Uid="SupplementalFilesAndFoldersSettingsCard"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}"
+                                           IsExpanded="{x:Bind ViewModel.FilesAndFoldersSettingsExpanderIsExpanded, Mode=TwoWay}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="FilesAndFoldersInfoBar"
+                        <InfoBar
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Title="{x:Bind ViewModel.FilesAndFoldersInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.FilesAndFoldersInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.FilesAndFoldersInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.FilesAndFoldersInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_FilesAndFolders}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_FilesAndFolders}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
@@ -170,33 +181,38 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreateFilesAndFoldersSupplementalPolicyButton" x:Uid="CreateSupplementalPolicyButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton_Click}" />
+                        <Button x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0"
+                                IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.CreateFilesAndFoldersSupplementalPolicyButton_Click}" />
 
-                        <ToggleButton x:Name="FilesAndFoldersPolicyDeployToggleButton" Click="FilesAndFoldersPolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="CreateSupplementalPolicyTeachingTip" Target="{x:Bind CreateFilesAndFoldersSupplementalPolicyButton}" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.FilesAndFoldersDeployButton, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <customUI:SettingsCardV3 x:Name="FilesAndFoldersBrowseForFilesSettingsCard" x:Uid="BrowseForFilesPolicyCreationSettingsCard">
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesSettingsCardVisibility, Mode=OneWay}"
+                                                 x:Uid="BrowseForFilesPolicyCreationSettingsCard">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFilesButton" x:Uid="FileBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFilesButton_Click}">
+                            <Button IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="FileBrowseButton"
+                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Click}">
 
                                 <Button.Flyout>
-                                    <Flyout x:Name="FilesAndFoldersBrowseForFilesButton_Flyout">
+                                    <Flyout>
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="FilesAndFoldersBrowseForFilesButton_SelectedFilesTextBox"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                MinWidth="400" IsReadOnly="True" />
+                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFilePaths, Mode=OneWay}" />
 
                                         </controls:WrapPanel>
 
@@ -207,22 +223,22 @@
 
                         </customUI:SettingsCardV3>
 
-                        <customUI:SettingsCardV3 x:Uid="BrowseForFoldersPolicyCreationSettingsCard" x:Name="FilesAndFoldersBrowseForFoldersSettingsCard">
+                        <customUI:SettingsCardV3 x:Uid="BrowseForFoldersPolicyCreationSettingsCard">
 
-                            <Button x:Name="FilesAndFoldersBrowseForFoldersButton" x:Uid="FolderBrowseButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Click}">
+                            <Button IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="FolderBrowseButton"
+                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Click}">
 
                                 <Button.Flyout>
-                                    <Flyout x:Name="FilesAndFoldersBrowseForFoldersButton_FlyOut">
+                                    <Flyout>
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="FilesAndFoldersBrowseForFoldersButton_SelectedFoldersTextBox"
-                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                 MinWidth="400" IsReadOnly="True" />
+                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFolderPaths, Mode=OneWay}" />
 
                                         </controls:WrapPanel>
 
@@ -233,28 +249,40 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="FilesAndFoldersPolicyNameTextBox" TextChanged="FilesAndFoldersPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                               x:Uid="SupplementalPolicyNameSettingsCard"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
+                            <TextBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     Text="{x:Bind ViewModel.FilesAndFoldersSupplementalPolicyName, Mode=TwoWay}"
+                                     x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                            x:Uid="BasePolicyFileSelectionSettingsCard" x:Name="FilesAndFoldersBrowseForBasePolicySettingsCard">
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                 x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <Button x:Name="FilesAndFoldersBrowseForBasePolicyButton" Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton" Click="{x:Bind FilesAndFoldersBrowseForBasePolicyButton_Click}">
+                            <Button IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                    x:Name="FilesAndFoldersBrowseForBasePolicyButton"
+                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                    x:Uid="PickPolicyFileButton"
+                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="FilesAndFoldersBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                MinWidth="400" IsReadOnly="True" />
+                                            <TextBox Text="{x:Bind ViewModel.FilesAndFoldersBasePolicyPath, Mode=OneWay}"
+                                                     TextWrapping="Wrap"
+                                                     AcceptsReturn="True"
+                                                     IsSpellCheckEnabled="False"
+                                                     MinWidth="400"
+                                                     IsReadOnly="True" />
 
                                         </controls:WrapPanel>
 
@@ -279,11 +307,10 @@
 
                         </customUI:SettingsCardV3>
 
-                        <customUI:SettingsCardV2 Description="Select the level based on which the detected files will be scanned."
-                            Header="Select Scan Level" x:Name="ScanLevelComboBoxSettingsCard">
+                        <customUI:SettingsCardV2 x:Uid="SelectScanLevelSettingsCard">
 
-                            <ComboBox x:Name="ScanLevelComboBox" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Uid="ScanLevelComboBox"
-                                 SelectedIndex="0">
+                            <ComboBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}">
                                 <x:String>File Publisher</x:String>
                                 <x:String>Publisher</x:String>
                                 <x:String>Hash</x:String>
@@ -297,17 +324,17 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
-                                <ProgressRing
-                                    IsIndeterminate="False"
-                                    Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}"
-                                    ToolTipService.ToolTip="The Supplemental policy creation progress" />
+                                <ProgressRing IsIndeterminate="False"
+                                              Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}" />
 
                                 <!-- Scalability Button with RadialGauge Flyout -->
-                                <Button x:Name="ScalabilityButton" x:Uid="ScalabilityButton">
+                                <Button IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                        x:Uid="ScalabilityButton"
+                                        Content="{x:Bind ViewModel.FilesAndFoldersScalabilityButtonContent, Mode=OneWay}">
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel>
-                                                <controls:RadialGauge x:Name="ScalabilityRadialGauge"
+                                                <controls:RadialGauge
                                                     StepSize="1"
                                                     TickSpacing="2"
                                                     ScaleWidth="12"
@@ -320,7 +347,8 @@
                                                     Width="200"
                                                     Maximum="120"
                                                     Minimum="2"
-                                                    ValueChanged="ScalabilityRadialGauge_ValueChanged"
+                                                    Value="{x:Bind ViewModel.FilesAndFoldersScalabilityRadialGaugeValue, Mode=TwoWay}"
+                                                    IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
                                                     ValueStringFormat="N0"/>
                                             </StackPanel>
                                         </Flyout>
@@ -331,13 +359,10 @@
 
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Description="View the details of all of the files that were detected in the file and folder paths you selected."
-                            Header="View detected file details"
+                        <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
                             HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
                             IsClickEnabled="True" IsActionIconVisible="True"
-                            IsEnabled="False"
-                            x:Name="FilesAndFoldersViewFileDetailsSettingsCard"
-                            Click="{x:Bind FilesAndFoldersViewFileDetailsSettingsCard_Click}">
+                            Click="{x:Bind ViewModel.FilesAndFoldersViewFileDetailsSettingsCard_Click}">
 
                         </controls:SettingsCard>
 
@@ -346,73 +371,85 @@
                 </controls:SettingsExpander>
 
                 <!-- Certificate -->
-                <controls:SettingsExpander x:Name="CertificatesSettingsCard"
-                    Description="Create Supplemental policy based on certificates"
-                    Header="Certificates"
+                <controls:SettingsExpander x:Uid="CertificatesSettingsExpander"
+                    IsExpanded="{x:Bind ViewModel.CertificatesBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEB95;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="CertificatesInfoBar"
+                        <InfoBar
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Title="{x:Bind ViewModel.CertificatesBasedInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.CertificatesBasedInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CertificatesBasedInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CertificatesBasedInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_Certificates}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_Certificates}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
-
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreateCertificatesSupplementalPolicyButton" Click="{x:Bind CreateCertificatesSupplementalPolicyButton_Click}" x:Uid="CreateSupplementalPolicyButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <Button Click="{x:Bind ViewModel.CreateCertificatesSupplementalPolicyButton_Click}"
+                                IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0" />
 
-                        <ToggleButton x:Name="CertificatesPolicyDeployToggleButton" Click="CertificatesPolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="CreateCertificateBasedSupplementalPolicyTeachingTip" Target="{x:Bind CreateCertificatesSupplementalPolicyButton}" />
+                        <ToggleButton x:Uid="DeployAfterCreationButton"
+                                      IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                      IsChecked="{x:Bind ViewModel.CertificatesBasedDeployButton, Mode=TwoWay}"
+                                      Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Description="Browse for certificate file paths to scan and include in the Supplemental policy."
-                            x:Name="CertificatesBrowseForCertsSettingsCard"
-                            Header="Browse For Certificates" Click="{x:Bind CertificatesBrowseForCertsSettingsCard_Click}"
-                            IsClickEnabled="True" IsActionIconVisible="False">
+                        <customUI:SettingsCardV3 x:Uid="BrowseForCertificatesSettingsCard"
+                                                 IsClickEnabled="True"
+                                                 IsActionIconVisible="False">
 
-                            <Button x:Name="CertificatesBrowseForCertsButton" x:Uid="FileBrowseButton" Click="{x:Bind CertificatesBrowseForCertsButton_Click}" />
+                            <Button x:Uid="FileBrowseButton"
+                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CertificatesBrowseForCertsButton_Click}" />
 
-                        </controls:SettingsCard>
-
+                        </customUI:SettingsCardV3>
 
                         <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="CertificatesPolicyNameTextBox" TextChanged="CertificatesPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     Text="{x:Bind ViewModel.CertificatesBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                     x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                IsEnabled="{x:Bind ViewModel.CertificatesBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                                x:Name="CertificatesBrowseForBasePolicySettingsCard" x:Uid="BasePolicyFileSelectionSettingsCard">
+                                                 x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <Button x:Name="CertificatesBrowseForBasePolicyButton" Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CertificatesBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton" Click="{x:Bind CertificatesBrowseForBasePolicyButton_Click}">
+                            <Button x:Name="CertificatesBrowseForBasePolicyButton"
+                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="PickPolicyFileButton"
+                                    Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="CertificatesBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                MinWidth="400" IsReadOnly="True" />
+                                            <TextBox Text="{x:Bind ViewModel.CertificatesBasedBasePolicyPath, Mode=OneWay}"
+                                                     TextWrapping="Wrap"
+                                                     AcceptsReturn="True"
+                                                     IsSpellCheckEnabled="False"
+                                                     MinWidth="400"
+                                                     IsReadOnly="True" />
 
                                         </controls:WrapPanel>
 
@@ -437,12 +474,14 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Name="CertificatesSigningScenarioSettingsCard" Description="Choose wether this certificate will be added to the User Mode or Kernel Mode Signing Scenario"
-                                Header="Signing Scenario" IsClickEnabled="False" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="SigningScenariosSettingsCard"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
 
-                            <RadioButtons Header="Signing Scenario" x:Name="SigningScenariosRadioButtons">
-                                <RadioButton Content="User Mode" IsChecked="True" Checked="{x:Bind UserModeRadioButton_Checked}"/>
-                                <RadioButton Content="Kernel Mode" Checked="{x:Bind KernelModeRadioButton_Checked}"/>
+                            <RadioButtons x:Uid="SigningScenariosRadioButtons"
+                                          IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}">
+                                <RadioButton x:Uid="UserModeRadioButton" IsChecked="{x:Bind ViewModel.CertificatesBasedUserModeOption, Mode=TwoWay}"/>
+                                <RadioButton x:Uid="KernelModeRadioButton" IsChecked="{x:Bind ViewModel.CertificatesBasedKernelModeOption, Mode=TwoWay}"/>
                             </RadioButtons>
 
                         </controls:SettingsCard>
@@ -452,47 +491,61 @@
                 </controls:SettingsExpander>
 
                 <!-- ISG -->
-                <controls:SettingsExpander x:Name="ISGSettingsCard"
+                <controls:SettingsExpander
                     Description="Create a Supplemental policy that only enables the usage of the Intelligent Security Graph to automatically authorize reputable apps and files"
                     Header="ISG"
+                    IsExpanded="{x:Bind ViewModel.ISGSettingsExpanderIsExpanded, Mode=TwoWay}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE734;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="ISGInfoBar"
+                        <InfoBar
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Title="{x:Bind ViewModel.ISGInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.ISGInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.ISGInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.ISGInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.ISGInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.ISGInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_ISG}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.ISGInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_ISG}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreateISGSupplementalPolicyButton" Click="{x:Bind CreateISGSupplementalPolicyButton_Click}" x:Uid="CreateSupplementalPolicyButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <Button Click="{x:Bind ViewModel.CreateISGSupplementalPolicyButton_Click}"
+                                IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0" />
 
-                        <ToggleButton x:Name="ISGPolicyDeployToggleButton" Click="ISGPolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="CreateISGSupplementalPolicyTeachingTip" Target="{x:Bind CreateISGSupplementalPolicyButton}" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.ISGBasedDeployButton, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="ISGPolicyNameTextBox" TextChanged="ISGPolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                     Text="{x:Bind ViewModel.ISGBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ISGBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                            x:Name="ISGBrowseForBasePolicySettingsCard" x:Uid="BasePolicyFileSelectionSettingsCard">
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                 IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                                 x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.ISGBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="ISGBrowseForBasePolicyButton" Click="{x:Bind ISGBrowseForBasePolicyButton_Click}"
+                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                    IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                    x:Name="ISGBrowseForBasePolicyButton"
+                                    Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Click}"
                                     x:Uid="PickPolicyFileButton">
 
                                 <Button.Flyout>
@@ -500,11 +553,11 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ISGBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="ISGBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                                            <TextBox Text="{x:Bind ViewModel.ISGBasedBasePolicyPath, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -536,89 +589,99 @@
                 </controls:SettingsExpander>
 
                 <!-- Strict Kernel-Mode -->
-                <controls:SettingsExpander x:Name="StrictKernelModeSection"
-                    Description="Create a Kernel-mode policy by scanning the event logs or scanning all local drivers"
-                    Header="Kernel-mode policy"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE945;}" IsExpanded="False">
+                <controls:SettingsExpander x:Uid="StrictKernelModeSettingsExpander"
+                    IsExpanded="{x:Bind ViewModel.StrictKernelModeSettingsExpanderIsExpanded, Mode=TwoWay}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE945;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="StrictKernelModeInfoBar"
+                        <InfoBar
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Title="{x:Bind ViewModel.StrictKernelModeInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.StrictKernelModeInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.StrictKernelModeInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.StrictKernelModeInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.StrictKernelModeInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_StrictKernelMode}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelMode}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
-
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="StrictKernelModeCreateButton" x:Uid="CreateSupplementalPolicyButton"
-                              Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind StrictKernelModeCreateButton_Click}" />
+                        <Button x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0"
+                                IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.StrictKernelModeCreateButton_Click}" />
 
-                        <ToggleButton x:Name="StrictKernelModeDeployToggleButton" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="StrictKernelModeCreateButtonTeachingTip" Target="{x:Bind StrictKernelModeCreateButton}" />
+                        <ToggleButton x:Uid="DeployAfterCreationButton"
+                                      IsChecked="{x:Bind ViewModel.StrictKernelModeShouldDeploy, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                      Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-
-                        <controls:SettingsCard x:Name="StrictKernelModeAutoDetectAllDriversSettingsCard" Description="Automatically detect and list all of the drivers on the system"
-                             Header="Auto Driver Detection"
-                             IsClickEnabled="True" IsActionIconVisible="False" Click="{x:Bind DriverAutoDetector}">
+                        <customUI:SettingsCardV2 x:Uid="AutoDriverDetectionSettingsCard">
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
                                 <ProgressRing
                                     IsIndeterminate="False"
-                                    Value="{x:Bind ViewModel.DriverAutoDetectionProgressRingValue,Mode=OneWay}"
-                                    ToolTipService.ToolTip="The Supplemental policy creation progress" />
+                                    Value="{x:Bind ViewModel.DriverAutoDetectionProgressRingValue,Mode=OneWay}" />
 
-                                <Button x:Name="StrictKernelModeAutoDetectAllDriversButton" Content="Begin" Click="{x:Bind DriverAutoDetector}" />
+                                <Button Content="Begin"
+                                        IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.DriverAutoDetector}" />
 
                             </controls:WrapPanel>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Name="StrictKernelModeScanButtonSettingsCard" Description="Scan the event logs for Kernel-mode files only"
-                             Header="Scan Event Logs"
-                             IsClickEnabled="False" IsActionIconVisible="False" >
+                        <controls:SettingsCard x:Uid="ScanEventLogsForStrictKernelPolicySettingsCard"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False" >
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
-                                <Button x:Name="StrictKernelModeScanButton" Click="{x:Bind StrictKernelModeScanButton_Click}" HorizontalAlignment="Center" Content="Scan for All Kernel-mode Logs" />
+                                <Button Click="{x:Bind ViewModel.StrictKernelModeScanButton_Click}"
+                                        IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                        HorizontalAlignment="Center"
+                                        Content="Scan for All Kernel-mode Logs" />
 
-                                <Button x:Name="StrictKernelModeScanSinceLastRebootButton" Click="{x:Bind StrictKernelModeScanSinceLastRebootButton_Click}" HorizontalAlignment="Center" Content="Scan for Kernel-mode Logs Since Last Reboot" />
+                                <Button Click="{x:Bind ViewModel.StrictKernelModeScanSinceLastRebootButton_Click}"
+                                        IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                        HorizontalAlignment="Center"
+                                        Content="Scan for Kernel-mode Logs Since Last Reboot" />
 
                             </controls:WrapPanel>
 
                         </controls:SettingsCard>
 
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                 x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                            x:Name="StrictKernelModeBrowseForBasePolicySettingsCard" x:Uid="BasePolicyFileSelectionSettingsCard">
-
-                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton" Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyIsEnabled, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton" Click="{x:Bind StrictKernelModeBrowseForBasePolicyButton_Click}">
+                            <Button x:Name="StrictKernelModeBrowseForBasePolicyButton"
+                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                    IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="PickPolicyFileButton"
+                                    Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="StrictKernelModeBrowseForBasePolicyButton_FlyOut">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="StrictKernelModeBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                                            <TextBox Text="{x:Bind ViewModel.StrictKernelModeBasePolicyPath, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -645,19 +708,20 @@
 
                         </customUI:SettingsCardV3>
 
-
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="StrictKernelModePolicyNameTextBox" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                               x:Uid="SupplementalPolicyNameSettingsCard"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                     Text="{x:Bind ViewModel.StrictKernelModePolicyName, Mode=TwoWay}"
+                                     x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-
-                        <controls:SettingsCard Description="View the details of all of the Kernel-mode files that were found"
-                            Header="View detected Kernel-mode files"
+                        <controls:SettingsCard x:Uid="ViewStrictKernelModeDetailsSettingsCard"
                             HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"
                             IsClickEnabled="True" IsActionIconVisible="True"
-                            IsEnabled="False"
-                            Click="{x:Bind DetectedKernelModeFilesDetailsSettingsCard_Click}"
-                            x:Name="DetectedKernelModeFilesDetailsSettingsCard">
+                            Click="{x:Bind ViewModel.DetectedKernelModeFilesDetailsSettingsCard_Click}">
 
                         </controls:SettingsCard>
 
@@ -666,59 +730,73 @@
                 </controls:SettingsExpander>
 
                 <!-- Package Family Name (PFN) -->
-                <controls:SettingsExpander x:Name="PFNSettingsCard"
-                    Description="Create a Supplemental policy based on an app's Package Family Name (PFN)"
-                    Header="Package Family Name"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}" Expanded="{x:Bind PFNSettingsCard_Expanded}">
+                <controls:SettingsExpander x:Uid="PFNSupplementalPolicySettingsExpander"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8F1;}"
+                    IsExpanded="{x:Bind ViewModel.PFNBasedSettingsExpanderIsExpanded, Mode=TwoWay}"
+                    Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="PFNInfoBar"
+                        <InfoBar
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Title="{x:Bind ViewModel.PFNInfoBarTitle, Mode=OneWay}"
+                            Message="{x:Bind ViewModel.PFNInfoBarMessage, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.PFNInfoBarIsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.PFNInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.PFNInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.PFNInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_PFN}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.PFNInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_PFN}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreatePFNSupplementalPolicyButton" Click="{x:Bind CreatePFNSupplementalPolicyButton_Click}" x:Uid="CreateSupplementalPolicyButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <Button Click="{x:Bind ViewModel.CreatePFNSupplementalPolicyButton_Click}"
+                                IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
-                        <ToggleButton x:Name="PFNPolicyDeployToggleButton" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="CreatePFNSupplementalPolicyTeachingTip" Target="{x:Bind CreatePFNSupplementalPolicyButton}" />
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                      IsChecked="{x:Bind ViewModel.PFNBasedShouldDeploy, Mode=TwoWay}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="PFNPolicyNameTextBox" x:Uid="SupplementalPolicyNameTextBox"/>
+                        <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                               x:Uid="SupplementalPolicyNameSettingsCard"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                     Text="{x:Bind ViewModel.PFNBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.PFNBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="PFNBrowseForBasePolicySettingsCard"
-                            x:Uid="BasePolicyFileSelectionSettingsCard">
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                 x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.PFNBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="PFNBrowseForBasePolicyButton"
-                                    x:Uid="PickPolicyFileButton" Click="{x:Bind PFNBrowseForBasePolicyButton_Click}">
+                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                    IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                    x:Uid="PickPolicyFileButton"
+                                    x:Name="PFNBrowseForBasePolicyButton"
+                                    Click="{x:Bind ViewModel.PFNBrowseForBasePolicyButton_Click}">
 
                                 <Button.Flyout>
                                     <Flyout x:Name="PFNBrowseForBasePolicyButton_FlyOut">
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind PFNBasePolicyClearButton_Click}"/>
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PFNBasePolicyClearButton_Click}"/>
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="PFNBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                                            <TextBox Text="{x:Bind ViewModel.PFNBasePolicyPath, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
@@ -745,47 +823,45 @@
 
                         </customUI:SettingsCardV3>
 
-
-                        <controls:SettingsCard Description="Select one or more installed packages to create a supplemental policy for"
-                            Header="Package Family Names" x:Name="PFNSelectPackagedAppsSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-
+                        <controls:SettingsCard x:Uid="PackageFamilyNamesSelectionSettingsCard"
+                                               IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
 
                             <controls:WrapPanel Orientation="Horizontal">
 
                                 <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
 
-                                    <TextBox x:Name="PFNAppFilteringTextBox" TextChanged="{x:Bind PFNAppFilteringTextBox_TextChanged}" PlaceholderText="Search among the apps"/>
+                                    <TextBox Text="{x:Bind ViewModel.PFNBasedSearchKeywordForAppsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search among the apps"/>
 
-                                    <TextBlock x:Uid="SelectedAppsTextBlock" x:Name="PFNSelectedItemsCount" HorizontalAlignment="Center"/>
-                                    <Button x:Uid="RefreshButton" HorizontalAlignment="Center" x:Name="PFNRefreshAppsListButton" Click="{x:Bind PFNRefreshAppsListButton_Click}" />
-                                    <Button x:Uid="SelectAllButton" HorizontalAlignment="Center" x:Name="PFNSelectAllAppsListButton" Click="{x:Bind PFNSelectAllAppsListButton_Click}" />
-                                    <Button x:Uid="RemoveSelectionsButton" HorizontalAlignment="Center" x:Name="PFNRemoveSelectionAppsListButton" Click="{x:Bind PFNRemoveSelectionAppsListButton_Click}" />
+                                    <TextBlock x:Uid="SelectedAppsTextBlock" Text="{x:Bind ViewModel.PFNBasedSelectedItemsCount, Mode=OneWay}" HorizontalAlignment="Center"/>
+                                    <Button x:Uid="RefreshButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.PFNRefreshAppsListButton_Click}" />
+                                    <Button x:Uid="SelectAllButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.PFNSelectAllAppsListButton_Click}" />
+                                    <Button x:Uid="RemoveSelectionsButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.PFNRemoveSelectionAppsListButton_Click}" />
 
                                 </controls:WrapPanel>
 
-                                <RefreshContainer x:Name="PFNRefreshContainer" RefreshRequested="PFNRefreshContainer_RefreshRequested">
+                                <RefreshContainer RefreshRequested="{x:Bind ViewModel.PFNRefreshAppsListButton_Click}">
 
-                                    <ListView
-                                        x:Name="PFNPackagedAppsListView"
+                                    <customUI:ListViewV3
                                         BorderThickness="1"
                                         CornerRadius="5"
+                                        RegistryKey="SupplementalPolicy_PFNBasedRules"
                                         ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
                                         BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
                                         Width="450"
                                         Height="400"
+                                        SelectionChanged="{x:Bind ViewModel.PFNPackagedAppsListView_SelectionChanged}"
                                         HorizontalAlignment="Left"
                                         SelectionMode="Multiple"
-                                        PointerEntered="PFNPackagedAppsListView_PointerEntered"
-                                        PointerExited="{x:Bind PFNPackagedAppsListView_PointerExited}"
-                                        SelectionChanged="{x:Bind PFNPackagedAppsListView_SelectionChanged}"
                                         ItemTemplate="{StaticResource PackagedAppsListViewTemplate}">
 
-                                        <ListView.ItemsPanel>
+                                        <customUI:ListViewV3.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <ItemsStackPanel AreStickyGroupHeadersEnabled="True"/>
                                             </ItemsPanelTemplate>
-                                        </ListView.ItemsPanel>
-                                        <ListView.GroupStyle>
+                                        </customUI:ListViewV3.ItemsPanel>
+                                        <customUI:ListViewV3.GroupStyle>
                                             <GroupStyle >
                                                 <GroupStyle.HeaderTemplate>
                                                     <DataTemplate x:DataType="others:GroupInfoListForPackagedAppView">
@@ -795,9 +871,9 @@
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
                                             </GroupStyle>
-                                        </ListView.GroupStyle>
+                                        </customUI:ListViewV3.GroupStyle>
 
-                                    </ListView>
+                                    </customUI:ListViewV3>
 
                                 </RefreshContainer>
 
@@ -810,46 +886,58 @@
                 </controls:SettingsExpander>
 
                 <!-- Custom File Path Rules -->
-                <controls:SettingsExpander x:Name="CustomPatternBasedFileRuleSettingsExpander"
+                <controls:SettingsExpander
                         x:Uid="SupplementalPolicyCustomPatternBasedFileRuleSettingsExpander"
+                        IsExpanded="{x:Bind ViewModel.CustomFilePathRulesSettingsExpanderIsExpanded, Mode=TwoWay}"
                         HeaderIcon="{ui:FontIcon Glyph=&#xE8A1;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar x:Name="CustomPatternBasedFileRuleInfoBar"
+                        <InfoBar
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"
-                            IsOpen="False"
-                            IsClosable="False"
-                            Severity="Informational">
+                            Title="{x:Bind ViewModel.CustomFilePathRulesInfoBarTitle, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.CustomFilePathRulesInfoBarMessage, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsClosable, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBarSeverity, Mode=OneWay}">
                             <InfoBar.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor_CustomPatternBasedFileRule}" />
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_CustomPatternBasedFileRule}" />
                             </InfoBar.ActionButton>
                         </InfoBar>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Name="CreateCustomPatternBasedFileRuleSupplementalPolicyButton" Click="{x:Bind CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click}" x:Uid="CreateSupplementalPolicyButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <Button Click="{x:Bind ViewModel.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click}"
+                                IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
-                        <ToggleButton x:Name="CustomPatternBasedFileRulePolicyDeployToggleButton" Click="CustomPatternBasedFileRulePolicyDeployToggleButton_Click" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
-
-                        <TeachingTip x:Name="CreateCustomPatternBasedFileRuleSupplementalPolicyTeachingTip" Target="{x:Bind CreateCustomPatternBasedFileRuleSupplementalPolicyButton}" />
+                        <ToggleButton IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Name="CustomPatternBasedFileRulePolicyNameTextBox" TextChanged="CustomPatternBasedFileRulePolicyNameTextBox_TextChanged" x:Uid="SupplementalPolicyNameTextBox"/>
+                            <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                     Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
-                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="CustomPatternBasedFileRuleBrowseForBasePolicySettingsCard"
-                            x:Uid="BasePolicyFileSelectionSettingsCard">
+                        <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                 x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyIsEnabled, Mode=OneWay}" x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton" Click="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
+                            <Button Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                    IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                    x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton"
+                                    Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
                                     x:Uid="PickPolicyFileButton">
 
                                 <Button.Flyout>
@@ -857,11 +945,11 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click}" />
+                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Flyout_Clear_Click}" />
 
                                             <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton_SelectedBasePolicyTextBox"
+                                            <TextBox Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicyPath, Mode=OneWay}"
                                                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                  MinWidth="400" IsReadOnly="True" />
 
@@ -893,10 +981,17 @@
                         </customUI:SettingsCardV3>
 
                         <controls:SettingsCard x:Uid="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox x:Name="SupplementalPolicyCustomPatternBasedCustomPatternTextBox" x:Uid="SupplementalPolicyCustomPatternBasedCustomPatternTextBox" TextWrapping="Wrap" MaxWidth="400"/>
+                            <TextBox Text="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay}"
+                                     IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                     x:Uid="SupplementalPolicyCustomPatternBasedCustomPatternTextBox"
+                                     TextWrapping="Wrap"
+                                     MaxWidth="400"/>
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard" IsClickEnabled="True" Click="{x:Bind SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click}" IsActionIconVisible="True"/>
+                        <controls:SettingsCard x:Uid="CustomPatternBasedFileRuleInfoSettingsCard"
+                                               IsClickEnabled="True"
+                                               Click="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedFileRuleSettingsCard_Click}"
+                                               IsActionIconVisible="True"/>
 
                     </controls:SettingsExpander.Items>
 

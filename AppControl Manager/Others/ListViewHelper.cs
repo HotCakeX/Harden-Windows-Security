@@ -55,7 +55,9 @@ internal static class ListViewHelper
 		DenyPolicy_FilesAndFolders_ScanResults = 9,
 		Simulation = 10,
 		PolicyEditor_FileBasedRules = 11,
-		PolicyEditor_SignatureBasedRules = 12
+		PolicyEditor_SignatureBasedRules = 12,
+		SupplementalPolicy_PFNBasedRules = 13,
+		DenyPolicy_PFNBasedRules = 14
 	}
 
 	/// <summary>

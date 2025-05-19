@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <Button x:Uid="RetrieveCodeIntegrityInfoButton"
-                Click="{x:Bind ViewModel.RetrieveCodeIntegrityInfo_Click}"                
+                Click="{x:Bind ViewModel.RetrieveCodeIntegrityInfo_Click}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Style="{StaticResource AccentButtonStyle}"

@@ -16,7 +16,6 @@
 //
 
 using System;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.Others;
@@ -25,8 +24,6 @@ namespace AppControlManager.Others;
 /// Used to pass ViewModel based properties of an InfoBar element to a class constructor
 /// in a way that the receiver will be able to modify the original objects.
 /// </summary>
-/// <param name="getVisibility"></param>
-/// <param name="setVisibility"></param>
 /// <param name="getIsOpen"></param>
 /// <param name="setIsOpen"></param>
 /// <param name="getMessage"></param>
@@ -35,55 +32,83 @@ namespace AppControlManager.Others;
 /// <param name="setSeverity"></param>
 /// <param name="getIsClosable"></param>
 /// <param name="setIsClosable"></param>
+/// <param name="getTitle"></param>
+/// <param name="setTitle"></param>
 internal sealed class InfoBarSettings(
-	Func<Visibility> getVisibility, Action<Visibility> setVisibility,
 	Func<bool> getIsOpen, Action<bool> setIsOpen,
 	Func<string?> getMessage, Action<string?> setMessage,
 	Func<InfoBarSeverity> getSeverity, Action<InfoBarSeverity> setSeverity,
-	Func<bool> getIsClosable, Action<bool> setIsClosable)
+	Func<bool> getIsClosable, Action<bool> setIsClosable,
+	Func<string?>? getTitle = null, Action<string?>? setTitle = null)
 {
-	private readonly Action<Visibility> _setVisibility = setVisibility;
-	private readonly Func<Visibility> _getVisibility = getVisibility;
-
-	private readonly Action<bool> _setIsOpen = setIsOpen;
-	private readonly Func<bool> _getIsOpen = getIsOpen;
-
-	private readonly Action<string?> _setMessage = setMessage;
-	private readonly Func<string?> _getMessage = getMessage;
-
-	private readonly Action<InfoBarSeverity> _setSeverity = setSeverity;
-	private readonly Func<InfoBarSeverity> _getSeverity = getSeverity;
-
-	private readonly Action<bool> _setIsClosable = setIsClosable;
-	private readonly Func<bool> _getIsClosable = getIsClosable;
-
-	internal Visibility Visibility
-	{
-		get => _getVisibility();
-		set => _setVisibility(value);
-	}
-
 	internal bool IsOpen
 	{
-		get => _getIsOpen();
-		set => _setIsOpen(value);
+		get => getIsOpen();
+		set => setIsOpen(value);
 	}
 
 	internal string? Message
 	{
-		get => _getMessage();
-		set => _setMessage(value);
+		get => getMessage();
+		set => setMessage(value);
 	}
 
 	internal InfoBarSeverity Severity
 	{
-		get => _getSeverity();
-		set => _setSeverity(value);
+		get => getSeverity();
+		set => setSeverity(value);
 	}
 
 	internal bool IsClosable
 	{
-		get => _getIsClosable();
-		set => _setIsClosable(value);
+		get => getIsClosable();
+		set => setIsClosable(value);
+	}
+
+	internal string? Title
+	{
+		// call the delegate if non-null, otherwise no-op fallback:
+		get => getTitle?.Invoke();
+		set => (setTitle ?? (_ => { }))(value);
+	}
+
+	internal void WriteInfo(string Msg, string? title = null)
+	{
+		IsOpen = true;
+		Message = Msg;
+		Title = title ?? "Status";
+		Logger.Write(title is not null ? title + ": " + Msg : Msg);
+		Severity = InfoBarSeverity.Informational;
+		IsClosable = false;
+	}
+
+	internal void WriteWarning(string Msg, string? title = null)
+	{
+		IsOpen = true;
+		Message = Msg;
+		Title = title ?? "Warning";
+		Logger.Write(title is not null ? title + ": " + Msg : Msg);
+		Severity = InfoBarSeverity.Warning;
+		IsClosable = true;
+	}
+
+	internal void WriteError(Exception ex, string? Msg = null, string? title = null)
+	{
+		IsOpen = true;
+		Message = Msg is not null ? Msg + ex.Message : ex.Message;
+		Title = title ?? "Error";
+		Logger.Write(ErrorWriter.FormatException(ex));
+		Severity = InfoBarSeverity.Error;
+		IsClosable = true;
+	}
+
+	internal void WriteSuccess(string Msg, string? title = null)
+	{
+		IsOpen = true;
+		Message = Msg;
+		Title = title ?? "Success";
+		Logger.Write(title is not null ? title + ": " + Msg : Msg);
+		Severity = InfoBarSeverity.Success;
+		IsClosable = true;
 	}
 }

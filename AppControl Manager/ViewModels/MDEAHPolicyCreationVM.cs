@@ -46,11 +46,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
-	internal Visibility MainInfoBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }

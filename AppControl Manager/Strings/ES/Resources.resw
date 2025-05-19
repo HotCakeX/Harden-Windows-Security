@@ -999,7 +999,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Todas las descargas finalizaron, instalando la nueva versión de AppControl Manager</value>
-  </data> 
+  </data>
   <data name="ASRError" xml:space="preserve">
     <value>Ocurrió un error al intentar eliminar las exclusiones de reglas ASR que puede ignorar de forma segura: </value>
   </data>
@@ -4362,5 +4362,197 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación de regla de Ruta de Archivo Basada en Patrón.</value>
+  </data>
+    <data name="TotalFiles" xml:space="preserve">
+    <value>Archivos Totales</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>Todos los datos se han borrado correctamente.</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>Por favor, seleccione un archivo de directiva y cárguelo antes de usar la función de guardar.</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>por favor ingrese una versión de directiva, no puede estar vacía.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>Algoritmo</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>El algoritmo criptográfico utilizado para el cifrado.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El algoritmo criptográfico utilizado para el cifrado.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El algoritmo criptográfico utilizado para el cifrado.</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>Directiva de modo kernel</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>Crear una directiva de modo kernel escaneando los registros de eventos o escaneando todos los controladores locales</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crear una directiva de modo kernel escaneando los registros de eventos o escaneando todos los controladores locales</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crear una directiva de modo kernel escaneando los registros de eventos o escaneando todos los controladores locales</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>Detección Automática de Controladores</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>Detectar y listar automáticamente todos los controladores del sistema</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Detectar y listar automáticamente todos los controladores del sistema</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Detectar y listar automáticamente todos los controladores del sistema</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>Escanear Registros de Eventos</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>Escanear los registros de eventos solo para archivos de modo kernel</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Escanear los registros de eventos solo para archivos de modo kernel</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Escanear los registros de eventos solo para archivos de modo kernel</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Ver archivos de modo kernel detectados</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Ver los detalles de todos los archivos de modo kernel que se encontraron</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver los detalles de todos los archivos de modo kernel que se encontraron</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver los detalles de todos los archivos de modo kernel que se encontraron</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>Nombre de Familia de Paquetes</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>Crear una directiva suplementaria basada en el Nombre de Familia de Paquetes (PFN) de una aplicación</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crear una directiva suplementaria basada en el Nombre de Familia de Paquetes (PFN) de una aplicación</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crear una directiva suplementaria basada en el Nombre de Familia de Paquetes (PFN) de una aplicación</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Nombres de Familia de Paquetes</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione uno o más paquetes instalados para crear una directiva.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione uno o más paquetes instalados para crear una directiva.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione uno o más paquetes instalados para crear una directiva.</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>Modo Kernel</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>Modo Usuario</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>Escenario de Firma</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>Escenario de Firma</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>Elija si este certificado se agregará al Escenario de Firma de Modo Usuario o Modo Kernel</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija si este certificado se agregará al Escenario de Firma de Modo Usuario o Modo Kernel</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija si este certificado se agregará al Escenario de Firma de Modo Usuario o Modo Kernel</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>Buscar Certificados</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>Busque rutas de archivos de certificado para escanear e incluir en la directiva suplementaria.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque rutas de archivos de certificado para escanear e incluir en la directiva suplementaria.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque rutas de archivos de certificado para escanear e incluir en la directiva suplementaria.</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Certificados</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Crear directiva suplementaria basada en certificados</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crear directiva suplementaria basada en certificados</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crear directiva suplementaria basada en certificados</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Ver detalles de archivos detectados</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Ver los detalles de todos los archivos que se detectaron en las rutas de archivos y carpetas que seleccionó.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver los detalles de todos los archivos que se detectaron en las rutas de archivos y carpetas que seleccionó.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver los detalles de todos los archivos que se detectaron en las rutas de archivos y carpetas que seleccionó.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar Nivel de Escaneo</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione el nivel según el cual se escanearán los archivos detectados.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione el nivel según el cual se escanearán los archivos detectados.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione el nivel según el cual se escanearán los archivos detectados.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>Seleccionar un archivo de directiva</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Busque una directiva de App Control para agregarle todas las reglas que creó en esta página.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Busque una directiva de App Control para agregarle todas las reglas que creó en esta página.</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija entre crear una nueva directiva suplementaria o agregar las reglas que se crearán a una directiva existente</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija entre crear una nueva directiva suplementaria o agregar las reglas que se crearán a una directiva existente</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>Modo: </value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>Crear Nueva Directiva</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>Agregar a Directiva Existente</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>El algoritmo seleccionado no es compatible para firmar directivas de App Control. Si tiene la intención de utilizar el certificado generado para la firma de App Control, por favor considere seleccionar otro algoritmo.</value>
   </data>
 </root>

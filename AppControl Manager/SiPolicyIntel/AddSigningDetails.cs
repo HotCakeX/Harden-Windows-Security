@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
@@ -144,8 +145,11 @@ internal static class AddSigningDetails
 			policyObject.UpdatePolicySigners = [updatePolicySigner1];
 		}
 
-		Management.SavePolicyToFile(policyObject, xmlPolicyFile);
-
+		// Remove the unsigned policy rule option from the policy
+		// And save the final result to the file
+		CiRuleOptions.Set(filePath: xmlPolicyFile,
+			rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy],
+			DirectPolicyObj: policyObject);
 
 		return policyObject;
 	}

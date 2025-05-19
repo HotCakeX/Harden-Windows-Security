@@ -437,7 +437,7 @@ internal sealed partial class Main : ViewModelBase
 
 	/// <summary>
 	/// Selected language for the application
-	/// </summary>	
+	/// </summary>
 	internal string ApplicationGlobalLanguage
 	{
 		get

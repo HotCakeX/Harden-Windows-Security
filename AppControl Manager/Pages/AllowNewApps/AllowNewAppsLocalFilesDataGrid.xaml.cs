@@ -62,7 +62,7 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			// Look up the mapping in your reusable property mappings dictionary.
+			// Look up the mapping in the reusable property mappings dictionary.
 			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(

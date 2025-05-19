@@ -57,7 +57,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		_ViewModelMSGraph = GraphVM;
 
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => MainInfoBarVisibility, value => MainInfoBarVisibility = value,
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
@@ -70,11 +69,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 
 	#region UI-Bound Properties
-
-	internal Visibility MainInfoBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 

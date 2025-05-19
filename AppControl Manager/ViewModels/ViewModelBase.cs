@@ -15,9 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using AppControlManager.IntelGathering;
 using Microsoft.UI.Dispatching;
 
 namespace AppControlManager.ViewModels;
@@ -60,4 +62,27 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
+
+	// Dictionaries used for quick conversion and parsing of ScanLevels.
+	internal static readonly Dictionary<string, ScanLevels> StringToScanLevel = new(StringComparer.OrdinalIgnoreCase)
+	{
+		{ "File Publisher", ScanLevels.FilePublisher },
+		{ "Publisher", ScanLevels.Publisher },
+		{ "Hash", ScanLevels.Hash },
+		{ "File Path", ScanLevels.FilePath },
+		{ "WildCard Folder Path", ScanLevels.WildCardFolderPath },
+		{ "PFN", ScanLevels.PFN },
+		{ "Custom File Rule Pattern", ScanLevels.CustomFileRulePattern }
+	};
+
+	internal static readonly Dictionary<ScanLevels, string> ScanLevelToString = new()
+	{
+		{ ScanLevels.FilePublisher, "File Publisher" },
+		{ ScanLevels.Publisher, "Publisher" },
+		{ ScanLevels.Hash, "Hash" },
+		{ ScanLevels.FilePath, "File Path" },
+		{ ScanLevels.WildCardFolderPath, "WildCard Folder Path" },
+		{ ScanLevels.PFN, "PFN" },
+		{ ScanLevels.CustomFileRulePattern, "Custom File Rule Pattern" }
+	 };
 }

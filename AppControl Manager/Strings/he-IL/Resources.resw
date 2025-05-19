@@ -552,7 +552,7 @@
   </data>
   <data name="BrowseForFilesPolicyCreationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>בחר נתיבי קבצים לסריקה ולהכללה במדיניות.</value>
-  </data>  
+  </data>
   <data name="DenyPolicyNameSettingsCard.Description" xml:space="preserve">
     <value>שם מדיניות החסימה שתיווצר.</value>
   </data>
@@ -3111,7 +3111,7 @@
   </data>
   <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>השתמש בסרגל הצד כדי לנעוץ נתיבי קובצי XML ולהשתמש בהם שוב בחלקים שונים של AppControl Manager.</value>
-  </data>  
+  </data>
   <data name="SidebarTextBlock.Text" xml:space="preserve">
     <value>סרגל צד</value>
   </data>
@@ -4028,7 +4028,7 @@
 <data name="UserConfigurationsFileUpdatedSuccessfullyMessage" xml:space="preserve">
     <value>קובץ UserConfigurations.json עודכן בהצלחה.</value>
 </data>
-<data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">  
+<data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>זוג מפתח-ערך נוסף ל-SignedPolicyStage1RemovalTimes: {0} = {1}</value>
 </data>
 <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
@@ -4364,4 +4364,196 @@
 <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>נוצרה בהצלחה מדיניות Pattern-based File Path rule Deny.</value>
 </data>
+  <data name="TotalFiles" xml:space="preserve">
+    <value>סך הכל קבצים</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>כל הנתונים נוקו בהצלחה.</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>אנא בחר קובץ מדיניות וטען אותו לפני השימוש בתכונת השמירה.</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>אנא הזן גרסת מדיניות, היא אינה יכולה להיות ריקה.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>אלגוריתם</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>האלגוריתם הקריפטוגרפי המשמש להצפנה.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>האלגוריתם הקריפטוגרפי המשמש להצפנה.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>האלגוריתם הקריפטוגרפי המשמש להצפנה.</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>מדיניות מצב ליבה</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>צור מדיניות מצב ליבה על ידי סריקת יומני אירועים או סריקת כל מנהלי ההתקנים המקומיים</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור מדיניות מצב ליבה על ידי סריקת יומני אירועים או סריקת כל מנהלי ההתקנים המקומיים</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור מדיניות מצב ליבה על ידי סריקת יומני אירועים או סריקת כל מנהלי ההתקנים המקומיים</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>זיהוי מנהלי התקנים אוטומטי</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>זהה ורשום באופן אוטומטי את כל מנהלי ההתקנים במערכת</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>זהה ורשום באופן אוטומטי את כל מנהלי ההתקנים במערכת</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>זהה ורשום באופן אוטומטי את כל מנהלי ההתקנים במערכת</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>סרוק יומני אירועים</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>סרוק את יומני האירועים עבור קבצי מצב ליבה בלבד</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סרוק את יומני האירועים עבור קבצי מצב ליבה בלבד</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סרוק את יומני האירועים עבור קבצי מצב ליבה בלבד</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>הצג קבצי מצב ליבה שזוהו</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>הצג את הפרטים של כל קבצי מצב ליבה שנמצאו</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג את הפרטים של כל קבצי מצב ליבה שנמצאו</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג את הפרטים של כל קבצי מצב ליבה שנמצאו</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>שם משפחת חבילה</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>צור מדיניות משלימה המבוססת על שם משפחת החבילה (PFN) של יישום</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור מדיניות משלימה המבוססת על שם משפחת החבילה (PFN) של יישום</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור מדיניות משלימה המבוססת על שם משפחת החבילה (PFN) של יישום</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>שמות משפחות חבילות</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>בחר חבילה מותקנת אחת או יותר ליצירת מדיניות עבורן.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר חבילה מותקנת אחת או יותר ליצירת מדיניות עבורן.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר חבילה מותקנת אחת או יותר ליצירת מדיניות עבורן.</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>מצב ליבה</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>מצב משתמש</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>תרחיש חתימה</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>תרחיש חתימה</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>בחר אם אישור זה יתווסף לתרחיש החתימה של מצב משתמש או מצב ליבה</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר אם אישור זה יתווסף לתרחיש החתימה של מצב משתמש או מצב ליבה</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר אם אישור זה יתווסף לתרחיש החתימה של מצב משתמש או מצב ליבה</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>עיון באישורים</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>אתר נתיבי קבצי אישורים לסריקה ולשילוב במדיניות המשלים.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר נתיבי קבצי אישורים לסריקה ולשילוב במדיניות המשלים.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר נתיבי קבצי אישורים לסריקה ולשילוב במדיניות המשלים.</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>אישורים</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>צור מדיניות משלימה המבוססת על אישורים</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור מדיניות משלימה המבוססת על אישורים</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור מדיניות משלימה המבוססת על אישורים</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>הצג פרטי קבצים שזוהו</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>הצג את הפרטים של כל הקבצים שזוהו בנתיבי הקבצים והתיקיות שבחרת.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג את הפרטים של כל הקבצים שזוהו בנתיבי הקבצים והתיקיות שבחרת.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג את הפרטים של כל הקבצים שזוהו בנתיבי הקבצים והתיקיות שבחרת.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>בחר רמת סריקה</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>בחר את הרמה שלפיה יסרקו הקבצים שזוהו.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את הרמה שלפיה יסרקו הקבצים שזוהו.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את הרמה שלפיה יסרקו הקבצים שזוהו.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>בחר קובץ מדיניות</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אתר מדיניות App Control כדי להוסיף אליה את כל הכללים שיצרת בדף זה.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אתר מדיניות App Control כדי להוסיף אליה את כל הכללים שיצרת בדף זה.</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר בין יצירת מדיניות משלימה חדשה או הוספת הכללים שייווצרו למדיניות קיימת</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר בין יצירת מדיניות משלימה חדשה או הוספת הכללים שייווצרו למדיניות קיימת</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>מצב: </value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>צור מדיניות חדשה</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>הוסף למדיניות קיימת</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>האלגוריתם שנבחר אינו נתמך לחתימת מדיניות App Control. אם בכוונתך להשתמש באישור שנוצר לחתימת App Control, אנא שקול לבחור אלגוריתם אחר.</value>
+  </data>
 </root>

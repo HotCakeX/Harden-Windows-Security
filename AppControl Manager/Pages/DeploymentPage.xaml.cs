@@ -23,7 +23,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.Main;
 using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -107,7 +106,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 		this.DataContext = this;
 
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => ViewModel.MainInfoBarVisibility, value => ViewModel.MainInfoBarVisibility = value,
 			() => ViewModel.MainInfoBarIsOpen, value => ViewModel.MainInfoBarIsOpen = value,
 			() => ViewModel.MainInfoBarMessage, value => ViewModel.MainInfoBarMessage = value,
 			() => ViewModel.MainInfoBarSeverity, value => ViewModel.MainInfoBarSeverity = value,
@@ -188,13 +186,10 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.Rizz.GetString("UnsignedXMLFiles");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
-
 
 			MainProgressRing.Visibility = Visibility.Visible;
 
@@ -340,7 +335,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
@@ -366,9 +360,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 					// Add certificate's details to the policy
 					SiPolicy.SiPolicy policyObject = AddSigningDetails.Add(file, CertPath);
-
-					// Remove the unsigned policy rule option from the policy
-					CiRuleOptions.Set(filePath: file, rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					// Define the path for the CIP file
 					string randomString = Guid.CreateVersion7().ToString("N");
@@ -479,7 +470,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
 			ViewModel.MainInfoBarIsOpen = true;
 			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
 			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
@@ -795,7 +785,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						ViewModel.MainInfoBarVisibility = Visibility.Visible;
 						ViewModel.MainInfoBarIsOpen = true;
 						ViewModel.MainInfoBarMessage = string.Format(
 							GlobalVars.Rizz.GetString("ConvertingFileToCIPMessage"),

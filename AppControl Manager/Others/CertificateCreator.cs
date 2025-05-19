@@ -34,8 +34,9 @@ internal static class CertificateGenerator
 	/// <param name="Password">Sets the password for protecting the private key of the generated certificate.</param>
 	/// <param name="validity">Defines the duration in years for which the certificate will be valid.</param>
 	/// <param name="keySize">Indicates the size of the key used for the certificate, affecting its security level.</param>
+	/// <param name="hashAlgorithm">The hashing algorithm.</param>
 	/// <returns>Returns the generated X509Certificate2 object representing the newly created certificate.</returns>
-	internal static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize)
+	internal static X509Certificate2 BuildAppControlCertificate(string CommonName, string Password, int validity, int keySize, HashAlgorithmName hashAlgorithm)
 	{
 		// Paths for .cer and .pfx files
 		string cerFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.cer");
@@ -70,7 +71,7 @@ internal static class CertificateGenerator
 			subjectName: CommonName,
 			validityInYears: validity,
 			keySize: keySize,
-			hashAlgorithm: HashAlgorithmName.SHA512,
+			hashAlgorithm: hashAlgorithm,
 			storeLocation: CertificateStoreLocation.User,
 			cerExportFilePath: cerFilePath,
 			friendlyName: CommonName,

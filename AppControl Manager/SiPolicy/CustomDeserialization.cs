@@ -491,32 +491,32 @@ internal static class CustomDeserialization
 	private static Allow DeserializeAllow(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Allow allow = new();
-		if (elem.HasAttribute("ID"))
-			allow.ID = elem.GetAttribute("ID");
-		if (elem.HasAttribute("FriendlyName"))
-			allow.FriendlyName = elem.GetAttribute("FriendlyName");
-		if (elem.HasAttribute("FileName"))
-			allow.FileName = elem.GetAttribute("FileName");
-		if (elem.HasAttribute("InternalName"))
-			allow.InternalName = elem.GetAttribute("InternalName");
-		if (elem.HasAttribute("FileDescription"))
-			allow.FileDescription = elem.GetAttribute("FileDescription");
-		if (elem.HasAttribute("ProductName"))
-			allow.ProductName = elem.GetAttribute("ProductName");
-		if (elem.HasAttribute("PackageFamilyName"))
-			allow.PackageFamilyName = elem.GetAttribute("PackageFamilyName");
-		if (elem.HasAttribute("PackageVersion"))
-			allow.PackageVersion = elem.GetAttribute("PackageVersion");
-		if (elem.HasAttribute("MinimumFileVersion"))
-			allow.MinimumFileVersion = elem.GetAttribute("MinimumFileVersion");
-		if (elem.HasAttribute("MaximumFileVersion"))
-			allow.MaximumFileVersion = elem.GetAttribute("MaximumFileVersion");
-		if (elem.HasAttribute("Hash"))
-			allow.Hash = ConvertHexStringToByteArray(elem.GetAttribute("Hash"));
-		if (elem.HasAttribute("AppIDs"))
-			allow.AppIDs = elem.GetAttribute("AppIDs");
-		if (elem.HasAttribute("FilePath"))
-			allow.FilePath = elem.GetAttribute("FilePath");
+		string idValue = elem.GetAttribute("ID");
+		allow.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		string friendlyNameValue = elem.GetAttribute("FriendlyName");
+		allow.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
+		string fileNameValue = elem.GetAttribute("FileName");
+		allow.FileName = string.IsNullOrWhiteSpace(fileNameValue) ? null : fileNameValue;
+		string internalNameValue = elem.GetAttribute("InternalName");
+		allow.InternalName = string.IsNullOrWhiteSpace(internalNameValue) ? null : internalNameValue;
+		string fileDescriptionValue = elem.GetAttribute("FileDescription");
+		allow.FileDescription = string.IsNullOrWhiteSpace(fileDescriptionValue) ? null : fileDescriptionValue;
+		string productNameValue = elem.GetAttribute("ProductName");
+		allow.ProductName = string.IsNullOrWhiteSpace(productNameValue) ? null : productNameValue;
+		string packageFamilyNameValue = elem.GetAttribute("PackageFamilyName");
+		allow.PackageFamilyName = string.IsNullOrWhiteSpace(packageFamilyNameValue) ? null : packageFamilyNameValue;
+		string packageVersionValue = elem.GetAttribute("PackageVersion");
+		allow.PackageVersion = string.IsNullOrWhiteSpace(packageVersionValue) ? null : packageVersionValue;
+		string minimumFileVersionValue = elem.GetAttribute("MinimumFileVersion");
+		allow.MinimumFileVersion = string.IsNullOrWhiteSpace(minimumFileVersionValue) ? null : minimumFileVersionValue;
+		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
+		allow.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
+		string hashValue = elem.GetAttribute("Hash");
+		allow.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		string appIDsValue = elem.GetAttribute("AppIDs");
+		allow.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		string filePathValue = elem.GetAttribute("FilePath");
+		allow.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
 		if (allow.ID is null)
 		{
@@ -567,32 +567,32 @@ internal static class CustomDeserialization
 	private static Deny DeserializeDeny(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		Deny deny = new();
-		if (elem.HasAttribute("ID"))
-			deny.ID = elem.GetAttribute("ID");
-		if (elem.HasAttribute("FriendlyName"))
-			deny.FriendlyName = elem.GetAttribute("FriendlyName");
-		if (elem.HasAttribute("FileName"))
-			deny.FileName = elem.GetAttribute("FileName");
-		if (elem.HasAttribute("InternalName"))
-			deny.InternalName = elem.GetAttribute("InternalName");
-		if (elem.HasAttribute("FileDescription"))
-			deny.FileDescription = elem.GetAttribute("FileDescription");
-		if (elem.HasAttribute("ProductName"))
-			deny.ProductName = elem.GetAttribute("ProductName");
-		if (elem.HasAttribute("PackageFamilyName"))
-			deny.PackageFamilyName = elem.GetAttribute("PackageFamilyName");
-		if (elem.HasAttribute("PackageVersion"))
-			deny.PackageVersion = elem.GetAttribute("PackageVersion");
-		if (elem.HasAttribute("MinimumFileVersion"))
-			deny.MinimumFileVersion = elem.GetAttribute("MinimumFileVersion");
-		if (elem.HasAttribute("MaximumFileVersion"))
-			deny.MaximumFileVersion = elem.GetAttribute("MaximumFileVersion");
-		if (elem.HasAttribute("Hash"))
-			deny.Hash = ConvertHexStringToByteArray(elem.GetAttribute("Hash"));
-		if (elem.HasAttribute("AppIDs"))
-			deny.AppIDs = elem.GetAttribute("AppIDs");
-		if (elem.HasAttribute("FilePath"))
-			deny.FilePath = elem.GetAttribute("FilePath");
+		string idValue = elem.GetAttribute("ID");
+		deny.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		string friendlyNameValue = elem.GetAttribute("FriendlyName");
+		deny.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
+		string fileNameValue = elem.GetAttribute("FileName");
+		deny.FileName = string.IsNullOrWhiteSpace(fileNameValue) ? null : fileNameValue;
+		string internalNameValue = elem.GetAttribute("InternalName");
+		deny.InternalName = string.IsNullOrWhiteSpace(internalNameValue) ? null : internalNameValue;
+		string fileDescriptionValue = elem.GetAttribute("FileDescription");
+		deny.FileDescription = string.IsNullOrWhiteSpace(fileDescriptionValue) ? null : fileDescriptionValue;
+		string productNameValue = elem.GetAttribute("ProductName");
+		deny.ProductName = string.IsNullOrWhiteSpace(productNameValue) ? null : productNameValue;
+		string packageFamilyNameValue = elem.GetAttribute("PackageFamilyName");
+		deny.PackageFamilyName = string.IsNullOrWhiteSpace(packageFamilyNameValue) ? null : packageFamilyNameValue;
+		string packageVersionValue = elem.GetAttribute("PackageVersion");
+		deny.PackageVersion = string.IsNullOrWhiteSpace(packageVersionValue) ? null : packageVersionValue;
+		string minimumFileVersionValue = elem.GetAttribute("MinimumFileVersion");
+		deny.MinimumFileVersion = string.IsNullOrWhiteSpace(minimumFileVersionValue) ? null : minimumFileVersionValue;
+		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
+		deny.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
+		string hashValue = elem.GetAttribute("Hash");
+		deny.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		string appIDsValue = elem.GetAttribute("AppIDs");
+		deny.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		string filePathValue = elem.GetAttribute("FilePath");
+		deny.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
 		if (deny.ID is null)
 		{
@@ -650,32 +650,32 @@ internal static class CustomDeserialization
 	private static FileAttrib DeserializeFileAttrib(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		FileAttrib fa = new();
-		if (elem.HasAttribute("ID"))
-			fa.ID = elem.GetAttribute("ID");
-		if (elem.HasAttribute("FriendlyName"))
-			fa.FriendlyName = elem.GetAttribute("FriendlyName");
-		if (elem.HasAttribute("FileName"))
-			fa.FileName = elem.GetAttribute("FileName");
-		if (elem.HasAttribute("InternalName"))
-			fa.InternalName = elem.GetAttribute("InternalName");
-		if (elem.HasAttribute("FileDescription"))
-			fa.FileDescription = elem.GetAttribute("FileDescription");
-		if (elem.HasAttribute("ProductName"))
-			fa.ProductName = elem.GetAttribute("ProductName");
-		if (elem.HasAttribute("PackageFamilyName"))
-			fa.PackageFamilyName = elem.GetAttribute("PackageFamilyName");
-		if (elem.HasAttribute("PackageVersion"))
-			fa.PackageVersion = elem.GetAttribute("PackageVersion");
-		if (elem.HasAttribute("MinimumFileVersion"))
-			fa.MinimumFileVersion = elem.GetAttribute("MinimumFileVersion");
-		if (elem.HasAttribute("MaximumFileVersion"))
-			fa.MaximumFileVersion = elem.GetAttribute("MaximumFileVersion");
-		if (elem.HasAttribute("Hash"))
-			fa.Hash = ConvertHexStringToByteArray(elem.GetAttribute("Hash"));
-		if (elem.HasAttribute("AppIDs"))
-			fa.AppIDs = elem.GetAttribute("AppIDs");
-		if (elem.HasAttribute("FilePath"))
-			fa.FilePath = elem.GetAttribute("FilePath");
+		string idValue = elem.GetAttribute("ID");
+		fa.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		string friendlyNameValue = elem.GetAttribute("FriendlyName");
+		fa.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
+		string fileNameValue = elem.GetAttribute("FileName");
+		fa.FileName = string.IsNullOrWhiteSpace(fileNameValue) ? null : fileNameValue;
+		string internalNameValue = elem.GetAttribute("InternalName");
+		fa.InternalName = string.IsNullOrWhiteSpace(internalNameValue) ? null : internalNameValue;
+		string fileDescriptionValue = elem.GetAttribute("FileDescription");
+		fa.FileDescription = string.IsNullOrWhiteSpace(fileDescriptionValue) ? null : fileDescriptionValue;
+		string productNameValue = elem.GetAttribute("ProductName");
+		fa.ProductName = string.IsNullOrWhiteSpace(productNameValue) ? null : productNameValue;
+		string packageFamilyNameValue = elem.GetAttribute("PackageFamilyName");
+		fa.PackageFamilyName = string.IsNullOrWhiteSpace(packageFamilyNameValue) ? null : packageFamilyNameValue;
+		string packageVersionValue = elem.GetAttribute("PackageVersion");
+		fa.PackageVersion = string.IsNullOrWhiteSpace(packageVersionValue) ? null : packageVersionValue;
+		string minimumFileVersionValue = elem.GetAttribute("MinimumFileVersion");
+		fa.MinimumFileVersion = string.IsNullOrWhiteSpace(minimumFileVersionValue) ? null : minimumFileVersionValue;
+		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
+		fa.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
+		string hashValue = elem.GetAttribute("Hash");
+		fa.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		string appIDsValue = elem.GetAttribute("AppIDs");
+		fa.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		string filePathValue = elem.GetAttribute("FilePath");
+		fa.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 
 		if (fa.ID is null)
 		{
@@ -733,32 +733,32 @@ internal static class CustomDeserialization
 	private static FileRule DeserializeFileRule(XmlElement elem, HashSet<string> IDsCollection)
 	{
 		FileRule fr = new();
-		if (elem.HasAttribute("ID"))
-			fr.ID = elem.GetAttribute("ID");
-		if (elem.HasAttribute("FriendlyName"))
-			fr.FriendlyName = elem.GetAttribute("FriendlyName");
-		if (elem.HasAttribute("FileName"))
-			fr.FileName = elem.GetAttribute("FileName");
-		if (elem.HasAttribute("InternalName"))
-			fr.InternalName = elem.GetAttribute("InternalName");
-		if (elem.HasAttribute("FileDescription"))
-			fr.FileDescription = elem.GetAttribute("FileDescription");
-		if (elem.HasAttribute("ProductName"))
-			fr.ProductName = elem.GetAttribute("ProductName");
-		if (elem.HasAttribute("PackageFamilyName"))
-			fr.PackageFamilyName = elem.GetAttribute("PackageFamilyName");
-		if (elem.HasAttribute("PackageVersion"))
-			fr.PackageVersion = elem.GetAttribute("PackageVersion");
-		if (elem.HasAttribute("MinimumFileVersion"))
-			fr.MinimumFileVersion = elem.GetAttribute("MinimumFileVersion");
-		if (elem.HasAttribute("MaximumFileVersion"))
-			fr.MaximumFileVersion = elem.GetAttribute("MaximumFileVersion");
-		if (elem.HasAttribute("Hash"))
-			fr.Hash = ConvertHexStringToByteArray(elem.GetAttribute("Hash"));
-		if (elem.HasAttribute("AppIDs"))
-			fr.AppIDs = elem.GetAttribute("AppIDs");
-		if (elem.HasAttribute("FilePath"))
-			fr.FilePath = elem.GetAttribute("FilePath");
+		string idValue = elem.GetAttribute("ID");
+		fr.ID = string.IsNullOrWhiteSpace(idValue) ? null : idValue;
+		string friendlyNameValue = elem.GetAttribute("FriendlyName");
+		fr.FriendlyName = string.IsNullOrWhiteSpace(friendlyNameValue) ? null : friendlyNameValue;
+		string fileNameValue = elem.GetAttribute("FileName");
+		fr.FileName = string.IsNullOrWhiteSpace(fileNameValue) ? null : fileNameValue;
+		string internalNameValue = elem.GetAttribute("InternalName");
+		fr.InternalName = string.IsNullOrWhiteSpace(internalNameValue) ? null : internalNameValue;
+		string fileDescriptionValue = elem.GetAttribute("FileDescription");
+		fr.FileDescription = string.IsNullOrWhiteSpace(fileDescriptionValue) ? null : fileDescriptionValue;
+		string productNameValue = elem.GetAttribute("ProductName");
+		fr.ProductName = string.IsNullOrWhiteSpace(productNameValue) ? null : productNameValue;
+		string packageFamilyNameValue = elem.GetAttribute("PackageFamilyName");
+		fr.PackageFamilyName = string.IsNullOrWhiteSpace(packageFamilyNameValue) ? null : packageFamilyNameValue;
+		string packageVersionValue = elem.GetAttribute("PackageVersion");
+		fr.PackageVersion = string.IsNullOrWhiteSpace(packageVersionValue) ? null : packageVersionValue;
+		string minimumFileVersionValue = elem.GetAttribute("MinimumFileVersion");
+		fr.MinimumFileVersion = string.IsNullOrWhiteSpace(minimumFileVersionValue) ? null : minimumFileVersionValue;
+		string maximumFileVersionValue = elem.GetAttribute("MaximumFileVersion");
+		fr.MaximumFileVersion = string.IsNullOrWhiteSpace(maximumFileVersionValue) ? null : maximumFileVersionValue;
+		string hashValue = elem.GetAttribute("Hash");
+		fr.Hash = string.IsNullOrWhiteSpace(hashValue) ? null : ConvertHexStringToByteArray(hashValue);
+		string appIDsValue = elem.GetAttribute("AppIDs");
+		fr.AppIDs = string.IsNullOrWhiteSpace(appIDsValue) ? null : appIDsValue;
+		string filePathValue = elem.GetAttribute("FilePath");
+		fr.FilePath = string.IsNullOrWhiteSpace(filePathValue) ? null : filePathValue;
 		if (elem.HasAttribute("Type"))
 			fr.Type = ConvertStringToRuleTypeType(elem.GetAttribute("Type"));
 

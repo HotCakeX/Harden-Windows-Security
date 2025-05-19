@@ -85,7 +85,23 @@
 
                 </customUI:SettingsCardV2>
 
-                <controls:SettingsCard x:Uid="CommonNameSettingsCard"              
+                <customUI:SettingsCardV2 x:Uid="AlgorithmSettingsCard"
+                          HeaderIcon="{ui:FontIcon Glyph=&#xF4A5;}"
+                          IsClickEnabled="True"
+                          IsActionIconVisible="False">
+
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SelectedHashAlgorithm, Mode=TwoWay}">
+                        <x:String>SHA2_256</x:String>
+                        <x:String>SHA2_384</x:String>
+                        <x:String>SHA2_512</x:String>
+                        <x:String>SHA3_256</x:String>
+                        <x:String>SHA3_384</x:String>
+                        <x:String>SHA3_512</x:String>
+                    </ComboBox>
+
+                </customUI:SettingsCardV2>
+
+                <controls:SettingsCard x:Uid="CommonNameSettingsCard"
                                        HeaderIcon="{ui:FontIcon Glyph=&#xE8AC;}"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">
@@ -94,7 +110,7 @@
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Uid="ValiditySettingsCard"         
+                <controls:SettingsCard x:Uid="ValiditySettingsCard"
                                        HeaderIcon="{ui:FontIcon Glyph=&#xE787;}"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">

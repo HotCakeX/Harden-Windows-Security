@@ -4363,4 +4363,196 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Pomyślnie utworzono zasady odmowy reguły ścieżki pliku opartej na wzorcu.</value>
   </data>
+    <data name="TotalFiles" xml:space="preserve">
+    <value>Suma plików</value>
+  </data>
+  <data name="AllDataClearedMsg" xml:space="preserve">
+    <value>Wszystkie dane zostały pomyślnie wyczyszczone.</value>
+  </data>
+  <data name="SelectPolicyBeforeLoad" xml:space="preserve">
+    <value>Proszę wybrać plik zasad i załadować go przed użyciem funkcji zapisywania.</value>
+  </data>
+  <data name="EnterPolicyVersion" xml:space="preserve">
+    <value>proszę wprowadzić wersję zasad, nie może być pusta.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
+    <value>Algorytm</value>
+  </data>
+  <data name="AlgorithmSettingsCard.Description" xml:space="preserve">
+    <value>Algorytm kryptograficzny używany do szyfrowania.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Algorytm kryptograficzny używany do szyfrowania.</value>
+  </data>
+  <data name="AlgorithmSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Algorytm kryptograficzny używany do szyfrowania.</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Header" xml:space="preserve">
+    <value>Zasady trybu jądra</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.Description" xml:space="preserve">
+    <value>Utwórz zasady trybu jądra poprzez skanowanie dzienników zdarzeń lub skanowanie wszystkich lokalnych sterowników</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz zasady trybu jądra poprzez skanowanie dzienników zdarzeń lub skanowanie wszystkich lokalnych sterowników</value>
+  </data>
+  <data name="StrictKernelModeSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz zasady trybu jądra poprzez skanowanie dzienników zdarzeń lub skanowanie wszystkich lokalnych sterowników</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Header" xml:space="preserve">
+    <value>Automatyczne wykrywanie sterowników</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.Description" xml:space="preserve">
+    <value>Automatycznie wykryj i wyświetl listę wszystkich sterowników w systemie</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatycznie wykryj i wyświetl listę wszystkich sterowników w systemie</value>
+  </data>
+  <data name="AutoDriverDetectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Automatycznie wykryj i wyświetl listę wszystkich sterowników w systemie</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Header" xml:space="preserve">
+    <value>Skanuj dzienniki zdarzeń</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.Description" xml:space="preserve">
+    <value>Skanuj dzienniki zdarzeń tylko w poszukiwaniu plików trybu jądra</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skanuj dzienniki zdarzeń tylko w poszukiwaniu plików trybu jądra</value>
+  </data>
+  <data name="ScanEventLogsForStrictKernelPolicySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skanuj dzienniki zdarzeń tylko w poszukiwaniu plików trybu jądra</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Wyświetl wykryte pliki trybu jądra</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Wyświetl szczegóły wszystkich znalezionych plików trybu jądra</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetl szczegóły wszystkich znalezionych plików trybu jądra</value>
+  </data>
+  <data name="ViewStrictKernelModeDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetl szczegóły wszystkich znalezionych plików trybu jądra</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Header" xml:space="preserve">
+    <value>Nazwa rodziny pakietów</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.Description" xml:space="preserve">
+    <value>Utwórz zasady uzupełniające na podstawie nazwy rodziny pakietów (PFN) aplikacji</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz zasady uzupełniające na podstawie nazwy rodziny pakietów (PFN) aplikacji</value>
+  </data>
+  <data name="PFNSupplementalPolicySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz zasady uzupełniające na podstawie nazwy rodziny pakietów (PFN) aplikacji</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Nazwy rodzin pakietów</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz jeden lub więcej zainstalowanych pakietów, aby utworzyć dla nich zasady.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz jeden lub więcej zainstalowanych pakietów, aby utworzyć dla nich zasady.</value>
+  </data>
+  <data name="PackageFamilyNamesSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz jeden lub więcej zainstalowanych pakietów, aby utworzyć dla nich zasady.</value>
+  </data>
+  <data name="KernelModeRadioButton.Content" xml:space="preserve">
+    <value>Tryb jądra</value>
+  </data>
+  <data name="UserModeRadioButton.Content" xml:space="preserve">
+    <value>Tryb użytkownika</value>
+  </data>
+  <data name="SigningScenariosRadioButtons.Header" xml:space="preserve">
+    <value>Scenariusz podpisywania</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Header" xml:space="preserve">
+    <value>Scenariusz podpisywania</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz, czy ten certyfikat zostanie dodany do scenariusza podpisywania w trybie użytkownika, czy w trybie jądra</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz, czy ten certyfikat zostanie dodany do scenariusza podpisywania w trybie użytkownika, czy w trybie jądra</value>
+  </data>
+  <data name="SigningScenariosSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz, czy ten certyfikat zostanie dodany do scenariusza podpisywania w trybie użytkownika, czy w trybie jądra</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Header" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu certyfikatów</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.Description" xml:space="preserve">
+    <value>Przeglądaj ścieżki plików certyfikatów do skanowania i dołączenia do zasad uzupełniających.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj ścieżki plików certyfikatów do skanowania i dołączenia do zasad uzupełniających.</value>
+  </data>
+  <data name="BrowseForCertificatesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj ścieżki plików certyfikatów do skanowania i dołączenia do zasad uzupełniających.</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Header" xml:space="preserve">
+    <value>Certyfikaty</value>
+  </data>
+  <data name="CertificatesSettingsExpander.Description" xml:space="preserve">
+    <value>Utwórz zasady uzupełniające na podstawie certyfikatów</value>
+  </data>
+  <data name="CertificatesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz zasady uzupełniające na podstawie certyfikatów</value>
+  </data>
+  <data name="CertificatesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz zasady uzupełniające na podstawie certyfikatów</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Header" xml:space="preserve">
+    <value>Wyświetl szczegóły wykrytych plików</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.Description" xml:space="preserve">
+    <value>Wyświetl szczegóły wszystkich plików wykrytych w wybranych ścieżkach plików i folderów.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetl szczegóły wszystkich plików wykrytych w wybranych ścieżkach plików i folderów.</value>
+  </data>
+  <data name="ViewDetectedFilesDetailsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetl szczegóły wszystkich plików wykrytych w wybranych ścieżkach plików i folderów.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Header" xml:space="preserve">
+    <value>Wybierz poziom skanowania</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz poziom, na podstawie którego wykryte pliki zostaną przeskanowane.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz poziom, na podstawie którego wykryte pliki zostaną przeskanowane.</value>
+  </data>
+  <data name="SelectScanLevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz poziom, na podstawie którego wykryte pliki zostaną przeskanowane.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.Content" xml:space="preserve">
+    <value>Wybierz plik zasad</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu zasad App Control, aby dodać do nich wszystkie reguły utworzone na tej stronie.</value>
+  </data>
+  <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu zasad App Control, aby dodać do nich wszystkie reguły utworzone na tej stronie.</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz między utworzeniem nowych zasad uzupełniających a dodaniem reguł, które zostaną utworzone, do istniejących zasad</value>
+  </data>
+  <data name="PolicyCreationOperationModeComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz między utworzeniem nowych zasad uzupełniających a dodaniem reguł, które zostaną utworzone, do istniejących zasad</value>
+  </data>
+  <data name="Mode.Text" xml:space="preserve">
+    <value>Tryb:</value>
+  </data>
+  <data name="CreateNewPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>Utwórz nowe zasady</value>
+  </data>
+  <data name="AddToExistingPolicyComboBoxItem.Content" xml:space="preserve">
+    <value>Dodaj do istniejących zasad</value>
+  </data>
+  <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
+    <value>Wybrany algorytm nie jest obsługiwany do podpisywania zasad App Control. Jeśli zamierzasz użyć wygenerowanego certyfikatu do podpisywania App Control, rozważ wybór innego algorytmu.</value>
+  </data>
 </root>

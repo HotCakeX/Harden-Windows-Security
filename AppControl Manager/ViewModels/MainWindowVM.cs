@@ -598,7 +598,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	{
 		if (MainWindow.RootGridPub is null) throw new InvalidOperationException("RootGrid is null");
 
-		// Get the current theme from your RootGrid or another element.
+		// Get the current theme from the RootGrid or another element.
 		ElementTheme currentTheme = MainWindow.RootGridPub.ActualTheme;
 
 		switch (style)

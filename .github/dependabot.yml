@@ -15,8 +15,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
-    reviewers:
-      - "HotCakeX"
     labels:
       - ".NET SDK"
   - package-ecosystem: "nuget"
@@ -28,8 +26,6 @@ updates:
       interval: "daily"
       time: "07:30"
       timezone: "Israel"
-    reviewers:
-      - "HotCakeX"
     labels:
       - "Nuget Dependencies"
   - package-ecosystem: "github-actions"
@@ -37,8 +33,6 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every week: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
       interval: "daily"
-    reviewers:
-      - "HotCakeX"
     labels:
       - "github_actions"
   - package-ecosystem: "cargo"
@@ -53,5 +47,3 @@ updates:
       interval: "daily"
       time: "07:30"
       timezone: "Israel"
-    reviewers:
-      - "HotCakeX"

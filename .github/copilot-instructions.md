@@ -9,3 +9,5 @@ This is a C# based repository. Please follow these guidelines when contributing:
 1. Use the latest .NET and C# features.
 2. Maintain existing code structure and organization.
 3. Comment the new changes properly.
+4. Never add extra dependencies to the projects.
+5. Always make sure the code you add or modify is compatible with Native AOT compilation.

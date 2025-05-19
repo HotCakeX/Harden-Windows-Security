@@ -15,8 +15,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "tuesday"
-    reviewers:
-      - "HotCakeX"
     labels:
       - ".NET SDK"
   - package-ecosystem: "nuget"
@@ -28,8 +26,6 @@ updates:
       interval: "daily"
       time: "07:30"
       timezone: "Israel"
-    reviewers:
-      - "HotCakeX"
     labels:
       - "Nuget Dependencies"
   - package-ecosystem: "github-actions"
@@ -37,20 +33,17 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every week: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
       interval: "daily"
-    reviewers:
-      - "HotCakeX"
     labels:
       - "github_actions"
   - package-ecosystem: "cargo"
     directories:
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Device Guard/Library/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Device Guard/Program/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Microsoft Defender/Program/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Microsoft Defender/Library/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Microsoft Defender/Printing raw data with types/"
+      - "/AppControl Manager/eXclude/ResourceValidator/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Device Guard/Library/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Device Guard/Program/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Program/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Library/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Printing raw data with types/"
     schedule:
       interval: "daily"
       time: "07:30"
       timezone: "Israel"
-    reviewers:
-      - "HotCakeX"

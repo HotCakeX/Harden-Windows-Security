@@ -43,11 +43,12 @@ updates:
       - "github_actions"
   - package-ecosystem: "cargo"
     directories:
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Device Guard/Library/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Device Guard/Program/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Microsoft Defender/Program/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Microsoft Defender/Library/"
-      - "/AppControl Manager/Excluded Code/Rust WMI Interop/Microsoft Defender/Printing raw data with types/"
+      - "/AppControl Manager/eXclude/ResourceValidator/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Device Guard/Library/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Device Guard/Program/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Program/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Library/"
+      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Printing raw data with types/"
     schedule:
       interval: "daily"
       time: "07:30"

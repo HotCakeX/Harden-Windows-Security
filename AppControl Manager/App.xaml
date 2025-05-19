@@ -16,6 +16,9 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
 
+            <!-- Value Converters -->
+            <valueConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" xmlns:valueConverters="using:AppControlManager.ValueConverters" />
+            <valueConverters:BoolToVisibilityInverterConverter x:Key="BoolToVisibilityInverter" xmlns:valueConverters="using:AppControlManager.ValueConverters" />
 
             <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
             <!--  Spacing between cards  -->

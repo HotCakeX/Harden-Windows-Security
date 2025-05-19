@@ -247,6 +247,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "MergePolicies", typeof(Pages.MergePolicies) },
 		{ "CreateDenyPolicy", typeof(Pages.CreateDenyPolicy) },
 		{ "ValidatePolicies", typeof(Pages.ValidatePolicy) },
+		{ "WDACReporting", typeof(Pages.WDACReporting) },
 		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
 		{ "PolicyEditor", typeof(Pages.PolicyEditor) },
 		{ "Update", typeof(Pages.UpdatePage) }
@@ -278,6 +279,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content"), typeof(Pages.MergePolicies) },
 		{ GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), typeof(Pages.CreateDenyPolicy) },
 		{ GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content"), typeof(Pages.ValidatePolicy) },
+		{ GlobalVars.Rizz.GetString("WDACReportingNavItem/Content"), typeof(Pages.WDACReporting) },
 		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) },
 		{ GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor) },
 		{ GlobalVars.Rizz.GetString("UpdateNavItem/Content"), typeof(Pages.UpdatePage) }
@@ -471,6 +473,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Merge Policies navigation item.
 	/// </summary>
 	internal IconElement? MergePoliciesIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the WDAC Reporting navigation item.
+	/// </summary>
+	internal IconElement? ReportingIcon { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Icon for the Deployment navigation item.
@@ -711,6 +718,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Certificate()
 					};
 
+					ReportingIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -8, -8, -8),
+						Source = new Timeline()
+					};
+
 					DeploymentIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -8, -8, -8),
@@ -844,6 +857,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					ReportingIcon = new FontIcon
+					{
+						Glyph = "\uEA38",
+						Foreground = accentBrush
+					};
+
 					DeploymentIcon = new FontIcon
 					{
 						Glyph = "\uF32A",
@@ -908,6 +927,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					DeploymentIcon = new FontIcon { Glyph = "\uF32A" };
 					CreateSupplementalPolicyIcon = new FontIcon { Glyph = "\uE8F9" };
 					MergePoliciesIcon = new FontIcon { Glyph = "\uEE49" };
+					ReportingIcon = new FontIcon { Glyph = "\uEA38" };
 					CreateDenyPolicyIcon = new FontIcon { Glyph = "\uE8D0" };
 					ValidatePoliciesIcon = new FontIcon { Glyph = "\uED5E" };
 					ViewFileCertificatesIcon = new FontIcon { Glyph = "\uEBD2" };

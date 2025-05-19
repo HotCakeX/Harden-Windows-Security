@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="AppControlManager.Pages.WDACReporting"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:AppControlManager.ViewModels"
+    mc:Ignorable="d">
+
+    <Grid Margin="20" RowDefinitions="Auto,Auto,*">
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="10">
+            <TextBlock Text="{x:Bind Rizz.GetString('WDACReportingTitle')}" Style="{StaticResource TitleTextBlockStyle}" />
+            <TextBlock Text="{x:Bind Rizz.GetString('WDACReportingDescription')}" TextWrapping="Wrap" />
+        </StackPanel>
+        
+        <!-- Filter Controls -->
+        <Grid Grid.Row="1" Margin="0,20,0,0" ColumnDefinitions="*,*,Auto" RowDefinitions="Auto,Auto">
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="{x:Bind Rizz.GetString('StartDateLabel')}" VerticalAlignment="Center" />
+                <CalendarDatePicker x:Name="StartDatePicker" 
+                                 Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}"
+                                 PlaceholderText="{x:Bind Rizz.GetString('SelectStartDate')}" />
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="{x:Bind Rizz.GetString('EndDateLabel')}" VerticalAlignment="Center" />
+                <CalendarDatePicker x:Name="EndDatePicker" 
+                                 Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}"
+                                 PlaceholderText="{x:Bind Rizz.GetString('SelectEndDate')}" />
+            </StackPanel>
+            
+            <Button Grid.Column="2" Grid.Row="0" 
+                   Content="{x:Bind Rizz.GetString('ApplyFilterButtonText')}" 
+                   Click="ApplyFilter_Click"
+                   Style="{StaticResource AccentButtonStyle}" />
+                   
+            <StackPanel Grid.ColumnSpan="3" Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+                <ProgressRing x:Name="LoadingIndicator" IsActive="False" />
+                <TextBlock x:Name="LoadingMessage" Visibility="Collapsed" />
+                <Button x:Name="LoadDataButton" 
+                       Content="{x:Bind Rizz.GetString('LoadEventDataButtonText')}" 
+                       Click="LoadData_Click" />
+            </StackPanel>
+        </Grid>
+        
+        <!-- Report Content -->
+        <ScrollViewer Grid.Row="2" Margin="0,20,0,0" VerticalScrollBarVisibility="Auto">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                
+                <!-- No Data Message -->
+                <TextBlock x:Name="NoDataMessage" 
+                         Text="{x:Bind Rizz.GetString('NoDataMessage')}" 
+                         Visibility="{x:Bind ViewModel.IsDataLoaded, Mode=OneWay, Converter={StaticResource BoolToVisibilityInverter}}"
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center"
+                         Style="{StaticResource SubtitleTextBlockStyle}"
+                         Margin="0,40,0,0" />
+                         
+                <!-- Top Users Report -->
+                <StackPanel Grid.Row="0" 
+                          Spacing="10" 
+                          Visibility="{x:Bind ViewModel.IsDataLoaded, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                          Margin="0,0,0,30">
+                    <TextBlock Text="{x:Bind Rizz.GetString('TopUsersTitle')}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <InfoBar IsOpen="True" 
+                           Severity="Informational" 
+                           Title="{x:Bind Rizz.GetString('TopUsersInfoTitle')}"
+                           Message="{x:Bind Rizz.GetString('TopUsersInfoMessage')}" />
+                           
+                    <Grid BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="10">
+                        <ListView ItemsSource="{x:Bind ViewModel.TopUserBlocks, Mode=OneWay}" 
+                                 SelectionMode="None"
+                                 IsItemClickEnabled="False"
+                                 MaxHeight="350">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:UserBlockStatistic">
+                                    <Grid ColumnDefinitions="2*,*,*" Margin="0,5">
+                                        <TextBlock Grid.Column="0" Text="{x:Bind UserName}" />
+                                        <TextBlock Grid.Column="1" Text="{x:Bind BlockCount}" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind UniqueFilesBlocked}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.Header>
+                                <Grid ColumnDefinitions="2*,*,*" Padding="0,5" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <TextBlock Grid.Column="0" Text="{x:Bind Rizz.GetString('UserColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Rizz.GetString('BlockCountColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind Rizz.GetString('UniqueFilesColumnHeader')}" FontWeight="SemiBold" />
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+                
+                <!-- Top Files Report -->
+                <StackPanel Grid.Row="1" 
+                          Spacing="10" 
+                          Visibility="{x:Bind ViewModel.IsDataLoaded, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                          Margin="0,0,0,30">
+                    <TextBlock Text="{x:Bind Rizz.GetString('TopFilesTitle')}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <InfoBar IsOpen="True" 
+                           Severity="Informational" 
+                           Title="{x:Bind Rizz.GetString('TopFilesInfoTitle')}"
+                           Message="{x:Bind Rizz.GetString('TopFilesInfoMessage')}" />
+                           
+                    <Grid BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="10">
+                        <ListView ItemsSource="{x:Bind ViewModel.TopFileBlocks, Mode=OneWay}" 
+                                 SelectionMode="None"
+                                 IsItemClickEnabled="False"
+                                 MaxHeight="350">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:FileBlockStatistic">
+                                    <Grid ColumnDefinitions="3*,*,*" Margin="0,5">
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{x:Bind FileName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{x:Bind FilePath}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
+                                                      Opacity="0.6" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind BlockCount}" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind UserCount}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.Header>
+                                <Grid ColumnDefinitions="3*,*,*" Padding="0,5" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <TextBlock Grid.Column="0" Text="{x:Bind Rizz.GetString('FileColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Rizz.GetString('BlockCountColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind Rizz.GetString('UserCountColumnHeader')}" FontWeight="SemiBold" />
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+                
+                <!-- File Type Report -->
+                <StackPanel Grid.Row="2" 
+                          Spacing="10" 
+                          Visibility="{x:Bind ViewModel.IsDataLoaded, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                          Margin="0,0,0,30">
+                    <TextBlock Text="{x:Bind Rizz.GetString('FileTypesTitle')}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <InfoBar IsOpen="True" 
+                           Severity="Informational" 
+                           Title="{x:Bind Rizz.GetString('FileTypesInfoTitle')}"
+                           Message="{x:Bind Rizz.GetString('FileTypesInfoMessage')}" />
+                           
+                    <Grid BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="10">
+                        <ListView ItemsSource="{x:Bind ViewModel.TopFileTypeBlocks, Mode=OneWay}" 
+                                 SelectionMode="None"
+                                 IsItemClickEnabled="False"
+                                 MaxHeight="350">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:FileTypeBlockStatistic">
+                                    <Grid ColumnDefinitions="*,*,*" Margin="0,5">
+                                        <TextBlock Grid.Column="0" Text="{x:Bind FileExtension}" />
+                                        <TextBlock Grid.Column="1" Text="{x:Bind BlockCount}" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind UniqueFilesCount}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.Header>
+                                <Grid ColumnDefinitions="*,*,*" Padding="0,5" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <TextBlock Grid.Column="0" Text="{x:Bind Rizz.GetString('FileExtensionColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Rizz.GetString('BlockCountColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind Rizz.GetString('UniqueFilesColumnHeader')}" FontWeight="SemiBold" />
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+                
+                <!-- Time-Based Report -->
+                <StackPanel Grid.Row="3" 
+                          Spacing="10" 
+                          Visibility="{x:Bind ViewModel.IsDataLoaded, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                          Margin="0,0,0,30">
+                    <TextBlock Text="{x:Bind Rizz.GetString('BlockTrendsTitle')}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <InfoBar IsOpen="True" 
+                           Severity="Informational" 
+                           Title="{x:Bind Rizz.GetString('BlockTrendsInfoTitle')}"
+                           Message="{x:Bind Rizz.GetString('BlockTrendsInfoMessage')}" />
+                           
+                    <Grid BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Padding="10">
+                        <ListView ItemsSource="{x:Bind ViewModel.BlocksByDate, Mode=OneWay}" 
+                                 SelectionMode="None"
+                                 IsItemClickEnabled="False"
+                                 MaxHeight="350">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="viewmodels:DateBlockStatistic">
+                                    <Grid ColumnDefinitions="*,*,*,*" Margin="0,5">
+                                        <TextBlock Grid.Column="0" Text="{x:Bind Date.ToString('d')}" />
+                                        <TextBlock Grid.Column="1" Text="{x:Bind BlockCount}" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind UniqueUserCount}" />
+                                        <TextBlock Grid.Column="3" Text="{x:Bind UniqueFilesCount}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.Header>
+                                <Grid ColumnDefinitions="*,*,*,*" Padding="0,5" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                    <TextBlock Grid.Column="0" Text="{x:Bind Rizz.GetString('DateColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="{x:Bind Rizz.GetString('BlockCountColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="{x:Bind Rizz.GetString('UniqueUsersColumnHeader')}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="3" Text="{x:Bind Rizz.GetString('UniqueFilesColumnHeader')}" FontWeight="SemiBold" />
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+                
+            </Grid>
+        </ScrollViewer>
+        
+    </Grid>
+</Page>

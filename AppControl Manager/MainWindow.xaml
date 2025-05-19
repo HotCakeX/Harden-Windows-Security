@@ -213,6 +213,7 @@
                 <NavigationViewItem x:Uid="MergePoliciesNavItem" Icon="{x:Bind ViewModel.MergePoliciesIcon, Mode=OneWay}" Tag="MergePolicies" />
                 <NavigationViewItem x:Uid="DeploymentNavItem" Icon="{x:Bind ViewModel.DeploymentIcon, Mode=OneWay}" Tag="Deployment" />
                 <NavigationViewItem x:Uid="ValidatePoliciesNavItem" Icon="{x:Bind ViewModel.ValidatePoliciesIcon, Mode=OneWay}" Tag="ValidatePolicies" />
+                <NavigationViewItem x:Uid="WDACReportingNavItem" Icon="{x:Bind ViewModel.ReportingIcon, Mode=OneWay}" Tag="WDACReporting" />
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Uid="DocumentationNavigationViewItemHeader"/>

@@ -4555,4 +4555,115 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
     <value>The selected algorithm is not supported for signing App Control policies. If you intend to use the generated certificate for App Control signing, please consider selecting another algorithm.</value>
   </data>
+  <data name="WDACReportingNavItem.Content" xml:space="preserve">
+    <value>WDAC Reporting</value>
+  </data>
+  <data name="WDACReportingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View reports on WDAC blocks and blocked applications</value>
+  </data>
+  <data name="WDACReportingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View reports on WDAC blocks and blocked applications</value>
+  </data>
+  <data name="WDACReportingTitle" xml:space="preserve">
+    <value>WDAC Reporting Dashboard</value>
+  </data>
+  <data name="WDACReportingDescription" xml:space="preserve">
+    <value>View and analyze Windows Defender Application Control (WDAC) block events with filters and reporting capabilities</value>
+  </data>
+  <data name="StartDateLabel" xml:space="preserve">
+    <value>Start Date:</value>
+  </data>
+  <data name="EndDateLabel" xml:space="preserve">
+    <value>End Date:</value>
+  </data>
+  <data name="SelectStartDate" xml:space="preserve">
+    <value>Select start date</value>
+  </data>
+  <data name="SelectEndDate" xml:space="preserve">
+    <value>Select end date</value>
+  </data>
+  <data name="ApplyFilterButtonText" xml:space="preserve">
+    <value>Apply Filter</value>
+  </data>
+  <data name="LoadEventDataButtonText" xml:space="preserve">
+    <value>Load Event Data</value>
+  </data>
+  <data name="NoDataMessage" xml:space="preserve">
+    <value>No data loaded. Click "Load Event Data" to view reports.</value>
+  </data>
+  <data name="TopUsersTitle" xml:space="preserve">
+    <value>Top Users Triggering WDAC Blocks</value>
+  </data>
+  <data name="TopUsersInfoTitle" xml:space="preserve">
+    <value>User Analysis</value>
+  </data>
+  <data name="TopUsersInfoMessage" xml:space="preserve">
+    <value>This report shows which users are encountering the most WDAC blocks, which can help identify users who might be attempting to run unauthorized software.</value>
+  </data>
+  <data name="UserColumnHeader" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="BlockCountColumnHeader" xml:space="preserve">
+    <value>Block Count</value>
+  </data>
+  <data name="UniqueFilesColumnHeader" xml:space="preserve">
+    <value>Unique Files</value>
+  </data>
+  <data name="TopFilesTitle" xml:space="preserve">
+    <value>Top Files Being Blocked</value>
+  </data>
+  <data name="TopFilesInfoTitle" xml:space="preserve">
+    <value>File Analysis</value>
+  </data>
+  <data name="TopFilesInfoMessage" xml:space="preserve">
+    <value>This report shows which files are most frequently blocked by WDAC, which can help identify applications that may need to be allowed in your policy.</value>
+  </data>
+  <data name="FileColumnHeader" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="UserCountColumnHeader" xml:space="preserve">
+    <value>User Count</value>
+  </data>
+  <data name="FileTypesTitle" xml:space="preserve">
+    <value>Common File Types Being Blocked</value>
+  </data>
+  <data name="FileTypesInfoTitle" xml:space="preserve">
+    <value>File Type Analysis</value>
+  </data>
+  <data name="FileTypesInfoMessage" xml:space="preserve">
+    <value>This report shows which file types are most frequently blocked by WDAC, which can help identify patterns in blocked applications.</value>
+  </data>
+  <data name="FileExtensionColumnHeader" xml:space="preserve">
+    <value>File Extension</value>
+  </data>
+  <data name="BlockTrendsTitle" xml:space="preserve">
+    <value>Block Trends Over Time</value>
+  </data>
+  <data name="BlockTrendsInfoTitle" xml:space="preserve">
+    <value>Time-based Analysis</value>
+  </data>
+  <data name="BlockTrendsInfoMessage" xml:space="preserve">
+    <value>This report shows how WDAC blocks are distributed over time, which can help identify trends and changes in application usage.</value>
+  </data>
+  <data name="DateColumnHeader" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="UniqueUsersColumnHeader" xml:space="preserve">
+    <value>Unique Users</value>
+  </data>
+  <data name="LoadingEventsMessage" xml:space="preserve">
+    <value>Loading events from logs...</value>
+  </data>
+  <data name="GeneratingReportsMessage" xml:space="preserve">
+    <value>Generating reports...</value>
+  </data>
+  <data name="InvalidDateRangeTitle" xml:space="preserve">
+    <value>Invalid Date Range</value>
+  </data>
+  <data name="InvalidDateRangeMessage" xml:space="preserve">
+    <value>The start date cannot be after the end date. Please select a valid date range.</value>
+  </data>
+  <data name="OKButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

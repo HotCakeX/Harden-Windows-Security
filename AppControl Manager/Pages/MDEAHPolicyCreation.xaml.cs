@@ -638,9 +638,6 @@ DeviceEvents
 								// Set policy name and reset the policy ID of our new policy
 								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
 
-								// Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, RemoveAll: true);
-
 								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
 								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
 

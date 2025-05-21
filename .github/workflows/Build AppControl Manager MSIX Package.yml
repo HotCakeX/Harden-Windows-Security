@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-2025
+    runs-on: windows-2022
 
     # Create outputs for this job where only other job that use "needs" keyword can use them. This job itself cannot access them.
     outputs:
@@ -38,8 +38,11 @@ jobs:
       - name: Updating Winget
         shell: pwsh
         run: |
-          Write-Host -Object "The version of the pre-installed Winget on the Runner:"
-          Write-Host -Object (winget --version)
+          try {
+            Write-Host -Object "The version of the pre-installed Winget on the Runner:"
+            Write-Host -Object (winget --version)
+          }
+          catch{}
 
           # Retrieve the latest Winget release information
           $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'

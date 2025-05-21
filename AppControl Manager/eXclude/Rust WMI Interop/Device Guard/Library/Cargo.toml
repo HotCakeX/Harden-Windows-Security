@@ -13,7 +13,10 @@ publish = false
 rust-version = "1.87" # Enforces minimum required installed Rust version
 
 [profile.release]
-opt-level = 3
+codegen-units = 1
+opt-level = "s"
+split-debuginfo = "packed"
+strip = "symbols"
 overflow-checks = true
 lto = "fat"
 incremental = true

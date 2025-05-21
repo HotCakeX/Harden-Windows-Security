@@ -463,7 +463,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		// Get/Deploy the block rules if this base policy is not being swapped
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
-			GetBlockRules(StagingArea, deploy);
+			_ = GetBlockRules(StagingArea, deploy);
 
 		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
 
@@ -563,7 +563,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		// Get/Deploy the block rules if this base policy is not being swapped
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
-			GetBlockRules(StagingArea, deploy);
+			_ = GetBlockRules(StagingArea, deploy);
 
 		File.Copy(GlobalVars.DefaultWindowsTemplatePolicyPath, tempPolicyPath, true);
 
@@ -631,7 +631,8 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 	/// <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
 	/// <param name="deploy">Indicates whether the policy should be deployed after processing.</param>
 	/// <exception cref="InvalidOperationException">Thrown when no XML content is found in the downloaded markdown from the Microsoft GitHub source.</exception>
-	internal static void GetBlockRules(string StagingArea, bool deploy)
+	/// <returns>path to the created policy.</returns>
+	internal static string GetBlockRules(string StagingArea, bool deploy)
 	{
 
 		const string policyName = "Microsoft Windows Recommended User Mode BlockList";
@@ -740,6 +741,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		File.Copy(tempPolicyPath, finalPolicyPath, true);
 
+		return finalPolicyPath;
 	}
 
 
@@ -783,7 +785,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		// Get/Deploy the block rules if this base policy is not being swapped
 		if (PolicyIDToUse is null && DeployMicrosoftRecommendedBlockRules)
-			GetBlockRules(StagingArea, deploy);
+			_ = GetBlockRules(StagingArea, deploy);
 
 		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
 

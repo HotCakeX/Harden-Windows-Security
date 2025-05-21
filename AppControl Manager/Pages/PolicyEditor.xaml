@@ -79,14 +79,17 @@
                                     <animatedvisuals:CurlyArrow/>
                                 </AnimatedIcon.Source>
                             </AnimatedIcon>
-                            <TextBlock Text="Browse For Policy" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="BrowseForPolicy" Margin="5,0,0,0" />
                         </StackPanel>
                     </customUI:ButtonV2.Content>
 
                 </customUI:ButtonV2>
 
-                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"
-                       ToolTipService.ToolTip="Load the selected App Control policy to the user interface" Click="{x:Bind ViewModel.ProcessData}">
+                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        ToolTipService.ToolTip="Load the selected App Control policy to the user interface"
+                        Click="{x:Bind ViewModel.ProcessData}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -94,7 +97,7 @@
                                     <animatedvisuals:Dotsload/>
                                 </AnimatedIcon.Source>
                             </AnimatedIcon>
-                            <TextBlock Text="Load Policy" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="LoadPolicy" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -108,7 +111,7 @@
                                     <animatedvisuals:Confetti/>
                                 </AnimatedIcon.Source>
                             </AnimatedIcon>
-                            <TextBlock Text="Save The Changes" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="SaveTheChanged" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -130,7 +133,7 @@
                                     <animatedvisuals:TrashCan/>
                                 </AnimatedIcon.Source>
                             </AnimatedIcon>
-                            <TextBlock Text="Clear the Data" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="ClearTheData" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -148,8 +151,14 @@
             -->
 
             <TabView.TabStripFooter>
-                <Button x:Name="DiamondButton" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"
-                        ToolTipService.ToolTip="View the total count of each rule type and other details about the loaded policy" Margin="0,0,3,-6" Padding="0" BorderThickness="0">
+                <Button x:Name="DiamondButton"
+                        Background="Transparent"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        x:Uid="PolicyEditorDiamondButton"
+                        Margin="0,0,3,-6"
+                        Padding="0"
+                        BorderThickness="0">
                     <Button.Content>
                         <AnimatedIcon Height="28" Width="28" Margin="0">
                             <AnimatedIcon.Source>
@@ -241,18 +250,18 @@
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth13, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth14, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="ID" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Friendly Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="IDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FriendlyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Hash" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="File Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Internal Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="File Description" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Product Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="File Path" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Minimum File Version" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Maximum File Version" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Package Family Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Package Version" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="InternalNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FileDescriptionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="ProductNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="MinimumFileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="MaximumFileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="PackageFamilyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="PackageVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="App IDs" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Type" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                     </Grid>
@@ -279,8 +288,8 @@
 
                                         <Grid.ColumnDefinitions>
                                             <!-- Accessing the ColumnWidth variables in the ViewModel class through the reference
-                                        that we include in every instance of the class that the "x:DataType" uses.
-                                        This enables us to use compiled binding instead of "Binding". -->
+                                                that we include in every instance of the class that the "x:DataType" uses.
+                                                This enables us to use compiled binding instead of "Binding". -->
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth1, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth2, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth3, Mode=OneWay}" />
@@ -356,7 +365,7 @@
                                             <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth6, Mode=OneWay}" />
                                             <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth7, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="ID" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="IDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Cert Root" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Cert Publisher" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -414,7 +423,7 @@
             </TabViewItem>
 
 
-            <TabViewItem Header="Policy Details" IsClosable="False" Visibility="Visible" MinWidth="200">
+            <TabViewItem x:Uid="PolicyDetails" IsClosable="False" Visibility="Visible" MinWidth="200">
                 <TabViewItem.IconSource>
                     <BitmapIconSource UriSource="/Assets/External/Sparkle.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
@@ -434,68 +443,74 @@
                                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                                 </win:StackPanel.ChildrenTransitions>
 
-                                <controls:SettingsCard
-                                    Description="The name of the selected App Control policy"
-                                    Header="Policy Name"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Name.png}" IsClickEnabled="False">
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"                                    
+                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Name.png}"
+                                                       IsClickEnabled="False">
 
-                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Policy Name" Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}" />
-
-                                </controls:SettingsCard>
-
-                                <controls:SettingsCard
-                                    Description="The Policy ID of the selected App Control policy"
-                                    Header="Policy ID"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/ID.png}" IsClickEnabled="False">
-
-                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Policy ID" Text="{x:Bind ViewModel.PolicyIDTextBox, Mode=TwoWay}" />
+                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             x:Uid="PolicyEditorPolicyName"
+                                             Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}" />
 
                                 </controls:SettingsCard>
 
-                                <controls:SettingsCard
-                                    Description="The Base Policy ID of the selected App Control policy"
-                                    Header="Base Policy ID"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/BasePolicyID.png}" IsClickEnabled="False">
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyIDSettingsCard"
+                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/ID.png}"
+                                                       IsClickEnabled="False">
 
-                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Base Policy ID" Text="{x:Bind ViewModel.PolicyBaseIDTextBox, Mode=TwoWay}" />
-
-                                </controls:SettingsCard>
-
-                                <controls:SettingsCard
-                                    Description="The version of the selected App Control policy"
-                                    Header="Policy Version"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Version.png}" IsClickEnabled="False">
-
-                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Policy Version" Text="{x:Bind ViewModel.PolicyVersionTextBox, Mode=TwoWay}" />
+                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             x:Uid="PolicyEditorPolicyID"
+                                             Text="{x:Bind ViewModel.PolicyIDTextBox, Mode=TwoWay}" />
 
                                 </controls:SettingsCard>
 
-                                <customUI:SettingsCardV2
-                                    Description="The Type of the selected App Control policy"
-                                    Header="Policy Type" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyType.png}">
+                                <controls:SettingsCard x:Uid="PolicyEditorBasePolicyIDSettingsCard"
+                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/BasePolicyID.png}"
+                                                       IsClickEnabled="False">
 
-                                    <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Policy Type"
-                                              ItemsSource="{x:Bind ViewModel.ComboBoxSource, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.PolicyTypeComboBox, Mode=TwoWay}"/>
+                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             x:Uid="PolicyEditorBasePolicyID"
+                                             Text="{x:Bind ViewModel.PolicyBaseIDTextBox, Mode=TwoWay}" />
+
+                                </controls:SettingsCard>
+
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyVersionSettingsCard"
+                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Version.png}"
+                                                       IsClickEnabled="False">
+
+                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             x:Uid="PolicyEditorPolicyVersion"
+                                             Text="{x:Bind ViewModel.PolicyVersionTextBox, Mode=TwoWay}" />
+
+                                </controls:SettingsCard>
+
+                                <customUI:SettingsCardV2 x:Uid="PolicyEditorPolicyTypeSettingsCard"
+                                                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                                         HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyType.png}">
+
+                                    <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                              x:Uid="PolicyEditorPolicyType"
+                                              ItemsSource="{x:Bind ViewModel.ComboBoxSource, Mode=OneTime}"
+                                              SelectedItem="{x:Bind ViewModel.PolicyTypeComboBox, Mode=TwoWay}"/>
 
                                 </customUI:SettingsCardV2>
 
-                                <controls:SettingsCard
-                                    Description="The Policy Info ID of the selected App Contorl policy"
-                                    Header="Policy Info ID"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyIDInfo.png}" IsClickEnabled="False">
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyInfoIDSettingsCard"
+                                                       HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/PolicyIDInfo.png}"
+                                                       IsClickEnabled="False">
 
-                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" PlaceholderText="Policy Info ID" Text="{x:Bind ViewModel.PolicyInfoIDTextBox, Mode=TwoWay}" />
+                                    <TextBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             x:Uid="PolicyEditorPolicyInfoID"
+                                             Text="{x:Bind ViewModel.PolicyInfoIDTextBox, Mode=TwoWay}" />
 
                                 </controls:SettingsCard>
 
-                                <customUI:SettingsCardV2
-                                    Description="The Hypervisor-Protected Code Integrity Level of the selected App Control policy"
-                                    Header="HVCI Level" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/HVCIOption.png}">
+                                <customUI:SettingsCardV2 x:Uid="PolicyEditorHVCILevelSettingsCard"
+                                                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                                         HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/HVCIOption.png}">
 
                                     <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                              PlaceholderText="HVCI Level" SelectedItem="{x:Bind ViewModel.HVCIOptionComboBox, Mode=TwoWay}">
+                                              x:Uid="PolicyEditorHVCILevel"
+                                              SelectedItem="{x:Bind ViewModel.HVCIOptionComboBox, Mode=TwoWay}">
                                         <ComboBox.Items>
                                             <x:String>Enabled - Strict</x:String>
                                             <x:String>Enabled</x:String>

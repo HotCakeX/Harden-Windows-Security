@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using Microsoft.Identity.Client;
 
 namespace AppControlManager.MicrosoftGraph;
 
@@ -313,6 +314,11 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 			}
 		}
 		catch (OperationCanceledException)
+		{
+			_InfoBar.WriteWarning(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
+		}
+		// Specifically for WAM
+		catch (MsalClientException ex) when (ex.ErrorCode == "authentication_canceled")
 		{
 			_InfoBar.WriteWarning(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
 		}

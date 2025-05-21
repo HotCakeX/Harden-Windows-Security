@@ -295,9 +295,24 @@
                 </controls:SettingsExpander>
 
                 <!-- Microsoft Recommended User Mode Block Rules -->
-                <controls:SettingsCard x:Name="RecommendedUserModeBlockRulesSettings"
+                <controls:SettingsExpander x:Name="RecommendedUserModeBlockRulesSettings"
                            x:Uid="RecommendedUserModeBlockRulesSettings"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}">
+                           HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}"
+                           IsExpanded="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsIsExpanded, Mode=TwoWay}">
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar
+                                BorderThickness="0"
+                                CornerRadius="0"
+                                IsIconVisible="True"
+                                Message="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
+                                IsOpen="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
+                                IsClosable="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.RecommendedUserModeBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedUserModeBlockRules}" />
+                            </InfoBar.ActionButton>
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
@@ -313,7 +328,7 @@
 
                     </controls:WrapPanel>
 
-                </controls:SettingsCard>
+                </controls:SettingsExpander>
 
                 <!-- Strict Kernel-mode policy -->
                 <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.StrictKernelModesSettingsIsExpanded, Mode=TwoWay}"

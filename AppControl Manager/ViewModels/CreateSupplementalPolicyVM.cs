@@ -277,7 +277,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				FilesAndFoldersScalabilityButtonContent = $"Scalability: {field}";
+				FilesAndFoldersScalabilityButtonContent = GlobalVars.Rizz.GetString("Scalability") + field;
 			}
 		}
 	} = 2;
@@ -285,7 +285,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// The content of the button that has the RadialGauge inside it.
 	/// </summary>
-	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = "Scalability: 2";
+	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("Scalability") + "2";
 
 	/// <summary>
 	/// Used to store the scan results and as the source for the results ListViews

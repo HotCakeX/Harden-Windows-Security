@@ -52,7 +52,7 @@ internal static partial class GetFileHashes
 			}
 		}
 
-		Logger.Write($"Returning {outputHashInfoProcessingString.Count} file rules that are based on hashes");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("ReturningNFileRulesBasedOnHashes"), outputHashInfoProcessingString.Count));
 		// Return the output HashSet
 		return outputHashInfoProcessingString;
 	}

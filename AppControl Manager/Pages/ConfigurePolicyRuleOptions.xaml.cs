@@ -231,7 +231,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 						_ = DispatcherQueue.TryEnqueue(() =>
 						{
 							MainTeachingTip.IsOpen = true;
-							MainTeachingTip.Subtitle = "The selected policy requires signing. Please use the 'Deploy App Control Policy' page to deploy it as a signed policy.";
+							MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("TeachingTipSubtitlePolicyRequiresSigning");
 						});
 
 						return;

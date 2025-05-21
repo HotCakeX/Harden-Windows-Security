@@ -995,6 +995,12 @@ fn validate_xuid_usage(
             "Header"
         ],
     );
+    allowed.insert(
+        "TabViewItem",
+        vec![
+            "Header"
+        ],
+    );
 
     // Regex to find elements with an x:Uid attribute
     let re: Regex = Regex::new(r#"<([A-Za-z0-9_:]+)\b[^>]*\bx:Uid\s*=\s*"([^"]+)""#)

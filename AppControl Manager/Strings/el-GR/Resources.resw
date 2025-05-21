@@ -4555,4 +4555,406 @@
   <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
     <value>Ο επιλεγμένος αλγόριθμος δεν υποστηρίζεται για την υπογραφή πολιτικών Ελέγχου Εφαρμογών. Εάν σκοπεύετε να χρησιμοποιήσετε το παραγόμενο πιστοποιητικό για υπογραφή Ελέγχου Εφαρμογών, παρακαλούμε εξετάστε την επιλογή ενός άλλου αλγορίθμου.</value>
   </data>
+  <data name="CreatingAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Δημιουργία της βασικής πολιτικής "Allow Microsoft"</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Η βασική πολιτική "Allow Microsoft" δημιουργήθηκε και αναπτύχθηκε με επιτυχία</value>
+</data>
+<data name="SuccessfullyCreatedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Η βασική πολιτική "Allow Microsoft" δημιουργήθηκε με επιτυχία</value>
+</data>
+<data name="CreatingDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>Δημιουργία της βασικής πολιτικής "Default Windows"</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>Η βασική πολιτική "Default Windows" δημιουργήθηκε και αναπτύχθηκε με επιτυχία</value>
+</data>
+<data name="SuccessfullyCreatedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>Η βασική πολιτική "Default Windows" δημιουργήθηκε με επιτυχία</value>
+</data>
+<data name="CreatingSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>Δημιουργία της βασικής πολιτικής "Signed and Reputable"</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>Η βασική πολιτική "Signed and Reputable" δημιουργήθηκε και αναπτύχθηκε με επιτυχία</value>
+</data>
+<data name="SuccessfullyCreatedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>Η βασική πολιτική "Signed and Reputable" δημιουργήθηκε με επιτυχία</value>
+</data>
+<data name="CreatingRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>Δημιουργία της πολιτικής "Microsoft Recommended Driver Block Rules"</value>
+</data>
+<data name="SuccessfullyCreatedRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>Η πολιτική "Microsoft Recommended Driver Block Rules" δημιουργήθηκε με επιτυχία</value>
+</data>
+<data name="CreatingUserModeBlockRules" xml:space="preserve">
+  <value>Δημιουργία των κανόνων "User Mode Block".</value>
+</data>
+<data name="SuccessfullyCreatedUserModeBlockRules" xml:space="preserve">
+  <value>Οι κανόνες "User Mode block" δημιουργήθηκαν με επιτυχία.</value>
+</data>
+<data name="CreatingPolicyFromLogsOrScans" xml:space="preserve">
+  <value>Δημιουργία της πολιτικής χρησιμοποιώντας τυχόν διαθέσιμα αρχεία καταγραφής συμβάντων ή αποτελέσματα σάρωσης αρχείων σε άλλες καρτέλες.</value>
+</data>
+<data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
+  <value>Δεν υπάρχουν αρχεία καταγραφής ή αρχεία σε κανένα πλέγμα δεδομένων για τη δημιουργία συμπληρωματικής πολιτικής.</value>
+</data>
+<data name="StagingAreaNotFound" xml:space="preserve">
+  <value>Η περιοχή προετοιμασίας δεν βρέθηκε</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
+  <value>Η πολιτική δημιουργήθηκε και αναπτύχθηκε με επιτυχία.</value>
+</data>
+<data name="SuccessfullyCreatedPolicy" xml:space="preserve">
+  <value>Η πολιτική δημιουργήθηκε με επιτυχία.</value>
+</data>
+<data name="SelectedItemNotValidXmlFilePath" xml:space="preserve">
+  <value>Το επιλεγμένο στοιχείο '{0}' δεν είναι μια έγκυρη διαδρομή αρχείου XML</value>
+</data>
+<data name="BasePolicyRedeployedInAuditMode" xml:space="preserve">
+  <value>Η βασική πολιτική έχει αναπτυχθεί ξανά σε λειτουργία ελέγχου.</value>
+</data>
+<data name="ScanningNFilesFoundInSelectedDirectories" xml:space="preserve">
+  <value>Σάρωση {0} αρχείων που βρέθηκαν στους επιλεγμένους καταλόγους.</value>
+</data>
+<data name="NLogsGeneratedDuringAuditPhase" xml:space="preserve">
+  <value>{0} αρχείο(α) καταγραφής δημιουργήθηκαν κατά τη φάση ελέγχου.</value>
+</data>
+<data name="DialogTitleSuccess" xml:space="preserve">
+  <value>Επιτυχία! ✅</value>
+</data>
+<data name="DialogContentCIPConvertedToXML" xml:space="preserve">
+  <value>Το δυαδικό αρχείο CIP μετατράπηκε με επιτυχία σε XML και το αρχείο αποθηκεύτηκε στην τοποθεσία:</value>
+</data>
+<data name="NoSimulationOutputToExport" xml:space="preserve">
+  <value>Δεν υπάρχουν αποτελέσματα προσομοίωσης για εξαγωγή.</value>
+</data>
+<data name="FailedToOpenRating" xml:space="preserve">
+  <value>Αποτυχία ανοίγματος της σελίδας αξιολόγησης στο Microsoft Store.</value>
+</data>
+<data name="CurrentFileHasNEKUs" xml:space="preserve">
+  <value>Το τρέχον αρχείο '{0}' έχει {1} EKU</value>
+</data>
+<data name="SignerEKUsMatchedFileEKUs" xml:space="preserve">
+  <value>Τα EKU του υπογράφοντος '{0}' αντιστοιχούν με τα EKU του αρχείου</value>
+</data>
+<data name="SignerIsWHQL" xml:space="preserve">
+  <value>Ο υπογράφων '{0}' είναι WHQL</value>
+</data>
+<data name="FailedToGetOpusDataCurrentChain" xml:space="preserve">
+  <value>Αποτυχία λήψης των δεδομένων Opus του τρέχοντος πακέτου αλυσίδας</value>
+</data>
+<data name="MinimumFileVersionNullSkipping" xml:space="preserve">
+  <value>Το MinimumFileVersion είναι null, παράλειψη.</value>
+</data>
+<data name="SpecificFileNameLevelIs" xml:space="preserve">
+  <value>Το SpecificFileNameLevel είναι {0}</value>
+</data>
+<data name="SignerHadEKUsButNoMatch" xml:space="preserve">
+  <value>Ο υπογράφων είχε EKU αλλά δεν αντιστοιχούσαν με τα EKU του αρχείου.</value>
+</data>
+<data name="ReturningNFileRulesBasedOnHashes" xml:space="preserve">
+  <value>Επιστροφή {0} κανόνων αρχείων που βασίζονται σε κατακερματισμούς.</value>
+</data>
+<data name="LogCIPFileIsSigned" xml:space="preserve">
+  <value>Το αρχείο CIP που μετατρέπεται ξανά σε XML είναι υπογεγραμμένο.</value>
+</data>
+<data name="ErrorBodyOffsetInvalid" xml:space="preserve">
+  <value>Η μετατόπιση του σώματος είναι πέρα από το τέλος του αρχείου, υποδεικνύοντας πιθανή αναντιστοιχία μορφής ή καταστροφή.</value>
+</data>
+<data name="ErrorUnknownFileRuleType" xml:space="preserve">
+  <value>Άγνωστος τύπος κανόνα αρχείου {0}</value>
+</data>
+<data name="ErrorUnknownSettingType" xml:space="preserve">
+  <value>Άγνωστος τύπος ρύθμισης {0}</value>
+</data>
+<data name="ErrorExpectedV3BlockTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα μπλοκ V3 '3', λήφθηκε '{0}'.</value>
+</data>
+<data name="ErrorExpectedV4BlockTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα μπλοκ V4 '4', λήφθηκε '{0}'.</value>
+</data>
+<data name="ErrorExpectedV5BlockTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα μπλοκ V5 '5', λήφθηκε '{0}'.</value>
+</data>
+<data name="ErrorExpectedV6BlockTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα μπλοκ V6 '6', λήφθηκε '{0}'.</value>
+</data>
+<data name="ErrorExpectedV7BlockTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα μπλοκ V7 '7', λήφθηκε '{0}'.</value>
+</data>
+<data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα μπλοκ V8 '8', λήφθηκε '{0}'.</value>
+</data>
+<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
+  <value>Αναμενόταν ετικέτα τέλους πολιτικής '{0}', λήφθηκε '{1}'.</value>
+</data>
+<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
+  <value>Το αρχείο XML '{0}' δεν είναι συμβατό με το σχήμα πολιτικής CI</value>
+</data>
+<data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
+  <value>Ο τύπος πολιτικής είναι {0} και έχει την επιλογή κανόνα {1} η οποία είναι μη έγκυρη. Μόνο το {2} μπορεί να την έχει.</value>
+</data>
+<data name="AppIDTaggingPolicyInvalidSigningScenarioID" xml:space="preserve">
+  <value>Ο τύπος πολιτικής είναι {0} αλλά υπάρχει ένα σενάριο υπογραφής με το αναγνωριστικό {1} το οποίο είναι μη έγκυρο επειδή αυτός ο τύπος πολιτικής υποστηρίζει προς το παρόν μόνο σενάρια υπογραφής λειτουργίας χρήστη (User-Mode).</value>
+</data>
+<data name="AppIDTaggingPolicyMissingAppIDTags" xml:space="preserve">
+  <value>Ο τύπος πολιτικής είναι {0} αλλά το σενάριο υπογραφής δεν έχει καθορισμένες ετικέτες AppIDTags σε αυτό.</value>
+</data>
+<data name="PolicyNeedsSigningButNoUpdateSigner" xml:space="preserve">
+  <value>Η πολιτική δεν έχει το {0} που υποδεικνύει ότι πρέπει να υπογραφεί, αλλά δεν βρέθηκε κανένας UpdatePolicySigner.</value>
+</data>
+<data name="SettingsAndAppIDTagsCountExceeded" xml:space="preserve">
+  <value>Ο συνολικός αριθμός των ετικετών Settings + AppID δεν πρέπει να υπερβαίνει το {0}</value>
+</data>
+<data name="SupplementalPolicyWithSupplementalSigners" xml:space="preserve">
+  <value>Ο τύπος πολιτικής είναι {0} και έχει συμπληρωματικούς υπογράφοντες πολιτικής (Supplemental Policy Signers). Μόνο οι βασικές πολιτικές μπορούν να τους έχουν.</value>
+</data>
+<data name="ButtonContentSignOnly" xml:space="preserve">
+  <value>Μόνο υπογραφή</value>
+</data>
+<data name="ButtonContentDeploy" xml:space="preserve">
+  <value>Ανάπτυξη</value>
+</data>
+<data name="TeachingTipSubtitlePolicyRequiresSigning" xml:space="preserve">
+  <value>Η επιλεγμένη πολιτική απαιτεί υπογραφή. Παρακαλούμε χρησιμοποιήστε τη σελίδα 'Ανάπτυξη πολιτικής ελέγχου εφαρμογών' για να την αναπτύξετε ως υπογεγραμμένη πολιτική.</value>
+</data>
+<data name="LogCheckingDeploymentStatusSupplemental" xml:space="preserve">
+  <value>Έλεγχος της κατάστασης ανάπτυξης της συμπληρωματικής πολιτικής '{0}'</value>
+</data>
+<data name="LogSupplementalPolicyAlreadyDeployed" xml:space="preserve">
+  <value>Η συμπληρωματική πολιτική με όνομα {0} είναι ήδη ανεπτυγμένη για τη βασική πολιτική με BasePolicyID {1}, παράλειψη της ανάπτυξής της.</value>
+</data>
+<data name="LogSupplementalPolicyNotDeployedDeploying" xml:space="preserve">
+  <value>Η συμπληρωματική πολιτική με όνομα {0} δεν είναι ανεπτυγμένη για τη βασική πολιτική με BasePolicyID {1}, ανάπτυξη τώρα.</value>
+</data>
+<data name="LogRemovingUnsignedSupplementalForSigned" xml:space="preserve">
+  <value>Κατάργηση της μη υπογεγραμμένης συμπληρωματικής πολιτικής με αναγνωριστικό {0} και όνομα {1} επειδή θα αναπτυχθεί η υπογεγραμμένη έκδοσή της.</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>Κατάσταση</value>
+</data>
+<data name="IDHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό</value>
+  </data>
+  <data name="MinimumFileVersionHeader.Text" xml:space="preserve">
+    <value>Ελάχιστη Έκδοση Αρχείου</value>
+  </data>
+  <data name="MaximumFileVersionHeader.Text" xml:space="preserve">
+    <value>Μέγιστη Έκδοση Αρχείου</value>
+  </data>
+  <data name="PackageVersionHeader.Text" xml:space="preserve">
+    <value>Έκδοση Πακέτου</value>
+  </data>
+  <data name="LoadPolicy.Text" xml:space="preserve">
+    <value>Φόρτωση Πολιτικής</value>
+  </data>
+  <data name="BrowseForPolicy.Text" xml:space="preserve">
+    <value>Αναζήτηση Πολιτικής</value>
+  </data>
+  <data name="SaveTheChanged.Text" xml:space="preserve">
+    <value>Αποθήκευση Αλλαγών</value>
+  </data>
+  <data name="ClearTheData.Text" xml:space="preserve">
+    <value>Εκκαθάριση Δεδομένων</value>
+  </data>
+  <data name="PolicyDetails.Header" xml:space="preserve">
+    <value>Λεπτομέρειες Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorDiamondButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή του συνολικού αριθμού κάθε τύπου κανόνα και άλλων λεπτομερειών για την φορτωμένη πολιτική</value>
+  </data>
+  <data name="PolicyEditorDiamondButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή του συνολικού αριθμού κάθε τύπου κανόνα και άλλων λεπτομερειών για την φορτωμένη πολιτική</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Όνομα Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Το όνομα της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το όνομα της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το όνομα της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>ID Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>Το ID της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το ID της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το ID της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>Βασικό ID Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>Το βασικό ID της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το βασικό ID της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το βασικό ID της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.Header" xml:space="preserve">
+    <value>Έκδοση Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.Description" xml:space="preserve">
+    <value>Η έκδοση της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Η έκδοση της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Η έκδοση της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.Header" xml:space="preserve">
+    <value>Τύπος Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.Description" xml:space="preserve">
+    <value>Ο τύπος της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο τύπος της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο τύπος της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.Header" xml:space="preserve">
+    <value>ID Πληροφοριών Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.Description" xml:space="preserve">
+    <value>Το ID πληροφοριών της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το ID πληροφοριών της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το ID πληροφοριών της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.Header" xml:space="preserve">
+    <value>Επίπεδο HVCI</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.Description" xml:space="preserve">
+    <value>Το επίπεδο Hypervisor-Protected Code Integrity της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το επίπεδο Hypervisor-Protected Code Integrity της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το επίπεδο Hypervisor-Protected Code Integrity της επιλεγμένης πολιτικής App Control</value>
+  </data>
+  <data name="PolicyEditorPolicyName.PlaceholderText" xml:space="preserve">
+    <value>Όνομα Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyID.PlaceholderText" xml:space="preserve">
+    <value>ID Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorBasePolicyID.PlaceholderText" xml:space="preserve">
+    <value>Βασικό ID Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyVersion.PlaceholderText" xml:space="preserve">
+    <value>Έκδοση Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyType.PlaceholderText" xml:space="preserve">
+    <value>Τύπος Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoID.PlaceholderText" xml:space="preserve">
+    <value>ID Πληροφοριών Πολιτικής</value>
+  </data>
+  <data name="PolicyEditorHVCILevel.PlaceholderText" xml:space="preserve">
+    <value>Επίπεδο HVCI</value>
+  </data>
+  <data name="EntraSignInSettingsCard.Header" xml:space="preserve">
+    <value>Συνδεθείτε με Entra ID</value>
+  </data>
+  <data name="EntraSignInSettingsCard.Description" xml:space="preserve">
+    <value>Συνδεθείτε στο tenant σας για να επιτρέψετε την απομακρυσμένη ανάπτυξη. Βεβαιωθείτε ότι έχετε τα απαραίτητα δικαιώματα.</value>
+  </data>
+  <data name="EntraSignInSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συνδεθείτε στο tenant σας για να επιτρέψετε την απομακρυσμένη ανάπτυξη. Βεβαιωθείτε ότι έχετε τα απαραίτητα δικαιώματα.</value>
+  </data>
+  <data name="EntraSignInSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Συνδεθείτε στο tenant σας για να επιτρέψετε την απομακρυσμένη ανάπτυξη. Βεβαιωθείτε ότι έχετε τα απαραίτητα δικαιώματα.</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.Header" xml:space="preserve">
+    <value>Χρήση Απομακρυσμένης Ανάπτυξης μέσω Intune</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.Description" xml:space="preserve">
+    <value>Αναπτύξτε απομακρυσμένα τις πολιτικές στο Intune αντί για το τοπικό σύστημα</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναπτύξτε απομακρυσμένα τις πολιτικές στο Intune αντί για το τοπικό σύστημα</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναπτύξτε απομακρυσμένα τις πολιτικές στο Intune αντί για το τοπικό σύστημα</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.Header" xml:space="preserve">
+    <value>Ανάθεση Ομάδας (Προαιρετικό)</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε την/τις ομάδα(-ες) ασφαλείας για ανάθεση στην πολιτική στο Intune</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε την/τις ομάδα(-ες) ασφαλείας για ανάθεση στην πολιτική στο Intune</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε την/τις ομάδα(-ες) ασφαλείας για ανάθεση στην πολιτική στο Intune</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>Επιλέξτε υπογεγραμμένα αρχεία XML πολιτικής</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς υπογραφή και ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς υπογραφή και ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς υπογραφή και ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>Επιλέξτε αρχεία CIP Binary</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία CIP Binary προς ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία CIP Binary προς ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία CIP Binary προς ανάπτυξη στο σύστημα</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>Επιλέξτε αρχεία XML πολιτικής</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς μετατροπή σε αρχεία CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς μετατροπή σε αρχεία CIP</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς μετατροπή σε αρχεία CIP</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+    <value>Επιλέξτε μη υπογεγραμμένα αρχεία XML πολιτικής</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
+  </data>
 </root>

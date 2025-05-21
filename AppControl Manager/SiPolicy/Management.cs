@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Xml;
 using AppControlManager.Main;
+using AppControlManager.Others;
 using AppControlManager.XMLOps;
 
 namespace AppControlManager.SiPolicy;
@@ -42,7 +43,7 @@ internal static class Management
 	{
 		if (!string.IsNullOrEmpty(xmlFilePath) && !CiPolicyTest.TestCiPolicy(xmlFilePath))
 		{
-			throw new InvalidOperationException($"The XML file '{xmlFilePath}' is not compliant with the CI policy schema");
+			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("XmlFileNotCompliantWithSchema"), xmlFilePath));
 		}
 
 		/*

@@ -35,7 +35,7 @@ internal static class SnapBackGuarantee
 
 		if (string.IsNullOrWhiteSpace(path))
 		{
-			throw new ArgumentNullException(nameof(path), "The path to the EnforcedMode.cip file cannot be null or whitespace.");
+			throw new ArgumentNullException(nameof(path));
 		}
 
 		Logger.Write(

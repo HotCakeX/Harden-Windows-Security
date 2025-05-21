@@ -719,7 +719,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			Step3InfoBar_IsClosable = false;
 
-			Step3InfoBar.WriteInfo("Creating the policy using any available event logs or file scan results in other tabs.");
+			Step3InfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPolicyFromLogsOrScans"));
 
 			// Check if there are items for the local file scans ListView
 			if (LocalFilesAllFileIdentities.Count > 0)
@@ -744,7 +744,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// If there are no logs to create a Supplemental policy with
 			if (fileIdentities.Count is 0)
 			{
-				Step3InfoBar.WriteWarning("There are no logs or files in any data grids to create a Supplemental policy for.");
+				Step3InfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoLogsOrFilesForSupplementalPolicy"));
 				return;
 			}
 
@@ -753,7 +753,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 				if (stagingArea is null)
 				{
-					throw new InvalidOperationException("Staging Area wasn't found");
+					throw new InvalidOperationException(GlobalVars.Rizz.GetString("StagingAreaNotFound"));
 				}
 
 				// Get the path to an empty policy file
@@ -825,7 +825,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				}
 			});
 
-			Step3InfoBar.WriteSuccess(DeployPolicy ? "Successfully created and deployed the policy." : "Successfully created the policy.");
+			Step3InfoBar.WriteSuccess(DeployPolicy ? GlobalVars.Rizz.GetString("SuccessfullyCreatedAndDeployedPolicy") : GlobalVars.Rizz.GetString("SuccessfullyCreatedPolicy"));
 
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 		}
@@ -862,7 +862,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			}
 			else
 			{
-				throw new InvalidOperationException($"Selected item '{selectedFile}' is not a valid XML file path");
+				throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SelectedItemNotValidXmlFilePath"), selectedFile));
 			}
 		}
 	}
@@ -1262,7 +1262,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				CiToolHelper.UpdatePolicy(AuditModeCIP);
 #endif
 
-				Logger.Write("The Base policy has been Re-Deployed in Audit Mode");
+				Logger.Write(GlobalVars.Rizz.GetString("BasePolicyRedeployedInAuditMode"));
 
 				EventLogUtility.SetLogSize(EventLogsUtil.MaxSizeMB);
 			});
@@ -1372,7 +1372,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 						_ = Dispatcher.TryEnqueue(() =>
 						{
-							Step2InfoBar.WriteInfo($"Scanning {DetectedFilesInSelectedDirectories.Item2} files found in the selected directories");
+							Step2InfoBar.WriteInfo(string.Format(GlobalVars.Rizz.GetString("ScanningNFilesFoundInSelectedDirectories"), DetectedFilesInSelectedDirectories.Item2));
 
 							// Set the progress ring to no longer be indeterminate since file scan will take control of its value
 							Step2ProgressRingIsIndeterminate = false;
@@ -1426,7 +1426,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 #endif
 
-			Step2InfoBar.WriteInfo($"{Output.Count} log(s) were generated during the Audit phase");
+			Step2InfoBar.WriteInfo(string.Format(GlobalVars.Rizz.GetString("NLogsGeneratedDuringAuditPhase"), Output.Count));
 
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count > 0)

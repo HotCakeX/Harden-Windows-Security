@@ -4556,4 +4556,406 @@
   <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
     <value>האלגוריתם שנבחר אינו נתמך לחתימת מדיניות App Control. אם בכוונתך להשתמש באישור שנוצר לחתימת App Control, אנא שקול לבחור אלגוריתם אחר.</value>
   </data>
+  <data name="CreatingAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>יוצר את מדיניות הבסיס 'Allow Microsoft'</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>מדיניות הבסיס 'Allow Microsoft' נוצרה ונפרסה בהצלחה</value>
+</data>
+<data name="SuccessfullyCreatedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>מדיניות הבסיס 'Allow Microsoft' נוצרה בהצלחה</value>
+</data>
+<data name="CreatingDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>יוצר את מדיניות הבסיס 'Default Windows'</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>מדיניות הבסיס 'Default Windows' נוצרה ונפרסה בהצלחה</value>
+</data>
+<data name="SuccessfullyCreatedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>מדיניות הבסיס 'Default Windows' נוצרה בהצלחה</value>
+</data>
+<data name="CreatingSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>יוצר את מדיניות הבסיס 'חתום ובעל מוניטין'</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>מדיניות הבסיס 'חתום ובעל מוניטין' נוצרה ונפרסה בהצלחה</value>
+</data>
+<data name="SuccessfullyCreatedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>מדיניות הבסיס 'חתום ובעל מוניטין' נוצרה בהצלחה</value>
+</data>
+<data name="CreatingRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>יוצר את מדיניות 'כללי חסימת מנהלי התקנים מומלצי Microsoft'</value>
+</data>
+<data name="SuccessfullyCreatedRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>מדיניות 'כללי חסימת מנהלי התקנים מומלצי Microsoft' נוצרה בהצלחה</value>
+</data>
+<data name="CreatingUserModeBlockRules" xml:space="preserve">
+  <value>יוצר את כללי החסימה של מצב משתמש.</value>
+</data>
+<data name="SuccessfullyCreatedUserModeBlockRules" xml:space="preserve">
+  <value>כללי החסימה של מצב משתמש נוצרו בהצלחה.</value>
+</data>
+<data name="CreatingPolicyFromLogsOrScans" xml:space="preserve">
+  <value>יוצר את המדיניות באמצעות יומני אירועים זמינים או תוצאות סריקת קבצים מכרטיסיות אחרות.</value>
+</data>
+<data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
+  <value>אין יומנים או קבצים ברשתות נתונים כלשהן ליצירת מדיניות משלימה עבורם.</value>
+</data>
+<data name="StagingAreaNotFound" xml:space="preserve">
+  <value>אזור ההכנה לא נמצא</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
+  <value>המדיניות נוצרה ונפרסה בהצלחה.</value>
+</data>
+<data name="SuccessfullyCreatedPolicy" xml:space="preserve">
+  <value>המדיניות נוצרה בהצלחה.</value>
+</data>
+<data name="SelectedItemNotValidXmlFilePath" xml:space="preserve">
+  <value>הפריט הנבחר '{0}' אינו נתיב קובץ XML חוקי</value>
+</data>
+<data name="BasePolicyRedeployedInAuditMode" xml:space="preserve">
+  <value>מדיניות הבסיס נפרסה מחדש במצב ביקורת (Audit Mode).</value>
+</data>
+<data name="ScanningNFilesFoundInSelectedDirectories" xml:space="preserve">
+  <value>סורק {0} קבצים שנמצאו בספריות הנבחרות.</value>
+</data>
+<data name="NLogsGeneratedDuringAuditPhase" xml:space="preserve">
+  <value>{0} יומנים נוצרו במהלך שלב הביקורת (Audit phase).</value>
+</data>
+<data name="DialogTitleSuccess" xml:space="preserve">
+  <value>הצלחה! ✅</value>
+</data>
+<data name="DialogContentCIPConvertedToXML" xml:space="preserve">
+  <value>קובץ ה-CIP הבינארי הומר בהצלחה ל-XML והקובץ נשמר בנתיב:</value>
+</data>
+<data name="NoSimulationOutputToExport" xml:space="preserve">
+  <value>אין פלט סימולציה לייצוא.</value>
+</data>
+<data name="FailedToOpenRating" xml:space="preserve">
+  <value>פתיחת דף הדירוג בחנות Microsoft נכשלה.</value>
+</data>
+<data name="CurrentFileHasNEKUs" xml:space="preserve">
+  <value>לקובץ הנוכחי '{0}' יש {1} EKUs</value>
+</data>
+<data name="SignerEKUsMatchedFileEKUs" xml:space="preserve">
+  <value>ה-EKUs של החותם '{0}' תאמו ל-EKUs של הקובץ</value>
+</data>
+<data name="SignerIsWHQL" xml:space="preserve">
+  <value>החותם '{0}' הוא WHQL</value>
+</data>
+<data name="FailedToGetOpusDataCurrentChain" xml:space="preserve">
+  <value>קבלת נתוני Opus של חבילת השרשרת הנוכחית נכשלה</value>
+</data>
+<data name="MinimumFileVersionNullSkipping" xml:space="preserve">
+  <value>MinimumFileVersion הוא null, מדלג.</value>
+</data>
+<data name="SpecificFileNameLevelIs" xml:space="preserve">
+  <value>ה-SpecificFileNameLevel הוא {0}</value>
+</data>
+<data name="SignerHadEKUsButNoMatch" xml:space="preserve">
+  <value>לחותם היו EKUs אך הם לא תאמו ל-EKUs של הקובץ.</value>
+</data>
+<data name="ReturningNFileRulesBasedOnHashes" xml:space="preserve">
+  <value>מחזיר {0} כללי קבצים המבוססים על hashes.</value>
+</data>
+<data name="LogCIPFileIsSigned" xml:space="preserve">
+  <value>קובץ ה-CIP המומר בחזרה ל-XML חתום.</value>
+</data>
+<data name="ErrorBodyOffsetInvalid" xml:space="preserve">
+  <value>היסט הגוף (body offset) חורג מסוף הקובץ, מה שמצביע על אי-התאמה אפשרית בפורמט או על השחתה.</value>
+</data>
+<data name="ErrorUnknownFileRuleType" xml:space="preserve">
+  <value>סוג כלל קובץ לא ידוע {0}</value>
+</data>
+<data name="ErrorUnknownSettingType" xml:space="preserve">
+  <value>סוג הגדרה לא ידוע {0}</value>
+</data>
+<data name="ErrorExpectedV3BlockTagGot" xml:space="preserve">
+  <value>צפויה תגית בלוק V3 '3', התקבלה '{0}'.</value>
+</data>
+<data name="ErrorExpectedV4BlockTagGot" xml:space="preserve">
+  <value>צפויה תגית בלוק V4 '4', התקבלה '{0}'.</value>
+</data>
+<data name="ErrorExpectedV5BlockTagGot" xml:space="preserve">
+  <value>צפויה תגית בלוק V5 '5', התקבלה '{0}'.</value>
+</data>
+<data name="ErrorExpectedV6BlockTagGot" xml:space="preserve">
+  <value>צפויה תגית בלוק V6 '6', התקבלה '{0}'.</value>
+</data>
+<data name="ErrorExpectedV7BlockTagGot" xml:space="preserve">
+  <value>צפויה תגית בלוק V7 '7', התקבלה '{0}'.</value>
+</data>
+<data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
+  <value>צפויה תגית בלוק V8 '8', התקבלה '{0}'.</value>
+</data>
+<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
+  <value>צפויה תגית סיום מדיניות '{0}', התקבלה '{1}'.</value>
+</data>
+<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
+  <value>קובץ ה-XML '{0}' אינו תואם לסכמת מדיניות CI</value>
+</data>
+<data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
+  <value>סוג המדיניות הוא {0} ויש לה אפשרות כלל {1} שאינה חוקית. רק ל-{2} יכולה להיות אפשרות זו.</value>
+</data>
+<data name="AppIDTaggingPolicyInvalidSigningScenarioID" xml:space="preserve">
+  <value>סוג המדיניות הוא {0} אך קיים תרחיש חתימה (Signing Scenario) עם המזהה {1} שאינו חוקי, מכיוון שסוג מדיניות זה תומך כעת רק בתרחישי חתימה במצב משתמש (User-Mode Signing Scenarios).</value>
+</data>
+<data name="AppIDTaggingPolicyMissingAppIDTags" xml:space="preserve">
+  <value>סוג המדיניות הוא {0} אך בתרחיש החתימה (Signing Scenario) לא מוגדרים AppIDTags.</value>
+</data>
+<data name="PolicyNeedsSigningButNoUpdateSigner" xml:space="preserve">
+  <value>למדיניות אין את {0} המציין שהיא צריכה להיחתם, אך לא נמצא UpdatePolicySigner.</value>
+</data>
+<data name="SettingsAndAppIDTagsCountExceeded" xml:space="preserve">
+  <value>הספירה הכוללת של תגיות Settings + AppID לא אמורה לעלות על {0}</value>
+</data>
+<data name="SupplementalPolicyWithSupplementalSigners" xml:space="preserve">
+  <value>סוג המדיניות הוא {0} ויש לה חותמי מדיניות משלימה (Supplemental Policy Signers). רק למדיניות בסיס יכולים להיות כאלה.</value>
+</data>
+<data name="ButtonContentSignOnly" xml:space="preserve">
+  <value>חתימה בלבד</value>
+</data>
+<data name="ButtonContentDeploy" xml:space="preserve">
+  <value>פרוס</value>
+</data>
+<data name="TeachingTipSubtitlePolicyRequiresSigning" xml:space="preserve">
+  <value>המדיניות שנבחרה דורשת חתימה. אנא השתמש בדף 'פרוס מדיניות בקרת יישומים' (Deploy App Control Policy) כדי לפרוס אותה כמדיניות חתומה.</value>
+</data>
+<data name="LogCheckingDeploymentStatusSupplemental" xml:space="preserve">
+  <value>בודק את סטטוס הפריסה של מדיניות משלימה '{0}'</value>
+</data>
+<data name="LogSupplementalPolicyAlreadyDeployed" xml:space="preserve">
+  <value>מדיניות משלימה בשם {0} כבר פרוסה עבור מדיניות הבסיס עם BasePolicyID {1}, מדלג על פריסתה.</value>
+</data>
+<data name="LogSupplementalPolicyNotDeployedDeploying" xml:space="preserve">
+  <value>מדיניות משלימה בשם {0} אינה פרוסה עבור מדיניות הבסיס עם BasePolicyID {1}, פורס אותה כעת.</value>
+</data>
+<data name="LogRemovingUnsignedSupplementalForSigned" xml:space="preserve">
+  <value>מסיר מדיניות משלימה לא חתומה עם המזהה {0} והשם {1} מכיוון שגרסתה החתומה תיפרס.</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>סטטוס</value>
+</data>
+<data name="IDHeader.Text" xml:space="preserve">
+    <value>מזהה</value>
+</data>
+<data name="MinimumFileVersionHeader.Text" xml:space="preserve">
+    <value>גרסת הקובץ המינימלית</value>
+</data>
+<data name="MaximumFileVersionHeader.Text" xml:space="preserve">
+    <value>גרסת הקובץ המקסימלית</value>
+</data>
+<data name="PackageVersionHeader.Text" xml:space="preserve">
+    <value>גרסת החבילה</value>
+</data>
+<data name="LoadPolicy.Text" xml:space="preserve">
+    <value>טען מדיניות</value>
+</data>
+<data name="BrowseForPolicy.Text" xml:space="preserve">
+    <value>עיין במדיניות</value>
+</data>
+<data name="SaveTheChanged.Text" xml:space="preserve">
+    <value>שמור את השינויים</value>
+</data>
+<data name="ClearTheData.Text" xml:space="preserve">
+    <value>נקה את הנתונים</value>
+</data>
+<data name="PolicyDetails.Header" xml:space="preserve">
+    <value>פרטי המדיניות</value>
+</data>
+<data name="PolicyEditorDiamondButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצג את המספר הכולל של כל סוג כלל ופרטים נוספים על המדיניות הטעונה</value>
+</data>
+<data name="PolicyEditorDiamondButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג את המספר הכולל של כל סוג כלל ופרטים נוספים על המדיניות הטעונה</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>שם המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>שם מדיניות בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שם מדיניות בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שם מדיניות בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>מזהה המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>מזהה המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מזהה המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מזהה המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>מזהה מדיניות בסיס</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>מזהה מדיניות הבסיס של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מזהה מדיניות הבסיס של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מזהה מדיניות הבסיס של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.Header" xml:space="preserve">
+    <value>גרסת המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.Description" xml:space="preserve">
+    <value>הגרסה של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגרסה של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגרסה של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.Header" xml:space="preserve">
+    <value>סוג המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.Description" xml:space="preserve">
+    <value>סוג המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סוג המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סוג המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.Header" xml:space="preserve">
+    <value>מזהה פרטי המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.Description" xml:space="preserve">
+    <value>מזהה פרטי המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מזהה פרטי המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מזהה פרטי המדיניות של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.Header" xml:space="preserve">
+    <value>רמת HVCI</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.Description" xml:space="preserve">
+    <value>רמת שלמות הקוד המוגן על-ידי Hypervisor של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רמת שלמות הקוד המוגן על-ידי Hypervisor של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רמת שלמות הקוד המוגן על-ידי Hypervisor של בקרת האפליקציות הנבחרת</value>
+</data>
+<data name="PolicyEditorPolicyName.PlaceholderText" xml:space="preserve">
+    <value>שם המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyID.PlaceholderText" xml:space="preserve">
+    <value>מזהה המדיניות</value>
+</data>
+<data name="PolicyEditorBasePolicyID.PlaceholderText" xml:space="preserve">
+    <value>מזהה מדיניות בסיס</value>
+</data>
+<data name="PolicyEditorPolicyVersion.PlaceholderText" xml:space="preserve">
+    <value>גרסת המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyType.PlaceholderText" xml:space="preserve">
+    <value>סוג המדיניות</value>
+</data>
+<data name="PolicyEditorPolicyInfoID.PlaceholderText" xml:space="preserve">
+    <value>מזהה פרטי המדיניות</value>
+</data>
+<data name="PolicyEditorHVCILevel.PlaceholderText" xml:space="preserve">
+    <value>רמת HVCI</value>
+</data>
+<data name="EntraSignInSettingsCard.Header" xml:space="preserve">
+    <value>כניסה עם Entra ID</value>
+</data>
+<data name="EntraSignInSettingsCard.Description" xml:space="preserve">
+    <value>התחבר לשוכר שלך כדי לאפשר פריסה מרחוק. ודא שיש לך את ההרשאות הנדרשות.</value>
+</data>
+<data name="EntraSignInSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחבר לשוכר שלך כדי לאפשר פריסה מרחוק. ודא שיש לך את ההרשאות הנדרשות.</value>
+</data>
+<data name="EntraSignInSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחבר לשוכר שלך כדי לאפשר פריסה מרחוק. ודא שיש לך את ההרשאות הנדרשות.</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.Header" xml:space="preserve">
+    <value>השתמש בפריסת Intune</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.Description" xml:space="preserve">
+    <value>פרוס את המדיניות מרחוק ב-Intune במקום במערכת המקומית</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פרוס את המדיניות מרחוק ב-Intune במקום במערכת המקומית</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פרוס את המדיניות מרחוק ב-Intune במקום במערכת המקומית</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.Header" xml:space="preserve">
+    <value>הקצאת קבוצות (אופציונלי)</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.Description" xml:space="preserve">
+    <value>בחר את קבוצות האבטחה שיוקצו למדיניות ב-Intune</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את קבוצות האבטחה שיוקצו למדיניות ב-Intune</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את קבוצות האבטחה שיוקצו למדיניות ב-Intune</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>בחר את קובצי מדיניות ה-XML החתומים</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>עיין בקבצי מדיניות XML כדי לחתום ולפרוס אותם במערכת</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקבצי מדיניות XML כדי לחתום ולפרוס אותם במערכת</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקבצי מדיניות XML כדי לחתום ולפרוס אותם במערכת</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>בחר את קובצי הבינארי של CIP</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>עיין בקבצי הבינארי של CIP כדי לפרוסם במערכת</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקבצי הבינארי של CIP כדי לפרוסם במערכת</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקבצי הבינארי של CIP כדי לפרוסם במערכת</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>בחר את קובצי מדיניות ה-XML</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>עיין בקובצי מדיניות XML כדי להמיר אותם לקובצי CIP</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקובצי מדיניות XML כדי להמיר אותם לקובצי CIP</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקובצי מדיניות XML כדי להמיר אותם לקובצי CIP</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+    <value>בחר את קובצי מדיניות ה-XML הלא חתומים</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
+</data>
 </root>

@@ -60,7 +60,7 @@ internal static class SupplementalForSelf
 		// Save the XML to the path as XML file
 		Management.SavePolicyToFile(policyObj, savePath);
 
-		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them
 
@@ -75,11 +75,11 @@ internal static class SupplementalForSelf
 
 		if (CurrentlyDeployedSupplementalPolicy.Count > 0)
 		{
-			Logger.Write($"Supplemental policy named {GlobalVars.AppControlManagerSpecialPolicyName} is already deployed for the base policy with the BasePolicyID {basePolicyID}, skipping its deployment.");
+			Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogSupplementalPolicyAlreadyDeployed"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
 		}
 		else
 		{
-			Logger.Write($"Supplemental policy named {GlobalVars.AppControlManagerSpecialPolicyName} is not deployed for the base policy with the BasePolicyID {basePolicyID}, deploying it now.");
+			Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogSupplementalPolicyNotDeployedDeploying"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
 
 			SiPolicy.Management.ConvertXMLToBinary(savePath, null, cipPath);
 
@@ -124,7 +124,7 @@ internal static class SupplementalForSelf
 		// Save the XML to the path as XML file
 		Management.SavePolicyToFile(policyObj, savePath);
 
-		Logger.Write($"Checking the deployment status of '{GlobalVars.AppControlManagerSpecialPolicyName}' Supplemental policy");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them
 
@@ -143,7 +143,7 @@ internal static class SupplementalForSelf
 		{
 			foreach (CiPolicyInfo item in CurrentlyDeployedSupplementalPolicy)
 			{
-				Logger.Write($"Removing unsigned Supplemental policy with the ID {item.PolicyID!} and name {item.FriendlyName} because its Signed version will be deployed.");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID!, item.FriendlyName));
 				CiToolHelper.RemovePolicy(item.PolicyID!);
 			}
 		}

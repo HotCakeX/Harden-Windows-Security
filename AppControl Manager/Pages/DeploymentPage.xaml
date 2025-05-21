@@ -35,7 +35,6 @@
 
             </controls:WrapPanel>
 
-
             <InfoBar Grid.Row="1"
                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
@@ -46,7 +45,6 @@
                 </InfoBar.Content>
             </InfoBar>
 
-
             <StackPanel HorizontalAlignment="Stretch"
              Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
 
@@ -56,17 +54,16 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsExpander x:Name="IntuneDeploymentSettingsExpander"
-                     Description="Deploy the policies remotely to the Intune instead of the local system"
-                     Header="Use Intune Deployment" IsExpanded="True"
-                     HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
+                                           x:Uid="UseIntuneDeploySettingsExpander"
+                                           IsExpanded="True"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
 
                     <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}" TextWrapping="Wrap" />
 
                     <controls:SettingsExpander.Items>
 
-                        <customUI:SettingsCardV2
-                            Description="Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions."
-                            Header="Entra ID Sign In" HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}">
+                        <customUI:SettingsCardV2 x:Uid="EntraSignInSettingsCard"
+                                                 HeaderIcon="{ui:FontIcon Glyph=&#xEC27;}">
 
                             <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 
@@ -238,7 +235,6 @@
                                                             </ComboBox.HeaderTemplate>
                                                         </ComboBox>
 
-
                                                         <ComboBox
                                                             ItemsSource="{x:Bind AuthCompanionCLS.AuthenticationContextComboBoxSource}"
                                                             Margin="0,5,0,0"
@@ -378,14 +374,17 @@
 
                         </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard
-                        Description="Select the security group(s) to assign to the policy in Intune"
-                        Header="Group Assignment (Optional)"
-                        HeaderIcon="{ui:FontIcon Glyph=&#xF0B9;}" IsClickEnabled="False" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="SelectIntuneGroupsSettingsCard"
+                                               HeaderIcon="{ui:FontIcon Glyph=&#xF0B9;}"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False">
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button IsEnabled="False" x:Name="RefreshIntuneGroupsButton" Content="Refresh" Click="{x:Bind RefreshIntuneGroupsButton_Click}" />
+                                <Button IsEnabled="False"
+                                        x:Name="RefreshIntuneGroupsButton"
+                                        x:Uid="RefreshButton"
+                                        Click="{x:Bind RefreshIntuneGroupsButton_Click}" />
 
                                 <ListView SelectionMode="Multiple"
                                           ItemsSource="{x:Bind ViewModel.GroupNamesCollection, Mode=OneWay}"
@@ -410,12 +409,11 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-
-                <controls:SettingsCard
-                x:Name="DeployUnsignedXMLPolicyFilesSettingsCard"
-                Description="Browse for XML policy file(s) to deploy unsigned on the system"
-                Header="Select unsigned XML policy file(s)"
-                HeaderIcon="{ui:FontIcon Glyph=&#xE82D;}" IsClickEnabled="False" IsActionIconVisible="False">
+                <controls:SettingsCard x:Name="DeployUnsignedXMLPolicyFilesSettingsCard"
+                                       x:Uid="DeployUnsignedXMLPolicyFilesSettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE82D;}"
+                                       IsClickEnabled="False"
+                                       IsActionIconVisible="False">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -479,9 +477,9 @@
 
 
                 <controls:SettingsExpander x:Name="DeploySignedXMLPolicyFilesSettingsExpander"
-                    Description="Browse for XML policy file(s) to Sign and deploy on the system"
-                    Header="Select signed XML policy file(s)" IsExpanded="True"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}">
+                                           x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
+                                           IsExpanded="True"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -558,11 +556,11 @@
                 </controls:SettingsExpander>
 
 
-                <controls:SettingsCard
-                    x:Name="DeployCIPFilesSettingsCard"
-                    Description="Browse for CIP Binary file(s) to deploy on the system"
-                    Header="Select CIP Binary file(s)"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}" IsClickEnabled="False" IsActionIconVisible="False" >
+                <controls:SettingsCard x:Name="DeployCIPFilesSettingsCard"
+                                       x:Uid="DeployCIPFilesSettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}"
+                                       IsClickEnabled="False"
+                                       IsActionIconVisible="False" >
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -613,11 +611,10 @@
 
                 </controls:SettingsCard>
 
-
-                <controls:SettingsCard
-                    Description="Browse for XML policy file(s) to convert to CIP file(s)"
-                    Header="Select XML policy file(s)"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xF003;}" IsClickEnabled="False" IsActionIconVisible="False" >
+                <controls:SettingsCard x:Uid="ConvertXMLToBinarySettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xF003;}"
+                                       IsClickEnabled="False"
+                                       IsActionIconVisible="False" >
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 

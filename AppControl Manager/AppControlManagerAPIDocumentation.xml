@@ -1590,7 +1590,7 @@
         <member name="P:AppControlManager.AppSettings.Main.ApplicationGlobalLanguage">
             <summary>
             Selected language for the application
-            </summary>	
+            </summary>
         </member>
         <member name="P:AppControlManager.AppSettings.Main.ApplicationGlobalFlowDirection">
             <summary>
@@ -2838,6 +2838,7 @@
             <param name="StagingArea">Specifies the directory where temporary policy files are stored during processing.</param>
             <param name="deploy">Indicates whether the policy should be deployed after processing.</param>
             <exception cref="T:System.InvalidOperationException">Thrown when no XML content is found in the downloaded markdown from the Microsoft GitHub source.</exception>
+            <returns>path to the created policy.</returns>
         </member>
         <member name="M:AppControlManager.Main.BasePolicyCreator.BuildSignedAndReputable(System.String,System.Boolean,System.Nullable{System.Double},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean)">
             <summary>
@@ -3121,7 +3122,7 @@
         </member>
         <member name="P:AppControlManager.MicrosoftGraph.AuthenticationCompanion.AuthenticatedAccountsShimmerVisibility">
             <summary>
-            Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts 
+            Visibility of the Shimmer for the ListView that contains the list of the Authenticated Accounts
             </summary>
         </member>
         <member name="M:AppControlManager.MicrosoftGraph.AuthenticationCompanion.UpdateAccountDetails">
@@ -8819,6 +8820,11 @@
         <member name="M:AppControlManager.ViewModels.CreatePolicyVM.RecommendedUserModeBlockRulesCreate_Click">
             <summary>
             Event handler for creating/deploying Microsoft recommended user-mode block rules policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreatePolicyVM.OpenInPolicyEditor_RecommendedUserModeBlockRules">
+            <summary>
+            Event handler to open the created Microsoft Recommended User Mode block rules policy in the Policy Editor
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CreatePolicyVM.StrictKernelModePolicyCreateButton_Click">

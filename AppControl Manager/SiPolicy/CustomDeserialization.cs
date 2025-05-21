@@ -135,7 +135,7 @@ internal static class CustomDeserialization
 
 		if (policy.PolicyType is PolicyType.SupplementalPolicy && policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies))
 		{
-			throw new InvalidOperationException($"The policy type is {PolicyType.SupplementalPolicy} and it has {OptionType.EnabledAllowSupplementalPolicies} rule option which is invalid. Only {PolicyType.BasePolicy} can have that.");
+			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SupplementalPolicyWithInvalidRuleOption"), PolicyType.SupplementalPolicy, OptionType.EnabledAllowSupplementalPolicies, PolicyType.BasePolicy));
 		}
 
 		// Deserialize EKUs
@@ -239,12 +239,12 @@ internal static class CustomDeserialization
 				{
 					if (signingScenario.Value != 12)
 					{
-						throw new InvalidOperationException($"The policy type is {PolicyType.AppIDTaggingPolicy} but there is a Signing Scenario with the ID {signingScenario.Value} which is invalid because this policy type currently only supports User-Mode Signing Scenarios.");
+						throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
 					}
 
 					if (signingScenario.AppIDTags is null || signingScenario.AppIDTags.AppIDTag is null || signingScenario.AppIDTags.AppIDTag.Length == 0)
 					{
-						throw new InvalidOperationException($"The policy type is {PolicyType.AppIDTaggingPolicy} but the Signing Scenario doesn't have any AppIDTags defined in it.");
+						throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
 					}
 				}
 
@@ -273,7 +273,7 @@ internal static class CustomDeserialization
 		// If policy requires to be Signed
 		if (!policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy) && policy.UpdatePolicySigners.Length == 0)
 		{
-			throw new InvalidOperationException($"The policy doesn't have the {OptionType.EnabledUnsignedSystemIntegrityPolicy} indicating it needs to be signed, but no UpdatePolicySigner has been found.");
+			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));
 		}
 
 		// Deserialize CiSigners
@@ -317,7 +317,7 @@ internal static class CustomDeserialization
 
 		if (policy.Settings.Length > ushort.MaxValue)
 		{
-			throw new InvalidOperationException($"The total count of the Settings + AppID tags shouldn't be more than {ushort.MaxValue}");
+			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SettingsAndAppIDTagsCountExceeded"), ushort.MaxValue));
 		}
 
 		// Deserialize Macros
@@ -366,7 +366,7 @@ internal static class CustomDeserialization
 
 		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Length != 0)
 		{
-			throw new InvalidOperationException($"The policy type is {PolicyType.SupplementalPolicy} and it has Supplemental Policy Signers. Only Base policies can have them.");
+			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SupplementalPolicyWithSupplementalSigners"), PolicyType.SupplementalPolicy));
 		}
 
 		// If it's supposed to be a Signed Base policy

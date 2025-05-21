@@ -275,18 +275,18 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText("ID");
-		double maxWidth2 = ListViewHelper.MeasureText("Friendly Name");
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
 		double maxWidth3 = ListViewHelper.MeasureText("Hash");
-		double maxWidth4 = ListViewHelper.MeasureText("File Name");
-		double maxWidth5 = ListViewHelper.MeasureText("Internal Name");
-		double maxWidth6 = ListViewHelper.MeasureText("File Description");
-		double maxWidth7 = ListViewHelper.MeasureText("Product Name");
-		double maxWidth8 = ListViewHelper.MeasureText("File Path");
-		double maxWidth9 = ListViewHelper.MeasureText("Minimum File Version");
-		double maxWidth10 = ListViewHelper.MeasureText("Maximum File Version");
-		double maxWidth11 = ListViewHelper.MeasureText("Package Family Name");
-		double maxWidth12 = ListViewHelper.MeasureText("Package Version");
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("MinimumFileVersionHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("MaximumFileVersionHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageVersionHeader/Text"));
 		double maxWidth13 = ListViewHelper.MeasureText("App IDs");
 		double maxWidth14 = ListViewHelper.MeasureText("Type");
 
@@ -338,7 +338,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText("ID");
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IDHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText("Name");
 		double maxWidth3 = ListViewHelper.MeasureText("Cert Root");
 		double maxWidth4 = ListViewHelper.MeasureText("Cert Publisher");
@@ -1482,7 +1482,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					{
 						ContentDialogV2 dialog = new()
 						{
-							Title = "Success! ✅",
+							Title = GlobalVars.Rizz.GetString("DialogTitleSuccess"),
 							Content = new WrapPanel
 							{
 								Orientation = Orientation.Vertical,
@@ -1493,7 +1493,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 								{
 									new TextBlock
 									{
-										Text = "The CIP binary has been successfully converted to XML and the file has been saved to:",
+										Text = GlobalVars.Rizz.GetString("DialogContentCIPConvertedToXML"),
 										HorizontalAlignment = HorizontalAlignment.Center,
 										TextWrapping = TextWrapping.WrapWholeWords
 									},

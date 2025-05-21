@@ -36,13 +36,15 @@ jobs:
     steps:
 
       - name: Updating Winget
-        shell: pwsh
+        shell: powershell
         run: |
           try {
             Write-Host -Object "The version of the pre-installed Winget on the Runner:"
             Write-Host -Object (winget --version)
           }
-          catch{}
+          catch{
+          Write-Host -Object "Windows is not installed."
+          }
 
           # Retrieve the latest Winget release information
           $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
@@ -57,7 +59,7 @@ jobs:
               'Winget.msixbundle'                    = $WingetURL
               'License1.xml'                         = $WingetLicense
           }
-          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
+          $Downloads.GetEnumerator() | ForEach-Object -Process {
               Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
           }
 

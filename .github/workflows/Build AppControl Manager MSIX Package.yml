@@ -36,14 +36,14 @@ jobs:
     steps:
 
       - name: Updating Winget
-        shell: powershell
+        shell: powershell # Change to pwsh once Windows-latest starts using Server 2025 and change Winget file downloads to use -parallel
         run: |
           try {
             Write-Host -Object "The version of the pre-installed Winget on the Runner:"
             Write-Host -Object (winget --version)
           }
           catch{
-          Write-Host -Object "Windows is not installed."
+          Write-Host -Object "Winget is not installed."
           }
 
           # Retrieve the latest Winget release information
@@ -109,7 +109,7 @@ jobs:
           $global:ErrorActionPreference = 'Stop'
 
           # Update the workloads
-          # dotnet workload update
+          dotnet workload update
           # dotnet workload config --update-mode workload-set
           # dotnet workload update
 

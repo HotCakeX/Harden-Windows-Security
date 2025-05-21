@@ -166,7 +166,7 @@ public partial class App : Application
 		_ = services.AddSingleton<MDEAHPolicyCreationVM>();
 		_ = services.AddSingleton<ViewFileCertificatesVM>();
 		_ = services.AddSingleton(sp => new MainWindowVM());
-		_ = services.AddSingleton<CreatePolicyVM>();
+		_ = services.AddSingleton(sp => new CreatePolicyVM());
 		_ = services.AddSingleton<DeploymentVM>();
 		_ = services.AddSingleton<UpdateVM>();
 		_ = services.AddSingleton<ValidatePolicyVM>();

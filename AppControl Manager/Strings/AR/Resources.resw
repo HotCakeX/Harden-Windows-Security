@@ -4555,4 +4555,406 @@
   <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
     <value>الخوارزمية المحددة غير مدعومة لتوقيع سياسات التحكم في التطبيقات. إذا كنت تنوي استخدام الشهادة التي تم إنشاؤها لتوقيع التحكم في التطبيقات، فيرجى التفكير في تحديد خوارزمية أخرى.</value>
   </data>
+  <data name="CreatingAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>إنشاء نهج "السماح من مايكروسوفت" الأساسي</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء ونشر نهج "السماح من مايكروسوفت" الأساسي</value>
+</data>
+<data name="SuccessfullyCreatedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء نهج "السماح من مايكروسوفت" الأساسي</value>
+</data>
+<data name="CreatingDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>إنشاء نهج ويندوز الافتراضي الأساسي</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء ونشر نهج ويندوز الافتراضي الأساسي</value>
+</data>
+<data name="SuccessfullyCreatedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء نهج ويندوز الافتراضي الأساسي</value>
+</data>
+<data name="CreatingSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>إنشاء النهج الأساسي للملفات الموقعة وذات السمعة الجيدة</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء ونشر النهج الأساسي للملفات الموقعة وذات السمعة الجيدة</value>
+</data>
+<data name="SuccessfullyCreatedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء النهج الأساسي للملفات الموقعة وذات السمعة الجيدة</value>
+</data>
+<data name="CreatingRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>إنشاء نهج "قواعد حظر برامج التشغيل الموصى بها من مايكروسوفت"</value>
+</data>
+<data name="SuccessfullyCreatedRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء نهج "قواعد حظر برامج التشغيل الموصى بها من مايكروسوفت"</value>
+</data>
+<data name="CreatingUserModeBlockRules" xml:space="preserve">
+  <value>إنشاء قواعد حظر وضع المستخدم.</value>
+</data>
+<data name="SuccessfullyCreatedUserModeBlockRules" xml:space="preserve">
+  <value>تم بنجاح إنشاء قواعد حظر وضع المستخدم.</value>
+</data>
+<data name="CreatingPolicyFromLogsOrScans" xml:space="preserve">
+  <value>إنشاء النهج باستخدام أي سجلات أحداث متاحة أو نتائج فحص ملفات في علامات التبويب الأخرى.</value>
+</data>
+<data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
+  <value>لا توجد سجلات أو ملفات في أي شبكات بيانات لإنشاء نهج تكميلي لها.</value>
+</data>
+<data name="StagingAreaNotFound" xml:space="preserve">
+  <value>لم يتم العثور على منطقة التجهيز</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء ونشر النهج.</value>
+</data>
+<data name="SuccessfullyCreatedPolicy" xml:space="preserve">
+  <value>تم بنجاح إنشاء النهج.</value>
+</data>
+<data name="SelectedItemNotValidXmlFilePath" xml:space="preserve">
+  <value>العنصر المحدد '{0}' ليس مسار ملف XML صالحًا</value>
+</data>
+<data name="BasePolicyRedeployedInAuditMode" xml:space="preserve">
+  <value>تمت إعادة نشر النهج الأساسي في وضع التدقيق.</value>
+</data>
+<data name="ScanningNFilesFoundInSelectedDirectories" xml:space="preserve">
+  <value>جارٍ فحص {0} من الملفات الموجودة في الدلائل المحددة.</value>
+</data>
+<data name="NLogsGeneratedDuringAuditPhase" xml:space="preserve">
+  <value>تم إنشاء {0} سجل (سجلات) أثناء مرحلة التدقيق.</value>
+</data>
+<data name="DialogTitleSuccess" xml:space="preserve">
+  <value>نجاح! ✅</value>
+</data>
+<data name="DialogContentCIPConvertedToXML" xml:space="preserve">
+  <value>تم تحويل ملف CIP الثنائي بنجاح إلى XML وتم حفظ الملف في: </value>
+</data>
+<data name="NoSimulationOutputToExport" xml:space="preserve">
+  <value>لا يوجد مخرجات محاكاة لتصديرها.</value>
+</data>
+<data name="FailedToOpenRating" xml:space="preserve">
+  <value>فشل فتح صفحة التقييم في متجر مايكروسوفت.</value>
+</data>
+<data name="CurrentFileHasNEKUs" xml:space="preserve">
+  <value>الملف الحالي '{0}' يحتوي على {1} من استخدامات المفاتيح المحسنة (EKUs)</value>
+</data>
+<data name="SignerEKUsMatchedFileEKUs" xml:space="preserve">
+  <value>استخدامات المفاتيح المحسنة (EKUs) للموقّع '{0}' تطابقت مع استخدامات المفاتيح المحسنة (EKUs) للملف</value>
+</data>
+<data name="SignerIsWHQL" xml:space="preserve">
+  <value>الموقّع '{0}' هو WHQL</value>
+</data>
+<data name="FailedToGetOpusDataCurrentChain" xml:space="preserve">
+  <value>فشل في الحصول على بيانات Opus الخاصة بحزمة السلسلة الحالية</value>
+</data>
+<data name="MinimumFileVersionNullSkipping" xml:space="preserve">
+  <value>قيمة MinimumFileVersion فارغة، يتم التخطي.</value>
+</data>
+<data name="SpecificFileNameLevelIs" xml:space="preserve">
+  <value>مستوى SpecificFileNameLevel هو {0}</value>
+</data>
+<data name="SignerHadEKUsButNoMatch" xml:space="preserve">
+  <value>كان لدى الموقّع استخدامات مفاتيح محسنة (EKUs) ولكنها لم تتطابق مع استخدامات المفاتيح المحسنة (EKUs) للملف.</value>
+</data>
+<data name="ReturningNFileRulesBasedOnHashes" xml:space="preserve">
+  <value>يتم إرجاع {0} من قواعد الملفات التي تستند إلى التجزئات.</value>
+</data>
+<data name="LogCIPFileIsSigned" xml:space="preserve">
+  <value>ملف CIP الذي يتم تحويله مرة أخرى إلى XML موقّع.</value>
+</data>
+<data name="ErrorBodyOffsetInvalid" xml:space="preserve">
+  <value>إزاحة الجسم تتجاوز نهاية الملف، مما يشير إلى عدم تطابق محتمل في التنسيق أو تلف.</value>
+</data>
+<data name="ErrorUnknownFileRuleType" xml:space="preserve">
+  <value>نوع قاعدة ملف غير معروف {0}</value>
+</data>
+<data name="ErrorUnknownSettingType" xml:space="preserve">
+  <value>نوع إعداد غير معروف {0}</value>
+</data>
+<data name="ErrorExpectedV3BlockTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة كتلة V3 '3'، ولكن تم الحصول على '{0}'.</value>
+</data>
+<data name="ErrorExpectedV4BlockTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة كتلة V4 '4'، ولكن تم الحصول على '{0}'.</value>
+</data>
+<data name="ErrorExpectedV5BlockTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة كتلة V5 '5'، ولكن تم الحصول على '{0}'.</value>
+</data>
+<data name="ErrorExpectedV6BlockTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة كتلة V6 '6'، ولكن تم الحصول على '{0}'.</value>
+</data>
+<data name="ErrorExpectedV7BlockTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة كتلة V7 '7'، ولكن تم الحصول على '{0}'.</value>
+</data>
+<data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة كتلة V8 '8'، ولكن تم الحصول على '{0}'.</value>
+</data>
+<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
+  <value>كان متوقعًا علامة نهاية النهج '{0}'، ولكن تم الحصول على '{1}'.</value>
+</data>
+<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
+  <value>ملف XML '{0}' غير متوافق مع مخطط نهج CI</value>
+</data>
+<data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
+  <value>نوع النهج هو {0} ويحتوي على خيار القاعدة {1} وهو غير صالح. فقط {2} يمكن أن يحتوي على ذلك.</value>
+</data>
+<data name="AppIDTaggingPolicyInvalidSigningScenarioID" xml:space="preserve">
+  <value>نوع النهج هو {0} ولكن يوجد سيناريو توقيع بالمعرف {1} وهو غير صالح لأن نوع النهج هذا يدعم حاليًا سيناريوهات توقيع وضع المستخدم فقط.</value>
+</data>
+<data name="AppIDTaggingPolicyMissingAppIDTags" xml:space="preserve">
+  <value>نوع النهج هو {0} ولكن سيناريو التوقيع لا يحتوي على أي علامات AppIDTags محددة فيه.</value>
+</data>
+<data name="PolicyNeedsSigningButNoUpdateSigner" xml:space="preserve">
+  <value>لا يحتوي النهج على {0} مما يشير إلى أنه يحتاج إلى توقيع، ولكن لم يتم العثور على UpdatePolicySigner.</value>
+</data>
+<data name="SettingsAndAppIDTagsCountExceeded" xml:space="preserve">
+  <value>العدد الإجمالي لعلامات الإعدادات + AppID يجب ألا يزيد عن {0}</value>
+</data>
+<data name="SupplementalPolicyWithSupplementalSigners" xml:space="preserve">
+  <value>نوع النهج هو {0} ويحتوي على موقعي نهج تكميليين. فقط النهج الأساسية يمكن أن تحتوي عليها.</value>
+</data>
+<data name="ButtonContentSignOnly" xml:space="preserve">
+  <value>توقيع فقط</value>
+</data>
+<data name="ButtonContentDeploy" xml:space="preserve">
+  <value>نشر</value>
+</data>
+<data name="TeachingTipSubtitlePolicyRequiresSigning" xml:space="preserve">
+  <value>النهج المحدد يتطلب توقيعًا. يرجى استخدام صفحة 'نشر نهج التحكم في التطبيقات' لنشره كنهج موقّع.</value>
+</data>
+<data name="LogCheckingDeploymentStatusSupplemental" xml:space="preserve">
+  <value>جارٍ التحقق من حالة نشر النهج التكميلي '{0}'</value>
+</data>
+<data name="LogSupplementalPolicyAlreadyDeployed" xml:space="preserve">
+  <value>النهج التكميلي المسمى {0} تم نشره بالفعل للنهج الأساسي ذي BasePolicyID {1}، يتم تخطي نشره.</value>
+</data>
+<data name="LogSupplementalPolicyNotDeployedDeploying" xml:space="preserve">
+  <value>النهج التكميلي المسمى {0} لم يتم نشره للنهج الأساسي ذي BasePolicyID {1}، يتم نشره الآن.</value>
+</data>
+<data name="LogRemovingUnsignedSupplementalForSigned" xml:space="preserve">
+  <value>جارٍ إزالة النهج التكميلي غير الموقّع بالمعرف {0} والاسم {1} لأنه سيتم نشر نسخته الموقّعة.</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>الحالة</value>
+</data>
+<data name="IDHeader.Text" xml:space="preserve">
+    <value>معرّف</value>
+</data>
+<data name="MinimumFileVersionHeader.Text" xml:space="preserve">
+    <value>الحد الأدنى لإصدار الملف</value>
+</data>
+<data name="MaximumFileVersionHeader.Text" xml:space="preserve">
+    <value>الحد الأقصى لإصدار الملف</value>
+</data>
+<data name="PackageVersionHeader.Text" xml:space="preserve">
+    <value>إصدار الحزمة</value>
+</data>
+<data name="LoadPolicy.Text" xml:space="preserve">
+    <value>تحميل السياسة</value>
+</data>
+<data name="BrowseForPolicy.Text" xml:space="preserve">
+    <value>استعراض السياسة</value>
+</data>
+<data name="SaveTheChanged.Text" xml:space="preserve">
+    <value>حفظ التغييرات</value>
+</data>
+<data name="ClearTheData.Text" xml:space="preserve">
+    <value>مسح البيانات</value>
+</data>
+<data name="PolicyDetails.Header" xml:space="preserve">
+    <value>تفاصيل السياسة</value>
+</data>
+<data name="PolicyEditorDiamondButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض العدد الإجمالي لكل نوع قاعدة وغيرها من التفاصيل حول السياسة المحمّلة</value>
+</data>
+<data name="PolicyEditorDiamondButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض العدد الإجمالي لكل نوع قاعدة وغيرها من التفاصيل حول السياسة المحمّلة</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>اسم السياسة</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>اسم سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اسم سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اسم سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>معرّف السياسة</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>معرّف سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>معرّف سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>معرّف سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>معرّف السياسة الأساسية</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>معرّف السياسة الأساسية للسياسة المحددة للتحكم بالتطبيق</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>معرّف السياسة الأساسية للسياسة المحددة للتحكم بالتطبيق</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>معرّف السياسة الأساسية للسياسة المحددة للتحكم بالتطبيق</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.Header" xml:space="preserve">
+    <value>إصدار السياسة</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.Description" xml:space="preserve">
+    <value>إصدار سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إصدار سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إصدار سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.Header" xml:space="preserve">
+    <value>نوع السياسة</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.Description" xml:space="preserve">
+    <value>نوع سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نوع سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نوع سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.Header" xml:space="preserve">
+    <value>معرّف معلومات السياسة</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.Description" xml:space="preserve">
+    <value>معرّف معلومات سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>معرّف معلومات سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>معرّف معلومات سياسة التحكم بالتطبيق المحددة</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.Header" xml:space="preserve">
+    <value>مستوى HVCI</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.Description" xml:space="preserve">
+    <value>مستوى تكامل الشيفرة المحمية بواسطة المشرف الافتراضي (HVCI) للسياسة المحددة للتحكم بالتطبيق</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>مستوى تكامل الشيفرة المحمية بواسطة المشرف الافتراضي (HVCI) للسياسة المحددة للتحكم بالتطبيق</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>مستوى تكامل الشيفرة المحمية بواسطة المشرف الافتراضي (HVCI) للسياسة المحددة للتحكم بالتطبيق</value>
+</data>
+<data name="PolicyEditorPolicyName.PlaceholderText" xml:space="preserve">
+    <value>اسم السياسة</value>
+</data>
+<data name="PolicyEditorPolicyID.PlaceholderText" xml:space="preserve">
+    <value>معرّف السياسة</value>
+</data>
+<data name="PolicyEditorBasePolicyID.PlaceholderText" xml:space="preserve">
+    <value>معرّف السياسة الأساسية</value>
+</data>
+<data name="PolicyEditorPolicyVersion.PlaceholderText" xml:space="preserve">
+    <value>إصدار السياسة</value>
+</data>
+<data name="PolicyEditorPolicyType.PlaceholderText" xml:space="preserve">
+    <value>نوع السياسة</value>
+</data>
+<data name="PolicyEditorPolicyInfoID.PlaceholderText" xml:space="preserve">
+    <value>معرّف معلومات السياسة</value>
+</data>
+<data name="PolicyEditorHVCILevel.PlaceholderText" xml:space="preserve">
+    <value>مستوى HVCI</value>
+</data>
+<data name="EntraSignInSettingsCard.Header" xml:space="preserve">
+    <value>تسجيل الدخول إلى Entra ID</value>
+</data>
+<data name="EntraSignInSettingsCard.Description" xml:space="preserve">
+    <value>قم بتسجيل الدخول إلى المستأجر الخاص بك للسماح بالنشر عن بُعد. تأكد من أن لديك الأذونات اللازمة.</value>
+</data>
+<data name="EntraSignInSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتسجيل الدخول إلى المستأجر الخاص بك للسماح بالنشر عن بُعد. تأكد من أن لديك الأذونات اللازمة.</value>
+</data>
+<data name="EntraSignInSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتسجيل الدخول إلى المستأجر الخاص بك للسماح بالنشر عن بُعد. تأكد من أن لديك الأذونات اللازمة.</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.Header" xml:space="preserve">
+    <value>استخدام النشر عبر Intune</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.Description" xml:space="preserve">
+    <value>نشر السياسات عن بُعد باستخدام Intune بدلاً من النظام المحلي</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نشر السياسات عن بُعد باستخدام Intune بدلاً من النظام المحلي</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نشر السياسات عن بُعد باستخدام Intune بدلاً من النظام المحلي</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.Header" xml:space="preserve">
+    <value>تعيين المجموعة (اختياري)</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.Description" xml:space="preserve">
+    <value>حدد مجموعة (أو مجموعات) الأمان لتعيينها للسياسة في Intune</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد مجموعة (أو مجموعات) الأمان لتعيينها للالسياسة في Intune</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد مجموعة (أو مجموعات) الأمان لتعيينها للسياسة في Intune</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>حدد ملف(ملفات) سياسة XML الموقَّعة</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتوقيع والنشر على النظام</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتوقيع والنشر على النظام</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتوقيع والنشر على النظام</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>حدد ملف(ملفات) ثنائية CIP</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) ثنائية CIP للنشر على النظام</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) ثنائية CIP للنشر على النظام</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) ثنائية CIP للنشر على النظام</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>حدد ملف(ملفات) سياسة XML</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتحويل إلى ملفات CIP</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتحويل إلى ملفات CIP</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للتحويل إلى ملفات CIP</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+    <value>حدد ملف(ملفات) سياسة XML غير موقَّعة</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
+</data>
 </root>

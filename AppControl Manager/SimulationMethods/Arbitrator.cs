@@ -69,7 +69,7 @@ internal static class Arbitrator
 			// If the signer has any EKUs, try to match it with the file's EKU OIDs
 			if (signer.HasEKU)
 			{
-				Logger.Write($"The current file '{simulationInput.FilePath.FullName}' has {simulationInput.EKUOIDs?.Count} EKUs");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CurrentFileHasNEKUs"), simulationInput.FilePath.FullName, simulationInput.EKUOIDs?.Count));
 
 				// Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
 				// This is used for all levels, not just WHQL levels
@@ -88,23 +88,23 @@ internal static class Arbitrator
 				if (EKUsMatch)
 				{
 
-					Logger.Write($"The EKUs of the signer '{signer.Name}' matched with the file's EKUs");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("SignerEKUsMatchedFileEKUs"), signer.Name));
 
 					// If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
 					if (signer.IsWHQL)
 					{
 
-						Logger.Write($"The signer '{signer.Name}' is WHQL");
+						Logger.Write(string.Format(GlobalVars.Rizz.GetString("SignerIsWHQL"), signer.Name));
 
 						// At this point the file is definitely WHQL-Signed
 
 						// Get the WHQL chain packages by checking for any chain whose leaf certificate contains the WHQL EKU OID
 						List<ChainPackage> WHQLChainPackagesCandidates = [.. simulationInput.AllFileSigners
-							  .Where(sig => sig.LeafCertificate is not null &&
-							  sig.LeafCertificate.Certificate.Extensions
-							  .OfType<X509EnhancedKeyUsageExtension>()
-							  .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
-							  .Any(oid => oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))))];
+						  .Where(sig => sig.LeafCertificate is not null &&
+						  sig.LeafCertificate.Certificate.Extensions
+						  .OfType<X509EnhancedKeyUsageExtension>()
+						  .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
+						  .Any(oid => oid.Value is not null && oid.Value.Contains(LocalFilesScan.WHQLOid, StringComparison.OrdinalIgnoreCase))))];
 
 
 						// HashSet to store all of the Opus data from the WHQL chain packages candidates
@@ -125,7 +125,7 @@ internal static class Arbitrator
 							}
 							catch
 							{
-								Logger.Write($"Failed to get the Opus data of the current chain package");
+								Logger.Write(GlobalVars.Rizz.GetString("FailedToGetOpusDataCurrentChain"));
 							}
 
 							// If there was Opus data
@@ -184,7 +184,7 @@ internal static class Arbitrator
 
 										if (!Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion))
 										{
-											Logger.Write("MinimumFileVersion is null, skipping");
+											Logger.Write(GlobalVars.Rizz.GetString("MinimumFileVersionNullSkipping"));
 											continue;
 										}
 
@@ -208,20 +208,20 @@ internal static class Arbitrator
 												 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 												 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
 												{
-													Logger.Write($"The SpecificFileNameLevel is {keyItem}");
+													Logger.Write(string.Format(GlobalVars.Rizz.GetString("SpecificFileNameLevelIs"), keyItem));
 
 													/*
-                                                        If there was a match then assign the keyItem, which is the name of the SpecificFileNameLevel option, to the SpecificFileNameLevelMatchCriteria of the SimulationOutput
+														If there was a match then assign the keyItem, which is the name of the SpecificFileNameLevel option, to the SpecificFileNameLevelMatchCriteria of the SimulationOutput
 
-                                                        ELIGIBILITY CHECK FOR LEVELS: WHQLFilePublisher
+														ELIGIBILITY CHECK FOR LEVELS: WHQLFilePublisher
 
-                                                        CRITERIA:
-                                                        1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
-                                                        2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
-                                                        3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
-                                                        4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
-                                                        5) The signer's FileAttribRef(s) point to the same file that is currently being investigated
-                                                        */
+														CRITERIA:
+														1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
+														2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
+														3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
+														4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
+														5) The signer's FileAttribRef(s) point to the same file that is currently being investigated
+														*/
 
 													return new SimulationOutput(
 														Path.GetFileName(simulationInput.FilePath.ToString()),
@@ -248,14 +248,14 @@ internal static class Arbitrator
 								}
 
 								/*
-                                    ELIGIBILITY CHECK FOR LEVELS: WHQLPublisher
+									ELIGIBILITY CHECK FOR LEVELS: WHQLPublisher
 
-                                    CRITERIA:
-                                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
-                                    2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
-                                    3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
-                                    4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
-                                    */
+									CRITERIA:
+									1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
+									2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
+									3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
+									4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
+									*/
 
 								// If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
 								else if (OpusMatch && signer.FileAttribRef is null)
@@ -281,13 +281,13 @@ internal static class Arbitrator
 								}
 
 								/*
-                                    ELIGIBILITY CHECK FOR LEVELS: WHQL
+									ELIGIBILITY CHECK FOR LEVELS: WHQL
 
-                                    CRITERIA:
-                                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
-                                    2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
-                                    3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
-                                    */
+									CRITERIA:
+									1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
+									2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
+									3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
+									*/
 
 								else
 								{
@@ -336,7 +336,7 @@ internal static class Arbitrator
 				}
 				else
 				{
-					Logger.Write("The signer had EKUs but they didn't match with the file's EKUs");
+					Logger.Write(GlobalVars.Rizz.GetString("SignerHadEKUsButNoMatch"));
 					// If the signer has EKU but it didn't match with the file's EKU then skip the current signer
 					// as it shouldn't be used for any other levels
 					continue;
@@ -386,7 +386,7 @@ internal static class Arbitrator
 
 									if (MinimumFileVersion is null)
 									{
-										Logger.Write("MinimumFileVersion is null, skipping");
+										Logger.Write(GlobalVars.Rizz.GetString("MinimumFileVersionNullSkipping"));
 										continue;
 									}
 
@@ -444,7 +444,7 @@ internal static class Arbitrator
 											 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 											 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
 											{
-												Logger.Write($"The SpecificFileNameLevel is {keyItem}");
+												Logger.Write(string.Format(GlobalVars.Rizz.GetString("SpecificFileNameLevelIs"), keyItem));
 
 
 												// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
@@ -546,12 +546,12 @@ internal static class Arbitrator
 				}
 
 				/*
-                    ELIGIBILITY CHECK FOR LEVELS: LeafCertificate
+					ELIGIBILITY CHECK FOR LEVELS: LeafCertificate
 
-                    CRITERIA:
-                    1) The Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used) matches the TBSValue of the file's Leaf certificate certificates
-                    2) The signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
-                    */
+					CRITERIA:
+					1) The Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used) matches the TBSValue of the file's Leaf certificate certificates
+					2) The signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
+					*/
 
 				if (string.Equals(signer.CertRoot, chain.LeafCertificate?.TBSValue, StringComparison.OrdinalIgnoreCase) &&
 					string.Equals(signer.Name, chain.LeafCertificate?.SubjectCN, StringComparison.OrdinalIgnoreCase))
@@ -585,17 +585,17 @@ internal static class Arbitrator
 
 
 				/*
-                    Region ROOT CERTIFICATE ELIGIBILITY CHECK
+					Region ROOT CERTIFICATE ELIGIBILITY CHECK
 
-                    This is regardless of how many certificates exist in the current chain
+					This is regardless of how many certificates exist in the current chain
 
-                    ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
+					ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
 
-                    CRITERIA:
-                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
-                    2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
-                    3) The signer's CertPublisher matches the Root certificate's SubjectCN
-                    */
+					CRITERIA:
+					1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
+					2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
+					3) The signer's CertPublisher matches the Root certificate's SubjectCN
+					*/
 
 				if (string.Equals(signer.CertRoot, chain.RootCertificate.TBSValue, StringComparison.OrdinalIgnoreCase) &&
 				   string.Equals(signer.Name, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase) &&
@@ -616,7 +616,7 @@ internal static class Arbitrator
 
 							if (MinimumFileVersion is null)
 							{
-								Logger.Write("MinimumFileVersion is null, skipping");
+								Logger.Write(GlobalVars.Rizz.GetString("MinimumFileVersionNullSkipping"));
 								continue;
 							}
 
@@ -675,7 +675,7 @@ internal static class Arbitrator
 									 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 									 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
 									{
-										Logger.Write($"The SpecificFileNameLevel is {keyItem}");
+										Logger.Write(string.Format(GlobalVars.Rizz.GetString("SpecificFileNameLevelIs"), keyItem));
 
 										// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
 										// And break out of the loop by validating the signer as suitable for FilePublisher level
@@ -735,12 +735,12 @@ internal static class Arbitrator
 				}
 
 				/*
-                    ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate (LeafCertificate will also generate the same type of signer)
+					ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate (LeafCertificate will also generate the same type of signer)
 
-                    CRITERIA:
-                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
-                    2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
-                    */
+					CRITERIA:
+					1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
+					2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
+					*/
 
 				else if (string.Equals(signer.CertRoot, chain.RootCertificate.TBSValue, StringComparison.OrdinalIgnoreCase) &&
 					string.Equals(signer.Name, chain.RootCertificate.SubjectCN, StringComparison.OrdinalIgnoreCase))

@@ -28,6 +28,52 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class CreatePolicyVM : ViewModelBase
 {
+
+	internal CreatePolicyVM()
+	{
+		AllowMSFTInfoBar = new InfoBarSettings(
+			() => AllowMicrosoftSettingsInfoBarIsOpen, value => AllowMicrosoftSettingsInfoBarIsOpen = value,
+			() => AllowMicrosoftSettingsInfoBarMessage, value => AllowMicrosoftSettingsInfoBarMessage = value,
+			() => AllowMicrosoftSettingsInfoBarSeverity, value => AllowMicrosoftSettingsInfoBarSeverity = value,
+			() => AllowMicrosoftSettingsInfoBarIsClosable, value => AllowMicrosoftSettingsInfoBarIsClosable = value,
+			null, null);
+
+		DefaultWinInfoBar = new InfoBarSettings(
+			() => DefaultWindowsSettingsInfoBarIsOpen, value => DefaultWindowsSettingsInfoBarIsOpen = value,
+			() => DefaultWindowsSettingsInfoBarMessage, value => DefaultWindowsSettingsInfoBarMessage = value,
+			() => DefaultWindowsSettingsInfoBarSeverity, value => DefaultWindowsSettingsInfoBarSeverity = value,
+			() => DefaultWindowsSettingsInfoBarIsClosable, value => DefaultWindowsSettingsInfoBarIsClosable = value,
+			null, null);
+
+		SignedAndRepInfoBar = new InfoBarSettings(
+			() => SignedAndReputableSettingsInfoBarIsOpen, value => SignedAndReputableSettingsInfoBarIsOpen = value,
+			() => SignedAndReputableSettingsInfoBarMessage, value => SignedAndReputableSettingsInfoBarMessage = value,
+			() => SignedAndReputableSettingsInfoBarSeverity, value => SignedAndReputableSettingsInfoBarSeverity = value,
+			() => SignedAndReputableSettingsInfoBarIsClosable, value => SignedAndReputableSettingsInfoBarIsClosable = value,
+			null, null);
+
+		KernelModeBlockListInfoBar = new InfoBarSettings(
+			() => RecommendedDriverBlockRulesSettingsInfoBarIsOpen, value => RecommendedDriverBlockRulesSettingsInfoBarIsOpen = value,
+			() => RecommendedDriverBlockRulesSettingsInfoBarMessage, value => RecommendedDriverBlockRulesSettingsInfoBarMessage = value,
+			() => RecommendedDriverBlockRulesSettingsInfoBarSeverity, value => RecommendedDriverBlockRulesSettingsInfoBarSeverity = value,
+			() => RecommendedDriverBlockRulesSettingsInfoBarIsClosable, value => RecommendedDriverBlockRulesSettingsInfoBarIsClosable = value,
+			null, null);
+
+		UserModeBlockListInfoBar = new InfoBarSettings(
+			() => RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, value => RecommendedUserModeBlockRulesSettingsInfoBarIsOpen = value,
+			() => RecommendedUserModeBlockRulesSettingsInfoBarMessage, value => RecommendedUserModeBlockRulesSettingsInfoBarMessage = value,
+			() => RecommendedUserModeBlockRulesSettingsInfoBarSeverity, value => RecommendedUserModeBlockRulesSettingsInfoBarSeverity = value,
+			() => RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, value => RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = value,
+			null, null);
+
+		StrictKernelInfoBar = new InfoBarSettings(
+			() => StrictKernelModesSettingsInfoBarIsOpen, value => StrictKernelModesSettingsInfoBarIsOpen = value,
+			() => StrictKernelModesSettingsInfoBarMessage, value => StrictKernelModesSettingsInfoBarMessage = value,
+			() => StrictKernelModesSettingsInfoBarSeverity, value => StrictKernelModesSettingsInfoBarSeverity = value,
+			() => StrictKernelModesSettingsInfoBarIsClosable, value => StrictKernelModesSettingsInfoBarIsClosable = value,
+			null, null);
+	}
+
 	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 	internal EventLogUtility EventLogsUtil { get; } = App.AppHost.Services.GetRequiredService<EventLogUtility>();
 
@@ -50,6 +96,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal InfoBarSeverity AllowMicrosoftSettingsInfoBarSeverity { get; set => SP(ref field, value); }
 	internal string? AllowMicrosoftSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftSettingsIsExpanded { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings AllowMSFTInfoBar;
 
 	internal string? _policyPathAllowMicrosoft { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftLogSizeInputIsEnabled { get; set => SP(ref field, value); }
@@ -81,10 +129,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		{
 			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Collapsed;
 
-			AllowMicrosoftSettingsInfoBarIsOpen = true;
 			AllowMicrosoftSettingsInfoBarIsClosable = false;
-			AllowMicrosoftSettingsInfoBarSeverity = InfoBarSeverity.Informational;
-			AllowMicrosoftSettingsInfoBarMessage = "Creating the Allow Microsoft base policy";
+			AllowMSFTInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingAllowMicrosoftBasePolicy"));
+
 			AllowMicrosoftSettingsIsExpanded = true;
 
 			// Disable the buttons to prevent multiple clicks
@@ -120,10 +167,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				);
 			});
 		}
-		catch
+		catch (Exception ex)
 		{
 			Error = true;
-			throw;
+			AllowMSFTInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -132,17 +179,11 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			AllowMicrosoftSettingsInfoBarIsClosable = true;
 
-			AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
-
 			if (!Error)
 			{
-				AllowMicrosoftSettingsInfoBarSeverity = InfoBarSeverity.Success;
-				AllowMicrosoftSettingsInfoBarMessage = AllowMicrosoftCreateAndDeploy ? "Successfully created and deployed the Allow Microsoft base policy" : "Successfully created the Allow Microsoft base policy";
-			}
-			else
-			{
-				AllowMicrosoftSettingsInfoBarSeverity = InfoBarSeverity.Error;
-				AllowMicrosoftSettingsInfoBarMessage = "There was an error while creating the Allow Microsoft base policy";
+				AllowMicrosoftInfoBarActionButtonVisibility = Visibility.Visible;
+
+				AllowMSFTInfoBar.WriteSuccess(AllowMicrosoftCreateAndDeploy ? GlobalVars.Rizz.GetString("SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy") : GlobalVars.Rizz.GetString("SuccessfullyCreatedAllowMicrosoftBasePolicy"));
 			}
 		}
 	}
@@ -179,6 +220,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal string? DefaultWindowsSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsSettingsIsExpanded { get; set => SP(ref field, value); }
 
+	private readonly InfoBarSettings DefaultWinInfoBar;
+
 	internal bool DefaultWindowsLogSizeInputIsEnabled { get; set => SP(ref field, value); }
 
 	internal bool DefaultWindowsAudit
@@ -208,10 +251,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 		try
 		{
-			DefaultWindowsSettingsInfoBarIsOpen = true;
 			DefaultWindowsSettingsInfoBarIsClosable = false;
-			DefaultWindowsSettingsInfoBarSeverity = InfoBarSeverity.Informational;
-			DefaultWindowsSettingsInfoBarMessage = "Creating the Default Windows base policy";
+			DefaultWinInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingDefaultWindowsBasePolicy"));
+
 			DefaultWindowsSettingsIsExpanded = true;
 
 			// Disable the buttons to prevent multiple clicks
@@ -247,29 +289,22 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			});
 
 		}
-		catch
+		catch (Exception ex)
 		{
 			Error = true;
-			throw;
+			DefaultWinInfoBar.WriteError(ex);
 		}
 		finally
 		{
 			// Re-enable the buttons once the work is done
 			DefaultWindowsSectionIsEnabled = true;
 
-			DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
-
 			DefaultWindowsSettingsInfoBarIsClosable = true;
 
 			if (!Error)
 			{
-				DefaultWindowsSettingsInfoBarSeverity = InfoBarSeverity.Success;
-				DefaultWindowsSettingsInfoBarMessage = DefaultWindowsCreateAndDeploy ? "Successfully created and deployed the Default Windows base policy" : "Successfully created the Default Windows base policy";
-			}
-			else
-			{
-				DefaultWindowsSettingsInfoBarSeverity = InfoBarSeverity.Error;
-				DefaultWindowsSettingsInfoBarMessage = "There was an error while creating the Default Windows base policy";
+				DefaultWindowsInfoBarActionButtonVisibility = Visibility.Visible;
+				DefaultWinInfoBar.WriteSuccess(DefaultWindowsCreateAndDeploy ? GlobalVars.Rizz.GetString("SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy") : GlobalVars.Rizz.GetString("SuccessfullyCreatedDefaultWindowsBasePolicy"));
 			}
 		}
 	}
@@ -306,6 +341,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal string? SignedAndReputableSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool SignedAndReputableSettingsIsExpanded { get; set => SP(ref field, value); }
 
+	private readonly InfoBarSettings SignedAndRepInfoBar;
+
 	internal bool SignedAndReputableLogSizeInputIsEnabled { get; set => SP(ref field, value); }
 
 	internal bool SignedAndReputableAudit
@@ -335,10 +372,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 		try
 		{
-			SignedAndReputableSettingsInfoBarIsOpen = true;
 			SignedAndReputableSettingsInfoBarIsClosable = false;
-			SignedAndReputableSettingsInfoBarSeverity = InfoBarSeverity.Informational;
-			SignedAndReputableSettingsInfoBarMessage = "Creating the Signed and Reputable base policy";
+			SignedAndRepInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingSignedAndReputableBasePolicy"));
+
 			SignedAndReputableSettingsIsExpanded = true;
 
 			// Disable the buttons
@@ -372,10 +408,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				);
 			});
 		}
-		catch
+		catch (Exception ex)
 		{
 			Error = true;
-			throw;
+			SignedAndRepInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -383,17 +419,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			SignedAndReputableSettingsInfoBarIsClosable = true;
 
-			SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
-
 			if (!Error)
 			{
-				SignedAndReputableSettingsInfoBarSeverity = InfoBarSeverity.Success;
-				SignedAndReputableSettingsInfoBarMessage = SignedAndReputableCreateAndDeploy ? "Successfully created and deployed the Signed and Reputable base policy" : "Successfully created the Signed and Reputable base policy";
-			}
-			else
-			{
-				SignedAndReputableSettingsInfoBarSeverity = InfoBarSeverity.Error;
-				SignedAndReputableSettingsInfoBarMessage = "There was an error while creating the Signed and Reputable base policy";
+				SignedAndReputableInfoBarActionButtonVisibility = Visibility.Visible;
+				SignedAndRepInfoBar.WriteSuccess(SignedAndReputableCreateAndDeploy ? GlobalVars.Rizz.GetString("SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy") : GlobalVars.Rizz.GetString("SuccessfullyCreatedSignedAndReputableBasePolicy"));
 			}
 		}
 	}
@@ -424,6 +453,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal string? RecommendedDriverBlockRulesSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool RecommendedDriverBlockRulesSettingsIsExpanded { get; set => SP(ref field, value); }
 
+	private readonly InfoBarSettings KernelModeBlockListInfoBar;
+
 	internal bool RecommendedDriverBlockRulesCreateAndDeploy { get; set => SP(ref field, value); }
 
 	internal string? RecommendedDriverBlockRulesVersionTextBlock { get; set => SP(ref field, value); } = "N/A";
@@ -446,15 +477,12 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
-			RecommendedDriverBlockRulesSettingsInfoBarIsOpen = true;
-			RecommendedDriverBlockRulesSettingsInfoBarSeverity = InfoBarSeverity.Informational;
-			RecommendedDriverBlockRulesSettingsInfoBarMessage = "Creating the Microsoft Recommended Driver Block Rules policy";
+			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingRecommendedDriverBlockRulesPolicy"));
 
 			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
 
 			(string?, string?) results = (null, null);
 
-			// Run the background operation using captured values
 			await Task.Run(() =>
 			{
 				if (RecommendedDriverBlockRulesCreateAndDeploy)
@@ -474,30 +502,22 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		catch (Exception ex)
 		{
 			error = true;
-
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
-			RecommendedDriverBlockRulesSettingsInfoBarIsOpen = true;
-			RecommendedDriverBlockRulesSettingsInfoBarSeverity = InfoBarSeverity.Error;
-			RecommendedDriverBlockRulesSettingsInfoBarMessage = $"There was a problem creating the Microsoft Recommended Driver Block Rules policy: {ex.Message}";
-
-			throw;
+			KernelModeBlockListInfoBar.WriteError(ex);
 		}
 		finally
 		{
-			if (!error)
-			{
-				RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
-				RecommendedDriverBlockRulesSettingsInfoBarIsOpen = true;
-				RecommendedDriverBlockRulesSettingsInfoBarSeverity = InfoBarSeverity.Success;
-				RecommendedDriverBlockRulesSettingsInfoBarMessage = "Successfully created the Microsoft Recommended Driver Block Rules policy";
-			}
-
-			// Re-enable buttons
 			RecommendedDriverBlockRulesSectionIsEnabled = true;
 
-			if (!RecommendedDriverBlockRulesCreateAndDeploy && !error)
+			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
+
+			if (!error)
 			{
-				RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
+				KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedRecommendedDriverBlockRulesPolicy"));
+
+				if (!RecommendedDriverBlockRulesCreateAndDeploy)
+				{
+					RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
+				}
 			}
 		}
 	}
@@ -513,37 +533,30 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		{
 			RecommendedDriverBlockRulesSectionIsEnabled = false;
 
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
-			RecommendedDriverBlockRulesSettingsInfoBarIsOpen = true;
-			RecommendedDriverBlockRulesSettingsInfoBarSeverity = InfoBarSeverity.Informational;
-			RecommendedDriverBlockRulesSettingsInfoBarMessage = GlobalVars.Rizz.GetString("ConfiguringAutoUpdate");
-
-			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
-		}
-		catch
-		{
-			errorsOccurred = true;
-			throw;
-		}
-		finally
-		{
-			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
+			RecommendedDriverBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
 
 			// Expand the settings card to make the InfoBar visible
 			RecommendedDriverBlockRulesSettingsIsExpanded = true;
 
-			if (errorsOccurred)
-			{
-				RecommendedDriverBlockRulesSettingsInfoBarSeverity = InfoBarSeverity.Error;
-				RecommendedDriverBlockRulesSettingsInfoBarMessage = GlobalVars.Rizz.GetString("AutoUpdateError");
-			}
-			else
-			{
-				RecommendedDriverBlockRulesSettingsInfoBarSeverity = InfoBarSeverity.Success;
-				RecommendedDriverBlockRulesSettingsInfoBarMessage = GlobalVars.Rizz.GetString("AutoUpdateConfigured");
-			}
+			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = false;
+			KernelModeBlockListInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ConfiguringAutoUpdate"));
 
+			await Task.Run(BasePolicyCreator.SetAutoUpdateDriverBlockRules);
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+			KernelModeBlockListInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("AutoUpdateError"));
+		}
+		finally
+		{
 			RecommendedDriverBlockRulesSectionIsEnabled = true;
+			RecommendedDriverBlockRulesSettingsInfoBarIsClosable = true;
+
+			if (!errorsOccurred)
+			{
+				KernelModeBlockListInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("AutoUpdateConfigured"));
+			}
 		}
 	}
 
@@ -559,33 +572,77 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	#region Microsoft Recommended Block Rule
 
+	internal string? _policyPathRecommendedUserModeBlockRules { get; set => SP(ref field, value); }
+
 	internal bool RecommendedUserModeBlockRulesSectionIsEnabled { get; set => SP(ref field, value); } = true;
 
 	internal bool RecommendedUserModeBlockRulesCreateAndDeploy { get; set => SP(ref field, value); }
+
+	internal Visibility RecommendedUserModeBlockRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal bool RecommendedUserModeBlockRulesSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal bool RecommendedUserModeBlockRulesSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal InfoBarSeverity RecommendedUserModeBlockRulesSettingsInfoBarSeverity { get; set => SP(ref field, value); }
+	internal string? RecommendedUserModeBlockRulesSettingsInfoBarMessage { get; set => SP(ref field, value); }
+	internal bool RecommendedUserModeBlockRulesSettingsIsExpanded { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings UserModeBlockListInfoBar;
 
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
 	/// </summary>
 	internal async void RecommendedUserModeBlockRulesCreate_Click()
 	{
+		bool error = false;
+
 		try
 		{
+			RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			_policyPathRecommendedUserModeBlockRules = null;
+
 			// Disable the buttons
 			RecommendedUserModeBlockRulesSectionIsEnabled = false;
 
+			RecommendedUserModeBlockRulesSettingsIsExpanded = true;
+
+			RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = false;
+
+			UserModeBlockListInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingUserModeBlockRules"));
+
 			string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
 
-			// Run the background operation using captured values
 			await Task.Run(() =>
 			{
-				BasePolicyCreator.GetBlockRules(stagingArea, RecommendedUserModeBlockRulesCreateAndDeploy);
+				_policyPathRecommendedUserModeBlockRules = BasePolicyCreator.GetBlockRules(stagingArea, RecommendedUserModeBlockRulesCreateAndDeploy);
 			});
+		}
+		catch (Exception ex)
+		{
+			error = true;
+			UserModeBlockListInfoBar.WriteError(ex);
 		}
 		finally
 		{
+			RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = true;
+
 			// Re-enable buttons
 			RecommendedUserModeBlockRulesSectionIsEnabled = true;
+
+			if (!error)
+			{
+				RecommendedUserModeBlockRulesInfoBarActionButtonVisibility = Visibility.Visible;
+				UserModeBlockListInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedUserModeBlockRules"));
+			}
 		}
+	}
+
+	/// <summary>
+	/// Event handler to open the created Microsoft Recommended User Mode block rules policy in the Policy Editor
+	/// </summary>
+	internal async void OpenInPolicyEditor_RecommendedUserModeBlockRules()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathRecommendedUserModeBlockRules);
 	}
 
 	#endregion
@@ -609,25 +666,25 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal string? StrictKernelModesSettingsInfoBarMessage { get; set => SP(ref field, value); }
 	internal bool StrictKernelModesSettingsIsExpanded { get; set => SP(ref field, value); }
 
+	private readonly InfoBarSettings StrictKernelInfoBar;
+
 	/// <summary>
 	/// Event handler to prepare the system for Strict Kernel-mode policy
 	/// </summary>
 	internal async void StrictKernelModePolicyCreateButton_Click()
 	{
-		StrictKernelModeSectionIsEnabled = false;
-		StrictKernelModesSettingsInfoBarIsClosable = false;
-		StrictKernelModesSettingsInfoBarIsOpen = true;
-		StrictKernelModesSettingsIsExpanded = true;
-
-		StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
-
 		bool errorsOccurred = false;
 
 		try
 		{
-			StrictKernelModesSettingsInfoBarMessage = GlobalVars.Rizz.GetString("CreatingPolicy");
-			Logger.Write(GlobalVars.Rizz.GetString("CreatingPolicy"));
-			StrictKernelModesSettingsInfoBarSeverity = InfoBarSeverity.Informational;
+			StrictKernelModesSettingsIsExpanded = true;
+
+			StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			StrictKernelModeSectionIsEnabled = false;
+			StrictKernelModesSettingsInfoBarIsClosable = false;
+
+			StrictKernelInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPolicy"));
 
 			_policyPathStrictKernelMode = await Task.Run(() =>
 			{
@@ -638,27 +695,20 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			StrictKernelModesSettingsInfoBarSeverity = InfoBarSeverity.Error;
-
-			StrictKernelModesSettingsInfoBarMessage = GlobalVars.Rizz.GetString("PolicyCreationError") + ex.Message;
-
 			errorsOccurred = true;
-
-			throw;
+			StrictKernelInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("PolicyCreationError"));
 		}
 		finally
 		{
 			if (!errorsOccurred)
 			{
-				StrictKernelModesSettingsInfoBarSeverity = InfoBarSeverity.Success;
-				StrictKernelModesSettingsInfoBarMessage = GlobalVars.Rizz.GetString("PolicyCreatedSuccessfully");
-				Logger.Write(GlobalVars.Rizz.GetString("PolicyCreatedSuccessfully"));
+				StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
+
+				StrictKernelInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("PolicyCreatedSuccessfully"));
 			}
 
 			StrictKernelModesSettingsInfoBarIsClosable = true;
 			StrictKernelModeSectionIsEnabled = true;
-
-			StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
 		}
 	}
 

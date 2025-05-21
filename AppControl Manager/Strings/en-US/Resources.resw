@@ -1378,7 +1378,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Original File Name</value>
   </data>
   <data name="InternalNameHeader.Text" xml:space="preserve">
-    <value>InternalName</value>
+    <value>Internal Name</value>
   </data>
   <data name="FileDescriptionHeader.Text" xml:space="preserve">
     <value>File Description</value>
@@ -4554,5 +4554,407 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
     <value>The selected algorithm is not supported for signing App Control policies. If you intend to use the generated certificate for App Control signing, please consider selecting another algorithm.</value>
+  </data>
+  <data name="CreatingAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Creating the Allow Microsoft base policy</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Successfully created and deployed the Allow Microsoft base policy</value>
+</data>
+<data name="SuccessfullyCreatedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Successfully created the Allow Microsoft base policy</value>
+</data>
+<data name="CreatingDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>Creating the Default Windows base policy</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>Successfully created and deployed the Default Windows base policy</value>
+</data>
+<data name="SuccessfullyCreatedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>Successfully created the Default Windows base policy</value>
+</data>
+<data name="CreatingSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>Creating the Signed and Reputable base policy</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>Successfully created and deployed the Signed and Reputable base policy</value>
+</data>
+<data name="SuccessfullyCreatedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>Successfully created the Signed and Reputable base policy</value>
+</data>
+<data name="CreatingRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>Creating the Microsoft Recommended Driver Block Rules policy</value>
+</data>
+<data name="SuccessfullyCreatedRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>Successfully created the Microsoft Recommended Driver Block Rules policy</value>
+</data>
+<data name="CreatingUserModeBlockRules" xml:space="preserve">
+  <value>Creating the User Mode Block rules.</value>
+</data>
+<data name="SuccessfullyCreatedUserModeBlockRules" xml:space="preserve">
+  <value>Successfully created the User Mode block rules.</value>
+</data>
+<data name="CreatingPolicyFromLogsOrScans" xml:space="preserve">
+  <value>Creating the policy using any available event logs or file scan results in other tabs.</value>
+</data>
+<data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
+  <value>There are no logs or files in any data grids to create a Supplemental policy for.</value>
+</data>
+<data name="StagingAreaNotFound" xml:space="preserve">
+  <value>Staging Area wasn't found</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
+  <value>Successfully created and deployed the policy.</value>
+</data>
+<data name="SuccessfullyCreatedPolicy" xml:space="preserve">
+  <value>Successfully created the policy.</value>
+</data>
+<data name="SelectedItemNotValidXmlFilePath" xml:space="preserve">
+  <value>Selected item '{0}' is not a valid XML file path</value>
+</data>
+<data name="BasePolicyRedeployedInAuditMode" xml:space="preserve">
+  <value>The Base policy has been Re-Deployed in Audit Mode.</value>
+</data>
+<data name="ScanningNFilesFoundInSelectedDirectories" xml:space="preserve">
+  <value>Scanning {0} files found in the selected directories.</value>
+</data>
+<data name="NLogsGeneratedDuringAuditPhase" xml:space="preserve">
+  <value>{0} log(s) were generated during the Audit phase.</value>
+</data>
+<data name="DialogTitleSuccess" xml:space="preserve">
+  <value>Success! ✅</value>
+</data>
+<data name="DialogContentCIPConvertedToXML" xml:space="preserve">
+  <value>The CIP binary has been successfully converted to XML and the file has been saved to:</value>
+</data>
+<data name="NoSimulationOutputToExport" xml:space="preserve">
+  <value>There are no simulation output to export.</value>
+</data>
+<data name="FailedToOpenRating" xml:space="preserve">
+  <value>Failed to open rating page in the Microsoft Store.</value>
+</data>
+<data name="CurrentFileHasNEKUs" xml:space="preserve">
+  <value>The current file '{0}' has {1} EKUs</value>
+</data>
+<data name="SignerEKUsMatchedFileEKUs" xml:space="preserve">
+  <value>The EKUs of the signer '{0}' matched with the file's EKUs</value>
+</data>
+<data name="SignerIsWHQL" xml:space="preserve">
+  <value>The signer '{0}' is WHQL</value>
+</data>
+<data name="FailedToGetOpusDataCurrentChain" xml:space="preserve">
+  <value>Failed to get the Opus data of the current chain package</value>
+</data>
+<data name="MinimumFileVersionNullSkipping" xml:space="preserve">
+  <value>MinimumFileVersion is null, skipping.</value>
+</data>
+<data name="SpecificFileNameLevelIs" xml:space="preserve">
+  <value>The SpecificFileNameLevel is {0}</value>
+</data>
+<data name="SignerHadEKUsButNoMatch" xml:space="preserve">
+  <value>The signer had EKUs but they didn't match with the file's EKUs.</value>
+</data>
+<data name="ReturningNFileRulesBasedOnHashes" xml:space="preserve">
+  <value>Returning {0} file rules that are based on hashes.</value>
+</data>
+<data name="LogCIPFileIsSigned" xml:space="preserve">
+  <value>The CIP file being converted back to XML is signed.</value>
+</data>
+<data name="ErrorBodyOffsetInvalid" xml:space="preserve">
+  <value>The body offset is beyond the end of the file, indicating a possible format mismatch or corruption.</value>
+</data>
+<data name="ErrorUnknownFileRuleType" xml:space="preserve">
+  <value>Unknown file rule type {0}</value>
+</data>
+<data name="ErrorUnknownSettingType" xml:space="preserve">
+  <value>Unknown setting type {0}</value>
+</data>
+<data name="ErrorExpectedV3BlockTagGot" xml:space="preserve">
+  <value>Expected V3 block tag '3', got '{0}'.</value>
+</data>
+<data name="ErrorExpectedV4BlockTagGot" xml:space="preserve">
+  <value>Expected V4 block tag '4', got '{0}'.</value>
+</data>
+<data name="ErrorExpectedV5BlockTagGot" xml:space="preserve">
+  <value>Expected V5 block tag '5', got '{0}'.</value>
+</data>
+<data name="ErrorExpectedV6BlockTagGot" xml:space="preserve">
+  <value>Expected V6 block tag '6', got '{0}'.</value>
+</data>
+<data name="ErrorExpectedV7BlockTagGot" xml:space="preserve">
+  <value>Expected V7 block tag '7', got '{0}'.</value>
+</data>
+<data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
+  <value>Expected V8 block tag '8', got '{0}'.</value>
+</data>
+<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
+  <value>Expected policy end tag '{0}', got '{1}'.</value>
+</data>
+<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
+  <value>The XML file '{0}' is not compliant with the CI policy schema</value>
+</data>
+<data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
+  <value>The policy type is {0} and it has {1} rule option which is invalid. Only {2} can have that.</value>
+</data>
+<data name="AppIDTaggingPolicyInvalidSigningScenarioID" xml:space="preserve">
+  <value>The policy type is {0} but there is a Signing Scenario with the ID {1} which is invalid because this policy type currently only supports User-Mode Signing Scenarios.</value>
+</data>
+<data name="AppIDTaggingPolicyMissingAppIDTags" xml:space="preserve">
+  <value>The policy type is {0} but the Signing Scenario doesn't have any AppIDTags defined in it.</value>
+</data>
+<data name="PolicyNeedsSigningButNoUpdateSigner" xml:space="preserve">
+  <value>The policy doesn't have the {0} indicating it needs to be signed, but no UpdatePolicySigner has been found.</value>
+</data>
+<data name="SettingsAndAppIDTagsCountExceeded" xml:space="preserve">
+  <value>The total count of the Settings + AppID tags shouldn't be more than {0}</value>
+</data>
+<data name="SupplementalPolicyWithSupplementalSigners" xml:space="preserve">
+  <value>The policy type is {0} and it has Supplemental Policy Signers. Only Base policies can have them.</value>
+</data>
+<data name="ButtonContentSignOnly" xml:space="preserve">
+  <value>Sign Only</value>
+</data>
+<data name="ButtonContentDeploy" xml:space="preserve">
+  <value>Deploy</value>
+</data>
+<data name="TeachingTipSubtitlePolicyRequiresSigning" xml:space="preserve">
+  <value>The selected policy requires signing. Please use the 'Deploy App Control Policy' page to deploy it as a signed policy.</value>
+</data>
+<data name="LogCheckingDeploymentStatusSupplemental" xml:space="preserve">
+  <value>Checking the deployment status of '{0}' Supplemental policy</value>
+</data>
+<data name="LogSupplementalPolicyAlreadyDeployed" xml:space="preserve">
+  <value>Supplemental policy named {0} is already deployed for the base policy with the BasePolicyID {1}, skipping its deployment.</value>
+</data>
+<data name="LogSupplementalPolicyNotDeployedDeploying" xml:space="preserve">
+  <value>Supplemental policy named {0} is not deployed for the base policy with the BasePolicyID {1}, deploying it now.</value>
+</data>
+<data name="LogRemovingUnsignedSupplementalForSigned" xml:space="preserve">
+  <value>Removing unsigned Supplemental policy with the ID {0} and name {1} because its Signed version will be deployed.</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>Status</value>
+</data>
+  <data name="IDHeader.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="MinimumFileVersionHeader.Text" xml:space="preserve">
+    <value>Minimum File Version</value>
+  </data>
+  <data name="MaximumFileVersionHeader.Text" xml:space="preserve">
+    <value>Maximum File Version</value>
+  </data>
+  <data name="PackageVersionHeader.Text" xml:space="preserve">
+    <value>Package Version</value>
+  </data>
+  <data name="LoadPolicy.Text" xml:space="preserve">
+    <value>Load Policy</value>
+  </data>
+  <data name="BrowseForPolicy.Text" xml:space="preserve">
+    <value>Browse For Policy</value>
+  </data>
+  <data name="SaveTheChanged.Text" xml:space="preserve">
+    <value>Save The Changes</value>
+  </data>
+  <data name="ClearTheData.Text" xml:space="preserve">
+    <value>Clear The Data</value>
+  </data>
+  <data name="PolicyDetails.Header" xml:space="preserve">
+    <value>Policy Details</value>
+  </data>
+  <data name="PolicyEditorDiamondButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>View the total count of each rule type and other details about the loaded policy</value>
+  </data>
+  <data name="PolicyEditorDiamondButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View the total count of each rule type and other details about the loaded policy</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Policy Name</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>The name of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The name of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The name of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>Policy ID</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>The Policy ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Policy ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Policy ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>Base Policy ID</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>The Base Policy ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Base Policy ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorBasePolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Base Policy ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.Header" xml:space="preserve">
+    <value>Policy Version</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.Description" xml:space="preserve">
+    <value>The version of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The version of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyVersionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The version of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.Header" xml:space="preserve">
+    <value>Policy Type</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.Description" xml:space="preserve">
+    <value>The Type of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Type of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyTypeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Type of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.Header" xml:space="preserve">
+    <value>Policy Info ID</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.Description" xml:space="preserve">
+    <value>The Policy Info ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Policy Info ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Policy Info ID of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.Header" xml:space="preserve">
+    <value>HVCI Level</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.Description" xml:space="preserve">
+    <value>The Hypervisor-Protected Code Integrity Level of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Hypervisor-Protected Code Integrity Level of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorHVCILevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Hypervisor-Protected Code Integrity Level of the selected App Control policy</value>
+  </data>
+  <data name="PolicyEditorPolicyName.PlaceholderText" xml:space="preserve">
+    <value>Policy Name</value>
+  </data>
+  <data name="PolicyEditorPolicyID.PlaceholderText" xml:space="preserve">
+    <value>Policy ID</value>
+  </data>
+  <data name="PolicyEditorBasePolicyID.PlaceholderText" xml:space="preserve">
+    <value>Base Policy ID</value>
+  </data>
+  <data name="PolicyEditorPolicyVersion.PlaceholderText" xml:space="preserve">
+    <value>Policy Version</value>
+  </data>
+  <data name="PolicyEditorPolicyType.PlaceholderText" xml:space="preserve">
+    <value>Policy Type</value>
+  </data>
+  <data name="PolicyEditorPolicyInfoID.PlaceholderText" xml:space="preserve">
+    <value>Policy Info ID</value>
+  </data>
+  <data name="PolicyEditorHVCILevel.PlaceholderText" xml:space="preserve">
+    <value>HVCI Level</value>
+  </data>
+  <data name="EntraSignInSettingsCard.Header" xml:space="preserve">
+    <value>Entra ID Sign In</value>
+  </data>
+  <data name="EntraSignInSettingsCard.Description" xml:space="preserve">
+    <value>Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions.</value>
+  </data>
+  <data name="EntraSignInSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions.</value>
+  </data>
+  <data name="EntraSignInSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sign into your tenant to allow for remote deployment. Make sure you have the necessary permissions.</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.Header" xml:space="preserve">
+    <value>Use Intune Deployment</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.Description" xml:space="preserve">
+    <value>Deploy the policies remotely to the Intune instead of the local system</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deploy the policies remotely to the Intune instead of the local system</value>
+  </data>
+  <data name="UseIntuneDeploySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deploy the policies remotely to the Intune instead of the local system</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.Header" xml:space="preserve">
+    <value>Group Assignment (Optional)</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.Description" xml:space="preserve">
+    <value>Select the security group(s) to assign to the policy in Intune</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select the security group(s) to assign to the policy in Intune</value>
+  </data>
+  <data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select the security group(s) to assign to the policy in Intune</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>Select signed XML policy file(s)</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
+  </data>
+  <data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for XML policy file(s) to Sign and deploy on the system</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>Select CIP Binary file(s)</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>Browse for CIP Binary file(s) to deploy on the system</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for CIP Binary file(s) to deploy on the system</value>
+  </data>
+  <data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for CIP Binary file(s) to deploy on the system</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>Select XML policy file(s)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>Browse for XML policy file(s) to convert to CIP file(s)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for XML policy file(s) to convert to CIP file(s)</value>
+  </data>
+  <data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for XML policy file(s) to convert to CIP file(s)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+    <value>Select unsigned XML policy file(s)</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
+  </data>
+  <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
   </data>
 </root>

@@ -844,7 +844,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 		XMLFilesToConvertToCIP.Clear();
 	}
 
-
 	/// <summary>
 	/// Event handler for the settings card to toggle the button
 	/// </summary>
@@ -852,7 +851,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 	{
 		SignOnlyNoDeployToggleSwitch.IsOn = !SignOnlyNoDeployToggleSwitch.IsOn;
 
-		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? "Sign Only" : "Deploy";
+		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? GlobalVars.Rizz.GetString("ButtonContentSignOnly") : GlobalVars.Rizz.GetString("ButtonContentDeploy");
 
 		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
 	}
@@ -862,7 +861,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 	/// </summary>
 	private void SignOnlyNoDeployToggleSwitch_Toggled()
 	{
-		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? "Sign Only" : "Deploy";
+		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? GlobalVars.Rizz.GetString("ButtonContentSignOnly") : GlobalVars.Rizz.GetString("ButtonContentDeploy");
 
 		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
 	}

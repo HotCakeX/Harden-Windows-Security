@@ -4555,4 +4555,406 @@
   <data name="AlgoNotSupportedByCIWarning" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത അൽഗോരിതം ആപ്പ് കൺട്രോൾ പോളിസികൾ സൈൻ ചെയ്യുന്നതിന് പിന്തുണയ്ക്കുന്നില്ല. ആപ്പ് കൺട്രോൾ സൈനിംഗിനായി ഉണ്ടാക്കിയ സർട്ടിഫിക്കറ്റ് ഉപയോഗിക്കാൻ നിങ്ങൾ ഉദ്ദേശിക്കുന്നുണ്ടെങ്കിൽ, ദയവായി മറ്റൊരു അൽഗോരിതം തിരഞ്ഞെടുക്കുന്നത് പരിഗണിക്കുക.</value>
   </data>
+  <data name="CreatingAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Microsoft അടിസ്ഥാന പോളിസി നിർമ്മിക്കുന്നു</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Microsoft അടിസ്ഥാന പോളിസി വിജയകരമായി നിർമ്മിക്കുകയും വിന്യസിക്കുകയും ചെയ്തു</value>
+</data>
+<data name="SuccessfullyCreatedAllowMicrosoftBasePolicy" xml:space="preserve">
+  <value>Microsoft അടിസ്ഥാന പോളിസി വിജയകരമായി നിർമ്മിച്ചു</value>
+</data>
+<data name="CreatingDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>ഡിഫോൾട്ട് വിൻഡോസ് അടിസ്ഥാന പോളിസി നിർമ്മിക്കുന്നു</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>ഡിഫോൾട്ട് വിൻഡോസ് അടിസ്ഥാന പോളിസി വിജയകരമായി നിർമ്മിക്കുകയും വിന്യസിക്കുകയും ചെയ്തു</value>
+</data>
+<data name="SuccessfullyCreatedDefaultWindowsBasePolicy" xml:space="preserve">
+  <value>ഡിഫോൾട്ട് വിൻഡോസ് അടിസ്ഥാന പോളിസി വിജയകരമായി നിർമ്മിച്ചു</value>
+</data>
+<data name="CreatingSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>ഒപ്പിട്ടതും പ്രശസ്തവുമായ അടിസ്ഥാന പോളിസി നിർമ്മിക്കുന്നു</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>ഒപ്പിട്ടതും പ്രശസ്തവുമായ അടിസ്ഥാന പോളിസി വിജയകരമായി നിർമ്മിക്കുകയും വിന്യസിക്കുകയും ചെയ്തു</value>
+</data>
+<data name="SuccessfullyCreatedSignedAndReputableBasePolicy" xml:space="preserve">
+  <value>ഒപ്പിട്ടതും പ്രശസ്തവുമായ അടിസ്ഥാന പോളിസി വിജയകരമായി നിർമ്മിച്ചു</value>
+</data>
+<data name="CreatingRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>Microsoft ശുപാർശ ചെയ്യുന്ന ഡ്രൈവർ ബ്ലോക്ക് നിയമങ്ങളുടെ പോളിസി നിർമ്മിക്കുന്നു</value>
+</data>
+<data name="SuccessfullyCreatedRecommendedDriverBlockRulesPolicy" xml:space="preserve">
+  <value>Microsoft ശുപാർശ ചെയ്യുന്ന ഡ്രൈവർ ബ്ലോക്ക് നിയമങ്ങളുടെ പോളിസി വിജയകരമായി നിർമ്മിച്ചു</value>
+</data>
+<data name="CreatingUserModeBlockRules" xml:space="preserve">
+  <value>യൂസർ മോഡ് ബ്ലോക്ക് നിയമങ്ങൾ നിർമ്മിക്കുന്നു.</value>
+</data>
+<data name="SuccessfullyCreatedUserModeBlockRules" xml:space="preserve">
+  <value>യൂസർ മോഡ് ബ്ലോക്ക് നിയമങ്ങൾ വിജയകരമായി നിർമ്മിച്ചു.</value>
+</data>
+<data name="CreatingPolicyFromLogsOrScans" xml:space="preserve">
+  <value>ലഭ്യമായ ഇവന്റ് ലോഗുകളോ മറ്റ് ടാബുകളിലെ ഫയൽ സ്കാൻ ഫലങ്ങളോ ഉപയോഗിച്ച് പോളിസി നിർമ്മിക്കുന്നു.</value>
+</data>
+<data name="NoLogsOrFilesForSupplementalPolicy" xml:space="preserve">
+  <value>സപ്ലിമെന്റൽ പോളിസി നിർമ്മിക്കുന്നതിനായി ഡാറ്റാ ഗ്രിഡുകളിൽ ലോഗുകളോ ഫയലുകളോ ലഭ്യമല്ല.</value>
+</data>
+<data name="StagingAreaNotFound" xml:space="preserve">
+  <value>സ്റ്റേജിംഗ് ഏരിയ കണ്ടെത്താനായില്ല</value>
+</data>
+<data name="SuccessfullyCreatedAndDeployedPolicy" xml:space="preserve">
+  <value>പോളിസി വിജയകരമായി നിർമ്മിക്കുകയും വിന്യസിക്കുകയും ചെയ്തു.</value>
+</data>
+<data name="SuccessfullyCreatedPolicy" xml:space="preserve">
+  <value>പോളിസി വിജയകരമായി നിർമ്മിച്ചു.</value>
+</data>
+<data name="SelectedItemNotValidXmlFilePath" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത ഇനം '{0}' സാധുവായ ഒരു XML ഫയൽ പാതയല്ല</value>
+</data>
+<data name="BasePolicyRedeployedInAuditMode" xml:space="preserve">
+  <value>അടിസ്ഥാന പോളിസി ഓഡിറ്റ് മോഡിൽ വീണ്ടും വിന്യസിച്ചിരിക്കുന്നു.</value>
+</data>
+<data name="ScanningNFilesFoundInSelectedDirectories" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത ഡയറക്ടറികളിൽ കണ്ടെത്തിയ {0} ഫയലുകൾ സ്കാൻ ചെയ്യുന്നു.</value>
+</data>
+<data name="NLogsGeneratedDuringAuditPhase" xml:space="preserve">
+  <value>ഓഡിറ്റ് ഘട്ടത്തിൽ {0} ലോഗ്(കൾ) സൃഷ്ടിക്കപ്പെട്ടു.</value>
+</data>
+<data name="DialogTitleSuccess" xml:space="preserve">
+  <value>വിജയം! ✅</value>
+</data>
+<data name="DialogContentCIPConvertedToXML" xml:space="preserve">
+  <value>CIP ബൈനറി വിജയകരമായി XML-ലേക്ക് പരിവർത്തനം ചെയ്യുകയും ഫയൽ ഇവിടെ സേവ് ചെയ്യുകയും ചെയ്തിരിക്കുന്നു:</value>
+</data>
+<data name="NoSimulationOutputToExport" xml:space="preserve">
+  <value>കയറ്റുമതി ചെയ്യാൻ സിമുലേഷൻ ഔട്ട്‌പുട്ടുകളൊന്നും ലഭ്യമല്ല.</value>
+</data>
+<data name="FailedToOpenRating" xml:space="preserve">
+  <value>Microsoft സ്റ്റോറിൽ റേറ്റിംഗ് പേജ് തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="CurrentFileHasNEKUs" xml:space="preserve">
+  <value>നിലവിലെ '{0}' എന്ന ഫയലിന് {1} EKUs ഉണ്ട്</value>
+</data>
+<data name="SignerEKUsMatchedFileEKUs" xml:space="preserve">
+  <value>ഒപ്പിട്ടയാളുടെ '{0}' EKUs ഫയലിന്റെ EKUs-മായി പൊരുത്തപ്പെട്ടു</value>
+</data>
+<data name="SignerIsWHQL" xml:space="preserve">
+  <value>ഒപ്പിട്ടയാൾ '{0}' WHQL ആണ്</value>
+</data>
+<data name="FailedToGetOpusDataCurrentChain" xml:space="preserve">
+  <value>നിലവിലെ ചെയിൻ പാക്കേജിന്റെ Opus ഡാറ്റ ലഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="MinimumFileVersionNullSkipping" xml:space="preserve">
+  <value>MinimumFileVersion ലഭ്യമല്ല, ഒഴിവാക്കുന്നു.</value>
+</data>
+<data name="SpecificFileNameLevelIs" xml:space="preserve">
+  <value>SpecificFileNameLevel {0} ആണ്</value>
+</data>
+<data name="SignerHadEKUsButNoMatch" xml:space="preserve">
+  <value>ഒപ്പിട്ടയാൾക്ക് EKUs ഉണ്ടായിരുന്നു, പക്ഷേ അവ ഫയലിന്റെ EKUs-മായി പൊരുത്തപ്പെട്ടില്ല.</value>
+</data>
+<data name="ReturningNFileRulesBasedOnHashes" xml:space="preserve">
+  <value>ഹാഷുകളെ അടിസ്ഥാനമാക്കിയുള്ള {0} ഫയൽ നിയമങ്ങൾ നൽകുന്നു.</value>
+</data>
+<data name="LogCIPFileIsSigned" xml:space="preserve">
+  <value>XML-ലേക്ക് തിരികെ പരിവർത്തനം ചെയ്യുന്ന CIP ഫയൽ ഒപ്പിട്ടതാണ്.</value>
+</data>
+<data name="ErrorBodyOffsetInvalid" xml:space="preserve">
+  <value>ബോഡി ഓഫ്‌സെറ്റ് ഫയലിന്റെ അവസാനത്തിനപ്പുറമാണ്, ഇത് സാധ്യമായ ഫോർമാറ്റ് പൊരുത്തക്കേടോ കേടുപാടുകളോ സൂചിപ്പിക്കുന്നു.</value>
+</data>
+<data name="ErrorUnknownFileRuleType" xml:space="preserve">
+  <value>അജ്ഞാതമായ ഫയൽ റൂൾ ടൈപ്പ് {0}</value>
+</data>
+<data name="ErrorUnknownSettingType" xml:space="preserve">
+  <value>അജ്ഞാതമായ സെറ്റിംഗ് ടൈപ്പ് {0}</value>
+</data>
+<data name="ErrorExpectedV3BlockTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച V3 ബ്ലോക്ക് ടാഗ് '3', ലഭിച്ചത് '{0}'.</value>
+</data>
+<data name="ErrorExpectedV4BlockTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച V4 ബ്ലോക്ക് ടാഗ് '4', ലഭിച്ചത് '{0}'.</value>
+</data>
+<data name="ErrorExpectedV5BlockTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച V5 ബ്ലോക്ക് ടാഗ് '5', ലഭിച്ചത് '{0}'.</value>
+</data>
+<data name="ErrorExpectedV6BlockTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച V6 ബ്ലോക്ക് ടാഗ് '6', ലഭിച്ചത് '{0}'.</value>
+</data>
+<data name="ErrorExpectedV7BlockTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച V7 ബ്ലോക്ക് ടാഗ് '7', ലഭിച്ചത് '{0}'.</value>
+</data>
+<data name="ErrorExpectedV8BlockTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച V8 ബ്ലോക്ക് ടാഗ് '8', ലഭിച്ചത് '{0}'.</value>
+</data>
+<data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
+  <value>പ്രതീക്ഷിച്ച പോളിസി എൻഡ് ടാഗ് '{0}', ലഭിച്ചത് '{1}'.</value>
+</data>
+<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
+  <value>'{0}' എന്ന XML ഫയൽ CI പോളിസി സ്കീമയുമായി പൊരുത്തപ്പെടുന്നില്ല</value>
+</data>
+<data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
+  <value>പോളിസി ടൈപ്പ് {0} ആണ്, അതിന് {1} റൂൾ ഓപ്ഷൻ ഉണ്ട്, അത് അസാധുവാണ്. {2}-ന് മാത്രമേ അത് ഉണ്ടാകാൻ കഴിയൂ.</value>
+</data>
+<data name="AppIDTaggingPolicyInvalidSigningScenarioID" xml:space="preserve">
+  <value>പോളിസി ടൈപ്പ് {0} ആണ്, പക്ഷേ ID {1} ഉള്ള ഒരു സൈനിംഗ് സിനാരിയോ ഉണ്ട്, അത് അസാധുവാണ്, കാരണം ഈ പോളിസി ടൈപ്പ് നിലവിൽ യൂസർ-മോഡ് സൈനിംഗ് സിനാരിയോകളെ മാത്രമേ പിന്തുണയ്ക്കൂ.</value>
+</data>
+<data name="AppIDTaggingPolicyMissingAppIDTags" xml:space="preserve">
+  <value>പോളിസി ടൈപ്പ് {0} ആണ്, പക്ഷേ സൈനിംഗ് സിനാരിയോയിൽ AppIDTags ഒന്നും നിർവചിച്ചിട്ടില്ല.</value>
+</data>
+<data name="PolicyNeedsSigningButNoUpdateSigner" xml:space="preserve">
+  <value>പോളിസിയിൽ ഒപ്പിടേണ്ടതുണ്ടെന്ന് സൂചിപ്പിക്കുന്ന {0} ഇല്ല, പക്ഷേ UpdatePolicySigner ഒന്നും കണ്ടെത്തിയിട്ടില്ല.</value>
+</data>
+<data name="SettingsAndAppIDTagsCountExceeded" xml:space="preserve">
+  <value>സെറ്റിംഗ്സ് + AppID ടാഗുകളുടെ ആകെ എണ്ണം {0}-ൽ കൂടരുത്</value>
+</data>
+<data name="SupplementalPolicyWithSupplementalSigners" xml:space="preserve">
+  <value>പോളിസി ടൈപ്പ് {0} ആണ്, അതിന് സപ്ലിമെന്റൽ പോളിസി സൈനർമാരുണ്ട്. അടിസ്ഥാന പോളിസികൾക്ക് മാത്രമേ അവ ഉണ്ടാകാൻ കഴിയൂ.</value>
+</data>
+<data name="ButtonContentSignOnly" xml:space="preserve">
+  <value>ഒപ്പ് മാത്രം</value>
+</data>
+<data name="ButtonContentDeploy" xml:space="preserve">
+  <value>വിന്യസിക്കുക</value>
+</data>
+<data name="TeachingTipSubtitlePolicyRequiresSigning" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത പോളിസിക്ക് ഒപ്പിടേണ്ടതുണ്ട്. ഒപ്പിട്ട പോളിസിയായി വിന്യസിക്കാൻ ദയവായി 'ആപ്പ് കൺട്രോൾ പോളിസി വിന്യസിക്കുക' പേജ് ഉപയോഗിക്കുക.</value>
+</data>
+<data name="LogCheckingDeploymentStatusSupplemental" xml:space="preserve">
+  <value>'{0}' സപ്ലിമെന്റൽ പോളിസിയുടെ വിന്യാസ നില പരിശോധിക്കുന്നു</value>
+</data>
+<data name="LogSupplementalPolicyAlreadyDeployed" xml:space="preserve">
+  <value>{0} എന്ന് പേരുള്ള സപ്ലിമെന്റൽ പോളിസി, BasePolicyID {1} ഉള്ള അടിസ്ഥാന പോളിസിക്കായി ഇതിനകം വിന്യസിച്ചിട്ടുണ്ട്, അതിന്റെ വിന്യാസം ഒഴിവാക്കുന്നു.</value>
+</data>
+<data name="LogSupplementalPolicyNotDeployedDeploying" xml:space="preserve">
+  <value>{0} എന്ന് പേരുള്ള സപ്ലിമെന്റൽ പോളിസി, BasePolicyID {1} ഉള്ള അടിസ്ഥാന പോളിസിക്കായി വിന്യസിച്ചിട്ടില്ല, ഇപ്പോൾ അത് വിന്യസിക്കുന്നു.</value>
+</data>
+<data name="LogRemovingUnsignedSupplementalForSigned" xml:space="preserve">
+  <value>ID {0}-ഉം പേര് {1}-ഉം ഉള്ള ഒപ്പിടാത്ത സപ്ലിമെന്റൽ പോളിസി നീക്കംചെയ്യുന്നു, കാരണം അതിന്റെ ഒപ്പിട്ട പതിപ്പ് വിന്യസിക്കുന്നതാണ്.</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>നില</value>
+</data>
+<data name="IDHeader.Text" xml:space="preserve">
+    <value>ഐഡി</value>
+</data>
+<data name="MinimumFileVersionHeader.Text" xml:space="preserve">
+    <value>കുറഞ്ഞ ഫയൽ പതിപ്പ്</value>
+</data>
+<data name="MaximumFileVersionHeader.Text" xml:space="preserve">
+    <value>പരമാവധി ഫയൽ പതിപ്പ്</value>
+</data>
+<data name="PackageVersionHeader.Text" xml:space="preserve">
+    <value>പാക്കേജ് പതിപ്പ്</value>
+</data>
+<data name="LoadPolicy.Text" xml:space="preserve">
+    <value>പോളിസി ലോഡ് ചെയ്യുക</value>
+</data>
+<data name="BrowseForPolicy.Text" xml:space="preserve">
+    <value>പോളിസി തിരയുക</value>
+</data>
+<data name="SaveTheChanged.Text" xml:space="preserve">
+    <value>മാറ്റങ്ങൾ സംരക്ഷിക്കുക</value>
+</data>
+<data name="ClearTheData.Text" xml:space="preserve">
+    <value>ഡേറ്റാ ശൂന്യപ്പെടുത്തുക</value>
+</data>
+<data name="PolicyDetails.Header" xml:space="preserve">
+    <value>പോളിസി വിശദാംശങ്ങൾ</value>
+</data>
+<data name="PolicyEditorDiamondButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലോഡ് ചെയ്ത പോളിസിയിലെ ഓരോ നിയമ തരംതിലും ഉള്ള മൊത്തം എണ്ണം மற்றும் മറ്റ് വിശദാംശങ്ങൾ കാണുക</value>
+</data>
+<data name="PolicyEditorDiamondButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലോഡ് ചെയ്ത പോളിസിയിലെ ഓരോ നിയമ തരംതിലും ഉള്ള മൊത്തം എണ്ണം және മറ്റ് വിശദാംശങ്ങൾ കാണുക</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസി പേര്</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പേര്</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പേര്</value>
+</data>
+<data name="PolicyEditorPolicyNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പേര്</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.Header" xml:space="preserve">
+    <value>അടിസ്ഥാന പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ അടിസ്ഥാന പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ അടിസ്ഥാന പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorBasePolicyIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ അടിസ്ഥാന പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസി പതിപ്പ്</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പതിപ്പ്</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പതിപ്പ്</value>
+</data>
+<data name="PolicyEditorPolicyVersionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പതിപ്പ്</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസി തരം</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ തരം</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ തരം</value>
+</data>
+<data name="PolicyEditorPolicyTypeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ തരം</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.Header" xml:space="preserve">
+    <value>പോളിസി വിവര ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പോളിസി വിവര ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പോളിസി വിവര ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyInfoIDSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ പോളിസി വിവര ഐഡി</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.Header" xml:space="preserve">
+    <value>HVCI ലെവൽ</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.Description" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ ഹൈപർവൈസർ-സംരക്ഷിത കോഡ് ഇന്റഗ്രിറ്റി ലെവൽ</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ ഹൈपർവൈസർ-സംരക്ഷിത കോഡ് ഇന്റഗ്രിറ്റി ലെവൽ</value>
+</data>
+<data name="PolicyEditorHVCILevelSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പ് നിയന്ത്രണ പോളിസിയുടെ ഹൈपർവൈസർ-സംരക്ഷിത കോഡ് ഇന്റഗ്രിറ്റി ലെവൽ</value>
+</data>
+<data name="PolicyEditorPolicyName.PlaceholderText" xml:space="preserve">
+    <value>പോളിസി പേര്</value>
+</data>
+<data name="PolicyEditorPolicyID.PlaceholderText" xml:space="preserve">
+    <value>പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorBasePolicyID.PlaceholderText" xml:space="preserve">
+    <value>അടിസ്ഥാന പോളിസി ഐഡി</value>
+</data>
+<data name="PolicyEditorPolicyVersion.PlaceholderText" xml:space="preserve">
+    <value>പോളിസി പതിപ്പ്</value>
+</data>
+<data name="PolicyEditorPolicyType.PlaceholderText" xml:space="preserve">
+    <value>പോളിസി തരം</value>
+</data>
+<data name="PolicyEditorPolicyInfoID.PlaceholderText" xml:space="preserve">
+    <value>പോളിസി വിവര ഐഡി</value>
+</data>
+<data name="PolicyEditorHVCILevel.PlaceholderText" xml:space="preserve">
+    <value>HVCI ലെവൽ</value>
+</data>
+<data name="EntraSignInSettingsCard.Header" xml:space="preserve">
+    <value>Entra ID സൈൻ ഇൻ</value>
+</data>
+<data name="EntraSignInSettingsCard.Description" xml:space="preserve">
+    <value>റിമോട്ട് ഡിപ്ലോയ്മെന്റിനായി നിങ്ങളുടെ ടെനന്റിൽ സൈൻ ഇൻ ചെയ്യുക. അനുയോജ്യമായ അനുവാദങ്ങൾ നിങ്ങൾക്കുണ്ടെന്ന് ഉറപ്പാക്കുക.</value>
+</data>
+<data name="EntraSignInSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>റിമോട്ട് ഡിപ്ലോയ്മെന്റിനായി നിങ്ങളുടെ ടെനന്റിൽ സൈൻ ഇൻ ചെയ്യുക. അനുയോജ്യമായ അനുവാദങ്ങൾ നിങ്ങൾക്കുണ്ടെന്ന് ഉറപ്പാക്കുക.</value>
+</data>
+<data name="EntraSignInSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>റിമോട്ട് ഡിപ്ലോയ്മെന്റിനായി നിങ്ങളുടെ ടെനന്റിൽ സൈൻ ഇൻ ചെയ്യുക. അനുയോജ്യമായ അനുവാദങ്ങൾ നിങ്ങൾക്കുണ്ടെന്ന് ഉറപ്പാക്കുക.</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.Header" xml:space="preserve">
+    <value>Intune ഡിപ്ലോയ്മെന്റ് ഉപയോഗിക്കുക</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.Description" xml:space="preserve">
+    <value>പോളിസികൾ ലൊക്കൽ സിസ്റ്റം ഒഴിവാക്കി Intune-ൽ റിമോട്ടായി ഡിപ്ലോയ് ചെയ്യുക</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പോളിസികൾ ലൊക്കൽ സിസ്റ്റം ഒഴിവാക്കി Intune-ൽ റിമോട്ടായി ഡിപ്ലോയ് ചെയ്യുക</value>
+</data>
+<data name="UseIntuneDeploySettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പോളിസികൾ ലൊക്കൽ സിസ്റ്റം ഒഴിവാക്കി Intune-ൽ റിമോട്ടായി ഡിപ്ലോയ് ചെയ്യുക</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.Header" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് നിയോഗിക്കൽ (ഐച്ഛികം)</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.Description" xml:space="preserve">
+    <value>Intune-ൽ പോളിസിക്ക് നിയോഗിക്കാൻ സുരക്ഷാ ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Intune-ൽ പോളിസിക്ക് നിയോഗിക്കാൻ സുരക്ഷാ ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="SelectIntuneGroupsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Intune-ൽ പോളിസിക്ക് നിയോഗിക്കാൻ സുരക്ഷാ ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.Header" xml:space="preserve">
+    <value>സൈൻ ചെയ്ത XML പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ സൈൻ ചെയ്ത് ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ സൈൻ ചെയ്ത് ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeploySignedXMLPolicyFilesSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ സൈൻ ചെയ്ത് ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.Header" xml:space="preserve">
+    <value>CIP ബൈനറി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഡിപ്ലോയ് ചെയ്യാൻ CIP ബൈനറി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഡിപ്ലോയ് ചെയ്യാൻ CIP ബൈനറി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeployCIPFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഡിപ്ലോയ് ചെയ്യാൻ CIP ബൈനറി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.Header" xml:space="preserve">
+    <value>XML പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.Description" xml:space="preserve">
+    <value>CIP ഫയലുകളായി പരിവർത്തനം ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>CIP ഫയലുകളായി പരിവർത്തനം ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="ConvertXMLToBinarySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>CIP ഫയലുകളായി പരിവർത്തനം ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Header" xml:space="preserve">
+    <value>അസൈൻ ചെയ്തിട്ടില്ലാത്ത XML പോളിസി ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.Description" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+<data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
 </root>

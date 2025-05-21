@@ -627,7 +627,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 		if (!launched)
 		{
-			Logger.Write("Failed to open rating");
+			Logger.Write(GlobalVars.Rizz.GetString("FailedToOpenRating"));
 		}
 	}
 

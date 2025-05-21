@@ -353,7 +353,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		if (AllSimulationOutputs.Count is 0)
 		{
-			Logger.Write("There are no simulation output to export");
+			Logger.Write(GlobalVars.Rizz.GetString("NoSimulationOutputToExport"));
 			return;
 		}
 

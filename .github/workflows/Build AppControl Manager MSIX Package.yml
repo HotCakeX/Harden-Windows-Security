@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     # Create outputs for this job where only other job that use "needs" keyword can use them. This job itself cannot access them.
     outputs:

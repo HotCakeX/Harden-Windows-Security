@@ -36,6 +36,23 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 {
+	internal ViewCurrentPoliciesVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
+
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
 	// To store the policies displayed on the ListView
 	internal readonly ObservableCollection<CiPolicyInfo> AllPolicies = [];
 
@@ -214,6 +231,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 			CalculateColumnWidths();
 		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 		finally
 		{
 			UIElementsEnabledState = true;
@@ -384,6 +405,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 						}
 				}
 			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -618,6 +643,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				}
 			}
 		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 		finally
 		{
 			// Refresh the ListView's policies and their count
@@ -843,52 +872,60 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// </summary>
 	internal async void SearchBox_TextChanged()
 	{
-		string? searchTerm = SearchBoxTextBox?.Trim();
-
-		if (searchTerm is null)
-			return;
-
-		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
-
-		double? savedHorizontal = null;
-		if (Sv != null)
+		try
 		{
-			savedHorizontal = Sv.HorizontalOffset;
+
+			string? searchTerm = SearchBoxTextBox?.Trim();
+
+			if (searchTerm is null)
+				return;
+
+			// Get the ListView ScrollViewer info
+			ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
+
+			double? savedHorizontal = null;
+			if (Sv != null)
+			{
+				savedHorizontal = Sv.HorizontalOffset;
+			}
+
+			IEnumerable<CiPolicyInfo> filteredResults = [];
+
+			await Task.Run(() =>
+			{
+				// Perform a case-insensitive search in all relevant fields
+				filteredResults = AllPoliciesOutput.Where(p =>
+				(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.IsSystemPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(p.IsOnDisk.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(p.IsEnforced.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+				);
+			});
+
+			AllPolicies.Clear();
+
+			// Update the ObservableCollection with the filtered results
+			foreach (CiPolicyInfo item in filteredResults)
+			{
+				AllPolicies.Add(item);
+			}
+
+			// Update the policies count text
+			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+
+			if (Sv != null && savedHorizontal.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			}
 		}
-
-		IEnumerable<CiPolicyInfo> filteredResults = [];
-
-		await Task.Run(() =>
+		catch (Exception ex)
 		{
-			// Perform a case-insensitive search in all relevant fields
-			filteredResults = AllPoliciesOutput.Where(p =>
-			(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.IsSystemPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(p.IsOnDisk.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(p.IsEnforced.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			);
-		});
-
-		AllPolicies.Clear();
-
-		// Update the ObservableCollection with the filtered results
-		foreach (CiPolicyInfo item in filteredResults)
-		{
-			AllPolicies.Add(item);
-		}
-
-		// Update the policies count text
-		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
-
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			MainInfoBar.WriteError(ex);
 		}
 	}
 

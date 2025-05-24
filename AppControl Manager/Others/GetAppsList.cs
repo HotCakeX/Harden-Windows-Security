@@ -63,8 +63,8 @@ internal static class GetAppsList
 					// Create a new instance of the class that displays each app in the ListView
 					apps.Add(new PackagedAppView(
 						displayName: item.DisplayName,
-						version: $"Version: {item.Id.Version.Major}.{item.Id.Version.Minor}.{item.Id.Version.Build}.{item.Id.Version.Revision}",
-						packageFamilyName: $"PFN: {item.Id.FamilyName}",
+						version: string.Format(GlobalVars.Rizz.GetString("VersionLabelFormat"), item.Id.Version.Major, item.Id.Version.Minor, item.Id.Version.Build, item.Id.Version.Revision),
+						packageFamilyName: string.Format(GlobalVars.Rizz.GetString("PFNLabelFormat"), item.Id.FamilyName),
 						logo: logoStr,
 						packageFamilyNameActual: item.Id.FamilyName
 						));
@@ -73,11 +73,11 @@ internal static class GetAppsList
 				{
 					try
 					{
-						Logger.Write($"There was an error getting the details for the app: {item.Id.FamilyName}");
+						Logger.Write(string.Format(GlobalVars.Rizz.GetString("AppDetailsErrorMessageWithName"), item.Id.FamilyName));
 					}
 					catch
 					{
-						Logger.Write("There was an error getting the details of an app");
+						Logger.Write(GlobalVars.Rizz.GetString("AppDetailsErrorMessageGeneric"));
 					}
 					Logger.Write(ErrorWriter.FormatException(ex));
 				}

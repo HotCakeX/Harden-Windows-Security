@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.Others;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -98,13 +99,21 @@ internal sealed partial class Logs : Page
 	/// </summary>
 	private async void LogFileComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (LogFileComboBox.SelectedItem is not null)
+		try
 		{
-			string? selectedFile = LogFileComboBox.SelectedItem.ToString();
-			if (!string.IsNullOrWhiteSpace(selectedFile))
+
+			if (LogFileComboBox.SelectedItem is not null)
 			{
-				await DisplayLogContentAsync(selectedFile);
+				string? selectedFile = LogFileComboBox.SelectedItem.ToString();
+				if (!string.IsNullOrWhiteSpace(selectedFile))
+				{
+					await DisplayLogContentAsync(selectedFile);
+				}
 			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 	}
 
@@ -115,23 +124,31 @@ internal sealed partial class Logs : Page
 	/// </summary>
 	private async Task DisplayLogContentAsync(string filePath)
 	{
-		if (File.Exists(filePath))
+		try
 		{
-			// Since the logger might be writing to the file at the same time the UI is reading it, we open the file with FileShare.ReadWrite
-			// This allows concurrent read/write operations without file locking issues.
-			using FileStream stream = new(
-				filePath,
-				FileMode.Open,
-				FileAccess.Read,
-				FileShare.ReadWrite);
-			using StreamReader reader = new(stream);
-			string content = await reader.ReadToEndAsync();
 
-			// Split file content into individual lines.
-			_allLogLines = content.Split(["\r\n", "\n"], StringSplitOptions.None);
+			if (File.Exists(filePath))
+			{
+				// Since the logger might be writing to the file at the same time the UI is reading it, we open the file with FileShare.ReadWrite
+				// This allows concurrent read/write operations without file locking issues.
+				using FileStream stream = new(
+					filePath,
+					FileMode.Open,
+					FileAccess.Read,
+					FileShare.ReadWrite);
+				using StreamReader reader = new(stream);
+				string content = await reader.ReadToEndAsync();
 
-			// Update the displayed log lines (filtered by search text if applicable).
-			UpdateLogDisplay();
+				// Split file content into individual lines.
+				_allLogLines = content.Split(["\r\n", "\n"], StringSplitOptions.None);
+
+				// Update the displayed log lines (filtered by search text if applicable).
+				UpdateLogDisplay();
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 	}
 

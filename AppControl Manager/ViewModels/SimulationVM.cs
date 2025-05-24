@@ -31,6 +31,19 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SimulationVM : ViewModelBase
 {
+
+	internal SimulationVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
+
 	internal readonly ObservableCollection<SimulationOutput> SimulationOutputs = [];
 
 	// Store all outputs for searching
@@ -41,20 +54,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
 
-	internal Visibility MainInfoBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SP(ref field, value);
-	} = InfoBarSeverity.Informational;
-
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	#endregion
@@ -374,8 +376,8 @@ internal sealed partial class SimulationVM : ViewModelBase
 			{
 				// Retrieve all properties. If a property is null, use an empty string.
 				// Use a helper method to properly wrap and escape the values.
-				List<string> values = new()
-				{
+				List<string> values =
+				[
 					WrapValue(record.Path),
 					WrapValue(record.Source),
 					WrapValue(record.IsAuthorized.ToString()),
@@ -395,7 +397,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 					WrapValue(record.CertNotAfter),
 					WrapValue(record.CertTBSValue),
 					WrapValue(record.FilePath)
-				};
+				];
 
 				// Join the values with comma and add the row to our CSV builder.
 				_ = csvBuilder.AppendLine(string.Join(",", values));

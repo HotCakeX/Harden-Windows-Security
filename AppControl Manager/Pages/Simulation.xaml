@@ -32,12 +32,11 @@
 
         </controls:WrapPanel>
 
-        <InfoBar Grid.Row="1"
-         Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
-         IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-         Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-         Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-         IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+        <InfoBar Grid.Row="1"        
+                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
         <Border
             Grid.Row="2"
@@ -192,15 +191,15 @@
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <controls:RadialGauge x:Name="ScalabilityRadialGauge"
+                                <customUI:ColorRadialGaugeV2 x:Name="ScalabilityRadialGauge"
                                       StepSize="1"
                                       TickSpacing="2"
                                       ScaleWidth="12"
-                                      NeedleWidth="5"
-                                      NeedleLength="80"
+                                      NeedleWidth="0"
+                                      NeedleLength="0"
                                       TickLength="8"
                                       TickWidth="0"
-                                      ScalePadding="0"
+                                      ScalePadding="5"
                                       TickPadding="24"
                                       Width="200"
                                       Maximum="120"

@@ -20,6 +20,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -30,8 +31,15 @@
             <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates" />
         </controls:WrapPanel>
 
+        <InfoBar Grid.Row="1"
+                 Margin="15"
+                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
         <StackPanel HorizontalAlignment="Stretch"
-                      Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
+                      Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
 
             <win:StackPanel.ChildrenTransitions>
                 <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -51,7 +59,7 @@
 
         </StackPanel>
 
-        <controls:WrapPanel Margin="15" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
+        <controls:WrapPanel Margin="15" Grid.Row="3" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
 
             <TextBox Width="300" x:Uid="CertificatesSearchBox" Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
 
@@ -59,7 +67,7 @@
 
         <customUI:ListViewV2 x:Name="FileCertificatesListView"
           RegistryKey="View_File_Certificates"
-          Grid.Row="3"
+          Grid.Row="4"
           ItemsSource="{x:Bind ViewModel.FileCertificates, Mode=OneWay}"
           SelectionMode="Single">
 

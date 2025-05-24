@@ -76,13 +76,20 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 	/// </summary>
 	private async void LightUp1()
 	{
-		PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
-		ViewModel.SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+		try
+		{
+			PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
+			ViewModel.SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 
-		await LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
+			await LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
 
-		// Expand the settings expander when user selects a policy
-		PolicyRuleExpander.IsExpanded = true;
+			// Expand the settings expander when user selects a policy
+			PolicyRuleExpander.IsExpanded = true;
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
 	}
 
 	#endregion
@@ -139,17 +146,25 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 	/// </summary>
 	private async void PickPolicyFileButton_Click()
 	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrWhiteSpace(selectedFile))
+		try
 		{
-			ViewModel.SelectedFilePath = selectedFile;
 
-			// Expand the settings expander when user selects a policy
-			PolicyRuleExpander.IsExpanded = true;
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-			// Load the policy options from the XML and update the UI
-			await LoadPolicyOptionsFromXML(selectedFile);
+			if (!string.IsNullOrWhiteSpace(selectedFile))
+			{
+				ViewModel.SelectedFilePath = selectedFile;
+
+				// Expand the settings expander when user selects a policy
+				PolicyRuleExpander.IsExpanded = true;
+
+				// Load the policy options from the XML and update the UI
+				await LoadPolicyOptionsFromXML(selectedFile);
+			}
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -159,34 +174,40 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 	/// <param name="filePath"></param>
 	private async Task LoadPolicyOptionsFromXML(string? filePath)
 	{
-
-		SiPolicy.SiPolicy policyObj = null!;
-
-		await Task.Run(() =>
+		try
 		{
-			policyObj = Management.Initialize(filePath, null);
-		});
+			SiPolicy.SiPolicy policyObj = null!;
 
-		// All the Policy OptionTypes in the selected XML file
-		IEnumerable<OptionType> policyRules = policyObj.Rules.Select(x => x.Item);
-
-		// Iterate through UI checkboxes and update their state
-		foreach (var item in PolicyRuleExpander.Items)
-		{
-			if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox)
+			await Task.Run(() =>
 			{
-				// Get the tag of the checkbox
-				string key = checkBox.Tag.ToString()!;
+				policyObj = Management.Initialize(filePath, null);
+			});
 
-				if (policyRules.Contains(CustomDeserialization.ConvertStringToOptionType(key)))
+			// All the Policy OptionTypes in the selected XML file
+			IEnumerable<OptionType> policyRules = policyObj.Rules.Select(x => x.Item);
+
+			// Iterate through UI checkboxes and update their state
+			foreach (var item in PolicyRuleExpander.Items)
+			{
+				if (item is SettingsCard settingsCard && settingsCard.Content is CheckBox checkBox)
 				{
-					checkBox.IsChecked = true;
-				}
-				else
-				{
-					checkBox.IsChecked = false;
+					// Get the tag of the checkbox
+					string key = checkBox.Tag.ToString()!;
+
+					if (policyRules.Contains(CustomDeserialization.ConvertStringToOptionType(key)))
+					{
+						checkBox.IsChecked = true;
+					}
+					else
+					{
+						checkBox.IsChecked = false;
+					}
 				}
 			}
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -247,6 +268,10 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 				});
 			}
 		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
 		finally
 		{
 			ManageButtonStates(true);
@@ -284,6 +309,10 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 			// Refresh the UI check boxes
 			await LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -371,6 +400,10 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 				MainTeachingTip.Subtitle = GlobalVars.Rizz.GetString("SelectPolicyFileBeforeRetrievingOptions");
 				return;
 			}
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
 		}
 		finally
 		{

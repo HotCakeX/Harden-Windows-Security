@@ -19,6 +19,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
@@ -29,7 +30,14 @@
 
             </controls:WrapPanel>
 
-            <customUI:ButtonV2 Grid.Row="1" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="{x:Bind PickPolicyFileButton_Click}"
+            <InfoBar Grid.Row="1"
+                Margin="10,0,10,15"
+                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
+            <customUI:ButtonV2 Grid.Row="2" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="{x:Bind PickPolicyFileButton_Click}"
                      HorizontalAlignment="Center"
                      x:Uid="PickPolicyFileButton">
 
@@ -67,7 +75,7 @@
 
             </customUI:ButtonV2>
 
-            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,20,0,0">
+            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,20,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />

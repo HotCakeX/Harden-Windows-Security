@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
   <Publisher>CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189</Publisher>
   <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
@@ -366,6 +366,8 @@
       <ReservedName>AppControl Manager</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
-  <AccountPackageIdentityNames />
+  <AccountPackageIdentityNames>
+    <MainPackageIdentityName>VioletHansen.HardenWindowsSecurity</MainPackageIdentityName>
+  </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://devcenterapi.dce.mp.microsoft.com/dashboard/Application?appId=9PNG1JDDTGP8" />
 </StoreAssociation>

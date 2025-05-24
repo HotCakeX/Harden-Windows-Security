@@ -37,14 +37,14 @@ internal static class NewFilePathRules
 
 		if (data.Count is 0)
 		{
-			Logger.Write($"NewFilePathRules: no FilePath rules detected to create allow rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoFilePathRulesDetectedAllowMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("FilePathRulesToAddMessage"), data.Count, xmlFilePath));
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
@@ -57,7 +57,7 @@ internal static class NewFilePathRules
 			// Create a new Allow FilePath rule
 			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newFileRule.SetAttribute("ID", allowRuleID);
-			newFileRule.SetAttribute("FriendlyName", "File Path Rule Type");
+			newFileRule.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("FilePathRuleTypeFriendlyName"));
 			newFileRule.SetAttribute("MinimumFileVersion", item.MinimumFileVersion);
 			newFileRule.SetAttribute("FilePath", item.FilePath);
 			// Add the new node to the FileRules node
@@ -73,7 +73,7 @@ internal static class NewFilePathRules
 			}
 			else
 			{
-				Logger.Write($"The following file is Kernel-Mode driver that doesn't support FilePath rules: {item.FilePath}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("KernelModeFilePathRuleWarningMessage"), item.FilePath));
 			}
 		}
 
@@ -92,14 +92,14 @@ internal static class NewFilePathRules
 
 		if (data.Count is 0)
 		{
-			Logger.Write($"NewFilePathRules: no FilePath rules detected to create deny rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoFilePathRulesDetectedDenyMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewFilePathRules: There are {data.Count} FilePath rules to be added to the XML file '{xmlFilePath}'");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("FilePathRulesToAddMessage"), data.Count, xmlFilePath));
 
 		// Loop through each item and create a new FilePath rule for it
 		foreach (FilePathCreator item in data)
@@ -112,7 +112,7 @@ internal static class NewFilePathRules
 			// Create a new Deny FilePath rule
 			XmlElement newFileRule = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newFileRule.SetAttribute("ID", denyRuleID);
-			newFileRule.SetAttribute("FriendlyName", "File Path Rule Type");
+			newFileRule.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("FilePathRuleTypeFriendlyName"));
 			newFileRule.SetAttribute("FilePath", item.FilePath);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
@@ -127,7 +127,7 @@ internal static class NewFilePathRules
 			}
 			else
 			{
-				Logger.Write($"The following file is Kernel-Mode driver that doesn't support FilePath rules: {item.FilePath}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("KernelModeFilePathRuleWarningMessage"), item.FilePath));
 			}
 		}
 

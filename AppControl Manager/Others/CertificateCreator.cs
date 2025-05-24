@@ -142,7 +142,7 @@ internal static class CertificateGenerator
 		// Code Signing
 		request.CertificateExtensions.Add(
 			new X509EnhancedKeyUsageExtension(
-				[new Oid("1.3.6.1.5.5.7.3.3")],
+				[new Oid(Signing.Structure.CodeSigningOID)],
 				false)
 			);
 
@@ -257,6 +257,16 @@ internal static class CertificateGenerator
 		DeleteCertificateFromAllStores(subjectName, StoreLocation.LocalMachine);
 	}
 
+	// List of all known certificate store names
+	private static readonly string[] AllStoreNames =
+	[
+			"My", // Personal / Certificates
+            "Root", // Trusted Root Certification Authorities / Certificates
+            "CA", // Intermediate Certification Authorities / Certificates
+            "AuthRoot", // Third-Party Root Certification Authorities / Certificates
+            "TrustedPeople", // Trusted People
+            "TrustedPublisher" // Trusted Publishers
+	];
 
 	/// <summary>
 	/// Deletes the certificate
@@ -265,22 +275,9 @@ internal static class CertificateGenerator
 	/// <param name="storeLocation"></param>
 	private static void DeleteCertificateFromAllStores(string subjectName, StoreLocation storeLocation)
 	{
-		// List of all known certificate store names
-		string[] allStoreNames =
-		[
-				"My", // Personal / Certificates
-                "Root", // Trusted Root Certification Authorities / Certificates
-                "CA", // Intermediate Certification Authorities / Certificates
-                "AuthRoot", // Third-Party Root Certification Authorities / Certificates
-                "TrustedPeople", // Trusted People
-                "TrustedPublisher" // Trusted Publishers
-            ];
-
-
 		// Iterate through all specified store names
-		foreach (string storeName in allStoreNames)
+		foreach (string storeName in AllStoreNames)
 		{
-
 			using X509Store store = new(storeName, storeLocation);
 			// MaxAllowed is necessary otherwise we'd get access denied error
 			store.Open(OpenFlags.MaxAllowed | OpenFlags.IncludeArchived | OpenFlags.OpenExistingOnly);
@@ -300,7 +297,6 @@ internal static class CertificateGenerator
 			}
 
 			store.Close();
-
 		}
 	}
 

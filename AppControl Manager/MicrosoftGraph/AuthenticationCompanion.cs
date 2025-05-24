@@ -324,9 +324,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			_InfoBar.WriteError(ex, string.Format(
-				GlobalVars.Rizz.GetString("ErrorSigningIntoMSGraphMessage"),
-				ex.Message));
+			_InfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorSigningIntoMSGraphMessage"));
 		}
 		finally
 		{

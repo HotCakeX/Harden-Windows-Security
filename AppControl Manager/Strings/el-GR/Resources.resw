@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
@@ -1182,9 +1182,6 @@
   </data>
   <data name="SelectedApps" xml:space="preserve">
     <value>Επιλεγμένες Εφαρμογές: </value>
-  </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Επιτυχής δημιουργία της πολιτικής Απαγόρευσης</value>
@@ -3467,7 +3464,7 @@
     <value>{0} αρχείο(α) καταγραφής δημιουργήθηκαν κατά τη φάση του Ελέγχου</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση του συστήματος: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση του συστήματος: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Επιτυχής σάρωση του συστήματος για συμβάντα</value>
@@ -3494,7 +3491,7 @@
     <value>Σάρωση {0} αρχείων</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Επιτυχής σάρωση του συστήματος για οδηγούς</value>
@@ -3545,7 +3542,7 @@
     <value>Μετατροπή {0} σε CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε πρόβλημα κατά τη μετατροπή των αρχείων XML σε CIP: {0}</value>
+    <value>Παρουσιάστηκε πρόβλημα κατά τη μετατροπή των αρχείων XML σε CIP: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Επιτυχής μετατροπή όλων των επιλεγμένων αρχείων XML σε δυαδικά CIP</value>
@@ -3554,7 +3551,7 @@
     <value>Σάρωση των αρχείων καταγραφής συμβάντων...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των αρχείων καταγραφής: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των αρχείων καταγραφής: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Η σάρωση ολοκληρώθηκε. Βρέθηκαν {0} αρχεία καταγραφής.</value>
@@ -3599,7 +3596,7 @@
     <value>Δεν παρέχθηκε GUID Βασικής Πολιτικής για να χρησιμοποιηθεί ως BasePolicyID της Συμπληρωματικής πολιτικής.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την επεξεργασία των αρχείων καταγραφής: {0}.</value>
+    <value>Παρουσιάστηκε σφάλμα κατά την επεξεργασία των αρχείων καταγραφής: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Επιτυχής επεξεργασία των αρχείων καταγραφής και συμπερίληψή τους στην πολιτική.</value>
@@ -3617,7 +3614,7 @@
     <value>Εκτέλεση της Προσομοίωσης</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε πρόβλημα κατά την προσομοίωση: {0}</value>
+    <value>Παρουσιάστηκε πρόβλημα κατά την προσομοίωση: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Η προσομοίωση ολοκληρώθηκε επιτυχώς.</value>
@@ -3632,7 +3629,7 @@
     <value>Φόρτωση της πολιτικής</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε πρόβλημα κατά τη φόρτωση του επιλεγμένου αρχείου πολιτικής: {0}</value>
+    <value>Παρουσιάστηκε πρόβλημα κατά τη φόρτωση του επιλεγμένου αρχείου πολιτικής: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Επιτυχής φόρτωση της επιλεγμένης πολιτικής</value>
@@ -4055,7 +4052,7 @@
     <value>Η σύνδεση στο MSGraph ακυρώθηκε από τον χρήστη</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σύνδεση στο MSGraph: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σύνδεση στο MSGraph: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>Το ερώτημα MDE Advanced Hunting ολοκληρώθηκε με επιτυχία.</value>
@@ -4301,7 +4298,7 @@
     <value>Δεν εντοπίστηκαν αποτελέσματα στα επιλεγμένα CSV αρχεία καταγραφής MDE Advanced Hunting.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των επιλεγμένων CSV αρχείων καταγραφής MDE Advanced Hunting: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των επιλεγμένων CSV αρχείων καταγραφής MDE Advanced Hunting: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Η σάρωση των επιλεγμένων CSV αρχείων καταγραφής MDE Advanced Hunting ολοκληρώθηκε με επιτυχία.</value>
@@ -4322,7 +4319,7 @@
     <value>Δεν επιλέχθηκε αρχείο πολιτικής για σύνδεση της συμπληρωματικής πολιτικής.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία της συμπληρωματικής πολιτικής: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία της συμπληρωματικής πολιτικής: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Ανάκτηση δεδομένων Microsoft Defender for Endpoint Advanced Hunting</value>
@@ -4343,7 +4340,7 @@
     <value>Δεν βρέθηκαν αρχεία καταγραφής που να επιδέχονται ενέργειας μεταξύ των ανακτηθέντων δεδομένων για δημιουργία συμπληρωματικής πολιτικής.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την ανάκτηση των αρχείων καταγραφής MDE Advanced Hunting από το MSGraph: {0}</value>
+    <value>Παρουσιάστηκε σφάλμα κατά την ανάκτηση των αρχείων καταγραφής MDE Advanced Hunting από το MSGraph: </value>
   </data>
   <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Προσθήκη αρχείων καταγραφής στην επιλεγμένη πολιτική</value>
@@ -4957,4 +4954,319 @@
   <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζήτηση για αρχεία XML πολιτικής προς ανάπτυξη χωρίς υπογραφή στο σύστημα</value>
   </data>
+   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>Το τμήμα ονόματος θέματος είναι κενό.</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>Δεν βρέθηκαν πιστοποιητικά στον χώρο αποθήκευσης {0}\{1}.</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>Αναζήτηση {0} πιστοποιητικών στον χώρο αποθήκευσης {1}\{2} για τμήμα ονόματος θέματος '{3}' (πραγματική αναζήτηση CN: '{4}')...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>Βρέθηκε πιστοποιητικό που αντιστοιχεί στα κριτήρια θέματος: {0} ( بصمة الإبهام: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>Αλγόριθμος Υπογραφής: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>Το πιστοποιητικό διαθέτει EKU υπογραφής κώδικα.</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>Το πιστοποιητικό ΔΕΝ διαθέτει EKU υπογραφής κώδικα.</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>Βρέθηκε κατάλληλο πιστοποιητικό υπογραφής κώδικα: {0} στον χώρο αποθήκευσης {1}\{2} ( بصمة الإبهام: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>Προειδοποίηση: Κρυπτογραφικό σφάλμα κατά την πρόσβαση στον χώρο αποθήκευσης πιστοποιητικών {0} στη θέση {1}: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>Προειδοποίηση: Γενικό σφάλμα κατά την πρόσβαση στον χώρο αποθήκευσης πιστοποιητικών {0} στη θέση {1}: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>Δεν βρέθηκε κατάλληλο πιστοποιητικό υπογραφής κώδικα με τμήμα ονόματος θέματος '{0}', ιδιωτικό κλειδί και EKU υπογραφής κώδικα στους ελεγμένους χώρους αποθήκευσης.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>Ο OID '{0}' ('{1}') του αλγορίθμου υπογραφής πιστοποιητικού δεν υποστηρίζεται για αυτόματη ανίχνευση OID αλγορίθμου κατακερματισμού για CryptSignMessage.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>Ο OID '{0}' ('{1}') του αλγορίθμου υπογραφής πιστοποιητικού δεν υποστηρίζεται για αυτόματη ανίχνευση ALG_ID για SignerSignEx3.</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>Το πιστοποιητικό πρέπει να διαθέτει ιδιωτικό κλειδί.</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>Η υπογραφή PKCS #7 (ενσωματωμένο περιεχόμενο, συμπεριλαμβάνεται πιστοποιητικό) γράφτηκε στο {0}</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>Η SignerSignEx3 απέτυχε με HRESULT: 0x{0:X}</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT).</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND).</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - Ένα ή περισσότερα ορίσματα δεν είναι έγκυρα).</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>Σφάλμα Win32 κατά την υπογραφή αρχείου (Κωδικός: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>Εκκίνηση εφαρμογής, έκδοση χρόνου εκτέλεσης .NET: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>Εκτελείται άλλη παρουσία του AppControl Manager. Αυτό είναι απλώς ένα ενημερωτικό αρχείο καταγραφής.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>Εντοπίστηκε ενεργοποίηση αρχείου</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>Η εφαρμογή εκκινήθηκε μέσω ενεργοποίησης αρχείου αλλά τα ορίσματα δεν περιείχαν αντικείμενα αρχείου</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>Η εφαρμογή εκκινήθηκε μέσω ενεργοποίησης αρχείου αλλά χωρίς ορίσματα ενεργοποίησης αρχείου</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>Ο χρήστης ακύρωσε την προτροπή UAC.</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>Απαιτήθηκε αίτημα ανύψωσης δικαιωμάτων για την επεξεργασία του επιλεγμένου αρχείου, αλλά απορρίφθηκε από τον χρήστη. Έξοδος από την εφαρμογή.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>Το αίτημα ανύψωσης δικαιωμάτων απορρίφθηκε από τον χρήστη</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>Η εφαρμογή εκκινήθηκε με ενεργοποίηση αρχείου για το ακόλουθο αρχείο: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>Παρουσιάστηκε σφάλμα κατά την εκκίνηση του Επεξεργαστή Πολιτικής με το επιλεγμένο αρχείο: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>Παρουσιάστηκε σφάλμα προγράμματος κατά την αποθήκευση του μεγέθους παραθύρου κατά το κλείσιμο της εφαρμογής: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>Παρουσιάστηκε σφάλμα</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>Παρουσιάστηκε ένα μη αναμενόμενο σφάλμα: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>Ρύθμιση μεγέθους αρχείου καταγραφής ακεραιότητας κώδικα</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>Έκδοση: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>PFN: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>Παρουσιάστηκε σφάλμα κατά τη λήψη των λεπτομερειών για την εφαρμογή: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>Παρουσιάστηκε σφάλμα κατά τη λήψη των λεπτομερειών μιας εφαρμογής</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>Η παρεχόμενη συμβολοσειρά '{0}' δεν είναι έγκυρη μορφή GUID.</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>Το επιλεγμένο αρχείο πολιτικής XML είναι μια Συμπληρωματική πολιτική, αλλά το BasePolicyID και το PolicyID του είναι ίδια, υποδεικνύοντας ότι πρόκειται για μια Βασική πολιτική. Αλλαγή τύπου.</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>Το επιλεγμένο αρχείο πολιτικής XML είναι μια Βασική πολιτική, αλλά το BasePolicyID και το PolicyID του δεν είναι ίδια, υποδεικνύοντας ότι πρόκειται για μια Συμπληρωματική πολιτική. Αλλαγή τύπου.</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>Η πολιτική ρυθμίστηκε επιτυχώς στη θέση '{0}'. Τώρα έχει τον Τύπο '{1}', BasePolicyID '{2}' και PolicyID '{3}'.</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>Η έκδοση του αρχείου πολιτικής στη θέση '{0}' ορίστηκε επιτυχώς από '{1}' σε '{2}'.</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Έναρξη της διαδικασίας διαχωρισμού δεδομένων.</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Χρήση μόνο επιπέδου Κατακερματισμού.</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Χρήση επιπέδων Εκδότη -> Κατακερματισμού.</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Χρήση επιπέδων Εκδότη Αρχείου -> Εκδότη -> Κατακερματισμού.</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Μεταβίβαση κανόνα Εκδότη στον πίνακα κατακερματισμού για το αρχείο: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Κανόνες Εκδότη Αρχείου.</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Κανόνες Εκδότη.</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Κανόνες Κατακερματισμού.</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Κανόνες Διαδρομής Αρχείου.</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Κανόνες Διαδρομής Αρχείου με Μπαλαντέρ.</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Κανόνες PFN.</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων Εκδότη Αρχείου.</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Ο κατακερματισμός TBS του ενδιάμεσου πιστοποιητικού είναι κενός για το αρχείο: {0}, χρησιμοποιείται αντ' αυτού ο κατακερματισμός TBS του πιστοποιητικού φύλλου</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων Εκδότη.</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων μη υπογεγραμμένου κατακερματισμού.</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Μία ή περισσότερες απαραίτητες ιδιότητες είναι null ή κενές στα hashData.</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων Διαδρομής Αρχείου</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων Διαδρομής Αρχείου με Μπαλαντέρ</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων Διαδρομής Αρχείου βάσει Προσαρμοσμένου Μοτίβου</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων PFN</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Η διαδικασία ολοκληρώθηκε.</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>Δεν ήταν δυνατό το άνοιγμα του αρχείου {0}. Σφάλμα: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>Η GetFileSizeFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>Η CreateFileMappingFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>Η CreateFileMappingAlreadyExists για το αρχείο {0} με σφάλμα {1}</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>Η MapViewOfFileFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>Η ImageNtHeaderFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>Η ImageDirectoryEntryToDataExFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>Η UnmapViewOfFileFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>Δεν ήταν δυνατό το κλείσιμο της λαβής χάρτη για το αρχείο {0} με σφάλμα {1}</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>Δεν ήταν δυνατό το κλείσιμο της λαβής αρχείου για το αρχείο {0} με σφάλμα {1}</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>Ένα από τα αρχεία XML έχει περισσότερους από 1 Υπογράφοντες με το ίδιο ID `{0}`</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>Το HVCI στο αρχείο πολιτικής '{0}' ορίστηκε επιτυχώς σε Strict.</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>Η Λίστα Γρήγορης Πρόσβασης δεν υποστηρίζεται.</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>Συγχώνευση των κανόνων</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>Επαναφορά του μεγέθους παραθύρου σε αυτό που ήταν όταν έκλεισε η εφαρμογή. Ύψος: {0} - Πλάτος: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>Η BCryptOpenAlgorithmProvider απέτυχε με κωδικό σφάλματος: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>Η CryptCATOpen απέτυχε με κωδικό σφάλματος: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>Η BCryptCloseAlgorithmProvider απέτυχε με κωδικό σφάλματος: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>Δεν ήταν δυνατή η αποσειριοποίηση της λίστας εξαιρέσεων κανόνων ASR JSON, η οποία ήταν η εξής: {0} - Σφάλμα: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν Κατακερματισμοί για τη δημιουργία κανόνων επιτρεπτής λειτουργίας.</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>Υπάρχουν {0} κανόνες Κατακερματισμού που πρέπει να προστεθούν στο αρχείο XML '{1}'</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>Κατακερματισμός Sha256 για: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>Κατακερματισμός Sha1 για: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνα Κατακερματισμού για αρχείο Λειτουργίας Κέρνελ: {0}. Το αρχείο Λειτουργίας Κέρνελ πρέπει να είναι υπογεγραμμένο!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν Κατακερματισμοί για τη δημιουργία κανόνων άρνησης.</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν κανόνες Διαδρομής Αρχείου για τη δημιουργία κανόνων επιτρεπτής λειτουργίας.</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>Υπάρχουν {0} κανόνες Διαδρομής Αρχείου που πρέπει να προστεθούν στο αρχείο XML '{1}'</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>Τύπος Κανόνα Διαδρομής Αρχείου</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>Το ακόλουθο αρχείο είναι πρόγραμμα οδήγησης Λειτουργίας Κέρνελ που δεν υποστηρίζει κανόνες Διαδρομής Αρχείου: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν κανόνες Διαδρομής Αρχείου για τη δημιουργία κανόνων άρνησης.</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν υπογράφοντες Εκδότη Αρχείου για τη δημιουργία κανόνων επιτρεπτής λειτουργίας.</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>Υπάρχουν {0} Υπογράφοντες Εκδότη Αρχείου που πρέπει να προστεθούν στο αρχείο XML</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>Τύπος Κανόνα Εκδότη Αρχείου</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν υπογράφοντες Εκδότη Αρχείου για τη δημιουργία κανόνων άρνησης.</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν Ονόματα Οικογένειας Πακέτων για τη δημιουργία κανόνων επιτρεπτής λειτουργίας.</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>Να επιτρέπεται η Εφαρμογή σε Πακέτο βάσει του Ονόματος Οικογένειάς της</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν Ονόματα Οικογένειας Πακέτων για τη δημιουργία κανόνων άρνησης.</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>Άρνηση Εφαρμογής σε Πακέτο βάσει του Ονόματος Οικογένειάς της</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν υπογράφοντες Εκδότη για τη δημιουργία κανόνων επιτρεπτής λειτουργίας.</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>Υπάρχουν {0} Υπογράφοντες Εκδότη που πρέπει να προστεθούν στο αρχείο XML '{1}'</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>δεν εντοπίστηκαν υπογράφοντες Εκδότη για τη δημιουργία κανόνων άρνησης.</value>
+</data>
 </root>

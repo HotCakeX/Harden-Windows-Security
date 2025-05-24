@@ -25,12 +25,49 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
+
+	internal SettingsVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+
+		// Populate the ComboBox's ItemsSource collection
+		LoadLanguages();
+	}
+
+	private void LoadLanguages()
+	{
+		LanguageOptions.Add(new LanguageOption("English", "ms-appx:///Assets/CountryFlags/usa-240.png"));
+		LanguageOptions.Add(new LanguageOption("עברית", "ms-appx:///Assets/CountryFlags/israel-240.png"));
+		LanguageOptions.Add(new LanguageOption("Ελληνικά", "ms-appx:///Assets/CountryFlags/greece-240.png"));
+		LanguageOptions.Add(new LanguageOption("हिंदी", "ms-appx:///Assets/CountryFlags/india-240.png"));
+		LanguageOptions.Add(new LanguageOption("Polski", "ms-appx:///Assets/CountryFlags/poland-240.png"));
+		LanguageOptions.Add(new LanguageOption("العربية", "ms-appx:///Assets/CountryFlags/saudi-arabia-240.png"));
+		LanguageOptions.Add(new LanguageOption("Español", "ms-appx:///Assets/CountryFlags/mexico-240.png"));
+		LanguageOptions.Add(new LanguageOption("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
+	}
+
+	/// <summary>
+	/// The main InfoBar for the Settings VM.
+	/// </summary>
+	internal readonly InfoBarSettings MainInfoBar;
+
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
 	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
 
 	internal bool IsElevated => App.IsElevated;
@@ -89,8 +126,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ "ar", 5 },
 		{ "es", 6 },
 		{ "ml", 7 }
-
 	};
+
 	private static readonly Dictionary<int, string> SupportedLanguagesReverse = new()
 	{
 		{ 0, "en-US" },
@@ -124,6 +161,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 			}
 		}
 	} = SupportedLanguages.TryGetValue(App.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
+
+	/// <summary>
+	/// Language Selection ComboBox ItemsSource
+	/// </summary>
+	internal ObservableCollection<LanguageOption> LanguageOptions = [];
 
 	private static readonly Dictionary<string, int> AppThemes = new(StringComparer.OrdinalIgnoreCase)
 	{
@@ -229,13 +271,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal void EditButton_SignedPolicyPath_Click()
 	{
 		_ = UserConfiguration.Set(SignedPolicyPath: SignedPolicyPathTextBox);
-		Logger.Write($"Edited SignedPolicyPathTextBox to {SignedPolicyPathTextBox}");
 	}
 
 	internal void ClearButton_SignedPolicyPath_Click()
 	{
 		UserConfiguration.Remove(SignedPolicyPath: true);
-		Logger.Write("Cleared SignedPolicyPath");
 		SignedPolicyPathTextBox = null;
 	}
 
@@ -251,13 +291,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal void EditButton_UnsignedPolicyPath_Click()
 	{
 		_ = UserConfiguration.Set(UnsignedPolicyPath: UnsignedPolicyPathTextBox);
-		Logger.Write($"Edited UnsignedPolicyPath to {UnsignedPolicyPathTextBox}");
 	}
 
 	internal void ClearButton_UnsignedPolicyPath_Click()
 	{
 		UserConfiguration.Remove(UnsignedPolicyPath: true);
-		Logger.Write("Cleared UnsignedPolicyPath");
 		UnsignedPolicyPathTextBox = null;
 	}
 
@@ -310,20 +348,27 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	private async Task FetchLatestCertificateCNsPrivate()
 	{
-		_InitialFetchComplete = true;
-
-		IEnumerable<string> certCNs = await Task.Run(CertCNFetcher.GetCertCNs);
-
-		CertCommonNames.Clear();
-		CertCommonNamesList.Clear();
-
-		foreach (string item in certCNs)
+		try
 		{
-			CertCommonNames.Add(item);
-			CertCommonNamesList.Add(item);
-		}
+			_InitialFetchComplete = true;
 
-		CertCNAutoSuggestBoxIsSuggestionListOpen = true;
+			IEnumerable<string> certCNs = await Task.Run(CertCNFetcher.GetCertCNs);
+
+			CertCommonNames.Clear();
+			CertCommonNamesList.Clear();
+
+			foreach (string item in certCNs)
+			{
+				CertCommonNames.Add(item);
+				CertCommonNamesList.Add(item);
+			}
+
+			CertCNAutoSuggestBoxIsSuggestionListOpen = true;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 	}
 
 	/// <summary>
@@ -331,7 +376,14 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	internal async void FetchLatestCertificateCNs()
 	{
-		await FetchLatestCertificateCNsPrivate();
+		try
+		{
+			await FetchLatestCertificateCNsPrivate();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 	}
 
 	/// <summary>
@@ -340,14 +392,21 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	internal async void CertificateCommonNameAutoSuggestBox_GotFocus()
 	{
-		if (!_InitialFetchComplete)
+		try
 		{
-			_InitialFetchComplete = true;
+			if (!_InitialFetchComplete)
+			{
+				_InitialFetchComplete = true;
 
-			await FetchLatestCertificateCNsPrivate();
+				await FetchLatestCertificateCNsPrivate();
+			}
+
+			CertCNAutoSuggestBoxIsSuggestionListOpen = true;
 		}
-
-		CertCNAutoSuggestBoxIsSuggestionListOpen = true;
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 	}
 
 	/// <summary>
@@ -372,13 +431,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal void EditButton_CertificateCommonName_Click()
 	{
 		_ = UserConfiguration.Set(CertificateCommonName: CertCNsAutoSuggestBoxText);
-		Logger.Write($"Edited CertificateCommonName to {CertCNsAutoSuggestBoxText}");
 	}
 
 	internal void ClearButton_CertificateCommonName_Click()
 	{
 		UserConfiguration.Remove(CertificateCommonName: true);
-		Logger.Write("Cleared CertificateCommonName");
 		CertCNsAutoSuggestBoxText = null;
 	}
 
@@ -389,13 +446,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal void EditButton_CertificatePath_Click()
 	{
 		_ = UserConfiguration.Set(CertificatePath: CertificatePathTextBox);
-		Logger.Write($"Edited CertificatePath to {CertificatePathTextBox}");
 	}
 
 	internal void ClearButton_CertificatePath_Click()
 	{
 		UserConfiguration.Remove(CertificatePath: true);
-		Logger.Write("Cleared CertificatePath");
 		CertificatePathTextBox = null;
 	}
 

@@ -167,12 +167,7 @@ internal sealed partial class Simulation : Page
 	{
 		if (xmlFilePath is null || !File.Exists(xmlFilePath))
 		{
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SelectExistingXmlPolicyFileMessage");
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
-			ViewModel.MainInfoBarIsClosable = true;
-
+			ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectExistingXmlPolicyFileMessage"));
 			return;
 		}
 
@@ -187,11 +182,9 @@ internal sealed partial class Simulation : Page
 			BeginSimulationButton.IsEnabled = false;
 			ScalabilityRadialGauge.IsEnabled = false;
 
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("PerformingSimulationMessage");
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
+
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("PerformingSimulationMessage"));
 
 			// Reset the progress bar value back to 0 if it was set from previous runs
 			SimulationProgressRing.Value = 0;
@@ -232,29 +225,14 @@ internal sealed partial class Simulation : Page
 		catch (NoValidFilesSelectedException ex)
 		{
 			error = true;
-
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = ex.Message;
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
-			ViewModel.MainInfoBarIsClosable = true;
+			ViewModel.MainInfoBar.WriteWarning(ex.Message);
 
 			return;
 		}
 		catch (Exception ex)
 		{
 			error = true;
-
-			ViewModel.MainInfoBarVisibility = Visibility.Visible;
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = string.Format(
-				GlobalVars.Rizz.GetString("ErrorDuringSimulationMessage"),
-				ex.Message
-			);
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarIsClosable = true;
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorDuringSimulationMessage"));
 		}
 		finally
 		{
@@ -263,12 +241,10 @@ internal sealed partial class Simulation : Page
 
 			if (!error)
 			{
-				ViewModel.MainInfoBarVisibility = Visibility.Visible;
-				ViewModel.MainInfoBarIsOpen = true;
-				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SimulationCompletedSuccessfullyMessage");
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarIsClosable = true;
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SimulationCompletedSuccessfullyMessage"));
 			}
+
+			ViewModel.MainInfoBarIsClosable = true;
 		}
 	}
 

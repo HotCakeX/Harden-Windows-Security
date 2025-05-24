@@ -51,10 +51,12 @@
 
             <ProgressRing x:Name="ScanLogsProgressRing" Visibility="Collapsed" IsActive="False"/>
 
-            <SelectorBar x:Name="MenuSelectorBar" SelectionChanged="MenuSelectorBar_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <SelectorBarItem x:Name="SelectorBarItemMain" Text="Local" IsSelected="True"/>
-                <SelectorBarItem x:Name="SelectorBarItemCloud" Text="Cloud"/>
-                <SelectorBarItem x:Name="SelectorBarItemCreate" Text="Create"/>
+            <SelectorBar HorizontalAlignment="Left"
+                         SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+                         VerticalAlignment="Center">
+                <SelectorBarItem Text="Local" IsSelected="True"/>
+                <SelectorBarItem Text="Cloud"/>
+                <SelectorBarItem Text="Create"/>
             </SelectorBar>
 
             <TextBox x:Uid="TotalLogsTextBlock"
@@ -68,17 +70,17 @@
 
             <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date"/>
 
-
         </controls:WrapPanel>
 
-        <Border Grid.Row="3" Visibility="{x:Bind IsLocalSelected, Mode=OneWay}"
+        <Border Grid.Row="3" Visibility="{x:Bind ViewModel.LocalVisibility, Mode=OneWay}"
             Margin="0,10,0,10"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                 <!-- Scan MDE Advanced Hunting button -->
-                <Button x:Name="ScanLogs" IsEnabled="False" ToolTipService.ToolTip="Once you select MDE Advanced Hunting logs, you can use this button to scan them and display their results in the grid below" Style="{StaticResource AccentButtonStyle}" Click="ScanLogs_Click" >
+                <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        ToolTipService.ToolTip="Once you select MDE Advanced Hunting logs, you can use this button to scan them and display their results in the grid below" Style="{StaticResource AccentButtonStyle}" Click="ScanLogs_Click" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEE6F;" />
@@ -88,18 +90,19 @@
                     </Button.Content>
                 </Button>
 
-                <customUI:ButtonV2 x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="{x:Bind BrowseForLogs_Click}">
+                <customUI:ButtonV2 ToolTipService.ToolTip="Browse for Advanced Hunting Logs"
+                                   Click="{x:Bind ViewModel.BrowseForLogs_Click}">
 
                     <customUI:ButtonV2.Flyout>
                         <Flyout x:Name="BrowseForLogs_Flyout">
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="BrowseForLogs_Flyout_Clear_Click" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForLogs_Flyout_Clear_Click}" />
 
                                 <TextBlock Text="View the log files you selected." TextWrapping="WrapWholeWords" />
 
-                                <TextBox x:Name="BrowseForLogs_SelectedFilesTextBox"
+                                <TextBox Text="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}"
                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                     MinWidth="400" IsReadOnly="True" />
 
@@ -121,7 +124,7 @@
         </Border>
 
 
-        <Border Grid.Row="3" Visibility="{x:Bind IsCloudSelected, Mode=OneWay}"
+        <Border Grid.Row="3" Visibility="{x:Bind ViewModel.CloudVisibility, Mode=OneWay}"
               Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
@@ -221,7 +224,7 @@
                                     </controls:SegmentedItem>
                                 </controls:Segmented>
 
-                                <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl1}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                                     <controls:Case Value="Active">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
@@ -283,6 +286,7 @@
                                             <ComboBox
                                                 ItemsSource="{x:Bind AuthCompanionCLS.SignInMethodsComboBoxSource}"
                                                 Margin="0,5,0,0"
+                                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                                 HorizontalAlignment="Center"
                                                 x:Uid="SignInMethodsComboBox"
                                                 SelectedItem="{x:Bind AuthCompanionCLS.SignInMethodsComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -436,7 +440,10 @@
                 </Button>
 
 
-                <Button Content="Device Name" x:Name="MSGraphDeviceNameButton" ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
+                <Button Content="Device Name"
+                        x:Name="MSGraphDeviceNameButton"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
                     <Button.Flyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>
@@ -454,13 +461,16 @@
                 </Button>
 
 
-                <Button Content="Retrieve The Logs" x:Name="RetrieveTheLogsButton" IsEnabled="False" Click="{x:Bind RetrieveTheLogsButton_Click}" ToolTipService.ToolTip="Retrieve the logs by submitting an Advanced Hunting query to MDE"/>
+                <Button Content="Retrieve The Logs" x:Name="RetrieveTheLogsButton"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind RetrieveTheLogsButton_Click}"
+                        ToolTipService.ToolTip="Retrieve the logs by submitting an Advanced Hunting query to MDE"/>
 
                 <Button Content="Query Examples" ToolTipService.ToolTip="You can copy the following queries and use them in the MDE Advanced Hunting portal to generate standard logs that are compatible with the AppControl Manager, or you can use the built-in functionality of the application to automatically retrieve the logs and process them">
                     <Button.Flyout>
                         <Flyout>
 
-                            <ListView ItemsSource="{x:Bind AdvancedHuntingQueries, Mode=OneWay}"
+                            <ListView ItemsSource="{x:Bind ViewModel.AdvancedHuntingQueries}"
                                     SelectionMode="None">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -508,7 +518,7 @@
         </Border>
 
 
-        <Border Grid.Row="3" Visibility="{x:Bind IsCreateSelected, Mode=OneWay}"
+        <Border Grid.Row="3" Visibility="{x:Bind ViewModel.CreateVisibility, Mode=OneWay}"
             Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
@@ -556,7 +566,7 @@
                                     <controls:SegmentedItem Content="Base GUID"
                                             Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                 </controls:Segmented>
-                                <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl}" HorizontalAlignment="Center">
+                                <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 
                                     <controls:Case Value="AddToPolicy">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
@@ -741,7 +751,7 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>

@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Linq;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -38,20 +37,12 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 	private CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
-	/// <summary>
-	/// Constructor for the CreateDenyPolicyFilesAndFoldersScanResults class. Initializes components, maintains navigation
-	/// state, and sets the DataContext.
-	/// </summary>
 	internal CreateDenyPolicyFilesAndFoldersScanResults()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
 	}
-
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -82,7 +73,6 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 		}
 	}
 
-
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -91,7 +81,7 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox.Text,
+					ViewModel.FilesAndFoldersScanResultsSearchTextBox,
 					ViewModel.filesAndFoldersScanResultsList,
 					ViewModel.FilesAndFoldersScanResults,
 					ViewModel.SortStateFilesAndFolders,
@@ -99,59 +89,6 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 					regKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
 			}
 		}
-	}
-
-
-	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		ApplyFilters();
-	}
-
-	/// <summary>
-	/// Applies the date and search filters to the data grid
-	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-			allFileIdentities: ViewModel.filesAndFoldersScanResultsList.AsEnumerable(),
-			filteredCollection: ViewModel.FilesAndFoldersScanResults,
-			searchText: SearchBox.Text,
-			datePicker: null,
-			regKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults
-		);
-		ViewModel.UpdateTotalFiles();
-	}
-
-	/// <summary>
-	/// Event handler for the Clear Data button
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ClearDataButton_Click(object sender, RoutedEventArgs e)
-	{
-		ViewModel.FilesAndFoldersScanResults.Clear();
-		ViewModel.filesAndFoldersScanResultsList.Clear();
-
-		ViewModel.UpdateTotalFiles(true);
-	}
-
-	/// <summary>
-	/// Selects all of the displayed rows on the ListView
-	/// </summary>
-	private void SelectAll_Click()
-	{
-		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FilesAndFoldersScanResults);
-	}
-
-	/// <summary>
-	/// De-selects all of the displayed rows on the ListView
-	/// </summary>
-	private void DeSelectAll_Click()
-	{
-		FileIdentitiesListView.SelectedItems.Clear();
 	}
 
 	/// <summary>

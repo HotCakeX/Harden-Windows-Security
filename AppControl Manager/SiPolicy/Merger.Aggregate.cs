@@ -308,7 +308,7 @@ internal static class Factory
 			{
 				if (!signerDictionary.TryAdd(signer.ID, signer))
 				{
-					Logger.Write($"One of the XML files has more than 1 Signer with the same ID `{signer.ID}`");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("DuplicateSignerIdMessage"), signer.ID));
 				}
 			}
 

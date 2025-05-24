@@ -17,10 +17,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.MicrosoftGraph;
@@ -41,19 +39,14 @@ namespace AppControlManager.Pages;
 /// DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
 /// user interactions for file selection and deployment status updates.
 /// </summary>
-internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INotifyPropertyChanged
+internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 {
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-
 	private ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private DeploymentVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<DeploymentVM>();
 	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 
-
 	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
-
 
 	/// <summary>
 	/// When online features are enabled, this method will enable the relevant buttons and performs extra necessary actions
@@ -186,9 +179,8 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.Rizz.GetString("UnsignedXMLFiles");
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingXMLFiles") + XMLFiles.Count + GlobalVars.Rizz.GetString("UnsignedXMLFiles"));
+
 			ViewModel.MainInfoBarIsClosable = false;
 
 			MainProgressRing.Visibility = Visibility.Visible;
@@ -219,7 +211,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'";
+						ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingXMLFile") + file + "'");
 					});
 
 					// Convert the XML file to CIP
@@ -247,22 +239,16 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 				}
 			});
 		}
-
-		catch
+		catch (Exception ex)
 		{
 			errorsOccurred = true;
-
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentError");
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("DeploymentError"));
 		}
 		finally
 		{
 			if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentSuccess");
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("DeploymentSuccess"));
 
 				// Clear the lists at the end if no errors occurred
 				XMLFiles.Clear();
@@ -335,10 +321,9 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
 
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles");
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
+
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingXMLFiles") + SignedXMLFiles.Count + GlobalVars.Rizz.GetString("SignedXMLFiles"));
 
 			MainProgressRing.Visibility = Visibility.Visible;
 
@@ -354,9 +339,8 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						ViewModel.MainInfoBarMessage = (SignOnlyNoDeployToggleSwitchStatus ? "Currently Signing XML file:" : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'";
+						ViewModel.MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitchStatus ? "Currently Signing XML file:" : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'");
 					});
-
 
 					// Add certificate's details to the policy
 					SiPolicy.SiPolicy policyObject = AddSigningDetails.Add(file, CertPath);
@@ -415,22 +399,16 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 				}
 			});
 		}
-
-		catch
+		catch (Exception ex)
 		{
 			errorsOccurred = true;
-
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentError");
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("DeploymentError"));
 		}
 		finally
 		{
 			if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarMessage = SignOnlyNoDeployToggleSwitchStatus ? "Successfully created signed CIP files for all of the selected XML files." : GlobalVars.Rizz.GetString("SignedDeploymentSuccess");
+				ViewModel.MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitchStatus ? "Successfully created signed CIP files for all of the selected XML files." : GlobalVars.Rizz.GetString("SignedDeploymentSuccess"));
 
 				// Clear the lists at the end if no errors occurred
 				SignedXMLFiles.Clear();
@@ -469,11 +447,9 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 			DeployUnsignedXMLButton.IsEnabled = false;
 			DeployCIPButton.IsEnabled = false;
 			DeploySignedXMLButton.IsEnabled = false;
-
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingXMLFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles");
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
+
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingXMLFiles") + CIPFiles.Count + GlobalVars.Rizz.GetString("CIPFiles"));
 
 			MainProgressRing.Visibility = Visibility.Visible;
 
@@ -484,7 +460,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 				{
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeployingCIPFile") + file + "'";
+						ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingCIPFile") + file + "'");
 					});
 
 					string randomPolicyID = Guid.CreateVersion7().ToString().ToUpperInvariant();
@@ -502,22 +478,16 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 				}
 			});
 		}
-
-		catch
+		catch (Exception ex)
 		{
 			errorsOccurred = true;
-
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("DeploymentError");
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("DeploymentError"));
 		}
 		finally
 		{
 			if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("CIPDeploymentSuccess");
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("CIPDeploymentSuccess"));
 
 				// Clear the list at the end if no errors occurred
 				CIPFiles.Clear();
@@ -540,7 +510,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 	/// </summary>
 	private void BrowseForXMLPolicyFilesButton_Click()
 	{
-
 		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 		if (selectedFiles is { Count: > 0 })
@@ -652,6 +621,10 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 				ViewModel.GroupNamesCollection.Add(new IntuneGroupItemListView(item.Key, item.Value));
 			}
 		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
 		finally
 		{
 			RefreshIntuneGroupsButton.IsEnabled = true;
@@ -668,68 +641,73 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 	/// <returns>This method does not return a value.</returns>
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
-		// ID(s) of the groups to assign the policy to
-		List<string> groupIDs = [];
-
-		await DispatcherQueue.EnqueueAsync(() =>
+		try
 		{
-			foreach (var item in IntuneGroupsListView.SelectedItems)
+
+			// ID(s) of the groups to assign the policy to
+			List<string> groupIDs = [];
+
+			await DispatcherQueue.EnqueueAsync(() =>
 			{
-				// Get the group name
-				IntuneGroupItemListView _item = (IntuneGroupItemListView)item;
-
-				groupIDs.Add(_item.GroupID);
-			}
-		});
-
-		// Name of the policy that will be uploaded
-		string? policyName = null;
-
-		// The description text for the Intune portal
-		// It will contain all of the information related to the policy
-		string descriptionText = null!;
-
-		await Task.Run(() =>
-		{
-			if (xmlFile is not null)
-			{
-
-				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
-
-				// Finding the policy name in the settings
-				Setting? nameSetting = policyObj.Settings.FirstOrDefault(x =>
-					string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase));
-
-				if (nameSetting is not null)
+				foreach (var item in IntuneGroupsListView.SelectedItems)
 				{
-					policyName = nameSetting.Value.Item.ToString();
+					// Get the group name
+					IntuneGroupItemListView _item = (IntuneGroupItemListView)item;
+
+					groupIDs.Add(_item.GroupID);
+				}
+			});
+
+			// Name of the policy that will be uploaded
+			string? policyName = null;
+
+			// The description text for the Intune portal
+			// It will contain all of the information related to the policy
+			string descriptionText = null!;
+
+			await Task.Run(() =>
+			{
+				if (xmlFile is not null)
+				{
+					SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
+
+					// Finding the policy name in the settings
+					Setting? nameSetting = policyObj.Settings.FirstOrDefault(x =>
+						string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+						string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
+						string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase));
+
+					if (nameSetting is not null)
+					{
+						policyName = nameSetting.Value.Item.ToString();
+					}
+
+					// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
+					CiPolicyInfo policy = new(
+						policyID: policyObj.PolicyID,
+						basePolicyID: policyObj.BasePolicyID,
+						friendlyName: policyName,
+						version: null,
+						versionString: policyObj.VersionEx,
+						isSystemPolicy: false,
+						isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
+						isOnDisk: false,
+						isEnforced: true,
+						isAuthorized: true,
+						policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
+					);
+
+					descriptionText = CiPolicyInfo.ToJson(policy);
 				}
 
+			});
 
-				// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
-				CiPolicyInfo policy = new(
-					policyID: policyObj.PolicyID,
-					basePolicyID: policyObj.BasePolicyID,
-					friendlyName: policyName,
-					version: null,
-					versionString: policyObj.VersionEx,
-					isSystemPolicy: false,
-					isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
-					isOnDisk: false,
-					isEnforced: true,
-					isAuthorized: true,
-					policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
-				);
-
-				descriptionText = CiPolicyInfo.ToJson(policy);
-
-			}
-
-		});
-
-		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupIDs, policyName, policyID, descriptionText);
+			await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupIDs, policyName, policyID, descriptionText);
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
 	}
 
 	private readonly HashSet<string> XMLFilesToConvertToCIP = [];
@@ -785,14 +763,13 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 
 					_ = DispatcherQueue.TryEnqueue(() =>
 					{
-						ViewModel.MainInfoBarIsOpen = true;
-						ViewModel.MainInfoBarMessage = string.Format(
-							GlobalVars.Rizz.GetString("ConvertingFileToCIPMessage"),
-							file
-						);
-						ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 						ViewModel.MainInfoBarIsClosable = false;
 						MainProgressRing.Visibility = Visibility.Visible;
+
+						ViewModel.MainInfoBar.WriteInfo(string.Format(
+							GlobalVars.Rizz.GetString("ConvertingFileToCIPMessage"),
+							file
+						));
 					});
 
 					string XMLSavePath = Path.Combine(GlobalVars.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
@@ -810,19 +787,13 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarMessage = string.Format(
-				GlobalVars.Rizz.GetString("ErrorConvertingXMLToCIPMessage"),
-				ex.Message
-			);
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorConvertingXMLToCIPMessage"));
 		}
 		finally
 		{
 			if (!ErrorsOccurred)
 			{
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessfullyConvertedXMLFilesToCIPMessage");
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyConvertedXMLFilesToCIPMessage"));
 			}
 
 			ViewModel.MainInfoBarIsClosable = true;
@@ -864,31 +835,5 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, INot
 		DeploySignedXMLButtonContentTextBlock.Text = SignOnlyNoDeployToggleSwitch.IsOn ? GlobalVars.Rizz.GetString("ButtonContentSignOnly") : GlobalVars.Rizz.GetString("ButtonContentDeploy");
 
 		DeploySignedXMLButtonFontIcon.Glyph = SignOnlyNoDeployToggleSwitch.IsOn ? "\uF572" : "\uE8B6";
-	}
-
-
-	/// <summary>
-	/// Sets the property and raises the PropertyChanged event if the value has changed.
-	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="currentValue"></param>
-	/// <param name="newValue"></param>
-	/// <param name="setter"></param>
-	/// <param name="propertyName"></param>
-	/// <returns></returns>
-	private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? propertyName = null)
-	{
-		if (EqualityComparer<T>.Default.Equals(currentValue, newValue))
-			return false;
-		setter(newValue);
-		OnPropertyChanged(propertyName);
-		return true;
-	}
-
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }

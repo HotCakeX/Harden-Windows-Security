@@ -686,6 +686,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		UpdateTotalFilesFilesAndFolders(true);
 	}
 
+	/// <summary>
+	/// Search box for the Files and Folders scan results.
+	/// </summary>
 	internal string? FilesAndFoldersScanResultsSearchTextBox
 	{
 		get; set
@@ -1466,7 +1469,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, string.Format(GlobalVars.Rizz.GetString("ErrorOccurredWhileScanningSystem")));
+			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredWhileScanningSystem"));
 		}
 		finally
 		{
@@ -1718,7 +1721,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, string.Format(GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers")));
+			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
@@ -2130,7 +2133,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PFNSupplementalPolicy");
 
 				// Get the path to an empty policy file

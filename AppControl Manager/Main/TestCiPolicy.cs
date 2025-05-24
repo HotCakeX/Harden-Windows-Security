@@ -58,49 +58,39 @@ internal static class CiPolicyTest
 		}
 
 		// Validate XML file against schema
-		try
+
+		// Create the XmlReaderSettings object
+		XmlReaderSettings settings = new();
+
+		// Add schema to settings
+		_ = settings.Schemas.Add(null, schemaPath);
+
+		// Set the validation settings
+		settings.ValidationType = ValidationType.Schema;
+
+		// Set the validation flags to report warnings
+		settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+
+		// Set the validation event handler
+		settings.ValidationEventHandler += (sender, args) =>
 		{
-			// Create the XmlReaderSettings object
-			XmlReaderSettings settings = new();
-
-			// Add schema to settings
-			_ = settings.Schemas.Add(null, schemaPath);
-
-			// Set the validation settings
-			settings.ValidationType = ValidationType.Schema;
-
-			// Set the validation flags to report warnings
-			settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
-
-			// Set the validation event handler
-			settings.ValidationEventHandler += (sender, args) =>
-			{
-				throw new XmlSchemaValidationException(
-					string.Format(
-						GlobalVars.Rizz.GetString("XmlValidationErrorMessage"),
-						xmlFilePath,
-						args.Message));
-			};
-
-			// Create an XmlDocument object
-			XmlDocument xmlDoc = new();
-
-			// Load the input XML document
-			xmlDoc.Load(xmlFilePath);
-
-			using XmlReader reader = XmlReader.Create(new StringReader(xmlDoc.OuterXml), settings);
-			// Validate the XML document
-			while (reader.Read()) { }
-
-			return true;
-		}
-		catch (XmlSchemaValidationException ex)
-		{
-			throw new InvalidOperationException(
+			throw new XmlSchemaValidationException(
 				string.Format(
 					GlobalVars.Rizz.GetString("XmlValidationErrorMessage"),
 					xmlFilePath,
-					ex.Message));
-		}
+					args.Message));
+		};
+
+		// Create an XmlDocument object
+		XmlDocument xmlDoc = new();
+
+		// Load the input XML document
+		xmlDoc.Load(xmlFilePath);
+
+		using XmlReader reader = XmlReader.Create(new StringReader(xmlDoc.OuterXml), settings);
+		// Validate the XML document
+		while (reader.Read()) { }
+
+		return true;
 	}
 }

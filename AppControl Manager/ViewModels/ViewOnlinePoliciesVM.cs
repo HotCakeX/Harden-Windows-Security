@@ -63,33 +63,29 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.Intune);
 
 		_ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
+
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
 	}
 
 	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
 
+	internal readonly InfoBarSettings MainInfoBar;
 
 	#region UI-Bound Properties
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SP(ref field, value);
-	} = InfoBarSeverity.Informational;
-
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	internal bool ListViewState
-	{
-		get; set => SP(ref field, value);
-	} = true;
+	internal bool ListViewState { get; set => SP(ref field, value); } = true;
 
-	internal bool SearchTextBoxState
-	{
-		get; set => SP(ref field, value);
-	} = true;
+	internal bool SearchTextBoxState { get; set => SP(ref field, value); } = true;
 
 	internal bool RetrievePoliciesButtonState { get; set => SP(ref field, value); }
 
@@ -97,10 +93,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
-	internal string PoliciesCountTextBox
-	{
-		get; set => SP(ref field, value);
-	} = "Number of Policies: 0";
+	internal string PoliciesCountTextBox { get; set => SP(ref field, value); } = "Number of Policies: 0";
 
 	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
 
@@ -285,6 +278,10 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 			CalculateColumnWidths();
 		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 		finally
 		{
 			// Update the policies count text
@@ -456,50 +453,58 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	/// </summary>
 	internal async void SearchBox_TextChanged()
 	{
-		string? searchTerm = SearchBoxTextBox?.Trim();
-
-		if (searchTerm is null)
-			return;
-
-		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
-
-		double? savedHorizontal = null;
-		if (Sv != null)
+		try
 		{
-			savedHorizontal = Sv.HorizontalOffset;
+
+			string? searchTerm = SearchBoxTextBox?.Trim();
+
+			if (searchTerm is null)
+				return;
+
+			// Get the ListView ScrollViewer info
+			ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
+
+			double? savedHorizontal = null;
+			if (Sv != null)
+			{
+				savedHorizontal = Sv.HorizontalOffset;
+			}
+
+
+			IEnumerable<CiPolicyInfo> filteredResults = [];
+
+			await Task.Run(() =>
+			{
+				// Perform a case-insensitive search in all relevant fields
+				filteredResults = AllPoliciesOutput.Where(p =>
+				(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+				);
+			});
+
+			AllPolicies.Clear();
+
+			// Update the ObservableCollection with the filtered results
+			foreach (CiPolicyInfo item in filteredResults)
+			{
+				AllPolicies.Add(item);
+			}
+
+			// Update the policies count text
+			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+
+			if (Sv != null && savedHorizontal.HasValue)
+			{
+				// restore horizontal scroll position
+				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			}
 		}
-
-
-		IEnumerable<CiPolicyInfo> filteredResults = [];
-
-		await Task.Run(() =>
+		catch (Exception ex)
 		{
-			// Perform a case-insensitive search in all relevant fields
-			filteredResults = AllPoliciesOutput.Where(p =>
-			(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			);
-		});
-
-		AllPolicies.Clear();
-
-		// Update the ObservableCollection with the filtered results
-		foreach (CiPolicyInfo item in filteredResults)
-		{
-			AllPolicies.Add(item);
-		}
-
-		// Update the policies count text
-		PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
-
-		if (Sv != null && savedHorizontal.HasValue)
-		{
-			// restore horizontal scroll position
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -512,14 +517,15 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		if (ListViewSelectedPolicy is null)
 			return;
 
-		if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
-		{
-			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("IntunePolicyObjectIdNullMessage"));
-		}
-
 		try
 		{
+
+			if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
+			{
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("IntunePolicyObjectIdNullMessage"));
+			}
+
 			ManageButtonsStates(false);
 
 			await MicrosoftGraph.Main.DeletePolicy(
@@ -533,6 +539,10 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			// Update the policies count text
 			PoliciesCountTextBox =
 				GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{

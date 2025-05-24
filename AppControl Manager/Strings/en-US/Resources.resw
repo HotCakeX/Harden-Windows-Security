@@ -1183,9 +1183,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SelectedApps" xml:space="preserve">
     <value>Selected Apps: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>There was an error: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Successfully created the Deny policy</value>
   </data>
@@ -3467,7 +3464,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>{0} log(s) were generated during the Audit phase</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>An error occurred while scanning the system: {0}</value>
+    <value>An error occurred while scanning the system: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Successfully scanned the system for events</value>
@@ -3494,7 +3491,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Scanning {0} files</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>There was an error: {0}</value>
+    <value>There was an error: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Successfully scanned the system for drivers</value>
@@ -3545,7 +3542,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Converting {0} to CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>There was a problem converting the XML files to CIP: {0}</value>
+    <value>There was a problem converting the XML files to CIP: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Successfully converted all of the selected XML files to CIP binaries</value>
@@ -3554,7 +3551,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Scanning the event logs...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>There was an error during logs scan: {0}</value>
+    <value>There was an error during logs scan: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Scan complete. {0} logs were found.</value>
@@ -3599,7 +3596,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>There was an error while processing the logs: {0}.</value>
+    <value>There was an error while processing the logs: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Successfully processed the logs and included them in the policy.</value>
@@ -3617,7 +3614,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Performing the Simulation</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>There was a problem during the simulation: {0}</value>
+    <value>There was a problem during the simulation: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Simulation completed successfully.</value>
@@ -3632,7 +3629,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Loading the policy</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>There was a problem loading the selected policy file: {0}</value>
+    <value>There was a problem loading the selected policy file: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Successfully loaded the selected policy</value>
@@ -4055,7 +4052,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Sign in to MSGraph was cancelled by the user</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>There was an error signing into MSGraph: {0}</value>
+    <value>There was an error signing into MSGraph: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>MDE Advanced Hunting Query has been Successful.</value>
@@ -4301,7 +4298,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No results detected in the selected MDE Advanced Hunting CSV logs.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>There was an error while scanning the selected MDE Advanced Hunting CSV Logs: {0}</value>
+    <value>There was an error while scanning the selected MDE Advanced Hunting CSV Logs: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Successfully completed scanning the selected MDE Advanced Hunting CSV Logs.</value>
@@ -4322,7 +4319,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No policy file was selected to associate the Supplemental policy with.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>There was an error creating the Supplemental policy: {0}</value>
+    <value>There was an error creating the Supplemental policy: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Retrieving the Microsoft Defender for Endpoint Advanced Hunting data</value>
@@ -4343,7 +4340,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No actionable logs were found among the retrieved data to create a Supplemental policy with.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>There was an error retrieving the MDE Advanced Hunting logs from MSGraph: {0}</value>
+    <value>There was an error retrieving the MDE Advanced Hunting logs from MSGraph: </value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Add logs to the selected policy</value>
@@ -4957,4 +4954,319 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Browse for XML policy file(s) to deploy unsigned on the system</value>
   </data>
+  <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>Subject name fragment is empty.</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>No certificates found in store {0}\{1}.</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>Searching {0} certificates in store {1}\{2} for subject fragment '{3}' (effective CN search: '{4}')...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>Found certificate with matching subject criteria: {0} (Thumbprint: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>Signature Algorithm: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>Certificate has Code Signing EKU.</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>Certificate does NOT have Code Signing EKU.</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>Suitable code signing certificate found: {0} in {1}\{2} (Thumbprint: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>Warning: Cryptographic error accessing certificate store {0} at {1}: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>Warning: General error accessing certificate store {0} at {1}: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>No suitable code signing certificate found with subject fragment '{0}', a private key, and Code Signing EKU in checked stores.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>Certificate signature algorithm OID '{0}' ('{1}') is not supported for automatic hash algorithm OID detection for CryptSignMessage.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>Certificate signature algorithm OID '{0}' ('{1}') is not supported for automatic ALG_ID detection for SignerSignEx3.</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>Certificate must have a private key.</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>PKCS #7 signature (content embedded, cert included) written to {0}</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>SignerSignEx3 failed with HRESULT: 0x{0:X}</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT).</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND).</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - One or more arguments are invalid).</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>Win32 Error signing file (Code: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>App Startup, .NET runtime version: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>There is another instance of the AppControl Manager running. This is just an informational log.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>File Activation detected</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>App was launched via File activation but arguments didn't have any file objects in them</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>App was launched via File activation but without any file activation arguments</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>User canceled the UAC prompt.</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>Elevation request was required to process the selected file but it was denied by the user. Exiting the app.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>Elevation request was denied by the user</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>The app was launched with file activation for the following file: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>There was an error launching the Policy Editor with the selected file: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>There was a program saving the window size when closing the app: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>An error occurred</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>An unexpected error has occurred: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>Setting the Code Integrity Log Size</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>Version: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>PFN: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>There was an error getting the details for the app: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>There was an error getting the details of an app</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>The provided string '{0}' is not a valid GUID format.</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>The selected XML policy file is a Supplemental policy but its BasePolicyID and PolicyID are the same, indicating it is a Base policy, changing the type.</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>The selected XML policy file is a Base policy but its BasePolicyID and PolicyID are not the same, indicating it is a Supplemental policy, changing the type.</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>Successfully configured the policy at '{0}'. Now it has the Type '{1}', BasePolicyID '{2}' and PolicyID '{3}'.</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>Successfully set the version of the policy file at '{0}' from '{1}' to '{2}'.</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Starting the data separation process.</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Using only Hash level.</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Using Publisher -&gt; Hash levels.</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Using FilePublisher -&gt; Publisher -&gt; Hash levels.</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Passing Publisher rule to the hash array for the file: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} FilePublisher Rules.</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Publisher Rules.</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Hash Rules.</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} FilePath Rules.</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} WildCard FilePath Rules.</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} PFN Rules.</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing FilePublisher data.</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {0}, using the leaf certificate TBS hash instead</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing Publisher data.</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing Unsigned Hash data.</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: One or more necessary properties are null or empty in hashData.</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing FilePath data</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing WildCard FilePath data</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing Custom Pattern-Based FilePath data</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Processing PFN data</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Completed the process.</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>CouldNotOpenFile {0}. Error: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>GetFileSizeFailed for file {0} with error {1}</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>CreateFileMappingFailed for the file {0} with error {1}</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>CreateFileMappingAlreadyExists for the file {0} with error {1}</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>MapViewOfFileFailed for the file {0} with error {1}</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>ImageNtHeaderFailed for the file {0} with error {1}</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>ImageDirectoryEntryToDataExFailed for the file {0} with error {1}</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>UnmapViewOfFileFailed for the file {0} with error {1}</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>CouldNotCloseMapHandle for the file {0} with error {1}</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>CouldNotCloseFileHandle for the file {0} with error {1}</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>One of the XML files has more than 1 Signer with the same ID `{0}`</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>Successfully set the HVCI in the policy file '{0}' to Strict.</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>JumpList is not supported.</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>Merging the rules</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>Setting the window size back to what it was when the app was closed. Height: {0} - Width: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptOpenAlgorithmProvider failed with error code: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>CryptCATOpen failed with error code: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptCloseAlgorithmProvider failed with error code: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>Couldn't deserialize ASR rules exceptions list JSON which was this: {0} - Error: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>no Hashes detected to create allow rules for.</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>There are {0} Hash rules to be added to the XML file '{1}'</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>Sha256 Hash for: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>Sha1 Hash for: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>Creating Hash rule for Kernel-Mode file: {0}. Kernel-Mode file should be signed!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>no Hashes detected to create deny rules for.</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>no FilePath rules detected to create allow rules for.</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>There are {0} FilePath rules to be added to the XML file '{1}'</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>File Path Rule Type</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>The following file is Kernel-Mode driver that doesn't support FilePath rules: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>no FilePath rules detected to create deny rules for.</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>no FilePublisher signers detected to create allow rules for.</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>There are {0} File Publisher Signers to be added to the XML file</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>File Publisher Rule Type</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>no FilePublisher signers detected to create deny rules for.</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>no PackageFamilyNames detected to create allow rules for.</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>Allowing Packaged App by its Family Name</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>no PackageFamilyNames detected to create deny rules for.</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>Denying Packaged App by its Family Name</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>no Publisher signers detected to create allow rules for.</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>There are {0} Publisher Signers to be added to the XML file '{1}'</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>no Publisher signers detected to create deny rules for.</value>
+</data>
 </root>

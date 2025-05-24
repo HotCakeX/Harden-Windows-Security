@@ -154,24 +154,24 @@ public partial class App : Application
 		// or it can be internal but the value must be supplied to it via lambda factory method.
 		_ = services.AddSingleton(sp => new AppSettings.Main(_localSettings));
 		_ = services.AddSingleton<SidebarVM>();
-		_ = services.AddSingleton<ViewCurrentPoliciesVM>();
-		_ = services.AddSingleton<SettingsVM>();
+		_ = services.AddSingleton(sp => new ViewCurrentPoliciesVM());
+		_ = services.AddSingleton(sp => new SettingsVM());
 		_ = services.AddSingleton(sp => new MergePoliciesVM());
-		_ = services.AddSingleton<ConfigurePolicyRuleOptionsVM>();
+		_ = services.AddSingleton(sp => new ConfigurePolicyRuleOptionsVM());
 		_ = services.AddSingleton<AllowNewAppsVM>(sp => new(sp.GetRequiredService<EventLogUtility>(), sp.GetRequiredService<PolicyEditorVM>()));
 		_ = services.AddSingleton(sp => new CreateDenyPolicyVM());
 		_ = services.AddSingleton(sp => new CreateSupplementalPolicyVM());
-		_ = services.AddSingleton<EventLogsPolicyCreationVM>();
-		_ = services.AddSingleton<SimulationVM>();
-		_ = services.AddSingleton<MDEAHPolicyCreationVM>();
-		_ = services.AddSingleton<ViewFileCertificatesVM>();
+		_ = services.AddSingleton(sp => new EventLogsPolicyCreationVM());
+		_ = services.AddSingleton(sp => new SimulationVM());
+		_ = services.AddSingleton(sp => new MDEAHPolicyCreationVM());
+		_ = services.AddSingleton(sp => new ViewFileCertificatesVM());
 		_ = services.AddSingleton(sp => new MainWindowVM());
 		_ = services.AddSingleton(sp => new CreatePolicyVM());
-		_ = services.AddSingleton<DeploymentVM>();
-		_ = services.AddSingleton<UpdateVM>();
-		_ = services.AddSingleton<ValidatePolicyVM>();
-		_ = services.AddSingleton<CodeIntegrityInfoVM>();
-		_ = services.AddSingleton<GetCIHashesVM>();
+		_ = services.AddSingleton(sp => new DeploymentVM());
+		_ = services.AddSingleton(sp => new UpdateVM());
+		_ = services.AddSingleton(sp => new ValidatePolicyVM());
+		_ = services.AddSingleton(sp => new CodeIntegrityInfoVM());
+		_ = services.AddSingleton(sp => new GetCIHashesVM());
 		_ = services.AddSingleton(sp => new EventLogUtility());
 		_ = services.AddSingleton<NavigationService>(sp => new(sp.GetRequiredService<MainWindowVM>(), sp.GetRequiredService<SidebarVM>()));
 		_ = services.AddSingleton<ViewModelForMSGraph>();
@@ -200,7 +200,7 @@ public partial class App : Application
 		// Subscribe to UnobservedTaskException events
 		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-		Logger.Write($"App Startup, .NET runtime version: {Environment.Version}");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("AppStartupMessage"), Environment.Version));
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
 		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
@@ -280,7 +280,7 @@ public partial class App : Application
 
 		if (!IsUniqueAppInstance)
 		{
-			Logger.Write("There is another instance of the AppControl Manager running. This is just an informational log.");
+			Logger.Write(GlobalVars.Rizz.GetString("AnotherInstanceRunningMessage"));
 		}
 
 		// Determines whether the session must prompt for UAC to elevate or not
@@ -294,7 +294,7 @@ public partial class App : Application
 
 			if (activatedEventArgs.Kind is ExtendedActivationKind.File)
 			{
-				Logger.Write("File Activation detected");
+				Logger.Write(GlobalVars.Rizz.GetString("FileActivationDetectedMessage"));
 
 				IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
 
@@ -320,12 +320,12 @@ public partial class App : Application
 					}
 					else
 					{
-						Logger.Write("App was launched via File activation but arguments didn't have any file objects in them");
+						Logger.Write(GlobalVars.Rizz.GetString("FileActivationNoObjectsMessage"));
 					}
 				}
 				else
 				{
-					Logger.Write("App was launched via File activation but without any file activation arguments");
+					Logger.Write(GlobalVars.Rizz.GetString("FileActivationNoArgumentsMessage"));
 				}
 			}
 		}
@@ -391,14 +391,14 @@ public partial class App : Application
 			}
 			else if (requireAdminPrivilege)
 			{
-				Logger.Write("Elevation request was required to process the selected file but it was denied by the user. Exiting the app.");
+				Logger.Write(GlobalVars.Rizz.GetString("ElevationRequiredButDeniedMessage"));
 
 				// Exit the process anyway since admin privileges were required but user didn't successfully elevate
 				Environment.Exit(0);
 			}
 			else
 			{
-				Logger.Write("Elevation request was denied by the user");
+				Logger.Write(GlobalVars.Rizz.GetString("ElevationDeniedMessage"));
 			}
 		}
 
@@ -417,7 +417,7 @@ public partial class App : Application
 
 		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
 		{
-			Logger.Write($"The app was launched with file activation for the following file: '{Settings.FileActivatedLaunchArg}'");
+			Logger.Write(string.Format(GlobalVars.Rizz.GetString("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
 
 			// Set the "Policy Editor" item as selected in the NavigationView
 			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
@@ -429,7 +429,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write($"There was an error launching the Policy Editor with the selected file: {ex.Message}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("PolicyEditorLaunchErrorMessage"), ex.Message));
 
 				// Continue doing the normal navigation if there was a problem
 				InitialNav();
@@ -540,7 +540,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write($"There was a program saving the window size when closing the app: {ex.Message}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("WindowSizeSaveErrorMessage"), ex.Message));
 			}
 		}
 
@@ -575,8 +575,8 @@ public partial class App : Application
 
 					CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
-						Title = "An error occurred",
-						Content = $"An unexpected error has occurred:\n{ex.Message}",
+						Title = GlobalVars.Rizz.GetString("ErrorDialogTitle"),
+						Content = string.Format(GlobalVars.Rizz.GetString("ErrorDialogContent"), ex.Message),
 						CloseButtonText = GlobalVars.Rizz.GetString("OK"),
 					};
 

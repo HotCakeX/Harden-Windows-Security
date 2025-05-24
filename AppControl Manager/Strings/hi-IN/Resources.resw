@@ -1183,9 +1183,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SelectedApps" xml:space="preserve">
     <value>चयनित ऐप्स: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>एक त्रुटि हुई: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>निषेध नीति सफलतापूर्वक बनाई गई</value>
   </data>
@@ -3467,7 +3464,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>रिकॉर्ड चरण के दौरान {0} लॉग(स) उत्पन्न हुए</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>सिस्टम स्कैन करते समय त्रुटि हुई: {0}</value>
+    <value>सिस्टम स्कैन करते समय त्रुटि हुई: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>इवेंट्स के लिए सिस्टम सफलतापूर्वक स्कैन किया गया</value>
@@ -3494,7 +3491,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>{0} फ़ाइलें स्कैन कर रहे हैं</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>एक त्रुटि हुई: {0}</value>
+    <value>एक त्रुटि हुई: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>सिस्टम के लिए ड्राइवर सफलतापूर्वक स्कैन किए गए</value>
@@ -3545,7 +3542,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>{0} को CIP में परिवर्तित कर रहे हैं</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>XML फ़ाइलों को CIP में परिवर्तित करने में समस्या हुई: {0}</value>
+    <value>XML फ़ाइलों को CIP में परिवर्तित करने में समस्या हुई: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>चयनित सभी XML फ़ाइलों को सफलतापूर्वक CIP बाइनरी में परिवर्तित किया गया</value>
@@ -3554,7 +3551,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>ईवेंट लॉग्स स्कैन कर रहे हैं…</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>लॉग्स स्कैन के दौरान त्रुटि हुई: {0}</value>
+    <value>लॉग्स स्कैन के दौरान त्रुटि हुई: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>स्कैन पूरा। {0} लॉग(स) मिले।</value>
@@ -3599,7 +3596,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>पूरक नीति का BasePolicyID होने के लिए कोई आधार नीति GUID प्रदान नहीं किया गया।</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>लॉग्स प्रोसेस करते समय त्रुटि हुई: {0}.</value>
+    <value>लॉग्स प्रोसेस करते समय त्रुटि हुई: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>लॉग्स सफलतापूर्वक प्रोसेस हुए और नीति में शामिल किए गए।</value>
@@ -3617,7 +3614,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>सिमुलेशन कर रहे हैं</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>सिमुलेशन के दौरान समस्या हुई: {0}</value>
+    <value>सिमुलेशन के दौरान समस्या हुई: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>सिमुलेशन सफलतापूर्वक पूरा हुआ।</value>
@@ -3632,7 +3629,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>नीति लोड कर रहे हैं</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>चयनित नीति फ़ाइल लोड करते समय समस्या हुई: {0}</value>
+    <value>चयनित नीति फ़ाइल लोड करते समय समस्या हुई: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>चयनित नीति सफलतापूर्वक लोड हुई</value>
@@ -4055,7 +4052,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>यूज़र द्वारा MSGraph में साइन इन रद्द किया गया</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>MSGraph में साइन इन करते समय त्रुटि हुई: {0}</value>
+    <value>MSGraph में साइन इन करते समय त्रुटि हुई: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>MDE उन्नत शिकार क्वेरी सफल रही।</value>
@@ -4301,7 +4298,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>चयनित MDE उन्नत शिकार CSV लॉग्स में कोई परिणाम नहीं मिला।</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>चयनित MDE उन्नत शिकार CSV लॉग्स स्कैन करते समय त्रुटि: {0}</value>
+    <value>चयनित MDE उन्नत शिकार CSV लॉग्स स्कैन करते समय त्रुटि: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>चयनित MDE उन्नत शिकार CSV लॉग्स का स्कैन सफलतापूर्वक पूरा हुआ।</value>
@@ -4322,7 +4319,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>पूरक नीति से जोड़ने के लिए कोई नीति फ़ाइल चयनित नहीं की गई।</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>पूरक नीति बनाते समय त्रुटि हुई: {0}</value>
+    <value>पूरक नीति बनाते समय त्रुटि हुई: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Microsoft Defender for Endpoint उन्नत शिकार डेटा प्राप्त कर रहे हैं</value>
@@ -4343,7 +4340,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>प्राप्त डेटा में से पूरक नीति बनाने के लिए कोई उपयुक्त लॉग नहीं मिले।</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>MSGraph से MDE उन्नत शिकार लॉग्स प्राप्त करते समय त्रुटि: {0}</value>
+    <value>MSGraph से MDE उन्नत शिकार लॉग्स प्राप्त करते समय त्रुटि: </value>
   </data>
   <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>चयनित नीति में लॉग जोड़ें</value>
@@ -4957,4 +4954,319 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>सिस्टम पर बिना साइन किए परिनियोजित करने के लिए XML नीति फ़ाइल(ओं) के लिए ब्राउज़ करें</value>
   </data>
+   <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>विषय नाम खंड रिक्त है।</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>स्टोर {0}\{1} में कोई प्रमाणपत्र नहीं मिला।</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>स्टोर {1}\{2} में विषय खंड '{3}' के लिए {0} प्रमाणपत्रों की खोज की जा रही है (प्रभावी सीएन खोज: '{4}')...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>मिलान विषय मानदंडों वाला प्रमाणपत्र मिला: {0} (थंबप्रिंट: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>हस्ताक्षर एल्गोरिथ्म: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>प्रमाणपत्र में कोड साइनिंग EKU है।</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>प्रमाणपत्र में कोड साइनिंग EKU नहीं है।</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>उपयुक्त कोड साइनिंग प्रमाणपत्र मिला: {0} में {1}\{2} (थंबप्रिंट: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>चेतावनी: प्रमाणपत्र स्टोर {0} पर {1} तक पहुँचने में क्रिप्टोग्राफ़िक त्रुटि: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>चेतावनी: प्रमाणपत्र स्टोर {0} पर {1} तक पहुँचने में सामान्य त्रुटि: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>जाँचे गए स्टोर्स में विषय खंड '{0}', एक निजी कुंजी और कोड साइनिंग EKU वाला कोई उपयुक्त कोड साइनिंग प्रमाणपत्र नहीं मिला।</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>CryptSignMessage के लिए स्वचालित हैश एल्गोरिथ्म OID पहचान के लिए प्रमाणपत्र हस्ताक्षर एल्गोरिथ्म OID '{0}' ('{1}') समर्थित नहीं है।</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>SignerSignEx3 के लिए स्वचालित ALG_ID पहचान के लिए प्रमाणपत्र हस्ताक्षर एल्गोरिथ्म OID '{0}' ('{1}') समर्थित नहीं है।</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>प्रमाणपत्र में एक निजी कुंजी होनी चाहिए।</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>PKCS #7 हस्ताक्षर (सामग्री एम्बेडेड, प्रमाणपत्र शामिल) {0} पर लिखा गया</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>SignerSignEx3 HRESULT: 0x{0:X} के साथ विफल रहा</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT)।</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND)।</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - एक या अधिक तर्क अमान्य हैं)।</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>फ़ाइल पर हस्ताक्षर करने में Win32 त्रुटि (कोड: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>ऐप स्टार्टअप, .NET रनटाइम संस्करण: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>AppControl प्रबंधक का एक और उदाहरण चल रहा है। यह केवल एक सूचनात्मक लॉग है।</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>फ़ाइल सक्रियण का पता चला</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>ऐप को फ़ाइल सक्रियण के माध्यम से लॉन्च किया गया था लेकिन तर्कों में कोई फ़ाइल ऑब्जेक्ट नहीं थे</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>ऐप को फ़ाइल सक्रियण के माध्यम से लॉन्च किया गया था लेकिन बिना किसी फ़ाइल सक्रियण तर्क के</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>उपयोगकर्ता ने UAC प्रॉम्प्ट रद्द कर दिया।</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>चयनित फ़ाइल को संसाधित करने के लिए एलिवेशन अनुरोध आवश्यक था लेकिन उपयोगकर्ता द्वारा इसे अस्वीकार कर दिया गया। ऐप से बाहर निकल रहा है।</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>उपयोगकर्ता द्वारा एलिवेशन अनुरोध अस्वीकार कर दिया गया</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>ऐप को निम्नलिखित फ़ाइल के लिए फ़ाइल सक्रियण के साथ लॉन्च किया गया था: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>चयनित फ़ाइल के साथ नीति संपादक को लॉन्च करने में एक त्रुटि हुई: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>ऐप बंद करते समय विंडो का आकार सहेजने वाले प्रोग्राम में एक त्रुटि थी: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>एक त्रुटि हुई</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>एक अप्रत्याशित त्रुटि हुई है: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>कोड इंटेग्रिटी लॉग का आकार सेट किया जा रहा है</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>संस्करण: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>PFN: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>ऐप के लिए विवरण प्राप्त करने में एक त्रुटि हुई: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>किसी ऐप का विवरण प्राप्त करने में एक त्रुटि हुई</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>प्रदत्त स्ट्रिंग '{0}' एक वैध GUID प्रारूप नहीं है।</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>चयनित XML नीति फ़ाइल एक पूरक नीति है, लेकिन इसकी BasePolicyID और PolicyID समान हैं, जो यह दर्शाता है कि यह एक आधार नीति है, प्रकार बदला जा रहा है।</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>चयनित XML नीति फ़ाइल एक आधार नीति है, लेकिन इसकी BasePolicyID और PolicyID समान नहीं हैं, जो यह दर्शाता है कि यह एक पूरक नीति है, प्रकार बदला जा रहा है।</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>'{0}' पर नीति को सफलतापूर्वक कॉन्फ़िगर किया गया। अब इसका प्रकार '{1}', BasePolicyID '{2}' और PolicyID '{3}' है।</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>'{0}' पर नीति फ़ाइल का संस्करण सफलतापूर्वक '{1}' से '{2}' में सेट किया गया।</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: डेटा पृथक्करण प्रक्रिया प्रारंभ की जा रही है।</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: केवल हैश स्तर का उपयोग किया जा रहा है।</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: प्रकाशक -&gt; हैश स्तरों का उपयोग किया जा रहा है।</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: फ़ाइलप्रकाशक -&gt; प्रकाशक -&gt; हैश स्तरों का उपयोग किया जा रहा है।</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: फ़ाइल के लिए हैश ऐरे में प्रकाशक नियम पास किया जा रहा है: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} फ़ाइलप्रकाशक नियम।</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} प्रकाशक नियम।</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} हैश नियम।</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} फ़ाइलपाथ नियम।</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} वाइल्डकार्ड फ़ाइलपाथ नियम।</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} PFN नियम।</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: फ़ाइलप्रकाशक डेटा संसाधित किया जा रहा है।</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: फ़ाइल के लिए मध्यवर्ती प्रमाणपत्र TBS हैश रिक्त है: {0}, इसके बजाय लीफ प्रमाणपत्र TBS हैश का उपयोग किया जा रहा है</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: प्रकाशक डेटा संसाधित किया जा रहा है।</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: अहस्ताक्षरित हैश डेटा संसाधित किया जा रहा है।</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: hashData में एक या अधिक आवश्यक गुण शून्य या रिक्त हैं।</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: फ़ाइलपाथ डेटा संसाधित किया जा रहा है</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: वाइल्डकार्ड फ़ाइलपाथ डेटा संसाधित किया जा रहा है</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: कस्टम पैटर्न-आधारित फ़ाइलपाथ डेटा संसाधित किया जा रहा है</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: PFN डेटा संसाधित किया जा रहा है</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: प्रक्रिया पूरी हुई।</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>{0} नहीं खोला जा सका। त्रुटि: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>फ़ाइल {0} का आकार प्राप्त करने में विफलता, त्रुटि {1}</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए फ़ाइल मैपिंग बनाने में विफलता, त्रुटि {1}</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए फ़ाइल मैपिंग पहले से मौजूद है, त्रुटि {1}</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए फ़ाइल का मैप व्यू बनाने में विफलता, त्रुटि {1}</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए इमेज एनटी हेडर प्राप्त करने में विफलता, त्रुटि {1}</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए इमेज डायरेक्टरी एंट्री से डेटा एक्सट्रैक्ट करने में विफलता, त्रुटि {1}</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए फ़ाइल का मैप व्यू अनमैप करने में विफलता, त्रुटि {1}</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए मैप हैंडल बंद नहीं किया जा सका, त्रुटि {1}</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>फ़ाइल {0} के लिए फ़ाइल हैंडल बंद नहीं किया जा सका, त्रुटि {1}</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>XML फ़ाइलों में से एक में समान ID `{0}` वाले 1 से अधिक हस्ताक्षरकर्ता हैं</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>नीति फ़ाइल '{0}' में HVCI को सफलतापूर्वक 'सख्त' पर सेट किया गया।</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>जंपलिस्ट समर्थित नहीं है।</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>नियमों का विलय किया जा रहा है</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>विंडो का आकार ऐप बंद होने के समय जैसा था वैसा ही सेट किया जा रहा है। ऊँचाई: {0} - चौड़ाई: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptOpenAlgorithmProvider त्रुटि कोड के साथ विफल रहा: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>CryptCATOpen त्रुटि कोड के साथ विफल रहा: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptCloseAlgorithmProvider त्रुटि कोड के साथ विफल रहा: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>ASR नियम अपवाद सूची JSON को डीसेरिएलाइज़ नहीं किया जा सका जो यह था: {0} - त्रुटि: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>अनुमति नियम बनाने के लिए कोई हैश नहीं मिला।</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>XML फ़ाइल '{1}' में {0} हैश नियम जोड़े जाने हैं</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>इसके लिए Sha256 हैश: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>इसके लिए Sha1 हैश: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>कर्नेल-मोड फ़ाइल के लिए हैश नियम बनाया जा रहा है: {0}. कर्नेल-मोड फ़ाइल हस्ताक्षरित होनी चाहिए!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>अस्वीकृत नियम बनाने के लिए कोई हैश नहीं मिला।</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>अनुमति नियम बनाने के लिए कोई फ़ाइलपाथ नियम नहीं मिला।</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>XML फ़ाइल '{1}' में {0} फ़ाइलपाथ नियम जोड़े जाने हैं</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>फ़ाइल पाथ नियम प्रकार</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>निम्नलिखित फ़ाइल कर्नेल-मोड ड्राइवर है जो फ़ाइलपाथ नियमों का समर्थन नहीं करता है: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>अस्वीकृत नियम बनाने के लिए कोई फ़ाइलपाथ नियम नहीं मिला।</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>अनुमति नियम बनाने के लिए कोई फ़ाइलप्रकाशक हस्ताक्षरकर्ता नहीं मिला।</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>XML फ़ाइल में {0} फ़ाइल प्रकाशक हस्ताक्षरकर्ता जोड़े जाने हैं</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>फ़ाइल प्रकाशक नियम प्रकार</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>अस्वीकृत नियम बनाने के लिए कोई फ़ाइलप्रकाशक हस्ताक्षरकर्ता नहीं मिला।</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>अनुमति नियम बनाने के लिए कोई पैकेज फ़ैमिली नाम नहीं मिला।</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>पैकेज्ड ऐप को उसके फ़ैमिली नाम से अनुमति दी जा रही है</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>अस्वीकृत नियम बनाने के लिए कोई पैकेज फ़ैमिली नाम नहीं मिला।</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>पैकेज्ड ऐप को उसके फ़ैमिली नाम से अस्वीकृत किया जा रहा है</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>अनुमति नियम बनाने के लिए कोई प्रकाशक हस्ताक्षरकर्ता नहीं मिला।</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>XML फ़ाइल '{1}' में {0} प्रकाशक हस्ताक्षरकर्ता जोड़े जाने हैं</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>अस्वीकृत नियम बनाने के लिए कोई प्रकाशक हस्ताक्षरकर्ता नहीं मिला।</value>
+</data>
 </root>

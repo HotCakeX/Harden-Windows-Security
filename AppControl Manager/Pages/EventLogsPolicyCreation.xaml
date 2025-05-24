@@ -78,7 +78,11 @@
 
         </controls:WrapPanel>
 
-        <InfoBar x:Name="MainInfoBar" Grid.Row="1" Visibility="Collapsed">
+        <InfoBar Grid.Row="1"
+                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
             <InfoBar.ActionButton>
                 <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
             </InfoBar.ActionButton>
@@ -140,7 +144,7 @@
                                     <controls:SegmentedItem Content="Base GUID"
                                         Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                 </controls:Segmented>
-                                <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl}" HorizontalAlignment="Center">
+                                <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 
                                     <controls:Case Value="AddToPolicy">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"

@@ -21,6 +21,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Automation.Provider;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -43,7 +44,6 @@ internal partial class SettingsCardV2 : SettingsCard
 
 	private void OnSettingsCardClick(object sender, RoutedEventArgs e)
 	{
-
 		switch (Content)
 		{
 			case ToggleSwitch obj:
@@ -57,7 +57,18 @@ internal partial class SettingsCardV2 : SettingsCard
 				break;
 
 			case Button obj:
-				InvokeButton(obj);
+				if (!obj.IsEnabled) return;
+
+				// If the button has an attached Flyout, show it; otherwise, invoke click.
+				FlyoutBase rootFlyout = FlyoutBase.GetAttachedFlyout(obj);
+				if (rootFlyout != null)
+				{
+					rootFlyout.ShowAt(obj);
+				}
+				else
+				{
+					InvokeButton(obj);
+				}
 				break;
 
 			// If it's a Panel such as StackPanel or WrapPanel, etc. Then get the first applicable element.
@@ -81,7 +92,18 @@ internal partial class SettingsCardV2 : SettingsCard
 						return;
 					}
 
-					// Button
+					// Button with Flyout
+					Button? childButtonWithFlyout = panel.Children
+						.OfType<Button>()
+						.FirstOrDefault(b => FlyoutBase.GetAttachedFlyout(b) != null && b.IsEnabled);
+					if (childButtonWithFlyout != null)
+					{
+						// Show the attached flyout
+						FlyoutBase.ShowAttachedFlyout(childButtonWithFlyout);
+						return;
+					}
+
+					// Regular Button
 					Button? childButton = panel.Children.OfType<Button>().FirstOrDefault();
 					if (childButton != null)
 					{

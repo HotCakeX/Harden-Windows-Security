@@ -133,7 +133,7 @@
                                     </controls:SegmentedItem>
                                 </controls:Segmented>
 
-                                <controls:SwitchPresenter Value="{Binding SelectedItem.Tag, ElementName=segmentedControl}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                                     <controls:Case Value="Active">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"

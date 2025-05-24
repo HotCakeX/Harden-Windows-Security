@@ -15,6 +15,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -26,7 +27,14 @@
 
             </controls:WrapPanel>
 
-            <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="1">
+            <InfoBar Grid.Row="1"
+                Margin="15"
+                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+
+            <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="2">
 
                 <!-- Button to trigger file picker -->
                 <Button Click="{x:Bind ViewModel.PickFile_Click}"

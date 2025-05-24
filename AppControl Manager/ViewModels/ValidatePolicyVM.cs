@@ -29,16 +29,25 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class ValidatePolicyVM : ViewModelBase
 {
 
+	internal ValidatePolicyVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
+	}
+
+
+	private readonly InfoBarSettings MainInfoBar;
+
 	#region UI-Bound Properties
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarTitle { get; set => SP(ref field, value); }
-
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); }
-
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	internal bool ElementsAreEnabled
@@ -123,10 +132,8 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 		try
 		{
-			MainInfoBarMessage = GlobalVars.Rizz.GetString("BrowseForAppControlPolicy");
-			MainInfoBarSeverity = InfoBarSeverity.Informational;
-			MainInfoBarIsOpen = true;
-			MainInfoBarTitle = GlobalVars.Rizz.GetString("CurrentStatusInfoBar/Title");
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("BrowseForAppControlPolicy"),
+				GlobalVars.Rizz.GetString("CurrentStatusInfoBar/Title"));
 
 			ElementsAreEnabled = false;
 
@@ -136,7 +143,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 			bool IsValid = false;
 
-			MainInfoBarMessage = GlobalVars.Rizz.GetString("Validating");
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("Validating"));
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -190,36 +197,32 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 			if (IsValid)
 			{
-				MainInfoBarMessage = GlobalVars.Rizz.GetString("IsValid") + selectedFile;
-				MainInfoBarSeverity = InfoBarSeverity.Success;
-				MainInfoBarTitle = GlobalVars.Rizz.GetString("Valid");
+				string msg = GlobalVars.Rizz.GetString("IsValid") + selectedFile;
 
 				if (Level4Test)
 				{
-					MainInfoBarMessage += $"\n{GlobalVars.Rizz.GetString("CIPFileSize")}: {CIPSize} KB";
+					msg += $"\n{GlobalVars.Rizz.GetString("CIPFileSize")}: {CIPSize} KB";
 
 					if (CIPSize < 350)
 					{
-						MainInfoBarMessage += $"\n{GlobalVars.Rizz.GetString("SuitableForIntuneDeployment")}";
+						msg += $"\n{GlobalVars.Rizz.GetString("SuitableForIntuneDeployment")}";
 					}
 					else
 					{
-						MainInfoBarMessage += $"\n{GlobalVars.Rizz.GetString("ReduceSizeForIntuneDeployment")}";
+						msg += $"\n{GlobalVars.Rizz.GetString("ReduceSizeForIntuneDeployment")}";
 					}
 				}
+
+				MainInfoBar.WriteSuccess(msg, GlobalVars.Rizz.GetString("Valid"));
 			}
 			else
 			{
-				MainInfoBarMessage = GlobalVars.Rizz.GetString("IsNotValid") + selectedFile;
-				MainInfoBarSeverity = InfoBarSeverity.Warning;
-				MainInfoBarTitle = GlobalVars.Rizz.GetString("Invalid");
+				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("IsNotValid") + selectedFile, GlobalVars.Rizz.GetString("Invalid"));
 			}
 		}
 		catch (Exception ex)
 		{
-			MainInfoBarMessage = ex.Message;
-			MainInfoBarSeverity = InfoBarSeverity.Error;
-			MainInfoBarTitle = GlobalVars.Rizz.GetString("Invalid");
+			MainInfoBar.WriteError(ex, null, GlobalVars.Rizz.GetString("Invalid"));
 		}
 		finally
 		{

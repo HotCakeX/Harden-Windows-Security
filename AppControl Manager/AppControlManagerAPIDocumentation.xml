@@ -1620,6 +1620,14 @@
             Returns true if there was a Flyout to show, false otherwise.
             </summary>
         </member>
+        <member name="T:AppControlManager.CustomUIElements.ColorRadialGaugeV2">
+            <summary>
+            A RadialGauge subclass that splits its value‐arc into five
+            smoothly‐blended color zones. As Value grows, each zone
+            lights up in a gradient from its start color into the next color,
+            and a white dot marks the moving end of the arc.
+            </summary>
+        </member>
         <member name="M:AppControlManager.CustomUIElements.CustomPatternBasedFilePath.InitializeComponent">
             <summary>
             InitializeComponent()
@@ -5029,6 +5037,20 @@
             <param name="policyFile"></param>
             <returns></returns>
         </member>
+        <member name="T:AppControlManager.Others.LanguageOption">
+            <summary>
+            Used by the ComboBox Items in the Settings page to display the language options.
+            </summary>
+            <param name="name"></param>
+            <param name="image"></param>
+        </member>
+        <member name="M:AppControlManager.Others.LanguageOption.#ctor(System.String,System.String)">
+            <summary>
+            Used by the ComboBox Items in the Settings page to display the language options.
+            </summary>
+            <param name="name"></param>
+            <param name="image"></param>
+        </member>
         <member name="T:AppControlManager.Others.UniqueStringObservableCollection">
             <summary>
             An ObservableCollection of strings that only allows unique items (case-insensitive, ordinal comparison).
@@ -5375,143 +5397,7 @@
         </member>
         <member name="T:AppControlManager.Pages.CreateDenyPolicy">
             <summary>
-            CreateDenyPolicy is a page for creating deny policies for files and folders. It initializes components and manages
-            user interactions.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.#ctor">
-            <summary>
-            Constructor for the CreateDenyPolicy class. Initializes components, sets navigation cache mode, and assigns the
-            data context.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreateFilesAndFoldersDenyPolicyButton_Click">
-            <summary>
-            Main button's event handler for files and folder Deny policy creation
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersPolicyDeployToggleButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Deploy policy Toggle Button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Click">
-            <summary>
-            Browse for Files - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Click">
-            <summary>
-            Browse for Folders - Button Click
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersPolicyNameTextBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            When the Deny Policy Name Textbox text changes
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.ScanLevelComboBox_SelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
-            <summary>
-            To detect when File Scan Level ComboBox level changes
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-            <exception cref="T:System.InvalidOperationException"></exception>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
-            <summary>
-            Button to clear the list of selected folder paths
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click">
-            <summary>
-            Button to clear the list of selected file paths
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateDenyPolicy._FilesAndFoldersSupplementalPolicyPath">
-            <summary>
-            Path to the Files and Folders Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.OpenInPolicyEditor_FilesAndFolders">
-            <summary>
-            Opens a policy editor for files and folders using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRefreshAppsListButton_Click">
-            <summary>
-            Event handler for the Refresh button to get the apps list
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRefreshContainer_RefreshRequested(Microsoft.UI.Xaml.Controls.RefreshContainer,Microsoft.UI.Xaml.Controls.RefreshRequestedEventArgs)">
-            <summary>
-            Event handler for the touch-initiated refresh action
-            </summary>
-            <param name="sender"></param>
-            <param name="args"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNSelectAllAppsListButton_Click">
-            <summary>
-            Event handler to select all apps in the ListView
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNRemoveSelectionAppsListButton_Click">
-            <summary>
-            Event handler to remove all selections of apps in the ListView
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNPackagedAppsListView_SelectionChanged">
-            <summary>
-            Event handler to display the selected apps count on the UI TextBlock
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNAppFilteringTextBox_TextChanged">
-            <summary>
-            Event handler for when the search box of apps list changes
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.PFNSettingsCard_Expanded">
-            <summary>
-            Event handler to happen only once when the section is expanded and apps list is loaded
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreatePFNDenyPolicyButton_Click">
-            <summary>
-            Main button's event handler - Create Deny policy based on PFNs
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateDenyPolicy._PFNSupplementalPolicyPath">
-            <summary>
-            Path to the PFN Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.OpenInPolicyEditor_PFN">
-            <summary>
-            Opens a policy editor for PFN using a specified supplemental policy path.
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.CreateCustomPatternBasedFileRuleDenyPolicyButton_Click">
-            <summary>
-            Event handler for the main button - to create Deny pattern based File path policy
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click">
-            <summary>
-            Event handler to display the content dialog for more info about patterns
-            </summary>
-        </member>
-        <member name="F:AppControlManager.Pages.CreateDenyPolicy._CustomPatternBasedFileRuleSupplementalPolicyPath">
-            <summary>
-            Path to the CustomPatternBasedFileRule Supplemental policy XML file
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicy.OpenInPolicyEditor_CustomPatternBasedFileRule">
-            <summary>
-            Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
+            CreateDenyPolicy is a page for creating deny policies for files and folders.
             </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicy.InitializeComponent">
@@ -5535,12 +5421,6 @@
             interactions like copying, filtering, and selecting items.
             </summary>
         </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.#ctor">
-            <summary>
-            Constructor for the CreateDenyPolicyFilesAndFoldersScanResults class. Initializes components, maintains navigation
-            state, and sets the DataContext.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
             Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -5554,33 +5434,6 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.SearchBox_TextChanged(System.Object,Microsoft.UI.Xaml.Controls.TextChangedEventArgs)">
-            <summary>
-            Event handler for the SearchBox text change
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.ApplyFilters">
-            <summary>
-            Applies the date and search filters to the data grid
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.ClearDataButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Event handler for the Clear Data button
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.SelectAll_Click">
-            <summary>
-            Selects all of the displayed rows on the ListView
-            </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.DeSelectAll_Click">
-            <summary>
-            De-selects all of the displayed rows on the ListView
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.CreateDenyPolicyFilesAndFoldersScanResults.CtrlC_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator,Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs)">
             <summary>
@@ -5792,18 +5645,6 @@
             <summary>
             Event handler for the toggle button that determines whether policies should be signed + deployed or signed only
             </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.DeploymentPage.SetProperty``1(``0,``0,System.Action{``0},System.String)">
-            <summary>
-            Sets the property and raises the PropertyChanged event if the value has changed.
-            This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI, and the UI might call set again, leading to an infinite loop.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="currentValue"></param>
-            <param name="newValue"></param>
-            <param name="setter"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
         </member>
         <member name="M:AppControlManager.Pages.DeploymentPage.InitializeComponent">
             <summary>
@@ -6158,23 +5999,11 @@
             and creating policies.
             </summary>
         </member>
-        <member name="E:AppControlManager.Pages.MDEAHPolicyCreation.PropertyChanged">
-            <summary>
-            An event that is triggered when a property value changes, allowing subscribers to be notified of updates.
-            </summary>
-        </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.#ctor">
             <summary>
             Initializes the MDEAHPolicyCreation component, sets default selections, maintains navigation state, and adds a date
             change event handler.
             </summary>
-        </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.ListViewFlyoutMenuCopy_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
-            <summary>
-            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-            </summary>
-            <param name="sender">The event sender.</param>
-            <param name="e">The event arguments.</param>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.CopyToClipboard_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
@@ -6204,11 +6033,6 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
-        </member>
-        <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.BrowseForLogs_Click">
-            <summary>
-            Event handler for the select Code Integrity EVTX file path button
-            </summary>
         </member>
         <member name="M:AppControlManager.Pages.MDEAHPolicyCreation.ClearDataButton_Click">
             <summary>
@@ -6813,6 +6637,106 @@
         <member name="T:AppControlManager.PolicyEditor.SignatureBasedRuleType">
             <summary>
             Levels used by the Policy Editor
+            </summary>
+        </member>
+        <member name="M:AppControlManager.Signing.Helper.FindCertificateBySubjectName(System.String)">
+            <summary>
+            Find a certificate via its common name.
+            </summary>
+            <param name="subjectNameFragment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AppControlManager.Signing.Main.SignFileBlob(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.String)">
+            <summary>
+            Method for SigningMode.Blob, CIP files. Problem with it is that it generates CMS V3
+            but then the signed CIP files will not be authorized by the OS after deployment
+            since they need CMS V1 which is less secure and not compatible with CNG.
+            </summary>
+            <param name="filePath"></param>
+            <param name="signingCertificate"></param>
+            <param name="contentOid"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.IO.FileNotFoundException"></exception>
+        </member>
+        <member name="M:AppControlManager.Signing.Main.SignFilePE(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.String,System.Boolean)">
+            <summary>
+            Method for signings regular PE files
+            </summary>
+            <param name="FilePath"></param>
+            <param name="signingCertificate"></param>
+            <param name="timestampUrl"></param>
+            <param name="enablePageHashing"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:AppControlManager.Signing.Main.SignFilePackage(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.String)">
+            <summary>
+            Method for signing packaged files (AppX/MSIX)
+            </summary>
+            <param name="FilePath"></param>
+            <param name="signingCertificate"></param>
+            <param name="timestampUrl"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:AppControlManager.Signing.Main.SignCIPUnUsed(System.String,System.String)">
+            <summary>
+            Signs a CIP Code Integrity policy file.
+            </summary>
+            <param name="CIPPath"></param>
+            <param name="CertCN"></param>
+        </member>
+        <member name="M:AppControlManager.Signing.Main.SignAppPackage(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Signs an App Package.
+            </summary>
+            <param name="PackagePath"></param>
+            <param name="Cert"></param>
+        </member>
+        <member name="M:AppControlManager.Signing.Main.SignPEs(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.String)">
+            <summary>
+            Signs normal PEs.
+            </summary>
+            <param name="FilePath"></param>
+            <param name="Cert"></param>
+            <param name="CertCN"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="T:AppControlManager.Signing.Structure">
+            <summary>
+            Defines the main structure of the signing operations. Defines C constants.
+            Learn more by following the links below.
+            https://learn.microsoft.com/windows/win32/appxpkg/how-to-programmatically-sign-a-package
+            https://learn.microsoft.com/windows/win32/seccrypto/signersignex3
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Signing.Structure.SIGNER_FILE_INFO">
+            <summary>
+            https://learn.microsoft.com/windows/win32/seccrypto/signer-file-info
+            </summary>
+        </member>
+        <member name="T:AppControlManager.Signing.Structure.SIGNER_BLOB_INFO">
+            <summary>
+            https://learn.microsoft.com/windows/win32/seccrypto/signer-blob-info
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Signing.Structure.SPC_INC_PE_PAGE_HASHES_FLAG">
+            <summary>
+            for page hashing support.
+            https://learn.microsoft.com/windows/win32/seccrypto/signersignex3#parameters
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Signing.Structure.CodeIntegrityOID">
+            <summary>
+            We'er signing special data for Code Integrity policy and it needs the following OID present in its signature.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.Signing.Structure.CodeSigningOID">
+            <summary>
+            Code Signing OID.
             </summary>
         </member>
         <member name="M:AppControlManager.SimulationMethods.Arbitrator.Compare(AppControlManager.Others.SimulationInput)">
@@ -8759,6 +8683,36 @@
             To store the selected policy path
             </summary>
         </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersElementsAreEnabled">
+            <summary>
+            Whether the UI elements for Files and Folders section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the Files and Folders section is expanded.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateDenyPolicyVM.filesAndFoldersFilePaths">
+            <summary>
+            Selected File Paths
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateDenyPolicyVM.filesAndFoldersFolderPaths">
+            <summary>
+            Selected Folder Paths
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.filesAndFoldersDenyPolicyName">
+            <summary>
+            Selected Deny policy name
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersScalabilityButtonContent">
+            <summary>
+            The content of the button that has the RadialGauge inside it.
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
@@ -8770,6 +8724,193 @@
         <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.UpdateTotalFiles(System.Nullable{System.Boolean})">
             <summary>
             Updates the total logs count displayed on the UI
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CreateFilesAndFoldersDenyPolicyButton_Click">
+            <summary>
+            Main button's event handler for files and folder Deny policy creation
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersBrowseForFilesButton_Click">
+            <summary>
+            Browse for Files - Button Click
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersBrowseForFoldersButton_Click">
+            <summary>
+            Browse for Folders - Button Click
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click">
+            <summary>
+            Button to clear the list of selected folder paths
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersBrowseForFilesButton_Flyout_Clear_Click">
+            <summary>
+            Button to clear the list of selected file paths
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateDenyPolicyVM._FilesAndFoldersDenyPolicyPath">
+            <summary>
+            Path to the Files and Folders Deny policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.OpenInPolicyEditor_FilesAndFolders">
+            <summary>
+            Opens a policy editor for files and folders using a specified Deny policy path.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.DeSelectAll_Click">
+            <summary>
+            De-selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.SelectAll_Click">
+            <summary>
+            Selects all of the displayed rows on the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.ClearDataButton_Click(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
+            <summary>
+            Event handler for the Clear Data button
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.FilesAndFoldersScanResultsSearchTextBox">
+            <summary>
+            Search box for the Files and Folders scan results.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.ApplyFilters">
+            <summary>
+            Applies the date and search filters to the data grid
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNElementsAreEnabled">
+            <summary>
+            Whether the UI elements for the PFN section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateDenyPolicyVM.packagesLoadedOnExpand">
+            <summary>
+            To track whether the expandable settings section for the PFN Deny policy has expanded so the apps list can be pre-loaded
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNBasedSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the PFN based section is expanded or not.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNBasedAppsListItemsSource">
+            <summary>
+            Items Source of the ListView that displays the list of the installed packaged apps.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNBasedShouldDeploy">
+            <summary>
+            Whether the Deny policy should be deployed at the end.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNBasedSelectedItemsCount">
+            <summary>
+            Displays the count of the selected apps from the ListView.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNBasedSearchKeywordForAppsList">
+            <summary>
+            The search keyword for filtering the apps list.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNBasedDenyPolicyName">
+            <summary>
+            The name of the Deny policy that will be created.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNRefreshAppsListButton_Click">
+            <summary>
+            Event handler for the Refresh button to get the apps list
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNSelectAllAppsListButton_Click">
+            <summary>
+            Event handler to select all apps in the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNRemoveSelectionAppsListButton_Click">
+            <summary>
+            Event handler to remove all selections of apps in the ListView
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNPackagedAppsListView_SelectionChanged">
+            <summary>
+            Event handler to display the selected apps count on the UI TextBlock
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNAppFilteringTextBox_TextChanged">
+            <summary>
+            Event handler for when the search box of apps list changes
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.PFNSettingsCard_Expanded">
+            <summary>
+            Event handler to happen only once when the section is expanded and apps list is loaded
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CreatePFNDenyPolicyButton_Click">
+            <summary>
+            Main button's event handler - Create Deny policy based on PFNs
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateDenyPolicyVM._PFNDenyPolicyPath">
+            <summary>
+            Path to the PFN Deny policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.OpenInPolicyEditor_PFN">
+            <summary>
+            Opens a policy editor for PFN using a specified Deny policy path.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.CustomFilePathRulesElementsAreEnabled">
+            <summary>
+            Whether the UI elements for the Custom File Path Rules section are enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.CustomFilePathRulesSettingsExpanderIsExpanded">
+            <summary>
+            Whether the Settings Expander for the Custom File Path Rules section is expanded.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.DenyPolicyCustomPatternBasedCustomPatternTextBox">
+            <summary>
+            The custom pattern used for file rule.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateDenyPolicyVM.CustomPatternBasedFileRuleBasedDenyPolicyName">
+            <summary>
+            Selected Deny policy name
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.CreateCustomPatternBasedFileRuleDenyPolicyButton_Click">
+            <summary>
+            Event handler for the main button - to create Deny pattern based File path policy
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.DenyPolicyCustomPatternBasedFileRuleSettingsCard_Click">
+            <summary>
+            Event handler to display the content dialog for more info about patterns
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.CreateDenyPolicyVM._CustomPatternBasedFileRuleDenyPolicyPath">
+            <summary>
+            Path to the CustomPatternBasedFileRule Deny policy XML file
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.CreateDenyPolicyVM.OpenInPolicyEditor_CustomPatternBasedFileRule">
+            <summary>
+            Opens a policy editor for CustomPatternBasedFileRule using a specified Deny policy path.
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CreatePolicyVM.AllowMicrosoftCreate_Click">
@@ -8968,6 +9109,11 @@
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ClearDataButton_Click">
             <summary>
             Event handler for the Clear Data button
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.CreateSupplementalPolicyVM.FilesAndFoldersScanResultsSearchTextBox">
+            <summary>
+            Search box for the Files and Folders scan results.
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.CreateSupplementalPolicyVM.ApplyFilters">
@@ -9591,12 +9737,37 @@
             Event handler for the Background ComboBox selection change event in the Settings page.
             </summary>
         </member>
+        <member name="P:AppControlManager.ViewModels.MDEAHPolicyCreationVM.MDEAdvancedHuntingLogs">
+            <summary>
+            To store the MDE Advanced Hunting CSV log file path.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MDEAHPolicyCreationVM.AreElementsEnabled">
+            <summary>
+            Determines whether the UI elements are enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AppControlManager.ViewModels.MDEAHPolicyCreationVM.SelectedItem">
+            <summary>
+            For Selector Bar's navigation
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.MDEAHPolicyCreationVM.CalculateColumnWidths">
             <summary>
             Calculates the maximum required width for each column (including header text)
             and assigns the value (with a little extra padding) to the corresponding property.
             It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
             And only after this method, the ItemsSource must be assigned to the ListView.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click">
+            <summary>
+            Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+            </summary>
+        </member>
+        <member name="M:AppControlManager.ViewModels.MDEAHPolicyCreationVM.BrowseForLogs_Click">
+            <summary>
+            Event handler for the select Code Integrity EVTX file path button
             </summary>
         </member>
         <member name="M:AppControlManager.ViewModels.MergePoliciesVM.MergeButton_Click">
@@ -9725,9 +9896,19 @@
             Event handler for deleting selected items from the SignatureBasedRulesListView's Items Source
             </summary>
         </member>
+        <member name="F:AppControlManager.ViewModels.SettingsVM.MainInfoBar">
+            <summary>
+            The main InfoBar for the Settings VM.
+            </summary>
+        </member>
         <member name="M:AppControlManager.ViewModels.SettingsVM.BrowseForCISchemaPath">
             <summary>
             Opens a file picker for Code Integrity Schema path.
+            </summary>
+        </member>
+        <member name="F:AppControlManager.ViewModels.SettingsVM.LanguageOptions">
+            <summary>
+            Language Selection ComboBox ItemsSource
             </summary>
         </member>
         <member name="F:AppControlManager.ViewModels.SettingsVM.VersionTextBlockText">

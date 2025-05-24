@@ -15,10 +15,12 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
+using AppControlManager.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -26,6 +28,17 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 {
+	internal MDEAHPolicyCreationVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
 
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
@@ -36,26 +49,53 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> AllFileIdentities = [];
 
+	/// <summary>
+	/// To store the MDE Advanced Hunting CSV log file path.
+	/// </summary>
+	internal string? MDEAdvancedHuntingLogs { get; set => SP(ref field, value); }
 
 	internal ListViewHelper.SortState SortState { get; set; } = new();
 
 	#region UI-Bound Properties
 
-	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SP(ref field, value);
-	} = InfoBarSeverity.Informational;
-
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Determines whether the UI elements are enabled or disabled.
+	/// </summary>
+	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// For Selector Bar's navigation
+	/// </summary>
+	internal SelectorBarItem? SelectedItem
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(IsLocalSelected));
+				OnPropertyChanged(nameof(IsCloudSelected));
+				OnPropertyChanged(nameof(IsCreateSelected));
+				OnPropertyChanged(nameof(LocalVisibility));
+				OnPropertyChanged(nameof(CloudVisibility));
+				OnPropertyChanged(nameof(CreateVisibility));
+			}
+		}
+	}
+	internal bool IsLocalSelected => string.Equals(SelectedItem?.Text, "Local", StringComparison.OrdinalIgnoreCase);
+	internal bool IsCloudSelected => string.Equals(SelectedItem?.Text, "Cloud", StringComparison.OrdinalIgnoreCase);
+	internal bool IsCreateSelected => string.Equals(SelectedItem?.Text, "Create", StringComparison.OrdinalIgnoreCase);
+	internal Visibility LocalVisibility => IsLocalSelected ? Visibility.Visible : Visibility.Collapsed;
+	internal Visibility CloudVisibility => IsCloudSelected ? Visibility.Visible : Visibility.Collapsed;
+	internal Visibility CreateVisibility => IsCreateSelected ? Visibility.Visible : Visibility.Collapsed;
+
 
 	#endregion
 
@@ -157,4 +197,96 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 
 	#endregion
 
+
+	// The list of queries property for x:Bind
+	internal readonly List<MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage> AdvancedHuntingQueries = [
+
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query",
+			Query = """
+DeviceEvents
+| where ActionType startswith "AppControlCodeIntegrity"
+   or ActionType startswith "AppControlCIScriptBlocked"
+   or ActionType startswith "AppControlCIScriptAudited"
+"""
+		},
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name filter",
+			Query = """
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName"
+"""
+		},
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name and Time filter",
+			Query = """
+DeviceEvents
+| where Timestamp >= ago(1h)
+
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName"
+"""
+		},
+
+		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+		{
+			QueryTitle = "Default Query with Device name and Policy name filter",
+			Query = """
+DeviceEvents
+| where (ActionType startswith "AppControlCodeIntegrity"
+    or ActionType startswith "AppControlCIScriptBlocked"
+    or ActionType startswith "AppControlCIScriptAudited")
+    and DeviceName == "deviceName" | where parse_json(AdditionalFields)["PolicyName"] == 'NameOfThePolicy'
+"""
+		}
+
+		];
+
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	internal void ListViewFlyoutMenuCopy_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
+		if (lv is null) return;
+
+		// Check if there are selected items in the ListView
+		if (lv.SelectedItems.Count > 0)
+		{
+			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+		}
+	}
+
+	internal void BrowseForLogs_Flyout_Clear_Click()
+	{
+		MDEAdvancedHuntingLogs = null;
+	}
+
+
+	/// <summary>
+	/// Event handler for the select Code Integrity EVTX file path button
+	/// </summary>
+	internal void BrowseForLogs_Click()
+	{
+		const string filter = "CSV file|*.csv";
+
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected csv file path
+			MDEAdvancedHuntingLogs = selectedFile;
+
+			Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
+		}
+	}
 }

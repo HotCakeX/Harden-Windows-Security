@@ -1183,9 +1183,6 @@
   <data name="SelectedApps" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത ആപ്പുകൾ: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>ഒരു പിശക് സംഭവിച്ചു: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>നിഷേധിക്കൽ നയം വിജയകരമായി സൃഷ്ടിച്ചു</value>
   </data>
@@ -3467,7 +3464,7 @@
     <value>ഓഡിറ്റ് ഘട്ടത്തിൽ {0} ലോഗ്(കൾ) സൃഷ്ടിക്കപ്പെട്ടു</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>സിസ്റ്റം സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>സിസ്റ്റം സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>ഇവന്റുകൾക്കായി സിസ്റ്റം വിജയകരമായി സ്കാൻ ചെയ്തു</value>
@@ -3494,7 +3491,7 @@
     <value>{0} ഫയലുകൾ സ്കാൻ ചെയ്യുന്നു</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>ഡ്രൈവറുകൾക്കായി സിസ്റ്റം വിജയകരമായി സ്കാൻ ചെയ്തു</value>
@@ -3545,7 +3542,7 @@
     <value>{0} CIP-ലേക്ക് പരിവർത്തനം ചെയ്യുന്നു</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>XML ഫയലുകൾ CIP-ലേക്ക് പരിവർത്തനം ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി: {0}</value>
+    <value>XML ഫയലുകൾ CIP-ലേക്ക് പരിവർത്തനം ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത എല്ലാ XML ഫയലുകളും CIP ബൈനറികളിലേക്ക് വിജയകരമായി പരിവർത്തനം ചെയ്തു</value>
@@ -3554,7 +3551,7 @@
     <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുന്നു...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>ലോഗ് സ്കാൻ സമയത്ത് ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>ലോഗ് സ്കാൻ സമയത്ത് ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>സ്കാൻ പൂർത്തിയായി. {0} ലോഗുകൾ കണ്ടെത്തി.</value>
@@ -3599,7 +3596,7 @@
     <value>അനുബന്ധ നയത്തിന്റെ BasePolicyID ആയി ഉപയോഗിക്കുന്നതിന് ഒരു അടിസ്ഥാന നയ GUID നൽകിയിട്ടില്ല.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>ലോഗുകൾ പ്രോസസ്സ് ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: {0}.</value>
+    <value>ലോഗുകൾ പ്രോസസ്സ് ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>ലോഗുകൾ വിജയകരമായി പ്രോസസ്സ് ചെയ്യുകയും നയത്തിൽ ഉൾപ്പെടുത്തുകയും ചെയ്തു.</value>
@@ -3617,7 +3614,7 @@
     <value>സിമുലേഷൻ നടത്തുന്നു</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>സിമുലേഷൻ സമയത്ത് ഒരു പ്രശ്നമുണ്ടായി: {0}</value>
+    <value>സിമുലേഷൻ സമയത്ത് ഒരു പ്രശ്നമുണ്ടായി: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>സിമുലേഷൻ വിജയകരമായി പൂർത്തിയായി.</value>
@@ -3632,7 +3629,7 @@
     <value>നയം ലോഡ് ചെയ്യുന്നു</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത നയ ഫയൽ ലോഡ് ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി: {0}</value>
+    <value>തിരഞ്ഞെടുത്ത നയ ഫയൽ ലോഡ് ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത നയം വിജയകരമായി ലോഡ് ചെയ്തു</value>
@@ -4055,7 +4052,7 @@
     <value>MSGraph-ലേക്കുള്ള സൈൻ ഇൻ ഉപയോക്താവ് റദ്ദാക്കി</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>MSGraph-ലേക്ക് സൈൻ ഇൻ ചെയ്യുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>MSGraph-ലേക്ക് സൈൻ ഇൻ ചെയ്യുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ക്വറി വിജയകരമായിരുന്നു.</value>
@@ -4301,7 +4298,7 @@
     <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകളിൽ ഫലങ്ങളൊന്നും കണ്ടെത്തിയില്ല.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകൾ സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകൾ സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകൾ സ്കാൻ ചെയ്യുന്നത് വിജയകരമായി പൂർത്തിയാക്കി.</value>
@@ -4322,7 +4319,7 @@
     <value>അനുബന്ധ നയവുമായി ബന്ധിപ്പിക്കുന്നതിന് ഒരു നയ ഫയലും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>അനുബന്ധ നയം സൃഷ്ടിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>അനുബന്ധ നയം സൃഷ്ടിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>മൈക്രോസോഫ്റ്റ് ഡിഫൻഡർ ഫോർ എൻഡ്‌പോയിന്റ് അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ഡാറ്റ വീണ്ടെടുക്കുന്നു</value>
@@ -4343,7 +4340,7 @@
     <value>അനുബന്ധ നയം സൃഷ്ടിക്കുന്നതിന് വീണ്ടെടുത്ത ഡാറ്റയിൽ പ്രവർത്തനക്ഷമമായ ലോഗുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>MSGraph-ൽ നിന്ന് MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾ വീണ്ടെടുക്കുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+    <value>MSGraph-ൽ നിന്ന് MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾ വീണ്ടെടുക്കുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
   </data>
   <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത നയത്തിലേക്ക് ലോഗുകൾ ചേർക്കുക</value>
@@ -4956,5 +4953,320 @@
 </data>
 <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>സിസ്റ്റത്തിൽ അസൈൻ ചെയ്‌തിട്ടില്ലാതെ ഡിപ്ലോയ് ചെയ്യാൻ XML പോളിസി ഫയലുകൾ തിരയുക</value>
+</data>
+ <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>വിഷയ നാമ ശകലം ശൂന്യമാണ്.</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>സ്റ്റോർ {0}\{1}-ൽ സർട്ടിഫിക്കറ്റുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>വിഷയ ശകലമായ '{3}' (ഫലപ്രദമായ CN തിരയൽ: '{4}') എന്നതിനായി സ്റ്റോർ {1}\{2}-ലെ {0} സർട്ടിഫിക്കറ്റുകൾ തിരയുന്നു...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>പൊരുത്തപ്പെടുന്ന വിഷയ മാനദണ്ഡങ്ങളുള്ള സർട്ടിഫിക്കറ്റ് കണ്ടെത്തി: {0} (തമ്പ്‌പ്രിന്റ്: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>സിഗ്നേച്ചർ അൽഗോരിതം: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റിന് കോഡ് സൈനിംഗ് EKU ഉണ്ട്.</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റിന് കോഡ് സൈനിംഗ് EKU ഇല്ല.</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>അനുയോജ്യമായ കോഡ് സൈനിംഗ് സർട്ടിഫിക്കറ്റ് കണ്ടെത്തി: {0} {1}\{2}-ൽ (തമ്പ്‌പ്രിന്റ്: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>മുന്നറിയിപ്പ്: {1}-ലെ സർട്ടിഫിക്കറ്റ് സ്റ്റോർ {0} ആക്‌സസ് ചെയ്യുന്നതിൽ ക്രിപ്‌റ്റോഗ്രാഫിക് പിശക്: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>മുന്നറിയിപ്പ്: {1}-ലെ സർട്ടിഫിക്കറ്റ് സ്റ്റോർ {0} ആക്‌സസ് ചെയ്യുന്നതിൽ പൊതുവായ പിശക്: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>പരിശോധിച്ച സ്റ്റോറുകളിൽ '{0}' എന്ന വിഷയ ശകലത്തോടുകൂടിയതും, ഒരു സ്വകാര്യ കീയും, കോഡ് സൈനിംഗ് EKU-ഉം ഉള്ള അനുയോജ്യമായ കോഡ് സൈനിംഗ് സർട്ടിഫിക്കറ്റ് കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>CryptSignMessage-നായുള്ള ഓട്ടോമാറ്റിക് ഹാഷ് അൽഗോരിതം OID കണ്ടെത്തലിനായി സർട്ടിഫിക്കറ്റ് സിഗ്നേച്ചർ അൽഗോരിതം OID '{0}' ('{1}') പിന്തുണയ്ക്കുന്നില്ല.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>SignerSignEx3-നായുള്ള ഓട്ടോമാറ്റിക് ALG_ID കണ്ടെത്തലിനായി സർട്ടിഫിക്കറ്റ് സിഗ്നേച്ചർ അൽഗോരിതം OID '{0}' ('{1}') പിന്തുണയ്ക്കുന്നില്ല.</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റിന് ഒരു സ്വകാര്യ കീ ഉണ്ടായിരിക്കണം.</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>PKCS #7 സിഗ്നേച്ചർ (ഉള്ളടക്കം ഉൾച്ചേർത്തത്, സർട്ടിഫിക്കറ്റ് ഉൾപ്പെടുത്തിയത്) {0} എന്നതിലേക്ക് എഴുതി</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>SignerSignEx3 HRESULT: 0x{0:X} ഉപയോഗിച്ച് പരാജയപ്പെട്ടു</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT).</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND).</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - ഒന്നോ അതിലധികമോ ആർഗ്യുമെന്റുകൾ അസാധുവാണ്).</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>ഫയലിൽ ഒപ്പിടുന്നതിൽ Win32 പിശക് (കോഡ്: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>ആപ്പ് സ്റ്റാർട്ടപ്പ്, .NET റൺടൈം പതിപ്പ്: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>AppControl Manager-ന്റെ മറ്റൊരു ഇൻസ്റ്റൻസ് പ്രവർത്തിക്കുന്നുണ്ട്. ഇതൊരു വിവരദായക ലോഗ് മാത്രമാണ്.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>ഫയൽ ആക്ടിവേഷൻ കണ്ടെത്തി</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>ഫയൽ ആക്ടിവേഷൻ വഴി ആപ്പ് സമാരംഭിച്ചു, പക്ഷേ ആർഗ്യുമെന്റുകളിൽ ഫയൽ ഒബ്‌ജക്റ്റുകളൊന്നും ഉണ്ടായിരുന്നില്ല</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>ഫയൽ ആക്ടിവേഷൻ വഴി ആപ്പ് സമാരംഭിച്ചു, പക്ഷേ ഫയൽ ആക്ടിവേഷൻ ആർഗ്യുമെന്റുകളൊന്നും ഉണ്ടായിരുന്നില്ല</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>ഉപയോക്താവ് UAC പ്രോംപ്റ്റ് റദ്ദാക്കി.</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത ഫയൽ പ്രോസസ് ചെയ്യുന്നതിന് എലിവേഷൻ അഭ്യർത്ഥന ആവശ്യമായിരുന്നു, പക്ഷേ ഉപയോക്താവ് അത് നിരസിച്ചു. ആപ്പിൽ നിന്ന് പുറത്തുകടക്കുന്നു.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>എലിവേഷൻ അഭ്യർത്ഥന ഉപയോക്താവ് നിരസിച്ചു</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>താഴെപ്പറയുന്ന ഫയലിനായുള്ള ഫയൽ ആക്ടിവേഷൻ ഉപയോഗിച്ച് ആപ്പ് സമാരംഭിച്ചു: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത ഫയൽ ഉപയോഗിച്ച് പോളിസി എഡിറ്റർ സമാരംഭിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>ആപ്പ് അടയ്ക്കുമ്പോൾ വിൻഡോ വലുപ്പം സേവ് ചെയ്യുന്നതിൽ ഒരു പ്രോഗ്രാം പിശക് സംഭവിച്ചു: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>ഒരു പിശക് സംഭവിച്ചു</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>അപ്രതീക്ഷിതമായ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>കോഡ് ഇന്റഗ്രിറ്റി ലോഗ് വലുപ്പം സജ്ജീകരിക്കുന്നു</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>പതിപ്പ്: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>PFN: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>ആപ്പിനായുള്ള വിശദാംശങ്ങൾ ലഭിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>ഒരു ആപ്പിന്റെ വിശദാംശങ്ങൾ ലഭിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>നൽകിയിട്ടുള്ള സ്ട്രിംഗ് '{0}' ഒരു സാധുവായ GUID ഫോർമാറ്റല്ല.</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത XML പോളിസി ഫയൽ ഒരു സപ്ലിമെന്റൽ പോളിസിയാണ്, എന്നാൽ അതിന്റെ BasePolicyID-യും PolicyID-യും ഒന്നുതന്നെയാണ്, ഇത് ഒരു ബേസ് പോളിസിയാണെന്ന് സൂചിപ്പിക്കുന്നു, തരം മാറ്റുന്നു.</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത XML പോളിസി ഫയൽ ഒരു ബേസ് പോളിസിയാണ്, എന്നാൽ അതിന്റെ BasePolicyID-യും PolicyID-യും ഒന്നല്ല, ഇത് ഒരു സപ്ലിമെന്റൽ പോളിസിയാണെന്ന് സൂചിപ്പിക്കുന്നു, തരം മാറ്റുന്നു.</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>'{0}' എന്നതിലെ പോളിസി വിജയകരമായി കോൺഫിഗർ ചെയ്തു. ഇപ്പോൾ അതിന് '{1}' തരം, BasePolicyID '{2}', PolicyID '{3}' എന്നിവയുണ്ട്.</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>'{0}' എന്നതിലെ പോളിസി ഫയലിന്റെ പതിപ്പ് '{1}' എന്നതിൽ നിന്ന് '{2}' എന്നതിലേക്ക് വിജയകരമായി സജ്ജീകരിച്ചു.</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഡാറ്റാ വിഭജന പ്രക്രിയ ആരംഭിക്കുന്നു.</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഹാഷ് തലം മാത്രം ഉപയോഗിക്കുന്നു.</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: പ്രസാധകർ -> ഹാഷ് തലങ്ങൾ ഉപയോഗിക്കുന്നു.</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഫയൽ പ്രസാധകർ -> പ്രസാധകർ -> ഹാഷ് തലങ്ങൾ ഉപയോഗിക്കുന്നു.</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഫയലിനായുള്ള ഹാഷ് അറേയിലേക്ക് പ്രസാധക നിയമം കൈമാറുന്നു: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} ഫയൽ പ്രസാധക നിയമങ്ങൾ.</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} പ്രസാധക നിയമങ്ങൾ.</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} ഹാഷ് നിയമങ്ങൾ.</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} ഫയൽ പാത നിയമങ്ങൾ.</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} വൈൽഡ്കാർഡ് ഫയൽ പാത നിയമങ്ങൾ.</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} PFN നിയമങ്ങൾ.</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഫയൽ പ്രസാധക ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു.</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഫയലിനായുള്ള ഇന്റർമീഡിയറ്റ് സർട്ടിഫിക്കറ്റ് TBS ഹാഷ് ശൂന്യമാണ്: {0}, പകരം ലീഫ് സർട്ടിഫിക്കറ്റ് TBS ഹാഷ് ഉപയോഗിക്കുന്നു</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: പ്രസാധക ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു.</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഒപ്പിടാത്ത ഹാഷ് ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു.</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഹാഷ് ഡാറ്റയിൽ ഒന്നോ അതിലധികമോ ആവശ്യമായ പ്രോപ്പർട്ടികൾ ശൂന്യമോ ശൂന്യമോ ആണ്.</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: ഫയൽ പാത ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: വൈൽഡ്കാർഡ് ഫയൽ പാത ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: കസ്റ്റം പാറ്റേൺ അടിസ്ഥാനമാക്കിയുള്ള ഫയൽ പാത ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: PFN ഡാറ്റ പ്രോസസ് ചെയ്യുന്നു</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: പ്രക്രിയ പൂർത്തിയായി.</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>{0} ഫയൽ തുറക്കാൻ കഴിഞ്ഞില്ല. പിശക്: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള GetFileSizeFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള CreateFileMappingFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള CreateFileMappingAlreadyExists {1} പിശകോടെ നിലവിലുണ്ട്</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള MapViewOfFileFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള ImageNtHeaderFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള ImageDirectoryEntryToDataExFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള UnmapViewOfFileFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള മാപ്പ് ഹാൻഡിൽ അടയ്ക്കാൻ കഴിഞ്ഞില്ല {1} പിശകോടെ</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>{0} ഫയലിനായുള്ള ഫയൽ ഹാൻഡിൽ അടയ്ക്കാൻ കഴിഞ്ഞില്ല {1} പിശകോടെ</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>XML ഫയലുകളിലൊന്നിൽ ഒരേ ഐഡി '{0}' ഉള്ള ഒന്നിൽ കൂടുതൽ സൈനർ ഉണ്ട്</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>'{0}' പോളിസി ഫയലിലെ HVCI വിജയകരമായി സ്ട്രിക്റ്റിലേക്ക് സജ്ജമാക്കി.</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>ജമ്പ്‌ലിസ്റ്റ് പിന്തുണയ്ക്കുന്നില്ല.</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>നിയമങ്ങൾ ലയിപ്പിക്കുന്നു</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>ആപ്പ് അടച്ചപ്പോൾ ഉണ്ടായിരുന്ന വിൻഡോ വലുപ്പത്തിലേക്ക് തിരികെ സജ്ജീകരിക്കുന്നു. ഉയരം: {0} - വീതി: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptOpenAlgorithmProvider പിശക് കോഡ് ഉപയോഗിച്ച് പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>CryptCATOpen പിശക് കോഡ് ഉപയോഗിച്ച് പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptCloseAlgorithmProvider പിശക് കോഡ് ഉപയോഗിച്ച് പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>ASR നിയമങ്ങളുടെ ഒഴിവാക്കൽ ലിസ്റ്റ് JSON ഡീസെറിയലൈസ് ചെയ്യാൻ കഴിഞ്ഞില്ല, അത് ഇതായിരുന്നു: {0} - പിശക്: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി ഹാഷുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>'{1}' XML ഫയലിലേക്ക് ചേർക്കാൻ {0} ഹാഷ് നിയമങ്ങളുണ്ട്</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>ഇതിനായുള്ള Sha256 ഹാഷ്: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>ഇതിനായുള്ള Sha1 ഹാഷ്: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>കേർണൽ-മോഡ് ഫയലിനായി ഹാഷ് നിയമം സൃഷ്ടിക്കുന്നു: {0}. കേർണൽ-മോഡ് ഫയൽ ഒപ്പിട്ടിരിക്കണം!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി ഹാഷുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി ഫയൽപാത്ത് നിയമങ്ങളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>'{1}' XML ഫയലിലേക്ക് ചേർക്കാൻ {0} ഫയൽപാത്ത് നിയമങ്ങളുണ്ട്</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>ഫയൽ പാത നിയമ തരം</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>താഴെപ്പറയുന്ന ഫയൽ ഫയൽപാത്ത് നിയമങ്ങളെ പിന്തുണയ്ക്കാത്ത കേർണൽ-മോഡ് ഡ്രൈവറാണ്: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി ഫയൽപാത്ത് നിയമങ്ങളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി ഫയൽ പബ്ലിഷർ സൈനർമാരൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>XML ഫയലിലേക്ക് ചേർക്കാൻ {0} ഫയൽ പബ്ലിഷർ സൈനർമാരുണ്ട്</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>ഫയൽ പബ്ലിഷർ നിയമ തരം</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി ഫയൽ പബ്ലിഷർ സൈനർമാരൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി പാക്കേജ് ഫാമിലി നെയിമുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>പാക്കേജ് ചെയ്ത ആപ്പിനെ അതിന്റെ ഫാമിലി നെയിം ഉപയോഗിച്ച് അനുവദിക്കുന്നു</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി പാക്കേജ് ഫാമിലി നെയിമുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>പാക്കേജ് ചെയ്ത ആപ്പിനെ അതിന്റെ ഫാമിലി നെയിം ഉപയോഗിച്ച് നിഷേധിക്കുന്നു</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി പ്രസാധക സൈനർമാരൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>'{1}' XML ഫയലിലേക്ക് ചേർക്കാൻ {0} പ്രസാധക സൈനർമാരുണ്ട്</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി പ്രസാധക സൈനർമാരൊന്നും കണ്ടെത്തിയില്ല.</value>
 </data>
 </root>

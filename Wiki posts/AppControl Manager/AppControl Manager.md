@@ -294,7 +294,7 @@ The build process will generate complete log files and you can use the [MSBuild 
 ```powershell
 # Requires -Version 5.1
 # Requires -RunAsAdministrator
-$global:ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 # Start the stopwatch
 $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -319,15 +319,20 @@ if (!(Get-Command -Name 'winget.exe' -ErrorAction Ignore)) {
     }
 
     Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
+
+    # Required to update the Winget
+    Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
+
     # Get the paths to all of the dependencies
     [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
     Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
 
     Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+
 }
 
-[System.String]$BranchName = "main"
-[System.String]$RepoName = "Harden-Windows-Security"
+[System.String]$BranchName = 'main'
+[System.String]$RepoName = 'Harden-Windows-Security'
 [System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
 [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
 [System.String]$InitialWorkingDirectory = $PWD
@@ -337,37 +342,56 @@ Remove-Item -Path $ZipPath -Force
 [System.String]$AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'AppControl Manager')
 Set-Location -Path $AppControlManagerDirectory
 
+Write-Host -Object 'The version of the Winget currently in use:'
+Write-Host -Object (winget --version)
+
 winget source update
-winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
-if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install .NET SDK') }
+Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
+$null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
 
+Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
+$null = winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
+
+Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
 # Downloads the online installer and automatically runs it and installs the build tools
 # https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment
 # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-build-tools
 # https://learn.microsoft.com/visualstudio/install/use-command-line-parameters-to-install-visual-studio
 # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community
-winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 --add Microsoft.VisualStudio.Component.UWP.VC.ARM64'
+winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
 
 if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
 
 winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
+# Refresh the environment variables so the current session detects the new dotnet installation
+$Env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';' +
+[System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User)
+
+# https://github.com/Microsoft/vswhere/wiki/Start-Developer-Command-Prompt#using-powershell
+$installationPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property installationPath
+if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsdevcmd.bat" -PathType Leaf)) {
+    & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | ForEach-Object -Process {
+        $name, $value = $_ -split '=', 2
+        Set-Content -Path env:\"$name" -Value $value -Force
+        Write-Host -Object "Setting environment variable: $name=$value"
+    }
+}
 
 # Update the workloads
 dotnet workload update
 dotnet workload config --update-mode workload-set
 dotnet workload update
 
-# Refresh the environment variables so the current session detects the new dotnet installation
-$Env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';' +
-[System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User)
-
 Write-Host -Object "`nChecking .NET info`n`n" -ForegroundColor Magenta
 dotnet --info
 Write-Host -Object "`nListing installed .NET SDKs`n`n" -ForegroundColor Magenta
 dotnet --list-sdks
 
-Function Find-mspdbcmf {
+function Find-mspdbcmf {
     # "-products *" is necessary to detect BuildTools too
     [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
 
@@ -412,39 +436,66 @@ Function Find-mspdbcmf {
 
 [string]$mspdbcmfPath = Find-mspdbcmf
 
-# https://github.com/Microsoft/vswhere/wiki/Start-Developer-Command-Prompt#using-powershell
-$installationPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property installationPath
-if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsdevcmd.bat" -PathType Leaf)) {
-    & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | ForEach-Object -Process {
-        $name, $value = $_ -split '=', 2
-        Set-Content -Path env:\"$name" -Value $value -Force
-        Write-Host -Object "Setting environment variable: $name=$value"
+function Find-MSBuild {
+    # "-products *" is necessary to detect BuildTools too
+    [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
+
+    [string]$MSBuildPath = [System.IO.Path]::Combine($VisualStudioPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
+
+    if (![System.IO.File]::Exists($MSBuildPath)) {
+        throw [System.IO.FileNotFoundException]::New("MSBuild.exe not found at $MSBuildPath")
     }
+
+    return $MSBuildPath
 }
 
+[string]$MSBuildPath = Find-MSBuild
 
 #region --- Compile C++ projects ---
 
 ### ManageDefender
 
-MSBuild.exe 'Excluded Code\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+. $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-Copy-Item -Path 'Excluded Code\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
+Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
 
-MSBuild.exe 'Excluded Code\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+. $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-Copy-Item -Path 'Excluded Code\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
+Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
 
 
 ### ScheduledTaskManager
 
-MSBuild.exe 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+. $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-Copy-Item -Path 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
+Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
 
-MSBuild.exe 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+. $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-Copy-Item -Path 'Excluded Code\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
+Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
+
+#endregion
+
+
+#region --- RUST projects ---
+
+rustup target add aarch64-pc-windows-msvc
+
+rustup target add x86_64-pc-windows-msvc
+
+rustup update
+
+[string]$Current_Location = (Get-Location).Path
+
+Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
+
+cargo build_x64
+Copy-Item -Path '.\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination "$Current_Location\RustInterop" -Force
+
+cargo build_arm64
+Copy-Item -Path '.\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination "$Current_Location\RustInterop" -Force
+
+Set-Location -Path $Current_Location
 
 #endregion
 
@@ -463,8 +514,8 @@ dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minim
 
 dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
 
-Function Get-MSIXFile {
-    Param(
+function Get-MSIXFile {
+    param(
         [System.String]$BasePath,
         [System.String]$FolderPattern,
         [System.String]$FileNamePattern,
@@ -482,7 +533,7 @@ Function Get-MSIXFile {
     }
 
     if (!$DetectedFolder) {
-        Throw [System.InvalidOperationException]::New($ErrorMessageFolder)
+        throw [System.InvalidOperationException]::New($ErrorMessageFolder)
     }
 
     # Get the full path of the first file matching the file name pattern inside the found folder
@@ -496,7 +547,7 @@ Function Get-MSIXFile {
     }
 
     if (!$DetectedFile) {
-        Throw [System.InvalidOperationException]::New($ErrorMessageFile)
+        throw [System.InvalidOperationException]::New($ErrorMessageFile)
     }
     return $DetectedFile
 }
@@ -521,18 +572,18 @@ Function Get-MSIXFile {
 [System.Text.RegularExpressions.Match]$MatchARM64 = $versionRegexARM64.Match($FinalMSIXARM64Name)
 
 if (!$MatchX64.Success) {
-    Throw [System.InvalidOperationException]::New('Could not detect version from X64 file name')
+    throw [System.InvalidOperationException]::New('Could not detect version from X64 file name')
 }
 
 if (!$MatchARM64.Success) {
-    Throw [System.InvalidOperationException]::New('Could not detect version from ARM64 file name')
+    throw [System.InvalidOperationException]::New('Could not detect version from ARM64 file name')
 }
 
 [System.String]$versionX64 = $MatchX64.Groups[1].Value
 [System.String]$versionARM64 = $MatchARM64.Groups[1].Value
 
 if ($versionX64 -ne $versionARM64) {
-    Throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
+    throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
 }
 
 # Craft the file name for the MSIX Bundle file
@@ -548,7 +599,7 @@ if ($versionX64 -ne $versionARM64) {
 # The path to the final MSIX Bundle file
 [System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
 
-Function Get-MakeAppxPath {
+function Get-MakeAppxPath {
     [System.String]$BasePath = 'C:\Program Files (x86)\Windows Kits\10\bin'
 
     # Get all subdirectories under the base path
@@ -596,7 +647,7 @@ if ([System.string]::IsNullOrWhiteSpace($MakeAppxPath)) {
 # https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
 . $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v
 
-if ($LASTEXITCODE -ne 0) { Throw [System.InvalidOperationException]::New("MakeAppx failed creating the MSIXBundle. Exit Code: $LASTEXITCODE") }
+if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("MakeAppx failed creating the MSIXBundle. Exit Code: $LASTEXITCODE") }
 
 #Endregion
 

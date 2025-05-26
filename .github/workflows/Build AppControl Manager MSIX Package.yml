@@ -39,11 +39,11 @@ jobs:
         shell: powershell # Change to pwsh once Windows-latest starts using Server 2025 and change Winget file downloads to use -parallel
         run: |
           try {
-            Write-Host -Object "The version of the pre-installed Winget on the Runner:"
-            Write-Host -Object (winget --version)
+              Write-Host -Object 'The version of the pre-installed Winget on the Runner:'
+              Write-Host -Object (winget --version)
           }
-          catch{
-          Write-Host -Object "Winget is not installed."
+          catch {
+              Write-Host -Object 'Winget is not installed.'
           }
 
           # Retrieve the latest Winget release information
@@ -68,7 +68,7 @@ jobs:
           [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
 
           # Required to update the Winget
-          Stop-Process -Name WindowsTerminal -Force -ErrorAction Ignore
+          Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
 
           Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
 
@@ -91,7 +91,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
 
           Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
-          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.ManagedDesktop --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.ComponentGroup.WindowsAppSDK.Cs --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.v141.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 --add Microsoft.VisualStudio.Component.UWP.VC.ARM64'
+          $null = winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Visual Studio Build Tools: $LASTEXITCODE") }
 
           Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
@@ -110,8 +110,8 @@ jobs:
 
           # Update the workloads
           dotnet workload update
-          # dotnet workload config --update-mode workload-set
-          # dotnet workload update
+          dotnet workload config --update-mode workload-set
+          dotnet workload update
 
           [System.String]$AppControlManagerDirectory = $PWD.Path
 
@@ -174,27 +174,41 @@ jobs:
               }
           }
 
+          function Find-MSBuild {
+              # "-products *" is necessary to detect BuildTools too
+              [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
+
+              [string]$MSBuildPath = [System.IO.Path]::Combine($VisualStudioPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
+
+              if (![System.IO.File]::Exists($MSBuildPath)) {
+                  throw [System.IO.FileNotFoundException]::New("MSBuild.exe not found at $MSBuildPath")
+              }
+
+              return $MSBuildPath
+          }
+
+          [string]$MSBuildPath = Find-MSBuild
 
           #region --- Compile C++ projects ---
 
           ### ManageDefender
 
-          MSBuild.exe 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+          . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
           Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
 
-          MSBuild.exe 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+          . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
           Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
 
 
           ### ScheduledTaskManager
 
-          MSBuild.exe 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+          . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
           Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
 
-          MSBuild.exe 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+          . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
           Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
 

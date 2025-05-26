@@ -197,7 +197,8 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <param name="logSize">Size of the Code Integrity Operational Event Log (in MB)</param>
 	internal static void SetLogSize(double logSize = 0)
 	{
-		Logger.Write("Setting the Code Integrity Log Size");
+		Logger.Write(GlobalVars.Rizz.GetString("SettingCodeIntegrityLogSizeMessageOnly"));
+
 		try
 		{
 			_suppressRegistryCallback = true;

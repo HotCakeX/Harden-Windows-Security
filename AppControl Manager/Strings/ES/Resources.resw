@@ -1183,9 +1183,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SelectedApps" xml:space="preserve">
     <value>Aplicaciones Seleccionadas: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>Hubo un error: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación</value>
   </data>
@@ -3467,7 +3464,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Se generaron {0} registro(s) durante la fase de Auditoría</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Ocurrió un error al escanear el sistema: {0}</value>
+    <value>Ocurrió un error al escanear el sistema: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Se escaneó el sistema en busca de eventos correctamente</value>
@@ -3494,7 +3491,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Escaneando {0} archivos</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Hubo un error: {0}</value>
+    <value>Hubo un error: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Se escaneó el sistema en busca de controladores correctamente</value>
@@ -3545,7 +3542,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Convirtiendo {0} a CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Hubo un problema al convertir los archivos XML a CIP: {0}</value>
+    <value>Hubo un problema al convertir los archivos XML a CIP: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Se convirtieron correctamente todos los archivos XML seleccionados a binarios CIP</value>
@@ -3554,7 +3551,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Escaneando los registros de eventos...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Hubo un error durante el escaneo de registros: {0}</value>
+    <value>Hubo un error durante el escaneo de registros: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Escaneo completo. Se encontraron {0} registros.</value>
@@ -3599,7 +3596,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se proporcionó ningún GUID de Directiva Base para usar como BasePolicyID de la directiva suplementaria.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Hubo un error al procesar los registros: {0}.</value>
+    <value>Hubo un error al procesar los registros: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Se procesaron los registros correctamente y se incluyeron en la directiva.</value>
@@ -3617,7 +3614,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Realizando la Simulación</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Hubo un problema durante la simulación: {0}</value>
+    <value>Hubo un problema durante la simulación: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>La simulación se completó correctamente.</value>
@@ -3632,7 +3629,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Cargando la directiva</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Hubo un problema al cargar el archivo de directiva seleccionado: {0}</value>
+    <value>Hubo un problema al cargar el archivo de directiva seleccionado: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Se cargó correctamente la directiva seleccionada</value>
@@ -4055,7 +4052,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>El usuario canceló el inicio de sesión en MSGraph</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Hubo un error al iniciar sesión en MSGraph: {0}</value>
+    <value>Hubo un error al iniciar sesión en MSGraph: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>La Consulta de Búsqueda Avanzada de MDE ha sido Exitosa.</value>
@@ -4301,7 +4298,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se detectaron resultados en los registros CSV de Búsqueda Avanzada de MDE seleccionados.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Hubo un error al escanear los Registros CSV de Búsqueda Avanzada de MDE seleccionados: {0}</value>
+    <value>Hubo un error al escanear los Registros CSV de Búsqueda Avanzada de MDE seleccionados: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Se completó correctamente el escaneo de los Registros CSV de Búsqueda Avanzada de MDE seleccionados.</value>
@@ -4322,7 +4319,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se seleccionó ningún archivo de directiva para asociar la directiva Suplementaria.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Hubo un error al crear la directiva Suplementaria: {0}</value>
+    <value>Hubo un error al crear la directiva Suplementaria: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Recuperando los datos de Búsqueda Avanzada de Microsoft Defender para Endpoint</value>
@@ -4343,7 +4340,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se encontraron registros procesables entre los datos recuperados para crear una directiva Suplementaria.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Hubo un error al recuperar los registros de Búsqueda Avanzada de MDE desde MSGraph: {0}</value>
+    <value>Hubo un error al recuperar los registros de Búsqueda Avanzada de MDE desde MSGraph: </value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Agregar registros a la directiva seleccionada</value>
@@ -4956,5 +4953,320 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Busque archivo(s) XML de directiva para desplegar sin firmar en el sistema</value>
+</data>
+ <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>El fragmento del nombre del sujeto está vacío.</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>No se encontraron certificados en el almacén {0}\{1}.</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>Buscando {0} certificados en el almacén {1}\{2} para el fragmento de sujeto '{3}' (búsqueda CN efectiva: '{4}')...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>Se encontró un certificado con criterios de sujeto coincidentes: {0} (Huella digital: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>Algoritmo de firma: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>El certificado tiene EKU de firma de código.</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>El certificado NO tiene EKU de firma de código.</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>Se encontró un certificado de firma de código adecuado: {0} en {1}\{2} (Huella digital: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>Advertencia: Error criptográfico al acceder al almacén de certificados {0} en {1}: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>Advertencia: Error general al acceder al almacén de certificados {0} en {1}: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>No se encontró ningún certificado de firma de código adecuado con el fragmento de sujeto '{0}', una clave privada y EKU de firma de código en los almacenes comprobados.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>El OID del algoritmo de firma del certificado '{0}' ('{1}') no es compatible para la detección automática del OID del algoritmo hash para CryptSignMessage.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>El OID del algoritmo de firma del certificado '{0}' ('{1}') no es compatible para la detección automática de ALG_ID para SignerSignEx3.</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>El certificado debe tener una clave privada.</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>Firma PKCS #7 (contenido incrustado, certificado incluido) escrita en {0}</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>SignerSignEx3 falló con HRESULT: 0x{0:X}</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT).</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND).</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - Uno o más argumentos no son válidos).</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>Error de Win32 al firmar el archivo (Código: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>Inicio de la aplicación, versión del runtime de .NET: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>Hay otra instancia de AppControl Manager en ejecución. Esto es solo un registro informativo.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>Activación de archivo detectada</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>La aplicación se inició mediante activación de archivo pero los argumentos no contenían ningún objeto de archivo</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>La aplicación se inició mediante activación de archivo pero sin argumentos de activación de archivo</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>El usuario canceló la solicitud de UAC.</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>Se requería elevación para procesar el archivo seleccionado pero fue denegada por el usuario. Saliendo de la aplicación.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>La solicitud de elevación fue denegada por el usuario</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>La aplicación se inició con activación de archivo para el siguiente archivo: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>Hubo un error al iniciar el Editor de directivas con el archivo seleccionado: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>Se produjo un error al guardar el tamaño de la ventana al cerrar la aplicación: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>Ocurrió un error</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>Ha ocurrido un error inesperado: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>Estableciendo el tamaño del registro de integridad de código</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>Versión: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>PFN: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>Hubo un error al obtener los detalles de la aplicación: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>Hubo un error al obtener los detalles de una aplicación</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>La cadena proporcionada '{0}' no tiene un formato GUID válido.</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>El archivo de directiva XML seleccionado es una directiva complementaria, pero su BasePolicyID y PolicyID son idénticos, lo que indica que es una directiva base; se cambiará el tipo.</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>El archivo de directiva XML seleccionado es una directiva base, pero su BasePolicyID y PolicyID no son idénticos, lo que indica que es una directiva complementaria; se cambiará el tipo.</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>Se configuró correctamente la directiva en '{0}'. Ahora tiene el Tipo '{1}', BasePolicyID '{2}' y PolicyID '{3}'.</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>Se estableció correctamente la versión del archivo de directiva en '{0}' de '{1}' a '{2}'.</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Iniciando el proceso de separación de datos.</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Usando solo el nivel Hash.</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Usando niveles Editor -&gt; Hash.</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Usando niveles Editor de Archivo -&gt; Editor -&gt; Hash.</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Pasando la regla de Editor al array de hash para el archivo: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Reglas de Editor de Archivo.</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Reglas de Editor.</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Reglas de Hash.</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Reglas de Ruta de Archivo.</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Reglas de Ruta de Archivo con Comodín.</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} Reglas PFN.</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos de Editor de Archivo.</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: El hash TBS del certificado intermedio está vacío para el archivo: {0}, usando en su lugar el hash TBS del certificado hoja</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos de Editor.</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos de Hash no firmado.</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Una o más propiedades necesarias son nulas o están vacías en hashData.</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos de Ruta de Archivo</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos de Ruta de Archivo con Comodín</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos de Ruta de Archivo basados en Patrón Personalizado</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Procesando datos PFN</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: Proceso completado.</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>No se pudo abrir el archivo {0}. Error: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>Falló la obtención del tamaño del archivo (GetFileSize) para el archivo {0} con error {1}</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>Falló la creación de la asignación de archivo (CreateFileMapping) para el archivo {0} con error {1}</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>CreateFileMappingAlreadyExists para el archivo {0} con error {1}</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>Falló la asignación de la vista del archivo (MapViewOfFile) para el archivo {0} con error {1}</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>Falló la obtención del encabezado NT de la imagen (ImageNtHeader) para el archivo {0} con error {1}</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>Falló la obtención de datos de la entrada de directorio de imagen (ImageDirectoryEntryToDataEx) para el archivo {0} con error {1}</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>Falló la desasignación de la vista del archivo (UnmapViewOfFile) para el archivo {0} con error {1}</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>No se pudo cerrar el manejador de mapa (CouldNotCloseMapHandle) para el archivo {0} con error {1}</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>No se pudo cerrar el manejador de archivo (CouldNotCloseFileHandle) para el archivo {0} con error {1}</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>Uno de los archivos XML tiene más de 1 Firmante con el mismo ID `{0}`</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>Se estableció correctamente HVCI en el archivo de directiva '{0}' como Estricto.</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>JumpList no es compatible.</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>Fusionando las reglas</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>Restableciendo el tamaño de la ventana al que tenía cuando se cerró la aplicación. Alto: {0} - Ancho: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptOpenAlgorithmProvider falló con el código de error: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>CryptCATOpen falló con el código de error: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptCloseAlgorithmProvider falló con el código de error: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>No se pudo deserializar la lista de excepciones de reglas ASR en formato JSON, que era: {0} - Error: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>no se detectaron Hashes para crear reglas de permiso.</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>Hay {0} reglas de Hash para agregar al archivo XML '{1}'</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>Hash Sha256 para: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>Hash Sha1 para: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>Creando regla de Hash para archivo en Modo Kernel: {0}. ¡El archivo en Modo Kernel debe estar firmado!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron Hashes para crear reglas de denegación.</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>no se detectaron reglas de Ruta de Archivo para crear reglas de permiso.</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>Hay {0} reglas de Ruta de Archivo para agregar al archivo XML '{1}'</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>Tipo de Regla de Ruta de Archivo</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>El siguiente archivo es un controlador en Modo Kernel que no admite reglas de Ruta de Archivo: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron reglas de Ruta de Archivo para crear reglas de denegación.</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>no se detectaron firmantes de Editor de Archivo para crear reglas de permiso.</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>Hay {0} Firmantes de Editor de Archivo para agregar al archivo XML</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>Tipo de Regla de Editor de Archivo</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron firmantes de Editor de Archivo para crear reglas de denegación.</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>no se detectaron PackageFamilyNames para crear reglas de permiso.</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>Permitiendo aplicación empaquetada por su Nombre de Familia</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron PackageFamilyNames para crear reglas de denegación.</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>Denegando aplicación empaquetada por su Nombre de Familia</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>no se detectaron firmantes de Editor para crear reglas de permiso.</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>Hay {0} Firmantes de Editor para agregar al archivo XML '{1}'</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>no se detectaron firmantes de Editor para crear reglas de denegación.</value>
 </data>
 </root>

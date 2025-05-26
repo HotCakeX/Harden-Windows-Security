@@ -36,7 +36,7 @@ internal static class NewCertificateSignerRules
 
 		if (signerData.Count is 0)
 		{
-			Logger.Write($"NewCertificateSignerRules: no Certificate rules detected to create allow rules for.");
+			Logger.Write($"no Certificate rules detected to create allow rules for.");
 			return;
 		}
 

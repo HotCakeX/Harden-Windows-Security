@@ -37,14 +37,14 @@ internal static class NewHashLevelRules
 
 		if (hashes.Count is 0)
 		{
-			Logger.Write($"NewHashLevelRules: no Hashes detected to create allow rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoHashesDetectedAllowMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewHashLevelRules: There are {hashes.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("HashRulesToAddMessage"), hashes.Count, xmlFilePath));
 
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in hashes)
@@ -58,7 +58,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA256
 			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", $"Sha256 Hash for: {hash.FileName}");
+			newAuth256HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.Rizz.GetString("Sha256HashFriendlyName"), hash.FileName));
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
@@ -66,7 +66,7 @@ internal static class NewHashLevelRules
 			// Create new Allow Hash rule for Authenticode SHA1
 			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Allow", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", $"Sha1 Hash for: {hash.FileName}");
+			newAuth1HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.Rizz.GetString("Sha1HashFriendlyName"), hash.FileName));
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
@@ -93,7 +93,7 @@ internal static class NewHashLevelRules
 				// Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
 				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write($"Creating Hash rule for Kernel-Mode file: {hash.FilePath}. Kernel-Mode file should be signed!");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
@@ -125,14 +125,14 @@ internal static class NewHashLevelRules
 
 		if (hashes.Count is 0)
 		{
-			Logger.Write($"NewHashLevelRules: no Hashes detected to create deny rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoHashesDetectedDenyMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewHashLevelRules: There are {hashes.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("HashRulesToAddMessage"), hashes.Count, xmlFilePath));
 
 		// Loop through each hash and create a new rule for it
 		foreach (HashCreator hash in hashes)
@@ -146,7 +146,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA256
 			XmlElement newAuth256HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth256HashNode.SetAttribute("ID", HashSHA256RuleID);
-			newAuth256HashNode.SetAttribute("FriendlyName", $"Sha256 Hash for: {hash.FileName}");
+			newAuth256HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.Rizz.GetString("Sha256HashFriendlyName"), hash.FileName));
 			newAuth256HashNode.SetAttribute("Hash", hash.AuthenticodeSHA256);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth256HashNode);
@@ -154,7 +154,7 @@ internal static class NewHashLevelRules
 			// Create new Deny Hash rule for Authenticode SHA1
 			XmlElement newAuth1HashNode = codeIntegrityPolicy.XmlDocument.CreateElement("Deny", GlobalVars.SiPolicyNamespace);
 			newAuth1HashNode.SetAttribute("ID", HashSHA1RuleID);
-			newAuth1HashNode.SetAttribute("FriendlyName", $"Sha1 Hash for: {hash.FileName}");
+			newAuth1HashNode.SetAttribute("FriendlyName", string.Format(GlobalVars.Rizz.GetString("Sha1HashFriendlyName"), hash.FileName));
 			newAuth1HashNode.SetAttribute("Hash", hash.AuthenticodeSHA1);
 			// Add the new node to the FileRules node
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
@@ -181,7 +181,7 @@ internal static class NewHashLevelRules
 				// Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
 				if (!hash.FilePath.EndsWith(".msi", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write($"Creating Hash rule for Kernel-Mode file: {hash.FilePath}. Kernel-Mode file should be signed!");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("KernelModeHashRuleWarningMessage"), hash.FilePath));
 				}
 
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="131">
@@ -198,6 +198,5 @@ internal static class NewHashLevelRules
 
 		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
-
 
 }

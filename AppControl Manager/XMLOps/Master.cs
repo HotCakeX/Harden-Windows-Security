@@ -32,7 +32,7 @@ internal static class Master
 	/// <param name="stagingArea">Indicates the location where temporary files can be stored during the merging operation.</param>
 	internal static void Initiate(FileBasedInfoPackage incomingData, string xmlFilePath, SiPolicyIntel.Authorization authorization, string? stagingArea = null)
 	{
-		Logger.Write("Merging");
+		Logger.Write(GlobalVars.Rizz.GetString("MergingRulesMessage"));
 
 		if (authorization is SiPolicyIntel.Authorization.Allow)
 		{

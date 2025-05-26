@@ -158,11 +158,9 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 		try
 		{
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = GlobalVars.Rizz.GetString("ScanningEventLogsMessage");
-			MainInfoBar.Severity = InfoBarSeverity.Informational;
-			MainInfoBar.IsClosable = false;
+			ViewModel.MainInfoBar.IsClosable = false;
+
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningEventLogsMessage"));
 
 			// Disable the scan button initially
 			ScanLogs.IsEnabled = false;
@@ -204,17 +202,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 		catch (Exception ex)
 		{
 			error = true;
-
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = string.Format(
-				GlobalVars.Rizz.GetString("ErrorDuringLogsScanMessage"),
-				ex.Message
-			);
-			MainInfoBar.Severity = InfoBarSeverity.Error;
-			MainInfoBar.IsClosable = true;
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorDuringLogsScanMessage"));
 		}
 		finally
 		{
@@ -234,15 +222,13 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			if (!error)
 			{
-				MainInfoBar.Visibility = Visibility.Visible;
-				MainInfoBar.IsOpen = true;
-				MainInfoBar.Message = string.Format(
+				ViewModel.MainInfoBar.WriteSuccess(string.Format(
 					GlobalVars.Rizz.GetString("ScanCompleteLogsFoundMessage"),
 					ViewModel.AllFileIdentities.Count
-				);
-				MainInfoBar.Severity = InfoBarSeverity.Success;
-				MainInfoBar.IsClosable = true;
+				));
 			}
+
+			ViewModel.MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -456,11 +442,9 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
 
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = GlobalVars.Rizz.GetString("ProcessingLogsMessage");
-			MainInfoBar.Severity = InfoBarSeverity.Informational;
-			MainInfoBar.IsClosable = false;
+			ViewModel.MainInfoBar.IsClosable = false;
+
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ProcessingLogsMessage"));
 
 			if (ViewModel.FileIdentities.Count is 0)
 			{
@@ -647,16 +631,7 @@ internal sealed partial class EventLogsPolicyCreation : Page
 		catch (Exception ex)
 		{
 			error = true;
-
-			MainInfoBar.Visibility = Visibility.Visible;
-			MainInfoBar.IsOpen = true;
-			MainInfoBar.Message = string.Format(
-				GlobalVars.Rizz.GetString("ErrorProcessingLogsMessage"),
-				ex.Message);
-			MainInfoBar.Severity = InfoBarSeverity.Error;
-			MainInfoBar.IsClosable = true;
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorProcessingLogsMessage"));
 		}
 		finally
 		{
@@ -670,18 +645,15 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
 
+			ViewModel.MainInfoBar.IsClosable = true;
+
 			if (!error)
 			{
-				MainInfoBar.Visibility = Visibility.Visible;
-				MainInfoBar.IsOpen = true;
-				MainInfoBar.Message = GlobalVars.Rizz.GetString("SuccessProcessedLogsMessage");
-				MainInfoBar.Severity = InfoBarSeverity.Success;
-				MainInfoBar.IsClosable = true;
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessProcessedLogsMessage"));
 
 				ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 		}
-
 	}
 
 

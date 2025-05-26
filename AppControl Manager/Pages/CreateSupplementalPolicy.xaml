@@ -5,6 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
     xmlns:others="using:AppControlManager.Others"
+    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -88,8 +91,44 @@
                 <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
 
             </controls:WrapPanel>
-
+            <!--
             <Border Grid.Row="1" ui:Effects.Shadow="{StaticResource BorderShadow}" BorderThickness="0" Margin="15,0,15,0">
+                <ani:Explicit.Animations>
+                    <ani:AnimationSet x:Name="ShadowEnterAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="20"/>
+                    </ani:AnimationSet>
+
+                    <ani:AnimationSet x:Name="ShadowExitAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="10"/>
+                    </ani:AnimationSet>
+                </ani:Explicit.Animations>
+                <interactivity:Interaction.Behaviors>
+                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
+                        <behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>
+                    </interactivity:EventTriggerBehavior>
+                    <interactivity:EventTriggerBehavior EventName="PointerExited">
+                        <behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>
+                    </interactivity:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
+            -->
+            <Border x:Name="AnimatedBorder"
+                Grid.Row="1"
+                ui:Effects.Shadow="{StaticResource BorderShadow}"
+                BorderThickness="0"
+                Margin="15,0,15,0"
+                PointerEntered="{x:Bind OnBorderPointerEntered}"
+                PointerExited="{x:Bind OnBorderPointerExited}">
+
+                <ani:Explicit.Animations>
+                    <ani:AnimationSet x:Name="ShadowEnterAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="20"/>
+                    </ani:AnimationSet>
+
+                    <ani:AnimationSet x:Name="ShadowExitAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="10"/>
+                    </ani:AnimationSet>
+                </ani:Explicit.Animations>
 
                 <Border Height="60" Background="{StaticResource SmokeFillColorDefaultBrush}" BorderThickness="0" CornerRadius="18">
 
@@ -104,7 +143,7 @@
                             <TextBlock x:Uid="Mode" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
 
                             <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
-                                      x:Uid="PolicyCreationOperationModeComboBox">
+                          x:Uid="PolicyCreationOperationModeComboBox">
                                 <ComboBoxItem x:Uid="CreateNewPolicyComboBoxItem"/>
                                 <ComboBoxItem x:Uid="AddToExistingPolicyComboBoxItem"/>
                             </ComboBox>
@@ -116,9 +155,9 @@
                             <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
 
                                 <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
-                                                   Margin="15,0,0,0"
-                                                   Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
-                                                   IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
+                                       Margin="15,0,0,0"
+                                       Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
+                                       IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
                                     <customUI:ButtonV2.Flyout>
                                         <Flyout>
@@ -130,8 +169,8 @@
                                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                                 <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
-                                                TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                                MinWidth="400" IsReadOnly="True" />
+                                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                    MinWidth="400" IsReadOnly="True" />
 
                                             </controls:WrapPanel>
 
@@ -320,7 +359,7 @@
 
                         </customUI:SettingsCardV2>
 
-                        <controls:SettingsCard x:Uid="ScalabilitySettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <customUI:SettingsCardV2 x:Uid="ScalabilitySettingsCard">
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -334,15 +373,15 @@
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel>
-                                                <controls:RadialGauge
+                                                <customUI:ColorRadialGaugeV2                                                    
                                                     StepSize="1"
                                                     TickSpacing="2"
                                                     ScaleWidth="12"
-                                                    NeedleWidth="5"
-                                                    NeedleLength="80"
+                                                    NeedleWidth="0"
+                                                    NeedleLength="0"
                                                     TickLength="8"
                                                     TickWidth="0"
-                                                    ScalePadding="0"
+                                                    ScalePadding="5"
                                                     TickPadding="24"
                                                     Width="200"
                                                     Maximum="120"
@@ -357,7 +396,7 @@
 
                             </controls:WrapPanel>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="ViewDetectedFilesDetailsSettingsCard"
                             HeaderIcon="{ui:FontIcon Glyph=&#xE83B;}"

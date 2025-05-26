@@ -37,14 +37,14 @@ internal static class NewFilePublisherLevelRules
 
 		if (filePublisherSigners.Count is 0)
 		{
-			Logger.Write($"NewFilePublisherLevelRules: no FilePublisher signers detected to create allow rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoFilePublisherSignersDetectedAllowMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewFilePublisherLevelRules: There are {filePublisherSigners.Count} File Publisher Signers to be added to the XML file");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("FilePublisherSignersToAddMessage"), filePublisherSigners.Count));
 
 		foreach (FilePublisherSignerCreator filePublisherData in filePublisherSigners)
 		{
@@ -57,7 +57,7 @@ internal static class NewFilePublisherLevelRules
 
 			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
 			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", "File Publisher Rule Type");
+			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("FilePublisherRuleTypeFriendlyName"));
 
 			#region Creating File Attributes with automatic fallback
 
@@ -180,14 +180,14 @@ internal static class NewFilePublisherLevelRules
 
 		if (filePublisherSigners.Count is 0)
 		{
-			Logger.Write($"NewFilePublisherLevelRules: no FilePublisher signers detected to create deny rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoFilePublisherSignersDetectedDenyMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewFilePublisherLevelRules: There are {filePublisherSigners.Count} File Publisher Signers to be added to the XML file");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("FilePublisherSignersToAddMessage"), filePublisherSigners.Count));
 
 		foreach (FilePublisherSignerCreator filePublisherData in filePublisherSigners)
 		{
@@ -200,7 +200,7 @@ internal static class NewFilePublisherLevelRules
 
 			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
 			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", "File Publisher Rule Type");
+			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("FilePublisherRuleTypeFriendlyName"));
 
 			#region Creating File Attributes with automatic fallback
 
@@ -309,6 +309,5 @@ internal static class NewFilePublisherLevelRules
 
 		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
-
 
 }

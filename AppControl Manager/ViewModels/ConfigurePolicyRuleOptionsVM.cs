@@ -18,11 +18,30 @@
 using System.Collections.Generic;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 {
+
+	internal ConfigurePolicyRuleOptionsVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
+
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal bool IsElevated => App.IsElevated;

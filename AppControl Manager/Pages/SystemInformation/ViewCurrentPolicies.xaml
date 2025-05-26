@@ -22,10 +22,18 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
+        <InfoBar Grid.Row="0"
+                 Margin="15"
+                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
+        <Border Grid.Row="1" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
@@ -125,7 +133,7 @@
 
         <customUI:ListViewV2
                   RegistryKey="Locally_Deployed_Policies"
-                  Grid.Row="1"
+                  Grid.Row="2"
                   SelectionMode="Single"
                   IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                   SelectedIndex="{x:Bind ViewModel.ListViewSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

@@ -826,9 +826,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			error = true;
 			await Dispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBar.WriteError(ex, string.Format(
-					GlobalVars.Rizz.GetString("ErrorLoadingPolicyFileMessage"),
-					ex.Message));
+				MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorLoadingPolicyFileMessage"));
 			});
 		}
 		finally
@@ -1678,14 +1676,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
 	internal async Task OpenInPolicyEditor(string? policyFile)
 	{
-		// Navigate to the policy editor page
-		App._nav.Navigate(typeof(Pages.PolicyEditor), null);
-
-		// Assign the policy file path to the local variable
-		SelectedPolicyFile = policyFile;
-
 		try
 		{
+			// Navigate to the policy editor page
+			App._nav.Navigate(typeof(Pages.PolicyEditor), null);
+
+			// Assign the policy file path to the local variable
+			SelectedPolicyFile = policyFile;
+
 			await Task.Run(ProcessData);
 		}
 		catch (Exception ex)

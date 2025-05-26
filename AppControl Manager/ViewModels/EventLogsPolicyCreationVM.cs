@@ -20,11 +20,30 @@ using System.Collections.ObjectModel;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
 internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
+
+	internal EventLogsPolicyCreationVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
+
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
 	// To store the FileIdentities displayed on the ListView
 	// Binding happens on the XAML but methods related to search update the ItemSource of the ListView from code behind otherwise there will not be an expected result
 	internal readonly ObservableCollection<FileIdentity> FileIdentities = [];

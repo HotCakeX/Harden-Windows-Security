@@ -37,14 +37,14 @@ internal static class NewPublisherLevelRules
 
 		if (publisherSigners.Count is 0)
 		{
-			Logger.Write($"NewPublisherLevelRules: no Publisher signers detected to create allow rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoPublisherSignersDetectedAllowMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewPublisherLevelRules: There are {publisherSigners.Count} Publisher Signers to be added to the XML file '{xmlFilePath}'");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("PublisherSignersToAddMessage"), publisherSigners.Count, xmlFilePath));
 
 		foreach (PublisherSignerCreator publisherData in publisherSigners)
 		{
@@ -129,14 +129,14 @@ internal static class NewPublisherLevelRules
 
 		if (publisherSigners.Count is 0)
 		{
-			Logger.Write($"NewPublisherLevelRules: no Publisher signers detected to create deny rules for.");
+			Logger.Write(GlobalVars.Rizz.GetString("NoPublisherSignersDetectedDenyMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write($"NewPublisherLevelRules: There are {publisherSigners.Count} Publisher Signers to be added to the XML file '{xmlFilePath}'");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("PublisherSignersToAddMessage"), publisherSigners.Count, xmlFilePath));
 
 		foreach (PublisherSignerCreator publisherData in publisherSigners)
 		{
@@ -207,6 +207,5 @@ internal static class NewPublisherLevelRules
 		// Save the XML file
 		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
-
 
 }

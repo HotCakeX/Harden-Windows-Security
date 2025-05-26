@@ -260,7 +260,7 @@ internal sealed partial class MainWindow : Window
 			if (App.Settings.MainWindowWidth > 200 && App.Settings.MainWindowHeight > 200)
 			{
 
-				Logger.Write($"Setting the window size back to what it was when the app was closed. Height: {App.Settings.MainWindowHeight} - Width: {App.Settings.MainWindowWidth}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("SettingWindowSizeMessage"), App.Settings.MainWindowHeight, App.Settings.MainWindowWidth));
 
 				// Apply to the current AppWindow
 				m_AppWindow?.Resize(new SizeInt32(App.Settings.MainWindowWidth, App.Settings.MainWindowHeight));

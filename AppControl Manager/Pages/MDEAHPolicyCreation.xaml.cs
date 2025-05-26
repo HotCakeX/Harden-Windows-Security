@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -41,7 +40,7 @@ namespace AppControlManager.Pages;
 /// MDEAHPolicyCreation is a page for managing MDE Advanced Hunting policies, including scanning logs, filtering data,
 /// and creating policies.
 /// </summary>
-internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
+internal sealed partial class MDEAHPolicyCreation : Page
 {
 
 	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
@@ -49,22 +48,12 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	private ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
-	/// <summary>
-	/// An event that is triggered when a property value changes, allowing subscribers to be notified of updates.
-	/// </summary>
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
-
 
 	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
 
 	private void UpdateButtonsStates(bool on)
 	{
-		// Enable the retrieve button if the a valid value is set as Active Account
+		// Enable the retrieve button if a valid value is set as Active Account
 		RetrieveTheLogsButton.IsEnabled = on;
 	}
 
@@ -80,9 +69,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	internal MDEAHPolicyCreation()
 	{
 		this.InitializeComponent();
-
-		// Default selection for the toolbar menu's selector bar
-		_selectedItem = SelectorBarItemMain;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Required;
@@ -101,81 +87,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
 	}
 
-
-	#region For the toolbar menu's Selector Bar
-
-	private SelectorBarItem _selectedItem;
-
-	internal bool IsLocalSelected => _selectedItem == SelectorBarItemMain;
-	internal bool IsCloudSelected => _selectedItem == SelectorBarItemCloud;
-	internal bool IsCreateSelected => _selectedItem == SelectorBarItemCreate;
-
-	private void MenuSelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
-	{
-		_selectedItem = sender.SelectedItem;
-		OnPropertyChanged(nameof(IsLocalSelected));
-		OnPropertyChanged(nameof(IsCloudSelected));
-		OnPropertyChanged(nameof(IsCreateSelected));
-	}
-
-	#endregion
-
-
-	// The list of queries property for x:Bind
-	internal readonly List<MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage> AdvancedHuntingQueries = [
-
-		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query",
-			Query = """
-DeviceEvents
-| where ActionType startswith "AppControlCodeIntegrity"
-   or ActionType startswith "AppControlCIScriptBlocked"
-   or ActionType startswith "AppControlCIScriptAudited"
-"""
-		},
-		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name filter",
-			Query = """
-DeviceEvents
-| where (ActionType startswith "AppControlCodeIntegrity"
-    or ActionType startswith "AppControlCIScriptBlocked"
-    or ActionType startswith "AppControlCIScriptAudited")
-    and DeviceName == "deviceName"
-"""
-		},
-		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name and Time filter",
-			Query = """
-DeviceEvents
-| where Timestamp >= ago(1h)
-
-| where (ActionType startswith "AppControlCodeIntegrity"
-    or ActionType startswith "AppControlCIScriptBlocked"
-    or ActionType startswith "AppControlCIScriptAudited")
-    and DeviceName == "deviceName"
-"""
-		},
-
-		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name and Policy name filter",
-			Query = """
-DeviceEvents
-| where (ActionType startswith "AppControlCodeIntegrity"
-    or ActionType startswith "AppControlCIScriptBlocked"
-    or ActionType startswith "AppControlCIScriptAudited")
-    and DeviceName == "deviceName" | where parse_json(AdditionalFields)["PolicyName"] == 'NameOfThePolicy'
-"""
-		}
-
-		];
-
-
-	private string? MDEAdvancedHuntingLogs; // To store the MDE Advanced Hunting CSV log file path
-
 	// Variables to hold the data supplied by the UI elements
 	private Guid? BasePolicyGUID;
 	private string? PolicyToAddLogsTo;
@@ -183,21 +94,6 @@ DeviceEvents
 
 	// The user selected scan level
 	private ScanLevels scanLevel = ScanLevels.FilePublisher;
-
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the ListView
-		if (FileIdentitiesListView.SelectedItems.Count > 0)
-		{
-			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems);
-		}
-	}
 
 	/// <summary>
 	/// Click event handler for copy
@@ -279,20 +175,15 @@ DeviceEvents
 
 		try
 		{
-			// Disable the scan button initially
-			ScanLogs.IsEnabled = false;
+			ViewModel.AreElementsEnabled = false;
 
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = true;
 			ScanLogsProgressRing.Visibility = Visibility.Visible;
 
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("ScanningMDEAdvancedHuntingCsvLogs");
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
 
-			// Disable the Policy creator button while scan is being performed
-			CreatePolicyButton.IsEnabled = false;
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningMDEAdvancedHuntingCsvLogs"));
 
 			// Clear the FileIdentities before getting and showing the new ones
 			ViewModel.FileIdentities.Clear();
@@ -306,14 +197,14 @@ DeviceEvents
 			// Grab the App Control Logs
 			await Task.Run(() =>
 			{
-				if (MDEAdvancedHuntingLogs is null)
+				if (ViewModel.MDEAdvancedHuntingLogs is null)
 				{
 					throw new InvalidOperationException(
 						GlobalVars.Rizz.GetString("NoMDEAdvancedHuntingLogProvided")
 					);
 				}
 
-				List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(MDEAdvancedHuntingLogs);
+				List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(ViewModel.MDEAdvancedHuntingLogs);
 
 				if (MDEAHCSVData.Count > 0)
 				{
@@ -346,62 +237,24 @@ DeviceEvents
 		catch (Exception ex)
 		{
 			error = true;
-
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarMessage = string.Format(
-				GlobalVars.Rizz.GetString("ErrorScanningMDEAdvancedHuntingCsvLogs"),
-				ex.Message
-			);
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			ViewModel.MainInfoBarIsClosable = false;
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorScanningMDEAdvancedHuntingCsvLogs"));
 		}
 		finally
 		{
-			// Enable the button again
-			ScanLogs.IsEnabled = true;
+			ViewModel.AreElementsEnabled = true;
 
 			// Stop displaying the Progress Ring
 			ScanLogsProgressRing.IsActive = false;
 			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
 
-			// Enable the Policy creator button again
-			CreatePolicyButton.IsEnabled = true;
-
 			if (!error)
 			{
-				ViewModel.MainInfoBarIsOpen = true;
-				ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs");
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarIsClosable = false;
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
 			}
+
+			ViewModel.MainInfoBarIsClosable = true;
 		}
 	}
-
-
-	/// <summary>
-	/// Event handler for the select Code Integrity EVTX file path button
-	/// </summary>
-	private void BrowseForLogs_Click()
-	{
-		const string filter = "CSV file|*.csv";
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(filter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected csv file path
-			MDEAdvancedHuntingLogs = selectedFile;
-
-			Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
-
-			ScanLogs.IsEnabled = true;
-
-			BrowseForLogs_SelectedFilesTextBox.Text += selectedFile + Environment.NewLine;
-		}
-	}
-
 
 	/// <summary>
 	/// Event handler for the Clear Data button
@@ -413,7 +266,6 @@ DeviceEvents
 
 		UpdateTotalLogs(true);
 	}
-
 
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
@@ -531,11 +383,7 @@ DeviceEvents
 
 		try
 		{
-			// Disable the policy creator button
-			CreatePolicyButton.IsEnabled = false;
-
-			// Disable the scan logs button
-			ScanLogs.IsEnabled = false;
+			ViewModel.AreElementsEnabled = false;
 
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = true;
@@ -557,8 +405,6 @@ DeviceEvents
 				);
 			}
 
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
 			ViewModel.MainInfoBarIsClosable = false;
 
 			// Create a policy name if it wasn't provided
@@ -590,10 +436,10 @@ DeviceEvents
 			// Check if there are selected items in the ListView and user chose to use them only in the policy
 			if ((OnlyIncludeSelectedItemsToggleButton.IsChecked ?? false) && FileIdentitiesListView.SelectedItems.Count > 0)
 			{
-				ViewModel.MainInfoBarMessage = string.Format(
+				ViewModel.MainInfoBar.WriteInfo(string.Format(
 					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
 					FileIdentitiesListView.SelectedItems.Count
-				);
+				));
 
 				// convert every selected item to FileIdentity and store it in the list
 				foreach (var item in FileIdentitiesListView.SelectedItems)
@@ -609,10 +455,10 @@ DeviceEvents
 			{
 				SelectedLogs = ViewModel.AllFileIdentities;
 
-				ViewModel.MainInfoBarMessage = string.Format(
+				ViewModel.MainInfoBar.WriteInfo(string.Format(
 					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
 					ViewModel.AllFileIdentities.Count
-				);
+				));
 			}
 
 			await Task.Run(() =>
@@ -761,24 +607,13 @@ DeviceEvents
 		catch (Exception ex)
 		{
 			Error = true;
-
-			ViewModel.MainInfoBarIsOpen = true;
-			ViewModel.MainInfoBarIsClosable = true;
-			ViewModel.MainInfoBarMessage = string.Format(
-				GlobalVars.Rizz.GetString("ErrorCreatingSupplementalPolicyMessage"),
-				ex.Message
-			);
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorCreatingSupplementalPolicyMessage"));
 		}
 		finally
 		{
-			// Enable the policy creator button again
-			CreatePolicyButton.IsEnabled = true;
+			ViewModel.AreElementsEnabled = true;
 
-			// enable the scan logs button again
-			ScanLogs.IsEnabled = true;
+			ViewModel.MainInfoBarIsClosable = true;
 
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRing.IsActive = false;
@@ -786,13 +621,10 @@ DeviceEvents
 
 			if (!Error)
 			{
-				ViewModel.MainInfoBarMessage = string.Format(
+				ViewModel.MainInfoBar.WriteSuccess(string.Format(
 					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
 					policyName
-				);
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
-				ViewModel.MainInfoBarIsOpen = true;
-				ViewModel.MainInfoBarIsClosable = true;
+				));
 
 				ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -817,28 +649,25 @@ DeviceEvents
 		scanLevel = Enum.Parse<ScanLevels>(selectedText);
 	}
 
-	private void BrowseForLogs_Flyout_Clear_Click(object sender, RoutedEventArgs e)
-	{
-		BrowseForLogs_SelectedFilesTextBox.Text = null;
-		MDEAdvancedHuntingLogs = null;
-	}
 
 	/// <summary>
 	/// Event handler for the button that retrieves the logs
 	/// </summary>
 	private async void RetrieveTheLogsButton_Click()
 	{
-		ViewModel.MainInfoBarIsOpen = true;
-		ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("RetrievingMDEAdvancedHuntingDataMessage");
-		ViewModel.MainInfoBarSeverity = InfoBarSeverity.Informational;
+
+		if (AuthCompanionCLS.CurrentActiveAccount is null)
+			return;
+
 		ViewModel.MainInfoBarIsClosable = false;
+
+		ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("RetrievingMDEAdvancedHuntingDataMessage"));
 
 		MDEAdvancedHuntingDataRootObject? root = null;
 
 		try
 		{
-			RetrieveTheLogsButton.IsEnabled = false;
-			MSGraphDeviceNameButton.IsEnabled = false;
+			ViewModel.AreElementsEnabled = false;
 
 			// Retrieve the MDE Advanced Hunting data as a JSON string
 			string? result = await MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text, AuthCompanionCLS.CurrentActiveAccount);
@@ -851,23 +680,20 @@ DeviceEvents
 
 				if (root is null)
 				{
-					ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("NoLogsRetrievedMessage");
-					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
+					ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoLogsRetrievedMessage"));
 					return;
 				}
 
 				if (root.Results.Count is 0)
 				{
-					ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("ZeroLogsRetrievedMessage");
-					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
+					ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ZeroLogsRetrievedMessage"));
 					return;
 				}
 
-				ViewModel.MainInfoBarMessage = string.Format(
+				ViewModel.MainInfoBar.WriteSuccess(string.Format(
 					GlobalVars.Rizz.GetString("SuccessfullyRetrievedLogsFromCloudMessage"),
 					root.Results.Count
-				);
-				ViewModel.MainInfoBarSeverity = InfoBarSeverity.Success;
+				));
 
 				Logger.Write(
 					string.Format(
@@ -881,8 +707,7 @@ DeviceEvents
 
 				if (Output.Count is 0)
 				{
-					ViewModel.MainInfoBarMessage = GlobalVars.Rizz.GetString("NoActionableLogsFoundMessage");
-					ViewModel.MainInfoBarSeverity = InfoBarSeverity.Warning;
+					ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoActionableLogsFoundMessage"));
 				}
 
 				ViewModel.AllFileIdentities.Clear();
@@ -905,17 +730,11 @@ DeviceEvents
 		}
 		catch (Exception ex)
 		{
-			ViewModel.MainInfoBarMessage = string.Format(
-				GlobalVars.Rizz.GetString("ErrorRetrievingMDEAdvancedHuntingLogsMessage"),
-				ex.Message
-			);
-			ViewModel.MainInfoBarSeverity = InfoBarSeverity.Error;
-			throw;
+			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorRetrievingMDEAdvancedHuntingLogsMessage"));
 		}
 		finally
 		{
-			RetrieveTheLogsButton.IsEnabled = true;
-			MSGraphDeviceNameButton.IsEnabled = true;
+			ViewModel.AreElementsEnabled = true;
 
 			ViewModel.MainInfoBarIsClosable = true;
 		}
@@ -1005,7 +824,7 @@ DeviceEvents
 	/// <param name="args"></param>
 	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
-		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
+		ViewModel.ListViewFlyoutMenuCopy_Click();
 		args.Handled = true;
 	}
 

@@ -39,19 +39,19 @@
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind SelectAll_Click}">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.SelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind DeSelectAll_Click}">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.DeSelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -68,7 +68,11 @@
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"/>
 
-                <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                <TextBox Width="300"
+                         x:Uid="SearchBoxTextBox"
+                         Text="{x:Bind ViewModel.FilesAndFoldersScanResultsSearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center" />
 
             </controls:WrapPanel>
         </Border>

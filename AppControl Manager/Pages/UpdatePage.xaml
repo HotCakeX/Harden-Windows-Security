@@ -30,15 +30,13 @@
 
             </controls:WrapPanel>
 
-            <InfoBar
-                Visibility="{x:Bind ViewModel.MainInfoBarVisibility, Mode=OneWay}"
-                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                IsIconVisible="True"
-                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
-                x:Uid="UpdatePageUpdateStatusInfoBar"
-                Grid.Row="1">
+            <InfoBar IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                     Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                     Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                     IsIconVisible="True"
+                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
+                     x:Uid="UpdatePageUpdateStatusInfoBar"
+                     Grid.Row="1">
                 <InfoBar.ActionButton>
                     <HyperlinkButton x:Uid="UpdatePageMoreInfoHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
                 </InfoBar.ActionButton>

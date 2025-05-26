@@ -78,7 +78,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.23.0</FileVersion>
+    <FileVersion>2.0.24.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -277,7 +277,7 @@
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250430001" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.5" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.5" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
@@ -286,7 +286,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.10.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.11.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />

@@ -21,6 +21,7 @@ using AppControlManager.WindowComponents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -28,17 +29,18 @@ namespace AppControlManager.Pages;
 /// <summary>
 /// Represents a page for creating supplemental policies, managing data display and user interactions.
 /// </summary>
+
 internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager
 {
-
 	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 
+	// [DynamicDependency(DynamicallyAccessedMemberTypes.PublicEvents, typeof(Border))]
 	internal CreateSupplementalPolicy()
 	{
 		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
 	}
 
@@ -109,4 +111,20 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 	}
 
 	#endregion
+
+	// Since using behaviors in XAML is not Native AOT compatible, we use event handlers.
+	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
+	{
+		if (sender is UIElement element)
+		{
+			await ShadowEnterAnimation.StartAsync(element);
+		}
+	}
+	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
+	{
+		if (sender is UIElement element)
+		{
+			await ShadowExitAnimation.StartAsync(element);
+		}
+	}
 }

@@ -1183,9 +1183,6 @@
   <data name="SelectedApps" xml:space="preserve">
     <value>אפליקציות שנבחרו: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>הייתה שגיאה: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>יצרתי בהצלחה את מדיניות הדחייה</value>
   </data>
@@ -3471,7 +3468,7 @@
     <value>נוצרו {0} יומנים במהלך שלב הביקורת</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>אירעה שגיאה בסריקת המערכת: {0}</value>
+    <value>אירעה שגיאה בסריקת המערכת: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>הסריקה של המערכת לאירועים הושלמה בהצלחה</value>
@@ -3498,7 +3495,7 @@
     <value>סורק {0} קבצים</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>אירעה שגיאה: {0}</value>
+    <value>אירעה שגיאה: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>הסריקה של המערכת עבור דרייברים הושלמה בהצלחה</value>
@@ -3549,7 +3546,7 @@
     <value>ממיר {0} ל-CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>אירעה בעיה להמיר את קבצי ה-XML ל-CIP: {0}</value>
+    <value>אירעה בעיה להמיר את קבצי ה-XML ל-CIP: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>כל קבצי ה-XML הנבחרים הומרו בהצלחה לבינרי CIP</value>
@@ -3558,7 +3555,7 @@
     <value>סורק את יומני האירועים...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>אירעה שגיאה במהלך סריקת היומנים: {0}</value>
+    <value>אירעה שגיאה במהלך סריקת היומנים: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>הסריקה הושלמה. נמצאו {0} יומנים.</value>
@@ -3603,7 +3600,7 @@
     <value>לא סופק GUID של מדיניות בסיס לשימוש כ-BasePolicyID של המדיניות המשנית.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>אירעה שגיאה במהלך עיבוד היומנים: {0}.</value>
+    <value>אירעה שגיאה במהלך עיבוד היומנים: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>היומנים עובדו בהצלחה וכללו אותם במדיניות.</value>
@@ -3621,7 +3618,7 @@
     <value>מבצע את הסימולציה</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>אירעה בעיה במהלך הסימולציה: {0}</value>
+    <value>אירעה בעיה במהלך הסימולציה: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>הסימולציה הושלמה בהצלחה.</value>
@@ -3636,7 +3633,7 @@
     <value>טוען את המדיניות</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>אירעה בעיה בטעינת קובץ המדיניות הנבחר: {0}</value>
+    <value>אירעה בעיה בטעינת קובץ המדיניות הנבחר: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>המדיניות הנבחרת נטענה בהצלחה</value>
@@ -4056,7 +4053,7 @@
     <value>תהליך ההתחברות ל-MSGraph בוטל על-ידי המשתמש</value>
 </data>
 <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>אירעה שגיאה בהתחברות ל-MSGraph: {0}</value>
+    <value>אירעה שגיאה בהתחברות ל-MSGraph: </value>
 </data>
 <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>השאילתא של MDE Advanced Hunting הושלמה בהצלחה.</value>
@@ -4302,7 +4299,7 @@
     <value>לא זוהו תוצאות ביומני MDE Advanced Hunting CSV שנבחרו.</value>
 </data>
 <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>אירעה שגיאה במהלך סריקת יומני MDE Advanced Hunting CSV שנבחרו: {0}</value>
+    <value>אירעה שגיאה במהלך סריקת יומני MDE Advanced Hunting CSV שנבחרו: </value>
 </data>
 <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>הסריקה של יומני MDE Advanced Hunting CSV שנבחרו הושלמה בהצלחה.</value>
@@ -4323,7 +4320,7 @@
     <value>לא נבחר קובץ מדיניות לצורך שיוך המדיניות המשלימה.</value>
 </data>
 <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>אירעה שגיאה ביצירת המדיניות המשלימה: {0}</value>
+    <value>אירעה שגיאה ביצירת המדיניות המשלימה: </value>
 </data>
 <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>מביא את הנתונים של Microsoft Defender for Endpoint Advanced Hunting</value>
@@ -4344,7 +4341,7 @@
     <value>לא נמצאו יומנים ברי פעולה בין הנתונים שהושגו לצורך יצירת מדיניות משלימה.</value>
 </data>
 <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>אירעה שגיאה בשליפת יומני MDE Advanced Hunting מ-MSGraph: {0}</value>
+    <value>אירעה שגיאה בשליפת יומני MDE Advanced Hunting מ-MSGraph: </value>
 </data>
 <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>הוסף יומנים למדיניות הנבחרת</value>
@@ -4957,5 +4954,320 @@
 </data>
 <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>עיין בקובצי מדיניות XML כדי לפרוסם במערכת ללא חתימה</value>
+</data>
+ <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>פרגמנט שם הנושא ריק.</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>לא נמצאו אישורים במאגר {0}\{1}.</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>מחפש אישורי {0} במאגר {1}\{2} עבור פרגמנט הנושא '{3}' (חיפוש CN אפקטיבי: '{4}')...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>נמצא אישור עם קריטריוני נושא תואמים: {0} (טביעת אצבע: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>אלגוריתם חתימה: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>לאישור יש EKU לחתימת קוד.</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>לאישור אין EKU לחתימת קוד.</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>נמצא אישור חתימת קוד מתאים: {0} ב- {1}\{2} (טביעת אצבע: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>אזהרה: שגיאה קריפטוגרפית בעת גישה למאגר האישורים {0} ב-{1}: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>אזהרה: שגיאה כללית בעת גישה למאגר האישורים {0} ב-{1}: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>לא נמצא אישור חתימת קוד מתאים עם פרגמנט הנושא '{0}', מפתח פרטי ו-EKU לחתימת קוד במאגרים שנבדקו.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>אלגוריתם חתימת האישור OID '{0}' ('{1}') אינו נתמך לזיהוי אוטומטי של OID אלגוריתם גיבוב עבור CryptSignMessage.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>אלגוריתם חתימת האישור OID '{0}' ('{1}') אינו נתמך לזיהוי אוטומטי של ALG_ID עבור SignerSignEx3.</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>לאישור חייב להיות מפתח פרטי.</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>חתימת PKCS #7 (תוכן מוטבע, אישור כלול) נכתבה ל- {0}</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>SignerSignEx3 נכשל עם HRESULT: 0x{0:X}</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT).</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND).</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - ארגומנט אחד או יותר אינם חוקיים).</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>שגיאת Win32 בחתימת קובץ (קוד: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>אתחול יישום, גרסת זמן ריצה .NET: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>קיימת מופע נוסף של מנהל AppControl פועל. זהו יומן מידע בלבד.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>זוהתה הפעלת קובץ</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>היישום הופעל באמצעות הפעלת קובץ אך הארגומנטים לא הכילו אובייקטי קבצים</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>היישום הופעל באמצעות הפעלת קובץ אך ללא ארגומנטים של הפעלת קובץ</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>המשתמש ביטל את הנחיית UAC.</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>נדרשה בקשת הרשאה לעיבוד הקובץ הנבחר אך היא נדחתה על ידי המשתמש. יוצא מהיישום.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>בקשת הרשאה נדחתה על ידי המשתמש</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>היישום הופעל עם הפעלת קובץ עבור הקובץ הבא: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>אירעה שגיאה בהפעלת עורך המדיניות עם הקובץ הנבחר: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>אירעה שגיאה בשמירת גודל החלון בעת סגירת היישום: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>אירעה שגיאה</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>אירעה שגיאה בלתי צפויה: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>מגדיר את גודל יומן תקינות הקוד</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>גרסה: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>PFN: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>אירעה שגיאה בקבלת הפרטים עבור היישום: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>אירעה שגיאה בקבלת פרטי יישום</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>המחרוזת שסופקה '{0}' אינה בפורמט GUID חוקי.</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>קובץ מדיניות ה-XML הנבחר הוא מדיניות משלימה אך ה-BasePolicyID וה-PolicyID שלו זהים, מה שמצביע על כך שזוהי מדיניות בסיס, משנה את הסוג.</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>קובץ מדיניות ה-XML הנבחר הוא מדיניות בסיס אך ה-BasePolicyID וה-PolicyID שלו אינם זהים, מה שמצביע על כך שזוהי מדיניות משלימה, משנה את הסוג.</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>המדיניות במיקום '{0}' הוגדרה בהצלחה. כעת יש לה סוג '{1}', BasePolicyID '{2}' ו-PolicyID '{3}'.</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>גרסת קובץ המדיניות במיקום '{0}' שונתה בהצלחה מ-'{1}' ל-'{2}'.</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מתחיל את תהליך הפרדת הנתונים.</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: משתמש ברמת Hash בלבד.</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: משתמש ברמות Publisher -&gt; Hash.</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: משתמש ברמות FilePublisher -&gt; Publisher -&gt; Hash.</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעביר כלל Publisher למערך הגיבוב עבור הקובץ: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} כללי FilePublisher.</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} כללי Publisher.</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} כללי Hash.</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} כללי FilePath.</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} כללי FilePath עם תווים כלליים.</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} כללי PFN.</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני FilePublisher.</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: גיבוב TBS של אישור הביניים ריק עבור הקובץ: {0}, במקום זאת נעשה שימוש בגיבוב TBS של אישור העלה</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני Publisher.</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני גיבוב לא חתומים.</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מאפיין חיוני אחד או יותר הוא null או ריק ב-hashData.</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני FilePath</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני FilePath עם תווים כלליים</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני FilePath מבוססי תבנית מותאמת אישית</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: מעבד נתוני PFN</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: התהליך הושלם.</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>לא ניתן היה לפתוח את הקובץ {0}. שגיאה: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>קבלת גודל הקובץ נכשלה עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>יצירת מיפוי קובץ נכשלה עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>מיפוי קובץ כבר קיים עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>מיפוי תצוגת קובץ נכשל עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>קריאת כותרת NT של התמונה נכשלה עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>קריאת נתוני רשומת ספריית התמונה נכשלה עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>ביטול מיפוי תצוגת קובץ נכשל עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>לא ניתן היה לסגור את ידית המיפוי עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>לא ניתן היה לסגור את ידית הקובץ עבור הקובץ {0} עם שגיאה {1}</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>אחד מקובצי ה-XML מכיל יותר מחותם אחד עם אותו מזהה (ID) `{0}`</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>הגדרת HVCI בקובץ המדיניות '{0}' ל-Strict בוצעה בהצלחה.</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>JumpList אינו נתמך.</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>ממזג את הכללים</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>מגדיר את גודל החלון בחזרה למה שהיה בעת סגירת היישום. גובה: {0} - רוחב: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptOpenAlgorithmProvider נכשל עם קוד שגיאה: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>CryptCATOpen נכשל עם קוד שגיאה: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>BCryptCloseAlgorithmProvider נכשל עם קוד שגיאה: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>לא ניתן היה לבצע דה-סריאליזציה לרשימת חריגות כללי ASR בפורמט JSON שהייתה זו: {0} - שגיאה: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>לא זוהו גיבובים ליצירת כללי התרה עבורם.</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>ישנם {0} כללי Hash להוספה לקובץ ה-XML '{1}'</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>גיבוב Sha256 עבור: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>גיבוב Sha1 עבור: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>יוצר כלל Hash עבור קובץ Kernel-Mode: {0}. קובץ Kernel-Mode אמור להיות חתום!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>לא זוהו גיבובים ליצירת כללי חסימה עבורם.</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>לא זוהו כללי FilePath ליצירת כללי התרה עבורם.</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>ישנם {0} כללי FilePath להוספה לקובץ ה-XML '{1}'</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>סוג כלל נתיב קובץ</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>הקובץ הבא הוא מנהל התקן Kernel-Mode שאינו תומך בכללי FilePath: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>לא זוהו כללי FilePath ליצירת כללי חסימה עבורם.</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>לא זוהו חותמי FilePublisher ליצירת כללי התרה עבורם.</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>ישנם {0} חותמי File Publisher להוספה לקובץ ה-XML</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>סוג כלל File Publisher</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>לא זוהו חותמי FilePublisher ליצירת כללי חסימה עבורם.</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>לא זוהו PackageFamilyNames ליצירת כללי התרה עבורם.</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>מתיר יישום ארוז (Packaged App) לפי שם המשפחה (Family Name) שלו</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>לא זוהו PackageFamilyNames ליצירת כללי חסימה עבורם.</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>חוסם יישום ארוז (Packaged App) לפי שם המשפחה (Family Name) שלו</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>לא זוהו חותמי Publisher ליצירת כללי התרה עבורם.</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>ישנם {0} חותמי Publisher להוספה לקובץ ה-XML '{1}'</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>לא זוהו חותמי Publisher ליצירת כללי חסימה עבורם.</value>
 </data>
 </root>

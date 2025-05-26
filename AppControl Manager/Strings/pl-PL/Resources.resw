@@ -1183,9 +1183,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SelectedApps" xml:space="preserve">
     <value>Wybrane aplikacje: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>Wystąpił błąd: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Pomyślnie utworzono zasady odmowy</value>
   </data>
@@ -3467,7 +3464,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Podczas fazy inspekcji wygenerowano {0} dziennik(ów)</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Wystąpił błąd podczas skanowania systemu: {0}</value>
+    <value>Wystąpił błąd podczas skanowania systemu: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Pomyślnie przeskanowano system w poszukiwaniu zdarzeń</value>
@@ -3494,7 +3491,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Skanowanie {0} plików</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Wystąpił błąd: {0}</value>
+    <value>Wystąpił błąd: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Pomyślnie przeskanowano system w poszukiwaniu sterowników</value>
@@ -3545,7 +3542,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Konwertowanie {0} na CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Wystąpił problem podczas konwertowania plików XML na CIP: {0}</value>
+    <value>Wystąpił problem podczas konwertowania plików XML na CIP: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Pomyślnie przekonwertowano wszystkie wybrane pliki XML na pliki binarne CIP</value>
@@ -3554,7 +3551,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Skanowanie dzienników zdarzeń...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas skanowania dzienników: {0}</value>
+    <value>Wystąpił błąd podczas skanowania dzienników: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Skanowanie zakończone. Znaleziono {0} dzienników.</value>
@@ -3599,7 +3596,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie podano identyfikatora GUID zasad podstawowych do użycia jako BasePolicyID zasad uzupełniających.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas przetwarzania dzienników: {0}.</value>
+    <value>Wystąpił błąd podczas przetwarzania dzienników: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Pomyślnie przetworzono dzienniki i uwzględniono je w zasadach.</value>
@@ -3617,7 +3614,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Wykonywanie symulacji</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Wystąpił problem podczas symulacji: {0}</value>
+    <value>Wystąpił problem podczas symulacji: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Symulacja zakończona pomyślnie.</value>
@@ -3632,7 +3629,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Ładowanie zasad</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Wystąpił problem podczas ładowania wybranego pliku zasad: {0}</value>
+    <value>Wystąpił problem podczas ładowania wybranego pliku zasad: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Pomyślnie załadowano wybrane zasady</value>
@@ -4055,7 +4052,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Logowanie do MSGraph zostało anulowane przez użytkownika</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas logowania do MSGraph: {0}</value>
+    <value>Wystąpił błąd podczas logowania do MSGraph: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>Zapytanie zaawansowanego wyszukiwania MDE zakończyło się pomyślnie.</value>
@@ -4301,7 +4298,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie wykryto żadnych wyników w wybranych dziennikach CSV zaawansowanego wyszukiwania MDE.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Wystąpił błąd podczas skanowania wybranych dzienników CSV zaawansowanego wyszukiwania MDE: {0}</value>
+    <value>Wystąpił błąd podczas skanowania wybranych dzienników CSV zaawansowanego wyszukiwania MDE: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Pomyślnie zakończono skanowanie wybranych dzienników CSV zaawansowanego wyszukiwania MDE.</value>
@@ -4322,7 +4319,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie wybrano pliku zasad do powiązania z zasadami uzupełniającymi.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas tworzenia zasad uzupełniających: {0}</value>
+    <value>Wystąpił błąd podczas tworzenia zasad uzupełniających: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Pobieranie danych zaawansowanego wyszukiwania Microsoft Defender for Endpoint</value>
@@ -4343,7 +4340,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie znaleziono żadnych dzienników umożliwiających podjęcie działań wśród pobranych danych w celu utworzenia zasad uzupełniających.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas pobierania dzienników zaawansowanego wyszukiwania MDE z MSGraph: {0}</value>
+    <value>Wystąpił błąd podczas pobierania dzienników zaawansowanego wyszukiwania MDE z MSGraph: </value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Dodaj dzienniki do wybranych zasad</value>
@@ -4956,5 +4953,320 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Przeglądaj pliki polityki XML, aby wdrożyć je niepodpisane w systemie</value>
+  </data>
+  <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+    <value>Fragment nazwy podmiotu jest pusty.</value>
+  </data>
+  <data name="NoCertificatesFoundInStore" xml:space="preserve">
+    <value>Nie znaleziono certyfikatów w magazynie {0}\{1}.</value>
+  </data>
+  <data name="SearchingCertificatesInStore" xml:space="preserve">
+    <value>Wyszukiwanie {0} certyfikatów w magazynie {1}\{2} dla fragmentu podmiotu '{3}' (efektywne wyszukiwanie CN: '{4}')...</value>
+  </data>
+  <data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+    <value>Znaleziono certyfikat spełniający kryteria podmiotu: {0} (Odcisk palca: {1})</value>
+  </data>
+  <data name="SignatureAlgorithmInfo" xml:space="preserve">
+    <value>Algorytm podpisu: {0} ({1})</value>
+  </data>
+  <data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+    <value>Certyfikat posiada EKU podpisywania kodu.</value>
+  </data>
+  <data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+    <value>Certyfikat NIE posiada EKU podpisywania kodu.</value>
+  </data>
+  <data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+    <value>Znaleziono odpowiedni certyfikat do podpisywania kodu: {0} w {1}\{2} (Odcisk palca: {3})</value>
+  </data>
+  <data name="CryptographicErrorAccessingStore" xml:space="preserve">
+    <value>Ostrzeżenie: Błąd kryptograficzny podczas uzyskiwania dostępu do magazynu certyfikatów {0} w {1}: {2}</value>
+  </data>
+  <data name="GeneralErrorAccessingStore" xml:space="preserve">
+    <value>Ostrzeżenie: Ogólny błąd podczas uzyskiwania dostępu do magazynu certyfikatów {0} w {1}: {2}</value>
+  </data>
+  <data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+    <value>Nie znaleziono odpowiedniego certyfikatu do podpisywania kodu z fragmentem podmiotu '{0}', kluczem prywatnym i EKU podpisywania kodu w sprawdzonych magazynach.</value>
+  </data>
+  <data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+    <value>Algorytm podpisu certyfikatu OID '{0}' ('{1}') nie jest obsługiwany do automatycznego wykrywania OID algorytmu skrótu dla CryptSignMessage.</value>
+  </data>
+  <data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+    <value>Algorytm podpisu certyfikatu OID '{0}' ('{1}') nie jest obsługiwany do automatycznego wykrywania ALG_ID dla SignerSignEx3.</value>
+  </data>
+  <data name="CertificateMustHavePrivateKey" xml:space="preserve">
+    <value>Certyfikat musi posiadać klucz prywatny.</value>
+  </data>
+  <data name="PKCS7SignatureWritten" xml:space="preserve">
+    <value>Podpis PKCS #7 (zawartość osadzona, certyfikat dołączony) zapisany do {0}</value>
+  </data>
+  <data name="SignerSignEx3Failed" xml:space="preserve">
+    <value>Funkcja SignerSignEx3 zakończyła się niepowodzeniem z HRESULT: 0x{0:X}</value>
+  </data>
+  <data name="ErrorBadFormat" xml:space="preserve">
+    <value> (ERROR_BAD_FORMAT).</value>
+  </data>
+  <data name="ErrorFileNotFound" xml:space="preserve">
+    <value> (ERROR_FILE_NOT_FOUND).</value>
+  </data>
+  <data name="ErrorInvalidArg" xml:space="preserve">
+    <value> (E_INVALIDARG - Co najmniej jeden argument jest nieprawidłowy).</value>
+  </data>
+  <data name="Win32ErrorSigningFile" xml:space="preserve">
+    <value>Błąd Win32 podczas podpisywania pliku (Kod: {0} / 0x{1:X}): {2}</value>
+  </data>
+  <data name="AppStartupMessage" xml:space="preserve">
+    <value>Uruchomienie aplikacji, wersja środowiska .NET: {0}</value>
+  </data>
+  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
+    <value>Działa inna instancja AppControl Manager. To jest tylko log informacyjny.</value>
+  </data>
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
+    <value>Wykryto aktywację plikiem</value>
+  </data>
+  <data name="FileActivationNoObjectsMessage" xml:space="preserve">
+    <value>Aplikacja została uruchomiona poprzez aktywację plikiem, ale argumenty nie zawierały żadnych obiektów plików</value>
+  </data>
+  <data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+    <value>Aplikacja została uruchomiona poprzez aktywację plikiem, ale bez żadnych argumentów aktywacji plikiem</value>
+  </data>
+  <data name="UserCanceledUACMessage" xml:space="preserve">
+    <value>Użytkownik anulował monit UAC.</value>
+  </data>
+  <data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+    <value>Żądanie podniesienia uprawnień było wymagane do przetworzenia wybranego pliku, ale zostało odrzucone przez użytkownika. Zamykanie aplikacji.</value>
+  </data>
+  <data name="ElevationDeniedMessage" xml:space="preserve">
+    <value>Żądanie podniesienia uprawnień zostało odrzucone przez użytkownika</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+    <value>Aplikacja została uruchomiona z aktywacją plikiem dla następującego pliku: '{0}'</value>
+  </data>
+  <data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+    <value>Wystąpił błąd podczas uruchamiania Edytora zasad z wybranym plikiem: {0}</value>
+  </data>
+  <data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+    <value>Wystąpił program zapisujący rozmiar okna podczas zamykania aplikacji: {0}</value>
+  </data>
+  <data name="ErrorDialogTitle" xml:space="preserve">
+    <value>Wystąpił błąd</value>
+  </data>
+  <data name="ErrorDialogContent" xml:space="preserve">
+    <value>Wystąpił nieoczekiwany błąd: {0}</value>
+  </data>
+  <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+    <value>Ustawianie rozmiaru dziennika integralności kodu</value>
+  </data>
+  <data name="VersionLabelFormat" xml:space="preserve">
+    <value>Wersja: {0}.{1}.{2}.{3}</value>
+  </data>
+  <data name="PFNLabelFormat" xml:space="preserve">
+    <value>PFN: {0}</value>
+  </data>
+  <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+    <value>Wystąpił błąd podczas pobierania szczegółów aplikacji: {0}</value>
+  </data>
+  <data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+    <value>Wystąpił błąd podczas pobierania szczegółów aplikacji</value>
+  </data>
+  <data name="InvalidGuidFormatError" xml:space="preserve">
+    <value>Podany ciąg '{0}' nie jest prawidłowym formatem GUID.</value>
+  </data>
+  <data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+    <value>Wybrany plik zasad XML jest zasadą uzupełniającą, ale jego BasePolicyID i PolicyID są takie same, co wskazuje, że jest to zasada podstawowa; zmieniam typ.</value>
+  </data>
+  <data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+    <value>Wybrany plik zasad XML jest zasadą podstawową, ale jego BasePolicyID i PolicyID nie są takie same, co wskazuje, że jest to zasada uzupełniająca; zmieniam typ.</value>
+  </data>
+  <data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+    <value>Pomyślnie skonfigurowano zasadę w '{0}'. Teraz ma typ '{1}', BasePolicyID '{2}' i PolicyID '{3}'.</value>
+  </data>
+  <data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+    <value>Pomyślnie ustawiono wersję pliku zasad w '{0}' z '{1}' na '{2}'.</value>
+  </data>
+  <data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Rozpoczynanie procesu separacji danych.</value>
+  </data>
+  <data name="BuildSignerHashLevelMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Używanie tylko poziomu skrótu.</value>
+  </data>
+  <data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Używanie poziomów Wydawca -&gt; Skrót.</value>
+  </data>
+  <data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Używanie poziomów Wydawca Pliku (FilePublisher) -&gt; Wydawca -&gt; Skrót.</value>
+  </data>
+  <data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przekazywanie reguły Wydawcy do tablicy skrótów dla pliku: {0}</value>
+  </data>
+  <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł Wydawcy Pliku (FilePublisher).</value>
+  </data>
+  <data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł Wydawcy.</value>
+  </data>
+  <data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł skrótu.</value>
+  </data>
+  <data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł ścieżki pliku.</value>
+  </data>
+  <data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł ścieżki pliku z symbolami wieloznacznymi.</value>
+  </data>
+  <data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reguł PFN.</value>
+  </data>
+  <data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych Wydawcy Pliku (FilePublisher).</value>
+  </data>
+  <data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Skrót TBS certyfikatu pośredniego jest pusty dla pliku: {0}, zamiast tego używany jest skrót TBS certyfikatu liścia</value>
+  </data>
+  <data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych Wydawcy.</value>
+  </data>
+  <data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych niepodpisanego skrótu.</value>
+  </data>
+  <data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Co najmniej jedna wymagana właściwość jest pusta (null) lub nie zawiera wartości w hashData.</value>
+  </data>
+  <data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych ścieżki pliku</value>
+  </data>
+  <data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych ścieżki pliku z symbolami wieloznacznymi</value>
+  </data>
+  <data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie niestandardowych danych ścieżki pliku opartych na wzorcu</value>
+  </data>
+  <data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Przetwarzanie danych PFN</value>
+  </data>
+  <data name="BuildSignerCompletedMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Zakończono proces.</value>
+  </data>
+  <data name="CouldNotOpenFileMessage" xml:space="preserve">
+    <value>Nie można otworzyć pliku {0}. Błąd: {1}</value>
+  </data>
+  <data name="GetFileSizeFailedMessage" xml:space="preserve">
+    <value>Pobranie rozmiaru pliku {0} nie powiodło się, błąd: {1}</value>
+  </data>
+  <data name="CreateFileMappingFailedMessage" xml:space="preserve">
+    <value>Utworzenie mapowania pliku {0} nie powiodło się, błąd: {1}</value>
+  </data>
+  <data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+    <value>Mapowanie pliku {0} już istnieje (CreateFileMappingAlreadyExists), błąd: {1}</value>
+  </data>
+  <data name="MapViewOfFileFailedMessage" xml:space="preserve">
+    <value>Odwzorowanie widoku pliku {0} nie powiodło się (MapViewOfFileFailed), błąd: {1}</value>
+  </data>
+  <data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+    <value>Pobranie nagłówka NT obrazu {0} nie powiodło się (ImageNtHeaderFailed), błąd: {1}</value>
+  </data>
+  <data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+    <value>Funkcja ImageDirectoryEntryToDataEx dla pliku {0} zakończyła się niepowodzeniem, błąd: {1}</value>
+  </data>
+  <data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+    <value>Usunięcie odwzorowania widoku pliku {0} nie powiodło się (UnmapViewOfFileFailed), błąd: {1}</value>
+  </data>
+  <data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+    <value>Nie można zamknąć uchwytu mapowania dla pliku {0}, błąd: {1}</value>
+  </data>
+  <data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+    <value>Nie można zamknąć uchwytu pliku {0}, błąd: {1}</value>
+  </data>
+  <data name="DuplicateSignerIdMessage" xml:space="preserve">
+    <value>Jeden z plików XML zawiera więcej niż jednego Sygnatariusza (Signer) o tym samym ID `{0}`</value>
+  </data>
+  <data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+    <value>Pomyślnie ustawiono HVCI w pliku zasad '{0}' na Ścisły (Strict).</value>
+  </data>
+  <data name="JumpListNotSupportedMessage" xml:space="preserve">
+    <value>Lista szybkiego dostępu (JumpList) nie jest obsługiwana.</value>
+  </data>
+  <data name="MergingRulesMessage" xml:space="preserve">
+    <value>Scalanie reguł</value>
+  </data>
+  <data name="SettingWindowSizeMessage" xml:space="preserve">
+    <value>Przywracanie rozmiaru okna do wartości sprzed zamknięcia aplikacji. Wysokość: {0} - Szerokość: {1}</value>
+  </data>
+  <data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+    <value>Funkcja BCryptOpenAlgorithmProvider zakończyła się niepowodzeniem, kod błędu: {0}</value>
+  </data>
+  <data name="CryptCATOpenFailedMessage" xml:space="preserve">
+    <value>Funkcja CryptCATOpen zakończyła się niepowodzeniem, kod błędu: {0}</value>
+  </data>
+  <data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+    <value>Funkcja BCryptCloseAlgorithmProvider zakończyła się niepowodzeniem, kod błędu: {0}</value>
+  </data>
+  <data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+    <value>Nie można zdeserializować listy wyjątków reguł ASR (JSON), która wyglądała następująco: {0} - Błąd: {1}</value>
+  </data>
+  <data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+    <value>nie wykryto żadnych skrótów (Hashes), dla których można by utworzyć reguły zezwalające.</value>
+  </data>
+  <data name="HashRulesToAddMessage" xml:space="preserve">
+    <value>Należy dodać {0} reguł skrótu do pliku XML '{1}'</value>
+  </data>
+  <data name="Sha256HashFriendlyName" xml:space="preserve">
+    <value>Skrót Sha256 dla: {0}</value>
+  </data>
+  <data name="Sha1HashFriendlyName" xml:space="preserve">
+    <value>Skrót Sha1 dla: {0}</value>
+  </data>
+  <data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+    <value>Tworzenie reguły skrótu dla pliku trybu jądra (Kernel-Mode): {0}. Plik trybu jądra powinien być podpisany!</value>
+  </data>
+  <data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+    <value>nie wykryto żadnych skrótów (Hashes), dla których można by utworzyć reguły blokujące.</value>
+  </data>
+  <data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+    <value>nie wykryto żadnych reguł ścieżki pliku, dla których można by utworzyć reguły zezwalające.</value>
+  </data>
+  <data name="FilePathRulesToAddMessage" xml:space="preserve">
+    <value>Należy dodać {0} reguł ścieżki pliku do pliku XML '{1}'</value>
+  </data>
+  <data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+    <value>Typ reguły ścieżki pliku</value>
+  </data>
+  <data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+    <value>Następujący plik jest sterownikiem trybu jądra (Kernel-Mode), który nie obsługuje reguł ścieżki pliku: {0}</value>
+  </data>
+  <data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+    <value>nie wykryto żadnych reguł ścieżki pliku, dla których można by utworzyć reguły blokujące.</value>
+  </data>
+  <data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>nie wykryto żadnych sygnatariuszy Wydawcy Pliku (FilePublisher), dla których można by utworzyć reguły zezwalające.</value>
+  </data>
+  <data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>Należy dodać {0} sygnatariuszy Wydawcy Pliku (File Publisher) do pliku XML</value>
+  </data>
+  <data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>Typ reguły Wydawcy Pliku (File Publisher)</value>
+  </data>
+  <data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>nie wykryto żadnych sygnatariuszy Wydawcy Pliku (FilePublisher), dla których można by utworzyć reguły blokujące.</value>
+  </data>
+  <data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+    <value>nie wykryto żadnych Nazw Rodzin Pakietów (PackageFamilyNames), dla których można by utworzyć reguły zezwalające.</value>
+  </data>
+  <data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+    <value>Zezwalanie na aplikację spakowaną na podstawie jej Nazwy Rodziny (Family Name)</value>
+  </data>
+  <data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+    <value>nie wykryto żadnych Nazw Rodzin Pakietów (PackageFamilyNames), dla których można by utworzyć reguły blokujące.</value>
+  </data>
+  <data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+    <value>Blokowanie aplikacji spakowanej na podstawie jej Nazwy Rodziny (Family Name)</value>
+  </data>
+  <data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>nie wykryto żadnych sygnatariuszy Wydawcy (Publisher), dla których można by utworzyć reguły zezwalające.</value>
+  </data>
+  <data name="PublisherSignersToAddMessage" xml:space="preserve">
+    <value>Należy dodać {0} sygnatariuszy Wydawcy (Publisher) do pliku XML '{1}'</value>
+  </data>
+  <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>nie wykryto żadnych sygnatariuszy Wydawcy (Publisher), dla których można by utworzyć reguły blokujące.</value>
   </data>
 </root>

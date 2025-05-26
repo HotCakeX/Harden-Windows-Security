@@ -26,7 +26,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Main;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -42,6 +41,18 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class UpdateVM : ViewModelBase
 {
+
+	internal UpdateVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
 
 	/// <summary>
 	/// Pattern for finding ASR rules that belong to the AppControl Manager
@@ -135,26 +146,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// </summary>
 	internal bool UseHardenedInstallationProcess { get; set => SP(ref field, value); }
 
-	internal Visibility MainInfoBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-
-	internal InfoBarSeverity MainInfoBarSeverity
-	{
-		get; set => SP(ref field, value);
-	} = InfoBarSeverity.Informational;
-
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	internal Visibility ProgressBarVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal double ProgressBarValue { get; set => SP(ref field, value); }
 
@@ -188,17 +185,14 @@ internal sealed partial class UpdateVM : ViewModelBase
 			{
 				CheckForUpdateButtonIsEnabled = false;
 				MainInfoBarIsClosable = false;
-				MainInfoBarVisibility = Visibility.Visible;
-				MainInfoBarIsOpen = true;
-				MainInfoBarSeverity = InfoBarSeverity.Informational;
-				MainInfoBarMessage = GlobalVars.Rizz.GetString("CheckingForUpdateStore");
+
+				MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CheckingForUpdateStore"));
 
 				UpdateCheckResponse UpCheckResult = await AppUpdate.CheckStore();
 
 				if (UpCheckResult.IsNewVersionAvailable)
 				{
-					MainInfoBarSeverity = InfoBarSeverity.Informational;
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("NewUpdateIsAvailableStore");
+					MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("NewUpdateIsAvailableStore"));
 
 					// https://learn.microsoft.com/windows/apps/develop/launch/launch-store-app#opening-to-a-specific-product
 					Uri uri = new($"ms-windows-store://pdp/?ProductId={GlobalVars.StoreProductID}&mode=mini");
@@ -207,23 +201,17 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 					if (!launched)
 					{
-						MainInfoBarVisibility = Visibility.Visible;
-						MainInfoBarIsOpen = true;
-						MainInfoBarSeverity = InfoBarSeverity.Warning;
-						MainInfoBarMessage = GlobalVars.Rizz.GetString("ProblemOpeningMSStore");
+						MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ProblemOpeningMSStore"));
 					}
 				}
 				else
 				{
-					MainInfoBarSeverity = InfoBarSeverity.Success;
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("TheAppIsUpToDate");
+					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("TheAppIsUpToDate"));
 				}
 			}
 			catch (Exception ex)
 			{
-				MainInfoBarSeverity = InfoBarSeverity.Error;
-				MainInfoBarMessage = GlobalVars.Rizz.GetString("UpdateCheckError") + ex.Message;
-				Logger.Write(ErrorWriter.FormatException(ex));
+				MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("UpdateCheckError"));
 			}
 			finally
 			{
@@ -238,9 +226,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 				CheckForUpdateButtonIsEnabled = false;
 				CheckForUpdateSettingsCardIsClickable = false;
 				MainInfoBarIsClosable = false;
-				MainInfoBarVisibility = Visibility.Visible;
-				MainInfoBarIsOpen = true;
-				MainInfoBarSeverity = InfoBarSeverity.Informational;
 
 				// variable to store the update results
 				UpdateCheckResponse? updateCheckResult = null;
@@ -248,7 +233,8 @@ internal sealed partial class UpdateVM : ViewModelBase
 				// If user did not provide custom MSIXBundle path, start checking for update
 				if (!InstallLocalPackageConfirmation)
 				{
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("CheckingForUpdate");
+					MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CheckingForUpdate"));
+
 					// Check for update asynchronously
 					updateCheckResult = await Task.Run(AppUpdate.CheckGitHub);
 				}
@@ -256,19 +242,14 @@ internal sealed partial class UpdateVM : ViewModelBase
 				// If a new version is available or user supplied a custom MSIXBundle path to be installed
 				if ((updateCheckResult is { IsNewVersionAvailable: true }) || InstallLocalPackageConfirmation)
 				{
-					string msg1;
-
 					if (InstallLocalPackageConfirmation)
 					{
-						msg1 = GlobalVars.Rizz.GetString("InstallingCustomPath") + LocalPackageFilePath;
+						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("InstallingCustomPath") + LocalPackageFilePath);
 					}
 					else
 					{
-						msg1 = GlobalVars.Rizz.GetString("VersionComparison") + App.currentAppVersion + GlobalVars.Rizz.GetString("WhileOnlineVersion") + updateCheckResult?.OnlineVersion + GlobalVars.Rizz.GetString("UpdatingApplication");
+						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("VersionComparison") + App.currentAppVersion + GlobalVars.Rizz.GetString("WhileOnlineVersion") + updateCheckResult?.OnlineVersion + GlobalVars.Rizz.GetString("UpdatingApplication"));
 					}
-
-					Logger.Write(msg1);
-					MainInfoBarMessage = msg1;
 
 					WhatsNewInfoBarIsOpen = true;
 
@@ -295,8 +276,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 						AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
-						MainInfoBarMessage = GlobalVars.Rizz.GetString("DownloadingPackage");
-
+						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DownloadingPackage"));
 
 						using (HttpClient client = new SecHttpClient())
 						{
@@ -370,12 +350,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 					ProgressBarIsIndeterminate = true;
 
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("DetectingSignTool");
-
-					// First check if SignTool path is registered in the user configurations, else attempt to detect or download it
-					string signToolPath = UserConfiguration.Get().SignToolCustomPath ?? await Task.Run(() => SignToolHelper.GetSignToolPath());
-
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("DownloadsFinished");
+					MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DownloadsFinished"));
 
 					await Task.Run(() =>
 					{
@@ -400,9 +375,8 @@ internal sealed partial class UpdateVM : ViewModelBase
 						UserProtectedPrivateKey: UseHardenedInstallationProcess,
 						ExportablePrivateKey: false);
 
-						// Signing the App Control Manager package
-						// In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
-						_ = ProcessStarter.RunCommand(signToolPath, $"sign /debug /n \"{CertCommonName}\" /fd Sha512 /sm /s Root /sha1 {generatedCert.Thumbprint} \"{AppControlManagerSavePath}\"");
+						// Sign the package
+						Signing.Main.SignAppPackage(AppControlManagerSavePath, generatedCert);
 
 						// Remove any certificates with the specified common name again
 						// Because the existing one contains private keys and we don't want that
@@ -476,7 +450,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 						}
 						catch (JsonException Jex)
 						{
-							Logger.Write($"Couldn't deserialize ASR rules exceptions list JSON which was this: {ASROutput}\nError: {Jex.Message}");
+							Logger.Write(string.Format(GlobalVars.Rizz.GetString("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
 						}
 						catch (Exception ex)
 						{
@@ -566,8 +540,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 						}
 					});
 
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("UpdateSuccess");
-					MainInfoBarSeverity = InfoBarSeverity.Success;
+					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("UpdateSuccess"));
 
 					UpdateButtonContent = GlobalVars.Rizz.GetString("UpdatesInstalled");
 
@@ -577,23 +550,20 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 				else
 				{
-					MainInfoBarMessage = GlobalVars.Rizz.GetString("AlreadyUpdated");
-					MainInfoBarSeverity = InfoBarSeverity.Success;
+					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("AlreadyUpdated"));
+
 					CheckForUpdateButtonIsEnabled = true;
 				}
 			}
 			catch (Exception ex)
 			{
-				MainInfoBarSeverity = InfoBarSeverity.Error;
-				MainInfoBarMessage = GlobalVars.Rizz.GetString("UpdateCheckError") + ex.Message;
-
 				ProgressBarValue = 0;
 
 				CheckForUpdateButtonIsEnabled = true;
 
 				WhatsNewInfoBarIsOpen = false;
 
-				Logger.Write(ErrorWriter.FormatException(ex));
+				MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("UpdateCheckError"));
 			}
 			finally
 			{
@@ -620,14 +590,21 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// </summary>
 	internal async void LaunchRating()
 	{
-		// https://learn.microsoft.com/windows/apps/develop/launch/launch-store-app#opening-to-a-specific-product
-		Uri uri = new($"ms-windows-store://review/?ProductId={GlobalVars.StoreProductID}");
-
-		bool launched = await Launcher.LaunchUriAsync(uri);
-
-		if (!launched)
+		try
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("FailedToOpenRating"));
+			// https://learn.microsoft.com/windows/apps/develop/launch/launch-store-app#opening-to-a-specific-product
+			Uri uri = new($"ms-windows-store://review/?ProductId={GlobalVars.StoreProductID}");
+
+			bool launched = await Launcher.LaunchUriAsync(uri);
+
+			if (!launched)
+			{
+				Logger.Write(GlobalVars.Rizz.GetString("FailedToOpenRating"));
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 		}
 	}
 

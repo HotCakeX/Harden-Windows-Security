@@ -1183,9 +1183,6 @@
   <data name="SelectedApps" xml:space="preserve">
     <value>التطبيقات المحددة: </value>
   </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>حدث خطأ: </value>
-  </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>تم إنشاء سياسة Deny بنجاح</value>
   </data>
@@ -3467,7 +3464,7 @@
     <value>تم إنشاء {0} سجل (سجلات) أثناء مرحلة التدقيق</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>حدث خطأ أثناء فحص النظام: {0}</value>
+    <value>حدث خطأ أثناء فحص النظام: </value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>تم فحص النظام بحثًا عن الأحداث بنجاح</value>
@@ -3494,7 +3491,7 @@
     <value>جارٍ فحص {0} ملفًا</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>حدث خطأ: {0}</value>
+    <value>حدث خطأ: </value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>تم فحص النظام بحثًا عن برامج التشغيل بنجاح</value>
@@ -3545,7 +3542,7 @@
     <value>جارٍ تحويل {0} إلى CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>حدثت مشكلة أثناء تحويل ملفات XML إلى CIP: {0}</value>
+    <value>حدثت مشكلة أثناء تحويل ملفات XML إلى CIP: </value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>تم تحويل جميع ملفات XML المحددة بنجاح إلى ملفات CIP ثنائية</value>
@@ -3554,7 +3551,7 @@
     <value>جارٍ فحص سجلات الأحداث...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء فحص السجلات: {0}</value>
+    <value>حدث خطأ أثناء فحص السجلات: </value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>اكتمل الفحص. تم العثور على {0} سجل.</value>
@@ -3599,7 +3596,7 @@
     <value>لم يتم توفير معرف GUID للسياسة الأساسية لاستخدامه كـ BasePolicyID للسياسة التكميلية.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء معالجة السجلات: {0}.</value>
+    <value>حدث خطأ أثناء معالجة السجلات: </value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>تمت معالجة السجلات بنجاح وتضمينها في السياسة.</value>
@@ -3617,7 +3614,7 @@
     <value>جارٍ إجراء المحاكاة</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>حدثت مشكلة أثناء المحاكاة: {0}</value>
+    <value>حدثت مشكلة أثناء المحاكاة: </value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>اكتملت المحاكاة بنجاح.</value>
@@ -3632,7 +3629,7 @@
     <value>جارٍ تحميل السياسة</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>حدثت مشكلة أثناء تحميل ملف السياسة المحدد: {0}</value>
+    <value>حدثت مشكلة أثناء تحميل ملف السياسة المحدد: </value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>تم تحميل السياسة المحددة بنجاح</value>
@@ -4055,7 +4052,7 @@
     <value>تم إلغاء تسجيل الدخول إلى MSGraph بواسطة المستخدم</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء تسجيل الدخول إلى MSGraph: {0}</value>
+    <value>حدث خطأ أثناء تسجيل الدخول إلى MSGraph: </value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>تم تنفيذ استعلام MDE Advanced Hunting بنجاح.</value>
@@ -4301,7 +4298,7 @@
     <value>لم يتم الكشف عن أي نتائج في سجلات CSV المتقدمة لـ MDE المحددة.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>حدث خطأ أثناء مسح سجلات CSV المتقدمة لـ MDE المحددة: {0}</value>
+    <value>حدث خطأ أثناء مسح سجلات CSV المتقدمة لـ MDE المحددة: </value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>اكتمل مسح سجلات CSV المتقدمة لـ MDE المحددة بنجاح.</value>
@@ -4322,7 +4319,7 @@
     <value>لم يتم تحديد ملف سياسة لربط السياسة التكميلية به.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء إنشاء السياسة التكميلية: {0}</value>
+    <value>حدث خطأ أثناء إنشاء السياسة التكميلية: </value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>استرداد بيانات Microsoft Defender for Endpoint Advanced Hunting</value>
@@ -4343,7 +4340,7 @@
     <value>لم يتم العثور على سجلات قابلة للتنفيذ بين البيانات المستردة لإنشاء سياسة تكميلية بها.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء استرداد سجلات MDE Advanced Hunting من MSGraph: {0}</value>
+    <value>حدث خطأ أثناء استرداد سجلات MDE Advanced Hunting من MSGraph: </value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>إضافة سجلات إلى السياسة المحددة</value>
@@ -4956,5 +4953,320 @@
 </data>
 <data name="DeployUnsignedXMLPolicyFilesSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>استعرض للعثور على ملف(ملفات) سياسة XML للنشر على النظام بدون توقيع</value>
+</data>
+ <data name="SubjectNameFragmentEmpty" xml:space="preserve">
+  <value>جزء اسم الموضوع فارغ.</value>
+</data>
+<data name="NoCertificatesFoundInStore" xml:space="preserve">
+  <value>لم يتم العثور على شهادات في المتجر {0}\{1}.</value>
+</data>
+<data name="SearchingCertificatesInStore" xml:space="preserve">
+  <value>يتم البحث عن شهادات {0} في المتجر {1}\{2} لجزء الموضوع '{3}' (بحث CN الفعال: '{4}')...</value>
+</data>
+<data name="FoundCertificateWithMatchingSubject" xml:space="preserve">
+  <value>تم العثور على شهادة بمعايير موضوع مطابقة: {0} (بصمة الإبهام: {1})</value>
+</data>
+<data name="SignatureAlgorithmInfo" xml:space="preserve">
+  <value>خوارزمية التوقيع: {0} ({1})</value>
+</data>
+<data name="CertificateHasCodeSigningEKU" xml:space="preserve">
+  <value>الشهادة لديها استخدام مفتاح معزز لتوقيع الرمز (EKU).</value>
+</data>
+<data name="CertificateDoesNotHaveCodeSigningEKU" xml:space="preserve">
+  <value>الشهادة لا تحتوي على استخدام مفتاح معزز لتوقيع الرمز (EKU).</value>
+</data>
+<data name="SuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>تم العثور على شهادة توقيع رمز مناسبة: {0} في {1}\{2} (بصمة الإبهام: {3})</value>
+</data>
+<data name="CryptographicErrorAccessingStore" xml:space="preserve">
+  <value>تحذير: خطأ تشفيري أثناء الوصول إلى متجر الشهادات {0} في {1}: {2}</value>
+</data>
+<data name="GeneralErrorAccessingStore" xml:space="preserve">
+  <value>تحذير: خطأ عام أثناء الوصول إلى متجر الشهادات {0} في {1}: {2}</value>
+</data>
+<data name="NoSuitableCodeSigningCertificateFound" xml:space="preserve">
+  <value>لم يتم العثور على شهادة توقيع رمز مناسبة مع جزء الموضوع '{0}'، ومفتاح خاص، واستخدام مفتاح معزز لتوقيع الرمز (EKU) في المتاجر التي تم فحصها.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForHashOID" xml:space="preserve">
+  <value>معرف OID لخوارزمية توقيع الشهادة '{0}' ('{1}') غير مدعوم للكشف التلقائي عن معرف OID لخوارزمية التجزئة لـ CryptSignMessage.</value>
+</data>
+<data name="UnsupportedCertificateSignatureAlgorithmForALGID" xml:space="preserve">
+  <value>معرف OID لخوارزمية توقيع الشهادة '{0}' ('{1}') غير مدعوم للكشف التلقائي عن ALG_ID لـ SignerSignEx3.</value>
+</data>
+<data name="CertificateMustHavePrivateKey" xml:space="preserve">
+  <value>يجب أن تحتوي الشهادة على مفتاح خاص.</value>
+</data>
+<data name="PKCS7SignatureWritten" xml:space="preserve">
+  <value>تمت كتابة توقيع PKCS #7 (المحتوى مضمن، الشهادة متضمنة) إلى {0}</value>
+</data>
+<data name="SignerSignEx3Failed" xml:space="preserve">
+  <value>فشل SignerSignEx3 مع HRESULT: 0x{0:X}</value>
+</data>
+<data name="ErrorBadFormat" xml:space="preserve">
+  <value> (ERROR_BAD_FORMAT).</value>
+</data>
+<data name="ErrorFileNotFound" xml:space="preserve">
+  <value> (ERROR_FILE_NOT_FOUND).</value>
+</data>
+<data name="ErrorInvalidArg" xml:space="preserve">
+  <value> (E_INVALIDARG - واحد أو أكثر من الوسائط غير صالحة).</value>
+</data>
+<data name="Win32ErrorSigningFile" xml:space="preserve">
+  <value>خطأ Win32 أثناء توقيع الملف (الرمز: {0} / 0x{1:X}): {2}</value>
+</data>
+<data name="AppStartupMessage" xml:space="preserve">
+  <value>بدء تشغيل التطبيق، إصدار وقت تشغيل .NET: {0}</value>
+</data>
+<data name="AnotherInstanceRunningMessage" xml:space="preserve">
+  <value>يوجد مثيل آخر من مدير AppControl قيد التشغيل. هذا مجرد سجل معلوماتي.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>تم الكشف عن تنشيط الملف</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>تم تشغيل التطبيق عبر تنشيط الملف ولكن الوسائط لم تحتوي على أي كائنات ملفات</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>تم تشغيل التطبيق عبر تنشيط الملف ولكن بدون أي وسائط لتنشيط الملف</value>
+</data>
+<data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>ألغى المستخدم موجه التحكم في حساب المستخدم (UAC).</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>كان طلب الرفع مطلوبًا لمعالجة الملف المحدد ولكنه رُفض من قبل المستخدم. يتم الخروج من التطبيق.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>رُفض طلب الرفع من قبل المستخدم</value>
+</data>
+<data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>تم تشغيل التطبيق مع تنشيط الملف للملف التالي: '{0}'</value>
+</data>
+<data name="PolicyEditorLaunchErrorMessage" xml:space="preserve">
+  <value>حدث خطأ أثناء تشغيل محرر النهج بالملف المحدد: {0}</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>حدث خطأ في البرنامج أثناء حفظ حجم النافذة عند إغلاق التطبيق: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>حدث خطأ</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>حدث خطأ غير متوقع: {0}</value>
+</data>
+<data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>تعيين حجم سجل سلامة الرمز</value>
+</data>
+<data name="VersionLabelFormat" xml:space="preserve">
+  <value>الإصدار: {0}.{1}.{2}.{3}</value>
+</data>
+<data name="PFNLabelFormat" xml:space="preserve">
+  <value>اسم عائلة الحزمة (PFN): {0}</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>حدث خطأ أثناء الحصول على تفاصيل التطبيق: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>حدث خطأ أثناء الحصول على تفاصيل أحد التطبيقات</value>
+</data>
+<data name="InvalidGuidFormatError" xml:space="preserve">
+  <value>السلسلة النصية المقدمة '{0}' ليست بتنسيق GUID صالح.</value>
+</data>
+<data name="SupplementalPolicyTypeChangeMessage" xml:space="preserve">
+  <value>ملف نهج XML المحدد هو نهج تكميلي ولكن معرف النهج الأساسي (BasePolicyID) ومعرف النهج (PolicyID) متطابقان، مما يشير إلى أنه نهج أساسي، يتم تغيير النوع.</value>
+</data>
+<data name="BasePolicyTypeChangeMessage" xml:space="preserve">
+  <value>ملف نهج XML المحدد هو نهج أساسي ولكن معرف النهج الأساسي (BasePolicyID) ومعرف النهج (PolicyID) غير متطابقين، مما يشير إلى أنه نهج تكميلي، يتم تغيير النوع.</value>
+</data>
+<data name="PolicyConfigurationSuccessMessage" xml:space="preserve">
+  <value>تم تكوين النهج بنجاح في '{0}'. الآن لديه النوع '{1}'، ومعرف النهج الأساسي (BasePolicyID) '{2}' ومعرف النهج (PolicyID) '{3}'.</value>
+</data>
+<data name="PolicyVersionSetSuccessMessage" xml:space="preserve">
+  <value>تم تعيين إصدار ملف النهج بنجاح في '{0}' من '{1}' إلى '{2}'.</value>
+</data>
+<data name="BuildSignerDataSeparationStartMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: بدء عملية فصل البيانات.</value>
+</data>
+<data name="BuildSignerHashLevelMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: استخدام مستوى التجزئة فقط.</value>
+</data>
+<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: استخدام مستويات الناشر -> التجزئة.</value>
+</data>
+<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: استخدام مستويات ناشر الملف -> الناشر -> التجزئة.</value>
+</data>
+<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: تمرير قاعدة الناشر إلى مصفوفة التجزئة للملف: {0}</value>
+</data>
+<data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} قواعد ناشر الملف.</value>
+</data>
+<data name="BuildSignerPublisherRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} قواعد الناشر.</value>
+</data>
+<data name="BuildSignerHashRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} قواعد التجزئة.</value>
+</data>
+<data name="BuildSignerFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} قواعد مسار الملف.</value>
+</data>
+<data name="BuildSignerWildCardFilePathRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} قواعد مسار الملف ذات حرف البدل.</value>
+</data>
+<data name="BuildSignerPFNRulesCountMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: {0} قواعد اسم عائلة الحزمة (PFN).</value>
+</data>
+<data name="BuildSignerProcessingFilePublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات ناشر الملف.</value>
+</data>
+<data name="BuildSignerIntermediateCertEmptyMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: تجزئة TBS للشهادة الوسيطة فارغة للملف: {0}، يتم استخدام تجزئة TBS لشهادة الطرف الأدنى بدلاً من ذلك</value>
+</data>
+<data name="BuildSignerProcessingPublisherMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات الناشر.</value>
+</data>
+<data name="BuildSignerProcessingUnsignedHashMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات التجزئة غير الموقعة.</value>
+</data>
+<data name="BuildSignerNullPropertiesMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: واحد أو أكثر من الخصائص الضرورية فارغة أو معدومة في hashData.</value>
+</data>
+<data name="BuildSignerProcessingFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات مسار الملف</value>
+</data>
+<data name="BuildSignerProcessingWildCardFilePathMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات مسار الملف ذات حرف البدل</value>
+</data>
+<data name="BuildSignerProcessingCustomPatternMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات مسار الملف المستندة إلى نمط مخصص</value>
+</data>
+<data name="BuildSignerProcessingPFNMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: معالجة بيانات اسم عائلة الحزمة (PFN)</value>
+</data>
+<data name="BuildSignerCompletedMessage" xml:space="preserve">
+  <value>BuildSignerAndHashObjects: اكتملت العملية.</value>
+</data>
+<data name="CouldNotOpenFileMessage" xml:space="preserve">
+  <value>تعذر فتح الملف {0}. الخطأ: {1}</value>
+</data>
+<data name="GetFileSizeFailedMessage" xml:space="preserve">
+  <value>فشل GetFileSize للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="CreateFileMappingFailedMessage" xml:space="preserve">
+  <value>فشل CreateFileMapping للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
+  <value>CreateFileMappingAlreadyExists للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="MapViewOfFileFailedMessage" xml:space="preserve">
+  <value>فشل MapViewOfFile للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="ImageNtHeaderFailedMessage" xml:space="preserve">
+  <value>فشل ImageNtHeader للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="ImageDirectoryEntryToDataExFailedMessage" xml:space="preserve">
+  <value>فشل ImageDirectoryEntryToDataEx للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="UnmapViewOfFileFailedMessage" xml:space="preserve">
+  <value>فشل UnmapViewOfFile للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="CouldNotCloseMapHandleMessage" xml:space="preserve">
+  <value>تعذر إغلاق مؤشر الخريطة للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="CouldNotCloseFileHandleMessage" xml:space="preserve">
+  <value>تعذر إغلاق مؤشر الملف للملف {0} مع الخطأ {1}</value>
+</data>
+<data name="DuplicateSignerIdMessage" xml:space="preserve">
+  <value>أحد ملفات XML يحتوي على أكثر من موقع واحد بنفس المعرف `{0}`</value>
+</data>
+<data name="HVCISetToStrictSuccessMessage" xml:space="preserve">
+  <value>تم تعيين HVCI بنجاح في ملف النهج '{0}' إلى صارم.</value>
+</data>
+<data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>قائمة الانتقال السريع غير مدعومة.</value>
+</data>
+<data name="MergingRulesMessage" xml:space="preserve">
+  <value>يتم دمج القواعد</value>
+</data>
+<data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>يتم إعادة تعيين حجم النافذة إلى ما كان عليه عند إغلاق التطبيق. الارتفاع: {0} - العرض: {1}</value>
+</data>
+<data name="BCryptOpenAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>فشل BCryptOpenAlgorithmProvider مع رمز الخطأ: {0}</value>
+</data>
+<data name="CryptCATOpenFailedMessage" xml:space="preserve">
+  <value>فشل CryptCATOpen مع رمز الخطأ: {0}</value>
+</data>
+<data name="BCryptCloseAlgorithmProviderFailedMessage" xml:space="preserve">
+  <value>فشل BCryptCloseAlgorithmProvider مع رمز الخطأ: {0}</value>
+</data>
+<data name="ASRRulesDeserializationFailedMessage" xml:space="preserve">
+  <value>تعذر إلغاء تسلسل قائمة استثناءات قواعد ASR JSON والتي كانت: {0} - الخطأ: {1}</value>
+</data>
+<data name="NoHashesDetectedAllowMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي تجزئات لإنشاء قواعد سماح لها.</value>
+</data>
+<data name="HashRulesToAddMessage" xml:space="preserve">
+  <value>هناك {0} قواعد تجزئة ليتم إضافتها إلى ملف XML '{1}'</value>
+</data>
+<data name="Sha256HashFriendlyName" xml:space="preserve">
+  <value>تجزئة Sha256 لـ: {0}</value>
+</data>
+<data name="Sha1HashFriendlyName" xml:space="preserve">
+  <value>تجزئة Sha1 لـ: {0}</value>
+</data>
+<data name="KernelModeHashRuleWarningMessage" xml:space="preserve">
+  <value>إنشاء قاعدة تجزئة لملف وضع النواة: {0}. يجب توقيع ملف وضع النواة!</value>
+</data>
+<data name="NoHashesDetectedDenyMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي تجزئات لإنشاء قواعد رفض لها.</value>
+</data>
+<data name="NoFilePathRulesDetectedAllowMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي قواعد مسار ملف لإنشاء قواعد سماح لها.</value>
+</data>
+<data name="FilePathRulesToAddMessage" xml:space="preserve">
+  <value>هناك {0} قواعد مسار ملف ليتم إضافتها إلى ملف XML '{1}'</value>
+</data>
+<data name="FilePathRuleTypeFriendlyName" xml:space="preserve">
+  <value>نوع قاعدة مسار الملف</value>
+</data>
+<data name="KernelModeFilePathRuleWarningMessage" xml:space="preserve">
+  <value>الملف التالي هو برنامج تشغيل في وضع النواة لا يدعم قواعد مسار الملف: {0}</value>
+</data>
+<data name="NoFilePathRulesDetectedDenyMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي قواعد مسار ملف لإنشاء قواعد رفض لها.</value>
+</data>
+<data name="NoFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي موقعين لناشر الملف لإنشاء قواعد سماح لهم.</value>
+</data>
+<data name="FilePublisherSignersToAddMessage" xml:space="preserve">
+  <value>هناك {0} موقعين لناشر الملف ليتم إضافتهم إلى ملف XML</value>
+</data>
+<data name="FilePublisherRuleTypeFriendlyName" xml:space="preserve">
+  <value>نوع قاعدة ناشر الملف</value>
+</data>
+<data name="NoFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي موقعين لناشر الملف لإنشاء قواعد رفض لهم.</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedAllowMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي أسماء عائلات حزم لإنشاء قواعد سماح لها.</value>
+</data>
+<data name="AllowingPackagedAppFriendlyName" xml:space="preserve">
+  <value>السماح بتطبيق معبأ بواسطة اسم عائلته</value>
+</data>
+<data name="NoPackageFamilyNamesDetectedDenyMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي أسماء عائلات حزم لإنشاء قواعد رفض لها.</value>
+</data>
+<data name="DenyingPackagedAppFriendlyName" xml:space="preserve">
+  <value>رفض تطبيق معبأ بواسطة اسم عائلته</value>
+</data>
+<data name="NoPublisherSignersDetectedAllowMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي موقعين للناشر لإنشاء قواعد سماح لهم.</value>
+</data>
+<data name="PublisherSignersToAddMessage" xml:space="preserve">
+  <value>هناك {0} موقعين للناشر ليتم إضافتهم إلى ملف XML '{1}'</value>
+</data>
+<data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
+  <value>لم يتم الكشف عن أي موقعين للناشر لإنشاء قواعد رفض لهم.</value>
 </data>
 </root>

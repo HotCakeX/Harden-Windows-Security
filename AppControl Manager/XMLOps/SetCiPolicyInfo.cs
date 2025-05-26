@@ -120,7 +120,7 @@ internal static class SetCiPolicyInfo
 
 			if (!response.Item1)
 			{
-				throw new ArgumentException($"The provided string '{basePolicyID}' is not a valid GUID format.");
+				throw new ArgumentException(string.Format(GlobalVars.Rizz.GetString("InvalidGuidFormatError"), basePolicyID));
 			}
 
 			// Set the BasePolicyID of the policy file to the user provided one
@@ -145,7 +145,7 @@ internal static class SetCiPolicyInfo
 		{
 			if (string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			{
-				Logger.Write("The selected XML policy file is a Supplemental policy but its BasePolicyID and PolicyID are the same, indicating it is a Base policy, changing the type.");
+				Logger.Write(GlobalVars.Rizz.GetString("SupplementalPolicyTypeChangeMessage"));
 
 				policyObj.PolicyType = SiPolicy.PolicyType.BasePolicy;
 			}
@@ -155,7 +155,7 @@ internal static class SetCiPolicyInfo
 		{
 			if (!string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			{
-				Logger.Write("The selected XML policy file is a Base policy but its BasePolicyID and PolicyID are not the same, indicating it is a Supplemental policy, changing the type.");
+				Logger.Write(GlobalVars.Rizz.GetString("BasePolicyTypeChangeMessage"));
 
 
 				policyObj.PolicyType = SiPolicy.PolicyType.SupplementalPolicy;
@@ -167,7 +167,7 @@ internal static class SetCiPolicyInfo
 		// Save the changes to the XML file
 		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 
-		Logger.Write($"Successfully configured the policy at '{filePath}'. Now it has the Type '{policyObj.PolicyType}', BasePolicyID '{policyObj.BasePolicyID}' and PolicyID '{policyObj.PolicyID}'.");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("PolicyConfigurationSuccessMessage"), filePath, policyObj.PolicyType, policyObj.BasePolicyID, policyObj.PolicyID));
 
 		return policyObj.PolicyID;
 	}
@@ -199,7 +199,7 @@ internal static class SetCiPolicyInfo
 
 			if (!response.Item1)
 			{
-				throw new ArgumentException($"The provided string '{ID}' is not a valid GUID format.");
+				throw new ArgumentException(string.Format(GlobalVars.Rizz.GetString("InvalidGuidFormatError"), ID));
 			}
 
 			// Set the BasePolicyID of the policy file to the user provided one
@@ -212,7 +212,7 @@ internal static class SetCiPolicyInfo
 		// Save the changes to the XML file
 		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 
-		Logger.Write($"Successfully set the version of the policy file at '{filePath}' from '{OriginalXMLPolicyVersion}' to '{version}'.");
+		Logger.Write(string.Format(GlobalVars.Rizz.GetString("PolicyVersionSetSuccessMessage"), filePath, OriginalXMLPolicyVersion, version));
 	}
 
 

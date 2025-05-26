@@ -105,7 +105,7 @@ internal static class KernelModeDrivers
 
 			if (fileHandle == INVALID_HANDLE_VALUE)
 			{
-				Logger.Write($"CouldNotOpenFile {filePath}. Error: {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CouldNotOpenFileMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -161,7 +161,7 @@ internal static class KernelModeDrivers
 			{
 				error = Marshal.GetLastWin32Error();
 
-				Logger.Write($"GetFileSizeFailed for file {filePath} with error {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("GetFileSizeFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -204,7 +204,7 @@ internal static class KernelModeDrivers
 
 			if (fileMappingHandle == IntPtr.Zero)
 			{
-				Logger.Write($"CreateFileMappingFailed for the file {filePath} with error {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CreateFileMappingFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -218,7 +218,7 @@ internal static class KernelModeDrivers
 
 			if (error == 183)
 			{
-				Logger.Write($"CreateFileMappingAlreadyExists for the file {filePath} with error {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CreateFileMappingAlreadyExistsMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -246,7 +246,7 @@ internal static class KernelModeDrivers
 			{
 				error = Marshal.GetLastWin32Error();
 
-				Logger.Write($"MapViewOfFileFailed for the file {filePath} with error {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("MapViewOfFileFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -275,7 +275,7 @@ internal static class KernelModeDrivers
 				}
 
 
-				Logger.Write($"ImageNtHeaderFailed for the file {filePath} with error {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("ImageNtHeaderFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -312,7 +312,7 @@ internal static class KernelModeDrivers
 				}
 
 
-				Logger.Write($"ImageDirectoryEntryToDataExFailed for the file {filePath} with error {error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("ImageDirectoryEntryToDataExFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
 				{
@@ -382,7 +382,7 @@ internal static class KernelModeDrivers
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
-					Logger.Write($"UnmapViewOfFileFailed for the file {filePath} with error {lastWin32Error}");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("UnmapViewOfFileFailedMessage"), filePath, lastWin32Error));
 				}
 			}
 			if (fileMappingHandle != IntPtr.Zero && fileMappingHandle != INVALID_HANDLE_VALUE)
@@ -391,7 +391,7 @@ internal static class KernelModeDrivers
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
-					Logger.Write($"CouldNotCloseMapHandle for the file {filePath} with error {lastWin32Error}");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("CouldNotCloseMapHandleMessage"), filePath, lastWin32Error));
 
 				}
 			}
@@ -401,7 +401,7 @@ internal static class KernelModeDrivers
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
-					Logger.Write($"CouldNotCloseFileHandle for the file {filePath} with error {lastWin32Error}");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("CouldNotCloseFileHandleMessage"), filePath, lastWin32Error));
 				}
 			}
 		}

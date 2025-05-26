@@ -33,6 +33,22 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 {
+	internal ViewFileCertificatesVM()
+	{
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
+	}
+
+	internal readonly InfoBarSettings MainInfoBar;
+
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	// Main collection assigned to the ListView
 	internal readonly ObservableCollection<FileCertificateInfoCol> FileCertificates = [];
@@ -195,112 +211,119 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <param name="newSortColumn">The column to sort by.</param>
 	private async void Sort(CertificateSortColumn newSortColumn)
 	{
-
-		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
-
-		double? savedHorizontal = null;
-		if (Sv != null)
+		try
 		{
-			savedHorizontal = Sv.HorizontalOffset;
-		}
 
+			// Get the ListView ScrollViewer info
+			ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
-		// Toggle sort order if the same column is clicked.
-		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
-		{
-			_isDescending = !_isDescending;
-		}
-		else
-		{
-			_currentSortColumn = newSortColumn;
-			_isDescending = true;
-		}
-
-		// Determine if there is active search text.
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
-		List<FileCertificateInfoCol> sourceData = isSearchEmpty
-			? FilteredCertificates
-			: FileCertificates.ToList();
-
-		List<FileCertificateInfoCol> sortedData = [];
-
-		switch (newSortColumn)
-		{
-			case CertificateSortColumn.SignerNumber:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.SignerNumber).ToList()
-					: sourceData.OrderBy(c => c.SignerNumber).ToList();
-				break;
-			case CertificateSortColumn.Type:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.Type).ToList()
-					: sourceData.OrderBy(c => c.Type).ToList();
-				break;
-			case CertificateSortColumn.SubjectCommonName:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.SubjectCN).ToList()
-					: sourceData.OrderBy(c => c.SubjectCN).ToList();
-				break;
-			case CertificateSortColumn.IssuerCommonName:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.IssuerCN).ToList()
-					: sourceData.OrderBy(c => c.IssuerCN).ToList();
-				break;
-			case CertificateSortColumn.NotBefore:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.NotBefore).ToList()
-					: sourceData.OrderBy(c => c.NotBefore).ToList();
-				break;
-			case CertificateSortColumn.NotAfter:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.NotAfter).ToList()
-					: sourceData.OrderBy(c => c.NotAfter).ToList();
-				break;
-			case CertificateSortColumn.HashingAlgorithm:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.HashingAlgorithm).ToList()
-					: sourceData.OrderBy(c => c.HashingAlgorithm).ToList();
-				break;
-			case CertificateSortColumn.SerialNumber:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.SerialNumber).ToList()
-					: sourceData.OrderBy(c => c.SerialNumber).ToList();
-				break;
-			case CertificateSortColumn.Thumbprint:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.Thumbprint).ToList()
-					: sourceData.OrderBy(c => c.Thumbprint).ToList();
-				break;
-			case CertificateSortColumn.TBSHash:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.TBSHash).ToList()
-					: sourceData.OrderBy(c => c.TBSHash).ToList();
-				break;
-			case CertificateSortColumn.ExtensionOIDs:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(c => c.OIDs).ToList()
-					: sourceData.OrderBy(c => c.OIDs).ToList();
-				break;
-			default:
-				break;
-		}
-
-		// Update the observable collection on the UI thread.
-		await Dispatcher.EnqueueAsync(() =>
-		{
-			FileCertificates.Clear();
-			foreach (var item in sortedData)
+			double? savedHorizontal = null;
+			if (Sv != null)
 			{
-				FileCertificates.Add(item);
+				savedHorizontal = Sv.HorizontalOffset;
 			}
 
-			if (Sv != null && savedHorizontal.HasValue)
+
+			// Toggle sort order if the same column is clicked.
+			if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
 			{
-				// restore horizontal scroll position
-				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+				_isDescending = !_isDescending;
 			}
-		});
+			else
+			{
+				_currentSortColumn = newSortColumn;
+				_isDescending = true;
+			}
+
+			// Determine if there is active search text.
+			bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
+			List<FileCertificateInfoCol> sourceData = isSearchEmpty
+				? FilteredCertificates
+				: FileCertificates.ToList();
+
+			List<FileCertificateInfoCol> sortedData = [];
+
+			switch (newSortColumn)
+			{
+				case CertificateSortColumn.SignerNumber:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.SignerNumber).ToList()
+						: sourceData.OrderBy(c => c.SignerNumber).ToList();
+					break;
+				case CertificateSortColumn.Type:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.Type).ToList()
+						: sourceData.OrderBy(c => c.Type).ToList();
+					break;
+				case CertificateSortColumn.SubjectCommonName:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.SubjectCN).ToList()
+						: sourceData.OrderBy(c => c.SubjectCN).ToList();
+					break;
+				case CertificateSortColumn.IssuerCommonName:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.IssuerCN).ToList()
+						: sourceData.OrderBy(c => c.IssuerCN).ToList();
+					break;
+				case CertificateSortColumn.NotBefore:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.NotBefore).ToList()
+						: sourceData.OrderBy(c => c.NotBefore).ToList();
+					break;
+				case CertificateSortColumn.NotAfter:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.NotAfter).ToList()
+						: sourceData.OrderBy(c => c.NotAfter).ToList();
+					break;
+				case CertificateSortColumn.HashingAlgorithm:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.HashingAlgorithm).ToList()
+						: sourceData.OrderBy(c => c.HashingAlgorithm).ToList();
+					break;
+				case CertificateSortColumn.SerialNumber:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.SerialNumber).ToList()
+						: sourceData.OrderBy(c => c.SerialNumber).ToList();
+					break;
+				case CertificateSortColumn.Thumbprint:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.Thumbprint).ToList()
+						: sourceData.OrderBy(c => c.Thumbprint).ToList();
+					break;
+				case CertificateSortColumn.TBSHash:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.TBSHash).ToList()
+						: sourceData.OrderBy(c => c.TBSHash).ToList();
+					break;
+				case CertificateSortColumn.ExtensionOIDs:
+					sortedData = _isDescending
+						? sourceData.OrderByDescending(c => c.OIDs).ToList()
+						: sourceData.OrderBy(c => c.OIDs).ToList();
+					break;
+				default:
+					break;
+			}
+
+			// Update the observable collection on the UI thread.
+			await Dispatcher.EnqueueAsync(() =>
+			{
+				FileCertificates.Clear();
+				foreach (var item in sortedData)
+				{
+					FileCertificates.Add(item);
+				}
+
+				if (Sv != null && savedHorizontal.HasValue)
+				{
+					// restore horizontal scroll position
+					_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 	}
 
 	// Methods bound to each header button’s Click events.
@@ -391,55 +414,63 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	/// <param name="file"></param>
 	/// <returns></returns>
-	internal static async Task<List<FileCertificateInfoCol>> FetchForCIP(string file)
+	internal async Task<List<FileCertificateInfoCol>> FetchForCIP(string file)
 	{
 		List<FileCertificateInfoCol> output = [];
 
-		await Task.Run(() =>
+		try
 		{
-
-			// Create a new SignedCms object to store the signed message
-			SignedCms signedCms = new();
-
-			// Decode the signed message from the file specified by cipFilePath
-			// The file is read as a byte array because the SignedCms.Decode() method expects a byte array as input
-			// https://learn.microsoft.com/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
-			signedCms.Decode(File.ReadAllBytes(file));
-
-			X509Certificate2Collection certificates = signedCms.Certificates;
-			X509Certificate2[] certificateArray = new X509Certificate2[certificates.Count];
-			certificates.CopyTo(certificateArray, 0);
-
-			// Counter (in case the CIP file is signed by multiple certificates)
-			int i = 1;
-
-			// Loop over the array of X509Certificate2 objects that represent the certificates used to sign the message
-			foreach (X509Certificate2 signer in certificateArray)
+			await Task.Run(() =>
 			{
-				output.Add(new FileCertificateInfoCol
+
+				// Create a new SignedCms object to store the signed message
+				SignedCms signedCms = new();
+
+				// Decode the signed message from the file specified by cipFilePath
+				// The file is read as a byte array because the SignedCms.Decode() method expects a byte array as input
+				// https://learn.microsoft.com/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
+				signedCms.Decode(File.ReadAllBytes(file));
+
+				X509Certificate2Collection certificates = signedCms.Certificates;
+				X509Certificate2[] certificateArray = new X509Certificate2[certificates.Count];
+				certificates.CopyTo(certificateArray, 0);
+
+				// Counter (in case the CIP file is signed by multiple certificates)
+				int i = 1;
+
+				// Loop over the array of X509Certificate2 objects that represent the certificates used to sign the message
+				foreach (X509Certificate2 signer in certificateArray)
 				{
-					SignerNumber = i,
-					Type = CertificateType.Leaf,
-					SubjectCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
-					IssuerCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
-					NotBefore = signer.NotBefore,
-					NotAfter = signer.NotAfter,
-					HashingAlgorithm = signer.SignatureAlgorithm.FriendlyName,
-					SerialNumber = signer.SerialNumber,
-					Thumbprint = signer.Thumbprint,
-					TBSHash = CertificateHelper.GetTBSCertificate(signer),
-					OIDs = string.Join(", ", signer.Extensions
-							.Select(ext =>
-								ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-							.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-				});
+					output.Add(new FileCertificateInfoCol
+					{
+						SignerNumber = i,
+						Type = CertificateType.Leaf,
+						SubjectCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
+						IssuerCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
+						NotBefore = signer.NotBefore,
+						NotAfter = signer.NotAfter,
+						HashingAlgorithm = signer.SignatureAlgorithm.FriendlyName,
+						SerialNumber = signer.SerialNumber,
+						Thumbprint = signer.Thumbprint,
+						TBSHash = CertificateHelper.GetTBSCertificate(signer),
+						OIDs = string.Join(", ", signer.Extensions
+								.Select(ext =>
+									ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+								.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+					});
 
-				i++;
-			}
+					i++;
+				}
+			});
 
-		});
+			return output;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 
-		return output;
+			return output;
+		}
 	}
 
 
@@ -448,36 +479,45 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	/// <param name="file"></param>
 	/// <returns></returns>
-	internal static async Task<List<FileCertificateInfoCol>> FetchForCER(string file)
+	internal async Task<List<FileCertificateInfoCol>> FetchForCER(string file)
 	{
 		List<FileCertificateInfoCol> output = [];
 
-		await Task.Run(() =>
+		try
 		{
-			// Create a certificate object from the .cer file
-			X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(file);
-
-			// Add the certificate as leaf certificate
-			output.Add(new FileCertificateInfoCol
+			await Task.Run(() =>
 			{
-				SignerNumber = 1,
-				Type = CertificateType.Leaf,
-				SubjectCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
-				IssuerCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
-				NotBefore = CertObject.NotBefore,
-				NotAfter = CertObject.NotAfter,
-				HashingAlgorithm = CertObject.SignatureAlgorithm.FriendlyName,
-				SerialNumber = CertObject.SerialNumber,
-				Thumbprint = CertObject.Thumbprint,
-				TBSHash = CertificateHelper.GetTBSCertificate(CertObject),
-				OIDs = string.Join(", ", CertObject.Extensions
-						.Select(ext =>
-							ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-						.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+				// Create a certificate object from the .cer file
+				X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(file);
+
+				// Add the certificate as leaf certificate
+				output.Add(new FileCertificateInfoCol
+				{
+					SignerNumber = 1,
+					Type = CertificateType.Leaf,
+					SubjectCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
+					IssuerCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
+					NotBefore = CertObject.NotBefore,
+					NotAfter = CertObject.NotAfter,
+					HashingAlgorithm = CertObject.SignatureAlgorithm.FriendlyName,
+					SerialNumber = CertObject.SerialNumber,
+					Thumbprint = CertObject.Thumbprint,
+					TBSHash = CertificateHelper.GetTBSCertificate(CertObject),
+					OIDs = string.Join(", ", CertObject.Extensions
+							.Select(ext =>
+								ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+							.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+				});
+
 			});
 
-		});
+			return output;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
 
-		return output;
+			return output;
+		}
 	}
 }

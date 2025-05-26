@@ -83,7 +83,7 @@ internal static partial class MeowParser
 			if (status != 0)
 			{
 				// If the context is not acquired
-				throw new InvalidOperationException($"BCryptOpenAlgorithmProvider failed with error code: {status}");
+				throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("BCryptOpenAlgorithmProviderFailedMessage"), status));
 			}
 
 			// Opens the catalog file and gets a handle to the catalog context.
@@ -93,7 +93,7 @@ internal static partial class MeowParser
 			{
 				// If the handle is not obtained, capture the error code.
 				int lastWin32Error = Marshal.GetLastWin32Error();
-				Logger.Write($"CryptCATOpen failed with error code: {lastWin32Error}");
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CryptCATOpenFailedMessage"), lastWin32Error));
 			}
 
 			// Iterates through the catalog members.
@@ -118,7 +118,7 @@ internal static partial class MeowParser
 				if (closeStatus != 0)
 				{
 					// Log the error if closing the handle failed.
-					Logger.Write($"BCryptCloseAlgorithmProvider failed with error code: {closeStatus}");
+					Logger.Write(string.Format(GlobalVars.Rizz.GetString("BCryptCloseAlgorithmProviderFailedMessage"), closeStatus));
 				}
 			}
 

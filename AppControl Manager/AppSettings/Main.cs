@@ -58,6 +58,8 @@ internal sealed partial class Main : ViewModelBase
 		ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), ApplicationGlobalFlowDirection);
 		FileActivatedLaunchArg = ReadValue(nameof(FileActivatedLaunchArg), FileActivatedLaunchArg);
 		CiPolicySchemaPath = ReadValue(nameof(CiPolicySchemaPath), CiPolicySchemaPath);
+		LaunchActivationFilePath = ReadValue(nameof(LaunchActivationFilePath), LaunchActivationFilePath);
+		LaunchActivationAction = ReadValue(nameof(LaunchActivationAction), LaunchActivationAction);
 	}
 
 	/// <summary>
@@ -528,6 +530,54 @@ internal sealed partial class Main : ViewModelBase
 				if (SP(ref field, value))
 				{
 					SaveValue(nameof(CiPolicySchemaPath), field);
+				}
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// File path retrieved from the Launch args received from Context Menu activation.
+	/// </summary>
+	internal string LaunchActivationFilePath
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return field;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (SP(ref field, value))
+				{
+					SaveValue(nameof(LaunchActivationFilePath), field);
+				}
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// Action retrieved from the Launch args received from Context Menu activation.
+	/// </summary>
+	internal string LaunchActivationAction
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return field;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (SP(ref field, value))
+				{
+					SaveValue(nameof(LaunchActivationAction), field);
 				}
 			}
 		}

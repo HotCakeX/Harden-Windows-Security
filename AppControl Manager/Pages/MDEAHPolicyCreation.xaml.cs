@@ -87,11 +87,6 @@ internal sealed partial class MDEAHPolicyCreation : Page
 		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
 	}
 
-	// Variables to hold the data supplied by the UI elements
-	private Guid? BasePolicyGUID;
-	private string? PolicyToAddLogsTo;
-	private string? BasePolicyXMLFile;
-
 	// The user selected scan level
 	private ScanLevels scanLevel = ScanLevels.FilePublisher;
 
@@ -160,7 +155,7 @@ internal sealed partial class MDEAHPolicyCreation : Page
 		   datePicker: FilterByDateCalendarPicker,
 		   regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting
 	   );
-		UpdateTotalLogs();
+		ViewModel.UpdateTotalLogs();
 	}
 
 
@@ -189,7 +184,7 @@ internal sealed partial class MDEAHPolicyCreation : Page
 			ViewModel.FileIdentities.Clear();
 			ViewModel.AllFileIdentities.Clear();
 
-			UpdateTotalLogs(true);
+			ViewModel.UpdateTotalLogs(true);
 
 			// To store the output of the MDE Advanced Hunting logs scan
 			HashSet<FileIdentity> Output = [];
@@ -230,7 +225,7 @@ internal sealed partial class MDEAHPolicyCreation : Page
 				ViewModel.FileIdentities.Add(item);
 			}
 
-			UpdateTotalLogs();
+			ViewModel.UpdateTotalLogs();
 
 			ViewModel.CalculateColumnWidths();
 		}
@@ -256,16 +251,6 @@ internal sealed partial class MDEAHPolicyCreation : Page
 		}
 	}
 
-	/// <summary>
-	/// Event handler for the Clear Data button
-	/// </summary>
-	private void ClearDataButton_Click()
-	{
-		ViewModel.FileIdentities.Clear();
-		ViewModel.AllFileIdentities.Clear();
-
-		UpdateTotalLogs(true);
-	}
 
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
@@ -301,73 +286,9 @@ internal sealed partial class MDEAHPolicyCreation : Page
 			_ = ViewModel.AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
 
-		UpdateTotalLogs();
+		ViewModel.UpdateTotalLogs();
 	}
 
-	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	private void UpdateTotalLogs(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesTextBox.Text = "Total logs: 0";
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox.Text = $"Total logs: {ViewModel.FileIdentities.Count}";
-		}
-	}
-
-	/// <summary>
-	/// The button that browses for XML file the logs will be added to
-	/// </summary>
-	private void AddToPolicyButton_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			PolicyToAddLogsTo = selectedFile;
-
-			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
-		}
-	}
-
-	/// <summary>
-	/// The button to browse for the XML file the supplemental policy that will be created will belong to
-	/// </summary>
-	private void BasePolicyFileButton_Click()
-	{
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-
-		if (!string.IsNullOrEmpty(selectedFile))
-		{
-			// Store the selected XML file path
-			BasePolicyXMLFile = selectedFile;
-
-			Logger.Write($"Selected {BasePolicyXMLFile} to associate the Supplemental policy with.");
-		}
-	}
-
-	/// <summary>
-	/// The button to submit a base policy GUID that will be used to set the base policy ID in the Supplemental policy file that will be created.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	/// <exception cref="ArgumentException"></exception>
-	private void BaseGUIDSubmitButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (Guid.TryParse(BaseGUIDTextBox.Text, out Guid guid))
-		{
-			BasePolicyGUID = guid;
-		}
-		else
-		{
-			throw new ArgumentException("Invalid GUID");
-		}
-	}
 
 	/// <summary>
 	/// When the main button responsible for creating policy is pressed
@@ -398,7 +319,7 @@ internal sealed partial class MDEAHPolicyCreation : Page
 				);
 			}
 
-			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
+			if (ViewModel.PolicyToAddLogsTo is null && ViewModel.BasePolicyXMLFile is null && ViewModel.BasePolicyGUID is null)
 			{
 				throw new InvalidOperationException(
 					GlobalVars.Rizz.GetString("NoPolicyCreationOptionSelectedErrorMessage")
@@ -479,25 +400,25 @@ internal sealed partial class MDEAHPolicyCreation : Page
 				{
 					case 0:
 						{
-							if (PolicyToAddLogsTo is not null)
+							if (ViewModel.PolicyToAddLogsTo is not null)
 							{
 								// Set policy name and reset the policy ID of our new policy
 								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
 
 								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
-								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
+								SiPolicy.Merger.Merge(ViewModel.PolicyToAddLogsTo, [EmptyPolicyPath]);
 
-								UpdateHvciOptions.Update(PolicyToAddLogsTo);
+								UpdateHvciOptions.Update(ViewModel.PolicyToAddLogsTo);
 
 								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = PolicyToAddLogsTo;
+								finalSupplementalPolicyPath = ViewModel.PolicyToAddLogsTo;
 
 								// If user selected to deploy the policy
 								if (DeployAtTheEnd)
 								{
 									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
 
-									SiPolicy.Management.ConvertXMLToBinary(PolicyToAddLogsTo, null, CIPPath);
+									SiPolicy.Management.ConvertXMLToBinary(ViewModel.PolicyToAddLogsTo, null, CIPPath);
 
 									CiToolHelper.UpdatePolicy(CIPPath);
 								}
@@ -514,12 +435,12 @@ internal sealed partial class MDEAHPolicyCreation : Page
 
 					case 1:
 						{
-							if (BasePolicyXMLFile is not null)
+							if (ViewModel.BasePolicyXMLFile is not null)
 							{
 								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
 								// Instantiate the user selected Base policy
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(BasePolicyXMLFile, null);
+								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(ViewModel.BasePolicyXMLFile, null);
 
 								// Set the BasePolicyID of our new policy to the one from user selected policy
 								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, policyObj.BasePolicyID, null);
@@ -558,12 +479,12 @@ internal sealed partial class MDEAHPolicyCreation : Page
 
 					case 2:
 						{
-							if (BasePolicyGUID is not null)
+							if (ViewModel.BasePolicyGUID is not null)
 							{
 								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
 								// Set the BasePolicyID of our new policy to the one supplied by user
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, ViewModel.BasePolicyGUID, null);
 
 								// Configure policy rule options
 								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
@@ -723,7 +644,7 @@ internal sealed partial class MDEAHPolicyCreation : Page
 					ViewModel.FileIdentities.Add(item);
 				}
 
-				UpdateTotalLogs();
+				ViewModel.UpdateTotalLogs();
 
 				ViewModel.CalculateColumnWidths();
 			}

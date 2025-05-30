@@ -655,7 +655,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		string xmlContent;
 
 		// Extract the XML content with Regex
-		Match match = MyRegex1().Match(msftUserModeBlockRulesAsString);
+		Match match = XMLCaptureRegex().Match(msftUserModeBlockRulesAsString);
 
 		if (match.Success)
 		{
@@ -909,12 +909,59 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		return finalPolicyPath;
 	}
 
+	/// <summary>
+	/// Creates the base policy responsible for blocking a large number of RMMs, Remote Monitoring and Management software.
+	/// </summary>
+	/// <param name="StagingArea"></param>
+	/// <param name="IsAudit"></param>
+	/// <param name="deploy"></param>
+	/// <returns></returns>
+	internal static string BuildRMMBlocking(string StagingArea, bool IsAudit, bool deploy)
+	{
 
-	[GeneratedRegex(@"<VersionEx>(.*?)<\/VersionEx>", RegexOptions.Compiled)]
-	private static partial Regex MyRegex();
+		const string fileName = "Blocking RMMs - Remote Monitor and Management";
 
-	// Regex pattern to capture XML content between ```xml and ```
+		// Path of the policy file in the staging area
+		string policyPath = Path.Combine(StagingArea, $"{fileName}.xml");
+
+		// path of the policy in the app's resources directory
+		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
+
+		// path of the policy in user configurations directory
+		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
+
+		// Copy the policy from app's directory to the staging area
+		File.Copy(policyPathInResourcesDir, policyPath, true);
+
+		if (IsAudit)
+		{
+			// Add the audit mode rule option to the policy
+			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
+		}
+
+		// Copy the policy to the user configurations directory
+		File.Copy(policyPath, finalPolicyPath, true);
+
+		// If it is to be deployed
+		if (deploy)
+		{
+			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
+
+			// Convert the XML to CiP
+			SiPolicy.Management.ConvertXMLToBinary(policyPath, null, cipPath);
+
+			// Deploy the CiP file
+			CiToolHelper.UpdatePolicy(cipPath);
+		}
+
+		return finalPolicyPath;
+	}
+
+	/// <summary>
+	/// Regex pattern to capture XML content between ```xml and ```
+	/// </summary>
+	/// <returns></returns>
 	[GeneratedRegex(@"```xml\s*(.*?)\s*```", RegexOptions.Compiled | RegexOptions.Singleline)]
-	private static partial Regex MyRegex1();
+	private static partial Regex XMLCaptureRegex();
 
 }

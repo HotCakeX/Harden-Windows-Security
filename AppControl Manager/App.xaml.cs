@@ -31,6 +31,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
 using Windows.ApplicationModel;
@@ -203,7 +204,7 @@ public partial class App : Application
 		Logger.Write(string.Format(GlobalVars.Rizz.GetString("AppStartupMessage"), Environment.Version));
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
-		// Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
+		Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
 
 		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
 		// https://learn.microsoft.com/windows/apps/design/style/reveal-focus
@@ -253,7 +254,7 @@ public partial class App : Application
 	/// Invoked when the application is launched.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
-	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
 		// Register the Jump List tasks
 		/*
@@ -326,6 +327,44 @@ public partial class App : Application
 				else
 				{
 					Logger.Write(GlobalVars.Rizz.GetString("FileActivationNoArgumentsMessage"));
+				}
+			}
+			else
+			{
+				Logger.Write($"ExtendedActivationKind: {activatedEventArgs.Kind}");
+
+				/*
+				Windows.ApplicationModel.Activation.LaunchActivatedEventArgs launchArgs = (Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)activatedEventArgs.Data;
+				string passed = launchArgs.Arguments;
+
+				Logger.Write($"Arguments: {passed}");
+				*/
+
+				string[] possibleArgs = Environment.GetCommandLineArgs();
+
+				// Look for our two keys
+				string? actionArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
+				string? fileArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
+
+				if (actionArg is not null && fileArg is not null)
+				{
+					// Extract values past the '=' and trim any quotes
+					string action = actionArg["--action=".Length..];
+
+					string filePath = fileArg["--file=".Length..].Trim('"');
+
+					Logger.Write($"Parsed Action: {action}");
+					Logger.Write($"Parsed File: {filePath}");
+
+					// Save file path and action for later navigation
+					if (!string.IsNullOrWhiteSpace(filePath) && !string.IsNullOrWhiteSpace(action))
+					{
+						Settings.LaunchActivationFilePath = filePath;
+						Settings.LaunchActivationAction = action;
+
+						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+						requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
+					}
 				}
 			}
 		}
@@ -425,7 +464,7 @@ public partial class App : Application
 
 			try
 			{
-				_ = PolicyEditorViewModel.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
+				await PolicyEditorViewModel.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
 			}
 			catch (Exception ex)
 			{
@@ -438,6 +477,55 @@ public partial class App : Application
 			{
 				// Clear the file activated launch args after it's been used
 				Settings.FileActivatedLaunchArg = string.Empty;
+			}
+		}
+		// If there is/was activation through context menu
+		else if (!string.IsNullOrWhiteSpace(Settings.LaunchActivationAction))
+		{
+			try
+			{
+				if (string.Equals(Settings.LaunchActivationAction, "PolicyEditor", StringComparison.OrdinalIgnoreCase))
+				{
+					ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+					.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
+
+					await PolicyEditorViewModel.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
+				}
+				else if (string.Equals(Settings.LaunchActivationAction, "FileSignature", StringComparison.OrdinalIgnoreCase))
+				{
+					ViewFileCertificatesVM vm = AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
+
+					ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+					.First(item => string.Equals(item.Tag.ToString(), "ViewFileCertificates", StringComparison.OrdinalIgnoreCase));
+
+					await vm.OpenInViewFileCertificatesVM(Settings.LaunchActivationFilePath);
+				}
+				else if (string.Equals(Settings.LaunchActivationAction, "FileHashes", StringComparison.OrdinalIgnoreCase))
+				{
+					GetCIHashesVM vm = AppHost.Services.GetRequiredService<GetCIHashesVM>();
+
+					ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+					.First(item => string.Equals(item.Tag.ToString(), "GetCodeIntegrityHashes", StringComparison.OrdinalIgnoreCase));
+
+					await vm.OpenInGetCIHashes(Settings.LaunchActivationFilePath);
+				}
+				else
+				{
+					InitialNav();
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+
+				// Continue doing the normal navigation if there was a problem
+				InitialNav();
+			}
+			finally
+			{
+				// Clear the launch activation args after they've been used
+				Settings.LaunchActivationFilePath = string.Empty;
+				Settings.LaunchActivationAction = string.Empty;
 			}
 		}
 		else

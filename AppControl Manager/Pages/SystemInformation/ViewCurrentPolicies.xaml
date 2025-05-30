@@ -27,7 +27,6 @@
         </Grid.RowDefinitions>
 
         <InfoBar Grid.Row="0"
-                 Margin="15"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"

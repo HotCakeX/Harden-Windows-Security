@@ -56,6 +56,13 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 
 	internal ListViewHelper.SortState SortState { get; set; } = new();
 
+	// Variables to hold the data supplied by the UI elements
+	internal string? BasePolicyGUID { get; set => SP(ref field, value); }
+	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
+	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
+
+	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = "Total logs: 0";
+
 	#region UI-Bound Properties
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -271,7 +278,6 @@ DeviceEvents
 		MDEAdvancedHuntingLogs = null;
 	}
 
-
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
 	/// </summary>
@@ -288,5 +294,75 @@ DeviceEvents
 
 			Logger.Write($"Selected {selectedFile} for MDE Advanced Hunting scan");
 		}
+	}
+
+	/// <summary>
+	/// The button that browses for XML file the logs will be added to
+	/// </summary>
+	internal void AddToPolicyButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			PolicyToAddLogsTo = selectedFile;
+
+			Logger.Write($"Selected {PolicyToAddLogsTo} to add the logs to.");
+		}
+	}
+
+	/// <summary>
+	/// The button to browse for the XML file the supplemental policy that will be created will belong to
+	/// </summary>
+	internal void BasePolicyFileButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			BasePolicyXMLFile = selectedFile;
+
+			Logger.Write($"Selected {BasePolicyXMLFile} to associate the Supplemental policy with.");
+		}
+	}
+
+	/// <summary>
+	/// The button to submit a base policy GUID that will be used to set the base policy ID in the Supplemental policy file that will be created.
+	/// </summary>
+	/// <exception cref="ArgumentException"></exception>
+	internal void BaseGUIDSubmitButton_Click()
+	{
+		if (!Guid.TryParse(BasePolicyGUID, out Guid guid))
+		{
+			throw new ArgumentException("Invalid GUID");
+		}
+	}
+
+	/// <summary>
+	/// Updates the total logs count displayed on the UI
+	/// </summary>
+	internal void UpdateTotalLogs(bool? Zero = null)
+	{
+		if (Zero == true)
+		{
+			TotalCountOfTheFilesTextBox = "Total logs: 0";
+		}
+		else
+		{
+			TotalCountOfTheFilesTextBox = $"Total logs: {FileIdentities.Count}";
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the Clear Data button
+	/// </summary>
+	internal void ClearDataButton_Click()
+	{
+		FileIdentities.Clear();
+		AllFileIdentities.Clear();
+
+		UpdateTotalLogs(true);
 	}
 }

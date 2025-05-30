@@ -96,17 +96,13 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 
 	#endregion
 
+	private string? selectedFile;
 
-	/// <summary>
-	/// Event handler for the browse button
-	/// </summary>
-	internal async void PickFile_Click()
+	private async Task Calculate()
 	{
 		try
 		{
 			PickFileButtonIsEnabled = false;
-
-			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 			if (string.IsNullOrWhiteSpace(selectedFile))
 			{
@@ -205,7 +201,6 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			// Display the rest of the hashes in the UI
 			SHA3384FlatHash = SHA3_384Hash ?? "N/A";
 			SHA3512FlatHash = SHA3_512Hash ?? "N/A";
-
 		}
 		catch (Exception ex)
 		{
@@ -213,8 +208,40 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		}
 		finally
 		{
+
 			PickFileButtonIsEnabled = true;
 		}
 	}
 
+	/// <summary>
+	/// Event handler for the browse button
+	/// </summary>
+	internal async void PickFile_Click()
+	{
+		selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+
+		await Calculate();
+	}
+
+	/// <summary>
+	/// The method used to open the GetCIHashes page from other parts of the application.
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
+	internal async Task OpenInGetCIHashes(string filePath)
+	{
+		try
+		{
+			// Navigate to the Get CI Hashes page
+			App._nav.Navigate(typeof(Pages.GetCIHashes), null);
+
+			selectedFile = filePath;
+
+			await Calculate();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
 }

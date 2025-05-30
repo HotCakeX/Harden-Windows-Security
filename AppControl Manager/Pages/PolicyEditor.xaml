@@ -443,7 +443,7 @@
                                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                                 </win:StackPanel.ChildrenTransitions>
 
-                                <controls:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"                                    
+                                <controls:SettingsCard x:Uid="PolicyEditorPolicyNameSettingsCard"
                                                        HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/External/Name.png}"
                                                        IsClickEnabled="False">
 

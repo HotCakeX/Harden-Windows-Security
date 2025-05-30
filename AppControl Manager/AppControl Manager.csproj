@@ -62,7 +62,6 @@
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
     <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
-    <!-- <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm> -->
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
     <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
@@ -78,7 +77,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.24.0</FileVersion>
+    <FileVersion>2.0.25.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -191,7 +190,7 @@
     <NuGetAuditMode>all</NuGetAuditMode>
     <NuGetAuditLevel>low</NuGetAuditLevel>
 
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
     <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
 
@@ -331,8 +330,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="CppInterop\ScheduledTaskManager-ARM64.exe" />
-    <None Remove="CppInterop\ScheduledTaskManager-x64.exe" />
     <None Remove="Pages\AllowNewAppsDataGrid.xaml" />
     <None Remove="Pages\AllowNewAppsEventLogsDataGrid.xaml" />
     <None Remove="Pages\AllowNewAppsLocalFilesDataGrid.xaml" />
@@ -364,13 +361,12 @@
     <None Remove="Resources\Allow All Policy.xml" />
     <None Remove="Resources\Allow Microsoft Template.xml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
+    <None Remove="Resources\Blocking RMMs - Remote Monitor and Management.xml" />
     <None Remove="Resources\Default Windows Template.xml" />
     <None Remove="Resources\EmptyPolicy.xml" />
     <None Remove="Resources\ISGBasedSupplementalPolicy.xml" />
     <None Remove="Resources\StrictKernelMode.xml" />
     <None Remove="Resources\StrictKernelMode_NoFlightRoots.xml" />
-    <None Remove="RustInterop\DeviceGuardWMIRetriever-ARM64.exe" />
-    <None Remove="RustInterop\DeviceGuardWMIRetriever-X64.exe" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -379,16 +375,10 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="CppInterop\ManageDefender-ARM64.exe">
+    <Content Include="CppInterop\ManageDefender.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="CppInterop\ManageDefender-x64.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CppInterop\ScheduledTaskManager-ARM64.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CppInterop\ScheduledTaskManager-x64.exe">
+    <Content Include="CppInterop\ScheduledTaskManager.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Allow All Policy.xml">
@@ -398,6 +388,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Blocking RMMs - Remote Monitor and Management.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Default Windows Template.xml">
@@ -415,10 +408,10 @@
     <Content Include="Resources\StrictKernelMode_NoFlightRoots.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="RustInterop\DeviceGuardWMIRetriever-ARM64.exe">
+    <Content Include="RustInterop\DeviceGuardWMIRetriever.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="RustInterop\DeviceGuardWMIRetriever-X64.exe">
+    <Content Include="Shell\Shell.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -431,14 +424,6 @@
     <Compile Remove="version.txt" />
     <Content Remove="version.txt" />
     <None Remove="version.txt" />
-
-    <Compile Remove="DownloadURL.txt" />
-    <Content Remove="DownloadURL.txt" />
-    <None Remove="DownloadURL.txt" />
-
-    <Compile Remove="AppControlManagerAPIDocumentation.xml" />
-    <Content Remove="AppControlManagerAPIDocumentation.xml" />
-    <None Remove="AppControlManagerAPIDocumentation.xml" />
 
     <Compile Remove="MSIXBundleDownloadURL.txt" />
     <Content Remove="MSIXBundleDownloadURL.txt" />

@@ -72,6 +72,13 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			() => StrictKernelModesSettingsInfoBarSeverity, value => StrictKernelModesSettingsInfoBarSeverity = value,
 			() => StrictKernelModesSettingsInfoBarIsClosable, value => StrictKernelModesSettingsInfoBarIsClosable = value,
 			null, null);
+
+		RMMBlockingInfoBar = new InfoBarSettings(
+			() => RMMBlockingSettingsInfoBarIsOpen, value => RMMBlockingSettingsInfoBarIsOpen = value,
+			() => RMMBlockingSettingsInfoBarMessage, value => RMMBlockingSettingsInfoBarMessage = value,
+			() => RMMBlockingSettingsInfoBarSeverity, value => RMMBlockingSettingsInfoBarSeverity = value,
+			() => RMMBlockingSettingsInfoBarIsClosable, value => RMMBlockingSettingsInfoBarIsClosable = value,
+			null, null);
 	}
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
@@ -718,6 +725,80 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void OpenInPolicyEditor_StrictKernelModePolicy()
 	{
 		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathStrictKernelMode);
+	}
+
+	#endregion
+
+	#region RMM Blocking
+
+	internal Visibility RMMBlockingInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal string? _policyPathRMMBlocking { get; set => SP(ref field, value); }
+
+	internal bool RMMBlockingSectionIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal bool RMMBlockingCreateAndDeploy { get; set => SP(ref field, value); }
+
+	internal bool RMMBlockingAudit { get; set => SP(ref field, value); }
+
+	internal bool RMMBlockingSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal bool RMMBlockingSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal InfoBarSeverity RMMBlockingSettingsInfoBarSeverity { get; set => SP(ref field, value); }
+	internal string? RMMBlockingSettingsInfoBarMessage { get; set => SP(ref field, value); }
+	internal bool RMMBlockingSettingsIsExpanded { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings RMMBlockingInfoBar;
+
+	/// <summary>
+	/// Event handler to prepare the RMM Blocking policy
+	/// </summary>
+	internal async void RMMBlockingPolicyCreateButton_Click()
+	{
+		bool errorsOccurred = false;
+
+		try
+		{
+			RMMBlockingSettingsIsExpanded = true;
+
+			RMMBlockingInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			RMMBlockingSectionIsEnabled = false;
+			RMMBlockingSettingsInfoBarIsClosable = false;
+
+			RMMBlockingInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPolicy"));
+
+			_policyPathRMMBlocking = await Task.Run(() =>
+			{
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("RMM Blocking Policy Prepare");
+
+				return BasePolicyCreator.BuildRMMBlocking(stagingArea.FullName, RMMBlockingAudit, RMMBlockingCreateAndDeploy);
+			});
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+			RMMBlockingInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				RMMBlockingInfoBarActionButtonVisibility = Visibility.Visible;
+
+				RMMBlockingInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("RMMBlockingPolicyCreatedSuccessfully"));
+			}
+
+			RMMBlockingSettingsInfoBarIsClosable = true;
+			RMMBlockingSectionIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler to open the created RMM Blocking policy in the Policy Editor
+	/// </summary>
+	internal async void OpenInPolicyEditor_RMMBlockingPolicy()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathRMMBlocking);
 	}
 
 	#endregion

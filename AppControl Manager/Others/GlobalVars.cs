@@ -17,7 +17,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace AppControlManager.Others;
@@ -115,28 +114,13 @@ internal static class GlobalVars
 	internal const string FallBackAppLogoURI = "ms-appx:///Assets/StoreLogo.backup.png";
 
 	// Path to the DeviceGuardWMIRetriever program in the App directory
-	internal static readonly string DeviceGuardWMIRetrieverProcessPath = RuntimeInformation.ProcessArchitecture switch
-	{
-		Architecture.X64 => Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever-X64.exe"),
-		Architecture.Arm64 => Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever-ARM64.exe"),
-		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
-	};
+	internal static readonly string DeviceGuardWMIRetrieverProcessPath = Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever.exe");
 
 	// Path to the ManageDefender program in the App directory
-	internal static readonly string ManageDefenderProcessPath = RuntimeInformation.ProcessArchitecture switch
-	{
-		Architecture.X64 => Path.Combine(CppInteropPath, "ManageDefender-X64.exe"),
-		Architecture.Arm64 => Path.Combine(CppInteropPath, "ManageDefender-ARM64.exe"),
-		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
-	};
+	internal static readonly string ManageDefenderProcessPath = Path.Combine(CppInteropPath, "ManageDefender.exe");
 
 	// Path to the ScheduledTaskManager program in the App directory
-	internal static readonly string ScheduledTaskManagerProcessPath = RuntimeInformation.ProcessArchitecture switch
-	{
-		Architecture.X64 => Path.Combine(CppInteropPath, "ScheduledTaskManager-x64.exe"),
-		Architecture.Arm64 => Path.Combine(CppInteropPath, "ScheduledTaskManager-ARM64.exe"),
-		_ => throw new NotSupportedException($"Unsupported architecture: {RuntimeInformation.ProcessArchitecture}")
-	};
+	internal static readonly string ScheduledTaskManagerProcessPath = Path.Combine(CppInteropPath, "ScheduledTaskManager.exe");
 
 
 	static GlobalVars()

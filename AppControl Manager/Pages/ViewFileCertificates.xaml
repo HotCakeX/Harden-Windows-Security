@@ -39,37 +39,44 @@
                  IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
         <StackPanel HorizontalAlignment="Stretch"
-                      Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
+                    Spacing="{StaticResource SettingsCardSpacing}"
+                    Grid.Row="2"
+                    Margin="0,20,0,0">
 
             <win:StackPanel.ChildrenTransitions>
                 <win:EntranceThemeTransition FromVerticalOffset="50" />
                 <win:RepositionThemeTransition IsStaggeringEnabled="False" />
             </win:StackPanel.ChildrenTransitions>
 
-            <controls:SettingsCard x:Uid="BrowseForFilesSettingsCard" x:Name="BrowseForFilesSettingsCard"
-            Click="{x:Bind BrowseForFilesSettingsCard_Click}" IsClickEnabled="True" IsActionIconVisible="False">
+            <customUI:SettingsCardV2 x:Uid="BrowseForFilesSettingsCard">
 
-                <Button x:Uid="FileBrowseButton" x:Name="BrowseForFilesButton" Click="{x:Bind BrowseForFilesSettingsCard_Click}"  />
+                <Button x:Uid="FileBrowseButton"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.BrowseForFilesSettingsCard_Click}"  />
 
-            </controls:SettingsCard>
+            </customUI:SettingsCardV2>
 
-            <customUI:SettingsCardV2 x:Name="IncludeSecurityCatalogsSettingsCard" x:Uid="IncludeSecurityCatalogsSettingsCard">
-                <ToggleSwitch x:Name="IncludeSecurityCatalogsToggleSwitch" IsOn="True" />
+            <customUI:SettingsCardV2 x:Uid="IncludeSecurityCatalogsSettingsCard">
+                <ToggleSwitch IsOn="{x:Bind ViewModel.IncludeSecurityCatalogsToggleSwitch, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
             </customUI:SettingsCardV2>
 
         </StackPanel>
 
         <controls:WrapPanel Margin="15" Grid.Row="3" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
 
-            <TextBox Width="300" x:Uid="CertificatesSearchBox" Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox Width="300" x:Uid="CertificatesSearchBox"
+                     Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                     VerticalAlignment="Center"
+                     VerticalContentAlignment="Center" />
 
         </controls:WrapPanel>
 
-        <customUI:ListViewV2 x:Name="FileCertificatesListView"
-          RegistryKey="View_File_Certificates"
-          Grid.Row="4"
-          ItemsSource="{x:Bind ViewModel.FileCertificates, Mode=OneWay}"
-          SelectionMode="Single">
+        <customUI:ListViewV2 RegistryKey="View_File_Certificates"
+                             Grid.Row="4"
+                             ItemsSource="{x:Bind ViewModel.FileCertificates, Mode=OneWay}"
+                             SelectionMode="Single">
 
             <customUI:ListViewV2.Header>
 
@@ -114,7 +121,7 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -130,67 +137,67 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="SignerNumberHeader" Click="CopySignerNumber_Click">
+                                        <MenuFlyoutItem x:Uid="SignerNumberHeader" Click="{x:Bind ParentViewModel.CopySignerNumber_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="TypeHeader" Click="CopyType_Click">
+                                        <MenuFlyoutItem x:Uid="TypeHeader" Click="{x:Bind ParentViewModel.CopyType_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SubjectCommonNameHeader" Click="CopySubjectCommonName_Click">
+                                        <MenuFlyoutItem x:Uid="SubjectCommonNameHeader" Click="{x:Bind ParentViewModel.CopySubjectCommonName_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IssuerCommonNameHeader" Click="CopyIssuerCommonName_Click">
+                                        <MenuFlyoutItem x:Uid="IssuerCommonNameHeader" Click="{x:Bind ParentViewModel.CopyIssuerCommonName_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="NotBeforeHeader" Click="CopyNotBefore_Click">
+                                        <MenuFlyoutItem x:Uid="NotBeforeHeader" Click="{x:Bind ParentViewModel.CopyNotBefore_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="NotAfterHeader" Click="CopyNotAfter_Click">
+                                        <MenuFlyoutItem x:Uid="NotAfterHeader" Click="{x:Bind ParentViewModel.CopyNotAfter_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="HashingAlgorithmHeader" Click="CopyHashingAlgorithm_Click">
+                                        <MenuFlyoutItem x:Uid="HashingAlgorithmHeader" Click="{x:Bind ParentViewModel.CopyHashingAlgorithm_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SerialNumberHeader" Click="CopySerialNumber_Click">
+                                        <MenuFlyoutItem x:Uid="SerialNumberHeader" Click="{x:Bind ParentViewModel.CopySerialNumber_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Click="CopyThumbprint_Click">
+                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Click="{x:Bind ParentViewModel.CopyThumbprint_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="TBSHashHeader" Click="CopyTBSHash_Click">
+                                        <MenuFlyoutItem x:Uid="TBSHashHeader" Click="{x:Bind ParentViewModel.CopyTBSHash_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ExtensionOIDsHeader" Click="CopyExtensionOIDs_Click">
+                                        <MenuFlyoutItem x:Uid="ExtensionOIDsHeader" Click="{x:Bind ParentViewModel.CopyExtensionOIDs_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

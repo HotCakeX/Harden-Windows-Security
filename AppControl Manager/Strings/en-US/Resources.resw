@@ -5269,4 +5269,29 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>no Publisher signers detected to create deny rules for.</value>
 </data>
+<!-- New -->
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>Create RMM Blocking Policy</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>This policy blocks a large number of Remote Monitoring and Management software based on their executable names and file path.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This policy blocks a large number of Remote Monitoring and Management software based on their executable names and file path.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This policy blocks a large number of Remote Monitoring and Management software based on their executable names and file path.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the RMM Blocking base policy</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the RMM Blocking base policy</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Successfully created the RMM Blocking policy</value>
+  </data>
 </root>

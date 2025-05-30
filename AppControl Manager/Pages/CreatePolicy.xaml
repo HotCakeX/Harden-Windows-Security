@@ -376,6 +376,53 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
+                <!-- RMM Blocking -->
+                <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.RMMBlockingSettingsIsExpanded, Mode=TwoWay}"
+                                           x:Uid="RMMBlockingSection"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xEA14;}">
+
+                    <controls:SettingsExpander.ItemsHeader>
+                        <InfoBar x:Uid="CurrentStatusInfoBar"
+                                 BorderThickness="0"
+                                 CornerRadius="0"
+                                 IsIconVisible="True"
+                                 Message="{x:Bind ViewModel.RMMBlockingSettingsInfoBarMessage, Mode=OneWay}"
+                                 IsOpen="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
+                                 IsClosable="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
+                                 Severity="{x:Bind ViewModel.RMMBlockingSettingsInfoBarSeverity, Mode=OneWay}">
+                            <InfoBar.ActionButton>
+                                <Button x:Uid="OpenInPolicyEditorButton"
+                                             Visibility="{x:Bind ViewModel.RMMBlockingInfoBarActionButtonVisibility, Mode=OneWay}"
+                                             Click="{x:Bind ViewModel.OpenInPolicyEditor_RMMBlockingPolicy}" />
+                            </InfoBar.ActionButton>
+                        </InfoBar>
+                    </controls:SettingsExpander.ItemsHeader>
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+
+                        <Button IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.RMMBlockingPolicyCreateButton_Click}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0"
+                                x:Uid="RMMBlockingCreateButton" />
+
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                                      IsChecked="{x:Bind ViewModel.RMMBlockingCreateAndDeploy, Mode=TwoWay}"
+                                      x:Uid="DeployAfterCreationButton"
+                                      Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+
+                        <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                                          IsOn="{x:Bind ViewModel.RMMBlockingAudit, Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
+
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
             </StackPanel>
 
         </Grid>

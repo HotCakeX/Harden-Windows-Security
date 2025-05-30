@@ -294,380 +294,476 @@ The build process will generate complete log files and you can use the [MSBuild 
 ```powershell
 # Requires -Version 5.1
 # Requires -RunAsAdministrator
-$ErrorActionPreference = 'Stop'
-# Start the stopwatch
-$Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-
-# Install Winget if it doesn't exist
-if (!(Get-Command -Name 'winget.exe' -ErrorAction Ignore)) {
-
-    # Retrieve the latest Winget release information
-    $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
-    $LatestRelease = $WingetReleases | Select-Object -First 1
-    # Direct links to the latest Winget release assets
-    [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
-    [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
-    [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
-    [hashtable]$Downloads = @{
-        # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
-        'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
-        'Winget.msixbundle'                    = $WingetURL
-        'License1.xml'                         = $WingetLicense
-    }
-    $Downloads.GetEnumerator() | ForEach-Object -Parallel {
-        Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
-    }
-
-    Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
-
-    # Required to update the Winget
-    Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
-
-    # Get the paths to all of the dependencies
-    [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
-    Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
-
-    Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
-
-}
-
-[System.String]$BranchName = 'main'
-[System.String]$RepoName = 'Harden-Windows-Security'
-[System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
-[System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
-[System.String]$InitialWorkingDirectory = $PWD
-Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath
-Expand-Archive -Path $ZipPath -DestinationPath $InitialWorkingDirectory -Force
-Remove-Item -Path $ZipPath -Force
-[System.String]$AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'AppControl Manager')
-Set-Location -Path $AppControlManagerDirectory
-
-Write-Host -Object 'The version of the Winget currently in use:'
-Write-Host -Object (winget --version)
-
-winget source update
-
-Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
-$null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
-
-Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
-$null = winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
-
-Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
-# Downloads the online installer and automatically runs it and installs the build tools
-# https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment
-# https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-build-tools
-# https://learn.microsoft.com/visualstudio/install/use-command-line-parameters-to-install-visual-studio
-# https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community
-winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
-
-if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
-
-winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-
-# Refresh the environment variables so the current session detects the new dotnet installation
-$Env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';' +
-[System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User)
-
-# https://github.com/Microsoft/vswhere/wiki/Start-Developer-Command-Prompt#using-powershell
-$installationPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property installationPath
-if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsdevcmd.bat" -PathType Leaf)) {
-    & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | ForEach-Object -Process {
-        $name, $value = $_ -split '=', 2
-        Set-Content -Path env:\"$name" -Value $value -Force
-        Write-Host -Object "Setting environment variable: $name=$value"
-    }
-}
-
-# Update the workloads
-dotnet workload update
-dotnet workload config --update-mode workload-set
-dotnet workload update
-
-Write-Host -Object "`nChecking .NET info`n`n" -ForegroundColor Magenta
-dotnet --info
-Write-Host -Object "`nListing installed .NET SDKs`n`n" -ForegroundColor Magenta
-dotnet --list-sdks
-
-function Find-mspdbcmf {
-    # "-products *" is necessary to detect BuildTools too
-    [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
-
-    [string]$BasePath = [System.IO.Path]::Combine($VisualStudioPath, 'VC', 'Tools', 'MSVC')
-
-    # Get all subdirectories under the base path
-    [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
-
-    # Initialize the highest version with a minimal version value.
-    [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
-    [System.String]$HighestVersionFolder = $null
-
-    # Loop through each directory to find the highest version folder.
-    foreach ($Dir in $VersionDirs) {
-        # Extract the folder name
-        [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
-        [System.Version]$CurrentVersion = $null
-        # Try parsing the folder name as a Version.
-        if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
-            # Compare versions
-            if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
-                $HighestVersion = $CurrentVersion
-                $HighestVersionFolder = $FolderName
-            }
-        }
-    }
-
-    # If no valid version folder is found
-    if (!$HighestVersionFolder) {
-        throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
-    }
-
-    # Combine the base path, the highest version folder, the architecture folder, and the file name.
-    [System.String]$mspdbcmfPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, 'bin', 'Hostx64', 'x64', 'mspdbcmf.exe')
-
-    if (![System.IO.File]::Exists($mspdbcmfPath)) {
-        throw [System.IO.FileNotFoundException]::New("mspdbcmf.exe not found at $mspdbcmfPath")
-    }
-
-    return $mspdbcmfPath
-}
-
-[string]$mspdbcmfPath = Find-mspdbcmf
-
-function Find-MSBuild {
-    # "-products *" is necessary to detect BuildTools too
-    [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
-
-    [string]$MSBuildPath = [System.IO.Path]::Combine($VisualStudioPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
-
-    if (![System.IO.File]::Exists($MSBuildPath)) {
-        throw [System.IO.FileNotFoundException]::New("MSBuild.exe not found at $MSBuildPath")
-    }
-
-    return $MSBuildPath
-}
-
-[string]$MSBuildPath = Find-MSBuild
-
-#region --- Compile C++ projects ---
-
-### ManageDefender
-
-. $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
-
-Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination 'CppInterop' -Force
-
-. $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
-
-Copy-Item -Path 'eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination 'CppInterop' -Force
-
-
-### ScheduledTaskManager
-
-. $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
-
-Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination 'CppInterop' -Force
-
-. $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
-
-Copy-Item -Path 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination 'CppInterop' -Force
-
-#endregion
-
-
-#region --- RUST projects ---
-
-rustup target add aarch64-pc-windows-msvc
-
-rustup target add x86_64-pc-windows-msvc
-
-rustup update
-
-[string]$Current_Location = (Get-Location).Path
-
-Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
-
-cargo build_x64
-Copy-Item -Path '.\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination "$Current_Location\RustInterop" -Force
-
-cargo build_arm64
-Copy-Item -Path '.\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination "$Current_Location\RustInterop" -Force
-
-Set-Location -Path $Current_Location
-
-#endregion
-
-
-# https://learn.microsoft.com/dotnet/core/tools/dotnet-build
-# https://learn.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-# https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
-
-# Generate for X64 architecture
-dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
-
-dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
-
-# Generate for ARM64 architecture
-dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
-
-dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
-
-function Get-MSIXFile {
+function Build_ACM {
     param(
-        [System.String]$BasePath,
-        [System.String]$FolderPattern,
-        [System.String]$FileNamePattern,
-        [System.String]$ErrorMessageFolder,
-        [System.String]$ErrorMessageFile
+        [ValidateSet('AppControlManager_sadt7br7jpt02', 'VioletHansen.AppControlManager_ea7andspwdn10')]
+        [string]$PackageFamilyName,
+        [bool]$DownloadRepo,
+        [bool]$InstallDeps,
+        [bool]$Workflow,
+        [bool]$UpdateWorkLoads
     )
-    # Get all subdirectories in the base path matching the folder pattern
-    [System.String[]]$Folders = [System.IO.Directory]::GetDirectories($BasePath)
-    [System.String]$DetectedFolder = $null
-    foreach ($Folder in $Folders) {
-        if ([System.Text.RegularExpressions.Regex]::IsMatch($Folder, $FolderPattern)) {
-            $DetectedFolder = $Folder
-            break
+
+    $ErrorActionPreference = 'Stop'
+    # Start the stopwatch
+    $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
+    [System.String]$script:AppControlManagerDirectory
+
+    if ($DownloadRepo) {
+
+        [System.String]$BranchName = 'main'
+        [System.String]$RepoName = 'Harden-Windows-Security'
+        [System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
+        [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
+        [System.String]$InitialWorkingDirectory = $PWD.Path
+        Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath
+        Expand-Archive -Path $ZipPath -DestinationPath $InitialWorkingDirectory -Force
+        Remove-Item -Path $ZipPath -Force
+        $script:AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'AppControl Manager')
+        Set-Location -Path $script:AppControlManagerDirectory
+    }
+    else {
+        $script:AppControlManagerDirectory = $PWD.Path
+    }
+
+    if ($InstallDeps) {
+
+        # Install Winget if it doesn't exist
+        if (!(Get-Command -Name 'winget.exe' -ErrorAction Ignore)) {
+
+            # Retrieve the latest Winget release information
+            $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
+            $LatestRelease = $WingetReleases | Select-Object -First 1
+            # Direct links to the latest Winget release assets
+            [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
+            [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
+            [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
+            [hashtable]$Downloads = @{
+                # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
+                'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
+                'Winget.msixbundle'                    = $WingetURL
+                'License1.xml'                         = $WingetLicense
+            }
+            $Downloads.GetEnumerator() | ForEach-Object -Parallel {
+                Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
+            }
+
+            Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
+
+            # Required to update the Winget
+            Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
+
+            # Get the paths to all of the dependencies
+            [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
+            Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
+
+            Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+
+        }
+
+        Write-Host -Object 'The version of the Winget currently in use:'
+        Write-Host -Object (winget --version)
+
+        winget source update
+
+        Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
+        $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
+
+        Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
+        $null = winget install --id Microsoft.DotNet.SDK.9 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
+
+        Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
+        # Downloads the online installer and automatically runs it and installs the build tools
+        # https://learn.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment
+        # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-build-tools
+        # https://learn.microsoft.com/visualstudio/install/use-command-line-parameters-to-install-visual-studio
+        # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community
+        winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
+
+        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
+
+        winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
+    }
+
+    # Refresh the environment variables so the current session detects the new dotnet installation
+    $Env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';' +
+    [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User)
+
+    # https://github.com/Microsoft/vswhere/wiki/Start-Developer-Command-Prompt#using-powershell
+    $installationPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property installationPath
+    if ($installationPath -and (Test-Path -Path "$installationPath\Common7\Tools\vsdevcmd.bat" -PathType Leaf)) {
+        & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | ForEach-Object -Process {
+            $name, $value = $_ -split '=', 2
+            Set-Content -Path env:\"$name" -Value $value -Force
+            Write-Host -Object "Setting environment variable: $name=$value"
         }
     }
 
-    if (!$DetectedFolder) {
-        throw [System.InvalidOperationException]::New($ErrorMessageFolder)
+    if ($UpdateWorkLoads) {
+        # Update the workloads
+        dotnet workload update
+        dotnet workload config --update-mode workload-set
+        dotnet workload update
     }
 
-    # Get the full path of the first file matching the file name pattern inside the found folder
-    [System.String[]]$Files = [System.IO.Directory]::GetFiles($DetectedFolder)
-    [System.String]$DetectedFile = $null
-    foreach ($File in $Files) {
-        if ([System.Text.RegularExpressions.Regex]::IsMatch($File, $FileNamePattern)) {
-            $DetectedFile = $File
-            break
-        }
-    }
+    Write-Host -Object "`nChecking .NET info`n`n" -ForegroundColor Magenta
+    dotnet --info
+    Write-Host -Object "`nListing installed .NET SDKs`n`n" -ForegroundColor Magenta
+    dotnet --list-sdks
 
-    if (!$DetectedFile) {
-        throw [System.InvalidOperationException]::New($ErrorMessageFile)
-    }
-    return $DetectedFile
-}
+    function Find-mspdbcmf {
+        # "-products *" is necessary to detect BuildTools too
+        [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
 
-#region Finding X64 outputs
-[System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
-[System.String]$FinalMSIXX64Name = [System.IO.Path]::GetFileName($FinalMSIXX64Path)
-[System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msixsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
-#endregion
+        [string]$BasePath = [System.IO.Path]::Combine($VisualStudioPath, 'VC', 'Tools', 'MSVC')
 
-#region Finding ARM64 outputs
-[System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
-[System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
-[System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
-#endregion
+        # Get all subdirectories under the base path
+        [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
 
-#region Detect and Validate File Versions
-[System.Text.RegularExpressions.Regex]$versionRegexX64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_x64\.msix')
-[System.Text.RegularExpressions.Regex]$versionRegexARM64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_arm64\.msix')
+        # Initialize the highest version with a minimal version value.
+        [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
+        [System.String]$HighestVersionFolder = $null
 
-[System.Text.RegularExpressions.Match]$MatchX64 = $versionRegexX64.Match($FinalMSIXX64Name)
-[System.Text.RegularExpressions.Match]$MatchARM64 = $versionRegexARM64.Match($FinalMSIXARM64Name)
-
-if (!$MatchX64.Success) {
-    throw [System.InvalidOperationException]::New('Could not detect version from X64 file name')
-}
-
-if (!$MatchARM64.Success) {
-    throw [System.InvalidOperationException]::New('Could not detect version from ARM64 file name')
-}
-
-[System.String]$versionX64 = $MatchX64.Groups[1].Value
-[System.String]$versionARM64 = $MatchARM64.Groups[1].Value
-
-if ($versionX64 -ne $versionARM64) {
-    throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
-}
-
-# Craft the file name for the MSIX Bundle file
-[System.String]$FinalBundleFileName = "AppControl Manager_$versionX64.msixbundle"
-#endregion
-
-# Creating the directory where the MSIX packages will be copied to
-[System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($AppControlManagerDirectory, 'MSIXBundleOutput')).FullName
-
-[System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name), $true)
-[System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
-
-# The path to the final MSIX Bundle file
-[System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
-
-function Get-MakeAppxPath {
-    [System.String]$BasePath = 'C:\Program Files (x86)\Windows Kits\10\bin'
-
-    # Get all subdirectories under the base path
-    [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
-
-    # Initialize the highest version with a minimal version value.
-    [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
-    [System.String]$HighestVersionFolder = $null
-
-    # Loop through each directory to find the highest version folder.
-    foreach ($Dir in $VersionDirs) {
-        # Extract the folder name
-        [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
-        [System.Version]$CurrentVersion = $null
-        # Try parsing the folder name as a Version.
-        if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
-            # Compare versions
-            if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
-                $HighestVersion = $CurrentVersion
-                $HighestVersionFolder = $FolderName
+        # Loop through each directory to find the highest version folder.
+        foreach ($Dir in $VersionDirs) {
+            # Extract the folder name
+            [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
+            [System.Version]$CurrentVersion = $null
+            # Try parsing the folder name as a Version.
+            if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
+                # Compare versions
+                if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
+                    $HighestVersion = $CurrentVersion
+                    $HighestVersionFolder = $FolderName
+                }
             }
         }
+
+        # If no valid version folder is found
+        if (!$HighestVersionFolder) {
+            throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
+        }
+
+        # Combine the base path, the highest version folder, the architecture folder, and the file name.
+        [System.String]$mspdbcmfPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, 'bin', 'Hostx64', 'x64', 'mspdbcmf.exe')
+
+        if (![System.IO.File]::Exists($mspdbcmfPath)) {
+            throw [System.IO.FileNotFoundException]::New("mspdbcmf.exe not found at $mspdbcmfPath")
+        }
+
+        return $mspdbcmfPath
     }
 
-    # If no valid version folder is found
-    if (!$HighestVersionFolder) {
-        throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
+    [string]$mspdbcmfPath = Find-mspdbcmf
+
+    function Find-MSBuild {
+        # "-products *" is necessary to detect BuildTools too
+        [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
+
+        [string]$MSBuildPath = [System.IO.Path]::Combine($VisualStudioPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
+
+        if (![System.IO.File]::Exists($MSBuildPath)) {
+            throw [System.IO.FileNotFoundException]::New("MSBuild.exe not found at $MSBuildPath")
+        }
+
+        return $MSBuildPath
     }
 
-    [string]$CPUArch = @{AMD64 = 'x64'; ARM64 = 'arm64' }[$Env:PROCESSOR_ARCHITECTURE]
-    if ([System.String]::IsNullOrWhiteSpace($CPUArch)) { throw [System.PlatformNotSupportedException]::New('Only AMD64 and ARM64 architectures are supported.') }
+    [string]$MSBuildPath = Find-MSBuild
 
-    # Combine the base path, the highest version folder, the architecture folder, and the file name.
-    [System.String]$MakeAppxPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, $CPUArch, 'makeappx.exe')
+    #region --- Compile C++ projects ---
 
-    return $MakeAppxPath
-}
+    ### ManageDefender
 
-[System.String]$MakeAppxPath = Get-MakeAppxPath
+    . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-if ([System.string]::IsNullOrWhiteSpace($MakeAppxPath)) {
-    throw [System.IO.FileNotFoundException]::New('Could not find the makeappx.exe')
-}
+    . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-# https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
-. $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v
+    ### ScheduledTaskManager
 
-if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("MakeAppx failed creating the MSIXBundle. Exit Code: $LASTEXITCODE") }
+    . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-#Endregion
+    . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-Write-Host -Object "X64 MSIX File Path: $FinalMSIXX64Path" -ForegroundColor Green
-Write-Host -Object "X64 MSIX File Name: $FinalMSIXX64Name" -ForegroundColor Green
-Write-Host -Object "X64 Symbols: $FinalMSIXX64SymbolPath" -ForegroundColor Green
+    ### Shell
 
-Write-Host -Object "ARM64 MSIX File Path: $FinalMSIXARM64Path" -ForegroundColor Cyan
-Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
-Write-Host -Object "ARM64 Symbols: $FinalMSIXARM64SymbolPath" -ForegroundColor Cyan
+    [string]$newPFN = "$PackageFamilyName!App"
+    [string]$content = Get-Content 'eXclude\Shell\Shell.cpp' -Raw
+    [string]$content = $content -replace 'static constexpr LPCWSTR APP_CONTROL_MANAGER_PFN = L"[^"]*";', "static constexpr LPCWSTR APP_CONTROL_MANAGER_PFN = L`"$newPFN`";"
+    $content | Set-Content 'eXclude\Shell\Shell.cpp' -NoNewline -Force
 
-Write-Host -Object "MSIX Bundle File Path: $MSIXBundle" -ForegroundColor Yellow
-Write-Host -Object "MSIX Bundle File Name: $FinalBundleFileName" -ForegroundColor Yellow
+    . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
 
-if ($null -ne $Stopwatch) {
+    . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
 
-    $Stopwatch.Stop()
+    #endregion
 
-    $Elapsed = $Stopwatch.Elapsed
-    [string]$Result = @"
+
+    #region --- RUST projects ---
+
+    rustup target add aarch64-pc-windows-msvc
+
+    rustup target add x86_64-pc-windows-msvc
+
+    rustup update
+
+    [string]$Current_Location = (Get-Location).Path
+
+    Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
+
+    cargo build_x64
+
+    cargo build_arm64
+
+    Set-Location -Path $Current_Location
+
+    #endregion
+
+    # Adjust the Digest Algorithm based on the package source
+    [xml]$ProjXMLContent = Get-Content -Path '.\AppControl Manager.csproj' -Force
+
+    # Grab ALL existing nodes, wherever they are
+    $nodes = $ProjXMLContent.SelectNodes('//AppxPackageSigningTimestampDigestAlgorithm')
+
+    foreach ($node in $nodes) {
+        if ($PackageFamilyName -eq 'VioletHansen.AppControlManager_ea7andspwdn10') {
+            $node.InnerText = 'SHA256'
+        }
+        else {
+            $node.InnerText = 'SHA512'
+        }
+    }
+
+    $ProjXMLContent.Save('.\AppControl Manager.csproj')
+
+    # https://learn.microsoft.com/dotnet/core/tools/dotnet-build
+    # https://learn.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+    # https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
+
+    # Copy the X64 components to the directory before the build starts
+    Copy-Item -Path '.\eXclude\Shell\x64\Release\Shell.dll' -Destination 'Shell' -Force
+
+    Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
+
+    Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
+
+    Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+
+    # Generate for X64 architecture
+    dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
+
+    dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+
+    # Copy the ARM64 components to the directory before the build starts
+    Copy-Item -Path '.\eXclude\Shell\ARM64\Release\Shell.dll' -Destination 'Shell' -Force
+
+    Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
+
+    Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
+
+    Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+
+    # Generate for ARM64 architecture
+    dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
+
+    dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+
+    function Get-MSIXFile {
+        param(
+            [System.String]$BasePath,
+            [System.String]$FolderPattern,
+            [System.String]$FileNamePattern,
+            [System.String]$ErrorMessageFolder,
+            [System.String]$ErrorMessageFile
+        )
+        # Get all subdirectories in the base path matching the folder pattern
+        [System.String[]]$Folders = [System.IO.Directory]::GetDirectories($BasePath)
+        [System.String]$DetectedFolder = $null
+        foreach ($Folder in $Folders) {
+            if ([System.Text.RegularExpressions.Regex]::IsMatch($Folder, $FolderPattern)) {
+                $DetectedFolder = $Folder
+                break
+            }
+        }
+
+        if (!$DetectedFolder) {
+            throw [System.InvalidOperationException]::New($ErrorMessageFolder)
+        }
+
+        # Get the full path of the first file matching the file name pattern inside the found folder
+        [System.String[]]$Files = [System.IO.Directory]::GetFiles($DetectedFolder)
+        [System.String]$DetectedFile = $null
+        foreach ($File in $Files) {
+            if ([System.Text.RegularExpressions.Regex]::IsMatch($File, $FileNamePattern)) {
+                $DetectedFile = $File
+                break
+            }
+        }
+
+        if (!$DetectedFile) {
+            throw [System.InvalidOperationException]::New($ErrorMessageFile)
+        }
+        return $DetectedFile
+    }
+
+    #region Finding X64 outputs
+    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
+    [System.String]$FinalMSIXX64Name = [System.IO.Path]::GetFileName($FinalMSIXX64Path)
+    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msixsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
+    #endregion
+
+    #region Finding ARM64 outputs
+    [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
+    [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
+    [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
+    #endregion
+
+    #region Detect and Validate File Versions
+    [System.Text.RegularExpressions.Regex]$versionRegexX64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_x64\.msix')
+    [System.Text.RegularExpressions.Regex]$versionRegexARM64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_arm64\.msix')
+
+    [System.Text.RegularExpressions.Match]$MatchX64 = $versionRegexX64.Match($FinalMSIXX64Name)
+    [System.Text.RegularExpressions.Match]$MatchARM64 = $versionRegexARM64.Match($FinalMSIXARM64Name)
+
+    if (!$MatchX64.Success) {
+        throw [System.InvalidOperationException]::New('Could not detect version from X64 file name')
+    }
+
+    if (!$MatchARM64.Success) {
+        throw [System.InvalidOperationException]::New('Could not detect version from ARM64 file name')
+    }
+
+    [System.String]$versionX64 = $MatchX64.Groups[1].Value
+    [System.String]$versionARM64 = $MatchARM64.Groups[1].Value
+
+    if ($versionX64 -ne $versionARM64) {
+        throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
+    }
+
+    # Craft the file name for the MSIX Bundle file
+    [System.String]$FinalBundleFileName = "AppControl Manager_$versionX64.msixbundle"
+    #endregion
+
+    # Creating the directory where the MSIX packages will be copied to
+    [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($script:AppControlManagerDirectory, 'MSIXBundleOutput')).FullName
+
+    [System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name), $true)
+    [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
+
+    # The path to the final MSIX Bundle file
+    [System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
+
+    function Get-MakeAppxPath {
+        [System.String]$BasePath = 'C:\Program Files (x86)\Windows Kits\10\bin'
+
+        # Get all subdirectories under the base path
+        [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
+
+        # Initialize the highest version with a minimal version value.
+        [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
+        [System.String]$HighestVersionFolder = $null
+
+        # Loop through each directory to find the highest version folder.
+        foreach ($Dir in $VersionDirs) {
+            # Extract the folder name
+            [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
+            [System.Version]$CurrentVersion = $null
+            # Try parsing the folder name as a Version.
+            if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
+                # Compare versions
+                if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
+                    $HighestVersion = $CurrentVersion
+                    $HighestVersionFolder = $FolderName
+                }
+            }
+        }
+
+        # If no valid version folder is found
+        if (!$HighestVersionFolder) {
+            throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
+        }
+
+        [string]$CPUArch = @{AMD64 = 'x64'; ARM64 = 'arm64' }[$Env:PROCESSOR_ARCHITECTURE]
+        if ([System.String]::IsNullOrWhiteSpace($CPUArch)) { throw [System.PlatformNotSupportedException]::New('Only AMD64 and ARM64 architectures are supported.') }
+
+        # Combine the base path, the highest version folder, the architecture folder, and the file name.
+        [System.String]$MakeAppxPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, $CPUArch, 'makeappx.exe')
+
+        return $MakeAppxPath
+    }
+
+    [System.String]$MakeAppxPath = Get-MakeAppxPath
+
+    if ([System.string]::IsNullOrWhiteSpace($MakeAppxPath)) {
+        throw [System.IO.FileNotFoundException]::New('Could not find the makeappx.exe')
+    }
+
+    # https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
+    . $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v
+
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("MakeAppx failed creating the MSIXBundle. Exit Code: $LASTEXITCODE") }
+
+    #Endregion
+
+    Write-Host -Object "X64 MSIX File Path: $FinalMSIXX64Path" -ForegroundColor Green
+    Write-Host -Object "X64 MSIX File Name: $FinalMSIXX64Name" -ForegroundColor Green
+    Write-Host -Object "X64 Symbols: $FinalMSIXX64SymbolPath" -ForegroundColor Green
+
+    Write-Host -Object "ARM64 MSIX File Path: $FinalMSIXARM64Path" -ForegroundColor Cyan
+    Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
+    Write-Host -Object "ARM64 Symbols: $FinalMSIXARM64SymbolPath" -ForegroundColor Cyan
+
+    Write-Host -Object "MSIX Bundle File Path: $MSIXBundle" -ForegroundColor Yellow
+    Write-Host -Object "MSIX Bundle File Name: $FinalBundleFileName" -ForegroundColor Yellow
+
+    if ($Workflow) {
+
+        [XML]$CSProjXMLContent = Get-Content -Path '.\AppControl Manager.csproj' -Force
+        [string]$MSIXVersion = $CSProjXMLContent.Project.PropertyGroup.FileVersion
+        [string]$MSIXVersion = $MSIXVersion.Trim() # It would have trailing whitespaces
+        if ([string]::IsNullOrWhiteSpace($FinalMSIXX64Path) -or [string]::IsNullOrWhiteSpace($FinalMSIXX64Name) -or [string]::IsNullOrWhiteSpace($MSIXVersion)) { throw 'Necessary info could not be found' }
+
+        # Write the MSIXVersion to GITHUB_ENV to set it as an environment variable for the entire workflow
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "PACKAGE_VERSION=$MSIXVersion"
+
+        # Saving the details for the MSIX Bundle file
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIXBundle_PATH=$MSIXBundle"
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIXBundle_NAME=$FinalBundleFileName"
+
+        # Saving the details of the log files
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64MSBuildLog_PATH=$((Resolve-Path -Path .\X64MSBuildLog.binlog).Path)"
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64MSBuildLog_PATH=$((Resolve-Path -Path .\ARM64MSBuildLog.binlog).Path)"
+
+        # Saving the details of the X64 symbol file
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64Symbol_PATH=$FinalMSIXX64SymbolPath"
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64Symbol_NAME=$FinalMSIXX64SymbolName"
+
+        # Saving the details of the ARM64 symbol file
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_PATH=$FinalMSIXARM64SymbolPath"
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_NAME=$FinalMSIXARM64SymbolName"
+
+        # https://github.com/microsoft/sbom-tool
+        # Generating SBOM
+        Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${Env:RUNNER_TEMP}\sbom-tool.exe"
+
+        # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
+        . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'AppControl Manager' -ps 'Violet Hansen' -pv $MSIXVersion -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true -lto 80
+
+        # Saving the details of the SBOM file
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
+        Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value 'SBOM_NAME=manifest.spdx.json'
+    }
+
+    if ($null -ne $Stopwatch) {
+
+        $Stopwatch.Stop()
+
+        $Elapsed = $Stopwatch.Elapsed
+        [string]$Result = @"
 Execution Time:
 ----------------------------
 Total Time   : $($Elapsed.ToString('g'))
@@ -678,8 +774,11 @@ Milliseconds : $($Elapsed.Milliseconds)
 ----------------------------
 "@
 
-    Write-Host -Object $Result -ForegroundColor Cyan
+        Write-Host -Object $Result -ForegroundColor Cyan
+    }
 }
+
+Build_ACM -PackageFamilyName 'VioletHansen.AppControlManager_ea7andspwdn10' -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false
 
 ```
 

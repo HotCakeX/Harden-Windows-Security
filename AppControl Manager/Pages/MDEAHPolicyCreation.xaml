@@ -60,7 +60,7 @@
             </SelectorBar>
 
             <TextBox x:Uid="TotalLogsTextBlock"
-                x:Name="TotalCountOfTheFilesTextBox"
+                Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
                 IsReadOnly="True"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
@@ -91,6 +91,7 @@
                 </Button>
 
                 <customUI:ButtonV2 ToolTipService.ToolTip="Browse for Advanced Hunting Logs"
+                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.BrowseForLogs_Click}">
 
                     <customUI:ButtonV2.Flyout>
@@ -524,7 +525,10 @@
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
 
-                <SplitButton x:Name="CreatePolicyButton" ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs" Click="{x:Bind CreatePolicyButton_Click}">
+                <SplitButton x:Name="CreatePolicyButton"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                             ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs"
+                             Click="{x:Bind CreatePolicyButton_Click}">
 
                     <SplitButton.Content>
                         <StackPanel Orientation="Horizontal">
@@ -577,7 +581,12 @@
                                                 <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind AddToPolicyButton_Click}" />
+                                            <Button Margin="5"
+                                                    x:Name="AddToPolicyButton"
+                                                    Content="Browse"
+                                                    ToolTipService.ToolTip="Select a XML file to add the scanned logs to"
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
 
                                         </StackPanel>
                                     </controls:Case>
@@ -592,7 +601,12 @@
                                                     policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BasePolicyFileButton_Click}" />
+                                            <Button Margin="5"
+                                                    x:Name="BasePolicyFileButton"
+                                                    Content="Browse"
+                                                    ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to."
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Click="{x:Bind ViewModel.BasePolicyFileButton_Click}" />
 
 
                                         </StackPanel>
@@ -603,9 +617,20 @@
                                             animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                             Style="{StaticResource PanelStyle}">
 
-                                            <TextBox x:Name="BaseGUIDTextBox" PlaceholderText="Enter a Base policy GUID" Width="300" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
+                                            <TextBox PlaceholderText="Enter a Base policy GUID"
+                                                     Width="300"
+                                                     Margin="10"
+                                                     VerticalAlignment="Center"
+                                                     VerticalContentAlignment="Center"
+                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay}"
+                                                     ToolTipService.ToolTip="Enter the Base GUID" />
 
-                                            <Button Margin="5" x:Name="BaseGUIDSubmitButton" Content="Submit" ToolTipService.ToolTip="Submit the GUID" Style="{StaticResource AccentButtonStyle}" Click="BaseGUIDSubmitButton_Click" />
+                                            <Button Margin="5"
+                                                    x:Name="BaseGUIDSubmitButton"
+                                                    Content="Submit"
+                                                    ToolTipService.ToolTip="Submit the GUID"
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
 
                                         </StackPanel>
                                     </controls:Case>
@@ -617,7 +642,8 @@
 
                 </SplitButton>
 
-                <DropDownButton x:Uid="ExtraActionsDropDownButton">
+                <DropDownButton x:Uid="ExtraActionsDropDownButton"
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
@@ -634,7 +660,7 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="{x:Bind ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -653,7 +679,8 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
 
-                <Button Content="Policy Name">
+                <Button Content="Policy Name"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                     <Button.Flyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>

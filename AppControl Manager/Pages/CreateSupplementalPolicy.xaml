@@ -373,7 +373,7 @@
                                     <Button.Flyout>
                                         <Flyout>
                                             <StackPanel>
-                                                <customUI:ColorRadialGaugeV2                                                    
+                                                <customUI:ColorRadialGaugeV2
                                                     StepSize="1"
                                                     TickSpacing="2"
                                                     ScaleWidth="12"

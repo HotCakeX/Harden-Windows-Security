@@ -44,7 +44,7 @@ internal static class Main
 			"1.2.840.10045.4.1" => "1.3.14.3.2.26", // SHA1
 			"1.2.840.10045.4.3.2" => "2.16.840.1.101.3.4.2.1", // SHA-2 256
 			"1.2.840.10045.4.3.3" => "2.16.840.1.101.3.4.2.2", // SHA-2 384
-			"1.2.840.10045.4.3.4" => "2.16.840.1.101.3.4.2.3", // SHA-2 512													  
+			"1.2.840.10045.4.3.4" => "2.16.840.1.101.3.4.2.3", // SHA-2 512
 
 			_ => throw new NotSupportedException(string.Format(GlobalVars.Rizz.GetString("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
 		};
@@ -395,7 +395,7 @@ internal static class Main
 			Marshal.WriteIntPtr(ppSignerContext, IntPtr.Zero);
 
 			// Specific setup for Package mode (AppX/MSIX SIP)
-			// The SIGNER_SIGN_EX3_PARAMS struct is what APPX_SIP_CLIENT_DATA.pSignerParams points to.			
+			// The SIGNER_SIGN_EX3_PARAMS struct is what APPX_SIP_CLIENT_DATA.pSignerParams points to.
 			pLegacySignerEx3ParamsForSip = Marshal.AllocHGlobal(Marshal.SizeOf<Structure.SIGNER_SIGN_EX3_PARAMS>());
 			Structure.SIGNER_SIGN_EX3_PARAMS signerEx3ParamsStructForSip = new()
 			{

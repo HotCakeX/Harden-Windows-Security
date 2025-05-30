@@ -31,7 +31,7 @@
   <Identity
     Name="AppControlManager"
     Publisher="CN=SelfSignedCertForAppControlManager"
-    Version="2.0.24.0" />
+    Version="2.0.25.0" />
 
   <mp:PhoneIdentity PhoneProductId="199a23ec-7cb6-4ab5-ab50-8baca348bc79" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -115,6 +115,23 @@
             <uap:Logo>Assets\External\CIPIcon.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
+
+       <!-- Context Menu entry -->
+       <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <!-- Making it available for all file types and then we can conditionally control the visibility of the sub-commands in the C++ code for the DLL -->
+            <desktop4:ItemType Type="*">
+              <desktop4:Verb Id="ACMOptions" Clsid="AF39E5CF-0FDA-4333-BD25-B87D43A71CCA" />
+            </desktop4:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="AppControl Manager">
+              <com:Class Id="AF39E5CF-0FDA-4333-BD25-B87D43A71CCA" Path="Shell\Shell.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
 
       </Extensions>
 

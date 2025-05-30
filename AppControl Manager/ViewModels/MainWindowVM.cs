@@ -72,7 +72,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.PolicyEditor),
 		typeof(Pages.MergePolicies),
 		typeof(Pages.Settings),
-		typeof(Pages.ConfigurePolicyRuleOptions)
+		typeof(Pages.ConfigurePolicyRuleOptions),
+		typeof(Pages.ViewFileCertificates)
 		];
 
 

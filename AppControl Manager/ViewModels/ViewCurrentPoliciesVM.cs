@@ -92,7 +92,14 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	internal CiPolicyInfo? ListViewSelectedPolicy { get; set => SP(ref field, value); }
 
-	internal string? SwapPolicyComboBoxSelectedItem { get; set => SP(ref field, value); }
+	private static readonly Dictionary<int, string> PolicyLevelDictionary = new()
+{
+	{ 0, "Default Windows" },
+	{ 1, "Allow Microsoft" },
+	{ 2, "Signed and Reputable" },
+	{ 3, "Strict Kernel-Mode" },
+	{ 4, "Strict Kernel-Mode (No Flight Roots)" }
+};
 
 	internal int SwapPolicyComboBoxSelectedIndex
 	{
@@ -185,7 +192,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			UIElementsEnabledState = false;
 
 			SwapPolicyComboBoxSelectedIndex = -1;
-			SwapPolicyComboBoxSelectedItem = null;
 
 			// Clear the policies before getting and showing the new ones
 			// They also set the "SelectedItem" property of the ListView to null
@@ -280,7 +286,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Create colored runs
 			Run accentPolicyName = new() { Text = ListViewSelectedPolicy.FriendlyName, Foreground = violetBrush };
 			Run accentPolicyID = new() { Text = policyID, Foreground = violetBrush };
-			Run accentPolicyType = new() { Text = SwapPolicyComboBoxSelectedItem, Foreground = hotPinkBrush };
+			Run accentPolicyType = new() { Text = PolicyLevelDictionary[SwapPolicyComboBoxSelectedIndex], Foreground = hotPinkBrush };
 
 			// Create bold text run
 			Bold boldText = new();
@@ -301,7 +307,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			formattedTextBlock.Inlines.Add(boldText);
 
 			// Create and display a ContentDialog with styled TextBlock
-			ContentDialogV2 dialog = new()
+			using ContentDialogV2 dialog = new()
 			{
 				Title = GlobalVars.Rizz.GetString("SwappingPolicyTitle"),
 				Content = formattedTextBlock,
@@ -474,7 +480,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 					if (currentlyDeployedBasePolicyIDs.Contains(ListViewSelectedPolicy.BasePolicyID))
 					{
 						// Create and display a ContentDialog with Yes and No options
-						ContentDialogV2 dialog = new()
+						using ContentDialogV2 dialog = new()
 						{
 							Title = GlobalVars.Rizz.GetString("WarningTitle"),
 							Content = GlobalVars.Rizz.GetString("ManualRemovalWarning") + GlobalVars.AppControlManagerSpecialPolicyName + "' " + GlobalVars.Rizz.GetString("ManualRemovalWarningEnd"),
@@ -556,7 +562,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								else
 								{
 									// Create and display a ContentDialog
-									ContentDialogV2 dialog = new()
+									using ContentDialogV2 dialog = new()
 									{
 										Title = GlobalVars.Rizz.GetString("WarningTitle"),
 										Content = GlobalVars.Rizz.GetString("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.Rizz.GetString("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
@@ -583,7 +589,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string XMLPolicyPath;
 
 								// Instantiate the Content Dialog
-								SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
+								using SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
 
 								// Show the dialog and await its result
 								ContentDialogResult result = await customDialog.ShowAsync();

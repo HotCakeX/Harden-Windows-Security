@@ -578,7 +578,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			allFileIdentities: filesAndFoldersScanResultsList.AsEnumerable(),
 			filteredCollection: FilesAndFoldersScanResults,
 			searchText: FilesAndFoldersScanResultsSearchTextBox,
-			datePicker: null,
+			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults
 		);
 		UpdateTotalFiles();

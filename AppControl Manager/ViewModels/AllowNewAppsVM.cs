@@ -922,7 +922,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			allFileIdentities: LocalFilesAllFileIdentities.AsEnumerable(),
 			filteredCollection: LocalFilesFileIdentities,
 			searchText: LocalFilesAllFileIdentitiesSearchText,
-			datePicker: null,
+			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults
 		);
 
@@ -1002,7 +1002,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			allFileIdentities: EventLogsAllFileIdentities.AsEnumerable(),
 			filteredCollection: EventLogsFileIdentities,
 			searchText: EventLogsAllFileIdentitiesSearchText,
-			datePicker: null,
+			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults
 		);
 
@@ -1167,7 +1167,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				#region Signing Details acquisition
 
 				// Instantiate the Content Dialog
-				SigningDetailsDialog customDialog = new(_BasePolicyObject);
+				using SigningDetailsDialog customDialog = new(_BasePolicyObject);
 
 				// Show the dialog and await its result
 				ContentDialogResult result = await customDialog.ShowAsync();

@@ -26,6 +26,11 @@ namespace AppControlManager.Main;
 
 internal static class CiFileHash
 {
+
+	// a constant field that defines a flag value for the native function
+	// This causes/helps the GetCiFileHashes method to return the flat file hashes whenever a non-conformant file is encountered
+	private const uint CryptcatadminCalchashFlagNonconformantFilesFallbackFlat = 1;
+
 	/// <summary>
 	/// Method that outputs all 4 kinds of hashes
 	/// </summary>
@@ -60,7 +65,7 @@ internal static class CiFileHash
 				return null;
 			}
 
-			if (!WinTrust.CryptCATAdminAcquireContext2(ref contextHandle, nint.Zero, hashAlgorithm, nint.Zero, 0))
+			if (!NativeMethods.CryptCATAdminAcquireContext2(ref contextHandle, nint.Zero, hashAlgorithm, nint.Zero, 0))
 			{
 				throw new InvalidOperationException(
 					string.Format(
@@ -70,12 +75,12 @@ internal static class CiFileHash
 
 			int hashSize = 0;
 
-			if (!WinTrust.CryptCATAdminCalcHashFromFileHandle3(
+			if (!NativeMethods.CryptCATAdminCalcHashFromFileHandle3(
 					contextHandle,
 					fileStreamHandle,
 					ref hashSize,
 					nint.Zero,
-					WinTrust.CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
+					CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
 			{
 				throw new InvalidOperationException(
 					string.Format(
@@ -86,12 +91,12 @@ internal static class CiFileHash
 
 			hashValue = Marshal.AllocHGlobal(hashSize);
 
-			if (!WinTrust.CryptCATAdminCalcHashFromFileHandle3(
+			if (!NativeMethods.CryptCATAdminCalcHashFromFileHandle3(
 					contextHandle,
 					fileStreamHandle,
 					ref hashSize,
 					hashValue,
-					WinTrust.CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
+					CryptcatadminCalchashFlagNonconformantFilesFallbackFlat))
 			{
 				throw new InvalidOperationException(
 					string.Format(
@@ -117,7 +122,7 @@ internal static class CiFileHash
 
 			if (contextHandle != nint.Zero)
 			{
-				_ = WinTrust.CryptCATAdminReleaseContext(contextHandle, 0);
+				_ = NativeMethods.CryptCATAdminReleaseContext(contextHandle, 0);
 			}
 		}
 

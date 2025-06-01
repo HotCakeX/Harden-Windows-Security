@@ -35,15 +35,15 @@
 
             </controls:WrapPanel>
 
-            <InfoBar Grid.Row="1"
+            <customUI:InfoBarV2 Grid.Row="1"
                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
-                <InfoBar.Content>
+                <customUI:InfoBarV2.Content>
                     <ProgressBar Margin="0,0,0,15" Visibility="Collapsed" x:Name="MainProgressRing" Value="0" IsIndeterminate="True" Minimum="0" Maximum="100"/>
-                </InfoBar.Content>
-            </InfoBar>
+                </customUI:InfoBarV2.Content>
+            </customUI:InfoBarV2>
 
             <StackPanel HorizontalAlignment="Stretch"
              Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">

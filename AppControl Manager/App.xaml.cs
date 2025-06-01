@@ -661,7 +661,7 @@ public partial class App : Application
 						CurrentlyOpenContentDialog = null;
 					}
 
-					CustomUIElements.ContentDialogV2 errorDialog = new()
+					using CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
 						Title = GlobalVars.Rizz.GetString("ErrorDialogTitle"),
 						Content = string.Format(GlobalVars.Rizz.GetString("ErrorDialogContent"), ex.Message),

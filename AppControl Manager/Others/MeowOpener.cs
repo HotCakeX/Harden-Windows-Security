@@ -21,26 +21,8 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
-internal static partial class MeowParser
+internal static class MeowParser
 {
-
-	// P/Invoke declaration to import the 'BCryptOpenAlgorithmProvider' function from 'bcrypt.dll'.
-	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
-	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptOpenAlgorithmProvider", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial int BCryptOpenAlgorithmProvider(
-	out IntPtr phAlgorithm, // Output parameter to receive the handle of the cryptographic algorithm.
-	string pszAlgId, // The algorithm identifier (e.g., AES, SHA256, etc.).
-	string? pszImplementation, // The implementation name (null for default).
-	uint dwFlags); // Flags to control the function behavior.
-
-	// P/Invoke declaration to import the 'BCryptCloseAlgorithmProvider' function from 'bcrypt.dll'.
-	// Releases the algorithm handle acquired by 'BCryptOpenAlgorithmProvider'.
-	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
-	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptCloseAlgorithmProvider", SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial int BCryptCloseAlgorithmProvider(IntPtr hAlgorithm, uint dwFlags);
-
 	// Defines a structure with sequential layout to match the native structure.
 	// https://learn.microsoft.com/windows/win32/api/mscat/ns-mscat-cryptcatmember
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -61,7 +43,7 @@ internal static partial class MeowParser
 
 
 	/// <summary>
-	/// A public static method that returns a HashSet of strings.
+	/// Gets the hashes of the members in a security catalog file.
 	/// </summary>
 	/// <param name="SecurityCatalogFilePath"></param>
 	/// <returns></returns>
@@ -78,7 +60,7 @@ internal static partial class MeowParser
 		try
 		{
 			// Attempt to acquire a cryptographic context using the CNG API.
-			int status = BCryptOpenAlgorithmProvider(out MainCryptProviderHandle, "SHA256", null, 0);
+			int status = NativeMethods.BCryptOpenAlgorithmProvider(out MainCryptProviderHandle, "SHA256", null, 0);
 
 			if (status != 0)
 			{
@@ -87,7 +69,7 @@ internal static partial class MeowParser
 			}
 
 			// Opens the catalog file and gets a handle to the catalog context.
-			MeowLogHandle = WinTrust.CryptCATOpen(SecurityCatalogFilePath, 0, MainCryptProviderHandle, 0, 0);
+			MeowLogHandle = NativeMethods.CryptCATOpen(SecurityCatalogFilePath, 0, MainCryptProviderHandle, 0, 0);
 
 			if (MeowLogHandle == IntPtr.Zero)
 			{
@@ -97,7 +79,7 @@ internal static partial class MeowParser
 			}
 
 			// Iterates through the catalog members.
-			while ((KittyPointer = WinTrust.CryptCATEnumerateMember(MeowLogHandle, KittyPointer)) != IntPtr.Zero)
+			while ((KittyPointer = NativeMethods.CryptCATEnumerateMember(MeowLogHandle, KittyPointer)) != IntPtr.Zero)
 			{
 				// Converts the pointer to a structure.
 				MeowMemberCrypt member = Marshal.PtrToStructure<MeowMemberCrypt>(KittyPointer);
@@ -112,7 +94,7 @@ internal static partial class MeowParser
 			if (MainCryptProviderHandle != IntPtr.Zero)
 			{
 				// Attempt to close the algorithm provider handle.
-				int closeStatus = BCryptCloseAlgorithmProvider(MainCryptProviderHandle, 0);
+				int closeStatus = NativeMethods.BCryptCloseAlgorithmProvider(MainCryptProviderHandle, 0);
 
 				// Check if the function succeeded by examining the NTSTATUS code.
 				if (closeStatus != 0)
@@ -123,7 +105,7 @@ internal static partial class MeowParser
 			}
 
 			if (MeowLogHandle != IntPtr.Zero)
-				_ = WinTrust.CryptCATClose(MeowLogHandle);
+				_ = NativeMethods.CryptCATClose(MeowLogHandle);
 		}
 
 		// Returns the HashSet containing the hashes.

@@ -26,7 +26,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <InfoBar Grid.Row="0"
+        <customUI:InfoBarV2 Grid.Row="0"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
@@ -104,7 +104,6 @@
                 </Button>
 
                 <ComboBox x:Uid="SwapPolicyComboBox"
-                          SelectedItem="{x:Bind ViewModel.SwapPolicyComboBoxSelectedItem, Mode=TwoWay}"
                           SelectedIndex="{x:Bind ViewModel.SwapPolicyComboBoxSelectedIndex, Mode=TwoWay}"
                           IsEnabled="{x:Bind ViewModel.SwapPolicyComboBoxState, Mode=OneWay}">
                     <x:String>Default Windows</x:String>

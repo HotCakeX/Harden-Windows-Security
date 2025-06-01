@@ -33,6 +33,7 @@
             <Button Grid.Row="1" HorizontalAlignment="Center"
                     HorizontalContentAlignment="Center"
                     Margin="15"
+                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
                     Click="{x:Bind ViewModel.BuildCertificateButton_Click}"
                     x:Uid="BuildCertificateButton">
                 <Button.Content>
@@ -53,19 +54,19 @@
                 </Button.Content>
             </Button>
 
-            <InfoBar
-                IsOpen="{x:Bind ViewModel.StatusInfoBarIsOpen, Mode=OneWay}"
+            <customUI:InfoBarV2
+                IsOpen="{x:Bind ViewModel.StatusInfoBarIsOpen, Mode=TwoWay}"
                 Severity="{x:Bind ViewModel.StatusInfoBarSeverity, Mode=OneWay}"
-                IsClosable="{x:Bind ViewModel.StatusInfoBarIsClosable, Mode=TwoWay}"
+                IsClosable="{x:Bind ViewModel.StatusInfoBarIsClosable, Mode=OneWay}"
                 Message="{x:Bind ViewModel.StatusInfoBarMessage, Mode=OneWay}"
                 Title="{x:Bind ViewModel.StatusInfoBarTitle, Mode=OneWay}"
                 Grid.Row="2">
-                <InfoBar.ActionButton>
+                <customUI:InfoBarV2.ActionButton>
                     <Button Visibility="{x:Bind ViewModel.CopyInfoBarToClipboardButtonVisibility, Mode=OneWay}"
                             x:Uid="CopyThumbPrintToClipboardButton"
                             Click="{x:Bind ViewModel.CopyInfoBarToClipboardButton_Click}" />
-                </InfoBar.ActionButton>
-            </InfoBar>
+                </customUI:InfoBarV2.ActionButton>
+            </customUI:InfoBarV2>
 
             <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
 
@@ -79,7 +80,8 @@
                                          IsClickEnabled="True"
                                          IsActionIconVisible="False">
 
-                    <ComboBox SelectedItem="{x:Bind ViewModel.KeySizeComboBoxSelectedItem, Mode=TwoWay}">
+                    <ComboBox SelectedItem="{x:Bind ViewModel.KeySizeComboBoxSelectedItem, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}">
                         <x:String>4096</x:String>
                     </ComboBox>
 
@@ -90,7 +92,8 @@
                           IsClickEnabled="True"
                           IsActionIconVisible="False">
 
-                    <ComboBox SelectedIndex="{x:Bind ViewModel.SelectedHashAlgorithm, Mode=TwoWay}">
+                    <ComboBox SelectedIndex="{x:Bind ViewModel.SelectedHashAlgorithm, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}">
                         <x:String>SHA2_256</x:String>
                         <x:String>SHA2_384</x:String>
                         <x:String>SHA2_512</x:String>
@@ -106,7 +109,10 @@
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">
 
-                    <TextBox x:Uid="CommonNameTextBox" Text="{x:Bind ViewModel.CommonName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200"/>
+                    <TextBox x:Uid="CommonNameTextBox"
+                             Text="{x:Bind ViewModel.CommonName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
+                             MinWidth="200"/>
 
                 </controls:SettingsCard>
 
@@ -118,6 +124,7 @@
                     <NumberBox Value="{x:Bind ViewModel.Validity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                SpinButtonPlacementMode="Inline"
                                SmallChange="10"
+                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
                                LargeChange="100"
                                Minimum="1"
                                MaxHeight="3000"/>
@@ -131,6 +138,7 @@
 
                     <PasswordBox MinWidth="250"
                                  PasswordChar="#"
+                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
                                  PasswordRevealMode="Peek"
                                  Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
                                  x:Uid="PFXEncryptionPasswordBox" />

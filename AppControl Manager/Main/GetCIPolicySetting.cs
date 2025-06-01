@@ -16,14 +16,13 @@
 //
 
 using System.Runtime.InteropServices;
-using AppControlManager.Others;
 
 namespace AppControlManager.Main;
 
-internal sealed class SecurePolicySetting(object? Value, WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
+internal sealed class SecurePolicySetting(object? Value, NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
 {
 	internal object? Value { get; set; } = Value;
-	internal WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
+	internal NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
 	internal uint ValueSize { get; set; } = ValueSize;
 	internal bool Status { get; set; } = Status;
 	internal int StatusCode { get; set; } = StatusCode;
@@ -36,19 +35,19 @@ internal static class GetCIPolicySetting
 	{
 
 		// Create UNICODE_STRING structures
-		UNICODE_STRING ProviderUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(provider);
-		UNICODE_STRING KeyUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(key);
-		UNICODE_STRING ValueNameUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(valueName);
+		NativeMethods.UNICODE_STRING ProviderUS = NativeMethods.InitUnicodeString(provider);
+		NativeMethods.UNICODE_STRING KeyUS = NativeMethods.InitUnicodeString(key);
+		NativeMethods.UNICODE_STRING ValueNameUS = NativeMethods.InitUnicodeString(valueName);
 
 		// Prepare output variables
 		uint ValueSize = 1024;  // Changed to uint to match the P/Invoke declaration
 		nint Value = Marshal.AllocHGlobal((int)ValueSize);
 
-		int result = WldpQuerySecurityPolicyWrapper.WldpQuerySecurityPolicy(
+		int result = NativeMethods.WldpQuerySecurityPolicy(
 			ref ProviderUS,
 			ref KeyUS,
 			ref ValueNameUS,
-			out WLDP_SECURE_SETTING_VALUE_TYPE ValueType,
+			out NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE ValueType,
 			Value,
 			ref ValueSize
 		);
@@ -59,18 +58,18 @@ internal static class GetCIPolicySetting
 		{
 			switch (ValueType)
 			{
-				case WLDP_SECURE_SETTING_VALUE_TYPE.WldpBoolean:
+				case NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE.WldpBoolean:
 					decodedValue = Marshal.ReadByte(Value) != 0;
 					break;
-				case WLDP_SECURE_SETTING_VALUE_TYPE.WldpString:
+				case NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE.WldpString:
 					decodedValue = Marshal.PtrToStringUni(Value);
 					break;
-				case WLDP_SECURE_SETTING_VALUE_TYPE.WldpInteger:
+				case NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE.WldpInteger:
 					decodedValue = Marshal.ReadInt32(Value);
 					break;
-				case WLDP_SECURE_SETTING_VALUE_TYPE.WldpNone:
+				case NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE.WldpNone:
 					break;
-				case WLDP_SECURE_SETTING_VALUE_TYPE.WldpFlag:
+				case NativeMethods.WLDP_SECURE_SETTING_VALUE_TYPE.WldpFlag:
 					break;
 				default:
 					break;

@@ -1478,7 +1478,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 					if (fileType == 0)
 					{
-						ContentDialogV2 dialog = new()
+						using ContentDialogV2 dialog = new()
 						{
 							Title = GlobalVars.Rizz.GetString("DialogTitleSuccess"),
 							Content = new WrapPanel

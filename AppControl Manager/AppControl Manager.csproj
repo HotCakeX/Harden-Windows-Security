@@ -77,7 +77,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.25.0</FileVersion>
+    <FileVersion>2.0.26.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

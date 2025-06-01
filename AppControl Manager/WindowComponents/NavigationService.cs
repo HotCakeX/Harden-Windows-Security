@@ -171,7 +171,7 @@ internal sealed class NavigationService
 				panel.Children.Add(extraInfoCheckBox);
 
 				// Create and configure the ContentDialog.
-				CustomUIElements.ContentDialogV2 dialog = new()
+				using CustomUIElements.ContentDialogV2 dialog = new()
 				{
 					Title = GlobalVars.Rizz.GetString("AppElevationNotice/Title"),
 					Content = panel,

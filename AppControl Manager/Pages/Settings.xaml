@@ -29,7 +29,7 @@
 
             </controls:WrapPanel>
 
-            <InfoBar Grid.Row="1"
+            <customUI:InfoBarV2 Grid.Row="1"
                  Margin="15"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
@@ -197,7 +197,7 @@
                 <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar
+                        <customUI:InfoBarV2
                             BorderThickness="0"
                             CornerRadius="0"
                             IsIconVisible="True"

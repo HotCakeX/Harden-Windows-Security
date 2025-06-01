@@ -33,43 +33,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid.Resources>
-
-            <Flyout x:Name="SelectedCodeIntegrityEVTXFilesFlyout">
-
-                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
-
-                    <Button x:Uid="ClearButton" Click="SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click" />
-
-                    <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
-
-                    <TextBox x:Name="SelectedCodeIntegrityEVTXFilesFlyout_TextBox"
-                        TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                        MinWidth="400" IsReadOnly="True" />
-
-                </controls:WrapPanel>
-
-            </Flyout>
-
-            <Flyout x:Name="SelectedAppLockerEVTXFilesFlyout">
-
-                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
-
-                    <Button x:Uid="ClearButton" Click="{x:Bind SelectedAppLockerEVTXFilesFlyout_Clear_Click}" />
-
-                    <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
-
-                    <TextBox x:Name="SelectedAppLockerEVTXFilesFlyout_TextBox"
-                        TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                        MinWidth="400" IsReadOnly="True" />
-
-                </controls:WrapPanel>
-
-            </Flyout>
-
-        </Grid.Resources>
-
-
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
 
             <TextBlock x:Uid="EventLogsPolicyCreationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
@@ -78,25 +41,31 @@
 
         </controls:WrapPanel>
 
-        <InfoBar Grid.Row="1"
-                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
-            <InfoBar.ActionButton>
-                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind OpenInPolicyEditor}" />
-            </InfoBar.ActionButton>
-        </InfoBar>
+        <customUI:InfoBarV2 Grid.Row="1"
+                   IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                   Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                   Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                   IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
+            <customUI:InfoBarV2.ActionButton>
+                <Button x:Uid="OpenInPolicyEditorButton"
+                Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}"
+                Click="{x:Bind ViewModel.OpenInPolicyEditor}" />
+            </customUI:InfoBarV2.ActionButton>
+        </customUI:InfoBarV2>
 
         <Border Grid.Row="2" Margin="0,10,0,10"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <ProgressRing x:Name="ScanLogsProgressRing" Visibility="Collapsed" IsActive="False" />
+                <ProgressRing Visibility="{x:Bind ViewModel.ScanLogsProgressRingVisibility, Mode=OneWay}"
+                              IsActive="{x:Bind ViewModel.ScanLogsProgressRingIsActive, Mode=OneWay}" />
 
                 <!-- Scan button -->
-                <Button x:Name="ScanLogs" x:Uid="ScanLogsButton" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind ScanLogs_Click}" >
+                <Button x:Uid="ScanLogsButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ScanLogs_Click}" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEE6F;" />
@@ -105,12 +74,14 @@
                     </Button.Content>
                 </Button>
 
-                <SplitButton x:Name="CreatePolicyButton" ToolTipService.ToolTip="Create the supplemental policy" Click="{x:Bind CreatePolicyButton_Click}">
+                <SplitButton ToolTipService.ToolTip="Create the supplemental policy"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                             Click="{x:Bind ViewModel.CreatePolicyButton_Click}">
 
                     <SplitButton.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xECCD;" />
-                            <TextBlock Text="Create Policy for Selected Base" Margin="5,0,0,0" />
+                            <TextBlock Text="{x:Bind ViewModel.CreatePolicyButtonContent, Mode=OneWay}" Margin="5,0,0,0" />
                         </StackPanel>
                     </SplitButton.Content>
 
@@ -132,11 +103,10 @@
                                 </Style>
                             </Flyout.FlyoutPresenterStyle>
 
-
                             <StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
                                 <controls:Segmented x:Name="segmentedControl"
                                     HorizontalAlignment="Stretch"
-                                    SelectedIndex="1" SelectionChanged="SegmentedControl_SelectionChanged">
+                                    SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
                                     <controls:SegmentedItem Content="Add To Policy"
                                         Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
                                     <controls:SegmentedItem Content="Base Policy File"
@@ -155,15 +125,17 @@
                                                 <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="AddToPolicyButton" Content="Browse" ToolTipService.ToolTip="Select a XML file to add the scanned logs to" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind AddToPolicyButton_Click}" />
+                                            <Button Margin="5" Content="Browse"
+                                                    ToolTipService.ToolTip="Select a XML file to add the scanned logs to"
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
 
                                         </StackPanel>
                                     </controls:Case>
                                     <controls:Case Value="BasePolicyFile">
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                               animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                               Style="{StaticResource PanelStyle}">
-
+                                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                    Style="{StaticResource PanelStyle}">
 
                                             <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="290" >
 
@@ -171,7 +143,10 @@
                                                     policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
                                             </TextBlock>
 
-                                            <Button Margin="5" x:Name="BasePolicyFileButton" Content="Browse" ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to." Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BasePolicyFileButton_Click}" />
+                                            <Button Margin="5" Content="Browse"
+                                                    ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to."
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Click="{x:Bind ViewModel.BasePolicyFileButton_Click}" />
                                         </StackPanel>
                                     </controls:Case>
 
@@ -180,9 +155,16 @@
                                              animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                              Style="{StaticResource PanelStyle}">
 
-                                            <TextBox x:Name="BaseGUIDTextBox" PlaceholderText="Enter a Base policy GUID" Width="300" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
+                                            <TextBox PlaceholderText="Enter a Base policy GUID"
+                                                     Width="300" Margin="10"
+                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay}"
+                                                     VerticalAlignment="Center"
+                                                     VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
 
-                                            <Button Margin="5" x:Name="BaseGUIDSubmitButton" Content="Submit" ToolTipService.ToolTip="Submit the GUID" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BaseGUIDSubmitButton_Click}" />
+                                            <Button Margin="5" Content="Submit"
+                                                    ToolTipService.ToolTip="Submit the GUID"
+                                                    Style="{StaticResource AccentButtonStyle}"
+                                                    Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
                                         </StackPanel>
                                     </controls:Case>
                                 </controls:SwitchPresenter>
@@ -191,47 +173,71 @@
                     </SplitButton.Flyout>
                 </SplitButton>
 
-                <DropDownButton x:Name="BrowseForEVTXDropDownButton" Content="Browse for EVTX" ToolTipService.ToolTip="Select EVTX files">
+                <customUI:ButtonV2 Content="Select Code Integrity EVTX Files"
+                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   Click="{x:Bind ViewModel.SelectCodeIntegrityEVTXFiles_Click}">
+                    <customUI:ButtonV2.Flyout>
+                        <Flyout>
+                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click}" />
+
+                                <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
+
+                                <TextBox Text="{x:Bind ViewModel.CodeIntegrityEVTX, Mode=OneWay}"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         IsSpellCheckEnabled="False"
+                                         MinWidth="400"
+                                         IsReadOnly="True" />
+
+                            </controls:WrapPanel>
+                        </Flyout>
+                    </customUI:ButtonV2.Flyout>
+                </customUI:ButtonV2>
+
+                <customUI:ButtonV2 Content="Select AppLocker EVTX Files"
+                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   Click="{x:Bind ViewModel.SelectAppLockerEVTXFiles_Click}">
+                    <customUI:ButtonV2.Flyout>
+                        <Flyout>
+                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedAppLockerEVTXFilesFlyout_Clear_Click}" />
+
+                                <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
+
+                                <TextBox Text="{x:Bind ViewModel.AppLockerEVTX, Mode=OneWay}"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         IsSpellCheckEnabled="False"
+                                         MinWidth="400"
+                                         IsReadOnly="True" />
+
+                            </controls:WrapPanel>
+                        </Flyout>
+                    </customUI:ButtonV2.Flyout>
+                </customUI:ButtonV2>
+
+                <DropDownButton x:Uid="ExtraActionsDropDownButton"
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Name="BrowseForCodeIntegrityEVTXFilesButton" RightTapped="BrowseForCodeIntegrityEVTXFilesButton_RightTapped" Holding="BrowseForCodeIntegrityEVTXFilesButton_Holding" Text="Select Code Integrity EVTX Files" Click="SelectCodeIntegrityEVTXFiles_Click" ToolTipService.ToolTip="Browse for Code Integrity Operational EVTX logs">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xEC50;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-
-                            <MenuFlyoutItem x:Name="BrowseForAppLockerEVTXFilesButton" RightTapped="BrowseForAppLockerEVTXFilesButton_RightTapped" Holding="BrowseForAppLockerEVTXFilesButton_Holding" Text="Select AppLocker EVTX Files" Click="{x:Bind SelectAppLockerEVTXFiles_Click}" ToolTipService.ToolTip="Browse for AppLocker EVTX logs">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xEC50;" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-
-                        </MenuFlyout>
-
-                    </DropDownButton.Flyout>
-                </DropDownButton>
-
-                <DropDownButton x:Uid="ExtraActionsDropDownButton">
-                    <DropDownButton.Flyout>
-
-                        <MenuFlyout Placement="Bottom">
-
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind SelectAll_Click}">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.SelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE762;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind DeSelectAll_Click}">
+                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.DeSelectAll_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="{x:Bind ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -239,7 +245,7 @@
 
                             <MenuFlyoutSeparator/>
 
-                            <ToggleMenuFlyoutItem x:Name="DeployPolicyToggle" x:Uid="DeployAfterCreationMenuFlyoutItem" IsChecked="False">
+                            <ToggleMenuFlyoutItem x:Uid="DeployAfterCreationMenuFlyoutItem" IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
                                 <ToggleMenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE896;"/>
                                 </ToggleMenuFlyoutItem.Icon>
@@ -252,14 +258,19 @@
                 </DropDownButton>
 
                 <TextBox x:Uid="TotalLogsTextBlock"
-                 x:Name="TotalCountOfTheFilesTextBox"
-                 IsReadOnly="True"
-                 VerticalAlignment="Center"
-                 VerticalContentAlignment="Center"/>
+                         Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
+                         IsReadOnly="True"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"/>
 
-                <TextBox x:Name="SearchBox" Width="300" x:Uid="SearchBoxTextBox" TextChanged="{x:Bind ApplyFilters}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                <TextBox Width="300"
+                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                         x:Uid="SearchBoxTextBox"
+                         Text="{x:Bind ViewModel.SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center" />
 
-                <Button Content="Policy Name">
+                <Button Content="Policy Name" IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                     <Button.Flyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>
@@ -270,21 +281,32 @@
                             </Flyout.FlyoutPresenterStyle>
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
-                                <TextBox Width="300" Header="Optional: Choose a policy name" PlaceholderText="Policy Name..." x:Name="PolicyNameTextBox"/>
+                                <TextBox Width="300"
+                                         Header="Optional: Choose a policy name"
+                                         Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}"
+                                         PlaceholderText="Policy Name..."/>
                             </controls:WrapPanel>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
 
-                <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
+                <CalendarDatePicker PlaceholderText="Filter logs by date"
+                                    Date="{x:Bind ViewModel.DatePickerDate, Mode=TwoWay}"
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
 
-                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" x:Uid="ScanLevelComboBox" PlaceholderText="Scan level" >
-                    <x:String>FilePublisher</x:String>
+                <ComboBox x:Uid="ScanLevelComboBox"
+                          IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                          PlaceholderText="Scan level" >
+                    <x:String>File Publisher</x:String>
                     <x:String>Publisher</x:String>
                     <x:String>Hash</x:String>
                 </ComboBox>
 
-                <ToggleButton x:Name="OnlyIncludeSelectedItemsToggleButton" x:Uid="OnlyIncludeSelectedItemsToggleButton" />
+                <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                              x:Uid="OnlyIncludeSelectedItemsToggleButton" />
 
             </controls:WrapPanel>
         </Border>
@@ -358,13 +380,13 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="DeleteRow" Click="ListViewFlyoutMenuDelete_Click">
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModelEventLogsPolicyCreationVM.ListViewFlyoutMenuDelete_Click}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelEventLogsPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>

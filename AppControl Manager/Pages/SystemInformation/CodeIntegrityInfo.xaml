@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
     xmlns:ci="using:AppControlManager.Others"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -23,7 +24,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <InfoBar Grid.Row="0"
+            <customUI:InfoBarV2 Grid.Row="0"
                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"

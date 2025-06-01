@@ -709,7 +709,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			allFileIdentities: filesAndFoldersScanResultsList.AsEnumerable(),
 			filteredCollection: FilesAndFoldersScanResults,
 			searchText: FilesAndFoldersScanResultsSearchTextBox,
-			datePicker: null,
+			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults
 		);
 		UpdateTotalFilesFilesAndFolders();
@@ -1827,7 +1827,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		allFileIdentities: StrictKernelModeScanResultsList.AsEnumerable(),
 		filteredCollection: StrictKernelModeScanResults,
 		searchText: StrictKernelModeResultsSearchTextBox,
-		datePicker: null,
+		selectedDate: null,
 		regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults
 		);
 

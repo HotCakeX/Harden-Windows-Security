@@ -128,7 +128,7 @@
 
                     </controls:WrapPanel>
 
-                    <InfoBar Severity="{x:Bind ViewModel.Step1InfoBar_Severity, Mode=OneWay}"
+                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step1InfoBar_Severity, Mode=OneWay}"
                              IsOpen="{x:Bind ViewModel.Step1InfoBar_IsOpen, Mode=TwoWay}"
                              IsClosable='{x:Bind ViewModel.Step1InfoBar_IsClosable, Mode=OneWay}'
                              Message="{x:Bind ViewModel.Step1InfoBar_Message, Mode=OneWay}"
@@ -200,7 +200,7 @@
 
                     </controls:WrapPanel>
 
-                    <InfoBar Severity="{x:Bind ViewModel.Step2InfoBar_Severity, Mode=OneWay}"
+                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step2InfoBar_Severity, Mode=OneWay}"
                         IsOpen="{x:Bind ViewModel.Step2InfoBar_IsOpen, Mode=TwoWay}"
                         IsClosable='{x:Bind ViewModel.Step2InfoBar_IsClosable, Mode=OneWay}'
                         Message="{x:Bind ViewModel.Step2InfoBar_Message, Mode=OneWay}"
@@ -256,15 +256,15 @@
                             Style="{StaticResource AccentButtonStyle}"/>
                     </controls:WrapPanel>
 
-                    <InfoBar Severity="{x:Bind ViewModel.Step3InfoBar_Severity, Mode=OneWay}"
+                    <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step3InfoBar_Severity, Mode=OneWay}"
                             IsOpen="{x:Bind ViewModel.Step3InfoBar_IsOpen, Mode=TwoWay}"
                             IsClosable='{x:Bind ViewModel.Step3InfoBar_IsClosable, Mode=OneWay}'
                             Message="{x:Bind ViewModel.Step3InfoBar_Message, Mode=OneWay}"
                             Margin="0,20,0,0" Grid.Row="2">
-                        <InfoBar.ActionButton>
+                        <customUI:InfoBarV2.ActionButton>
                             <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor}" />
-                        </InfoBar.ActionButton>
-                    </InfoBar>
+                        </customUI:InfoBarV2.ActionButton>
+                    </customUI:InfoBarV2>
                 </Grid>
             </Border>
 

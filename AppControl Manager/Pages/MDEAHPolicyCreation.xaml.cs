@@ -16,20 +16,13 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
-using AppControlManager.Main;
-using AppControlManager.MicrosoftGraph;
+using System.ComponentModel;
 using AppControlManager.Others;
+using Microsoft.UI.Xaml.Controls;
+using AppControlManager.IntelGathering;
 using AppControlManager.ViewModels;
-using AppControlManager.XMLOps;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
@@ -40,55 +33,58 @@ namespace AppControlManager.Pages;
 /// MDEAHPolicyCreation is a page for managing MDE Advanced Hunting policies, including scanning logs, filtering data,
 /// and creating policies.
 /// </summary>
-internal sealed partial class MDEAHPolicyCreation : Page
+internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 {
 
-	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
-	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
-	private ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	/// <summary>
+	/// An event that is triggered when a property value changes, allowing subscribers to be notified of updates.
+	/// </summary>
+	public event PropertyChangedEventHandler? PropertyChanged;
 
-
-	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
-
-	private void UpdateButtonsStates(bool on)
+	private void OnPropertyChanged(string? propertyName)
 	{
-		// Enable the retrieve button if a valid value is set as Active Account
-		RetrieveTheLogsButton.IsEnabled = on;
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
-	internal readonly AuthenticationCompanion AuthCompanionCLS;
+	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
+	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
-	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
-
-
-	/// <summary>
-	/// Initializes the MDEAHPolicyCreation component, sets default selections, maintains navigation state, and adds a date
-	/// change event handler.
-	/// </summary>
 	internal MDEAHPolicyCreation()
 	{
 		this.InitializeComponent();
-
-		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Required;
-
+		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = this;
 
-		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
-			() => ViewModel.MainInfoBarIsOpen, value => ViewModel.MainInfoBarIsOpen = value,
-			() => ViewModel.MainInfoBarMessage, value => ViewModel.MainInfoBarMessage = value,
-			() => ViewModel.MainInfoBarSeverity, value => ViewModel.MainInfoBarSeverity = value,
-			() => ViewModel.MainInfoBarIsClosable, value => ViewModel.MainInfoBarIsClosable = value), AuthenticationContext.MDEAdvancedHunting);
+		// Perform initial selected item assignment for the SelectorBar
+		InitSelectorBar();
 
-		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
-
-		// Add the DateChanged event handler
-		FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
+		// Setting it in XAML would fire it unnecessarily initially
+		MenuSelectorBar.SelectionChanged += MenuSelectorBar_SelectionChanged;
 	}
 
-	// The user selected scan level
-	private ScanLevels scanLevel = ScanLevels.FilePublisher;
+	#region For the toolbar menu's Selector Bar
+
+	internal bool IsLocalSelected => string.Equals(ViewModel.SelectedBarItemText, SelectorBarItemMain.Text, StringComparison.OrdinalIgnoreCase);
+	internal bool IsCloudSelected => string.Equals(ViewModel.SelectedBarItemText, SelectorBarItemCloud.Text, StringComparison.OrdinalIgnoreCase);
+	internal bool IsCreateSelected => string.Equals(ViewModel.SelectedBarItemText, SelectorBarItemCreate.Text, StringComparison.OrdinalIgnoreCase);
+
+	private void InitSelectorBar()
+	{
+		foreach (SelectorBarItem item in MenuSelectorBar.Items)
+		{
+			item.IsSelected = item.Text.Equals(ViewModel.SelectedBarItemText, StringComparison.OrdinalIgnoreCase);
+		}
+	}
+
+	private void MenuSelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+	{
+		ViewModel.SelectedBarItemText = sender.SelectedItem.Text;
+		OnPropertyChanged(nameof(IsLocalSelected));
+		OnPropertyChanged(nameof(IsCloudSelected));
+		OnPropertyChanged(nameof(IsCreateSelected));
+	}
+
+	#endregion
 
 	/// <summary>
 	/// Click event handler for copy
@@ -105,7 +101,6 @@ internal sealed partial class MDEAHPolicyCreation : Page
 		}
 	}
 
-
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -114,7 +109,7 @@ internal sealed partial class MDEAHPolicyCreation : Page
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
-					SearchBox.Text,
+					ViewModel.SearchBoxText,
 					ViewModel.AllFileIdentities,
 					ViewModel.FileIdentities,
 					ViewModel.SortState,
@@ -123,559 +118,6 @@ internal sealed partial class MDEAHPolicyCreation : Page
 			}
 		}
 	}
-
-
-	/// <summary>
-	/// Event handler for the CalendarDatePicker date changed event
-	/// </summary>
-	private void FilterByDateCalendarPicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)
-	{
-		ApplyFilters();
-	}
-
-
-	/// <summary>
-	/// Event handler for the SearchBox text change
-	/// </summary>
-	private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		ApplyFilters();
-	}
-
-
-	/// <summary>
-	/// Applies the date and search filters to the data grid
-	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-		   allFileIdentities: ViewModel.AllFileIdentities.AsEnumerable(),
-		   filteredCollection: ViewModel.FileIdentities,
-		   searchText: SearchBox.Text,
-		   datePicker: FilterByDateCalendarPicker,
-		   regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting
-	   );
-		ViewModel.UpdateTotalLogs();
-	}
-
-
-	/// <summary>
-	/// Event handler for the ScanLogs click
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void ScanLogs_Click(object sender, RoutedEventArgs e)
-	{
-		bool error = false;
-
-		try
-		{
-			ViewModel.AreElementsEnabled = false;
-
-			// Display the progress ring on the ScanLogs button
-			ScanLogsProgressRing.IsActive = true;
-			ScanLogsProgressRing.Visibility = Visibility.Visible;
-
-			ViewModel.MainInfoBarIsClosable = false;
-
-			ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningMDEAdvancedHuntingCsvLogs"));
-
-			// Clear the FileIdentities before getting and showing the new ones
-			ViewModel.FileIdentities.Clear();
-			ViewModel.AllFileIdentities.Clear();
-
-			ViewModel.UpdateTotalLogs(true);
-
-			// To store the output of the MDE Advanced Hunting logs scan
-			HashSet<FileIdentity> Output = [];
-
-			// Grab the App Control Logs
-			await Task.Run(() =>
-			{
-				if (ViewModel.MDEAdvancedHuntingLogs is null)
-				{
-					throw new InvalidOperationException(
-						GlobalVars.Rizz.GetString("NoMDEAdvancedHuntingLogProvided")
-					);
-				}
-
-				List<MDEAdvancedHuntingData> MDEAHCSVData = OptimizeMDECSVData.Optimize(ViewModel.MDEAdvancedHuntingLogs);
-
-				if (MDEAHCSVData.Count > 0)
-				{
-					Output = GetMDEAdvancedHuntingLogsData.Retrieve(MDEAHCSVData);
-				}
-				else
-				{
-					throw new InvalidOperationException(
-						GlobalVars.Rizz.GetString("NoResultsInMDEAdvancedHuntingCsvLogs")
-					);
-				}
-			});
-
-			// Store all of the data in the List
-			ViewModel.AllFileIdentities.AddRange(Output);
-
-			// Store all of the data in the ObservableCollection
-			foreach (FileIdentity item in Output)
-			{
-				// Add a reference to the ViewModel class instance to every item
-				// so we can use it for navigation in the XAML
-				item.ParentViewModelMDEAHPolicyCreationVM = ViewModel;
-				ViewModel.FileIdentities.Add(item);
-			}
-
-			ViewModel.UpdateTotalLogs();
-
-			ViewModel.CalculateColumnWidths();
-		}
-		catch (Exception ex)
-		{
-			error = true;
-			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorScanningMDEAdvancedHuntingCsvLogs"));
-		}
-		finally
-		{
-			ViewModel.AreElementsEnabled = true;
-
-			// Stop displaying the Progress Ring
-			ScanLogsProgressRing.IsActive = false;
-			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
-
-			if (!error)
-			{
-				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
-			}
-
-			ViewModel.MainInfoBarIsClosable = true;
-		}
-	}
-
-
-	/// <summary>
-	/// Selects all of the displayed rows on the ListView
-	/// </summary>
-	private void SelectAll_Click()
-	{
-		ListViewHelper.SelectAll(FileIdentitiesListView, ViewModel.FileIdentities);
-	}
-
-
-	/// <summary>
-	/// De-selects all of the displayed rows on the ListView
-	/// </summary>
-	private void DeSelectAll_Click()
-	{
-		FileIdentitiesListView.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
-	}
-
-	/// <summary>
-	/// Deletes the selected row from the results
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void ListViewFlyoutMenuDelete_Click(object sender, RoutedEventArgs e)
-	{
-		// Collect the selected items to delete
-		List<FileIdentity> itemsToDelete = [.. FileIdentitiesListView.SelectedItems.Cast<FileIdentity>()];
-
-		// Remove each selected item from the FileIdentities ObservableCollection, they won't be included in the policy
-		foreach (FileIdentity item in itemsToDelete)
-		{
-			_ = ViewModel.FileIdentities.Remove(item);
-			_ = ViewModel.AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
-		}
-
-		ViewModel.UpdateTotalLogs();
-	}
-
-
-	/// <summary>
-	/// When the main button responsible for creating policy is pressed
-	/// </summary>
-	private async void CreatePolicyButton_Click()
-	{
-		bool Error = false;
-
-		// Empty the class variable that stores the policy file path
-		finalSupplementalPolicyPath = null;
-
-		string? policyName = null;
-
-		try
-		{
-			ViewModel.AreElementsEnabled = false;
-
-			// Display the progress ring on the ScanLogs button
-			ScanLogsProgressRing.IsActive = true;
-			ScanLogsProgressRing.Visibility = Visibility.Visible;
-
-			ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
-
-			if (ViewModel.FileIdentities.Count is 0)
-			{
-				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("NoLogsErrorMessage")
-				);
-			}
-
-			if (ViewModel.PolicyToAddLogsTo is null && ViewModel.BasePolicyXMLFile is null && ViewModel.BasePolicyGUID is null)
-			{
-				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("NoPolicyCreationOptionSelectedErrorMessage")
-				);
-			}
-
-			ViewModel.MainInfoBarIsClosable = false;
-
-			// Create a policy name if it wasn't provided
-			DateTime now = DateTime.Now;
-			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
-
-			// Get the policy name from the UI text box
-			policyName = PolicyNameTextBox.Text;
-
-			// If the UI text box was empty or whitespace then set policy name manually
-			if (string.IsNullOrWhiteSpace(policyName))
-			{
-				policyName = string.Format(
-					GlobalVars.Rizz.GetString("DefaultSupplementalPolicyNameFormat"),
-					formattedDate
-				);
-			}
-
-			// If user selected to deploy the policy
-			// Need to retrieve it while we're still at the UI thread
-			bool DeployAtTheEnd = DeployPolicyToggle.IsChecked;
-
-			// See which section of the Segmented control is selected for policy creation
-			int selectedCreationMethod = segmentedControl.SelectedIndex;
-
-			// All of the File Identities that will be used to put in the policy XML file
-			List<FileIdentity> SelectedLogs = [];
-
-			// Check if there are selected items in the ListView and user chose to use them only in the policy
-			if ((OnlyIncludeSelectedItemsToggleButton.IsChecked ?? false) && FileIdentitiesListView.SelectedItems.Count > 0)
-			{
-				ViewModel.MainInfoBar.WriteInfo(string.Format(
-					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
-					FileIdentitiesListView.SelectedItems.Count
-				));
-
-				// convert every selected item to FileIdentity and store it in the list
-				foreach (var item in FileIdentitiesListView.SelectedItems)
-				{
-					if (item is FileIdentity item1)
-					{
-						SelectedLogs.Add(item1);
-					}
-				}
-			}
-			// If no item was selected from the ListView and user didn't choose to only use the selected items, then use everything in the ObservableCollection
-			else
-			{
-				SelectedLogs = ViewModel.AllFileIdentities;
-
-				ViewModel.MainInfoBar.WriteInfo(string.Format(
-					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
-					ViewModel.AllFileIdentities.Count
-				));
-			}
-
-			await Task.Run(() =>
-			{
-				// Create a new Staging Area
-				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyCreatorMDEAH");
-
-				// Get the path to an empty policy file
-				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
-
-				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: scanLevel);
-
-				// Insert the data into the empty policy file
-				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
-
-				switch (selectedCreationMethod)
-				{
-					case 0:
-						{
-							if (ViewModel.PolicyToAddLogsTo is not null)
-							{
-								// Set policy name and reset the policy ID of our new policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
-
-								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
-								SiPolicy.Merger.Merge(ViewModel.PolicyToAddLogsTo, [EmptyPolicyPath]);
-
-								UpdateHvciOptions.Update(ViewModel.PolicyToAddLogsTo);
-
-								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = ViewModel.PolicyToAddLogsTo;
-
-								// If user selected to deploy the policy
-								if (DeployAtTheEnd)
-								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-									SiPolicy.Management.ConvertXMLToBinary(ViewModel.PolicyToAddLogsTo, null, CIPPath);
-
-									CiToolHelper.UpdatePolicy(CIPPath);
-								}
-							}
-							else
-							{
-								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoPolicySelectedToAddLogsMessage")
-								);
-							}
-
-							break;
-						}
-
-					case 1:
-						{
-							if (ViewModel.BasePolicyXMLFile is not null)
-							{
-								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
-								// Instantiate the user selected Base policy
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(ViewModel.BasePolicyXMLFile, null);
-
-								// Set the BasePolicyID of our new policy to the one from user selected policy
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, policyObj.BasePolicyID, null);
-
-								// Configure policy rule options
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
-								// Set policy version
-								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-								// Copying the policy file to the User Config directory - outside of the temporary staging area
-								File.Copy(EmptyPolicyPath, OutputPath, true);
-
-								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = OutputPath;
-
-								// If user selected to deploy the policy
-								if (DeployAtTheEnd)
-								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-
-									CiToolHelper.UpdatePolicy(CIPPath);
-								}
-							}
-							else
-							{
-								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoPolicyFileSelectedToAssociateErrorMessage")
-								);
-							}
-
-							break;
-						}
-
-					case 2:
-						{
-							if (ViewModel.BasePolicyGUID is not null)
-							{
-								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
-
-								// Set the BasePolicyID of our new policy to the one supplied by user
-								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, ViewModel.BasePolicyGUID, null);
-
-								// Configure policy rule options
-								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
-
-								// Set policy version
-								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
-
-								// Copying the policy file to the User Config directory - outside of the temporary staging area
-								File.Copy(EmptyPolicyPath, OutputPath, true);
-
-								// Add the supplemental policy path to the class variable
-								finalSupplementalPolicyPath = OutputPath;
-
-								// If user selected to deploy the policy
-								if (DeployAtTheEnd)
-								{
-									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
-
-									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
-
-									CiToolHelper.UpdatePolicy(CIPPath);
-								}
-							}
-							else
-							{
-								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoBasePolicyGuidProvidedMessage")
-								);
-							}
-
-							break;
-						}
-
-					default:
-						{
-							break;
-						}
-				}
-			});
-		}
-		catch (Exception ex)
-		{
-			Error = true;
-			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorCreatingSupplementalPolicyMessage"));
-		}
-		finally
-		{
-			ViewModel.AreElementsEnabled = true;
-
-			ViewModel.MainInfoBarIsClosable = true;
-
-			// Display the progress ring on the ScanLogs button
-			ScanLogsProgressRing.IsActive = false;
-			ScanLogsProgressRing.Visibility = Visibility.Collapsed;
-
-			if (!Error)
-			{
-				ViewModel.MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
-					policyName
-				));
-
-				ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
-			}
-		}
-	}
-
-
-	/// <summary>
-	/// Scan level selection event handler for ComboBox
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	/// <exception cref="InvalidOperationException"></exception>
-	private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		// Get the ComboBox that triggered the event
-		ComboBox comboBox = (ComboBox)sender;
-
-		// Get the selected item from the ComboBox
-		string selectedText = (string)comboBox.SelectedItem;
-
-		scanLevel = Enum.Parse<ScanLevels>(selectedText);
-	}
-
-
-	/// <summary>
-	/// Event handler for the button that retrieves the logs
-	/// </summary>
-	private async void RetrieveTheLogsButton_Click()
-	{
-
-		if (AuthCompanionCLS.CurrentActiveAccount is null)
-			return;
-
-		ViewModel.MainInfoBarIsClosable = false;
-
-		ViewModel.MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("RetrievingMDEAdvancedHuntingDataMessage"));
-
-		MDEAdvancedHuntingDataRootObject? root = null;
-
-		try
-		{
-			ViewModel.AreElementsEnabled = false;
-
-			// Retrieve the MDE Advanced Hunting data as a JSON string
-			string? result = await MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox.Text, AuthCompanionCLS.CurrentActiveAccount);
-
-			// If there were results
-			if (result is not null)
-			{
-				// Deserialize the JSON result
-				root = await Task.Run(() => JsonSerializer.Deserialize(result, MDEAdvancedHuntingJSONSerializationContext.Default.MDEAdvancedHuntingDataRootObject));
-
-				if (root is null)
-				{
-					ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoLogsRetrievedMessage"));
-					return;
-				}
-
-				if (root.Results.Count is 0)
-				{
-					ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ZeroLogsRetrievedMessage"));
-					return;
-				}
-
-				ViewModel.MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyRetrievedLogsFromCloudMessage"),
-					root.Results.Count
-				));
-
-				Logger.Write(
-					string.Format(
-						GlobalVars.Rizz.GetString("DeserializationCompleteNumberOfRecordsMessage"),
-						root.Results.Count
-					)
-				);
-
-				// Grab the App Control Logs
-				HashSet<FileIdentity> Output = await Task.Run(() => GetMDEAdvancedHuntingLogsData.Retrieve(root.Results));
-
-				if (Output.Count is 0)
-				{
-					ViewModel.MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoActionableLogsFoundMessage"));
-				}
-
-				ViewModel.AllFileIdentities.Clear();
-				ViewModel.FileIdentities.Clear();
-
-				// Store all of the data in the List
-				ViewModel.AllFileIdentities.AddRange(Output);
-
-				// Store all of the data in the ObservableCollection
-				foreach (FileIdentity item in Output)
-				{
-					item.ParentViewModelMDEAHPolicyCreationVM = ViewModel;
-					ViewModel.FileIdentities.Add(item);
-				}
-
-				ViewModel.UpdateTotalLogs();
-
-				ViewModel.CalculateColumnWidths();
-			}
-		}
-		catch (Exception ex)
-		{
-			ViewModel.MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorRetrievingMDEAdvancedHuntingLogsMessage"));
-		}
-		finally
-		{
-			ViewModel.AreElementsEnabled = true;
-
-			ViewModel.MainInfoBarIsClosable = true;
-		}
-	}
-
-
-	/// <summary>
-	/// Event handler for for the segmented button's selection change
-	/// </summary>
-	private void SegmentedControl_SelectionChanged()
-	{
-		CreatePolicyButton.Content = segmentedControl.SelectedIndex switch
-		{
-			0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicyMessage"),
-			1 => GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase"),
-			2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGUIDMessage"),
-			_ => GlobalVars.Rizz.GetString("DefaultCreatePolicy")
-		};
-	}
-
 
 	/// <summary>
 	/// Handles the Copy button click.
@@ -734,7 +176,6 @@ internal sealed partial class MDEAHPolicyCreation : Page
 
 			// Start the storyboard.
 			sb.Begin();
-
 		}
 	}
 
@@ -748,20 +189,6 @@ internal sealed partial class MDEAHPolicyCreation : Page
 		ViewModel.ListViewFlyoutMenuCopy_Click();
 		args.Handled = true;
 	}
-
-	/// <summary>
-	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
-	/// </summary>
-	private string? finalSupplementalPolicyPath;
-
-	/// <summary>
-	/// Event handler to open the supplemental policy in the Policy Editor
-	/// </summary>
-	private async void OpenInPolicyEditor()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
-	}
-
 }
 
 internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage

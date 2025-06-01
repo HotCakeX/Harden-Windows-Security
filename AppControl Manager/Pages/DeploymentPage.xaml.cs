@@ -289,7 +289,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 		string SignToolPath;
 
 		// Instantiate the Content Dialog
-		SigningDetailsDialog customDialog = new();
+		using SigningDetailsDialog customDialog = new();
 
 		// Show the dialog and await its result
 		ContentDialogResult result = await customDialog.ShowAsync();

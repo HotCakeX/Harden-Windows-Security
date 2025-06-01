@@ -32,7 +32,7 @@
 
         </controls:WrapPanel>
 
-        <InfoBar Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="1"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"

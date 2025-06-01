@@ -100,7 +100,6 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	{
 		try
 		{
-
 			string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
 			if (!string.IsNullOrWhiteSpace(selectedFile))

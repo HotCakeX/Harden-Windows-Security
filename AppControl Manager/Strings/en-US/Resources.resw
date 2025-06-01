@@ -5294,4 +5294,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
     <value>Successfully created the RMM Blocking policy</value>
   </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>Prevent other apps such as screen recorders (including Recall) to record or take screenshots of the AppControl Manager's window.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>Screen Shield</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Prevent other apps such as screen recorders (including Recall) to record or take screenshots of the AppControl Manager's window.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Prevent other apps such as screen recorders (including Recall) to record or take screenshots of the AppControl Manager's window.</value>
+  </data>
 </root>

@@ -57,7 +57,8 @@ internal static class ListViewHelper
 		PolicyEditor_FileBasedRules = 11,
 		PolicyEditor_SignatureBasedRules = 12,
 		SupplementalPolicy_PFNBasedRules = 13,
-		DenyPolicy_PFNBasedRules = 14
+		DenyPolicy_PFNBasedRules = 14,
+		Deployment_IntuneGroupsListView = 15
 	}
 
 	/// <summary>

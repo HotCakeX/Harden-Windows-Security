@@ -48,7 +48,6 @@ internal sealed partial class MainWindow : Window
 #pragma warning disable CA1822
 	private MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 	private SidebarVM sidebarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
 #pragma warning restore CA1822
 
@@ -86,6 +85,9 @@ internal sealed partial class MainWindow : Window
 
 		// Retrieve the window handle (HWND) of the main WinUI 3 window and store it in the global vars
 		GlobalVars.hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+
+		// Set the window display affinity upon window creation to exclude it from capture if ScreenShield is enabled, otherwise set it to 
+		WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
 
 		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
 		// Make title bar Mica
@@ -142,6 +144,166 @@ internal sealed partial class MainWindow : Window
 
 		// Set the initial Icons styles abased on the user's settings
 		ViewModel.OnIconsStylesChanged(App.Settings.IconsStyle);
+	}
+
+	/// <summary>
+	/// a method to manually refresh localized text for all UI elements in the MainWindow.
+	/// All of the elements in the window's XAML that use x:UID must have an x:Name to be easily referenced in this method.
+	/// </summary>
+	internal void RefreshLocalizedContent()
+	{
+		try
+		{
+			// Create a new Resource Loader after changing the language of the app
+			Microsoft.Windows.ApplicationModel.Resources.ResourceLoader resourceLoader = new();
+
+			// Assign it to the Rizz in GlobalVars so any subsequent calls to it will receive the new strings
+			GlobalVars.Rizz = resourceLoader;
+
+			// Rebuild the dictionaries related to UI elements
+			// Anything else that will be added in the future that will store texts related to UI elements on the Window itself from the resw file will have to be updated as well.
+			ViewModel.RebuildBreadcrumbMappings();
+			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
+			CustomUIElements.CustomPatternBasedFilePath.PopulateFilePathPatternExamplesCollection();
+
+			TitleBarSearchBox.PlaceholderText = GlobalVars.Rizz.GetString("MainSearchAutoSuggestBox/PlaceholderText");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(TitleBarSearchBox, GlobalVars.Rizz.GetString("MainSearchAutoSuggestBox/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(TitleBarSearchBox, GlobalVars.Rizz.GetString("MainSearchAutoSuggestBox/ToolTipService/ToolTip"));
+
+			CreationNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("CreationNavigationViewItemHeader/Content");
+
+			CreatePolicyNavItem.Content = GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(CreatePolicyNavItem, GlobalVars.Rizz.GetString("CreatePolicyNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(CreatePolicyNavItem, GlobalVars.Rizz.GetString("CreatePolicyNavItem/ToolTipService/ToolTip"));
+
+			CreateSupplementalPolicyNavItem.Content = GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(CreateSupplementalPolicyNavItem, GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(CreateSupplementalPolicyNavItem, GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/ToolTipService/ToolTip"));
+
+			CreateDenyPolicyNavItem.Content = GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(CreateDenyPolicyNavItem, GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(CreateDenyPolicyNavItem, GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/ToolTipService/ToolTip"));
+
+			CertificatesNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("CertificatesNavigationViewItemHeader/Content");
+
+			BuildNewCertificateNavItem.Content = GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(BuildNewCertificateNavItem, GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(BuildNewCertificateNavItem, GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/ToolTipService/ToolTip"));
+
+			ViewFileCertificatesNavItem.Content = GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(ViewFileCertificatesNavItem, GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(ViewFileCertificatesNavItem, GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/ToolTipService/ToolTip"));
+
+			LogsProcessingNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("LogsProcessingNavigationViewItemHeader/Content");
+
+			CreatePolicyFromEventLogsNavItem.Content = GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(CreatePolicyFromEventLogsNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(CreatePolicyFromEventLogsNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/ToolTipService/ToolTip"));
+
+			CreatePolicyFromMDEAHNavItem.Content = GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(CreatePolicyFromMDEAHNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(CreatePolicyFromMDEAHNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/ToolTipService/ToolTip"));
+
+			TacticalNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("TacticalNavigationViewItemHeader/Content");
+
+			AllowNewAppsNavItem.Content = GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(AllowNewAppsNavItem, GlobalVars.Rizz.GetString("AllowNewAppsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(AllowNewAppsNavItem, GlobalVars.Rizz.GetString("AllowNewAppsNavItem/ToolTipService/ToolTip"));
+
+			PolicyEditorNavItem.Content = GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content");
+
+			SimulationNavItem.Content = GlobalVars.Rizz.GetString("SimulationNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(SimulationNavItem, GlobalVars.Rizz.GetString("SimulationNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(SimulationNavItem, GlobalVars.Rizz.GetString("SimulationNavItem/ToolTipService/ToolTip"));
+
+			InfoGatheringNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("InfoGatheringNavigationViewItemHeader/Content");
+
+			SystemInformationNavItem.Content = GlobalVars.Rizz.GetString("SystemInformationNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(SystemInformationNavItem, GlobalVars.Rizz.GetString("SystemInformationNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(SystemInformationNavItem, GlobalVars.Rizz.GetString("SystemInformationNavItem/ToolTipService/ToolTip"));
+
+			GetCodeIntegrityHashesNavItem.Content = GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(GetCodeIntegrityHashesNavItem, GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(GetCodeIntegrityHashesNavItem, GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/ToolTipService/ToolTip"));
+
+			GetSecurePolicySettingsNavItem.Content = GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(GetSecurePolicySettingsNavItem, GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(GetSecurePolicySettingsNavItem, GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/ToolTipService/ToolTip"));
+
+			PolicyManagementNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("PolicyManagementNavigationViewItemHeader/Content");
+
+			ConfigurePolicyRuleOptionsNavItem.Content = GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(ConfigurePolicyRuleOptionsNavItem, GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(ConfigurePolicyRuleOptionsNavItem, GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/ToolTipService/ToolTip"));
+
+			MergePoliciesNavItem.Content = GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(MergePoliciesNavItem, GlobalVars.Rizz.GetString("MergePoliciesNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(MergePoliciesNavItem, GlobalVars.Rizz.GetString("MergePoliciesNavItem/ToolTipService/ToolTip"));
+
+			DeploymentNavItem.Content = GlobalVars.Rizz.GetString("DeploymentNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(DeploymentNavItem, GlobalVars.Rizz.GetString("DeploymentNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(DeploymentNavItem, GlobalVars.Rizz.GetString("DeploymentNavItem/ToolTipService/ToolTip"));
+
+			ValidatePoliciesNavItem.Content = GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(ValidatePoliciesNavItem, GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(ValidatePoliciesNavItem, GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/ToolTipService/ToolTip"));
+
+			DocumentationNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("DocumentationNavigationViewItemHeader/Content");
+
+			GitHubDocsNavItem.Content = GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(GitHubDocsNavItem, GlobalVars.Rizz.GetString("GitHubDocsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(GitHubDocsNavItem, GlobalVars.Rizz.GetString("GitHubDocsNavItem/ToolTipService/ToolTip"));
+
+			MSFTDocsNavItem.Content = GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(MSFTDocsNavItem, GlobalVars.Rizz.GetString("MSFTDocsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(MSFTDocsNavItem, GlobalVars.Rizz.GetString("MSFTDocsNavItem/ToolTipService/ToolTip"));
+
+			LogsNavItem.Content = GlobalVars.Rizz.GetString("LogsNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(LogsNavItem, GlobalVars.Rizz.GetString("LogsNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(LogsNavItem, GlobalVars.Rizz.GetString("LogsNavItem/ToolTipService/ToolTip"));
+
+			UpdateNavItem.Content = GlobalVars.Rizz.GetString("UpdateNavItem/Content");
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(UpdateNavItem, GlobalVars.Rizz.GetString("UpdateNavItem/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(UpdateNavItem, GlobalVars.Rizz.GetString("UpdateNavItem/ToolTipService/ToolTip"));
+
+			SidebarTextBlock.Text = GlobalVars.Rizz.GetString("SidebarTextBlock/Text");
+
+			SidebarMainCaptionTextBlock.Text = GlobalVars.Rizz.GetString("SidebarMainCaptionTextBlock/Text");
+
+			SidebarPinnedPolicyPathTextBlock.Text = GlobalVars.Rizz.GetString("SidebarPinnedPolicyPathTextBlock/Text");
+
+			SidebarPolicyPathPlaceHolder.PlaceholderText = GlobalVars.Rizz.GetString("SidebarPolicyPathPlaceHolder/PlaceholderText");
+
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(SidebarBrowseButton, GlobalVars.Rizz.GetString("SidebarBrowseButton/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(SidebarBrowseButton, GlobalVars.Rizz.GetString("SidebarBrowseButton/ToolTipService/ToolTip"));
+
+			BrowseTextBlock.Text = GlobalVars.Rizz.GetString("BrowseTextBlock/Text");
+
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(SidebarClearButton, GlobalVars.Rizz.GetString("SidebarClearButton/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(SidebarClearButton, GlobalVars.Rizz.GetString("SidebarClearButton/ToolTipService/ToolTip"));
+
+			ClearTextBlock.Text = GlobalVars.Rizz.GetString("ClearTextBlock/Text");
+
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(SidebarPolicySelectAssignmentButton, GlobalVars.Rizz.GetString("SidebarPolicySelectAssignmentButton/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(SidebarPolicySelectAssignmentButton, GlobalVars.Rizz.GetString("SidebarPolicySelectAssignmentButton/ToolTipService/ToolTip"));
+
+			SelectTextBlock.Text = GlobalVars.Rizz.GetString("SelectTextBlock/Text");
+
+			SidebarAutomaticAssignmentSettingsCard.Header = GlobalVars.Rizz.GetString("SidebarAutomaticAssignmentSettingsCard/Header");
+
+			SidebarGuideHyperlinkButton.Content = GlobalVars.Rizz.GetString("SidebarGuideHyperlinkButton/Content");
+
+			OpenConfigDirectoryButtonText.Text = GlobalVars.Rizz.GetString("OpenConfigDirectoryButtonText/Text");
+
+			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(OpenConfigDirectoryButton, GlobalVars.Rizz.GetString("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
+			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(OpenConfigDirectoryButton, GlobalVars.Rizz.GetString("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
+
+			Logger.Write("MainWindow localized text refreshed successfully");
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Error refreshing localized text: {ex.Message}");
+		}
 	}
 
 	/// <summary>

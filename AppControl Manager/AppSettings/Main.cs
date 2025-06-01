@@ -17,6 +17,7 @@
 
 using System;
 using System.Threading;
+using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
@@ -60,6 +61,7 @@ internal sealed partial class Main : ViewModelBase
 		CiPolicySchemaPath = ReadValue(nameof(CiPolicySchemaPath), CiPolicySchemaPath);
 		LaunchActivationFilePath = ReadValue(nameof(LaunchActivationFilePath), LaunchActivationFilePath);
 		LaunchActivationAction = ReadValue(nameof(LaunchActivationAction), LaunchActivationAction);
+		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
 	}
 
 	/// <summary>
@@ -583,4 +585,30 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = string.Empty;
 
+
+	/// <summary>
+	/// Prevent screen recorders and other apps from recording or taking screenshot of the app's window.
+	/// </summary>
+	internal bool ScreenShield
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return field;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (SP(ref field, value))
+				{
+					WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, field ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
+
+					SaveValue(nameof(ScreenShield), field);
+				}
+			}
+		}
+	}
 }

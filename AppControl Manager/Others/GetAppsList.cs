@@ -69,6 +69,12 @@ internal static class GetAppsList
 						packageFamilyNameActual: item.Id.FamilyName
 						));
 				}
+				catch (System.Runtime.InteropServices.COMException)
+				{ /*
+				     Do nothing.
+				     It's thrown here: string? logoStr = item.Logo?.ToString();				                                                       
+				  */
+				}
 				catch (Exception ex)
 				{
 					try

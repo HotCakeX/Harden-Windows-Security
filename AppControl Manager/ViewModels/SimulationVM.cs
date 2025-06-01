@@ -16,12 +16,15 @@
 //
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.Main;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
@@ -40,18 +43,47 @@ internal sealed partial class SimulationVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		ProgressRingValueProgress = new Progress<double>(p => ProgressRingValue = p);
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
 
 	internal readonly ObservableCollection<SimulationOutput> SimulationOutputs = [];
 
-	// Store all outputs for searching
+	/// <summary>
+	/// Store all outputs for searching
+	/// </summary>
 	internal readonly List<SimulationOutput> AllSimulationOutputs = [];
 
+	/// <summary>
+	/// For selected file paths
+	/// </summary>
+	internal UniqueStringObservableCollection FilePaths = [];
 
-	#region UI-Bound Properties
+	/// <summary>
+	/// For selected folder paths
+	/// </summary>
+	internal readonly UniqueStringObservableCollection FolderPaths = [];
 
+	/// <summary>
+	/// For selected XML file path
+	/// </summary>
+	internal string? XmlFilePath { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// For selected Cat Root paths
+	/// </summary>
+	internal List<string> CatRootPaths = [];
+
+	/// <summary>
+	/// The total count of the Simulation results.
+	/// </summary>
+	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = "0";
+
+	/// <summary>
+	/// The text entered in the Text box for search.
+	/// </summary>
 	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
@@ -59,8 +91,42 @@ internal sealed partial class SimulationVM : ViewModelBase
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	#endregion
+	/// <summary>
+	/// Determines whether the UI elements are enabled or disabled.
+	/// </summary>
+	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
+	// a Progress<double> so Report() callbacks run on the UI thread
+	internal IProgress<double> ProgressRingValueProgress;
+
+	/// <summary>
+	/// Value of the UI Progress Ring.
+	/// </summary>
+	internal double ProgressRingValue { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// The value of the Radial Gauge for scalability.
+	/// </summary>
+	internal double ScalabilityRadialGaugeValue
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ScalabilityButtonContent = GlobalVars.Rizz.GetString("Scalability") + field;
+			}
+		}
+	} = 2;
+
+	/// <summary>
+	/// The content of the button that has the RadialGauge inside it.
+	/// </summary>
+	internal string ScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("Scalability") + "2";
+
+	/// <summary>
+	/// Whether the Simulation should scan and take into account the security catalogs.
+	/// </summary>
+	internal bool NoCatRootScanning { get; set => SP(ref field, value); } = true;
 
 	#region LISTVIEW IMPLEMENTATIONS
 
@@ -167,7 +233,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 			savedHorizontal = Sv.HorizontalOffset;
 		}
 
-
 		// Perform a case-insensitive search in all relevant fields
 		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
 			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -185,7 +250,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 		{
 			SimulationOutputs.Add(item);
 		}
-
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -318,7 +382,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 				SimulationOutputs.Add(item);
 			}
 
-
 			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
@@ -424,6 +487,264 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		// Wrap the value in double quotes.
 		return $"\"{safeValue}\"";
+	}
+
+	/// <summary>
+	/// Converts the properties of a SimulationOutput row into a labeled, formatted string for copying to clipboard.
+	/// </summary>
+	/// <param name="row">The selected SimulationOutput row from the ListView.</param>
+	/// <returns>A formatted string of the row's properties with labels.</returns>
+	private static string ConvertRowToText(SimulationOutput row)
+	{
+		// Use StringBuilder to format each property with its label for easy reading
+		return new StringBuilder()
+			.AppendLine($"Path: {row.Path}")
+			.AppendLine($"Source: {row.Source}")
+			.AppendLine($"Is Authorized: {row.IsAuthorized}")
+			.AppendLine($"Match Criteria: {row.MatchCriteria}")
+			.AppendLine($"Specific File Name Criteria: {row.SpecificFileNameLevelMatchCriteria}")
+			.AppendLine($"Signer ID: {row.SignerID}")
+			.AppendLine($"Signer Name: {row.SignerName}")
+			.AppendLine($"Signer Cert Root: {row.SignerCertRoot}")
+			.AppendLine($"Signer Cert Publisher: {row.SignerCertPublisher}")
+			.AppendLine($"Signer Scope: {row.SignerScope}")
+			.AppendLine($"Cert Subject CN: {row.CertSubjectCN}")
+			.AppendLine($"Cert Issuer CN: {row.CertIssuerCN}")
+			.AppendLine($"Cert Not After: {row.CertNotAfter}")
+			.AppendLine($"Cert TBS Value: {row.CertTBSValue}")
+			.AppendLine($"File Path: {row.FilePath}")
+			.ToString();
+	}
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	internal void ListViewFlyoutMenuCopy_Click()
+	{
+
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
+		if (lv is null) return;
+
+		// Check if there are selected items in the ListView
+		if (lv.SelectedItems.Count > 0)
+		{
+			// Initialize StringBuilder to store all selected rows' data with labels
+			StringBuilder dataBuilder = new();
+
+			// Loop through each selected item in the ListView
+			foreach (var selectedItem in lv.SelectedItems)
+			{
+				if (selectedItem is SimulationOutput obj)
+
+					// Append each row's formatted data to the StringBuilder
+					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
+
+				// Add a separator between rows for readability in multi-row copies
+				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
+			}
+
+			ClipboardManagement.CopyText(dataBuilder.ToString());
+		}
+	}
+
+	// Click event handlers for each property
+	internal void CopyPath_Click() => CopyToClipboard((item) => item.Path);
+	internal void CopySource_Click() => CopyToClipboard((item) => item.Source);
+	internal void CopyIsAuthorized_Click() => CopyToClipboard((item) => item.IsAuthorized.ToString());
+	internal void CopyMatchCriteria_Click() => CopyToClipboard((item) => item.MatchCriteria);
+	internal void CopySpecificFileNameLevelMatch_Click() => CopyToClipboard((item) => item.SpecificFileNameLevelMatchCriteria);
+	internal void CopySignerID_Click() => CopyToClipboard((item) => item.SignerID);
+	internal void CopySignerName_Click() => CopyToClipboard((item) => item.SignerName);
+	internal void CopySignerCertRoot_Click() => CopyToClipboard((item) => item.SignerCertRoot);
+	internal void CopySignerCertPublisher_Click() => CopyToClipboard((item) => item.SignerCertPublisher);
+	internal void CopySignerScope_Click() => CopyToClipboard((item) => item.SignerScope);
+	internal void CopyCertSubjectCN_Click() => CopyToClipboard((item) => item.CertSubjectCN);
+	internal void CopyCertIssuerCN_Click() => CopyToClipboard((item) => item.CertIssuerCN);
+	internal void CopyCertNotAfter_Click() => CopyToClipboard((item) => item.CertNotAfter);
+	internal void CopyCertTBSValue_Click() => CopyToClipboard((item) => item.CertTBSValue);
+	internal void CopyFilePath_Click() => CopyToClipboard((item) => item.FilePath);
+
+	/// <summary>
+	/// Helper method to copy a specified property to clipboard without reflection
+	/// </summary>
+	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
+	private void CopyToClipboard(Func<SimulationOutput, string?> getProperty)
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
+		if (lv is null) return;
+
+		if (lv.SelectedItem is SimulationOutput selectedItem)
+		{
+			string? propertyValue = getProperty(selectedItem);
+			if (propertyValue is not null)
+			{
+				ClipboardManagement.CopyText(propertyValue);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the Begin Simulation button
+	/// </summary>
+	internal async void BeginSimulationButton_Click()
+	{
+		if (XmlFilePath is null || !File.Exists(XmlFilePath))
+		{
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectExistingXmlPolicyFileMessage"));
+			return;
+		}
+
+		bool error = false;
+
+		try
+		{
+			AreElementsEnabled = false;
+
+			MainInfoBarIsClosable = false;
+
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("PerformingSimulationMessage"));
+
+			// Run the simulation
+			ConcurrentDictionary<string, SimulationOutput> result = await Task.Run(() =>
+			{
+				return AppControlSimulation.Invoke(
+					FilePaths.UniqueItems,
+					FolderPaths.UniqueItems,
+					XmlFilePath,
+					NoCatRootScanning,
+					CatRootPaths,
+					(ushort)ScalabilityRadialGaugeValue,
+					ProgressRingValueProgress
+				);
+			});
+
+			// Clear the current ObservableCollection and backup the full data set
+			SimulationOutputs.Clear();
+			AllSimulationOutputs.Clear();
+
+			// Update the TextBox with the total count of files
+			TotalCountOfTheFilesTextBox = result.Count.ToString(CultureInfo.InvariantCulture);
+
+			AllSimulationOutputs.AddRange(result.Values);
+
+			// Add to the ObservableCollection bound to the UI
+			foreach (KeyValuePair<string, SimulationOutput> entry in result)
+			{
+				// Add a reference to the ViewModel class so we can use it for navigation in the XAML
+				entry.Value.ParentViewModelSimulationVM = this;
+				SimulationOutputs.Add(entry.Value);
+			}
+
+			CalculateColumnWidths();
+		}
+		catch (NoValidFilesSelectedException ex)
+		{
+			error = true;
+			MainInfoBar.WriteWarning(ex.Message);
+
+			return;
+		}
+		catch (Exception ex)
+		{
+			error = true;
+			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorDuringSimulationMessage"));
+		}
+		finally
+		{
+			if (!error)
+			{
+				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SimulationCompletedSuccessfullyMessage"));
+			}
+
+			AreElementsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the Select XML File button
+	/// </summary>
+	internal void SelectXmlFileButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			XmlFilePath = selectedFile;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the Select Files button
+	/// </summary>
+	internal void SelectFilesButton_Click()
+	{
+		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+
+		if (selectedFiles is { Count: > 0 })
+		{
+			foreach (string item in selectedFiles)
+			{
+				FilePaths.Add(item);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the Select Folders button
+	/// </summary>
+	internal void SelectFoldersButton_Click()
+	{
+		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+
+		if (selectedFolders is { Count: > 0 })
+		{
+			foreach (string folder in selectedFolders)
+			{
+				FolderPaths.Add(folder);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the Cat Root Paths button
+	/// </summary>
+	internal void CatRootPathsButton_Click()
+	{
+		List<string>? selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+
+		if (selectedCatRoots is { Count: > 0 })
+		{
+			CatRootPaths = selectedCatRoots;
+		}
+	}
+
+	// Event handler for the Clear Data button
+	internal void ClearDataButton_Click()
+	{
+		// Clear the ObservableCollection
+		SimulationOutputs.Clear();
+		// Clear the full data
+		AllSimulationOutputs.Clear();
+
+		// set the total count to 0 after clearing all the data
+		TotalCountOfTheFilesTextBox = "0";
+	}
+
+	internal void SelectXmlFileButton_Flyout_Clear_Click()
+	{
+		XmlFilePath = null;
+	}
+
+	internal void SelectFilesButton_Flyout_Clear_Click()
+	{
+		FilePaths.Clear();
+	}
+
+	internal void SelectFoldersButton_Flyout_Clear_Click()
+	{
+		FolderPaths.Clear();
 	}
 
 }

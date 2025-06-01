@@ -403,6 +403,13 @@ function Build_ACM {
         }
     }
 
+    # Remove any possible existing directories 
+    Remove-Item -Path .\MSIXOutputX64 -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path .\MSIXOutputARM64 -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path .\MSIXBundleOutput -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path .\bin -Recurse -Force -ErrorAction Ignore
+    Remove-Item -Path .\obj -Recurse -Force -ErrorAction Ignore
+
     if ($UpdateWorkLoads) {
         # Update the workloads
         dotnet workload update
@@ -514,6 +521,8 @@ function Build_ACM {
     [string]$Current_Location = (Get-Location).Path
 
     Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
+
+    cargo clean
 
     cargo build_x64
 

@@ -590,4 +590,29 @@ internal static partial class NativeMethods
 	#endregion
 
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowdisplayaffinity
+	/// </summary>
+	/// <param name="hWnd"></param>
+	/// <param name="dwAffinity"></param>
+	/// <returns></returns>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
+
+
+	/// <summary>
+	/// Import GetLastError to get detailed error information
+	/// </summary>
+	/// <returns></returns>
+	[LibraryImport("kernel32.dll")]
+	internal static partial uint GetLastError();
+
+
+	// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowplacement
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetWindowPlacement(IntPtr hWnd, ref Others.Win32InteropInternal.WINDOWPLACEMENT lpwndpl);
+
 }

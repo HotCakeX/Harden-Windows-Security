@@ -28,7 +28,6 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using AppControlManager.XMLOps;
-using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.Main;
 
@@ -70,19 +69,19 @@ internal static class AppControlSimulation
 	/// <param name="noCatalogScanning"></param>
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
-	/// <param name="UIProgressRing"></param>
+	/// <param name="progressReporter"></param>
 	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static ConcurrentDictionary<string, SimulationOutput> Invoke(
-		List<string>? filePaths,
-		List<string>? folderPaths,
+		IReadOnlyCollection<string>? filePaths,
+		IReadOnlyCollection<string>? folderPaths,
 		string xmlFilePath,
 		bool noCatalogScanning,
 		List<string>? catRootPath,
 		ushort threadsCount = 2,
-		ProgressRing? UIProgressRing = null)
+		IProgress<double>? progressReporter = null)
 	{
 
 		// Ensure threadsCount is at least 1
@@ -188,24 +187,28 @@ internal static class AppControlSimulation
 		#endregion
 
 
-		// Create a timer to update the progress bar every 2 seconds.
+		// Create a timer to update the progress ring every 2 seconds.
 		Timer? progressTimer = null;
 
-		if (UIProgressRing is not null)
+		if (progressReporter is not null)
 		{
 			progressTimer = new(state =>
-			   {
-				   // Read the current value in a thread-safe manner.
-				   int current = Volatile.Read(ref processedFilesCount);
+			{
+				// Read the current value in a thread-safe manner.
+				int current = Volatile.Read(ref processedFilesCount);
 
-				   // Calculate the percentage complete
-				   int currentPercentage = (int)(current / AllFilesCount * 100);
+				// Calculate the percentage complete
+				int currentPercentage = (int)(current / AllFilesCount * 100);
 
-				   _ = UIProgressRing.DispatcherQueue.TryEnqueue(() =>
-				   {
-					   UIProgressRing.Value = Math.Min(currentPercentage, 100);
-				   });
-			   }, null, 0, 2000);
+				// Cap the percentage at 100
+				int percentageToUse = Math.Min(currentPercentage, 100);
+
+				progressReporter.Report(percentageToUse);
+
+				// Update the taskbar progress
+				Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
+
+			}, null, 0, 2000);
 		}
 
 		try
@@ -507,17 +510,16 @@ internal static class AppControlSimulation
 			// The method is already being called in an async/await fashion
 			Task.WaitAll([.. tasks]);
 
-			// Dispose the timer and update the progress bar to 100%
-			if (UIProgressRing is not null)
-			{
-				_ = UIProgressRing.DispatcherQueue.TryEnqueue(() => UIProgressRing.Value = 100);
-			}
+			// update the progress ring to 100%
+			progressReporter?.Report(100);
 
 		}
 		finally
 		{   // Dispose of the timer
 			progressTimer?.Dispose();
 
+			// Clear the taskbar progress
+			Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
 			Taskbar.Badge.ClearBadge();
 		}
 

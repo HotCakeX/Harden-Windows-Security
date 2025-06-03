@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -32,13 +33,19 @@
 
                 <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
 
-                    <Button x:Uid="RetrieveSecureSettingsButton" Click="{x:Bind InvokeButton_Click}" Margin="0,12,5,0"
+                    <Button x:Uid="RetrieveSecureSettingsButton" Click="{x:Bind ViewModel.InvokeButton_Click}" Margin="0,12,5,0"
                             HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}"/>
 
                     <!-- Input Fields -->
-                    <TextBox x:Name="ProviderTextBox" x:Uid="SecureSettingProviderTextBox" MinWidth="200"/>
-                    <TextBox x:Name="KeyTextBox" x:Uid="SecureSettingKeyTextBox" MinWidth="200"/>
-                    <TextBox x:Name="ValueNameTextBox" x:Uid="SecureSettingValueNameTextBox" MinWidth="200"/>
+                    <TextBox Text="{x:Bind ViewModel.Provider, Mode=TwoWay}"
+                             x:Uid="SecureSettingProviderTextBox"
+                             MinWidth="200"/>
+                    <TextBox Text="{x:Bind ViewModel.Key, Mode=TwoWay}"
+                             x:Uid="SecureSettingKeyTextBox"
+                             MinWidth="200"/>
+                    <TextBox Text="{x:Bind ViewModel.ValueName, Mode=TwoWay}"
+                             x:Uid="SecureSettingValueNameTextBox"
+                             MinWidth="200"/>
 
                 </controls:WrapPanel>
 
@@ -48,15 +55,20 @@
 
                 <!-- Result Fields -->
                 <TextBlock x:Uid="SecureSettingResultsTextBlock" FontWeight="Bold" />
-                <TextBox x:Name="ValueTextBox" IsReadOnly="True" Header="Value" MinWidth="200" />
-                <TextBox x:Name="ValueTypeTextBox" IsReadOnly="True" Header="Value Type" MinWidth="200"/>
-                <TextBox x:Name="ValueSizeTextBox" IsReadOnly="True" Header="Value Size" MinWidth="200"/>
-                <TextBox x:Name="StatusTextBox" IsReadOnly="True" Header="Status" MinWidth="200"/>
-                <TextBox x:Name="StatusCodeTextBox" IsReadOnly="True" Header="Status Code" MinWidth="200"/>
+                <TextBox Text="{x:Bind ViewModel.Value, Mode=OneWay}" IsReadOnly="True" Header="Value" MinWidth="200" />
+                <TextBox Text="{x:Bind ViewModel.ValueType, Mode=OneWay}" IsReadOnly="True" Header="Value Type" MinWidth="200"/>
+                <TextBox Text="{x:Bind ViewModel.ValueSize, Mode=OneWay}" IsReadOnly="True" Header="Value Size" MinWidth="200"/>
+                <TextBox Text="{x:Bind ViewModel.Status, Mode=OneWay}" IsReadOnly="True" Header="Status" MinWidth="200"/>
+                <TextBox Text="{x:Bind ViewModel.StatusCode, Mode=OneWay}" IsReadOnly="True" Header="Status Code" MinWidth="200"/>
 
             </controls:WrapPanel>
 
-            <InfoBar x:Name="InfoBar" IsOpen="False" Margin="0,20,0,0" Grid.Row="3"/>
+            <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
+                                Margin="0,20,0,0"
+                                Grid.Row="3"/>
 
         </Grid>
     </ScrollViewer>

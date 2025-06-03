@@ -24,6 +24,7 @@ using AppControlManager.AppSettings;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.WindowComponents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
@@ -32,6 +33,8 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
+
+	private NavigationService nav { get; } = App.AppHost.Services.GetRequiredService<NavigationService>();
 
 	internal SettingsVM()
 	{
@@ -140,8 +143,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ 7, "ml" }
 	};
 
-	internal bool LanguageSectionSettingsExpanderInfoBarIsOpen { get; set => SP(ref field, value); }
-
 	internal int LanguageComboBoxSelectedIndex
 	{
 		get; set
@@ -152,7 +153,15 @@ internal sealed partial class SettingsVM : ViewModelBase
 				{
 					ApplicationLanguages.PrimaryLanguageOverride = x;
 					App.Settings.ApplicationGlobalLanguage = x;
-					LanguageSectionSettingsExpanderInfoBarIsOpen = true;
+
+					// Refresh this page.
+					nav.RefreshSettingsPage();
+
+					// Get reference to the MainWindow and refresh the localized content
+					if (App.MainWindow is MainWindow mainWindow)
+					{
+						mainWindow.RefreshLocalizedContent();
+					}
 				}
 				else
 				{

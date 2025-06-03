@@ -79,15 +79,64 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		CertificateCommonName = currentUserConfigs.CertificateCommonName;
 		SignToolPath = currentUserConfigs.SignToolCustomPath;
 
-
 		// Set the focus on the Verify button when the Content Dialog opens
-		// And highlight it
-		VerifyButton.Loaded += async (sender, e) =>
-		{
-			_ = await FocusManager.TryFocusAsync(VerifyButton, FocusState.Keyboard);
-		};
+		VerifyButton.Loaded += VerifyButton_Loaded;
 	}
 
+	/// <summary>
+	/// Event handler for when the Verify button is loaded
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void VerifyButton_Loaded(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			// Ensure we're on the UI thread
+			if (this.DispatcherQueue is not null)
+			{
+				// Use DispatcherQueue to ensure we're on the UI thread
+				this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+				{
+					try
+					{
+						// Small delay to ensure the button is fully loaded and ready
+						await Task.Delay(50);
+
+						// Attempt to set focus
+						FocusMovementResult focusResult = await FocusManager.TryFocusAsync(VerifyButton, FocusState.Keyboard);
+
+						// If focus setting failed, try again with a different focus state
+						if (!focusResult.Succeeded)
+						{
+							await Task.Delay(100);
+							_ = FocusManager.TryFocusAsync(VerifyButton, FocusState.Programmatic).GetAwaiter().GetResult();
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Write($"Failed to set focus on VerifyButton: {ex.Message}");
+					}
+				});
+			}
+			else
+			{
+				// Fallback: try setting focus directly without async
+				try
+				{
+					_ = FocusManager.TryFocusAsync(VerifyButton, FocusState.Keyboard);
+				}
+				catch (Exception ex)
+				{
+					Logger.Write($"Failed to set focus on VerifyButton (fallback): {ex.Message}");
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Exception in VerifyButton_Loaded: {ex.Message}");
+		}
+	}
 
 	/// <summary>
 	/// Event handler for AutoSuggestBox
@@ -108,7 +157,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		}
 	}
 
-
 	/// <summary>
 	/// Start suggesting when tap or mouse click happens
 	/// </summary>
@@ -120,18 +168,24 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		((AutoSuggestBox)sender).ItemsSource = CertCommonNames;
 	}
 
-
 	/// <summary>
 	/// Get all of the common names of the certificates in the user/my certificate store over time
 	/// </summary>
 	private async void FetchLatestCertificateCNs()
 	{
-		await Task.Run(() =>
+		try
 		{
-			CertCommonNames = CertCNFetcher.GetCertCNs();
-		});
+			await Task.Run(() =>
+			{
+				CertCommonNames = CertCNFetcher.GetCertCNs();
+			});
+		}
+		catch (Exception ex)
+		{
+			ShowTeachingTip(ex.Message);
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
 	}
-
 
 	/// <summary>
 	/// Event handler for the button that navigates to the Settings page
@@ -143,7 +197,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 		App._nav.Navigate(typeof(Pages.Settings), null);
 	}
-
 
 	/// <summary>
 	/// Event handler for the primary button click
@@ -159,7 +212,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		SignToolPath = SignToolPathTextBox.Text;
 		XMLPolicyPath = XMLPolicyFileTextBox.Text;
 	}
-
 
 	/// <summary>
 	/// Event handler for the toggle switch to automatically download SignTool.exe from the Microsoft servers
@@ -178,7 +230,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		}
 	}
 
-
 	/// <summary>
 	/// Disables the input UI elements
 	/// </summary>
@@ -192,7 +243,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		CertFilePathTextBox.IsEnabled = false;
 		XMLPolicyFileBrowseButton.IsEnabled = false;
 	}
-
 
 	/// <summary>
 	/// Enables the input UI elements
@@ -208,7 +258,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		XMLPolicyFileBrowseButton.IsEnabled = true;
 	}
 
-
 	/// <summary>
 	/// To show the Teaching Tip for the Verify button
 	/// </summary>
@@ -219,7 +268,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 		VerifyButtonTeachingTip.Subtitle = message;
 	}
-
 
 	/// <summary>
 	/// Event handler for the Verify button
@@ -424,9 +472,58 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			Button? primaryButton = this.GetTemplateChild("PrimaryButton") as Button;
 			if (primaryButton is not null)
 			{
-				// Set focus on the primary button
-				_ = await FocusManager.TryFocusAsync(primaryButton, FocusState.Keyboard);
+				try
+				{
+					// Ensure we're on the UI thread
+					if (this.DispatcherQueue is not null)
+					{
+						// Use DispatcherQueue to ensure we're on the UI thread
+						this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+						{
+							try
+							{
+								// Small delay to ensure the button is fully loaded and ready
+								await Task.Delay(50);
+
+								// Attempt to set focus on the primary button
+								FocusMovementResult focusResult = await FocusManager.TryFocusAsync(primaryButton, FocusState.Keyboard);
+
+								// If focus setting failed, try again with a different focus state
+								if (!focusResult.Succeeded)
+								{
+									await Task.Delay(100);
+									_ = FocusManager.TryFocusAsync(primaryButton, FocusState.Programmatic).GetAwaiter().GetResult();
+								}
+							}
+							catch (Exception ex)
+							{
+								Logger.Write($"Failed to set focus on PrimaryButton: {ex.Message}");
+							}
+						});
+					}
+					else
+					{
+						// Fallback: try setting focus directly without async
+						try
+						{
+							_ = FocusManager.TryFocusAsync(primaryButton, FocusState.Keyboard);
+						}
+						catch (Exception ex)
+						{
+							Logger.Write($"Failed to set focus on PrimaryButton (fallback): {ex.Message}");
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Write($"Exception in setting focus on PrimaryButton: {ex.Message}");
+				}
 			}
+		}
+		catch (Exception ex)
+		{
+			ShowTeachingTip(ex.Message);
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 		finally
 		{
@@ -446,7 +543,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for SignTool.exe browse button
 	/// </summary>
@@ -460,7 +556,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			SignToolPathTextBox.Text = selectedFiles;
 		}
 	}
-
 
 	/// <summary>
 	/// Event handler for browse for certificate .cer file button
@@ -476,7 +571,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the XML policy file browse button
 	/// </summary>
@@ -490,5 +584,4 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			XMLPolicyFileTextBox.Text = selectedFiles;
 		}
 	}
-
 }

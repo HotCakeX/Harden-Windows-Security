@@ -30,23 +30,27 @@
 
             </controls:WrapPanel>
 
-            <InfoBar Grid.Row="1"
-                Margin="10,0,10,15"
-                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+            <customUI:InfoBarV2 Grid.Row="1"
+                                Margin="10,0,10,5"
+                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-            <customUI:ButtonV2 Grid.Row="2" Margin="0,0,0,20" x:Name="PickPolicyFileButton" Click="{x:Bind PickPolicyFileButton_Click}"
-                     HorizontalAlignment="Center"
-                     x:Uid="PickPolicyFileButton">
+            <customUI:ButtonV2 Grid.Row="2"
+                               Margin="0,0,0,20"
+                               x:Name="PickPolicyFileButton"
+                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                               Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"
+                               HorizontalAlignment="Center"
+                               x:Uid="PickPolicyFileButton">
 
                 <customUI:ButtonV2.Flyout>
                     <Flyout x:Name="PickPolicyFileButton_FlyOut">
 
                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                            <Button x:Uid="ClearButton" Click="{x:Bind PickPolicyFileButton_FlyOut_Clear_Click}" />
+                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PickPolicyFileButton_FlyOut_Clear_Click}" />
 
                             <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
 
@@ -82,32 +86,204 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsExpander x:Name="PolicyRuleExpander"
-                           x:Uid="PolicyRuleExpander"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+                <controls:SettingsExpander x:Uid="PolicyRuleExpander"
+                                           IsExpanded="{x:Bind ViewModel.SettingsExpanderIsExpanded, Mode=TwoWay}"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
-                        <Button x:Name="ApplyTheChangesButton" x:Uid="ApplyThePolicyRuleOptionsChangesButton" Click="{x:Bind ApplyTheChangesButton_Click}"
-                            Style="{StaticResource AccentButtonStyle}" />
+                        <Button x:Uid="ApplyThePolicyRuleOptionsChangesButton"
+                                Click="{x:Bind ViewModel.ApplyTheChangesButton_Click}"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                Style="{StaticResource AccentButtonStyle}" />
 
-                        <ToggleButton x:Name="DeployAfterApplyingToggleButton" x:Uid="DeployAfterApplyingRuleOptionsToggleButton" IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" />
+                        <ToggleButton x:Uid="DeployAfterApplyingRuleOptionsToggleButton"
+                                      IsChecked="{x:Bind ViewModel.DeployAfterApplyingToggleButton, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" />
 
-                        <Button x:Name="RefreshRuleOptionsState" x:Uid="RefreshRuleOptionsStateButton" Click="{x:Bind RefreshRuleOptionsState_Click}"/>
+                        <Button x:Uid="RefreshRuleOptionsStateButton"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.RefreshRuleOptionsState_Click}"/>
 
-                        <TeachingTip x:Name="MainTeachingTip" Target="{x:Bind PolicyRuleExpander}" Title="Error"/>
                     </controls:WrapPanel>
+
+                    <controls:SettingsExpander.Items>
+                        <customUI:SettingsCardV2 Header="Enabled:UMCI"                                               
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:UMCI'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:UMCI'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledUMCICheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Boot Menu Protection"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Boot Menu Protection'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Boot Menu Protection'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledBootMenuProtectionCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Required:WHQL"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Required:WHQL'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Required:WHQL'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.RequiredWHQLCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Audit Mode"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Audit Mode'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Audit Mode'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledAuditModeCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Disabled:Flight Signing"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Disabled:Flight Signing'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Disabled:Flight Signing'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.DisabledFlightSigningCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Inherit Default Policy"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Inherit Default Policy'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Inherit Default Policy'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledInheritDefaultPolicyCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Unsigned System Integrity Policy"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Unsigned System Integrity Policy'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Unsigned System Integrity Policy'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledUnsignedSystemIntegrityPolicyCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Required:EV Signers"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Required:EV Signers'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Required:EV Signers'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.RequiredEVSignersCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Advanced Boot Options Menu"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Advanced Boot Options Menu'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Advanced Boot Options Menu'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledAdvancedBootOptionsMenuCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Boot Audit On Failure"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Boot Audit On Failure'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Boot Audit On Failure'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledBootAuditOnFailureCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Disabled:Script Enforcement"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Disabled:Script Enforcement'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Disabled:Script Enforcement'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.DisabledScriptEnforcementCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Required:Enforce Store Applications"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Required:Enforce Store Applications'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Required:Enforce Store Applications'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.RequiredEnforceStoreApplicationsCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Managed Installer"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Managed Installer'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Managed Installer'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledManagedInstallerCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Intelligent Security Graph Authorization"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Intelligent Security Graph Authorization'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Intelligent Security Graph Authorization'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledIntelligentSecurityGraphAuthorizationCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Invalidate EAs on Reboot"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Invalidate EAs on Reboot'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Invalidate EAs on Reboot'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledInvalidateEAsOnRebootCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Update Policy No Reboot"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Update Policy No Reboot'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Update Policy No Reboot'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledUpdatePolicyNoRebootCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Allow Supplemental Policies"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Allow Supplemental Policies'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Allow Supplemental Policies'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledAllowSupplementalPoliciesCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Disabled:Runtime FilePath Rule Protection"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Disabled:Runtime FilePath Rule Protection'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Disabled:Runtime FilePath Rule Protection'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.DisabledRuntimeFilePathRuleProtectionCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Dynamic Code Security"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Dynamic Code Security'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Dynamic Code Security'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledDynamicCodeSecurityCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Revoked Expired As Unsigned"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Revoked Expired As Unsigned'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Revoked Expired As Unsigned'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledRevokedExpiredAsUnsignedCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Developer Mode Dynamic Code Trust"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Developer Mode Dynamic Code Trust'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Developer Mode Dynamic Code Trust'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledDeveloperModeDynamicCodeTrustCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Secure Setting Policy"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Secure Setting Policy'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Secure Setting Policy'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledSecureSettingPolicyCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 Header="Enabled:Conditional Windows Lockdown Policy"
+                                                 ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Conditional Windows Lockdown Policy'], Mode=OneTime}"
+                                                 Description="{x:Bind ViewModel.RuleOptions['Enabled:Conditional Windows Lockdown Policy'], Mode=OneTime}">
+                            <CheckBox IsChecked="{x:Bind ViewModel.EnabledConditionalWindowsLockdownPolicyCheckBox, Mode=TwoWay}"
+                                      HorizontalAlignment="Right" />
+                        </customUI:SettingsCardV2>
+                    </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
 
-                <controls:SettingsCard x:Name="PolicyTemplate"
-                               x:Uid="PolicyTemplateSettingCard"
-                               HeaderIcon="{ui:FontIcon Glyph=&#xE799;}">
+                <controls:SettingsCard x:Uid="PolicyTemplateSettingCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE799;}">
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <Button x:Name="SetPolicyTemplate" Click="{x:Bind SetPolicyTemplate_Click}" x:Uid="SetPolicyTemplateButton" Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <Button Click="{x:Bind ViewModel.SetPolicyTemplate_Click}"
+                                x:Uid="SetPolicyTemplateButton"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0" />
 
-                        <ComboBox x:Name="PolicyTemplatesComboBox" SelectedIndex="0">
+                        <ComboBox SelectedItem="{x:Bind ViewModel.PolicyTemplatesComboBoxSelectedItem, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
                             <x:String>Base</x:String>
                             <x:String>BaseISG</x:String>
                             <x:String>BaseKernel</x:String>

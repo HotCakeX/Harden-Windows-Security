@@ -27,7 +27,7 @@ namespace AppControlManager.Others;
 internal static class GlobalVars
 {
 	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
-	internal static readonly ResourceLoader Rizz = new();
+	internal static ResourceLoader Rizz = new();
 
 	// User Mode block rules
 	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");

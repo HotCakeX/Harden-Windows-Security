@@ -238,7 +238,6 @@ namespace AppControlManager.CustomUIElements
 			// center text
 			_centerText = new TextBlock
 			{
-				Foreground = new SolidColorBrush(Colors.White),
 				FontSize = ScaleWidth * 2.0,
 				Text = Value.ToString(),
 				TextAlignment = TextAlignment.Center
@@ -281,7 +280,7 @@ namespace AppControlManager.CustomUIElements
 			// border wraps the inner grid
 			_centerBorder = new Border
 			{
-				BorderBrush = new SolidColorBrush(Colors.White),
+				BorderBrush = string.Equals(App.Settings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White),
 				BorderThickness = new Thickness(2),
 				CornerRadius = new CornerRadius(4),
 				Padding = new Thickness(3),
@@ -291,7 +290,6 @@ namespace AppControlManager.CustomUIElements
 			TextBlock threadsLabel = new()
 			{
 				Text = "Threads",
-				Foreground = new SolidColorBrush(Colors.White),
 				FontSize = ScaleWidth * 0.8,
 				TextAlignment = TextAlignment.Center,
 				Margin = new Thickness(0, 5, 0, 0)

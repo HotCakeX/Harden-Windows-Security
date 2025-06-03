@@ -26,7 +26,7 @@ namespace AppControlManager.Signing;
 /// https://learn.microsoft.com/windows/win32/appxpkg/how-to-programmatically-sign-a-package
 /// https://learn.microsoft.com/windows/win32/seccrypto/signersignex3
 /// </summary>
-internal static partial class Structure
+internal static class Structure
 {
 	// https://learn.microsoft.com/windows/win32/seccrypto/signer-subject-info
 	internal const uint SIGNER_SUBJECT_FILE = 0x01;
@@ -281,19 +281,6 @@ internal static partial class Structure
 		internal IntPtr rgAttr; // PCRYPT_ATTRIBUTE
 	}
 
-	[LibraryImport("crypt32.dll", SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool CryptSignMessage(
-		IntPtr pSignPara,
-		[MarshalAs(UnmanagedType.Bool)] bool fDetachedSignature,
-		uint cToBeSigned,
-		[In] IntPtr[] rgpbToBeSigned,
-		[In] uint[] rgcbToBeSigned,
-		IntPtr pbSignedBlob,
-		ref uint pcbSignedBlob
-	);
-
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_SIGN_MESSAGE_PARA
 	{
@@ -328,28 +315,6 @@ internal static partial class Structure
 		internal uint cbData;
 		internal IntPtr pbData;
 	}
-
-	[LibraryImport("Mssign32.dll", EntryPoint = "SignerSignEx3", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial int SignerSignEx3(
-		uint dwFlags,
-		IntPtr pSubjectInfo,
-		IntPtr pSigningCert,
-		IntPtr pSignatureInfo,
-		IntPtr pProviderInfo,
-		uint dwTimestampFlags,
-		[MarshalAs(UnmanagedType.LPStr)] string? pszTimestampAlgorithmOid,
-		[MarshalAs(UnmanagedType.LPWStr)] string? pwszHttpTimeStamp,
-		IntPtr psRequest,
-		IntPtr pSipData,
-		IntPtr ppSignerContext,
-		IntPtr pCryptoPolicy,
-		IntPtr pSignEx3Params,
-		IntPtr ppReserved);
-
-	[LibraryImport("Mssign32.dll", SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial int SignerFreeSignerContext(IntPtr pSignerContext);
 
 	/// <summary>
 	/// for page hashing support.

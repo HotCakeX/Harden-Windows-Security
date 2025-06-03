@@ -32,7 +32,7 @@
 
         </controls:WrapPanel>
 
-        <InfoBar Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="1"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
@@ -45,7 +45,10 @@
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
                 <!-- Begin Simulation Button -->
-                <Button x:Name="BeginSimulationButton" ToolTipService.ToolTip="Start the Simulation using the selected configurations" Style="{StaticResource AccentButtonStyle}" Click="{x:Bind BeginSimulationButton_Click}">
+                <Button ToolTipService.ToolTip="Start the Simulation using the selected configurations"
+                        Style="{StaticResource AccentButtonStyle}"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.BeginSimulationButton_Click}">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Play" />
                         <TextBlock Text="Begin Simulation" Margin="5,0,0,0"/>
@@ -53,21 +56,22 @@
                 </Button>
 
                 <!-- Select XML File Button -->
-                <customUI:ButtonV2 Click="{x:Bind SelectXmlFileButton_Click}" x:Name="SelectXmlFileButton"
-                  ToolTipService.ToolTip="Browse for the App Control policy XML file">
+                <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectXmlFileButton_Click}"
+                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   ToolTipService.ToolTip="Browse for the App Control policy XML file">
 
                     <customUI:ButtonV2.Flyout>
-                        <Flyout x:Name="SelectXmlFileButton_Flyout">
+                        <Flyout>
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind SelectXmlFileButton_Flyout_Clear_Click}" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectXmlFileButton_Flyout_Clear_Click}" />
 
                                 <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox x:Name="SelectXmlFileButton_SelectedFilesTextBox"
-                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                    MinWidth="400" IsReadOnly="True" />
+                                <TextBox Text="{x:Bind ViewModel.XmlFilePath, Mode=OneWay}"
+                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                         MinWidth="400" IsReadOnly="True" />
 
                             </controls:WrapPanel>
 
@@ -83,20 +87,20 @@
                 </customUI:ButtonV2>
 
                 <!-- Select Files Button -->
-                <customUI:ButtonV2 Click="{x:Bind SelectFilesButton_Click}" x:Name="SelectFilesButton" ToolTipService.ToolTip="Browse for files to include in the simulation">
+                <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectFilesButton_Click}"
+                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   ToolTipService.ToolTip="Browse for files to include in the simulation">
 
                     <customUI:ButtonV2.Flyout>
-                        <Flyout x:Name="SelectFilesButton_Flyout">
+                        <Flyout>
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind SelectFilesButton_Flyout_Clear_Click}" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFilesButton_Flyout_Clear_Click}" />
 
                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox x:Name="SelectFilesButton_SelectedFilesTextBox"
-                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                    MinWidth="400" IsReadOnly="True" />
+                                <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.FilePaths, Mode=OneWay}" />
 
                             </controls:WrapPanel>
 
@@ -112,21 +116,20 @@
                 </customUI:ButtonV2>
 
                 <!-- Select Folders Button -->
-                <customUI:ButtonV2 Click="{x:Bind SelectFoldersButton_Click}" x:Name="SelectFoldersButton"
-                  ToolTipService.ToolTip="Browse for a folder to include in the simulation">
+                <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectFoldersButton_Click}"
+                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   ToolTipService.ToolTip="Browse for a folder to include in the simulation">
 
                     <customUI:ButtonV2.Flyout>
-                        <Flyout x:Name="SelectFoldersButton_Flyout">
+                        <Flyout>
 
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind SelectFoldersButton_Flyout_Clear_Click}" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFoldersButton_Flyout_Clear_Click}" />
 
                                 <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox x:Name="SelectFoldersButton_SelectedFilesTextBox"
-                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                    MinWidth="400" IsReadOnly="True" />
+                                <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.FolderPaths, Mode=OneWay}" />
 
                             </controls:WrapPanel>
 
@@ -141,13 +144,17 @@
                     </customUI:ButtonV2.Content>
                 </customUI:ButtonV2>
 
-                <DropDownButton Content="Options" ToolTipService.ToolTip="Multiple Extra Options">
+                <DropDownButton Content="Options"
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                ToolTipService.ToolTip="Multiple Extra Options">
                     <DropDownButton.Flyout>
 
                         <MenuFlyout Placement="Bottom">
 
                             <!-- Cat Root Paths Button -->
-                            <MenuFlyoutItem Text="Cat Root Paths" Click="{x:Bind CatRootPathsButton_Click}" ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
+                            <MenuFlyoutItem Text="Cat Root Paths"
+                                            Click="{x:Bind ViewModel.CatRootPathsButton_Click}"
+                                            ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xED25;"/>
                                 </MenuFlyoutItem.Icon>
@@ -156,7 +163,9 @@
                             <MenuFlyoutSeparator/>
 
                             <!-- Toggle Button for No Cat Root Scanning -->
-                            <ToggleMenuFlyoutItem IsChecked="True" x:Name="NoCatRootScanningToggle" Text="No Cat Root Scanning" ToolTipService.ToolTip="Will not scan the security catalogs on the system">
+                            <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.NoCatRootScanning, Mode=TwoWay}"
+                                                  Text="No Cat Root Scanning"
+                                                  ToolTipService.ToolTip="Will not scan the security catalogs on the system">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEB95;" />
                                 </MenuFlyoutItem.Icon>
@@ -165,7 +174,9 @@
                             <MenuFlyoutSeparator/>
 
                             <!-- Button for CSV Output -->
-                            <MenuFlyoutItem x:Name="CSVOutputToggle" Click="{x:Bind ViewModel.ExportToCsv}" Text="Save output to CSV" ToolTipService.ToolTip="Exports the output to a CSV file in the AppControlManager directory in the Program Files directory.">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ExportToCsv}"
+                                            Text="Save output to CSV"
+                                            ToolTipService.ToolTip="Exports the output to a CSV file in the AppControlManager directory in the Program Files directory.">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE9F9;" />
                                 </MenuFlyoutItem.Icon>
@@ -175,7 +186,7 @@
                             <MenuFlyoutSeparator/>
 
                             <!-- Clear Data Button -->
-                            <MenuFlyoutItem Click="ClearDataButton_Click" x:Uid="ClearDataMenuFlyoutItem">
+                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Delete" />
                                 </MenuFlyoutItem.Icon>
@@ -187,12 +198,15 @@
                 </DropDownButton>
 
                 <!-- Scalability Button with RadialGauge Flyout -->
-                <Button x:Name="ScalabilityButton" x:Uid="ScalabilityButton">
+                <Button Content="{x:Bind ViewModel.ScalabilityButtonContent, Mode=OneWay}"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        x:Uid="ScalabilityButton">
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
-                                <customUI:ColorRadialGaugeV2 x:Name="ScalabilityRadialGauge"
+                                <customUI:ColorRadialGaugeV2
                                       StepSize="1"
+                                      IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                       TickSpacing="2"
                                       ScaleWidth="12"
                                       NeedleWidth="0"
@@ -204,32 +218,40 @@
                                       Width="200"
                                       Maximum="120"
                                       Minimum="2"
-                                      ValueChanged="ScalabilityRadialGauge_ValueChanged"
+                                      Value="{x:Bind ViewModel.ScalabilityRadialGaugeValue, Mode=TwoWay}"
                                       ValueStringFormat="N0"/>
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
                 </Button>
 
-                <ProgressRing x:Name="SimulationProgressRing" IsIndeterminate="False" Background="LightGray" Value="0" ToolTipService.ToolTip="The Simulation progress" />
+                <ProgressRing IsIndeterminate="False"
+                              Background="LightGray"
+                              Value="{x:Bind ViewModel.ProgressRingValue, Mode=OneWay}"
+                              ToolTipService.ToolTip="The Simulation progress" />
 
                 <TextBox PlaceholderText="Total count"
-                         x:Name="TotalCountOfTheFilesTextBox"
+                         Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
                          IsReadOnly="True"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files that participated in the last Simulation job"/>
 
-                <TextBox PlaceholderText="Search in the data..." Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
+                <TextBox PlaceholderText="Search in the data..."
+                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                         Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"
+                         ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
 
             </controls:WrapPanel>
         </Border>
 
 
-        <customUI:ListViewV2 x:Name="SimOutputListView"
-                RegistryKey="Simulation"
-                ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
-                Grid.Row="3"
-                SelectionMode="Extended">
+        <customUI:ListViewV2 RegistryKey="Simulation"
+                             ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
+                             Grid.Row="3"
+                             SelectionMode="Extended">
 
             <customUI:ListViewV2.Header>
 
@@ -282,7 +304,7 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="ListViewFlyoutMenuCopy_Click">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelSimulationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -298,91 +320,91 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="PathHeader" Click="CopyPath_Click">
+                                        <MenuFlyoutItem x:Uid="PathHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyPath_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SourceHeader" Click="CopySource_Click">
+                                        <MenuFlyoutItem x:Uid="SourceHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySource_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="CopyIsAuthorized_Click">
+                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyIsAuthorized_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Click="CopyMatchCriteria_Click">
+                                        <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyMatchCriteria_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Click="CopySpecificFileNameLevelMatch_Click">
+                                        <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySpecificFileNameLevelMatch_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerIDHeader" Click="CopySignerID_Click">
+                                        <MenuFlyoutItem x:Uid="SignerIDHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerID_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerNameHeader" Click="CopySignerName_Click">
+                                        <MenuFlyoutItem x:Uid="SignerNameHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerName_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerCertRootHeader" Click="CopySignerCertRoot_Click">
+                                        <MenuFlyoutItem x:Uid="SignerCertRootHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerCertRoot_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Click="CopySignerCertPublisher_Click">
+                                        <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerCertPublisher_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerScopeHeader" Click="CopySignerScope_Click">
+                                        <MenuFlyoutItem x:Uid="SignerScopeHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerScope_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Click="CopyCertSubjectCN_Click">
+                                        <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertSubjectCN_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Click="CopyCertIssuerCN_Click">
+                                        <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertIssuerCN_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertNotAfterHeader" Click="CopyCertNotAfter_Click">
+                                        <MenuFlyoutItem x:Uid="CertNotAfterHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertNotAfter_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertTBSValueHeader" Click="CopyCertTBSValue_Click">
+                                        <MenuFlyoutItem x:Uid="CertTBSValueHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertTBSValue_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="CopyFilePath_Click">
+                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyFilePath_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

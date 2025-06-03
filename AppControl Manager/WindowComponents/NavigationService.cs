@@ -17,11 +17,13 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.ApplicationModel.UserActivities;
 
 #pragma warning disable CA1812
 
@@ -31,6 +33,11 @@ internal sealed class NavigationService
 {
 	private readonly MainWindowVM mainWindowVM;
 	private readonly SidebarVM sidebarVM;
+
+	/// <summary>
+	/// User Activity tracking field
+	/// </summary>
+	private UserActivitySession? _previousSession;
 
 	internal NavigationService(MainWindowVM _MainWindowVM, SidebarVM _SidebarVM)
 	{
@@ -48,6 +55,56 @@ internal sealed class NavigationService
 	{
 		_frame = frame;
 		MainNavigation = mainNavigation;
+	}
+
+	/// <summary>
+	/// Publishes or updates user activity for the current page.
+	/// https://learn.microsoft.com/windows/ai/recall/recall-relaunch
+	/// </summary>
+	/// <param name="pageType">The type of the page being navigated to</param>
+	private async Task PublishUserActivityAsync(Type pageType)
+	{
+		try
+		{
+			// Dispose of any previous session (which automatically logs the end of the interaction with that content)
+			_previousSession?.Dispose();
+
+			// Generate an identifier that uniquely maps to the current page
+			string pageTypeName = pageType.Name;
+			string activityId = $"AppControlManager-{pageTypeName}";
+
+			// Create a new user activity that represents the current page
+			UserActivity activity = await UserActivityChannel.GetDefault().GetOrCreateUserActivityAsync(activityId);
+
+			// Get display name for the page from the breadcrumb mappings
+			string displayName = pageTypeName;
+
+			// Get the display name from breadCrumbMappingsV2
+			PageTitleMap pageInfo = mainWindowVM.breadCrumbMappingsV2[pageType];
+
+			// Use the last title from the breadcrumb mapping as the display name
+			displayName = pageInfo.Titles[^1];
+
+			// Populate the required properties
+			activity.VisualElements.DisplayText = displayName;
+			activity.ActivationUri = new Uri($"appcontrolmanager://page/{pageTypeName}");
+
+			// Add content info for better representation
+			activity.ContentInfo = UserActivityContentInfo.FromJson(
+				$"{{\"type\":\"page\",\"name\":\"{displayName}\",\"app\":\"AppControl Manager\"}}"
+			);
+
+			// Save the activity
+			await activity.SaveAsync();
+
+			// Start a new session tracking the engagement with this new activity
+			_previousSession = activity.CreateSession();
+		}
+		catch (Exception ex)
+		{
+			// Log the exception but don't let it break navigation
+			Logger.Write($"Failed to publish user activity: {ex.Message}");
+		}
 	}
 
 	/// <summary>
@@ -171,7 +228,7 @@ internal sealed class NavigationService
 				panel.Children.Add(extraInfoCheckBox);
 
 				// Create and configure the ContentDialog.
-				CustomUIElements.ContentDialogV2 dialog = new()
+				using CustomUIElements.ContentDialogV2 dialog = new()
 				{
 					Title = GlobalVars.Rizz.GetString("AppElevationNotice/Title"),
 					Content = panel,
@@ -256,6 +313,9 @@ internal sealed class NavigationService
 		// Navigate to the new page
 		_ = _frame.Navigate(nextNavPageType, null, new DrillInNavigationTransitionInfo());
 
+		// Publish user activity for the new page
+		await PublishUserActivityAsync(nextNavPageType);
+
 		// For page Interface and light augmentation
 		AffectPagesAnimatedIconsVisibilities(_frame);
 
@@ -323,5 +383,26 @@ internal sealed class NavigationService
 		AffectPagesAnimatedIconsVisibilitiesEx(false);
 
 		sidebarVM.Nullify();
+	}
+
+	/// <summary>
+	/// Used to refresh the Settings page but re-navigating to it so we can display the new language after user changes app language.
+	/// Settings page is the only point where language can be changed for the app.
+	/// </summary>
+	internal void RefreshSettingsPage()
+	{
+		_ = _frame?.Navigate(typeof(Pages.Settings));
+
+		// Clear navigation history because it will have the same Settings page assigned to it due to in-place refresh.
+		_frame?.BackStack.Clear();
+	}
+
+	/// <summary>
+	/// Disposes of the current user activity session when the app is closing.
+	/// </summary>
+	internal void DisposeUserActivitySession()
+	{
+		_previousSession?.Dispose();
+		_previousSession = null;
 	}
 }

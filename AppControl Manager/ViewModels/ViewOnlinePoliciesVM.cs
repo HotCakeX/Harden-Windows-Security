@@ -520,6 +520,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		try
 		{
 
+			MainInfoBarIsClosable = false;
+
 			if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
 			{
 				throw new InvalidOperationException(
@@ -531,6 +533,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			await MicrosoftGraph.Main.DeletePolicy(
 				AuthCompanionCLS.CurrentActiveAccount,
 				ListViewSelectedPolicy.IntunePolicyObjectID);
+
+			MainInfoBar.WriteInfo($"Successfully removed the policy with the name '{ListViewSelectedPolicy.FriendlyName}' and ID '{ListViewSelectedPolicy.PolicyID}' from Intune.");
 
 			// Remove the policy from the Lists after removal from Intune
 			_ = AllPolicies.Remove(ListViewSelectedPolicy);
@@ -547,6 +551,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		finally
 		{
 			ManageButtonsStates(true);
+			MainInfoBarIsClosable = true;
 		}
 	}
 

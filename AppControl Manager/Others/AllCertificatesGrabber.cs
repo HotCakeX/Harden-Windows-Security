@@ -23,12 +23,19 @@ using System.Security.Cryptography.X509Certificates;
 
 #pragma warning disable CA2000
 
-// The following functions and methods use the Windows APIs to grab all of the certificates from a signed file
-
 namespace AppControlManager.Others;
 
-internal static partial class AllCertificatesGrabber
+/// <summary>
+/// The following functions and methods use the Windows APIs to grab all of the certificates from a signed file
+/// </summary>
+internal static class AllCertificatesGrabber
 {
+
+	// Constants related to WinTrust
+	private const uint StateActionVerify = 1;
+	private const uint StateActionClose = 2;
+	private static Guid GenericWinTrustVerifyActionGuid = new("{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}");
+
 	// Structure defining signer information for cryptographic providers
 	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
 	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -135,7 +142,7 @@ internal static partial class AllCertificatesGrabber
 		internal uint RevocationChecks;   // Revocation checks
 		internal uint UnionChoice = 1;   // Union choice for trust verification
 		internal IntPtr FileInfoPtr;   // Pointer to file information
-		internal uint StateAction = WinTrust.StateActionVerify;   // State action for trust verification
+		internal uint StateAction = StateActionVerify;   // State action for trust verification
 		internal IntPtr StateData = IntPtr.Zero;   // Pointer to state data
 		[MarshalAs(UnmanagedType.LPTStr)]
 		private readonly string? URLReference;   // URL reference for trust verification
@@ -167,29 +174,12 @@ internal static partial class AllCertificatesGrabber
 		}
 	}
 
-	// Interop with crypt32.dll for cryptographic functions
-	internal static partial class Crypt32DLL
-	{
-		internal const int EncodedMessageParameter = 29;
-
-		// External method declaration for CryptMsgGetParam
-		[LibraryImport("crypt32.dll", SetLastError = true)]
-		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
-		internal static partial bool CryptMsgGetParam(
-			IntPtr hCryptMsg,
-			int dwParamType,
-			int dwIndex,
-			[Out] byte[]? pvData, // pvData is populated by CryptMsgGetParam with data from the cryptographic message
-			ref int pcbData
-		);
-	}
-
 
 	// This is the main method used to retrieve all signers for a given file
 	internal static List<AllFileSigners> GetAllFileSigners(string FilePath)
 	{
+		const int EncodedMessageParameter = 29;
+
 		// List to hold all file signers
 		List<AllFileSigners> AllFileSigners = [];
 		uint maxSigners = uint.MaxValue;   // Maximum number of signers to process, initially set to maximum possible value
@@ -210,9 +200,9 @@ internal static partial class AllCertificatesGrabber
 				Marshal.StructureToPtr(TrustedData, winTrustDataPointer, false);
 
 				// Call WinVerifyTrust to verify trust on the file
-				WinTrust.WinVerifyTrustResult verifyTrustResult = WinTrust.WinVerifyTrust(
+				NativeMethods.WinVerifyTrustResult verifyTrustResult = NativeMethods.WinVerifyTrust(
 					IntPtr.Zero,
-					ref WinTrust.GenericWinTrustVerifyActionGuid,
+					ref GenericWinTrustVerifyActionGuid,
 					winTrustDataPointer
 				);
 
@@ -237,13 +227,13 @@ internal static partial class AllCertificatesGrabber
 				}
 
 				// If the certificate is expired, continue to the next iteration
-				if (verifyTrustResult == WinTrust.WinVerifyTrustResult.CertExpired)
+				if (verifyTrustResult == NativeMethods.WinVerifyTrustResult.CertExpired)
 				{
 					continue;
 				}
 
 				// if there is a hash mismatch in the file, throw an exception
-				if (verifyTrustResult == WinTrust.WinVerifyTrustResult.HashMismatch)
+				if (verifyTrustResult == NativeMethods.WinVerifyTrustResult.HashMismatch)
 				{
 					// Throw a custom exception
 					throw new HashMismatchInCertificateException(
@@ -256,15 +246,15 @@ internal static partial class AllCertificatesGrabber
 				if (TrustedData.StateData != IntPtr.Zero)
 				{
 					// Get provider data from state data
-					CryptProviderData providerData = Marshal.PtrToStructure<CryptProviderData>(WinTrust.WTHelperProvDataFromStateData(TrustedData.StateData));
+					CryptProviderData providerData = Marshal.PtrToStructure<CryptProviderData>(NativeMethods.WTHelperProvDataFromStateData(TrustedData.StateData));
 
 					int pcbData = 0;   // Size of data in bytes
 
 					// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
 					// Get size of encoded message
-					if (providerData.hMsg != IntPtr.Zero && Crypt32DLL.CryptMsgGetParam(
+					if (providerData.hMsg != IntPtr.Zero && NativeMethods.CryptMsgGetParam(
 						providerData.hMsg,          // Handle to the cryptographic message
-						Crypt32DLL.EncodedMessageParameter, // Parameter type to retrieve (encoded message)
+						EncodedMessageParameter,    // Parameter type to retrieve (encoded message)
 						0,                          // Index of the parameter to retrieve
 						null,                       // Pointer to the buffer that receives the data (null to get the size)
 						ref pcbData                 // Size of the data in bytes (output parameter)
@@ -275,9 +265,9 @@ internal static partial class AllCertificatesGrabber
 						byte[] numArray = new byte[pcbData];
 
 						// Retrieve the encoded message and decode it
-						if (Crypt32DLL.CryptMsgGetParam(
+						if (NativeMethods.CryptMsgGetParam(
 								providerData.hMsg, // Handle to the cryptographic message
-								Crypt32DLL.EncodedMessageParameter, // Parameter type to retrieve (encoded message)
+								EncodedMessageParameter, // Parameter type to retrieve (encoded message)
 								0, // Index of the parameter to retrieve
 								numArray, // Pointer to the buffer that receives the data
 								ref pcbData // Size of the data in bytes (output parameter)
@@ -318,11 +308,11 @@ internal static partial class AllCertificatesGrabber
 				if (TrustedData is not null)
 				{
 					// Set StateAction to close the WinTrustData structure
-					TrustedData.StateAction = WinTrust.StateActionClose;
+					TrustedData.StateAction = StateActionClose;
 
 					// Convert TrustedData back to pointer and call WinVerifyTrust to close the structure
 					Marshal.StructureToPtr(TrustedData, winTrustDataPointer, false);
-					_ = WinTrust.WinVerifyTrust(IntPtr.Zero, ref WinTrust.GenericWinTrustVerifyActionGuid, winTrustDataPointer);
+					_ = NativeMethods.WinVerifyTrust(IntPtr.Zero, ref GenericWinTrustVerifyActionGuid, winTrustDataPointer);
 				}
 
 				// Free memory allocated to winTrustDataPointer

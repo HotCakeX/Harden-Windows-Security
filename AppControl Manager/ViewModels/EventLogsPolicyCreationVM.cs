@@ -15,10 +15,17 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
+using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.XMLOps;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -26,6 +33,8 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
+
+	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
 
 	internal EventLogsPolicyCreationVM()
 	{
@@ -55,15 +64,75 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	internal ListViewHelper.SortState SortState { get; set; } = new();
 
-	#region UI-Bound Properties
+	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility
+	// Variables to hold the data supplied by the UI elements
+	internal string? BasePolicyGUID { get; set => SP(ref field, value); }
+	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
+	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Determines whether the UI elements are enabled or disabled.
+	/// </summary>
+	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = "Total logs: 0";
+
+	// The default selected scan level
+	internal ScanLevels ScanLevel = ScanLevels.FilePublisher;
+	internal string ScanLevelComboBoxSelectedItem
 	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ScanLevel = StringToScanLevel[field];
+			}
+		}
+	} = ScanLevelToString[ScanLevels.FilePublisher];
 
-	#endregion
+	/// <summary>
+	/// Bound to the Date Picker on the UI.
+	/// </summary>
+	internal DateTimeOffset? DatePickerDate
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ApplyFilters();
+			}
+		}
+	}
 
+	/// <summary>
+	/// Bound to the Search text box on the UI.
+	/// </summary>
+	internal string? SearchBoxText
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ApplyFilters();
+			}
+		}
+	}
+
+	/// <summary>
+	/// To store the Code Integrity EVTX file path
+	/// </summary>
+	internal string? CodeIntegrityEVTX { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// To store the AppLocker EVTX file path
+	/// </summary>
+	internal string? AppLockerEVTX { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Path of the Supplemental policy that is created or the policy that user selected to add the logs to.
+	/// </summary>
+	internal string? finalSupplementalPolicyPath;
 
 	#region LISTVIEW IMPLEMENTATIONS
 
@@ -173,5 +242,556 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	}
 
 	#endregion
+
+
+	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase");
+
+	internal int SelectedCreationMethod
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				CreatePolicyButtonContent = field switch
+				{
+					0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicyMessage"),
+					1 => GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase"),
+					2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGUIDMessage"),
+					_ => GlobalVars.Rizz.GetString("DefaultCreatePolicy")
+				};
+			}
+		}
+	} = 1;
+
+
+	internal bool ScanLogsProgressRingIsActive { get; set => SP(ref field, value); }
+	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+
+	internal string? PolicyNameTextBox { get; set => SP(ref field, value); }
+
+	internal bool DeployPolicyToggle { get; set => SP(ref field, value); }
+
+	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Applies the date and search filters to the data grid
+	/// </summary>
+	private void ApplyFilters()
+	{
+		ListViewHelper.ApplyFilters(
+		allFileIdentities: AllFileIdentities.AsEnumerable(),
+		filteredCollection: FileIdentities,
+		searchText: SearchBoxText,
+		selectedDate: DatePickerDate,
+		regKey: ListViewHelper.ListViewsRegistry.Event_Logs
+		);
+		UpdateTotalLogs();
+	}
+
+
+	/// <summary>
+	/// Updates the total logs count displayed on the UI
+	/// </summary>
+	internal void UpdateTotalLogs(bool? Zero = null)
+	{
+		if (Zero == true)
+		{
+			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalLogsZeroMessage");
+		}
+		else
+		{
+			TotalCountOfTheFilesTextBox = string.Format(
+				GlobalVars.Rizz.GetString("TotalLogsCountMessage"), FileIdentities.Count);
+		}
+	}
+
+
+
+	/// <summary>
+	/// Clears the selected AppLocker EVTX file paths
+	/// </summary>
+	internal void SelectedAppLockerEVTXFilesFlyout_Clear_Click()
+	{
+		AppLockerEVTX = null;
+	}
+
+
+	/// <summary>
+	/// Event handler for the Clear Data button
+	/// </summary>
+	internal void ClearDataButton_Click()
+	{
+		FileIdentities.Clear();
+		AllFileIdentities.Clear();
+
+		UpdateTotalLogs(true);
+	}
+
+	/// <summary>
+	/// Selects all of the displayed rows on the ListView
+	/// </summary>
+	internal void SelectAll_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
+		if (lv is null) return;
+
+		ListViewHelper.SelectAll(lv, FileIdentities);
+	}
+
+	/// <summary>
+	/// De-selects all of the displayed rows on the ListView
+	/// </summary>
+	internal void DeSelectAll_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
+		if (lv is null) return;
+
+		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
+	}
+
+	/// <summary>
+	/// Deletes the selected row from the results
+	/// </summary>
+	internal void ListViewFlyoutMenuDelete_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
+		if (lv is null) return;
+
+		// Collect the selected items to delete
+		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
+
+		// Remove each selected item from the FileIdentities collection
+		foreach (FileIdentity item in itemsToDelete)
+		{
+			_ = FileIdentities.Remove(item);
+			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
+		}
+
+		UpdateTotalLogs();
+	}
+
+
+	/// <summary>
+	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+	/// </summary>
+	internal void ListViewFlyoutMenuCopy_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
+		if (lv is null) return;
+
+		// Check if there are selected items in the ListView
+		if (lv.SelectedItems.Count > 0)
+		{
+			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+		}
+	}
+
+	internal void SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click()
+	{
+		CodeIntegrityEVTX = null;
+	}
+
+
+	/// <summary>
+	/// Event handler to open the supplemental policy in the Policy Editor
+	/// </summary>
+	internal async void OpenInPolicyEditor()
+	{
+		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+	}
+
+	/// <summary>
+	/// Event handler for the select Code Integrity EVTX file path button
+	/// </summary>
+	internal void SelectCodeIntegrityEVTXFiles_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected evtx file path
+			CodeIntegrityEVTX = selectedFile;
+
+			// Log the selection with a localized message
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedCodeIntegrityEvtxForScanning"),
+				selectedFile
+			));
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler for the select AppLocker EVTX file path button
+	/// </summary>
+	internal void SelectAppLockerEVTXFiles_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.EVTXPickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected EVTX file path
+			AppLockerEVTX = selectedFile;
+
+			// Log the selection with a localized message
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedAppLockerEvtxForScanning"),
+				selectedFile
+			));
+		}
+	}
+
+	/// <summary>
+	/// The button that browses for XML file the logs will be added to
+	/// </summary>
+	internal void AddToPolicyButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			PolicyToAddLogsTo = selectedFile;
+
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedFileToAddLogsToMessage"),
+				PolicyToAddLogsTo));
+		}
+	}
+
+	/// <summary>
+	/// The button to browse for the XML file the supplemental policy that will be created will belong to
+	/// </summary>
+	internal void BasePolicyFileButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected XML file path
+			BasePolicyXMLFile = selectedFile;
+
+			Logger.Write(string.Format(
+				GlobalVars.Rizz.GetString("SelectedBasePolicyFileMessage"),
+				BasePolicyXMLFile));
+		}
+	}
+
+	/// <summary>
+	/// The button to submit a base policy GUID that will be used to set the base policy ID
+	/// in the Supplemental policy file that will be created.
+	/// </summary>
+	/// <exception cref="ArgumentException"></exception>
+	internal void BaseGUIDSubmitButton_Click()
+	{
+		if (!Guid.TryParse(BasePolicyGUID, out _))
+		{
+			throw new ArgumentException(
+				GlobalVars.Rizz.GetString("InvalidGuidMessage"));
+		}
+	}
+
+
+	/// <summary>
+	/// Event handler for the ScanLogs click
+	/// </summary>
+	internal async void ScanLogs_Click()
+	{
+		bool error = false;
+
+		try
+		{
+			AreElementsEnabled = false;
+
+			MainInfoBar.IsClosable = false;
+
+			ClearDataButton_Click();
+
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningEventLogsMessage"));
+
+			// Display the progress ring on the ScanLogs button
+			ScanLogsProgressRingIsActive = true;
+			ScanLogsProgressRingVisibility = Visibility.Visible;
+
+			UpdateTotalLogs(true);
+
+			// Grab the App Control Logs
+			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(
+				CodeIntegrityEvtxFilePath: CodeIntegrityEVTX,
+				AppLockerEvtxFilePath: AppLockerEVTX
+			);
+
+			// Store all of the data in the List
+			AllFileIdentities.AddRange(Output);
+
+			foreach (FileIdentity item in Output)
+			{
+				// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
+				item.ParentViewModelEventLogsPolicyCreationVM = this;
+				FileIdentities.Add(item);
+			}
+
+			UpdateTotalLogs();
+
+			CalculateColumnWidths();
+		}
+		catch (Exception ex)
+		{
+			error = true;
+			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorDuringLogsScanMessage"));
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+
+			// Clear the selected file paths
+			CodeIntegrityEVTX = null;
+			AppLockerEVTX = null;
+
+			// Stop displaying the Progress Ring
+			ScanLogsProgressRingIsActive = false;
+			ScanLogsProgressRingVisibility = Visibility.Collapsed;
+
+			if (!error)
+			{
+				MainInfoBar.WriteSuccess(string.Format(
+					GlobalVars.Rizz.GetString("ScanCompleteLogsFoundMessage"),
+					AllFileIdentities.Count
+				));
+			}
+
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// When the main button responsible for creating policy is pressed
+	/// </summary>
+	internal async void CreatePolicyButton_Click()
+	{
+		bool error = false;
+
+		try
+		{
+			AreElementsEnabled = false;
+
+			// Display the progress ring on the ScanLogs button
+			ScanLogsProgressRingIsActive = true;
+			ScanLogsProgressRingVisibility = Visibility.Visible;
+
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			MainInfoBar.IsClosable = false;
+
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ProcessingLogsMessage"));
+
+			if (FileIdentities.Count is 0)
+			{
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("NoLogsUseScanButtonMessage"));
+			}
+
+			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
+			{
+				throw new InvalidOperationException(
+					GlobalVars.Rizz.GetString("MustSelectOptionMessage"));
+			}
+
+			// Create a policy name if it wasn't provided
+			DateTime now = DateTime.Now;
+			string formattedDate = now.ToString("MM-dd-yyyy 'at' HH-mm-ss");
+
+			// Get the policy name from the UI text box
+			string? policyName = PolicyNameTextBox;
+
+			// If the UI text box was empty or whitespace then set policy name manually
+			if (string.IsNullOrWhiteSpace(policyName))
+			{
+				policyName = string.Format(
+					GlobalVars.Rizz.GetString("DefaultPolicyNameFormat"),
+					formattedDate);
+			}
+
+			// If user selected to deploy the policy
+			bool DeployAtTheEnd = DeployPolicyToggle;
+
+			// All of the File Identities that will be used to put in the policy XML file
+			List<FileIdentity> SelectedLogs = [];
+
+			ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
+
+			// Check if there are selected items in the ListView and user chose to use them only in the policy
+			if (OnlyIncludeSelectedItemsToggleButton && lv?.SelectedItems.Count > 0)
+			{
+				// convert every selected item to FileIdentity and store it in the list
+				foreach (var item in lv.SelectedItems)
+				{
+					if (item is FileIdentity item1)
+					{
+						SelectedLogs.Add(item1);
+					}
+				}
+			}
+			// If no item was selected from the ListView and user didn't choose to only use the selected items, then use everything in the ObservableCollection
+			else
+			{
+				SelectedLogs = AllFileIdentities;
+			}
+
+			await Task.Run(() =>
+			{
+				// Create a new Staging Area
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PolicyCreator");
+
+				// Get the path to an empty policy file
+				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
+
+				// Separate the signed and unsigned data
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevel);
+
+				// Insert the data into the empty policy file
+				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+
+				switch (SelectedCreationMethod)
+				{
+					case 0:
+						{
+							if (PolicyToAddLogsTo is not null)
+							{
+								// Set policy name and reset the policy ID of our new policy
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, null, null);
+
+								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
+								SiPolicy.Merger.Merge(PolicyToAddLogsTo, [EmptyPolicyPath]);
+
+								UpdateHvciOptions.Update(PolicyToAddLogsTo);
+
+								finalSupplementalPolicyPath = PolicyToAddLogsTo;
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+									SiPolicy.Management.ConvertXMLToBinary(PolicyToAddLogsTo, null, CIPPath);
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoPolicySelectedToAddLogsMessage"));
+							}
+
+							break;
+						}
+					case 1:
+						{
+							if (BasePolicyXMLFile is not null)
+							{
+								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+								// Instantiate the user selected Base policy
+								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(BasePolicyXMLFile, null);
+
+								// Set the BasePolicyID of our new policy to the one from user selected policy
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, policyObj.BasePolicyID, null);
+
+								// Configure policy rule options
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+								// Set policy version
+								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+								// Copying the policy file to the User Config directory - outside of the temporary staging area
+								File.Copy(EmptyPolicyPath, OutputPath, true);
+
+								finalSupplementalPolicyPath = OutputPath;
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoPolicyFileSelectedToAssociateErrorMessage"));
+							}
+
+							break;
+						}
+					case 2:
+						{
+							if (BasePolicyGUID is not null)
+							{
+								// Make sure the GUID that user entered is valid in case they didn't submit to validate it.
+								BaseGUIDSubmitButton_Click();
+
+								string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+								// Set the BasePolicyID of our new policy to the one supplied by user
+								string supplementalPolicyID = SetCiPolicyInfo.Set(EmptyPolicyPath, true, policyName, BasePolicyGUID.ToString(), null);
+
+								// Configure policy rule options
+								CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
+
+								// Set policy version
+								SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+								// Copying the policy file to the User Config directory - outside of the temporary staging area
+								File.Copy(EmptyPolicyPath, OutputPath, true);
+
+								finalSupplementalPolicyPath = OutputPath;
+
+								// If user selected to deploy the policy
+								if (DeployAtTheEnd)
+								{
+									string CIPPath = Path.Combine(stagingArea.FullName, $"{supplementalPolicyID}.cip");
+									SiPolicy.Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+									CiToolHelper.UpdatePolicy(CIPPath);
+								}
+							}
+							else
+							{
+								throw new InvalidOperationException(
+									GlobalVars.Rizz.GetString("NoBasePolicyGuidProvidedMessage"));
+							}
+
+							break;
+						}
+					default:
+						{
+							break;
+						}
+				}
+			});
+		}
+		catch (Exception ex)
+		{
+			error = true;
+			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorProcessingLogsMessage"));
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+
+			// Hide the progress ring
+			ScanLogsProgressRingIsActive = false;
+			ScanLogsProgressRingVisibility = Visibility.Collapsed;
+
+			MainInfoBar.IsClosable = true;
+
+			if (!error)
+			{
+				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessProcessedLogsMessage"));
+
+				OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
+			}
+		}
+	}
 
 }

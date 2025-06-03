@@ -57,7 +57,8 @@ internal static class ListViewHelper
 		PolicyEditor_FileBasedRules = 11,
 		PolicyEditor_SignatureBasedRules = 12,
 		SupplementalPolicy_PFNBasedRules = 13,
-		DenyPolicy_PFNBasedRules = 14
+		DenyPolicy_PFNBasedRules = 14,
+		Deployment_IntuneGroupsListView = 15
 	}
 
 	/// <summary>
@@ -374,15 +375,15 @@ internal static class ListViewHelper
 	/// <param name="searchText">
 	/// The search term.
 	/// </param>
-	/// <param name="datePicker">
-	/// An optional CalendarDatePicker for date filtering. If null, no date filtering is applied.
+	/// <param name="selectedDate">
+	/// An optional DateTimeOffset for date filtering. If null, no date filtering is applied.
 	/// </param>
 	/// <param name="regKey">used to find the ListView in the cache.</param>
 	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,
 		string? searchText,
-		CalendarDatePicker? datePicker,
+		DateTimeOffset? selectedDate,
 		ListViewsRegistry regKey
 		)
 	{
@@ -403,11 +404,10 @@ internal static class ListViewHelper
 		// This list is used as the base set for filtering to preserve original data
 		IEnumerable<FileIdentity> filteredResults = allFileIdentities;
 
-		// If a CalendarDatePicker is provided and a date is selected, filter by date.
-		// Filter results to include only items where 'TimeCreated' is greater than or equal to the selected date
-		if (datePicker is not null && datePicker.Date.HasValue)
+		// If a selectedDate is provided, filter by date.
+		// Filter results to include only items where 'TimeCreated' is greater than or equal to the selected date.
+		if (selectedDate is not null)
 		{
-			DateTimeOffset selectedDate = datePicker.Date.Value;
 			filteredResults = filteredResults.Where(item =>
 				item.TimeCreated.HasValue && item.TimeCreated.Value >= selectedDate);
 		}

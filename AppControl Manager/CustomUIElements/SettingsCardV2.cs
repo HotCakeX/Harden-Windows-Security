@@ -56,6 +56,11 @@ internal partial class SettingsCardV2 : SettingsCard
 				obj.IsDropDownOpen = !obj.IsDropDownOpen;
 				break;
 
+			case CheckBox obj:
+				if (!obj.IsEnabled) return;
+				obj.IsChecked = !obj.IsChecked;
+				break;
+
 			case Button obj:
 				if (!obj.IsEnabled) return;
 
@@ -89,6 +94,14 @@ internal partial class SettingsCardV2 : SettingsCard
 					if (childCombo != null && childCombo.IsEnabled)
 					{
 						childCombo.IsDropDownOpen = !childCombo.IsDropDownOpen;
+						return;
+					}
+
+					// CheckBox
+					CheckBox? childCheckBox = panel.Children.OfType<CheckBox>().FirstOrDefault();
+					if (childCheckBox != null && childCheckBox.IsEnabled)
+					{
+						childCheckBox.IsChecked = !childCheckBox.IsChecked;
 						return;
 					}
 

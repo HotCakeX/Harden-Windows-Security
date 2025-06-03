@@ -30,37 +30,47 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
 
-	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [
+	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [];
 
-		new()
+	internal static void PopulateFilePathPatternExamplesCollection()
+	{
+		FilePathPatternExamplesCollection.Clear();
+
+		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\Windows\\*",
 			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription1")
-		},
-		new()
+		});
+
+		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "D:\\EnterpriseApps\\MyApp\\*",
 			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription2")
-		},
-		new()
+		});
+
+		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "*\\Bing.exe",
 			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription3")
-		},
-		new()
+		});
+
+		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\*\\CCMCACHE\\*\\7z????-x64.exe",
 			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription4")
-		},
-		new()
+		});
+
+		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
-			Example = "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node\"",
+			Example = "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node",
 			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription5")
-		}
-	];
+		});
+	}
 
 	internal CustomPatternBasedFilePath()
 	{
+		PopulateFilePathPatternExamplesCollection();
+
 		this.InitializeComponent();
 
 		XamlRoot = App.MainWindow?.Content.XamlRoot;

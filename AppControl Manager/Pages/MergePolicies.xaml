@@ -44,7 +44,7 @@
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA3C;}">
 
                     <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar
+                        <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
@@ -54,7 +54,7 @@
                             Message="{x:Bind ViewModel.PolicyMergerInfoBarMessage, Mode=OneWay}"
                             IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.PolicyMergerInfoBarSeverity, Mode=OneWay}">
-                        </InfoBar>
+                        </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">

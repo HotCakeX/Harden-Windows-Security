@@ -43,7 +43,7 @@ internal static class PageHashCalculator
 		try
 		{
 			// call the native function with the given parameters and store the return value
-			int firstPageHash1 = WinTrust.ComputeFirstPageHash(algName, fileName, buffer, bufferSize);
+			int firstPageHash1 = NativeMethods.ComputeFirstPageHash(algName, fileName, buffer, bufferSize);
 
 			// if the return value is zero, it means the function failed
 			if (firstPageHash1 == 0)
@@ -56,7 +56,7 @@ internal static class PageHashCalculator
 			buffer = Marshal.AllocHGlobal(firstPageHash1);
 
 			// call the native function again with the same parameters and the allocated buffer
-			int firstPageHash2 = WinTrust.ComputeFirstPageHash(algName, fileName, buffer, firstPageHash1);
+			int firstPageHash2 = NativeMethods.ComputeFirstPageHash(algName, fileName, buffer, firstPageHash1);
 
 			// if the return value is zero, it means the function failed
 			if (firstPageHash2 == 0)

@@ -29,7 +29,7 @@
 
             </controls:WrapPanel>
 
-            <InfoBar Grid.Row="1"
+            <customUI:InfoBarV2 Grid.Row="1"
                  Margin="15"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
@@ -178,6 +178,9 @@
                         <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
                             <ToggleSwitch IsOn="{x:Bind AppSettings.PromptForElevationOnStartup, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
+                        <customUI:SettingsCardV2 x:Uid="ScreenShieldSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEE3F;}">
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.ScreenShield, Mode=TwoWay}" />
+                        </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="BrowseForCISchemaSettingsCard">
                             <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
@@ -195,17 +198,6 @@
                 <!-- Language section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
                 <controls:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
-
-                    <controls:SettingsExpander.ItemsHeader>
-                        <InfoBar
-                            BorderThickness="0"
-                            CornerRadius="0"
-                            IsIconVisible="True"
-                            IsOpen="{x:Bind ViewModel.LanguageSectionSettingsExpanderInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="True"
-                            x:Uid="LanguageSectionSettingsExpanderInfoBar"
-                            Severity="Warning" />
-                    </controls:SettingsExpander.ItemsHeader>
 
                     <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="LanguageSelectionSettingsCard"

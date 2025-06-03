@@ -247,7 +247,7 @@ internal static class Main
 				dwFlags |= Structure.SPC_INC_PE_PAGE_HASHES_FLAG;
 			}
 
-			int hr = Structure.SignerSignEx3(
+			int hr = NativeMethods.SignerSignEx3(
 				dwFlags,               // dwFlags for page hashing etc.
 				pSignerSubjectInfo,
 				pSignerCert,
@@ -283,7 +283,7 @@ internal static class Main
 		finally
 		{
 			if (pActualSignerContext != IntPtr.Zero)
-				Structure.SignerFreeSignerContext(pActualSignerContext);
+				NativeMethods.SignerFreeSignerContext(pActualSignerContext);
 			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext); // Free the memory allocated for the pointer itself
 
 			// Cleanup for Authenticode common structures
@@ -417,7 +417,7 @@ internal static class Main
 
 			uint dwFlags = 0; // Page hashing (SPC_INC_PE_PAGE_HASHES_FLAG) is not applicable for packages.
 
-			int hr = Structure.SignerSignEx3(
+			int hr = NativeMethods.SignerSignEx3(
 				dwFlags,        // Main dwFlags for SignerSignEx3, usually 0 for packages.
 				pSignerSubjectInfo,
 				pSignerCert,
@@ -470,7 +470,7 @@ internal static class Main
 		finally
 		{
 			if (pActualSignerContext != IntPtr.Zero)
-				Structure.SignerFreeSignerContext(pActualSignerContext);
+				NativeMethods.SignerFreeSignerContext(pActualSignerContext);
 			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext);
 
 			if (pAppxSipClientData != IntPtr.Zero) Marshal.FreeHGlobal(pAppxSipClientData);

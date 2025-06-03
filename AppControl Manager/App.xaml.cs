@@ -179,6 +179,7 @@ public partial class App : Application
 		_ = services.AddSingleton<ViewOnlinePoliciesVM>(sp => new(sp.GetRequiredService<ViewModelForMSGraph>()));
 		_ = services.AddSingleton(sp => new PolicyEditorVM());
 		_ = services.AddSingleton(sp => new BuildNewCertificateVM());
+		_ = services.AddSingleton(sp => new GetSecurePolicySettingsVM());
 
 		AppHost = builder.Build();
 
@@ -621,7 +622,7 @@ public partial class App : Application
 				Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
 
 				// Check if the window is maximized
-				_ = Win32InteropInternal.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
+				_ = NativeMethods.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
 
 				// Save the maximized status of the window before closing to the app settings
 				Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
@@ -634,6 +635,8 @@ public partial class App : Application
 
 		// Release the Mutex
 		_mutex?.Dispose();
+
+		_nav.DisposeUserActivitySession();
 	}
 
 	/// <summary>
@@ -661,7 +664,7 @@ public partial class App : Application
 						CurrentlyOpenContentDialog = null;
 					}
 
-					CustomUIElements.ContentDialogV2 errorDialog = new()
+					using CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
 						Title = GlobalVars.Rizz.GetString("ErrorDialogTitle"),
 						Content = string.Format(GlobalVars.Rizz.GetString("ErrorDialogContent"), ex.Message),

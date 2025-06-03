@@ -35,30 +35,36 @@
 
             </controls:WrapPanel>
 
-            <InfoBar Grid.Row="1"
-                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
-                <InfoBar.Content>
-                    <ProgressBar Margin="0,0,0,15" Visibility="Collapsed" x:Name="MainProgressRing" Value="0" IsIndeterminate="True" Minimum="0" Maximum="100"/>
-                </InfoBar.Content>
-            </InfoBar>
+            <customUI:InfoBarV2 Grid.Row="1"
+                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
+                <customUI:InfoBarV2.Content>
+                    <ProgressBar Margin="0,0,0,15"
+                                 Visibility="{x:Bind ViewModel.MainProgressBarVisibility, Mode=OneWay}"
+                                 Value="0"
+                                 IsIndeterminate="True"
+                                 Minimum="0"
+                                 Maximum="100"/>
+                </customUI:InfoBarV2.Content>
+            </customUI:InfoBarV2>
 
             <StackPanel HorizontalAlignment="Stretch"
-             Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
+                        Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="2">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsExpander x:Name="IntuneDeploymentSettingsExpander"
-                                           x:Uid="UseIntuneDeploySettingsExpander"
+                <controls:SettingsExpander x:Uid="UseIntuneDeploySettingsExpander"
                                            IsExpanded="True"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xEA91;}">
 
-                    <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}" TextWrapping="Wrap" />
+                    <TextBlock Text="{x:Bind ViewModel.LocalOnlineStatusText, Mode=OneWay}"
+                               TextWrapping="Wrap" />
 
                     <controls:SettingsExpander.Items>
 
@@ -171,10 +177,10 @@
 
                                                             <TextBlock Text="Details of the account that's currently in use" Margin="0,0,0,5" HorizontalAlignment="Center"/>
 
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountAccountIdentifier" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountAccountIdentifier, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
+                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountAccountIdentifier" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountAccountIdentifier, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
+                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
 
                                                         </controls:WrapPanel>
 
@@ -189,8 +195,8 @@
 
                                                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
 
-                                                            <Button IsEnabled="{x:Bind AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
-                                                                    x:Uid="SignInButton" Click="{x:Bind AuthCompanionCLS.SignIn}">
+                                                            <Button IsEnabled="{x:Bind ViewModel.AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
+                                                                    x:Uid="SignInButton" Click="{x:Bind ViewModel.AuthCompanionCLS.SignIn}">
                                                                 <Button.Content>
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -203,8 +209,8 @@
                                                                 </Button.Content>
                                                             </Button>
 
-                                                            <Button IsEnabled="{x:Bind AuthCompanionCLS.SignOutButtonState, Mode=OneWay}"
-                                                                    x:Uid="CancelSigningInButton" Click="{x:Bind AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
+                                                            <Button IsEnabled="{x:Bind ViewModel.AuthCompanionCLS.SignOutButtonState, Mode=OneWay}"
+                                                                    x:Uid="CancelSigningInButton" Click="{x:Bind ViewModel.AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
                                                                 <Button.Content>
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -220,11 +226,11 @@
                                                         </StackPanel>
 
                                                         <ComboBox
-                                                                ItemsSource="{x:Bind AuthCompanionCLS.SignInMethodsComboBoxSource}"
+                                                                ItemsSource="{x:Bind ViewModel.AuthCompanionCLS.SignInMethodsComboBoxSource}"
                                                                 Margin="0,5,0,0"
                                                                 HorizontalAlignment="Center"
                                                                 x:Uid="SignInMethodsComboBox"
-                                                                SelectedItem="{x:Bind AuthCompanionCLS.SignInMethodsComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                                SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.SignInMethodsComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                             <!-- To center the header text -->
                                                             <ComboBox.HeaderTemplate>
                                                                 <DataTemplate>
@@ -236,11 +242,11 @@
                                                         </ComboBox>
 
                                                         <ComboBox
-                                                            ItemsSource="{x:Bind AuthCompanionCLS.AuthenticationContextComboBoxSource}"
+                                                            ItemsSource="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSource}"
                                                             Margin="0,5,0,0"
                                                             HorizontalAlignment="Center"
                                                             x:Uid="AuthenticationContextComboBox"
-                                                            SelectedItem="{x:Bind AuthCompanionCLS.AuthenticationContextComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                            SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                             <!-- To center the header text -->
                                                             <ComboBox.HeaderTemplate>
                                                                 <DataTemplate>
@@ -263,7 +269,7 @@
 
                                                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Top">
 
-                                                            <Button HorizontalAlignment="Center" x:Uid="RemoveAccountButton" VerticalAlignment="Top" Click="{x:Bind AuthCompanionCLS.LogOutOfSelectedAccount}">
+                                                            <Button HorizontalAlignment="Center" x:Uid="RemoveAccountButton" VerticalAlignment="Top" Click="{x:Bind ViewModel.AuthCompanionCLS.LogOutOfSelectedAccount}">
                                                                 <Button.Content>
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -277,7 +283,7 @@
                                                             </Button>
 
 
-                                                            <Button HorizontalAlignment="Center" x:Uid="SetAccountAsActiveButton" VerticalAlignment="Top" Click="{x:Bind AuthCompanionCLS.SetActiveFromListView}">
+                                                            <Button HorizontalAlignment="Center" x:Uid="SetAccountAsActiveButton" VerticalAlignment="Top" Click="{x:Bind ViewModel.AuthCompanionCLS.SetActiveFromListView}">
                                                                 <Button.Content>
                                                                     <StackPanel Orientation="Horizontal">
                                                                         <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -295,7 +301,7 @@
                                                         <!-- Shimmer -->
 
                                                         <StackPanel Margin="0,10,0,0"
-                                                            Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"
+                                                            Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"
                                                             Width="450"
                                                             Height="255"
                                                             Padding="16"
@@ -306,31 +312,30 @@
                                                             Spacing="12">
 
                                                             <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                                             </Grid>
 
                                                             <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                                             </Grid>
 
                                                             <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                                             </Grid>
 
                                                             <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
+                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                                             </Grid>
 
                                                         </StackPanel>
 
 
                                                         <ListView HorizontalAlignment="Center"
-                                                            Visibility="{x:Bind AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
-                                                            x:Name="AuthenticatedAccountsListView"
+                                                            Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
                                                             BorderThickness="0"
                                                             CornerRadius="5"
-                                                            ItemsSource="{x:Bind ViewModelMSGraph.AuthenticatedAccounts, Mode=OneWay}"
-                                                            SelectedItem="{x:Bind AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ItemsSource="{x:Bind ViewModel.ViewModelMSGraph.AuthenticatedAccounts, Mode=OneWay}"
+                                                            SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                             Height="300"
                                                             SelectionMode="Single">
                                                             <ListView.ItemTemplate>
@@ -381,12 +386,11 @@
 
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button IsEnabled="False"
-                                        x:Name="RefreshIntuneGroupsButton"
+                                <Button IsEnabled="{x:Bind ViewModel.AreOnlineFeaturesEnabled, Mode=OneWay}"
                                         x:Uid="RefreshButton"
-                                        Click="{x:Bind RefreshIntuneGroupsButton_Click}" />
+                                        Click="{x:Bind ViewModel.RefreshIntuneGroupsButton_Click}" />
 
-                                <ListView SelectionMode="Multiple"
+                                <customUI:ListViewV3 SelectionMode="Multiple"
                                           ItemsSource="{x:Bind ViewModel.GroupNamesCollection, Mode=OneWay}"
                                           MaxHeight="400"
                                           MaxWidth="400"
@@ -395,13 +399,14 @@
                                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                           ShowsScrollingPlaceholders="True"
                                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          x:Name="IntuneGroupsListView">
-                                    <ListView.ItemTemplate>
+                                          IsEnabled="{x:Bind ViewModel.AreOnlineFeaturesEnabled, Mode=OneWay}"
+                                          RegistryKey="Deployment_IntuneGroupsListView">
+                                    <customUI:ListViewV3.ItemTemplate>
                                         <DataTemplate x:DataType="MSGraph:IntuneGroupItemListView">
                                             <TextBlock Text="{x:Bind GroupName}" TextWrapping="Wrap" Margin="5" MaxWidth="380" />
                                         </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
+                                    </customUI:ListViewV3.ItemTemplate>
+                                </customUI:ListViewV3>
 
                             </controls:WrapPanel>
 
@@ -409,15 +414,16 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
-                <controls:SettingsCard x:Name="DeployUnsignedXMLPolicyFilesSettingsCard"
-                                       x:Uid="DeployUnsignedXMLPolicyFilesSettingsCard"
+                <controls:SettingsCard x:Uid="DeployUnsignedXMLPolicyFilesSettingsCard"
                                        HeaderIcon="{ui:FontIcon Glyph=&#xE82D;}"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton" Click="{x:Bind BrowseForXMLPolicyFilesButton_Click}">
+                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton"
+                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                           Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
                             <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -437,13 +443,14 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}" />
+                                        <Button x:Uid="ClearButton"
+                                                Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox x:Name="BrowseForXMLPolicyFilesButton_SelectedFilesTextBox"
-                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                            MinWidth="400" IsReadOnly="True" />
+                                        <ListBox MinWidth="400"
+                                                 SelectionMode="Single"
+                                                 ItemsSource="{x:Bind ViewModel.XMLFiles, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
@@ -452,8 +459,10 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center" x:Name="DeployUnsignedXMLButton"
-                        HorizontalContentAlignment="Center" Click="{x:Bind DeployUnsignedXMLButton_Click}">
+                        <Button HorizontalAlignment="Center"                                
+                                HorizontalContentAlignment="Center"
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.DeployUnsignedXMLButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -465,25 +474,20 @@
 
                         </Button>
 
-                        <TeachingTip x:Name="DeployUnsignedXMLButtonTeachingTip"
-                            Target="{x:Bind DeployUnsignedXMLButton}"
-                            Title="No File was selected"
-                            Subtitle="You need to select unsigned XML files to deploy first.">
-                        </TeachingTip>
-
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
 
-                <controls:SettingsExpander x:Name="DeploySignedXMLPolicyFilesSettingsExpander"
-                                           x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
+                <controls:SettingsExpander x:Uid="DeploySignedXMLPolicyFilesSettingsExpander"
                                            IsExpanded="True"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xEF3F;}">
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton" Click="{x:Bind BrowseForSignedXMLPolicyFilesButton_Click}">
+                        <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton"
+                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                           Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
                             <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
 
@@ -503,13 +507,14 @@
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}" />
+                                        <Button x:Uid="ClearButton"
+                                                Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox x:Name="BrowseForSignedXMLPolicyFilesButton_SelectedFilesTextBox"
-                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                            MinWidth="400" IsReadOnly="True" />
+                                        <ListBox MinWidth="400"
+                                                 SelectionMode="Single"
+                                                 ItemsSource="{x:Bind ViewModel.SignedXMLFiles, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
@@ -518,66 +523,63 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center" x:Name="DeploySignedXMLButton"
-                            HorizontalContentAlignment="Center" Click="{x:Bind DeploySignedXMLButton_Click}">
+                        <Button HorizontalAlignment="Center"
+                                IsEnabled="{x:Bind ViewModel.DeploySignedXMLButtonIsEnabled, Mode=OneWay}"
+                                HorizontalContentAlignment="Center" Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <FontIcon Glyph="&#xE8B6;" x:Name="DeploySignedXMLButtonFontIcon" Margin="0,0,8,0" />
-                                        <TextBlock x:Name="DeploySignedXMLButtonContentTextBlock" Text="Deploy"/>
+                                        <FontIcon Glyph="{x:Bind ViewModel.DeploySignedXMLButtonFontIcon, Mode=OneWay}" Margin="0,0,8,0" />
+                                        <TextBlock Text="{x:Bind ViewModel.DeploySignedXMLButtonContentTextBlock, Mode=OneWay}"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Button.Content>
 
                         </Button>
 
-                        <TeachingTip x:Name="DeploySignedXMLButtonTeachingTip"
-                            Target="{x:Bind DeploySignedXMLButton}"
-                            Title="No File was selected"
-                            Subtitle="You need to select Signed XML files to deploy first.">
-                        </TeachingTip>
-
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard
-                             x:Name="SignOnlyNoDeploySettingsCard"
+                        <customUI:SettingsCardV2
                              Description="Only creates signed CIP file(s) in the user config directory without deploying them. Toggle this if you want to deploy them on another system."
-                             Header="Sign Only - No Deployment" Click="{x:Bind SignOnlyNoDeploySettingsCard_Click}"
+                             Header="Sign Only - No Deployment"
                              HeaderIcon="{ui:FontIcon Glyph=&#xF572;}" IsClickEnabled="True" IsActionIconVisible="False">
 
-                            <ToggleSwitch x:Name="SignOnlyNoDeployToggleSwitch" Toggled="{x:Bind SignOnlyNoDeployToggleSwitch_Toggled}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignOnlyNoDeployToggleSwitch, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"/>
 
-                        </controls:SettingsCard>
+                        </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>
 
 
-                <controls:SettingsCard x:Name="DeployCIPFilesSettingsCard"
-                                       x:Uid="DeployCIPFilesSettingsCard"
+                <controls:SettingsCard x:Uid="DeployCIPFilesSettingsCard"
                                        HeaderIcon="{ui:FontIcon Glyph=&#xEF3E;}"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False" >
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <customUI:ButtonV2 x:Name="BrowseForCIPBinaryFilesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForCIPBinaryFilesButton_Click}">
+                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                           Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Click}">
 
                             <customUI:ButtonV2.Flyout>
                                 <Flyout>
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}" />
+                                        <Button x:Uid="ClearButton"
+                                                Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock Text="View the CIP files you selected." TextWrapping="WrapWholeWords" />
 
-                                        <TextBox x:Name="BrowseForCIPBinaryFilesButton_SelectedFilesTextBox"
-                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                            MinWidth="400" IsReadOnly="True" />
+                                        <ListBox MinWidth="400"
+                                                 SelectionMode="Single"
+                                                 ItemsSource="{x:Bind ViewModel.CIPFiles, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
@@ -586,8 +588,10 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center" x:Name="DeployCIPButton"
-                            HorizontalContentAlignment="Center" Click="{x:Bind DeployCIPButton_Click}">
+                        <Button HorizontalAlignment="Center"                                
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                HorizontalContentAlignment="Center"
+                                Click="{x:Bind ViewModel.DeployCIPButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
 
@@ -601,12 +605,6 @@
 
                         </Button>
 
-                        <TeachingTip x:Name="DeployCIPButtonTeachingTip"
-                            Target="{x:Bind DeployCIPButton}"
-                            Title="No File was selected"
-                            Subtitle="You need to select CIP files to deploy first.">
-                        </TeachingTip>
-
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
@@ -618,20 +616,23 @@
 
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicesButton" x:Uid="FileBrowseButton" Click="{x:Bind BrowseForXMLPolicesButton_Click}">
+                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                           Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Click}">
 
                             <customUI:ButtonV2.Flyout>
                                 <Flyout>
 
                                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind BrowseForXMLPolicesButton_Flyout_Clear_Click}" />
+                                        <Button x:Uid="ClearButton"
+                                                Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Flyout_Clear_Click}" />
 
                                         <TextBlock Text="View the XML files you selected." TextWrapping="WrapWholeWords" />
 
-                                        <TextBox x:Name="BrowseForXMLPolicesButton_SelectedFilesTextBox"
-                                            TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                            MinWidth="400" IsReadOnly="True" />
+                                        <ListBox MinWidth="400"
+                                                 SelectionMode="Single"
+                                                 ItemsSource="{x:Bind ViewModel.XMLFilesToConvertToCIP, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 
@@ -640,8 +641,10 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center" x:Name="ConvertXMLToCIPButton"
-                                HorizontalContentAlignment="Center" Click="{x:Bind ConvertXMLToCIPButton_Click}">
+                        <Button HorizontalAlignment="Center"                                
+                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                HorizontalContentAlignment="Center"
+                                Click="{x:Bind ViewModel.ConvertXMLToCIPButton_Click}">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
 
@@ -654,12 +657,6 @@
                             </Button.Content>
 
                         </Button>
-
-                        <TeachingTip x:Name="ConvertXMLToCIPButtonTeachingTip"
-                            Target="{x:Bind ConvertXMLToCIPButton}"
-                            Title="No File was selected"
-                            Subtitle="You need to select XML files to convert first.">
-                        </TeachingTip>
 
                     </controls:WrapPanel>
 

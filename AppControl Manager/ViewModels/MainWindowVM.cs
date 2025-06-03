@@ -82,140 +82,168 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// It is used by the BreadCrumbBar.
 	/// Sub-pages must use the same value as their main page in the dictionary.
 	/// </summary>
-	internal readonly Dictionary<Type, PageTitleMap> breadCrumbMappingsV2 = new()
+	internal readonly Dictionary<Type, PageTitleMap> breadCrumbMappingsV2 = [];
+
+	internal void RebuildBreadcrumbMappings()
 	{
-		[typeof(Pages.CreatePolicy)] = new PageTitleMap
+		breadCrumbMappingsV2.Clear();
+
+		breadCrumbMappingsV2[typeof(Pages.CreatePolicy)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content")],
 			Pages = [typeof(Pages.CreatePolicy)]
-		},
-		[typeof(Pages.GetCIHashes)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.GetCIHashes)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content")],
 			Pages = [typeof(Pages.GetCIHashes)]
-		},
-		[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.GitHubDocumentation)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content")],
 			Pages = [typeof(Pages.GitHubDocumentation)]
-		},
-		[typeof(Pages.MicrosoftDocumentation)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.MicrosoftDocumentation)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content")],
 			Pages = [typeof(Pages.MicrosoftDocumentation)]
-		},
-		[typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.GetSecurePolicySettings)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content")],
 			Pages = [typeof(Pages.GetSecurePolicySettings)]
-		},
-		[typeof(Pages.Settings)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.Settings)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("SettingsNavItem/Content")],
 			Pages = [typeof(Pages.Settings)]
-		},
-		[typeof(Pages.SystemInformation)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.SystemInformation)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("SystemInformationNavItem/Content")],
 			Pages = [typeof(Pages.SystemInformation)]
-		},
-		[typeof(Pages.ConfigurePolicyRuleOptions)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.ConfigurePolicyRuleOptions)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content")],
 			Pages = [typeof(Pages.ConfigurePolicyRuleOptions)]
-		},
-		[typeof(Pages.Logs)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.Logs)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("LogsNavItem/Content")],
 			Pages = [typeof(Pages.Logs)]
-		},
-		[typeof(Pages.Simulation)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.Simulation)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("SimulationNavItem/Content")],
 			Pages = [typeof(Pages.Simulation)]
-		},
-		[typeof(Pages.UpdatePage)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.UpdatePage)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
-		},
-		[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap // sub-page
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
-		},
-		[typeof(Pages.DeploymentPage)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.DeploymentPage)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("DeploymentNavItem/Content")],
 			Pages = [typeof(Pages.DeploymentPage)]
-		},
-		[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")],
 			Pages = [typeof(Pages.EventLogsPolicyCreation)]
-		},
-		[typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.MDEAHPolicyCreation)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")],
 			Pages = [typeof(Pages.MDEAHPolicyCreation)]
-		},
-		[typeof(Pages.AllowNewApps)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.AllowNewApps)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")],
 			Pages = [typeof(Pages.AllowNewApps)]
-		},
-		[typeof(Pages.BuildNewCertificate)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.BuildNewCertificate)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")],
 			Pages = [typeof(Pages.BuildNewCertificate)]
-		},
-		[typeof(Pages.MergePolicies)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.MergePolicies)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content")],
 			Pages = [typeof(Pages.MergePolicies)]
-		},
-		[typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
-		},
-		[typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)] = new PageTitleMap // sub-page
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults)]
-		},
-		[typeof(Pages.StrictKernelPolicyScanResults)] = new PageTitleMap // sub-page
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.StrictKernelPolicyScanResults)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateSupplementalPolicy), typeof(Pages.StrictKernelPolicyScanResults)]
-		},
-		[typeof(Pages.CreateDenyPolicy)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.CreateDenyPolicy)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
-		},
-		[typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), GlobalVars.Rizz.GetString("ScanResults")],
 			Pages = [typeof(Pages.CreateDenyPolicy), typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults)]
-		},
-		[typeof(Pages.ValidatePolicy)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.ValidatePolicy)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content")],
 			Pages = [typeof(Pages.ValidatePolicy)]
-		},
-		[typeof(Pages.ViewFileCertificates)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.ViewFileCertificates)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")],
 			Pages = [typeof(Pages.ViewFileCertificates)]
-		},
-		[typeof(Pages.PolicyEditor)] = new PageTitleMap
+		};
+
+		breadCrumbMappingsV2[typeof(Pages.PolicyEditor)] = new PageTitleMap
 		{
 			Titles = [GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content")],
 			Pages = [typeof(Pages.PolicyEditor)]
-		}
-	};
-
+		};
+	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
@@ -258,31 +286,35 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Dictionary of all the main pages in the app, used for the search bar.
 	/// Keys are page contents which are localized and values are page types.
 	/// </summary>
-	internal readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = new()
+	internal readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = [];
+
+	internal void RebuildNavigationPageToItemContentMapForSearch()
 	{
-		{ GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy) },
-		{ GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content"), typeof(Pages.GetCIHashes) },
-		{ GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content"), typeof(Pages.GitHubDocumentation) },
-		{ GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content"), typeof(Pages.MicrosoftDocumentation) },
-		{ GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content"), typeof(Pages.GetSecurePolicySettings) },
-		{ GlobalVars.Rizz.GetString("SettingsNavItem/Content"), typeof(Pages.Settings) },
-		{ GlobalVars.Rizz.GetString("SystemInformationNavItem/Content"), typeof(Pages.SystemInformation) },
-		{ GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content"), typeof(Pages.ConfigurePolicyRuleOptions) },
-		{ GlobalVars.Rizz.GetString("LogsNavItem/Content"), typeof(Pages.Logs) },
-		{ GlobalVars.Rizz.GetString("SimulationNavItem/Content"), typeof(Pages.Simulation) },
-		{ GlobalVars.Rizz.GetString("DeploymentNavItem/Content"), typeof(Pages.DeploymentPage) },
-		{ GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content"), typeof(Pages.EventLogsPolicyCreation) },
-		{ GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content"), typeof(Pages.MDEAHPolicyCreation) },
-		{ GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content"), typeof(Pages.AllowNewApps) },
-		{ GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content"), typeof(Pages.BuildNewCertificate) },
-		{ GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content"), typeof(Pages.CreateSupplementalPolicy) },
-		{ GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content"), typeof(Pages.MergePolicies) },
-		{ GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content"), typeof(Pages.CreateDenyPolicy) },
-		{ GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content"), typeof(Pages.ValidatePolicy) },
-		{ GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content"), typeof(Pages.ViewFileCertificates) },
-		{ GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor) },
-		{ GlobalVars.Rizz.GetString("UpdateNavItem/Content"), typeof(Pages.UpdatePage) }
-	};
+		NavigationPageToItemContentMapForSearch.Clear();
+
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content")] = typeof(Pages.CreatePolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content")] = typeof(Pages.GetCIHashes);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content")] = typeof(Pages.MicrosoftDocumentation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content")] = typeof(Pages.GetSecurePolicySettings);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("SettingsNavItem/Content")] = typeof(Pages.Settings);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("SystemInformationNavItem/Content")] = typeof(Pages.SystemInformation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content")] = typeof(Pages.ConfigurePolicyRuleOptions);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("LogsNavItem/Content")] = typeof(Pages.Logs);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("SimulationNavItem/Content")] = typeof(Pages.Simulation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("DeploymentNavItem/Content")] = typeof(Pages.DeploymentPage);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content")] = typeof(Pages.MergePolicies);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content")] = typeof(Pages.ValidatePolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
+	}
 
 	/// <summary>
 	/// Values for back drop combo box in the settings page
@@ -304,6 +336,10 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal MainWindowVM()
 	{
+
+		RebuildBreadcrumbMappings();
+		RebuildNavigationPageToItemContentMapForSearch();
+
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		AppUpdate.UpdateAvailable += OnUpdateAvailable!;
 

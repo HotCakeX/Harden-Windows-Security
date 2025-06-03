@@ -3562,9 +3562,6 @@
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>تم تحديد {0} لفحص سجل EVTX لـ AppLocker</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>إجمالي السجلات: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>إجمالي السجلات: {0}</value>
   </data>
@@ -5268,5 +5265,77 @@
 </data>
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>لم يتم الكشف عن أي موقعين للناشر لإنشاء قواعد رفض لهم.</value>
+</data>
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>إنشاء سياسة حظر RMM</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>تقوم هذه السياسة بحظر عدد كبير من برامج المراقبة والإدارة عن بُعد بناءً على أسماء الملفات التنفيذية ومسار الملف.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تقوم هذه السياسة بحظر عدد كبير من برامج المراقبة والإدارة عن بُعد بناءً على أسماء الملفات التنفيذية ومسار الملف.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تقوم هذه السياسة بحظر عدد كبير من برامج المراقبة والإدارة عن بُعد بناءً على أسماء الملفات التنفيذية ومسار الملف.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة حظر RMM الأساسية</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة حظر RMM الأساسية</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء سياسة حظر RMM بنجاح</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>منع التطبيقات الأخرى مثل مسجلات الشاشة (بما في ذلك Recall) من تسجيل أو التقاط لقطات شاشة لنافذة مدير التحكم في التطبيقات.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>درع الشاشة</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>منع التطبيقات الأخرى مثل مسجلات الشاشة (بما في ذلك Recall) من تسجيل أو التقاط لقطات شاشة لنافذة مدير التحكم في التطبيقات.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>منع التطبيقات الأخرى مثل مسجلات الشاشة (بما في ذلك Recall) من تسجيل أو التقاط لقطات شاشة لنافذة مدير التحكم في التطبيقات.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>تشغيل</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>إيقاف</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>تحتاج إلى تحديد ملفات CIP للنشر.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>تحتاج إلى تحديد ملفات XML لتحويلها إلى ملف CIP ثنائي.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>تم إنشاء ملفات CIP موقعة بنجاح لجميع ملفات XML المحددة.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>يتم حالياً توقيع ملف XML: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>تحتاج إلى تحديد ملفات XML للتوقيع والنشر.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>تحتاج إلى تحديد ملفات XML غير الموقعة للنشر.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>فحص توقيعات الملفات</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>الملف '{0}' يحتوي على {1} موقع (موقعين). البيانات من كتالوجات الأمان في النظام تم {2} في الفحص.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>تضمينها</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>عدم تضمينها</value>
 </data>
 </root>

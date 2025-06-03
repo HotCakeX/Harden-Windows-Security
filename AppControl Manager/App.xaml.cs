@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.MicrosoftGraph;
@@ -330,6 +331,40 @@ public partial class App : Application
 					Logger.Write(GlobalVars.Rizz.GetString("FileActivationNoArgumentsMessage"));
 				}
 			}
+			else if (activatedEventArgs.Kind is ExtendedActivationKind.Protocol)
+			{
+				ProtocolActivatedEventArgs? eventArgs = activatedEventArgs.Data as ProtocolActivatedEventArgs;
+
+				string? protocolName = eventArgs?.Uri?.OriginalString;
+
+				if (protocolName is not null)
+				{
+
+					Logger.Write($"Protocol Activation Detected: {protocolName}");
+
+
+					Match match = ProtocolDetailsExtraction.Match(protocolName);
+
+					string? action = null;
+					string? filePath = null;
+
+					if (match.Success)
+					{
+						action = match.Groups[1].Value;
+						filePath = match.Groups[2].Value;
+
+						Logger.Write($"Action: {action}");
+						Logger.Write($"File Path: {filePath}");
+					}
+
+					if (filePath is not null && action is not null)
+					{
+
+						Settings.LaunchActivationFilePath = filePath;
+						Settings.LaunchActivationAction = action;
+					}
+				}
+			}
 			else
 			{
 				Logger.Write($"ExtendedActivationKind: {activatedEventArgs.Kind}");
@@ -485,30 +520,44 @@ public partial class App : Application
 		{
 			try
 			{
-				if (string.Equals(Settings.LaunchActivationAction, "PolicyEditor", StringComparison.OrdinalIgnoreCase))
+				if (Enum.TryParse(Settings.LaunchActivationAction, true, out ViewModelBase.LaunchProtocolActions parsedAction))
 				{
-					ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-					.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
+					switch (parsedAction)
+					{
+						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
+							{
+								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+								.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
 
-					await PolicyEditorViewModel.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
-				}
-				else if (string.Equals(Settings.LaunchActivationAction, "FileSignature", StringComparison.OrdinalIgnoreCase))
-				{
-					ViewFileCertificatesVM vm = AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
+								await PolicyEditorViewModel.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
+								break;
+							}
+						case ViewModelBase.LaunchProtocolActions.FileSignature:
+							{
+								ViewFileCertificatesVM vm = AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
 
-					ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-					.First(item => string.Equals(item.Tag.ToString(), "ViewFileCertificates", StringComparison.OrdinalIgnoreCase));
+								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+								.First(item => string.Equals(item.Tag.ToString(), "ViewFileCertificates", StringComparison.OrdinalIgnoreCase));
 
-					await vm.OpenInViewFileCertificatesVM(Settings.LaunchActivationFilePath);
-				}
-				else if (string.Equals(Settings.LaunchActivationAction, "FileHashes", StringComparison.OrdinalIgnoreCase))
-				{
-					GetCIHashesVM vm = AppHost.Services.GetRequiredService<GetCIHashesVM>();
+								await vm.OpenInViewFileCertificatesVM(Settings.LaunchActivationFilePath);
+								break;
+							}
+						case ViewModelBase.LaunchProtocolActions.FileHashes:
+							{
+								GetCIHashesVM vm = AppHost.Services.GetRequiredService<GetCIHashesVM>();
 
-					ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-					.First(item => string.Equals(item.Tag.ToString(), "GetCodeIntegrityHashes", StringComparison.OrdinalIgnoreCase));
+								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
+								.First(item => string.Equals(item.Tag.ToString(), "GetCodeIntegrityHashes", StringComparison.OrdinalIgnoreCase));
 
-					await vm.OpenInGetCIHashes(Settings.LaunchActivationFilePath);
+								await vm.OpenInGetCIHashes(Settings.LaunchActivationFilePath);
+								break;
+							}
+						default:
+							{
+								InitialNav();
+								break;
+							}
+					}
 				}
 				else
 				{
@@ -635,8 +684,6 @@ public partial class App : Application
 
 		// Release the Mutex
 		_mutex?.Dispose();
-
-		_nav.DisposeUserActivitySession();
 	}
 
 	/// <summary>
@@ -682,4 +729,13 @@ public partial class App : Application
 			}
 		}
 	}
+
+
+	private const string Pattern = @"^appcontrol-manager:--action=([^-]+(?:--(?!file=).*?)*)--file=(.+)$";
+
+	private static readonly Regex ProtocolDetailsExtraction = Regex1();
+
+	[GeneratedRegex(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+	private static partial Regex Regex1();
+
 }

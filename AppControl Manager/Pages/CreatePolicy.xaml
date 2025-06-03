@@ -72,7 +72,9 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftAudit, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftAudit, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
@@ -88,19 +90,27 @@
                         </controls:SettingsCard>
 
                         <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftRequireEVSigners, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftRequireEVSigners, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftEnableScriptEnforcement, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftEnableScriptEnforcement, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftTestMode, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftTestMode, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftNoBlockRules, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftNoBlockRules, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
@@ -140,7 +150,9 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.DefaultWindowsAudit, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.DefaultWindowsAudit, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
@@ -156,19 +168,27 @@
                         </controls:SettingsCard>
 
                         <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
-                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsRequireEVSigners,Mode=TwoWay}" />
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsOn="{x:Bind ViewModel.DefaultWindowsRequireEVSigners,Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
-                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsEnableScriptEnforcement,Mode=TwoWay}" />
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsOn="{x:Bind ViewModel.DefaultWindowsEnableScriptEnforcement,Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
-                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsTestMode,Mode=TwoWay}" />
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsOn="{x:Bind ViewModel.DefaultWindowsTestMode,Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.DefaultWindowsNoBlockRules,Mode=TwoWay}" />
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsOn="{x:Bind ViewModel.DefaultWindowsNoBlockRules,Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
@@ -207,7 +227,9 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableAudit, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableAudit, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
@@ -223,19 +245,27 @@
                         </controls:SettingsCard>
 
                         <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableRequireEVSigners, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableRequireEVSigners, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableEnableScriptEnforcement, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableEnableScriptEnforcement, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableTestMode, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableTestMode, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableNoBlockRules, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableNoBlockRules, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                         </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
@@ -365,11 +395,15 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.StrictKernelModesAudit, Mode=TwoWay}" />
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsOn="{x:Bind ViewModel.StrictKernelModesAudit, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard">
-                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}" IsOn="{x:Bind ViewModel.StrictKernelModeNoFlightRoots, Mode=TwoWay}" />
+                            <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
+                                          IsOn="{x:Bind ViewModel.StrictKernelModeNoFlightRoots, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
@@ -416,6 +450,7 @@
 
                         <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
                             <ToggleSwitch IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                                          x:Uid="ToggleSwitchGeneral"
                                           IsOn="{x:Bind ViewModel.RMMBlockingAudit, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 

@@ -40,6 +40,7 @@
                      IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
                     <ToggleSwitch IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
+                                  x:Uid="ToggleSwitchGeneral"
                                   IsOn="{x:Bind ViewModel.InstallLocalPackageConfirmation, Mode=TwoWay}" />
                 </customUI:SettingsCardV2>
 

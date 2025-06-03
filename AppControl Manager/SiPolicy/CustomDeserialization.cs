@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -421,7 +422,7 @@ internal static class CustomDeserialization
 	}
 
 
-	private static readonly Dictionary<string, OptionType> PolicyRuleOptionsActual = new()
+	private static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>
 	{
 		{ "Enabled:UMCI", OptionType.EnabledUMCI },
 		{ "Enabled:Boot Menu Protection", OptionType.EnabledBootMenuProtection },
@@ -446,7 +447,7 @@ internal static class CustomDeserialization
 		{ "Enabled:Developer Mode Dynamic Code Trust", OptionType.EnabledDeveloperModeDynamicCodeTrust },
 		{ "Enabled:Secure Setting Policy", OptionType.EnabledSecureSettingPolicy },
 		{ "Enabled:Conditional Windows Lockdown Policy", OptionType.EnabledConditionalWindowsLockdownPolicy }
-	};
+	}.ToFrozenDictionary(StringComparer.Ordinal);
 
 	// Conversion methods for enums.
 	internal static OptionType ConvertStringToOptionType(string s)

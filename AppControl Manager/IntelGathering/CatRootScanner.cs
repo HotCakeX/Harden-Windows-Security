@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 
@@ -52,23 +51,23 @@ internal static class CatRootScanner
 		// The output dictionary that will contain the hashes of the security catalogs and their file paths
 		ConcurrentDictionary<string, string> output = new(scalability, paths?.Count ?? 1);
 
-		List<DirectoryInfo> DirectoriesToScan = [];
+		List<string> DirectoriesToScan = [];
 
 		if (paths is { Count: > 0 })
 		{
 			foreach (string item in paths)
 			{
-				DirectoriesToScan.Add(new DirectoryInfo(item));
+				DirectoriesToScan.Add(item);
 			}
 		}
 		else
 		{
 			// Use the default directory in the OS if no other paths were provided
-			DirectoriesToScan.Add(new(@"C:\Windows\System32\CatRoot"));
+			DirectoriesToScan.Add(@"C:\Windows\System32\CatRoot");
 		}
 
 		// Get the .cat files in the CatRoot directories
-		(IEnumerable<FileInfo>, int) detectedCatFiles = FileUtility.GetFilesFast([.. DirectoriesToScan], null, [".cat"]);
+		(IEnumerable<string>, int) detectedCatFiles = FileUtility.GetFilesFast([.. DirectoriesToScan], null, [".cat"]);
 
 		Logger.Write(string.Format(
 			GlobalVars.Rizz.GetString("IncludingSecurityCatalogsScanCountMessage"),
@@ -80,14 +79,14 @@ internal static class CatRootScanner
 		_ = Parallel.ForEach(detectedCatFiles.Item1, options, file =>
 		{
 			// Get the hashes of the security catalog file
-			HashSet<string> catHashes = MeowParser.GetHashes(file.FullName);
+			HashSet<string> catHashes = MeowParser.GetHashes(file);
 
 			// If the security catalog file has hashes, then add them to the dictionary
 			if (catHashes.Count > 0)
 			{
 				foreach (string hash in catHashes)
 				{
-					_ = output.TryAdd(hash, file.FullName);
+					_ = output.TryAdd(hash, file);
 				}
 			}
 		});

@@ -62,6 +62,7 @@ internal sealed partial class Main : ViewModelBase
 		LaunchActivationFilePath = ReadValue(nameof(LaunchActivationFilePath), LaunchActivationFilePath);
 		LaunchActivationAction = ReadValue(nameof(LaunchActivationAction), LaunchActivationAction);
 		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
+		PublishUserActivityInTheOS = ReadValue(nameof(PublishUserActivityInTheOS), PublishUserActivityInTheOS);
 	}
 
 	/// <summary>
@@ -611,4 +612,28 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// Whether the application can publish user activity in the OS so that user can then re-trace their steps in features such as Recall.
+	/// </summary>
+	internal bool PublishUserActivityInTheOS
+	{
+		get
+		{
+			lock (_syncRoot)
+			{
+				return field;
+			}
+		}
+		set
+		{
+			lock (_syncRoot)
+			{
+				if (SP(ref field, value))
+				{
+					SaveValue(nameof(PublishUserActivityInTheOS), field);
+				}
+			}
+		}
+	} = true;
 }

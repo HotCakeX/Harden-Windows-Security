@@ -94,7 +94,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
 	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = "Total logs: 0";
+	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
 
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -432,11 +432,11 @@ DeviceEvents
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox = "Total logs: 0";
+			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox = $"Total logs: {FileIdentities.Count}";
+			TotalCountOfTheFilesTextBox = string.Format(GlobalVars.Rizz.GetString("TotalLogsCountMessage"), FileIdentities.Count);
 		}
 	}
 

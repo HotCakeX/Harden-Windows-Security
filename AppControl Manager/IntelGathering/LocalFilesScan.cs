@@ -47,7 +47,14 @@ internal static class LocalFilesScan
 	/// <param name="VMRef">The reference to the ViewModel class.</param>
 	/// <typeparam name="TReference">The generic type used for ViewModel class reference. There are mode than 1 type.</typeparam>
 	/// <returns></returns>
-	internal static IEnumerable<FileIdentity> Scan<TReference>((IEnumerable<FileInfo>, int) files, ushort scalability, IProgress<double> progressReporter, TReference VMRef, Action<FileIdentity, TReference> assignVMRef)
+	internal static IEnumerable<FileIdentity> Scan<TReference>(
+		(IEnumerable<string>, int) files,
+		ushort scalability,
+		IProgress<double> progressReporter,
+		TReference VMRef,
+		Action<FileIdentity,
+		TReference> assignVMRef,
+		CancellationToken? cToken = null)
 	{
 
 		// Make sure scalability is always at least 2
@@ -93,19 +100,22 @@ internal static class LocalFilesScan
 			}, null, 0, 2000);
 
 			// split the file paths by the value of Scalability variable
-			IEnumerable<FileInfo[]> SplitArrays = Enumerable.Chunk(files.Item1, (int)Math.Ceiling(AllFilesCount / scalability));
+			IEnumerable<string[]> SplitArrays = Enumerable.Chunk(files.Item1, (int)Math.Ceiling(AllFilesCount / scalability));
 
 			// List of tasks to run in parallel
 			List<Task> tasks = new(scalability);
 
 			// Loop over each chunk of data
-			foreach (FileInfo[] chunk in SplitArrays)
+			foreach (string[] chunk in SplitArrays)
 			{
 				// Run each chunk of data in a different thread
 				tasks.Add(Task.Run(() =>
 				{
-					foreach (FileInfo file in chunk)
+					foreach (string file in chunk)
 					{
+
+						cToken?.ThrowIfCancellationRequested();
+
 						// Increment the processed file count safely
 						_ = Interlocked.Increment(ref processedFilesCount);
 
@@ -140,7 +150,7 @@ internal static class LocalFilesScan
 							{
 								Logger.Write(string.Format(
 									GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
-									file.FullName));
+									file));
 							}
 
 							bool fileIsSigned = false;
@@ -161,7 +171,7 @@ internal static class LocalFilesScan
 								{
 									Logger.Write(string.Format(
 										GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
-										file.FullName));
+										file));
 								}
 							}
 							else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
@@ -174,7 +184,7 @@ internal static class LocalFilesScan
 								{
 									Logger.Write(string.Format(
 										GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
-										file.FullName));
+										file));
 								}
 							}
 
@@ -191,7 +201,7 @@ internal static class LocalFilesScan
 								Origin = FileIdentityOrigin.DirectFileScan,
 								SignatureStatus = fileIsSigned ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned,
 								FilePath = fileString,
-								FileName = file.Name,
+								FileName = Path.GetFileName(file),
 								SHA1Hash = fileHashes.SHa1Authenticode,
 								SHA256Hash = fileHashes.SHA256Authenticode,
 								SHA1PageHash = fileHashes.SHA1Page,
@@ -352,13 +362,13 @@ internal static class LocalFilesScan
 						{
 							Logger.Write(string.Format(
 								GlobalVars.Rizz.GetString("SkippingFileInUseMessage"),
-								file.FullName));
+								file));
 						}
 						catch (IOException ex) when (ex.HResult == unchecked((int)0x80070780)) // File cannot be accessed by the system
 						{
 							Logger.Write(string.Format(
 								GlobalVars.Rizz.GetString("SkippingFileCannotBeAccessedMessage"),
-								file.FullName));
+								file));
 						}
 						// Custom "Could not hash file via SHA1" error
 						// Either thrown from CiFileHash.GetCiFileHashes or CiFileHash.GetAuthenticodeHash
@@ -366,20 +376,20 @@ internal static class LocalFilesScan
 						{
 							Logger.Write(string.Format(
 								GlobalVars.Rizz.GetString("SkippingFileHashingFailedMessage"),
-								file.FullName));
+								file));
 						}
 						catch (IOException ex) when (ex.HResult == -2147024894) // FileNotFoundException (0x80070002)
 						{
 							Logger.Write(string.Format(
 								GlobalVars.Rizz.GetString("SkippingFileNotFoundMessage"),
-								file.FullName));
+								file));
 						}
 						// Defender files in Program Data directory can throw this
 						catch (UnauthorizedAccessException)
 						{
 							Logger.Write(string.Format(
 								GlobalVars.Rizz.GetString("SkippingFileAccessDeniedMessage"),
-								file.FullName));
+								file));
 						}
 
 					}

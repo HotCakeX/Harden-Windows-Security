@@ -201,6 +201,10 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			// Display the rest of the hashes in the UI
 			SHA3384FlatHash = SHA3_384Hash ?? "N/A";
 			SHA3512FlatHash = SHA3_512Hash ?? "N/A";
+
+			await PublishUserActivityAsync(LaunchProtocolActions.FileHashes,
+				selectedFile,
+				GlobalVars.Rizz.GetString("UserActivityNameForFileHashes"));
 		}
 		catch (Exception ex)
 		{

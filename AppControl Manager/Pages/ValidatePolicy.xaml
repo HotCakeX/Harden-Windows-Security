@@ -61,22 +61,30 @@
 
                 <!-- Schema -->
                 <controls:SettingsCard x:Uid="SchemaValidationSettingsCard">
-                    <ToggleSwitch IsOn="True" IsEnabled="False"/>
+                    <ToggleSwitch IsOn="True"
+                                  x:Uid="ToggleSwitchGeneral"
+                                  IsEnabled="False"/>
                 </controls:SettingsCard>
 
                 <!-- Deserialize -->
                 <customUI:SettingsCardV2 x:Uid="DeserializeValidationSettingsCard">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level2Test, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level2Test, Mode=TwoWay}"
+                                  x:Uid="ToggleSwitchGeneral"
+                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                 </customUI:SettingsCardV2>
 
                 <!-- Serialize -->
                 <customUI:SettingsCardV2 x:Uid="SerializeValidationSettingsCard">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level3Test, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level3Test, Mode=TwoWay}"
+                                  x:Uid="ToggleSwitchGeneral"
+                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                 </customUI:SettingsCardV2>
 
                 <!-- Binary creation -->
                 <customUI:SettingsCardV2 x:Uid="BinaryValidationSettingsCard">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level4Test, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.Level4Test, Mode=TwoWay}"
+                                  x:Uid="ToggleSwitchGeneral"
+                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                 </customUI:SettingsCardV2>
 
             </StackPanel>

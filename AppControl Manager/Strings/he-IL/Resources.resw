@@ -3566,9 +3566,6 @@
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>נבחר {0} לסריקת יומני EVTX של AppLocker</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>סה״כ יומנים: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>סה״כ יומנים: {0}</value>
   </data>
@@ -5269,5 +5266,77 @@
 </data>
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>לא זוהו חותמי Publisher ליצירת כללי חסימה עבורם.</value>
+</data>
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>יצירת מדיניות חסימת RMM</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>מדיניות זו חוסמת מספר רב של תוכנות ניטור וניהול מרחוק על בסיס שמות הקבצים הרצים שלהן ונתיב הקובץ.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מדיניות זו חוסמת מספר רב של תוכנות ניטור וניהול מרחוק על בסיס שמות הקבצים הרצים שלהן ונתיב הקובץ.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מדיניות זו חוסמת מספר רב של תוכנות ניטור וניהול מרחוק על בסיס שמות הקבצים הרצים שלהן ונתיב הקובץ.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>צור</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור את מדיניות הבסיס לחסימת RMM</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור את מדיניות הבסיס לחסימת RMM</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>מדיניות חסימת RMM נוצרה בהצלחה</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>מנע מאפליקציות אחרות כגון מקליטי מסך (כולל Recall) להקליט או לצלם צילומי מסך של חלון מנהל בקרת האפליקציות.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>מגן מסך</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מנע מאפליקציות אחרות כגון מקליטי מסך (כולל Recall) להקליט או לצלם צילומי מסך של חלון מנהל בקרת האפליקציות.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מנע מאפליקציות אחרות כגון מקליטי מסך (כולל Recall) להקליט או לצלם צילומי מסך של חלון מנהל בקרת האפליקציות.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>מופעל</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>כבוי</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>עליך לבחור קבצי CIP לפריסה.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>עליך לבחור קבצי XML להמרה לבינארי CIP.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>קבצי CIP חתומים נוצרו בהצלחה עבור כל קבצי ה-XML שנבחרו.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>חותם כרגע קובץ XML: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>עליך לבחור קבצי XML לחתימה ופריסה.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>עליך לבחור קבצי XML לא חתומים לפריסה.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>בודק חתימות קבצים</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>לקובץ '{0}' יש {1} חותם(ים). נתונים מקטלוגי האבטחה במערכת {2} בסריקה.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>נכללו</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>לא נכללו</value>
 </data>
 </root>

@@ -1,0 +1,1628 @@
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AppControlManager.Others;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Media;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
+using Windows.UI;
+
+namespace AppControlManager.CustomUIElements;
+
+internal sealed partial class AnimatedCancellableButton : Button
+{
+	private Storyboard _fadeOutStoryboard = new();
+	private Storyboard _fadeInStoryboard = new();
+	private DoubleAnimation _fadeOutAnimation = new();
+	private DoubleAnimation _fadeInAnimation = new();
+	private Storyboard _shadowAnimationStoryboard = new();
+	private AttachedCardShadow? _attachedShadow;
+	private AttachedCardShadow? _transparentShadow;
+	private bool _isShadowAnimationRunning;
+	private bool _hasShadowApplied;
+	private DispatcherTimer? _shadowTimer;
+	private bool _shadowIncreasing = true;
+	private double _currentBlurRadius = 8.0;
+	private const double MIN_BLUR_RADIUS = 8.0;
+	private const double MAX_BLUR_RADIUS = 30.0;
+	private const double BLUR_STEP = 1.0;
+	private volatile bool _isClickInProgress;
+	private readonly Lock _stateLock = new();
+	private volatile bool _operationStarted;
+	private bool _isLoaded;
+	private DispatcherTimer? _clickDelayTimer;
+	private CancellationTokenSource? _disposalCancellationTokenSource;
+	private volatile bool _isDisposed;
+	private volatile bool _isDisposing;
+
+	private int _currentColorIndex;
+	private int _nextColorIndex = 1;
+	private int _colorTransitionCounter;
+	private const int COLOR_TRANSITION_DURATION = 60;
+	private const int COLOR_HOLD_DURATION = 80;
+	private int _colorHoldCounter;
+	private bool _inColorTransition;
+	private const double SHADOW_OPACITY = 0.85;
+
+	private static readonly Color[] _shadowColors = [
+		Color.FromArgb(255, 255, 192, 203), // Pink
+		Color.FromArgb(255, 255, 20, 147),  // Hot Pink
+		Color.FromArgb(255, 144, 238, 144), // Light Green
+		Color.FromArgb(255, 173, 216, 230), // Light Blue
+		Color.FromArgb(255, 221, 160, 221)  // Light Purple
+	];
+
+	public new event RoutedEventHandler? Click;
+
+	public static readonly DependencyProperty CancelMethodProperty =
+		DependencyProperty.Register(
+			nameof(CancelMethod),
+			typeof(Func<Task>),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(null, OnCancelMethodChanged));
+
+	public Func<Task>? CancelMethod
+	{
+		get => (Func<Task>?)GetValue(CancelMethodProperty);
+		set => SetValue(CancelMethodProperty, value);
+	}
+
+	private static void OnCancelMethodChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			// No action needed for this property change
+		}
+	}
+
+	public static readonly DependencyProperty ExternalOperationInProgressProperty =
+		DependencyProperty.Register(
+			nameof(ExternalOperationInProgress),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalOperationInProgressChanged));
+
+	public bool ExternalOperationInProgress
+	{
+		get => (bool)GetValue(ExternalOperationInProgressProperty);
+		set => SetValue(ExternalOperationInProgressProperty, value);
+	}
+
+	private static void OnExternalOperationInProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			bool isInProgress = (bool)e.NewValue;
+
+			if (!isInProgress &&
+				!button.ExternalIsCancelState &&
+				!button.ExternalIsCancellingState &&
+				!button.ExternalIsAnimating)
+			{
+				button.SynchronizeWithExternalState();
+			}
+		}
+	}
+
+	public static readonly DependencyProperty ExternalIsCancelStateProperty =
+		DependencyProperty.Register(
+			nameof(ExternalIsCancelState),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalIsCancelStateChanged));
+
+	public bool ExternalIsCancelState
+	{
+		get => (bool)GetValue(ExternalIsCancelStateProperty);
+		set => SetValue(ExternalIsCancelStateProperty, value);
+	}
+
+	private static void OnExternalIsCancelStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalIsCancellingStateProperty =
+		DependencyProperty.Register(
+			nameof(ExternalIsCancellingState),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalIsCancellingStateChanged));
+
+	public bool ExternalIsCancellingState
+	{
+		get => (bool)GetValue(ExternalIsCancellingStateProperty);
+		set => SetValue(ExternalIsCancellingStateProperty, value);
+	}
+
+	private static void OnExternalIsCancellingStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalIsAnimatingProperty =
+		DependencyProperty.Register(
+			nameof(ExternalIsAnimating),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalIsAnimatingChanged));
+
+	public bool ExternalIsAnimating
+	{
+		get => (bool)GetValue(ExternalIsAnimatingProperty);
+		set => SetValue(ExternalIsAnimatingProperty, value);
+	}
+
+	private static void OnExternalIsAnimatingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalButtonContentProperty =
+		DependencyProperty.Register(
+			nameof(ExternalButtonContent),
+			typeof(string),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(string.Empty, OnExternalButtonContentChanged));
+
+	public string ExternalButtonContent
+	{
+		get => (string)GetValue(ExternalButtonContentProperty);
+		set => SetValue(ExternalButtonContentProperty, value);
+	}
+
+	private static void OnExternalButtonContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			string newContent = (string)e.NewValue;
+
+			if (!string.IsNullOrEmpty(newContent))
+			{
+				button.Content = newContent;
+			}
+		}
+	}
+
+	public static readonly DependencyProperty ExternalOriginalTextProperty =
+		DependencyProperty.Register(
+			nameof(ExternalOriginalText),
+			typeof(string),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(string.Empty, OnExternalOriginalTextChanged));
+
+	public string ExternalOriginalText
+	{
+		get => (string)GetValue(ExternalOriginalTextProperty);
+		set => SetValue(ExternalOriginalTextProperty, value);
+	}
+
+	private static void OnExternalOriginalTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalInternalIsCancelStateProperty =
+		DependencyProperty.Register(
+			nameof(ExternalInternalIsCancelState),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalInternalIsCancelStateChanged));
+
+	public bool ExternalInternalIsCancelState
+	{
+		get => (bool)GetValue(ExternalInternalIsCancelStateProperty);
+		set => SetValue(ExternalInternalIsCancelStateProperty, value);
+	}
+
+	private static void OnExternalInternalIsCancelStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalInternalIsCancellingStateProperty =
+		DependencyProperty.Register(
+			nameof(ExternalInternalIsCancellingState),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalInternalIsCancellingStateChanged));
+
+	public bool ExternalInternalIsCancellingState
+	{
+		get => (bool)GetValue(ExternalInternalIsCancellingStateProperty);
+		set => SetValue(ExternalInternalIsCancellingStateProperty, value);
+	}
+
+	private static void OnExternalInternalIsCancellingStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalInternalIsAnimatingProperty =
+		DependencyProperty.Register(
+			nameof(ExternalInternalIsAnimating),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalInternalIsAnimatingChanged));
+
+	public bool ExternalInternalIsAnimating
+	{
+		get => (bool)GetValue(ExternalInternalIsAnimatingProperty);
+		set => SetValue(ExternalInternalIsAnimatingProperty, value);
+	}
+
+	private static void OnExternalInternalIsAnimatingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalInternalIsOperationInProgressProperty =
+		DependencyProperty.Register(
+			nameof(ExternalInternalIsOperationInProgress),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalInternalIsOperationInProgressChanged));
+
+	public bool ExternalInternalIsOperationInProgress
+	{
+		get => (bool)GetValue(ExternalInternalIsOperationInProgressProperty);
+		set => SetValue(ExternalInternalIsOperationInProgressProperty, value);
+	}
+
+	private static void OnExternalInternalIsOperationInProgressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalInternalSuppressExternalClickProperty =
+		DependencyProperty.Register(
+			nameof(ExternalInternalSuppressExternalClick),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalInternalSuppressExternalClickChanged));
+
+	public bool ExternalInternalSuppressExternalClick
+	{
+		get => (bool)GetValue(ExternalInternalSuppressExternalClickProperty);
+		set => SetValue(ExternalInternalSuppressExternalClickProperty, value);
+	}
+
+	private static void OnExternalInternalSuppressExternalClickChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			button.SynchronizeWithExternalState();
+		}
+	}
+
+	public static readonly DependencyProperty ExternalShadowAnimationRunningProperty =
+		DependencyProperty.Register(
+			nameof(ExternalShadowAnimationRunning),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalShadowAnimationRunningChanged));
+
+	public bool ExternalShadowAnimationRunning
+	{
+		get => (bool)GetValue(ExternalShadowAnimationRunningProperty);
+		set => SetValue(ExternalShadowAnimationRunningProperty, value);
+	}
+
+	private static void OnExternalShadowAnimationRunningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			bool shouldAnimate = (bool)e.NewValue;
+
+			if (button._isLoaded)
+			{
+				if (shouldAnimate && !button._isShadowAnimationRunning)
+				{
+					button.StartShadowAnimation();
+				}
+				else if (!shouldAnimate && button._isShadowAnimationRunning)
+				{
+					button.StopShadowAnimation();
+				}
+			}
+		}
+	}
+
+	public static readonly DependencyProperty ExternalOperationStartedProperty =
+		DependencyProperty.Register(
+			nameof(ExternalOperationStarted),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false, OnExternalOperationStartedChanged));
+
+	public bool ExternalOperationStarted
+	{
+		get => (bool)GetValue(ExternalOperationStartedProperty);
+		set => SetValue(ExternalOperationStartedProperty, value);
+	}
+
+	private static void OnExternalOperationStartedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
+		{
+			bool operationStarted = (bool)e.NewValue;
+			button._operationStarted = operationStarted;
+		}
+	}
+
+	private void InitializeClickDelayTimer()
+	{
+		_clickDelayTimer = new DispatcherTimer
+		{
+			Interval = TimeSpan.FromMilliseconds(50)
+		};
+		_clickDelayTimer.Tick += ClickDelayTimer_Tick;
+	}
+
+	private void ClickDelayTimer_Tick(object? sender, object e)
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_clickDelayTimer?.Stop();
+			_isClickInProgress = false;
+		}
+	}
+
+	private void InvokeCancelMethodSafely()
+	{
+		CancellationTokenSource? cts = null;
+		lock (_stateLock)
+		{
+			if (!_isDisposed && !_isDisposing && _disposalCancellationTokenSource is not null)
+			{
+				cts = _disposalCancellationTokenSource;
+			}
+		}
+
+		if (CancelMethod is not null && cts is not null)
+		{
+			_ = Task.Run(async () =>
+			{
+				try
+				{
+					if (!cts.Token.IsCancellationRequested)
+					{
+						await CancelMethod.Invoke();
+					}
+				}
+				catch (Exception)
+				{
+				}
+			}, cts.Token);
+		}
+	}
+
+	private static AttachedCardShadow CreateTransparentShadow()
+	{
+		try
+		{
+			return new AttachedCardShadow
+			{
+				Color = Color.FromArgb(0, 0, 0, 0),
+				Offset = "0",
+				BlurRadius = 0.0,
+				Opacity = 0.0,
+				CornerRadius = 0.0
+			};
+		}
+		catch (Exception)
+		{
+			try
+			{
+				return new AttachedCardShadow
+				{
+					Offset = "0",
+					Color = Color.FromArgb(0, 0, 0, 0),
+					BlurRadius = 0.0,
+					Opacity = 0.0,
+					CornerRadius = 0.0
+				};
+			}
+			catch (Exception)
+			{
+				try
+				{
+					return new AttachedCardShadow
+					{
+						CornerRadius = 0.0,
+						BlurRadius = 0.0,
+						Color = Color.FromArgb(0, 0, 0, 0),
+						Opacity = 0.0
+					};
+				}
+				catch (Exception)
+				{
+					return new AttachedCardShadow();
+				}
+			}
+		}
+	}
+
+	private AttachedCardShadow? CreateShadow()
+	{
+		try
+		{
+			return new AttachedCardShadow
+			{
+				Color = GetCurrentShadowColor(),
+				Offset = "0",
+				BlurRadius = MIN_BLUR_RADIUS,
+				Opacity = SHADOW_OPACITY,
+				CornerRadius = 5.0
+			};
+		}
+		catch (Exception)
+		{
+			try
+			{
+				return new AttachedCardShadow
+				{
+					Offset = "0",
+					Color = GetCurrentShadowColor(),
+					BlurRadius = MIN_BLUR_RADIUS,
+					Opacity = SHADOW_OPACITY,
+					CornerRadius = 5.0
+				};
+			}
+			catch (Exception)
+			{
+				try
+				{
+					return new AttachedCardShadow
+					{
+						CornerRadius = 5.0,
+						BlurRadius = MIN_BLUR_RADIUS,
+						Color = GetCurrentShadowColor(),
+						Opacity = SHADOW_OPACITY
+					};
+				}
+				catch (Exception)
+				{
+					return null;
+				}
+			}
+		}
+	}
+
+	private Color GetCurrentShadowColor()
+	{
+		if (_isDisposed || _isDisposing) return Color.FromArgb(0, 0, 0, 0);
+
+		if (_currentColorIndex < 0 || _currentColorIndex >= _shadowColors.Length)
+		{
+			_currentColorIndex = 0;
+		}
+
+		if (_nextColorIndex < 0 || _nextColorIndex >= _shadowColors.Length)
+		{
+			_nextColorIndex = (_currentColorIndex + 1) % _shadowColors.Length;
+		}
+
+		if (!_inColorTransition)
+		{
+			return _shadowColors[_currentColorIndex];
+		}
+
+		double transitionProgress = (double)_colorTransitionCounter / COLOR_TRANSITION_DURATION;
+		transitionProgress = Math.Clamp(transitionProgress, 0.0, 1.0);
+
+		double easedProgress = EaseInOutCubic(transitionProgress);
+
+		Color currentColor = _shadowColors[_currentColorIndex];
+		Color nextColor = _shadowColors[_nextColorIndex];
+
+		byte interpolatedA = (byte)(currentColor.A + (nextColor.A - currentColor.A) * easedProgress);
+		byte interpolatedR = (byte)(currentColor.R + (nextColor.R - currentColor.R) * easedProgress);
+		byte interpolatedG = (byte)(currentColor.G + (nextColor.G - currentColor.G) * easedProgress);
+		byte interpolatedB = (byte)(currentColor.B + (nextColor.B - currentColor.B) * easedProgress);
+
+		return Color.FromArgb(interpolatedA, interpolatedR, interpolatedG, interpolatedB);
+	}
+
+	private static double EaseInOutCubic(double t)
+	{
+		return t < 0.5 ? 4 * t * t * t : 1 - Math.Pow(-2 * t + 2, 3) / 2;
+	}
+
+	private void AdvanceToNextShadowColor()
+	{
+		_currentColorIndex = _nextColorIndex;
+		_nextColorIndex = (_currentColorIndex + 1) % _shadowColors.Length;
+	}
+
+	private void StartColorTransition()
+	{
+		if (!_inColorTransition)
+		{
+			_inColorTransition = true;
+			_colorTransitionCounter = 0;
+		}
+	}
+
+	private void UpdateShadowColor()
+	{
+		if (_attachedShadow != null)
+		{
+			try
+			{
+				_attachedShadow.Color = GetCurrentShadowColor();
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	private void InitializeShadowAnimation()
+	{
+		try
+		{
+			_shadowAnimationStoryboard = new Storyboard();
+
+			_shadowTimer = new DispatcherTimer
+			{
+				Interval = TimeSpan.FromMilliseconds(50)
+			};
+			_shadowTimer.Tick += ShadowTimer_Tick;
+
+			_currentColorIndex = 0;
+			_nextColorIndex = 1;
+			_colorTransitionCounter = 0;
+			_colorHoldCounter = 0;
+			_inColorTransition = false;
+
+			_transparentShadow = CreateTransparentShadow();
+		}
+		catch (Exception)
+		{
+			_shadowTimer = new DispatcherTimer
+			{
+				Interval = TimeSpan.FromMilliseconds(50)
+			};
+			_shadowTimer.Tick += ShadowTimer_Tick;
+			_currentColorIndex = 0;
+			_nextColorIndex = 1;
+			_colorTransitionCounter = 0;
+			_colorHoldCounter = 0;
+			_inColorTransition = false;
+
+			try
+			{
+				_transparentShadow = CreateTransparentShadow();
+			}
+			catch (Exception)
+			{
+				_transparentShadow = new AttachedCardShadow();
+			}
+		}
+	}
+
+	private void ShadowTimer_Tick(object? sender, object e)
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			try
+			{
+				if (_attachedShadow != null && _isShadowAnimationRunning)
+				{
+					if (_shadowIncreasing)
+					{
+						_currentBlurRadius += BLUR_STEP;
+						if (_currentBlurRadius >= MAX_BLUR_RADIUS)
+						{
+							_currentBlurRadius = MAX_BLUR_RADIUS;
+							_shadowIncreasing = false;
+						}
+					}
+					else
+					{
+						_currentBlurRadius -= BLUR_STEP;
+						if (_currentBlurRadius <= MIN_BLUR_RADIUS)
+						{
+							_currentBlurRadius = MIN_BLUR_RADIUS;
+							_shadowIncreasing = true;
+						}
+					}
+
+					_attachedShadow.BlurRadius = _currentBlurRadius;
+
+					if (_inColorTransition)
+					{
+						_colorTransitionCounter++;
+						UpdateShadowColor();
+
+						if (_colorTransitionCounter >= COLOR_TRANSITION_DURATION)
+						{
+							_inColorTransition = false;
+							_colorTransitionCounter = 0;
+							AdvanceToNextShadowColor();
+							_colorHoldCounter = 0;
+							UpdateShadowColor();
+						}
+					}
+					else
+					{
+						_colorHoldCounter++;
+						if (_colorHoldCounter >= COLOR_HOLD_DURATION)
+						{
+							StartColorTransition();
+						}
+					}
+				}
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	private void StartShadowAnimation()
+	{
+		if (_isShadowAnimationRunning || _isDisposed || _isDisposing)
+		{
+			return;
+		}
+
+		try
+		{
+			if (_attachedShadow == null)
+			{
+				_attachedShadow = CreateShadow();
+			}
+
+			if (_attachedShadow != null && !_hasShadowApplied)
+			{
+				Effects.SetShadow(this, _attachedShadow);
+				_hasShadowApplied = true;
+			}
+
+			if (_attachedShadow != null)
+			{
+				_currentBlurRadius = MIN_BLUR_RADIUS;
+				_shadowIncreasing = true;
+				_colorTransitionCounter = 0;
+				_colorHoldCounter = 0;
+				_inColorTransition = false;
+				_attachedShadow.BlurRadius = _currentBlurRadius;
+				_attachedShadow.Color = GetCurrentShadowColor();
+				_attachedShadow.Opacity = SHADOW_OPACITY;
+
+				if (_shadowTimer != null)
+				{
+					_shadowTimer.Start();
+					_isShadowAnimationRunning = true;
+
+					ExternalShadowAnimationRunning = true;
+				}
+			}
+		}
+		catch (Exception)
+		{
+			_isShadowAnimationRunning = true;
+			ExternalShadowAnimationRunning = true;
+		}
+	}
+
+	private void StopShadowAnimation()
+	{
+		try
+		{
+			if (_shadowTimer != null && _shadowTimer.IsEnabled)
+			{
+				_shadowTimer.Stop();
+			}
+
+			_isShadowAnimationRunning = false;
+
+			ExternalShadowAnimationRunning = false;
+
+			if (_hasShadowApplied)
+			{
+				if (_transparentShadow != null)
+				{
+					Effects.SetShadow(this, _transparentShadow);
+				}
+				else
+				{
+					AttachedCardShadow tempTransparentShadow = CreateTransparentShadow();
+					Effects.SetShadow(this, tempTransparentShadow);
+				}
+				_hasShadowApplied = false;
+			}
+
+			_attachedShadow = null;
+		}
+		catch (Exception)
+		{
+			_isShadowAnimationRunning = false;
+			ExternalShadowAnimationRunning = false;
+		}
+	}
+
+	private void UpdateButtonContentImmediately()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		try
+		{
+			if (ExternalInternalIsCancellingState)
+			{
+				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+			}
+			else if (ExternalInternalIsCancelState)
+			{
+				this.Content = GlobalVars.Rizz.GetString("Cancel");
+			}
+			else
+			{
+				if (!string.IsNullOrEmpty(ExternalButtonContent))
+				{
+					this.Content = ExternalButtonContent;
+				}
+				else if (!string.IsNullOrEmpty(ExternalOriginalText))
+				{
+					this.Content = ExternalOriginalText;
+				}
+				else
+				{
+					this.Content = "Button";
+				}
+			}
+		}
+		catch (Exception)
+		{
+		}
+	}
+
+	private void ForceResetToOriginalState()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_operationStarted = false;
+			_isClickInProgress = false;
+
+			ExternalOperationStarted = false;
+			ExternalShadowAnimationRunning = false;
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+			}
+			catch (Exception)
+			{
+			}
+
+			StopShadowAnimation();
+
+			UpdateButtonContentImmediately();
+
+			try
+			{
+				this.Opacity = 1.0;
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	private void SynchronizeWithExternalState()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_operationStarted = ExternalOperationStarted;
+
+			if (!_operationStarted)
+			{
+				UpdateButtonContentImmediately();
+
+				if (_isShadowAnimationRunning)
+				{
+					StopShadowAnimation();
+				}
+
+				try
+				{
+					if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+					{
+						_fadeOutStoryboard.Stop();
+					}
+					if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+					{
+						_fadeInStoryboard.Stop();
+					}
+
+					this.Opacity = 1.0;
+				}
+				catch (Exception)
+				{
+				}
+				return;
+			}
+
+			UpdateButtonContentImmediately();
+
+			bool shouldAnimateShadow = (ExternalInternalIsCancelState || ExternalInternalIsCancellingState) && ExternalShadowAnimationRunning;
+
+			if (shouldAnimateShadow && !_isShadowAnimationRunning && _isLoaded)
+			{
+				StartShadowAnimation();
+			}
+			else if (!shouldAnimateShadow && _isShadowAnimationRunning)
+			{
+				StopShadowAnimation();
+			}
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+
+				this.Opacity = 1.0;
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	private void RestoreShadowAnimationAfterNavigation()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		if (ExternalShadowAnimationRunning && !_isShadowAnimationRunning && _isLoaded)
+		{
+			bool shouldAnimate = ExternalInternalIsCancelState || ExternalInternalIsCancellingState;
+
+			if (shouldAnimate)
+			{
+				StartShadowAnimation();
+			}
+		}
+	}
+
+	public AnimatedCancellableButton()
+	{
+		this.DefaultStyleKey = typeof(Button);
+		base.Click += AnimatedCancellableButton_BaseClick;
+		this.Loaded += AnimatedCancellableButton_Loaded;
+		this.Unloaded += AnimatedCancellableButton_Unloaded;
+		InitializeAnimations();
+		InitializeShadowAnimation();
+		InitializeClickDelayTimer();
+		_disposalCancellationTokenSource = new CancellationTokenSource();
+	}
+
+	private void AnimatedCancellableButton_Loaded(object? sender, RoutedEventArgs e)
+	{
+		_isLoaded = true;
+
+		SynchronizeWithExternalState();
+
+		RestoreShadowAnimationAfterNavigation();
+	}
+
+	private void InitializeAnimations()
+	{
+		_fadeOutAnimation = new DoubleAnimation
+		{
+			From = 1.0,
+			To = 0.0,
+			Duration = new Duration(TimeSpan.FromMilliseconds(150)),
+			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+		};
+
+		_fadeOutStoryboard = new Storyboard();
+		_fadeOutStoryboard.Children.Add(_fadeOutAnimation);
+		_fadeOutStoryboard.Completed += FadeOutStoryboard_Completed;
+
+		_fadeInAnimation = new DoubleAnimation
+		{
+			From = 0.0,
+			To = 1.0,
+			Duration = new Duration(TimeSpan.FromMilliseconds(150)),
+			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+		};
+
+		_fadeInStoryboard = new Storyboard();
+		_fadeInStoryboard.Children.Add(_fadeInAnimation);
+		_fadeInStoryboard.Completed += FadeInStoryboard_Completed;
+	}
+
+	private void AnimatedCancellableButton_BaseClick(object? sender, RoutedEventArgs e)
+	{
+		if (_isClickInProgress || _isDisposed || _isDisposing)
+		{
+			return;
+		}
+
+		lock (_stateLock)
+		{
+			if (_isClickInProgress || _isDisposed || _isDisposing)
+			{
+				return;
+			}
+
+			_isClickInProgress = true;
+
+			try
+			{
+				if (ExternalInternalIsAnimating)
+				{
+					return;
+				}
+
+				if (!ExternalInternalIsCancelState && !ExternalInternalIsCancellingState)
+				{
+					_operationStarted = true;
+					ExternalOperationStarted = true;
+
+					StartOperation();
+
+					try
+					{
+						Click?.Invoke(this, e);
+
+						DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High, () =>
+						{
+							if (!ExternalInternalIsOperationInProgress &&
+								!ExternalInternalIsCancelState &&
+								!ExternalInternalIsCancellingState)
+							{
+								ForceResetToOriginalState();
+							}
+						});
+					}
+					catch (Exception)
+					{
+						ForceResetToOriginalState();
+						throw;
+					}
+				}
+				else if (ExternalInternalIsCancelState && !ExternalInternalIsCancellingState)
+				{
+					_ = CancelOperationAsync();
+				}
+				else if (ExternalInternalIsCancellingState)
+				{
+					return;
+				}
+			}
+			finally
+			{
+				if (!_isDisposed && !_isDisposing)
+				{
+					_clickDelayTimer?.Start();
+				}
+				else
+				{
+					_isClickInProgress = false;
+				}
+			}
+		}
+	}
+
+	private void StartOperation()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		StartShadowAnimation();
+
+		AnimateToState(true, false);
+	}
+
+	private async Task CancelOperationAsync()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		AnimateToState(false, true);
+
+		if (CancelMethod is not null)
+		{
+			try
+			{
+				await CancelMethod.Invoke();
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	public void NotifyOperationCompleted()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			if (ExternalInternalIsCancellingState && !ExternalInternalIsAnimating)
+			{
+				StopShadowAnimation();
+				AnimateToState(false, false);
+				_operationStarted = false;
+				ExternalOperationStarted = false;
+			}
+		}
+	}
+
+	private void AnimateToState(bool toCancelState, bool toCancellingState)
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		try
+		{
+			if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+			{
+				_fadeOutStoryboard.Stop();
+			}
+			if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+			{
+				_fadeInStoryboard.Stop();
+			}
+
+			bool shouldAnimateShadow = toCancelState || toCancellingState;
+
+			if (shouldAnimateShadow && !_isShadowAnimationRunning)
+			{
+				StartShadowAnimation();
+			}
+			else if (!shouldAnimateShadow && _isShadowAnimationRunning)
+			{
+				StopShadowAnimation();
+			}
+
+			Storyboard.SetTarget(_fadeOutAnimation, null);
+			Storyboard.SetTarget(_fadeInAnimation, null);
+
+			// Set new targets
+			Storyboard.SetTarget(_fadeOutAnimation, this);
+			Storyboard.SetTargetProperty(_fadeOutAnimation, "Opacity");
+
+			_targetStateAfterFadeOut = toCancelState;
+			_targetCancellingStateAfterFadeOut = toCancellingState;
+
+			_fadeOutStoryboard.Begin();
+		}
+		catch (Exception)
+		{
+		}
+	}
+
+	private bool _targetStateAfterFadeOut;
+	private bool _targetCancellingStateAfterFadeOut;
+
+	private void FadeOutStoryboard_Completed(object? sender, object? e)
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		try
+		{
+			if (_targetCancellingStateAfterFadeOut)
+			{
+				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+			}
+			else if (_targetStateAfterFadeOut)
+			{
+				this.Content = GlobalVars.Rizz.GetString("Cancel");
+			}
+			else
+			{
+				if (!string.IsNullOrEmpty(ExternalButtonContent))
+				{
+					this.Content = ExternalButtonContent;
+				}
+				else if (!string.IsNullOrEmpty(ExternalOriginalText))
+				{
+					this.Content = ExternalOriginalText;
+				}
+				else
+				{
+					this.Content = "Button";
+				}
+			}
+
+			if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+			{
+				_fadeInStoryboard.Stop();
+			}
+
+			Storyboard.SetTarget(_fadeInAnimation, null);
+
+			// Set new target
+			Storyboard.SetTarget(_fadeInAnimation, this);
+			Storyboard.SetTargetProperty(_fadeInAnimation, "Opacity");
+
+			_fadeInStoryboard.Begin();
+		}
+		catch (Exception)
+		{
+		}
+	}
+
+	private void FadeInStoryboard_Completed(object? sender, object? e)
+	{
+	}
+
+	public bool IsCancelState => !_isDisposed && !_isDisposing && ExternalInternalIsCancelState;
+
+	public bool IsCancellingState => !_isDisposed && !_isDisposing && ExternalInternalIsCancellingState;
+
+	public bool IsOperationInProgress => !_isDisposed && !_isDisposing && ExternalInternalIsOperationInProgress;
+
+	public bool IsSuppressingExternalClick => !_isDisposed && !_isDisposing && ExternalInternalSuppressExternalClick;
+
+	public bool IsShadowAnimationRunning => !_isDisposed && !_isDisposing && _isShadowAnimationRunning;
+
+	public int CurrentShadowColorIndex => _isDisposed || _isDisposing ? 0 : _currentColorIndex;
+
+	public Color CurrentShadowColor => GetCurrentShadowColor();
+
+	public bool IsInColorTransition => !_isDisposed && !_isDisposing && _inColorTransition;
+
+	public double ColorTransitionProgress => (_isDisposed || _isDisposing || !_inColorTransition) ? 0.0 : (double)_colorTransitionCounter / COLOR_TRANSITION_DURATION;
+
+	public static double ShadowOpacity => SHADOW_OPACITY;
+
+	public void CompleteOperation()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			if (ExternalInternalIsOperationInProgress)
+			{
+				if ((ExternalInternalIsCancelState || ExternalInternalIsCancellingState) && !ExternalInternalIsAnimating)
+				{
+					StopShadowAnimation();
+					AnimateToState(false, false);
+					_operationStarted = false;
+					ExternalOperationStarted = false;
+				}
+			}
+		}
+	}
+
+	public void StartOperationProgrammatically()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			if (!ExternalInternalIsOperationInProgress && !ExternalInternalIsCancelState && !ExternalInternalIsCancellingState && !ExternalInternalIsAnimating)
+			{
+				_operationStarted = true;
+				ExternalOperationStarted = true;
+				StartOperation();
+			}
+		}
+	}
+
+	public async Task CancelOperationProgrammaticallyAsync()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		bool shouldCancel = false;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			if (ExternalInternalIsOperationInProgress && ExternalInternalIsCancelState && !ExternalInternalIsCancellingState && !ExternalInternalIsAnimating)
+			{
+				shouldCancel = true;
+			}
+		}
+
+		if (shouldCancel)
+		{
+			await CancelOperationAsync();
+		}
+	}
+
+	public async Task ResetToOriginalStateAsync()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_operationStarted = false;
+			_isClickInProgress = false;
+
+			ExternalOperationStarted = false;
+			ExternalShadowAnimationRunning = false;
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+			}
+			catch (Exception)
+			{
+			}
+
+			StopShadowAnimation();
+
+			UpdateButtonContentImmediately();
+
+			try
+			{
+				this.Opacity = 1.0;
+			}
+			catch (Exception)
+			{
+			}
+		}
+
+		if (CancelMethod is not null)
+		{
+			try
+			{
+				await CancelMethod.Invoke();
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	public void ResetToOriginalState()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_operationStarted = false;
+			_isClickInProgress = false;
+
+			ExternalOperationStarted = false;
+			ExternalShadowAnimationRunning = false;
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+			}
+			catch (Exception)
+			{
+			}
+
+			StopShadowAnimation();
+
+			UpdateButtonContentImmediately();
+
+			try
+			{
+				this.Opacity = 1.0;
+			}
+			catch (Exception)
+			{
+			}
+		}
+
+		InvokeCancelMethodSafely();
+	}
+
+	public void SetToCancelState()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_operationStarted = true;
+			ExternalOperationStarted = true;
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+
+				StartShadowAnimation();
+
+				this.Content = GlobalVars.Rizz.GetString("Cancel");
+				this.Opacity = 1.0;
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	public void SetToCancellingState()
+	{
+		if (_isDisposed || _isDisposing) return;
+
+		lock (_stateLock)
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			_operationStarted = true;
+			ExternalOperationStarted = true;
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+
+				if (!_isShadowAnimationRunning)
+				{
+					StartShadowAnimation();
+				}
+
+				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+				this.Opacity = 1.0;
+			}
+			catch (Exception)
+			{
+			}
+		}
+	}
+
+	public double AnimationDurationMilliseconds
+	{
+		get => _isDisposed || _isDisposing ? 150.0 : _fadeOutAnimation.Duration.TimeSpan.TotalMilliseconds;
+		set
+		{
+			if (_isDisposed || _isDisposing) return;
+
+			var duration = new Duration(TimeSpan.FromMilliseconds(Math.Max(50, value)));
+			_fadeOutAnimation.Duration = duration;
+			_fadeInAnimation.Duration = duration;
+		}
+	}
+
+	public double ShadowAnimationDurationMilliseconds
+	{
+		get => _isDisposed || _isDisposing ? 50.0 : _shadowTimer?.Interval.TotalMilliseconds ?? 50.0;
+		set
+		{
+			if (!_isDisposed && !_isDisposing && _shadowTimer is not null)
+			{
+				_shadowTimer.Interval = TimeSpan.FromMilliseconds(Math.Max(10, value));
+			}
+		}
+	}
+
+	public static double ShadowMinBlurRadius => MIN_BLUR_RADIUS;
+
+	public static double ShadowMaxBlurRadius => MAX_BLUR_RADIUS;
+
+	public static int ColorTransitionDuration => COLOR_TRANSITION_DURATION;
+
+	public static int ColorHoldDuration => COLOR_HOLD_DURATION;
+
+	public static Color[] ShadowColors => [.. _shadowColors];
+
+	protected override void OnApplyTemplate()
+	{
+		base.OnApplyTemplate();
+
+		if (_isDisposed || _isDisposing) return;
+
+		if (_fadeOutStoryboard.Children.Count == 0 || _fadeInStoryboard.Children.Count == 0)
+		{
+			InitializeAnimations();
+		}
+
+		if (_shadowTimer is null)
+		{
+			InitializeShadowAnimation();
+		}
+
+		SynchronizeWithExternalState();
+	}
+
+	private void AnimatedCancellableButton_Unloaded(object? sender, RoutedEventArgs e)
+	{
+		_isLoaded = false;
+
+		lock (_stateLock)
+		{
+			_isDisposing = true;
+			_isClickInProgress = false;
+
+			try
+			{
+				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeOutStoryboard.Stop();
+				}
+				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
+				{
+					_fadeInStoryboard.Stop();
+				}
+			}
+			catch (Exception)
+			{
+			}
+
+			if (_shadowTimer != null && _shadowTimer.IsEnabled)
+			{
+				_shadowTimer.Stop();
+			}
+			_isShadowAnimationRunning = false;
+
+			if (_hasShadowApplied)
+			{
+				try
+				{
+					if (_transparentShadow != null)
+					{
+						Effects.SetShadow(this, _transparentShadow);
+					}
+					else
+					{
+						AttachedCardShadow tempTransparentShadow = CreateTransparentShadow();
+						Effects.SetShadow(this, tempTransparentShadow);
+					}
+				}
+				catch (Exception)
+				{
+				}
+				_hasShadowApplied = false;
+			}
+
+			_shadowAnimationStoryboard?.Children.Clear();
+
+			if (_shadowTimer is not null)
+			{
+				_shadowTimer.Stop();
+				_shadowTimer.Tick -= ShadowTimer_Tick;
+				_shadowTimer = null;
+			}
+
+			if (_clickDelayTimer is not null)
+			{
+				_clickDelayTimer.Stop();
+				_clickDelayTimer.Tick -= ClickDelayTimer_Tick;
+				_clickDelayTimer = null;
+			}
+
+			try
+			{
+				Storyboard.SetTarget(_fadeOutAnimation, null);
+				Storyboard.SetTarget(_fadeInAnimation, null);
+			}
+			catch (Exception)
+			{
+			}
+
+			_fadeOutStoryboard.Completed -= FadeOutStoryboard_Completed;
+			_fadeOutStoryboard.Children.Clear();
+
+			_fadeInStoryboard.Completed -= FadeInStoryboard_Completed;
+			_fadeInStoryboard.Children.Clear();
+
+			InvokeCancelMethodSafely();
+
+			_disposalCancellationTokenSource?.Cancel();
+			_disposalCancellationTokenSource?.Dispose();
+			_disposalCancellationTokenSource = null;
+
+			_isDisposed = true;
+		}
+
+		try
+		{
+			base.Click -= AnimatedCancellableButton_BaseClick;
+			this.Loaded -= AnimatedCancellableButton_Loaded;
+			this.Unloaded -= AnimatedCancellableButton_Unloaded;
+		}
+		catch (Exception)
+		{
+		}
+	}
+}

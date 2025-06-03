@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
@@ -269,6 +270,52 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		}
 	}
 
+
+	private CancellationTokenSource? CancellationTokenSource { get; set; }
+
+	internal Func<Task> CancelCreateFilesAndFoldersDenyPolicy => async () =>
+	{
+		try
+		{
+			// Set the cancelling state when cancel is requested
+			CreateFilesAndFoldersDenyPolicyInternalIsCancellingState = true;
+
+			if (CancellationTokenSource is not null)
+			{
+				await CancellationTokenSource.CancelAsync();
+			}
+		}
+		catch
+		{
+		}
+	};
+
+	internal bool CreateFilesAndFoldersDenyPolicyIsOperationInProgress { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyIsCancelState { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyIsCancellingState { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyIsAnimating { get; set => SP(ref field, value); }
+
+	internal string CreateFilesAndFoldersDenyPolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content");
+
+	internal string CreateFilesAndFoldersDenyPolicyOriginalText { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content");
+
+	internal bool CreateFilesAndFoldersDenyPolicyInternalIsCancelState { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyInternalIsCancellingState { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyInternalIsAnimating { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyShadowAnimationRunning { get; set => SP(ref field, value); }
+
+	internal bool CreateFilesAndFoldersDenyPolicyOperationStarted { get; set => SP(ref field, value); }
+
 	/// <summary>
 	/// Main button's event handler for files and folder Deny policy creation
 	/// </summary>
@@ -281,10 +328,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		// Reset the progress ring from previous runs or in case an error occurred
 		FilesAndFoldersProgressRingValue = 0;
 
+		// Check validation conditions but do NOT set button state until all checks pass
 		if (filesAndFoldersFilePaths.Count == 0 && filesAndFoldersFolderPaths.Count == 0)
 		{
 			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoFilesOrFoldersSelected"),
 				GlobalVars.Rizz.GetString("SelectFilesOrFoldersTitle"));
+
 			return;
 		}
 
@@ -292,16 +341,35 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		{
 			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle"),
 				GlobalVars.Rizz.GetString("ChoosePolicyNameTitle"));
+
 			return;
 		}
 
+		// All validation passed - NOW set button state to indicate operation starting
 		_FilesAndFoldersDenyPolicyPath = null;
 
 		bool errorsOccurred = false;
+		bool wasCancelled = false;
+
+		// Create and assign cancellation token source for this operation
+		CancellationTokenSource?.Dispose();
+		CancellationTokenSource = new CancellationTokenSource();
+
+		CreateFilesAndFoldersDenyPolicyIsOperationInProgress = true;
+		CreateFilesAndFoldersDenyPolicyIsCancelState = true;
+		CreateFilesAndFoldersDenyPolicyIsCancellingState = false;
+		CreateFilesAndFoldersDenyPolicyIsAnimating = false;
+		CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress = true;
+		CreateFilesAndFoldersDenyPolicyInternalIsCancelState = true;
+		CreateFilesAndFoldersDenyPolicyInternalIsCancellingState = false;
+		CreateFilesAndFoldersDenyPolicyInternalIsAnimating = false;
+		CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick = false;
+		CreateFilesAndFoldersDenyPolicyShadowAnimationRunning = true;
+		CreateFilesAndFoldersDenyPolicyOperationStarted = true;
+
 
 		try
 		{
-
 			FilesAndFoldersElementsAreEnabled = false;
 
 			FilesAndFoldersInfoBar.IsClosable = false;
@@ -310,26 +378,18 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 			await Task.Run(async () =>
 			{
-
-				DirectoryInfo[] selectedDirectories = [];
-
-				// Convert user selected folder paths that are strings to DirectoryInfo objects
-				selectedDirectories = [.. filesAndFoldersFolderPaths.Select(dir => new DirectoryInfo(dir))];
-
-				FileInfo[] selectedFiles = [];
-
-				// Convert user selected file paths that are strings to FileInfo objects
-				selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
-
 				IEnumerable<FileIdentity> LocalFilesResults = [];
+
+				CancellationTokenSource.Token.ThrowIfCancellationRequested();
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (!UsingWildCardFilePathRules)
 				{
-
 					// Collect all of the AppControl compatible files from user selected directories and files
-					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
-
+					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths,
+						filesAndFoldersFilePaths,
+						null,
+						CancellationTokenSource.Token);
 
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
@@ -348,6 +408,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + GlobalVars.Rizz.GetString("AppControlCompatibleFiles"));
 					});
 
+					CancellationTokenSource.Token.ThrowIfCancellationRequested();
+
 					// Scan all of the detected files from the user selected directories
 					// Add the reference to the ViewModel class to the item so we can use it for navigation from the XAML
 					LocalFilesResults = LocalFilesScan.Scan(
@@ -355,12 +417,14 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 						(ushort)FilesAndFoldersProgressRingValue,
 						FilesAndFoldersProgressRingValueProgress,
 						this,
-						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm);
-
+						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm,
+						CancellationTokenSource.Token);
 
 					filesAndFoldersScanResultsList.Clear();
 
 					filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
+
+					CancellationTokenSource.Token.ThrowIfCancellationRequested();
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
@@ -378,6 +442,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 					});
 				}
 
+				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersDenyPolicy");
 
 				// Get the path to an empty policy file
@@ -386,6 +452,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths);
 
+				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName);
 
@@ -393,6 +461,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 				// Set policy name and reset the policy ID
 				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersDenyPolicyName, null, null);
+
+				CancellationTokenSource.Token.ThrowIfCancellationRequested();
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
@@ -407,8 +477,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
 
+				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+
+				CancellationTokenSource.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
@@ -426,8 +500,42 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 					string finalCIPPath = Path.Combine(GlobalVars.UserConfigDir, Path.GetFileName(CIPPath));
 					File.Copy(CIPPath, finalCIPPath, true);
 				}
+
+			}, CancellationTokenSource.Token);
+
+			// Final check for cancellation after Task.Run completes
+			CancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+		}
+		catch (OperationCanceledException)
+		{
+			wasCancelled = true;
+			// Don't log this as an error, it's expected behavior
+		}
+		catch (AggregateException aggregateEx)
+		{
+			// Check if any of the inner exceptions is an OperationCanceledException
+			bool containsCancellation = false;
+			aggregateEx.Handle(innerEx =>
+			{
+				if (innerEx is OperationCanceledException)
+				{
+					containsCancellation = true;
+					return true; // Mark this exception as handled
+				}
+				return false; // Don't handle other exceptions
 			});
 
+			if (containsCancellation)
+			{
+				wasCancelled = true;
+				// Don't log this as an error, it's expected behavior
+			}
+			else
+			{
+				errorsOccurred = true;
+				FilesAndFoldersInfoBar.WriteError(aggregateEx, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			}
 		}
 		catch (Exception ex)
 		{
@@ -436,12 +544,33 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		}
 		finally
 		{
-			if (!errorsOccurred)
+			// Clean up the cancellation token source
+			CancellationTokenSource?.Dispose();
+			CancellationTokenSource = null;
+
+			if (wasCancelled)
+			{
+				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
 			{
 				FilesAndFoldersInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("DenyPolicyCreatedSuccessfully") + filesAndFoldersDenyPolicyName + "'");
 
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
+
+			// Reset all button state properties
+			CreateFilesAndFoldersDenyPolicyIsOperationInProgress = false;
+			CreateFilesAndFoldersDenyPolicyIsCancelState = false;
+			CreateFilesAndFoldersDenyPolicyIsCancellingState = false;
+			CreateFilesAndFoldersDenyPolicyIsAnimating = false;
+			CreateFilesAndFoldersDenyPolicyInternalIsCancelState = false;
+			CreateFilesAndFoldersDenyPolicyInternalIsCancellingState = false;
+			CreateFilesAndFoldersDenyPolicyInternalIsAnimating = false;
+			CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress = false;
+			CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick = false;
+			CreateFilesAndFoldersDenyPolicyShadowAnimationRunning = false;
+			CreateFilesAndFoldersDenyPolicyOperationStarted = false;
 
 			FilesAndFoldersInfoBar.IsClosable = true;
 

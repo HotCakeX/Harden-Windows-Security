@@ -76,7 +76,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = "Total logs: 0";
+	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
 
 	// The default selected scan level
 	internal ScanLevels ScanLevel = ScanLevels.FilePublisher;
@@ -297,7 +297,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalLogsZeroMessage");
+			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
 		}
 		else
 		{
@@ -305,7 +305,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				GlobalVars.Rizz.GetString("TotalLogsCountMessage"), FileIdentities.Count);
 		}
 	}
-
 
 
 	/// <summary>

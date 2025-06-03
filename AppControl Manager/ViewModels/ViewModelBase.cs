@@ -16,11 +16,16 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
+using AppControlManager.Others;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Dispatching;
+using Windows.ApplicationModel.UserActivities;
 
 namespace AppControlManager.ViewModels;
 
@@ -64,7 +69,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	}
 
 	// Dictionaries used for quick conversion and parsing of ScanLevels.
-	internal static readonly Dictionary<string, ScanLevels> StringToScanLevel = new(StringComparer.OrdinalIgnoreCase)
+	internal static readonly FrozenDictionary<string, ScanLevels> StringToScanLevel = new Dictionary<string, ScanLevels>
 	{
 		{ "File Publisher", ScanLevels.FilePublisher },
 		{ "Publisher", ScanLevels.Publisher },
@@ -73,9 +78,10 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		{ "WildCard Folder Path", ScanLevels.WildCardFolderPath },
 		{ "PFN", ScanLevels.PFN },
 		{ "Custom File Rule Pattern", ScanLevels.CustomFileRulePattern }
-	};
+	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
-	internal static readonly Dictionary<ScanLevels, string> ScanLevelToString = new()
+
+	internal static readonly FrozenDictionary<ScanLevels, string> ScanLevelToString = new Dictionary<ScanLevels, string>
 	{
 		{ ScanLevels.FilePublisher, "File Publisher" },
 		{ ScanLevels.Publisher, "Publisher" },
@@ -84,5 +90,63 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		{ ScanLevels.WildCardFolderPath, "WildCard Folder Path" },
 		{ ScanLevels.PFN, "PFN" },
 		{ ScanLevels.CustomFileRulePattern, "Custom File Rule Pattern" }
-	 };
+	}.ToFrozenDictionary();
+
+	/// <summary>
+	/// User Activity tracking field
+	/// </summary>
+	private UserActivitySession? _previousSession;
+
+	/// <summary>
+	/// Publishes or updates user activity for the current page.
+	/// https://learn.microsoft.com/windows/ai/recall/recall-relaunch
+	/// </summary>
+	/// <param name="pageType">The type of the page being navigated to</param>
+	internal async Task PublishUserActivityAsync(LaunchProtocolActions action, string filePath, string displayText)
+	{
+		// Only publish if allowed
+		if (!App.Settings.PublishUserActivityInTheOS)
+			return;
+
+		try
+		{
+			await Dispatcher.EnqueueAsync(async () =>
+			{
+
+				// Dispose of any previous session (which automatically logs the end of the interaction with that content)
+				_previousSession?.Dispose();
+
+				string activityId = $"AppControlManager-{action}";
+
+				// Create a new user activity that represents the current page
+				UserActivity activity = await UserActivityChannel.GetDefault().GetOrCreateUserActivityAsync(activityId);
+
+				// Populate the required properties
+				activity.VisualElements.DisplayText = displayText;
+				activity.ActivationUri = new Uri($"appcontrol-manager:--action={action}--file={filePath}");
+
+				// Save the activity
+				await activity.SaveAsync();
+
+				// Start a new session tracking the engagement with this new activity
+				_previousSession = activity.CreateSession();
+
+			});
+		}
+		catch (Exception ex)
+		{
+			// Log the exception but don't let it break navigation
+			Logger.Write($"Failed to publish user activity: {ex.Message}");
+		}
+	}
+
+	/// <summary>
+	/// All of the activations used and detected by the app, either via Protocol, Launch arguments and so on.
+	/// </summary>
+	internal enum LaunchProtocolActions
+	{
+		PolicyEditor,
+		FileSignature,
+		FileHashes
+	}
 }

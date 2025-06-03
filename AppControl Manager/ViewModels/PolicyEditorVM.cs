@@ -820,6 +820,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				}
 				catch { }
 			});
+
+			await PublishUserActivityAsync(LaunchProtocolActions.PolicyEditor,
+				SelectedPolicyFile,
+				GlobalVars.Rizz.GetString("UserActivityNameForPolicyEditor"));
 		}
 		catch (Exception ex)
 		{

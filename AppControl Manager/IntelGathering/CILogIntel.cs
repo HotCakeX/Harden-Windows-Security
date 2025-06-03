@@ -15,74 +15,166 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace AppControlManager.IntelGathering;
 
 // Application Control event tags intelligence
 internal static class CILogIntel
 {
-	// Requested and Validated Signing Level Mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
-	internal static readonly Dictionary<int, string> ReqValSigningLevels = new()
-	{
-		{ 0, "Signing level hasn't yet been checked"},
-		{ 1, "File is unsigned or has no signature that passes the active policies"},
-		{ 2, "Trusted by App Control for Business policy"},
-		{ 3, "Developer signed code"},
-		{ 4, "Authenticode signed"},
-		{ 5, "Microsoft Store signed app PPL (Protected Process Light)"},
-		{ 6, "Microsoft Store-signed"},
-		{ 7, "Signed by an Antimalware vendor whose product is using AMPPL"},
-		{ 8, "Microsoft signed"},
-		{ 11, "Only used for signing of the .NET NGEN compiler"},
-		{ 12, "Windows signed"},
-		{ 14, "Windows Trusted Computing Base signed"}
-	};
+	/// <summary>
+	/// Requested and Validated Signing Level Mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
+	/// </summary>
+	private static readonly string?[] ReqValSigningLevels =
+	[
+		"Signing level hasn't yet been checked", // Index 0
+		"File is unsigned or has no signature that passes the active policies", // Index 1
+		"Trusted by App Control for Business policy", // Index 2
+		"Developer signed code", // Index 3
+		"Authenticode signed", // Index 4
+		"Microsoft Store signed app PPL (Protected Process Light)", // Index 5
+		"Microsoft Store-signed", // Index 6
+		"Signed by an Antimalware vendor whose product is using AMPPL", // Index 7
+		"Microsoft signed", // Index 8
+		null, // Index 9 - does not exist
+		null, // Index 10 - does not exist
+		"Only used for signing of the .NET NGEN compiler", // Index 11
+		"Windows signed", // Index 12
+		null, // Index 13 - does not exist
+		"Windows Trusted Computing Base signed" // Index 14
+	];
 
-	// SignatureType Mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#signaturetype
-	internal static readonly Dictionary<int, string> SignatureTypeTable = new()
-	{
-		{ 0, "Unsigned or verification hasn't been attempted" },
-		{ 1, "Embedded signature" },
-		{ 2, "Cached signature; presence of a CI EA means the file was previously verified" },
-		{ 3, "Cached catalog verified via Catalog Database or searching catalog directly" },
-		{ 4, "Uncached catalog verified via Catalog Database or searching catalog directly" },
-		{ 5, "Successfully verified using an EA that informs CI that catalog to try first" },
-		{ 6, "AppX / MSIX package catalog verified" },
-		{ 7, "File was verified" }
-	};
+	/// <summary>
+	/// SignatureType Mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#signaturetype
+	/// </summary>
+	private static readonly string[] SignatureTypeTable =
+	[
+		"Unsigned or verification hasn't been attempted", // Index 0
+		"Embedded signature", // Index 1
+		"Cached signature; presence of a CI EA means the file was previously verified", // Index 2
+		"Cached catalog verified via Catalog Database or searching catalog directly", // Index 3
+		"Uncached catalog verified via Catalog Database or searching catalog directly", // Index 4
+		"Successfully verified using an EA that informs CI that catalog to try first", // Index 5
+		"AppX / MSIX package catalog verified", // Index 6
+		"File was verified" // Index 7
+	];
 
-	// VerificationError mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#verificationerror
-	internal static readonly Dictionary<int, string> VerificationErrorTable = new()
+	/// <summary>
+	/// VerificationError mappings: https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#verificationerror
+	/// </summary>
+	private static readonly string[] VerificationErrorTable =
+	[
+		"Successfully verified signature.", // Index 0
+		"File has an invalid hash.", // Index 1
+		"File contains shared writable sections.", // Index 2
+		"File isn't signed.", // Index 3
+		"Revoked signature.", // Index 4
+		"Expired signature.", // Index 5
+		"File is signed using a weak hashing algorithm, which doesn't meet the minimum policy.", // Index 6
+		"Invalid root certificate.", // Index 7
+		"Signature was unable to be validated; generic error.", // Index 8
+		"Signing time not trusted.", // Index 9
+		"The file must be signed using page hashes for this scenario.", // Index 10
+		"Page hash mismatch.", // Index 11
+		"Not valid for a PPL (Protected Process Light).", // Index 12
+		"Not valid for a PP (Protected Process).", // Index 13
+		"The signature is missing the required ARM processor EKU.", // Index 14
+		"Failed WHQL check.", // Index 15
+		"Default policy signing level not met.", // Index 16
+		"Custom policy signing level not met; returned when signature doesn't validate against an SBCP-defined set of certs.", // Index 17
+		"Custom signing level not met; returned if signature fails to match CISigners in UMCI.", // Index 18
+		"Binary is revoked based on its file hash.", // Index 19
+		"SHA1 cert hash's timestamp is missing or after valid cutoff as defined by Weak Crypto Policy.", // Index 20
+		"Failed to pass App Control for Business policy.", // Index 21
+		"Not Isolated User Mode (IUM) signed; indicates an attempt to load a standard Windows binary into a virtualization-based security (VBS) trustlet.", // Index 22
+		"Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError.", // Index 23
+		"Flight root not allowed; indicates trying to run flight-signed code on production OS.", // Index 24
+		"Anti-cheat policy violation.", // Index 25
+		"Explicitly denied by App Control policy.", // Index 26
+		"The signing chain appears to be tampered / invalid.", // Index 27
+		"Resource page hash mismatch." // Index 28
+	];
+
+
+	// Array length constants for performance optimization
+	private const uint ReqValSigningLevelsLength = 15;
+	private const uint SignatureTypeTableLength = 8;
+	private const uint VerificationErrorTableLength = 29;
+
+
+	/// <summary>
+	/// Resolves the Validated/Requested Signing Level int to friendly string
+	/// </summary>
+	/// <param name="SigningLevelInt"></param>
+	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static string? GetValidatedRequestedSigningLevel(int? SigningLevelInt)
 	{
-		{ 0, "Successfully verified signature."},
-		{ 1, "File has an invalid hash."},
-		{ 2, "File contains shared writable sections."},
-		{ 3, "File isn't signed."},
-		{ 4, "Revoked signature."},
-		{ 5, "Expired signature."},
-		{ 6, "File is signed using a weak hashing algorithm, which doesn't meet the minimum policy."},
-		{ 7, "Invalid root certificate."},
-		{ 8, "Signature was unable to be validated; generic error."},
-		{ 9, "Signing time not trusted."},
-		{ 10, "The file must be signed using page hashes for this scenario."},
-		{ 11, "Page hash mismatch."},
-		{ 12, "Not valid for a PPL (Protected Process Light)."},
-		{ 13, "Not valid for a PP (Protected Process)."},
-		{ 14, "The signature is missing the required ARM processor EKU."},
-		{ 15, "Failed WHQL check."},
-		{ 16, "Default policy signing level not met."},
-		{ 17, "Custom policy signing level not met; returned when signature doesn't validate against an SBCP-defined set of certs."},
-		{ 18, "Custom signing level not met; returned if signature fails to match CISigners in UMCI."},
-		{ 19, "Binary is revoked based on its file hash."},
-		{ 20, "SHA1 cert hash's timestamp is missing or after valid cutoff as defined by Weak Crypto Policy."},
-		{ 21, "Failed to pass App Control for Business policy."},
-		{ 22, "Not Isolated User Mode (IUM) signed; indicates an attempt to load a standard Windows binary into a virtualization-based security (VBS) trustlet."},
-		{ 23, "Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError."},
-		{ 24, "Flight root not allowed; indicates trying to run flight-signed code on production OS."},
-		{ 25, "Anti-cheat policy violation."},
-		{ 26, "Explicitly denied by App Control policy."},
-		{ 27, "The signing chain appears to be tampered / invalid."},
-		{ 28, "Resource page hash mismatch."}
-	};
+		if (SigningLevelInt.HasValue)
+		{
+			if ((uint)SigningLevelInt.Value < ReqValSigningLevelsLength)
+			{
+				return ReqValSigningLevels[SigningLevelInt.Value];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	/// Resolves the VerificationError int to a friendly string
+	/// </summary>
+	/// <param name="VerificationError"></param>
+	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static string? GetVerificationError(int? VerificationError)
+	{
+		if (VerificationError.HasValue)
+		{
+			if ((uint)VerificationError.Value < VerificationErrorTableLength)
+			{
+				return VerificationErrorTable[VerificationError.Value];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	/// Resolves the SignatureType int to a friendly string
+	/// </summary>
+	/// <param name="SignatureType"></param>
+	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static string? GetSignatureType(int? SignatureType)
+	{
+		if (SignatureType.HasValue)
+		{
+			if ((uint)SignatureType.Value < SignatureTypeTableLength)
+			{
+				return SignatureTypeTable[SignatureType.Value];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		else
+		{
+			return null;
+		}
+	}
+
 }

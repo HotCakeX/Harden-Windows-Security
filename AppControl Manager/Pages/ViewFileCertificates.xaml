@@ -58,6 +58,7 @@
 
             <customUI:SettingsCardV2 x:Uid="IncludeSecurityCatalogsSettingsCard">
                 <ToggleSwitch IsOn="{x:Bind ViewModel.IncludeSecurityCatalogsToggleSwitch, Mode=TwoWay}"
+                              x:Uid="ToggleSwitchGeneral"
                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
             </customUI:SettingsCardV2>
 

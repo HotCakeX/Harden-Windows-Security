@@ -3562,9 +3562,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>Selected {0} for AppLocker EVTX log scanning</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>Total logs: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>Total logs: {0}</value>
   </data>
@@ -5269,7 +5266,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>no Publisher signers detected to create deny rules for.</value>
 </data>
-<!-- New -->
   <data name="RMMBlockingSection.Header" xml:space="preserve">
     <value>Create RMM Blocking Policy</value>
   </data>
@@ -5305,5 +5301,69 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Prevent other apps such as screen recorders (including Recall) to record or take screenshots of the AppControl Manager's window.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>You need to select CIP files to deploy.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>You need to select XML files to convert to CIP binary.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>Successfully created signed CIP files for all of the selected XML files.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>Currently Signing XML file:</value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>You need to select XML files to sign and deploy.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>You need to select unsigned XML files to deploy.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>Checking for file signatures</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>The file '{0}' has {1} signer(s). Data from the Security Catalogs on the system were {2} in the scan.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>included</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>not included</value>
+</data>
+<!--new-->
+<data name="UserActivityNameForFileHashes" xml:space="preserve">
+  <value>Calculating Advanced File Hashes</value>
+</data>
+<data name="UserActivityNameForFileSignature" xml:space="preserve">
+  <value>Viewing File Certificates</value>
+</data>
+<data name="UserActivityNameForPolicyEditor" xml:space="preserve">
+  <value>Opening an App Control Policy In The Policy Editor</value>
+</data>
+ <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>Publish various activities that you perform in the AppControl Manager to the OS, allowing them to appear and be available to you in Microsoft Recall so you can re-trace your actions.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>Publish Activity In The OS</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Publish various activities that you perform in the AppControl Manager to the OS, allowing them to appear and be available to you in Microsoft Recall so you can re-trace your actions.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Publish various activities that you perform in the AppControl Manager to the OS, allowing them to appear and be available to you in Microsoft Recall so you can re-trace your actions.</value>
+  </data>
+  <data name="OperationCancelledByUser" xml:space="preserve">
+    <value>The operation was cancelled.</value>
+  </data>
+    <data name="Cancelling" xml:space="preserve">
+    <value>Cancelling...</value>
   </data>
 </root>

@@ -331,7 +331,9 @@
                                 <controls:SettingsCard HorizontalContentAlignment="Center"
                                     x:Name="SidebarAutomaticAssignmentSettingsCard" x:Uid="SidebarAutomaticAssignmentSettingsCard" Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
                                     HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
-                                    <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}" IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
+                                    <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}"
+                                                  x:Uid="ToggleSwitchGeneral"
+                                                  IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
                                 </controls:SettingsCard>
 
                                 <HyperlinkButton x:Name="SidebarGuideHyperlinkButton" x:Uid="SidebarGuideHyperlinkButton" HorizontalAlignment="Center" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />

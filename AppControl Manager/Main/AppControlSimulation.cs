@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -35,10 +36,10 @@ internal static class AppControlSimulation
 {
 
 	// Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
-	private static readonly HashSet<string> unsignedExtensions = new(StringComparer.OrdinalIgnoreCase)
-		{
-			".ocx", ".bat", ".bin"
-		};
+	private static readonly FrozenSet<string> unsignedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+	{
+		".ocx", ".bat", ".bin"
+	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// An Aux method that calls the main method then checks the result to make sure all files are allowed, if they are then returns true, otherwise returns false
@@ -130,9 +131,9 @@ internal static class AppControlSimulation
 
 		Logger.Write(GlobalVars.Rizz.GetString("GettingSupportedFilePathsMessage"));
 
-		(IEnumerable<FileInfo>, int) CollectedFiles = FileUtility.GetFilesFast(
-			folderPaths?.Select(dir => new DirectoryInfo(dir)).ToArray(),
-			filePaths?.Select(file => new FileInfo(file)).ToArray(),
+		(IEnumerable<string>, int) CollectedFiles = FileUtility.GetFilesFast(
+			folderPaths,
+			filePaths,
 			null);
 
 		// Make sure the selected directories and files contain files with the supported extensions
@@ -216,19 +217,19 @@ internal static class AppControlSimulation
 			Taskbar.Badge.SetBadgeAsActive();
 
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
-			IEnumerable<FileInfo[]> SplitArrays = CollectedFiles.Item1.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
+			IEnumerable<string[]> SplitArrays = CollectedFiles.Item1.Chunk((int)Math.Ceiling(AllFilesCount / threadsCount));
 
 			// List of tasks to run in parallel
 			List<Task> tasks = [];
 
 			// Loop over each chunk of data
-			foreach (FileInfo[] chunk in SplitArrays)
+			foreach (string[] chunk in SplitArrays)
 			{
 				// Run each chunk of data in a different thread
 				tasks.Add(Task.Run(() =>
 				{
 					// Loop over the current chunk of data
-					foreach (FileInfo CurrentFilePath in chunk)
+					foreach (string CurrentFilePath in chunk)
 					{
 						// Increment the processed file count safely
 						_ = Interlocked.Increment(ref processedFilesCount);
@@ -237,11 +238,13 @@ internal static class AppControlSimulation
 						// This is because App Control policies sometimes have hash rules for signed files too
 						// So here we prioritize being authorized by file hash over being authorized by Signature
 
-						if (HasFilePathRules && FilePathRules.Contains(CurrentFilePath.FullName))
+						FileInfo CurrentFilePathObj = new(CurrentFilePath);
+
+						if (HasFilePathRules && FilePathRules.Contains(CurrentFilePathObj.FullName))
 						{
-							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
-									CurrentFilePath.Name,
+									CurrentFilePathObj.Name,
 									"FilePath",
 									true,
 									null,
@@ -256,7 +259,7 @@ internal static class AppControlSimulation
 									null,
 									null,
 									null,
-									CurrentFilePath.FullName
+									CurrentFilePathObj.FullName
 								));
 
 							// Move to the next file
@@ -268,16 +271,16 @@ internal static class AppControlSimulation
 
 						try
 						{
-							CodeIntegrityHashes CurrentFileHashResult = CiFileHash.GetCiFileHashes(CurrentFilePath.FullName);
+							CodeIntegrityHashes CurrentFileHashResult = CiFileHash.GetCiFileHashes(CurrentFilePathObj.FullName);
 
 							CurrentFilePathHashSHA256 = CurrentFileHashResult.SHA256Authenticode!;
 							CurrentFilePathHashSHA1 = CurrentFileHashResult.SHa1Authenticode!;
 						}
 						catch
 						{
-							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
-									CurrentFilePath.Name,
+									CurrentFilePathObj.Name,
 									"Signer",
 									false,
 									null,
@@ -292,7 +295,7 @@ internal static class AppControlSimulation
 									null,
 									null,
 									null,
-									CurrentFilePath.FullName
+									CurrentFilePathObj.FullName
 								));
 
 							// Move to the next file
@@ -302,9 +305,9 @@ internal static class AppControlSimulation
 						// if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
 						if (AllHashTypesFromXML.Contains(CurrentFilePathHashSHA256) || AllHashTypesFromXML.Contains(CurrentFilePathHashSHA1))
 						{
-							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
-									CurrentFilePath.Name,
+									CurrentFilePathObj.Name,
 									"Hash",
 									true,
 									null,
@@ -319,7 +322,7 @@ internal static class AppControlSimulation
 									null,
 									null,
 									null,
-									CurrentFilePath.FullName
+									CurrentFilePathObj.FullName
 								));
 
 							// Move to the next file
@@ -327,11 +330,11 @@ internal static class AppControlSimulation
 						}
 
 						// If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
-						else if (unsignedExtensions.Contains(CurrentFilePath.Extension))
+						else if (unsignedExtensions.Contains(CurrentFilePathObj.Extension))
 						{
-							_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
-									CurrentFilePath.Name,
+									CurrentFilePathObj.Name,
 									"Unsigned",
 									false,
 									null,
@@ -346,7 +349,7 @@ internal static class AppControlSimulation
 									null,
 									null,
 									null,
-									CurrentFilePath.FullName
+									CurrentFilePathObj.FullName
 								));
 
 							// Move to the next file
@@ -358,7 +361,7 @@ internal static class AppControlSimulation
 						{
 							try
 							{
-								List<AllFileSigners> FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePath.FullName);
+								List<AllFileSigners> FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathObj.FullName);
 
 								// If there is no result then check if the file is allowed by a security catalog
 								if (FileSignatureResults.Count == 0)
@@ -380,9 +383,9 @@ internal static class AppControlSimulation
 										nint handle = CatalogSignerDits.Chain.ChainElements[0].Certificate.Handle;
 
 										// The file is authorized by a security catalog on the system
-										_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+										_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 											new SimulationOutput(
-												CurrentFilePath.Name,
+												CurrentFilePathObj.Name,
 												"Catalog Signed",
 												true,
 												null,
@@ -397,7 +400,7 @@ internal static class AppControlSimulation
 												CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
 												CatalogSignerDits.Chain.ChainElements[0].Certificate.NotAfter.ToString(CultureInfo.InvariantCulture),
 												CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
-												CurrentFilePath.FullName
+												CurrentFilePathObj.FullName
 											));
 
 										// Move to the next file
@@ -406,9 +409,9 @@ internal static class AppControlSimulation
 									else
 									{
 										// The file is not signed and is not allowed by hash using Security Catalog
-										_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+										_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 											new SimulationOutput(
-												CurrentFilePath.Name,
+												CurrentFilePathObj.Name,
 												"Unsigned",
 												false,
 												null,
@@ -423,7 +426,7 @@ internal static class AppControlSimulation
 												null,
 												null,
 												null,
-												CurrentFilePath.FullName
+												CurrentFilePathObj.FullName
 											));
 
 										// Move to the next file
@@ -438,21 +441,21 @@ internal static class AppControlSimulation
 									List<string> ekuOIDs = LocalFilesScan.GetOIDs(FileSignatureResults);
 
 									SimulationInput inPutSim = new(
-										CurrentFilePath, // Path of the signed file
+										CurrentFilePathObj, // Path of the signed file
 										GetCertificateDetails.Get(FileSignatureResults), //  Get all of the details of all certificates of the signed file
 										SignerInfo, // The entire Signer Info of the App Control Policy file
 										ekuOIDs);
 
 									SimulationOutput ComparisonResult = Arbitrator.Compare(inPutSim);
 
-									_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName, ComparisonResult);
+									_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName, ComparisonResult);
 								}
 							}
 							catch (HashMismatchInCertificateException)
 							{
-								_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+								_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 									new SimulationOutput(
-										CurrentFilePath.Name,
+										CurrentFilePathObj.Name,
 										"Signer",
 										false,
 										null,
@@ -467,7 +470,7 @@ internal static class AppControlSimulation
 										null,
 										null,
 										null,
-										CurrentFilePath.FullName
+										CurrentFilePathObj.FullName
 									));
 
 								// Move to the next file
@@ -478,9 +481,9 @@ internal static class AppControlSimulation
 							catch (Exception ex)
 							{
 								// If the file is signed but has unknown signature status
-								_ = FinalSimulationResults.TryAdd(CurrentFilePath.FullName,
+								_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 									new SimulationOutput(
-										CurrentFilePath.Name,
+										CurrentFilePathObj.Name,
 										"Signer",
 										false,
 										null,
@@ -495,7 +498,7 @@ internal static class AppControlSimulation
 										null,
 										null,
 										null,
-										CurrentFilePath.FullName
+										CurrentFilePathObj.FullName
 									));
 
 								// Move to the next file

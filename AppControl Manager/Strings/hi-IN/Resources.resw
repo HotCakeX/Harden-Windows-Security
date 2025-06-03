@@ -3562,9 +3562,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>AppLocker EVTX लॉग स्कैनिंग के लिए चयनित: {0}</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>कुल लॉग्स: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>कुल लॉग्स: {0}</value>
   </data>
@@ -5268,5 +5265,77 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 </data>
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>अस्वीकृत नियम बनाने के लिए कोई प्रकाशक हस्ताक्षरकर्ता नहीं मिला।</value>
+</data>
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>RMM अवरोधन नीति बनाएं</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>यह नीति दूरस्थ निगरानी और प्रबंधन सॉफ़्टवेयर की एक बड़ी संख्या को उनके निष्पादन योग्य फ़ाइल नामों और फ़ाइल पथ के आधार पर अवरुद्ध करती है।</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यह नीति दूरस्थ निगरानी और प्रबंधन सॉफ़्टवेयर की एक बड़ी संख्या को उनके निष्पादन योग्य फ़ाइल नामों और फ़ाइल पथ के आधार पर अवरुद्ध करती है।</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यह नीति दूरस्थ निगरानी और प्रबंधन सॉफ़्टवेयर की एक बड़ी संख्या को उनके निष्पादन योग्य फ़ाइल नामों और फ़ाइल पथ के आधार पर अवरुद्ध करती है।</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>बनाएं</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>RMM अवरोधन आधार नीति बनाएं</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>RMM अवरोधन आधार नीति बनाएं</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>RMM अवरोधन नीति सफलतापूर्वक बनाई गई</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>अन्य एप्लिकेशन जैसे स्क्रीन रिकॉर्डर (Recall सहित) को एप्लिकेशन नियंत्रण प्रबंधक की विंडो को रिकॉर्ड करने या स्क्रीनशॉट लेने से रोकें।</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>स्क्रीन सुरक्षा</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अन्य एप्लिकेशन जैसे स्क्रीन रिकॉर्डर (Recall सहित) को एप्लिकेशन नियंत्रण प्रबंधक की विंडो को रिकॉर्ड करने या स्क्रीनशॉट लेने से रोकें।</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अन्य एप्लिकेशन जैसे स्क्रीन रिकॉर्डर (Recall सहित) को एप्लिकेशन नियंत्रण प्रबंधक की विंडो को रिकॉर्ड करने या स्क्रीनशॉट लेने से रोकें।</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>चालू</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>बंद</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>आपको तैनाती के लिए CIP फ़ाइलें चुनने की आवश्यकता है।</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>आपको CIP बाइनरी में परिवर्तित करने के लिए XML फ़ाइलें चुनने की आवश्यकता है।</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>सभी चयनित XML फ़ाइलों के लिए हस्ताक्षरित CIP फ़ाइलें सफलतापूर्वक बनाई गईं।</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>वर्तमान में XML फ़ाइल पर हस्ताक्षर कर रहे हैं: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>आपको हस्ताक्षर और तैनाती के लिए XML फ़ाइलें चुनने की आवश्यकता है।</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>आपको तैनाती के लिए अहस्ताक्षरित XML फ़ाइलें चुनने की आवश्यकता है।</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>फ़ाइल हस्ताक्षरों की जांच कर रहे हैं</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>फ़ाइल '{0}' में {1} हस्ताक्षरकर्ता हैं। सिस्टम पर सुरक्षा कैटलॉग से डेटा स्कैन में {2} था।</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>शामिल</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>शामिल नहीं</value>
 </data>
 </root>

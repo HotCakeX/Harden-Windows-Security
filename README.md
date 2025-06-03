@@ -29,11 +29,11 @@
   <a href="#related">Related</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="#Trust">Trust</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="#support">Support</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
-  <a href="#security-recommendations"><b>Security Recommendations</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
+  <a href="#security-recommendations">Security Recommendations</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="#resources">Resources</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="#license">License</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki"><b>Wiki</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions"><b>Basic FAQs</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#roadmap"><b>Roadmap</b></a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions">Basic FAQs</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#roadmap">Roadmap</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#donation">Donation</a>
 </p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink%20inverted.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -1908,28 +1908,63 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 ## Donations <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/DonateIcon.png" width="48" alt="DonateIcon">
 
-If you would like to support my work financially, your generosity is greatly appreciated.
+If you would like to support my work financially, your generosity is greatly appreciated. You can donate using any of the following methods and then let me know via [X](https://x.com/CyberCakeX) or [Discord](https://discord.com/users/1198196610476294239) or Teams/Email via `spynetgirl@outlook.com` so I can thank you personally. <img src="https://raw.githubusercontent.com/HotCakeX/.github/aa3901d1efc03871a423552dd32a5f2cea5ba180/Pictures/Gifs/stellakiss.gif" width="45" alt="xo">
 
-You can donate using the following method:
+Your support helps me continue to create and maintain this project.
 
-<details>
-<summary>
+### Bitcoin
 
-* [My Public Address to Receive BNB (Smart Chain - Coin)](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D) - Click/Tap here to view QR code
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/bcbca9889beba717975643c39b7882e6954407ea/Pictures/PNG%20and%20JPG/Crypto%20Donations%20Icons/bitcoin.svg" width="25" alt="Bitcoin donation Harden Windows Security"> Wallet Address for BTC
 
-</summary>
+```
+bc1qa948wr4mg2qkx2us5g8rv5ca75ppyy2ngl8k4e
+```
 
-<div align="center">
+* [Wallet Link](https://link.trustwallet.com/send?coin=0&address=bc1qa948wr4mg2qkx2us5g8rv5ca75ppyy2ngl8k4e)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/BNB%20Donation.png" width="700" alt="Donation QR code for BNB">
+* [Wallet QR Code](https://raw.githubusercontent.com/HotCakeX/.github/f4519dee61ff3c04862d45ea3ea97b7b7db6e5f9/Pictures/PNG%20and%20JPG/Bitcoin%20Donation.png)
 
-</div>
+---
 
-</details>
+### Bitcoin Cash
+
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/bcbca9889beba717975643c39b7882e6954407ea/Pictures/PNG%20and%20JPG/Crypto%20Donations%20Icons/bitcoin-cash.svg" width="25" alt="Bitcoin Cash donation Harden Windows Security"> Wallet Address for BCH
+
+```
+qrrj03927q90z4wg4nu2e3nf4y3qnun2ku7muv8rvm
+```
+
+* [Wallet Link](https://link.trustwallet.com/send?coin=145&address=qrrj03927q90z4wg4nu2e3nf4y3qnun2ku7muv8rvm)
+
+* [Wallet QR Code](https://raw.githubusercontent.com/HotCakeX/.github/a2260b835dc08dfa7daf7d34b068120b25f7c199/Pictures/PNG%20and%20JPG/Bitcoin%20Cash%20Donation.png)
+
+---
+
+### Ethereum
+
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/bcbca9889beba717975643c39b7882e6954407ea/Pictures/PNG%20and%20JPG/Crypto%20Donations%20Icons/ethereum.svg" width="30" alt="Ethereum donation Harden Windows Security"> Wallet Address for ETH
 
 ```
 0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D
 ```
+
+* [Wallet Link](https://link.trustwallet.com/send?coin=60&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D)
+
+* [Wallet QR Code](https://raw.githubusercontent.com/HotCakeX/.github/ec4ba0e9727cc33229c4537fc1a243025519e1f5/Pictures/PNG%20and%20JPG/Ethereum%20Donation.png)
+
+---
+
+### BSC (Binance Smart Chain - Coin)
+
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/bcbca9889beba717975643c39b7882e6954407ea/Pictures/PNG%20and%20JPG/Crypto%20Donations%20Icons/binance.svg" width="25" alt="Binance Smart Chain donation Harden Windows Security"> Wallet Address for BSC
+
+```
+0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D
+```
+
+* [Wallet Link](https://link.trustwallet.com/send?coin=20000714&address=0xF784a3D4F9A7CC5c26d69de41D7dD6480112114D)
+
+* [Wallet QR Code](https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/PNG%20and%20JPG/BNB%20Donation.png)
 
 <br>
 

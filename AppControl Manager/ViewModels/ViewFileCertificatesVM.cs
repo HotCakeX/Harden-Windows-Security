@@ -349,7 +349,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		}
 	}
 
-	// Methods bound to each header button’s Click events.
+	// Methods bound to each header button's Click events.
 	internal void SortBySignerNumber()
 	{
 		Sort(CertificateSortColumn.SignerNumber);
@@ -635,7 +635,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		try
 		{
-			MainInfoBar.WriteInfo("Checking for file signatures");
+			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CheckingForFileSignatures"));
 
 			// Get the file's extension
 			string fileExtension = Path.GetExtension(selectedFile);
@@ -800,7 +800,11 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			CalculateColumnWidths();
 
-			MainInfoBar.WriteSuccess($"The file '{selectedFile}' has {(FilteredCertificates.Count > 0 ? FilteredCertificates.Max(x => x.SignerNumber) : 0)} signer(s). Data from the Security Catalogs on the system were {(IncludeSecurityCatalogsToggleSwitch ? "included" : "not included")} in the scan.");
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.Rizz.GetString("FileCertificatesScanResultMessage"), selectedFile, (FilteredCertificates.Count > 0 ? FilteredCertificates.Max(x => x.SignerNumber) : 0), (IncludeSecurityCatalogsToggleSwitch ? GlobalVars.Rizz.GetString("IncludedText") : GlobalVars.Rizz.GetString("NotIncludedText"))));
+
+			await PublishUserActivityAsync(LaunchProtocolActions.FileSignature,
+				selectedFile,
+				GlobalVars.Rizz.GetString("UserActivityNameForFileSignature"));
 		}
 		catch (Exception ex)
 		{

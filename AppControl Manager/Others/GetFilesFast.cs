@@ -17,95 +17,165 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Enumeration;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AppControlManager.Others;
 
 internal static class FileUtility
 {
+
+	/// <summary>
+	/// Method that takes 2 collections, one containing file paths and the other containing folder paths.
+	/// It checks them and returns the unique file paths that are not in any of the folder paths.
+	/// Performs this check recursively, so it works if a file path is in a sub-directory of a folder path.
+	/// It works even if the file paths or folder paths are non-existent/deleted, but they still need to be valid file/folder paths.
+	/// </summary>
+	private static HashSet<string> TestFilePath(
+		IReadOnlyCollection<string> directoryPaths,
+		IReadOnlyCollection<string> filePaths)
+	{
+		// Normalize each directory‐path into an absolute path ending with a single separator.
+		HashSet<string> normalizedDirs = new(StringComparer.OrdinalIgnoreCase);
+
+		foreach (string dir in directoryPaths)
+		{
+			if (string.IsNullOrWhiteSpace(dir))
+				continue;
+
+			// Get full absolute path, trim any trailing separator, then add exactly one.
+			string fullDir = Path.GetFullPath(dir)
+								 .TrimEnd(Path.DirectorySeparatorChar)
+								 + Path.DirectorySeparatorChar;
+
+			normalizedDirs.Add(fullDir);
+		}
+
+		// Walk through each file. Normalize its full path, then climb its parent chain.
+		// If we ever match one of the normalizedDirs, skip it. Otherwise, add the original file string.
+		HashSet<string> output = new(StringComparer.OrdinalIgnoreCase);
+
+		foreach (string file in filePaths)
+		{
+			if (string.IsNullOrWhiteSpace(file))
+				continue;
+
+			// Normalize file into an absolute path
+			string fullFilePath;
+			try
+			{
+				fullFilePath = Path.GetFullPath(file);
+			}
+			catch (Exception)
+			{
+				// If the file‐string is not a valid path, skip it
+				continue;
+			}
+
+			// Start checking from the file's parent directory upwards
+			string? currentDir = Path.GetDirectoryName(fullFilePath);
+			bool residesUnderExcluded = false;
+
+			while (currentDir is not null)
+			{
+				// Normalize this ancestor folder (absolute, trailing separator)
+				string normalizedAncestor = Path.GetFullPath(currentDir)
+											 .TrimEnd(Path.DirectorySeparatorChar)
+											 + Path.DirectorySeparatorChar;
+
+				if (normalizedDirs.Contains(normalizedAncestor))
+				{
+					residesUnderExcluded = true;
+					break;
+				}
+
+				currentDir = Path.GetDirectoryName(currentDir);
+			}
+
+			if (!residesUnderExcluded)
+			{
+				// Use the original file‐string (not the full‐path) in the output set
+				output.Add(file);
+			}
+		}
+
+		// Return the set of files that do NOT reside under any of the provided directories.
+		return output;
+	}
+
 	// Used to enumerate all files, recursively inside each sub-directory of each user-selected directory
-	private static readonly EnumerationOptions options = new()
+	private static readonly EnumerationOptions RecursiveEnumeration = new()
 	{
 		IgnoreInaccessible = true,
 		RecurseSubdirectories = true,
-		AttributesToSkip = FileAttributes.None
+		AttributesToSkip = FileAttributes.None,
+		MatchCasing = MatchCasing.CaseInsensitive,
+		ReturnSpecialDirectories = false,
+		MaxRecursionDepth = int.MaxValue,
+		BufferSize = 65536
 	};
 
 	// Used to only enumerate the files in each user-selected directories
-	private static readonly EnumerationOptions options2 = new()
+	private static readonly EnumerationOptions NonRecurseEnumeration = new()
 	{
 		IgnoreInaccessible = true,
 		RecurseSubdirectories = false,
-		AttributesToSkip = FileAttributes.None
+		AttributesToSkip = FileAttributes.None,
+		MatchCasing = MatchCasing.CaseInsensitive,
+		ReturnSpecialDirectories = false,
+		MaxRecursionDepth = int.MaxValue,
+		BufferSize = 65536
 	};
 
 
 	// The Default App Control supported extensions, case-insensitive
-	private static readonly HashSet<string> appControlExtensions = new(StringComparer.OrdinalIgnoreCase)
-		{
-			".sys", ".exe", ".com", ".dll", ".rll", ".ocx", ".msp", ".mst", ".msi",
-			".js", ".vbs", ".ps1", ".appx", ".bin", ".bat", ".hxs", ".mui", ".lex", ".mof"
-		};
-
-
-	/// <summary>
-	/// Custom HashSet comparer to compare two FileInfo objects based on their FullName (full path of file)
-	/// </summary>
-	private sealed class FileInfoComparer : IEqualityComparer<FileInfo>
+	private static readonly FrozenSet<string> AppControlExtensions = new string[]
 	{
-		public bool Equals(FileInfo? x, FileInfo? y)
-		{
-			if (x is null || y is null)
-				return x == y;
-
-			// Compare by file path
-			return x.FullName.Equals(y.FullName, StringComparison.OrdinalIgnoreCase);
-		}
-
-		public int GetHashCode(FileInfo obj)
-		{
-			// Hash based on the file path
-			return obj.FullName.ToLowerInvariant().GetHashCode(StringComparison.OrdinalIgnoreCase);
-		}
-	}
+		".sys", ".exe", ".com", ".dll", ".rll", ".ocx", ".msp", ".mst", ".msi",
+		".js", ".vbs", ".ps1", ".appx", ".bin", ".bat", ".hxs", ".mui", ".lex", ".mof"
+	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
 
 	/// <summary>
-	/// A flexible and fast method that can accept directory paths and file paths as input and return a list of FileInfo objects that are compliant with the App Control policy.
+	/// A flexible and fast method that can accept directory paths and file paths as input and return file paths that are compliant with App Control policies.
 	/// It supports custom extensions to filter by as well.
 	/// </summary>
 	/// <param name="directories">Directories to process.</param>
 	/// <param name="files">Files to process.</param>
 	/// <param name="extensionsToFilterBy">Extensions to filter by. If null or empty, default App Control supported extensions are used.</param>
 	/// <returns>A Tuple containing the IEnumerable and count of the data</returns>
-	internal static (IEnumerable<FileInfo>, int) GetFilesFast(
-		DirectoryInfo[]? directories,
-		FileInfo[]? files,
-		string[]? extensionsToFilterBy)
+	internal static (IEnumerable<string>, int) GetFilesFast(
+		IReadOnlyCollection<string>? directories,
+		IReadOnlyCollection<string>? files,
+		string[]? extensionsToFilterBy,
+		CancellationToken? cToken = null)
 	{
 		// Create a Stopwatch instance and start measuring time
 		Stopwatch stopwatch = Stopwatch.StartNew();
 
-		// A HashSet used to store extensions to filter files
-		HashSet<string> extensions = new(StringComparer.OrdinalIgnoreCase);
+		// A FrozenSet used to store extensions to filter files
+		FrozenSet<string> extensions;
 
 		// If custom extensions are provided, use them and make them case-insensitive
 		if (extensionsToFilterBy is { Length: > 0 })
 		{
-			extensions = new HashSet<string>(extensionsToFilterBy, StringComparer.OrdinalIgnoreCase);
+			extensions = extensionsToFilterBy.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 		}
 		else
 		{
-			extensions = appControlExtensions;
+			extensions = AppControlExtensions;
 		}
 
 		// https://learn.microsoft.com/dotnet/api/system.collections.concurrent.blockingcollection-1
 		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/when-to-use-a-thread-safe-collection
 		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/blockingcollection-overview
-		using BlockingCollection<FileInfo> bc = [];
+		// We could use "Using" statement here but then we wouldn't be able to pass the collection's enumerable as the return object and instead would have to materialize it into an Array/List which would degrade performance.
+		BlockingCollection<string> bc = [];
 
 		// To store all of the tasks
 		List<Task> tasks = [];
@@ -114,63 +184,62 @@ internal static class FileUtility
 		#region Directories
 
 		// Process directories if provided
-		if (directories is { Length: > 0 })
+		if (directories is { Count: > 0 })
 		{
-			foreach (DirectoryInfo directory in directories)
+			foreach (string directory in directories)
 			{
-				// Process files in the current directory
+				// Process files in the current directory - non-recursive
 				tasks.Add(Task.Run(() =>
 				{
-					IEnumerator<FileInfo> enumerator = directory.EnumerateFiles("*", options2).GetEnumerator();
 
-					// If there is wildcard in extensions to filter by, then add all files without performing extension check
-					if (extensions.Contains("*"))
+					FileSystemEnumerable<FileSystemInfo> enumeration = new(
+							directory,
+							(ref entry) => entry.ToFileSystemInfo(),
+							NonRecurseEnumeration)
 					{
-						while (true)
+						ShouldIncludePredicate = (ref entry) =>
 						{
-							try
+							// Skip directories.
+							if (entry.IsDirectory)
 							{
-								// Move to the next file
-								// The reason we use MoveNext() instead of foreach loop is that protected/inaccessible files
-								// Would throw errors and this way we can catch them and move to the next file without terminating the entire loop
-								if (!enumerator.MoveNext())
-								{
-									// If we reach the end of the enumeration, we break out of the loop
-									break;
-								}
-								bc.Add(enumerator.Current);
+								return false;
 							}
-							catch { }
-						}
-					}
-					// Filter files by extensions if there is no wildcard character for filtering
-					else
-					{
-						while (true)
-						{
-							try
-							{
-								// Move to the next file
-								if (!enumerator.MoveNext())
-								{
-									// If we reach the end of the enumeration, we break out of the loop
-									break;
-								}
 
-								// Check if the file extension is in the Extensions HashSet or Wildcard was used
-								if (extensions.Contains(enumerator.Current.Extension))
-								{
-									bc.Add(enumerator.Current);
-								}
+							// If the file has the correct extension or wildcard was used
+							if (extensions.Contains("*") || extensions.Contains(Path.GetExtension(entry.ToFullPath())))
+							{
+								return true;
 							}
-							catch { }
+
+							return false;
 						}
+					};
+
+					IEnumerator<FileSystemInfo> enumerator = enumeration.GetEnumerator();
+
+					while (true)
+					{
+						cToken?.ThrowIfCancellationRequested();
+
+						try
+						{
+							// Move to the next file
+							// The reason we use MoveNext() instead of foreach loop is that protected/inaccessible files
+							// Would throw errors and this way we can catch them and move to the next file without terminating the entire loop
+							if (!enumerator.MoveNext())
+							{
+								// If we reach the end of the enumeration, we break out of the loop
+								break;
+							}
+							bc.Add(enumerator.Current.FullName);
+						}
+						catch { }
 					}
 				}));
 
 
 				// Check for immediate sub-directories and process them if present
-				DirectoryInfo[] subDirectories = directory.GetDirectories();
+				DirectoryInfo[] subDirectories = new DirectoryInfo(directory).GetDirectories();
 
 				if (subDirectories.Length > 0)
 				{
@@ -179,46 +248,44 @@ internal static class FileUtility
 						// Process files in each sub-directory concurrently
 						tasks.Add(Task.Run(() =>
 						{
-							IEnumerator<FileInfo> subEnumerator = subDirectory.EnumerateFiles("*", options).GetEnumerator();
 
-							if (extensions.Contains("*"))
+							FileSystemEnumerable<FileSystemInfo> enumeration = new(
+								subDirectory.FullName,
+								(ref entry) => entry.ToFileSystemInfo(),
+								RecursiveEnumeration)
 							{
-								while (true)
+								ShouldIncludePredicate = (ref entry) =>
 								{
-									try
+									// Skip directories.
+									if (entry.IsDirectory)
 									{
-										// Move to the next file
-										if (!subEnumerator.MoveNext())
-										{
-											// If we reach the end of the enumeration, we break out of the loop
-											break;
-										}
-										bc.Add(subEnumerator.Current);
+										return false;
 									}
-									catch { }
-								}
-							}
-							else
-							{
-								while (true)
-								{
-									try
-									{
-										// Move to the next file
-										if (!subEnumerator.MoveNext())
-										{
-											// If we reach the end of the enumeration, we break out of the loop
-											break;
-										}
 
-										// Check if the file extension is in the Extensions HashSet or Wildcard was used
-										if (extensions.Contains(subEnumerator.Current.Extension))
-										{
-											bc.Add(subEnumerator.Current);
-										}
+									// If the file has the correct extension or wildcard was used
+									if (extensions.Contains("*") || extensions.Contains(Path.GetExtension(entry.ToFullPath())))
+									{
+										return true;
 									}
-									catch { }
+
+									return false;
 								}
+							};
+
+							IEnumerator<FileSystemInfo> subEnumerator = enumeration.GetEnumerator();
+							while (true)
+							{
+								cToken?.ThrowIfCancellationRequested();
+
+								try
+								{
+									if (!subEnumerator.MoveNext())
+									{
+										break;
+									}
+									bc.Add(subEnumerator.Current.FullName);
+								}
+								catch { }
 							}
 						}));
 					}
@@ -233,22 +300,32 @@ internal static class FileUtility
 		#region Files
 
 		// If files are provided, process them
-		if (files is { Length: > 0 })
+		if (files is { Count: > 0 })
 		{
+
+			// Ensure the files aren't already in the directories that were scanned
+			IReadOnlyCollection<string> filesToUse = directories is not null && directories.Count > 0 ?
+				TestFilePath(directories, files) :
+				files;
+
 			// If user provided wildcard then add all files without checking their extensions
 			if (extensions.Contains("*"))
 			{
-				foreach (FileInfo file in files)
+				foreach (string file in filesToUse)
 				{
+					cToken?.ThrowIfCancellationRequested();
+
 					bc.Add(file);
 				}
 			}
 			// If user provided no extensions to filter by or provided extensions that are not wildcard
 			else
 			{
-				foreach (FileInfo file in files)
+				foreach (string file in filesToUse)
 				{
-					if (extensions.Contains(file.Extension))
+					cToken?.ThrowIfCancellationRequested();
+
+					if (extensions.Contains(Path.GetExtension(file)))
 					{
 						bc.Add(file);
 					}
@@ -265,10 +342,6 @@ internal static class FileUtility
 		// Stop adding items to the collection
 		bc.CompleteAdding();
 
-		// Defining a HashSet to store the final output and add each item to the HashSet from the Blocking Collection
-		// Using the HashSet's special constructor for higher performance
-		HashSet<FileInfo> output = new(bc.GetConsumingEnumerable(), new FileInfoComparer());
-
 		// Stop measuring time
 		stopwatch.Stop();
 
@@ -284,6 +357,6 @@ internal static class FileUtility
 			)
 		);
 
-		return (output, output.Count);
+		return (bc.GetConsumingEnumerable(), bc.Count);
 	}
 }

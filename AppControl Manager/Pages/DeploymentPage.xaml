@@ -547,6 +547,7 @@
                              HeaderIcon="{ui:FontIcon Glyph=&#xF572;}" IsClickEnabled="True" IsActionIconVisible="False">
 
                             <ToggleSwitch IsOn="{x:Bind ViewModel.SignOnlyNoDeployToggleSwitch, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"
                                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"/>
 
                         </customUI:SettingsCardV2>

@@ -468,25 +468,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			await Task.Run(async () =>
 			{
-
-				DirectoryInfo[] selectedDirectories = [];
-
-				// Convert user selected folder paths that are strings to DirectoryInfo objects
-				selectedDirectories = [.. filesAndFoldersFolderPaths.Select(dir => new DirectoryInfo(dir))];
-
-				FileInfo[] selectedFiles = [];
-
 				IEnumerable<FileIdentity> LocalFilesResults = [];
-
-				// Convert user selected file paths that are strings to FileInfo objects
-				selectedFiles = [.. filesAndFoldersFilePaths.Select(file => new FileInfo(file))];
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (!UsingWildCardFilePathRules)
 				{
 
 					// Collect all of the AppControl compatible files from user selected directories and files
-					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, selectedFiles, null);
+					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths, filesAndFoldersFilePaths, null);
 
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
@@ -1651,7 +1640,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			DriverAutoDetectionProgressRingValue = 0;
 
-			List<FileInfo> kernelModeDriversList = [];
+			List<string> kernelModeDriversList = [];
 
 			await Task.Run(() =>
 			{
@@ -1668,12 +1657,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				foreach (string directory in Directory.GetDirectories(directoryPath))
 				{
 					// Add the desired file path to the list
-					kernelModeDriversList.Add(new FileInfo(Path.Combine(directory, "bootres.dll.mui")));
+					kernelModeDriversList.Add(Path.Combine(directory, "bootres.dll.mui"));
 				}
 
-				DirectoryInfo sys32Dir = new(Path.Combine(systemDrive, "Windows", "System32"));
+				string sys32Dir = new(Path.Combine(systemDrive, "Windows", "System32"));
 
-				(IEnumerable<FileInfo>, int) filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
+				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
 
 				kernelModeDriversList.AddRange(filesOutput.Item1);
 

@@ -120,7 +120,10 @@
                          IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
                          Text="{x:Bind ViewModel.SearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search the data...  " />
 
-                <ToggleSwitch HorizontalAlignment="Center" VerticalAlignment="Center" Toggled="{x:Bind ViewModel.ChangeTextSelectionsState}" OnContent="Text Selection is Enabled" OffContent="Text Selection is Disabled"
+                <ToggleSwitch HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Toggled="{x:Bind ViewModel.ChangeTextSelectionsState}"
+                              OnContent="Text Selection is Enabled" OffContent="Text Selection is Disabled"
                               ToolTipService.ToolTip="Enable or Disable the ability to be able to select texts in the List View rows" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"/>
 
 

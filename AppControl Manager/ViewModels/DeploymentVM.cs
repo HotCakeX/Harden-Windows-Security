@@ -75,7 +75,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = "Local Deployment is Currently Active";
+	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("LocalDeploymentActive");
 
 	/// <summary>
 	/// Bound to the UI ListView and holds the Intune group Names/IDs
@@ -235,7 +235,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 		// Enable the options if a valid value is set as Active Account
 		DeployToIntune = on;
 		AreOnlineFeaturesEnabled = on;
-		LocalOnlineStatusText = on ? "Cloud Deployment is Currently Active" : "Local Deployment is Currently Active";
+		LocalOnlineStatusText = on ? GlobalVars.Rizz.GetString("CloudDeploymentActive") : GlobalVars.Rizz.GetString("LocalDeploymentActive");
 
 		// If online features are turned off, clear the list of Intune groups
 		if (!on)
@@ -252,7 +252,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	{
 		if (XMLFiles.Count is 0)
 		{
-			MainInfoBar.WriteWarning("You need to select unsigned XML files to deploy first.");
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectUnsignedXMLFilesToDeployWarningMsg"));
 			return;
 		}
 
@@ -438,7 +438,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 
 		if (SignedXMLFiles.Count is 0)
 		{
-			MainInfoBar.WriteWarning("You need to select Signed XML files to deploy first.");
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectXMLFilesToSignAndDeployWarningMsg"));
 			return;
 		}
 
@@ -493,7 +493,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? "Currently Signing XML file:" : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'");
+						MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? GlobalVars.Rizz.GetString("CurrentlySigningXMLFile") : GlobalVars.Rizz.GetString("DeployingXMLFile")) + file + "'");
 					});
 
 					// Add certificate's details to the policy
@@ -562,7 +562,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 		{
 			if (!errorsOccurred)
 			{
-				MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitch ? "Successfully created signed CIP files for all of the selected XML files." : GlobalVars.Rizz.GetString("SignedDeploymentSuccess"));
+				MainInfoBar.WriteSuccess(SignOnlyNoDeployToggleSwitch ? GlobalVars.Rizz.GetString("SuccessfullyCreatedSignedCIPFiles") : GlobalVars.Rizz.GetString("SignedDeploymentSuccess"));
 
 				// Clear the lists at the end if no errors occurred
 				SignedXMLFiles.Clear();
@@ -584,7 +584,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	{
 		if (CIPFiles.Count is 0)
 		{
-			MainInfoBar.WriteWarning("You need to select CIP files to deploy first.");
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectCIPFilesToDeployWarningMsg"));
 			return;
 		}
 
@@ -684,7 +684,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	{
 		if (XMLFilesToConvertToCIP.Count is 0)
 		{
-			MainInfoBar.WriteWarning("You need to select XML files to convert first.");
+			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectXMLFilesToDeployWarningMsg"));
 			return;
 		}
 

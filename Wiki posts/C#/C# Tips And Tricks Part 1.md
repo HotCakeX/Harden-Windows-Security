@@ -254,3 +254,13 @@ Microsoft has a [troubleshooting documentation](https://learn.microsoft.com/en-u
 If your WPF GUI only uses the Window object, then the Hot Reload feature will not work.
 
 <br>
+
+## Define The Size of the Collections Whenever You Can
+
+When creating a collection such as `List<T>`, `ObservableCollection<T>` and so on, define the capacity of them in the constructor in order to pre-size them to the number of items you know you will be adding. That produces the least growths and the most efficient additions.
+
+## Use `IEnumerable<T>` Between Methods As Much As Possible
+
+The standard and most basic way to represent a "collection" is an `IEnumerable<T>`. If you require something more specific you force your users to allocate a copy before passing the collection to your method. You don't want to force your users into giving you a specific collection type as input. Just make sure you don't iterate over it twice because the item must not be materialized more than once or else performance will be degraded. E.g., if we are looping over the data more than 1 time, convert `IEnumerable` to a `list`.
+
+<br>

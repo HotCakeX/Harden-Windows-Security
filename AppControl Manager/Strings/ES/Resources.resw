@@ -3562,9 +3562,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>Seleccionado {0} para el escaneo de registros EVTX de AppLocker</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>Registros totales: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>Registros totales: {0}</value>
   </data>
@@ -5268,5 +5265,77 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>no se detectaron firmantes de Editor para crear reglas de denegación.</value>
+</data>
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>Crear Política de Bloqueo RMM</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>Esta política bloquea un gran número de software de Monitoreo y Administración Remota basándose en los nombres de sus archivos ejecutables y la ruta del archivo.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Esta política bloquea un gran número de software de Monitoreo y Administración Remota basándose en los nombres de sus archivos ejecutables y la ruta del archivo.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Esta política bloquea un gran número de software de Monitoreo y Administración Remota basándose en los nombres de sus archivos ejecutables y la ruta del archivo.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crear la política base de bloqueo RMM</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crear la política base de bloqueo RMM</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Se creó exitosamente la política de bloqueo RMM</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>Prevenir que otras aplicaciones como grabadoras de pantalla (incluyendo Recall) graben o tomen capturas de pantalla de la ventana del Administrador de Control de Aplicaciones.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>Escudo de Pantalla</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Prevenir que otras aplicaciones como grabadoras de pantalla (incluyendo Recall) graben o tomen capturas de pantalla de la ventana del Administrador de Control de Aplicaciones.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Prevenir que otras aplicaciones como grabadoras de pantalla (incluyendo Recall) graben o tomen capturas de pantalla de la ventana del Administrador de Control de Aplicaciones.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Necesitas seleccionar archivos CIP para implementar.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Necesitas seleccionar archivos XML para convertir a binario CIP.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>Se crearon exitosamente archivos CIP firmados para todos los archivos XML seleccionados.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>Firmando actualmente archivo XML: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>Necesitas seleccionar archivos XML para firmar e implementar.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Necesitas seleccionar archivos XML sin firmar para implementar.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>Verificando firmas de archivos</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>El archivo '{0}' tiene {1} firmante(s). Los datos de los Catálogos de Seguridad en el sistema fueron {2} en el escaneo.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>incluidos</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>no incluidos</value>
 </data>
 </root>

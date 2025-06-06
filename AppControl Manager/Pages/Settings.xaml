@@ -129,7 +129,8 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.NavViewBackground, Mode=TwoWay}"/>
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.NavViewBackground, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="BackgroundStyleSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
@@ -170,16 +171,24 @@
                 <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
                     <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.ListViewsVerticalCentering, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.ListViewsVerticalCentering, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.CacheSecurityCatalogsScanResults, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.CacheSecurityCatalogsScanResults, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.PromptForElevationOnStartup, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.PromptForElevationOnStartup, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="ScreenShieldSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEE3F;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.ScreenShield, Mode=TwoWay}" />
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.ScreenShield, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
+                        </customUI:SettingsCardV2>
+                        <customUI:SettingsCardV2 x:Uid="PublishUserActivityInTheOSSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC5B;}">
+                            <ToggleSwitch IsOn="{x:Bind AppSettings.PublishUserActivityInTheOS, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="BrowseForCISchemaSettingsCard">
@@ -220,7 +229,8 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.UIFlowDirectionToggleSwitch, Mode=TwoWay}" x:Uid="UIFlowDirectionToggleSwitch" />
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.UIFlowDirectionToggleSwitch, Mode=TwoWay}"
+                                          x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -228,7 +238,8 @@
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
                 <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
-                    <ToggleSwitch IsOn="{x:Bind AppSettings.SoundSetting, Mode=TwoWay}" />
+                    <ToggleSwitch IsOn="{x:Bind AppSettings.SoundSetting, Mode=TwoWay}"
+                                  x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
                 <!-- About section -->

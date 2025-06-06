@@ -92,7 +92,7 @@
                     <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
 
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,0,0,5" ToolTipService.ToolTip="Automatically downloads the signtool.exe from Microsoft servers">
-                            <ToggleSwitch x:Name="AutoAcquireSignTool" Toggled="{x:Bind AutoAcquireSignTool_Toggled}" />
+                            <ToggleSwitch x:Uid="ToggleSwitchGeneral" x:Name="AutoAcquireSignTool" Toggled="{x:Bind AutoAcquireSignTool_Toggled}" />
                             <TextBlock Text="Auto Acquire" Margin="0,8.7,0,0" />
                         </StackPanel>
 

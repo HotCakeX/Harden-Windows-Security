@@ -113,11 +113,24 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Uid="CreateDenyPolicyButton"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Margin="0,0,15,0"
-                                IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyButton_Click}" />
+                        <customUI:AnimatedCancellableButton x:Uid="CreateDenyPolicyButton"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Margin="0,0,15,0"                            
+                                    Click="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyButton_Click}"
+                                    CancelMethod="{x:Bind ViewModel.CancelCreateFilesAndFoldersDenyPolicy}"
+                                    ExternalOperationInProgress="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyIsOperationInProgress, Mode=OneWay}"
+                                    ExternalIsCancelState="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyIsCancelState, Mode=OneWay}"
+                                    ExternalIsCancellingState="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyIsCancellingState, Mode=OneWay}"
+                                    ExternalIsAnimating="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyIsAnimating, Mode=OneWay}"
+                                    ExternalButtonContent="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyButtonContent, Mode=OneWay}"
+                                    ExternalOriginalText="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyOriginalText, Mode=OneWay}"
+                                    ExternalInternalIsCancelState="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyInternalIsCancelState, Mode=OneWay}"
+                                    ExternalInternalIsCancellingState="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyInternalIsCancellingState, Mode=OneWay}"
+                                    ExternalInternalIsAnimating="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyInternalIsAnimating, Mode=OneWay}"
+                                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress, Mode=OneWay}"
+                                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick, Mode=OneWay}"
+                                    ExternalShadowAnimationRunning="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyShadowAnimationRunning, Mode=OneWay}"
+                                    ExternalOperationStarted="{x:Bind ViewModel.CreateFilesAndFoldersDenyPolicyOperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.filesAndFoldersDeployButton, Mode=TwoWay}"
                                       IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"

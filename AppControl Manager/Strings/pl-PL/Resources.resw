@@ -3562,9 +3562,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>Wybrano {0} do skanowania dziennika EVTX AppLocker</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>Całkowita liczba dzienników: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>Całkowita liczba dzienników: {0}</value>
   </data>
@@ -5269,4 +5266,76 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
     <value>nie wykryto żadnych sygnatariuszy Wydawcy (Publisher), dla których można by utworzyć reguły blokujące.</value>
   </data>
+    <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>Utwórz Zasady Blokowania RMM</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>Te zasady blokują dużą liczbę oprogramowania do Zdalnego Monitorowania i Zarządzania na podstawie nazw ich plików wykonywalnych i ścieżki pliku.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Te zasady blokują dużą liczbę oprogramowania do Zdalnego Monitorowania i Zarządzania na podstawie nazw ich plików wykonywalnych i ścieżki pliku.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Te zasady blokują dużą liczbę oprogramowania do Zdalnego Monitorowania i Zarządzania na podstawie nazw ich plików wykonywalnych i ścieżki pliku.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>Utwórz</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz podstawowe zasady blokowania RMM</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz podstawowe zasady blokowania RMM</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Pomyślnie utworzono zasady blokowania RMM</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>Zapobiegaj innym aplikacjom, takim jak nagrywanie ekranu (w tym Recall), nagrywaniu lub robieniu zrzutów ekranu okna Menedżera Kontroli Aplikacji.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>Osłona Ekranu</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapobiegaj innym aplikacjom, takim jak nagrywanie ekranu (w tym Recall), nagrywaniu lub robieniu zrzutów ekranu okna Menedżera Kontroli Aplikacji.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zapobiegaj innym aplikacjom, takim jak nagrywanie ekranu (w tym Recall), nagrywaniu lub robieniu zrzutów ekranu okna Menedżera Kontroli Aplikacji.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>Włączone</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>Wyłączone</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Musisz wybrać pliki CIP do wdrożenia.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Musisz wybrać pliki XML do konwersji na binarne CIP.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>Pomyślnie utworzono podpisane pliki CIP dla wszystkich wybranych plików XML.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>Obecnie podpisywany plik XML: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>Musisz wybrać pliki XML do podpisania i wdrożenia.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Musisz wybrać niepodpisane pliki XML do wdrożenia.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>Sprawdzanie podpisów plików</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>Plik '{0}' ma {1} sygnatariusz(y). Dane z Katalogów Bezpieczeństwa w systemie zostały {2} w skanowaniu.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>uwzględnione</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>nieuwzględnione</value>
+</data>
 </root>

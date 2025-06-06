@@ -207,8 +207,8 @@ internal static class GetEventLogsData
 					FilePath = FilePath,
 					FileName = FileName,
 					ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
-					RequestedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
-					ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
+					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
+					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
 					Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
 					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
 					SHA256Hash = SHA256Hash,
@@ -272,9 +272,9 @@ internal static class GetEventLogsData
 							Signature = GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
 							Hash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Hash']"),
 							PageHash = GetBooleanValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PageHash']"),
-							SignatureType = GetSignatureType(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='SignatureType']")),
-							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='ValidatedSigningLevel']")),
-							VerificationError = GetVerificationError(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='VerificationError']")),
+							SignatureType = CILogIntel.GetSignatureType(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='SignatureType']")),
+							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='ValidatedSigningLevel']")),
+							VerificationError = CILogIntel.GetVerificationError(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='VerificationError']")),
 							Flags = GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Flags']"),
 							NotValidBefore = GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidBefore']"),
 							NotValidAfter = GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidAfter']"),
@@ -396,8 +396,8 @@ internal static class GetEventLogsData
 					FilePath = FilePath,
 					FileName = FileName,
 					ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
-					RequestedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
-					ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
+					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
+					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
 					Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
 					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
 					SHA256Hash = SHA256Hash,
@@ -463,9 +463,9 @@ internal static class GetEventLogsData
 							Signature = GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
 							Hash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Hash']"),
 							PageHash = GetBooleanValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PageHash']"),
-							SignatureType = GetSignatureType(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='SignatureType']")),
-							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='ValidatedSigningLevel']")),
-							VerificationError = GetVerificationError(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='VerificationError']")),
+							SignatureType = CILogIntel.GetSignatureType(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='SignatureType']")),
+							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='ValidatedSigningLevel']")),
+							VerificationError = CILogIntel.GetVerificationError(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='VerificationError']")),
 							Flags = GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Flags']"),
 							NotValidBefore = GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidBefore']"),
 							NotValidAfter = GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidAfter']"),
@@ -1004,65 +1004,6 @@ internal static class GetEventLogsData
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
 		return node is not null && bool.TryParse(node.InnerText, out bool result) ? result : null;
 	}
-
-
-	/// <summary>
-	/// Resolves the Validated/Requested Signing Level int to friendly string
-	/// </summary>
-	/// <param name="SigningLevelInt"></param>
-	/// <returns></returns>
-	private static string? GetValidatedRequestedSigningLevel(int? SigningLevelInt)
-	{
-		if (SigningLevelInt.HasValue)
-		{
-			_ = CILogIntel.ReqValSigningLevels.TryGetValue(SigningLevelInt.Value, out string? SigningLevel);
-
-			return SigningLevel;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-
-	/// <summary>
-	/// Resolves the VerificationError int to a friendly string
-	/// </summary>
-	/// <param name="VerificationError"></param>
-	/// <returns></returns>
-	private static string? GetVerificationError(int? VerificationError)
-	{
-		if (VerificationError.HasValue)
-		{
-			_ = CILogIntel.VerificationErrorTable.TryGetValue(VerificationError.Value, out string? VerificationErrorString);
-			return VerificationErrorString;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-
-	/// <summary>
-	/// Resolves the SignatureType int to a friendly string
-	/// </summary>
-	/// <param name="SignatureType"></param>
-	/// <returns></returns>
-	private static string? GetSignatureType(int? SignatureType)
-	{
-		if (SignatureType.HasValue)
-		{
-			_ = CILogIntel.SignatureTypeTable.TryGetValue(SignatureType.Value, out string? SignatureTypeString);
-			return SignatureTypeString;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
 
 	/// <summary>
 	/// Replaces global root NT paths to the normal paths

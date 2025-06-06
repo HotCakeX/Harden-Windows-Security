@@ -73,7 +73,7 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 
 	private void Button_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
-		if (_innerButton is null)
+		if (_innerButton is null || !_innerButton.IsEnabled)
 			return;
 
 		FlyoutBase flyout = _innerButton.Flyout;
@@ -85,7 +85,7 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 
 	private void Card_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
-		if (_innerButton is null)
+		if (_innerButton is null || !_innerButton.IsEnabled)
 			return;
 
 		FlyoutBase flyout = _innerButton.Flyout;
@@ -97,7 +97,7 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 
 	private void Card_Holding(object sender, HoldingRoutedEventArgs e)
 	{
-		if (e.HoldingState != HoldingState.Started || _innerButton is null)
+		if (e.HoldingState != HoldingState.Started || _innerButton is null || !_innerButton.IsEnabled)
 			return;
 
 		FlyoutBase flyout = _innerButton.Flyout;

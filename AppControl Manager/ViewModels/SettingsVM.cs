@@ -182,12 +182,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{"Dark", 1 },
 		{"Light", 2 }
 	};
-	private static readonly Dictionary<int, string> AppThemesReverse = new()
-	{
-		{ 0, "Use System Setting" },
-		{ 1, "Dark" },
-		{ 2, "Light" }
-	};
+	private static readonly string[] AppThemesReverse = [
+		"Use System Setting",
+		"Dark" ,
+		"Light"
+	];
 
 	internal int AppThemeComboBoxSelectedIndex
 	{
@@ -195,17 +194,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				if (AppThemesReverse.TryGetValue(field, out string? x))
-				{
-					// Raise the global BackgroundChanged event
-					AppThemeManager.OnAppThemeChanged(x);
+				// Raise the global BackgroundChanged event
+				AppThemeManager.OnAppThemeChanged(AppThemesReverse[field]);
 
-					App.Settings.AppTheme = x;
-				}
-				else
-				{
-					Logger.Write($"Unknown theme Index: {field}");
-				}
+				App.Settings.AppTheme = AppThemesReverse[field];
 			}
 		}
 	} = AppThemes.TryGetValue(App.Settings.AppTheme, out int x) ? x : 0;

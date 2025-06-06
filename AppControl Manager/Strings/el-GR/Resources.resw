@@ -3562,9 +3562,6 @@
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>Επιλέχθηκε {0} για σάρωση αρχείων καταγραφής EVTX AppLocker</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>Συνολικά αρχεία καταγραφής: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>Συνολικά αρχεία καταγραφής: {0}</value>
   </data>
@@ -5268,5 +5265,77 @@
 </data>
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>δεν εντοπίστηκαν υπογράφοντες Εκδότη για τη δημιουργία κανόνων άρνησης.</value>
+</data>
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>Δημιουργία Πολιτικής Αποκλεισμού RMM</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>Αυτή η πολιτική αποκλείει μεγάλο αριθμό λογισμικού Απομακρυσμένης Παρακολούθησης και Διαχείρισης βασιζόμενη στα ονόματα των εκτελέσιμων αρχείων και τη διαδρομή αρχείου.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτή η πολιτική αποκλείει μεγάλο αριθμό λογισμικού Απομακρυσμένης Παρακολούθησης και Διαχείρισης βασιζόμενη στα ονόματα των εκτελέσιμων αρχείων και τη διαδρομή αρχείου.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτή η πολιτική αποκλείει μεγάλο αριθμό λογισμικού Απομακρυσμένης Παρακολούθησης και Διαχείρισης βασιζόμενη στα ονόματα των εκτελέσιμων αρχείων και τη διαδρομή αρχείου.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>Δημιουργία</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργία της βασικής πολιτικής αποκλεισμού RMM</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργία της βασικής πολιτικής αποκλεισμού RMM</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Η πολιτική αποκλεισμού RMM δημιουργήθηκε επιτυχώς</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>Αποτρέψτε άλλες εφαρμογές όπως καταγραφείς οθόνης (συμπεριλαμβανομένου του Recall) να καταγράψουν ή να τραβήξουν στιγμιότυπα οθόνης του παραθύρου του Διαχειριστή Ελέγχου Εφαρμογών.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>Ασπίδα Οθόνης</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποτρέψτε άλλες εφαρμογές όπως καταγραφείς οθόνης (συμπεριλαμβανομένου του Recall) να καταγράψουν ή να τραβήξουν στιγμιότυπα οθόνης του παραθύρου του Διαχειριστή Ελέγχου Εφαρμογών.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποτρέψτε άλλες εφαρμογές όπως καταγραφείς οθόνης (συμπεριλαμβανομένου του Recall) να καταγράψουν ή να τραβήξουν στιγμιότυπα οθόνης του παραθύρου του Διαχειριστή Ελέγχου Εφαρμογών.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>Ενεργό</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>Ανενεργό</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Πρέπει να επιλέξετε αρχεία CIP για ανάπτυξη.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Πρέπει να επιλέξετε αρχεία XML για μετατροπή σε δυαδικό CIP.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>Δημιουργήθηκαν επιτυχώς υπογεγραμμένα αρχεία CIP για όλα τα επιλεγμένα αρχεία XML.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>Υπογράφεται τώρα αρχείο XML: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>Πρέπει να επιλέξετε αρχεία XML για υπογραφή και ανάπτυξη.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>Πρέπει να επιλέξετε μη υπογεγραμμένα αρχεία XML για ανάπτυξη.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>Έλεγχος υπογραφών αρχείων</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>Το αρχείο '{0}' έχει {1} υπογράφοντα(ες). Τα δεδομένα από τους Καταλόγους Ασφαλείας στο σύστημα {2} στη σάρωση.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>συμπεριλήφθηκαν</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>δεν συμπεριλήφθηκαν</value>
 </data>
 </root>

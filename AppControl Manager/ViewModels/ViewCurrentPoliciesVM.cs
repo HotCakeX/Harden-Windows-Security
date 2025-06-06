@@ -92,14 +92,13 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	internal CiPolicyInfo? ListViewSelectedPolicy { get; set => SP(ref field, value); }
 
-	private static readonly Dictionary<int, string> PolicyLevelDictionary = new()
-{
-	{ 0, "Default Windows" },
-	{ 1, "Allow Microsoft" },
-	{ 2, "Signed and Reputable" },
-	{ 3, "Strict Kernel-Mode" },
-	{ 4, "Strict Kernel-Mode (No Flight Roots)" }
-};
+	private static readonly string[] PolicyLevels = [
+	 "Default Windows",
+	 "Allow Microsoft",
+	 "Signed and Reputable",
+	 "Strict Kernel-Mode",
+	 "Strict Kernel-Mode (No Flight Roots)"
+	];
 
 	internal int SwapPolicyComboBoxSelectedIndex
 	{
@@ -286,7 +285,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Create colored runs
 			Run accentPolicyName = new() { Text = ListViewSelectedPolicy.FriendlyName, Foreground = violetBrush };
 			Run accentPolicyID = new() { Text = policyID, Foreground = violetBrush };
-			Run accentPolicyType = new() { Text = PolicyLevelDictionary[SwapPolicyComboBoxSelectedIndex], Foreground = hotPinkBrush };
+			Run accentPolicyType = new() { Text = PolicyLevels[SwapPolicyComboBoxSelectedIndex], Foreground = hotPinkBrush };
 
 			// Create bold text run
 			Bold boldText = new();

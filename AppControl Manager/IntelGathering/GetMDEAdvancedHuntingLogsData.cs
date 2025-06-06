@@ -98,8 +98,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					FilePath = possibleCodeIntegrityAuditEvent.FolderPath,
 					FileName = possibleCodeIntegrityAuditEvent.FileName,
 					ProcessName = possibleCodeIntegrityAuditEvent.ProcessName,
-					RequestedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityAuditEvent.RequestedSigningLevel)),
-					ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityAuditEvent.ValidatedSigningLevel)),
+					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityAuditEvent.RequestedSigningLevel)),
+					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityAuditEvent.ValidatedSigningLevel)),
 					Status = possibleCodeIntegrityAuditEvent.StatusCode,
 					SHA1Hash = possibleCodeIntegrityAuditEvent.SHA1,
 					SHA256Hash = possibleCodeIntegrityAuditEvent.SHA256,
@@ -149,9 +149,9 @@ internal static class GetMDEAdvancedHuntingLogsData
 							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
 							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
-							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
 							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
@@ -203,8 +203,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					FilePath = possibleCodeIntegrityBlockEvent.FolderPath,
 					FileName = possibleCodeIntegrityBlockEvent.FileName,
 					ProcessName = possibleCodeIntegrityBlockEvent.ProcessName,
-					RequestedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityBlockEvent.RequestedSigningLevel)),
-					ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityBlockEvent.ValidatedSigningLevel)),
+					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityBlockEvent.RequestedSigningLevel)),
+					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleCodeIntegrityBlockEvent.ValidatedSigningLevel)),
 					Status = possibleCodeIntegrityBlockEvent.StatusCode,
 					SHA1Hash = possibleCodeIntegrityBlockEvent.SHA1,
 					SHA256Hash = possibleCodeIntegrityBlockEvent.SHA256,
@@ -254,9 +254,9 @@ internal static class GetMDEAdvancedHuntingLogsData
 							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
 							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
-							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
 							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
@@ -310,8 +310,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					FilePath = possibleAppLockerAuditEvent.FolderPath,
 					FileName = possibleAppLockerAuditEvent.FileName,
 					ProcessName = possibleAppLockerAuditEvent.ProcessName,
-					RequestedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerAuditEvent.RequestedSigningLevel)),
-					ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerAuditEvent.ValidatedSigningLevel)),
+					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerAuditEvent.RequestedSigningLevel)),
+					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerAuditEvent.ValidatedSigningLevel)),
 					Status = possibleAppLockerAuditEvent.StatusCode,
 					SHA1Hash = possibleAppLockerAuditEvent.SHA1,
 					SHA256Hash = possibleAppLockerAuditEvent.SHA256,
@@ -361,9 +361,9 @@ internal static class GetMDEAdvancedHuntingLogsData
 							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
 							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
-							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
 							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
@@ -415,8 +415,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 					FilePath = possibleAppLockerBlockEvent.FolderPath,
 					FileName = possibleAppLockerBlockEvent.FileName,
 					ProcessName = possibleAppLockerBlockEvent.ProcessName,
-					RequestedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerBlockEvent.RequestedSigningLevel)),
-					ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerBlockEvent.ValidatedSigningLevel)),
+					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerBlockEvent.RequestedSigningLevel)),
+					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(possibleAppLockerBlockEvent.ValidatedSigningLevel)),
 					Status = possibleAppLockerBlockEvent.StatusCode,
 					SHA1Hash = possibleAppLockerBlockEvent.SHA1,
 					SHA256Hash = possibleAppLockerBlockEvent.SHA256,
@@ -466,9 +466,9 @@ internal static class GetMDEAdvancedHuntingLogsData
 							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
 							Signature = correlatedEvent.Signature,
 							Hash = correlatedEvent.Hash,
-							SignatureType = GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
 							Flags = correlatedEvent.Flags,
 							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
 							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
@@ -545,61 +545,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	private static Guid? GetGuidValue(string? data)
 	{
 		return data is not null && Guid.TryParse(data, out Guid guid) ? guid : null;
-	}
-
-	/// <summary>
-	/// Resolves the Validated/Requested Signing Level int to friendly string
-	/// </summary>
-	/// <param name="SigningLevelInt"></param>
-	/// <returns></returns>
-	private static string? GetValidatedRequestedSigningLevel(int? SigningLevelInt)
-	{
-		if (SigningLevelInt.HasValue)
-		{
-			_ = CILogIntel.ReqValSigningLevels.TryGetValue(SigningLevelInt.Value, out string? SigningLevel);
-
-			return SigningLevel;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/// <summary>
-	/// Resolves the VerificationError int to a friendly string
-	/// </summary>
-	/// <param name="VerificationError"></param>
-	/// <returns></returns>
-	private static string? GetVerificationError(int? VerificationError)
-	{
-		if (VerificationError.HasValue)
-		{
-			_ = CILogIntel.VerificationErrorTable.TryGetValue(VerificationError.Value, out string? VerificationErrorString);
-			return VerificationErrorString;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/// <summary>
-	/// Resolves the SignatureType int to a friendly string
-	/// </summary>
-	/// <param name="SignatureType"></param>
-	/// <returns></returns>
-	private static string? GetSignatureType(int? SignatureType)
-	{
-		if (SignatureType.HasValue)
-		{
-			_ = CILogIntel.SignatureTypeTable.TryGetValue(SignatureType.Value, out string? SignatureTypeString);
-			return SignatureTypeString;
-		}
-		else
-		{
-			return null;
-		}
 	}
 
 	#endregion

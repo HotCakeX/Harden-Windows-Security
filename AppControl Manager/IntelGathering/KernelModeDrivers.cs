@@ -16,9 +16,9 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
@@ -34,14 +34,21 @@ internal static class KernelModeDrivers
 	private static readonly Guid CRYPT_SUBJTYPE_CATALOG_IMAGE = new("DE351A43-8E59-11d0-8C47-00C04FC295EE");
 	private static readonly Guid CRYPT_SUBJTYPE_CTL_IMAGE = new("9BA61D3F-E73A-11d0-8CD2-00C04FC295EE");
 
+	private static readonly int ImportDescriptorSize = Marshal.SizeOf<IMAGE_IMPORT_DESCRIPTOR>();
+
+	private const string KernelModeFileExtension = ".sys";
+
 	// If any of these DLLs are found in the imports list, the file is (likely) a user-mode PE.
 	// When a binary (such as a .exe or .dll) imports any of these user-mode libraries, it indicates that the binary relies on user-space functions, which are designed for normal applications.
 	// E.g., functions like CreateFile, MessageBox, or CreateWindow etc. are provided by kernel32.dll and user32.dll for user-mode applications, not for code running in kernel mode.
 	// Kernel-mode components do not interact with these user-mode DLLs. Instead, they access the kernel directly through SysCalls and low-level APIs.
 
-	private static readonly HashSet<string> UserModeDlls = ["kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"];
+	private static readonly FrozenSet<string> UserModeDlls = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+	{
+		"kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"
+	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
-	internal struct IMAGE_IMPORT_DESCRIPTOR
+	private struct IMAGE_IMPORT_DESCRIPTOR
 	{
 		internal uint CharacteristicsOrOriginalFirstThunk;
 		internal uint TimeDateStamp;
@@ -70,8 +77,8 @@ internal static class KernelModeDrivers
 	internal static KernelUserVerdict CheckKernelUserModeStatus(string filePath)
 	{
 
-		// To store the import names
-		List<string> importNames = [];
+		// To store the import names - Pre-allocate with an average capacity for better performance
+		List<string> importNames = new(8);
 
 		uint localPointerFileSizeHigh = 0;
 		IntPtr fileMappingView = IntPtr.Zero;
@@ -85,9 +92,8 @@ internal static class KernelModeDrivers
 		bool isPE = false;
 		SSType Verdict = SSType.UserMode;
 
-
 		// If the file is a .sys file then it's a kernel-mode driver, do not proceed further
-		if (string.Equals(Path.GetExtension(filePath), ".sys", StringComparison.OrdinalIgnoreCase))
+		if (string.Equals(Path.GetExtension(filePath), KernelModeFileExtension, StringComparison.OrdinalIgnoreCase))
 		{
 			return new KernelUserVerdict
 			{
@@ -323,8 +329,8 @@ internal static class KernelModeDrivers
 				};
 			}
 
-			// Collect all of the file's imports
-			for (int offset = 0; ; offset += Marshal.SizeOf<IMAGE_IMPORT_DESCRIPTOR>())
+			// Collect all of the file's imports - using cached ImportDescriptorSize for performance
+			for (int offset = 0; ; offset += ImportDescriptorSize)
 			{
 				// Get the pointer to the current IMAGE_IMPORT_DESCRIPTOR in unmanaged memory
 				IntPtr currentImportDescriptorPtr = (IntPtr)((long)dataEx + offset);
@@ -350,8 +356,18 @@ internal static class KernelModeDrivers
 				}
 			}
 
+			// if any import name is found in UserModeDlls, or there are no imports, it's UserMode, otherwise KernelMode
+			bool IsUserMode = importNames.Count == 0;
+			for (int i = 0; i < importNames.Count; i++)
+			{
+				if (UserModeDlls.Contains(importNames[i]))
+				{
+					IsUserMode = true;
+					break;
+				}
+			}
 
-			Verdict = importNames.Any(import => UserModeDlls.Any(dll => string.Equals(import, dll, StringComparison.OrdinalIgnoreCase))) ? SSType.UserMode : SSType.KernelMode;
+			Verdict = IsUserMode ? SSType.UserMode : SSType.KernelMode;
 
 			// Return the actual output which happens when no errors occurred before
 			return new KernelUserVerdict

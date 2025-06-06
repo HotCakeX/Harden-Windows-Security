@@ -3562,9 +3562,6 @@
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
     <value>ആപ്പ്ലോക്കർ EVTX ലോഗ് സ്കാനിംഗിനായി {0} തിരഞ്ഞെടുത്തു</value>
   </data>
-  <data name="TotalLogsZeroMessage" xml:space="preserve">
-    <value>ആകെ ലോഗുകൾ: 0</value>
-  </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>ആകെ ലോഗുകൾ: {0}</value>
   </data>
@@ -5268,5 +5265,77 @@
 </data>
 <data name="NoPublisherSignersDetectedDenyMessage" xml:space="preserve">
   <value>നിഷേധിക്കൽ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി പ്രസാധക സൈനർമാരൊന്നും കണ്ടെത്തിയില്ല.</value>
+</data>
+  <data name="RMMBlockingSection.Header" xml:space="preserve">
+    <value>RMM തടയൽ നയം സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="RMMBlockingSection.Description" xml:space="preserve">
+    <value>ഈ നയം വിദൂര നിരീക്ഷണവും മാനേജ്മെന്റ് സോഫ്റ്റ്‌വെയറുകളുടെയും വലിയ എണ്ണത്തെ അവയുടെ എക്സിക്യൂട്ടബിൾ ഫയൽ നാമങ്ങളും ഫയൽ പാത്തിന്റെയും അടിസ്ഥാനത്തിൽ തടയുന്നു.</value>
+  </data>
+  <data name="RMMBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ നയം വിദൂര നിരീക്ഷണവും മാനേജ്മെന്റ് സോഫ്റ്റ്‌വെയറുകളുടെയും വലിയ എണ്ണത്തെ അവയുടെ എക്സിക്യൂട്ടബിൾ ഫയൽ നാമങ്ങളും ഫയൽ പാത്തിന്റെയും അടിസ്ഥാനത്തിൽ തടയുന്നു.</value>
+  </data>
+  <data name="RMMBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ നയം വിദൂര നിരീക്ഷണവും മാനേജ്മെന്റ് സോഫ്റ്റ്‌വെയറുകളുടെയും വലിയ എണ്ണത്തെ അവയുടെ എക്സിക്യൂട്ടബിൾ ഫയൽ നാമങ്ങളും ഫയൽ പാത്തിന്റെയും അടിസ്ഥാനത്തിൽ തടയുന്നു.</value>
+  </data>
+  <data name="RMMBlockingCreateButton.Content" xml:space="preserve">
+    <value>സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="RMMBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>RMM തടയൽ അടിസ്ഥാന നയം സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="RMMBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>RMM തടയൽ അടിസ്ഥാന നയം സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="RMMBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>RMM തടയൽ നയം വിജയകരമായി സൃഷ്ടിച്ചു</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>സ്ക്രീൻ റെക്കോർഡറുകൾ (Recall ഉൾപ്പെടെ) പോലുള്ള മറ്റ് ആപ്ലിക്കേഷനുകൾ ആപ്ലിക്കേഷൻ കൺട്രോൾ മാനേജറിന്റെ വിൻഡോ റെക്കോർഡ് ചെയ്യുന്നതോ സ്ക്രീൻഷോട്ടുകൾ എടുക്കുന്നതോ തടയുക.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>സ്ക്രീൻ കവചം</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സ്ക്രീൻ റെക്കോർഡറുകൾ (Recall ഉൾപ്പെടെ) പോലുള്ള മറ്റ് ആപ്ലിക്കേഷനുകൾ ആപ്ലിക്കേഷൻ കൺട്രോൾ മാനേജറിന്റെ വിൻഡോ റെക്കോർഡ് ചെയ്യുന്നതോ സ്ക്രീൻഷോട്ടുകൾ എടുക്കുന്നതോ തടയുക.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സ്ക്രീൻ റെക്കോർഡറുകൾ (Recall ഉൾപ്പെടെ) പോലുള്ള മറ്റ് ആപ്ലിക്കേഷനുകൾ ആപ്ലിക്കേഷൻ കൺട്രോൾ മാനേജറിന്റെ വിൻഡോ റെക്കോർഡ് ചെയ്യുന്നതോ സ്ക്രീൻഷോട്ടുകൾ എടുക്കുന്നതോ തടയുക.</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>ഓൺ</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>ഓഫ്</value>
+  </data>
+  <data name="SelectCIPFilesToDeployWarningMsg" xml:space="preserve">
+    <value>വിന്യാസത്തിനായി നിങ്ങൾ CIP ഫയലുകൾ തിരഞ്ഞെടുക്കേണ്ടതുണ്ട്.</value>
+  </data>
+  <data name="SelectXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>CIP ബൈനറിയിലേക്ക് പരിവർത്തനം ചെയ്യാൻ നിങ്ങൾ XML ഫയലുകൾ തിരഞ്ഞെടുക്കേണ്ടതുണ്ട്.</value>
+  </data>
+  <data name="SuccessfullyCreatedSignedCIPFiles" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത എല്ലാ XML ഫയലുകൾക്കുമായി ഒപ്പിട്ട CIP ഫയലുകൾ വിജയകരമായി സൃഷ്ടിച്ചു.</value>
+  </data>
+  <data name="CurrentlySigningXMLFile" xml:space="preserve">
+    <value>നിലവിൽ XML ഫയൽ ഒപ്പിടുന്നു: </value>
+  </data>
+  <data name="SelectXMLFilesToSignAndDeployWarningMsg" xml:space="preserve">
+    <value>ഒപ്പിടാനും വിന്യസിക്കാനും നിങ്ങൾ XML ഫയലുകൾ തിരഞ്ഞെടുക്കേണ്ടതുണ്ട്.</value>
+  </data>
+  <data name="SelectUnsignedXMLFilesToDeployWarningMsg" xml:space="preserve">
+    <value>വിന്യാസത്തിനായി നിങ്ങൾ ഒപ്പിടാത്ത XML ഫയലുകൾ തിരഞ്ഞെടുക്കേണ്ടതുണ്ട്.</value>
+  </data>
+  <data name="CheckingForFileSignatures" xml:space="preserve">
+  <value>ഫയൽ ഒപ്പുകൾ പരിശോധിക്കുന്നു</value>
+</data>
+<data name="FileCertificatesScanResultMessage" xml:space="preserve">
+  <value>ഫയൽ '{0}'-ന് {1} ഒപ്പിടുന്നവരുണ്ട്. സിസ്റ്റത്തിലെ സുരക്ഷാ കാറ്റലോഗുകളിൽ നിന്നുള്ള ഡാറ്റ സ്കാനിൽ {2}.</value>
+</data>
+<data name="IncludedText" xml:space="preserve">
+  <value>ഉൾപ്പെടുത്തി</value>
+</data>
+<data name="NotIncludedText" xml:space="preserve">
+  <value>ഉൾപ്പെടുത്തിയില്ല</value>
 </data>
 </root>

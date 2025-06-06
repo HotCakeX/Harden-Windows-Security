@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -29,7 +30,7 @@ internal static class Helper
 
 	internal const string DefaultMaxVersion = "65535.65535.65535.65535";
 
-	internal static readonly Dictionary<OptionType, uint> Options = new()
+	internal static readonly FrozenDictionary<OptionType, uint> Options = new Dictionary<OptionType, uint>
 	{
 		{ OptionType.EnabledUMCI, 4U },
 		{ OptionType.EnabledBootMenuProtection, 8U },
@@ -54,7 +55,7 @@ internal static class Helper
 		{ OptionType.EnabledManagedInstaller, 134217728U  },
 		{ OptionType.EnabledUpdatePolicyNoReboot, 268435456U  },
 		{ OptionType.EnabledConditionalWindowsLockdownPolicy, 536870912U  }
-	};
+	}.ToFrozenDictionary();
 
 	internal static readonly Dictionary<OptionType, Setting> RuleToSettingMapping = new()
 	{

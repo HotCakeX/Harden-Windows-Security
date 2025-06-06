@@ -272,11 +272,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	{
 		StartPoint = new Windows.Foundation.Point(0, 0),
 		EndPoint = new Windows.Foundation.Point(1, 1),
-		GradientStops = new GradientStopCollection
-		{
+		GradientStops =
+		[
 			new GradientStop { Color = Colors.HotPink, Offset = 0.0 },
 			new GradientStop { Color = Colors.Wheat,  Offset = 1.0 }
-		}
+		]
 	};
 
 	/// <summary>
@@ -1358,13 +1358,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 						Step2ProgressRingIsIndeterminate = false;
 					});
 
-					DirectoryInfo[] selectedDirectories = [];
-
-					// Convert user selected folder paths that are strings to DirectoryInfo objects
-					selectedDirectories = [.. selectedDirectoriesToScan.Select(dir => new DirectoryInfo(dir))];
-
 					// Get all of the AppControl compatible files from user selected directories
-					(IEnumerable<FileInfo>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectories, null, null);
+					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectoriesToScan, null, null);
 
 					// If any App Control compatible files were found in the user selected directories
 					if (DetectedFilesInSelectedDirectories.Item2 > 0)

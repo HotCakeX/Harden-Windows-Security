@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -178,7 +179,7 @@ internal static class ListViewHelper
 
 	// Pre-computed property getters for high performance.
 	// Used for column sorting and column copying (single cell and entire row), for all of the ListViews that display FileIdentity data type
-	internal static readonly Dictionary<string, (string Label, Func<FileIdentity, object?> Getter)> PropertyMappings = new()
+	internal static readonly FrozenDictionary<string, (string Label, Func<FileIdentity, object?> Getter)> PropertyMappings = new Dictionary<string, (string Label, Func<FileIdentity, object?> Getter)>
 	{
 		{ "Origin", ("Origin", fi => fi.Origin) },
 		{ "SignatureStatus", ("Signature Status", fi => fi.SignatureStatus) },
@@ -216,7 +217,7 @@ internal static class ListViewHelper
 		{ "HasWHQLSigner", ("Has WHQL Signer", fi => fi.HasWHQLSigner) },
 		{ "IsECCSigned", ("Is ECC Signed", fi => fi.IsECCSigned) },
 		{ "Opus", ("Opus Data", fi => fi.Opus) }
-	};
+	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 
 	/// <summary>

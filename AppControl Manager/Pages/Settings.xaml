@@ -265,6 +265,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton x:Uid="SpyNetGirlWebsiteHyperLinkButton" NavigateUri="https://spynetgirl.github.io/" />
                                     <HyperlinkButton x:Uid="YouTubeChannelHyperLinkButton" NavigateUri="https://www.youtube.com/@hotcakex" />
+                                    <HyperlinkButton x:Uid="DonationHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#donations-" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Vertical">

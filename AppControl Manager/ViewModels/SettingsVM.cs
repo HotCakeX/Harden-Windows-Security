@@ -131,17 +131,16 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ "ml", 7 }
 	};
 
-	private static readonly Dictionary<int, string> SupportedLanguagesReverse = new()
-	{
-		{ 0, "en-US" },
-		{ 1, "he" },
-		{ 2, "el" },
-		{ 3, "hi" },
-		{ 4, "pl" },
-		{ 5, "ar" },
-		{ 6, "es" },
-		{ 7, "ml" }
-	};
+	private static readonly string[] SupportedLanguagesReverse = [
+		 "en-US",
+		 "he",
+		 "el",
+		 "hi",
+		 "pl",
+		 "ar",
+		 "es",
+		 "ml"
+	];
 
 	internal int LanguageComboBoxSelectedIndex
 	{
@@ -149,24 +148,19 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				if (SupportedLanguagesReverse.TryGetValue(field, out string? x))
-				{
-					ApplicationLanguages.PrimaryLanguageOverride = x;
-					App.Settings.ApplicationGlobalLanguage = x;
+				string x = SupportedLanguagesReverse[field];
 
-					// Refresh this page.
-					nav.RefreshSettingsPage();
+				ApplicationLanguages.PrimaryLanguageOverride = x;
+				App.Settings.ApplicationGlobalLanguage = x;
 
-					// Get reference to the MainWindow and refresh the localized content
-					if (App.MainWindow is MainWindow mainWindow)
-					{
-						mainWindow.RefreshLocalizedContent();
-					}
-				}
-				else
+				// Get reference to the MainWindow and refresh the localized content
+				if (App.MainWindow is MainWindow mainWindow)
 				{
-					Logger.Write($"Unknown language Index: {field}");
+					mainWindow.RefreshLocalizedContent();
 				}
+
+				// Refresh this page.
+				nav.RefreshSettingsPage();
 			}
 		}
 	} = SupportedLanguages.TryGetValue(App.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;

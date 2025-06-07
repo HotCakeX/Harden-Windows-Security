@@ -48,7 +48,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private const double ShadowCornerRadius = 14.0;
 	private const double DialogCornerRadius = 14.0;
 	private const double ShadowMargin = 25;
-	private static readonly Color ShadowColor = Colors.HotPink;
+	// Use Windows accent color for shadow color to match the border color, if not found then use Hot Pink as fallback
+	private static readonly Color ShadowColor = Application.Current.Resources["SystemAccentColor"] is Color accentColor ? accentColor : Colors.HotPink;
 
 	// Static pre-allocated objects for performance
 	private static readonly SolidColorBrush TransparentBrush = new(Colors.Transparent);

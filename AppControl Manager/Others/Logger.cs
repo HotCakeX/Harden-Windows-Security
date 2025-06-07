@@ -25,7 +25,7 @@ namespace AppControlManager.Others;
 internal static class Logger
 {
 	// The Logs file path
-	private static readonly string LogFileName = Path.Combine(App.LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+	internal static readonly string LogFileName = Path.Combine(App.LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
 	// The log channel for high-performance asynchronous logging
 	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions

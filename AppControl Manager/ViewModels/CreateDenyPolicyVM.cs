@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
@@ -51,6 +50,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
 			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
+		FilesAndFoldersCancellableButton = new(GlobalVars.Rizz.GetString("CreateDenyPolicyButton/Content"));
+
 		// InfoBar manager for the PFN section
 		PFNInfoBar = new InfoBarSettings(
 			() => PFNInfoBarIsOpen, value => PFNInfoBarIsOpen = value,
@@ -59,6 +60,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
 			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
 
+		PFNBasedCancellableButton = new(GlobalVars.Rizz.GetString("CreateDenyPolicyButton/Content"));
+
 		// InfoBar manager for the CustomFilePathRules section
 		CustomFilePathRulesInfoBar = new InfoBarSettings(
 			() => CustomFilePathRulesInfoBarIsOpen, value => CustomFilePathRulesInfoBarIsOpen = value,
@@ -66,6 +69,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
 			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
+
+		PatternBasedFileRuleCancellableButton = new(GlobalVars.Rizz.GetString("CreateDenyPolicyButton/Content"));
 	}
 
 	#region Files and Folders scan
@@ -270,51 +275,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		}
 	}
 
-
-	private CancellationTokenSource? CancellationTokenSource { get; set; }
-
-	internal Func<Task> CancelCreateFilesAndFoldersDenyPolicy => async () =>
-	{
-		try
-		{
-			// Set the cancelling state when cancel is requested
-			CreateFilesAndFoldersDenyPolicyInternalIsCancellingState = true;
-
-			if (CancellationTokenSource is not null)
-			{
-				await CancellationTokenSource.CancelAsync();
-			}
-		}
-		catch
-		{
-		}
-	};
-
-	internal bool CreateFilesAndFoldersDenyPolicyIsOperationInProgress { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyIsCancelState { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyIsCancellingState { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyIsAnimating { get; set => SP(ref field, value); }
-
-	internal string CreateFilesAndFoldersDenyPolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content");
-
-	internal string CreateFilesAndFoldersDenyPolicyOriginalText { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content");
-
-	internal bool CreateFilesAndFoldersDenyPolicyInternalIsCancelState { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyInternalIsCancellingState { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyInternalIsAnimating { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyShadowAnimationRunning { get; set => SP(ref field, value); }
-
-	internal bool CreateFilesAndFoldersDenyPolicyOperationStarted { get; set => SP(ref field, value); }
+	/// <summary>
+	/// Initialization details for the main Create button for the Files and Folders section
+	/// </summary>
+	internal readonly AnimatedCancellableButtonInitializer FilesAndFoldersCancellableButton;
 
 	/// <summary>
 	/// Main button's event handler for files and folder Deny policy creation
@@ -345,28 +309,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			return;
 		}
 
-		// All validation passed - NOW set button state to indicate operation starting
+		// All validation passed - NOW we set button state to indicate operation starting
 		_FilesAndFoldersDenyPolicyPath = null;
 
 		bool errorsOccurred = false;
-		bool wasCancelled = false;
 
-		// Create and assign cancellation token source for this operation
-		CancellationTokenSource?.Dispose();
-		CancellationTokenSource = new CancellationTokenSource();
-
-		CreateFilesAndFoldersDenyPolicyIsOperationInProgress = true;
-		CreateFilesAndFoldersDenyPolicyIsCancelState = true;
-		CreateFilesAndFoldersDenyPolicyIsCancellingState = false;
-		CreateFilesAndFoldersDenyPolicyIsAnimating = false;
-		CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress = true;
-		CreateFilesAndFoldersDenyPolicyInternalIsCancelState = true;
-		CreateFilesAndFoldersDenyPolicyInternalIsCancellingState = false;
-		CreateFilesAndFoldersDenyPolicyInternalIsAnimating = false;
-		CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick = false;
-		CreateFilesAndFoldersDenyPolicyShadowAnimationRunning = true;
-		CreateFilesAndFoldersDenyPolicyOperationStarted = true;
-
+		FilesAndFoldersCancellableButton.Begin();
 
 		try
 		{
@@ -380,7 +328,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			{
 				IEnumerable<FileIdentity> LocalFilesResults = [];
 
-				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
 				if (!UsingWildCardFilePathRules)
@@ -389,7 +337,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths,
 						filesAndFoldersFilePaths,
 						null,
-						CancellationTokenSource.Token);
+						FilesAndFoldersCancellableButton.Cts?.Token);
 
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
@@ -408,7 +356,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + GlobalVars.Rizz.GetString("AppControlCompatibleFiles"));
 					});
 
-					CancellationTokenSource.Token.ThrowIfCancellationRequested();
+					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Scan all of the detected files from the user selected directories
 					// Add the reference to the ViewModel class to the item so we can use it for navigation from the XAML
@@ -418,13 +366,13 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 						FilesAndFoldersProgressRingValueProgress,
 						this,
 						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm,
-						CancellationTokenSource.Token);
+						FilesAndFoldersCancellableButton.Cts?.Token);
 
 					filesAndFoldersScanResultsList.Clear();
 
 					filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
 
-					CancellationTokenSource.Token.ThrowIfCancellationRequested();
+					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
@@ -442,7 +390,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 					});
 				}
 
-				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersDenyPolicy");
 
@@ -452,7 +400,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths);
 
-				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName);
@@ -462,7 +410,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Set policy name and reset the policy ID
 				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, filesAndFoldersDenyPolicyName, null, null);
 
-				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
@@ -477,12 +425,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{filesAndFoldersDenyPolicyName}.cip");
 
-				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
-				CancellationTokenSource.Token.ThrowIfCancellationRequested();
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (filesAndFoldersDeployButton)
@@ -501,54 +449,19 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 					File.Copy(CIPPath, finalCIPPath, true);
 				}
 
-			}, CancellationTokenSource.Token);
-
-			// Final check for cancellation after Task.Run completes
-			CancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-		}
-		catch (OperationCanceledException)
-		{
-			wasCancelled = true;
-			// Don't log this as an error, it's expected behavior
-		}
-		catch (AggregateException aggregateEx)
-		{
-			// Check if any of the inner exceptions is an OperationCanceledException
-			bool containsCancellation = false;
-			aggregateEx.Handle(innerEx =>
-			{
-				if (innerEx is OperationCanceledException)
-				{
-					containsCancellation = true;
-					return true; // Mark this exception as handled
-				}
-				return false; // Don't handle other exceptions
 			});
 
-			if (containsCancellation)
-			{
-				wasCancelled = true;
-				// Don't log this as an error, it's expected behavior
-			}
-			else
-			{
-				errorsOccurred = true;
-				FilesAndFoldersInfoBar.WriteError(aggregateEx, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
-			}
+			// Final check for cancellation after Task.Run completes
+			FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
-			FilesAndFoldersInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
-			// Clean up the cancellation token source
-			CancellationTokenSource?.Dispose();
-			CancellationTokenSource = null;
-
-			if (wasCancelled)
+			if (FilesAndFoldersCancellableButton.wasCancelled)
 			{
 				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
 			}
@@ -559,18 +472,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 
-			// Reset all button state properties
-			CreateFilesAndFoldersDenyPolicyIsOperationInProgress = false;
-			CreateFilesAndFoldersDenyPolicyIsCancelState = false;
-			CreateFilesAndFoldersDenyPolicyIsCancellingState = false;
-			CreateFilesAndFoldersDenyPolicyIsAnimating = false;
-			CreateFilesAndFoldersDenyPolicyInternalIsCancelState = false;
-			CreateFilesAndFoldersDenyPolicyInternalIsCancellingState = false;
-			CreateFilesAndFoldersDenyPolicyInternalIsAnimating = false;
-			CreateFilesAndFoldersDenyPolicyInternalIsOperationInProgress = false;
-			CreateFilesAndFoldersDenyPolicyInternalSuppressExternalClick = false;
-			CreateFilesAndFoldersDenyPolicyShadowAnimationRunning = false;
-			CreateFilesAndFoldersDenyPolicyOperationStarted = false;
+			FilesAndFoldersCancellableButton.End();
 
 			FilesAndFoldersInfoBar.IsClosable = true;
 
@@ -760,6 +662,11 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal string? PFNBasedSelectedItemsCount { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Initialization details for the main Create button for the PFN-Based section
+	/// </summary>
+	internal readonly AnimatedCancellableButtonInitializer PFNBasedCancellableButton;
+
+	/// <summary>
 	/// The search keyword for filtering the apps list.
 	/// </summary>
 	internal string? PFNBasedSearchKeywordForAppsList
@@ -925,9 +832,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			return;
 		}
 
-		bool ErrorsOccurred = false;
-
+		// All validation passed - NOW we set button state to indicate operation starting
 		_PFNDenyPolicyPath = null;
+
+		bool errorsOccurred = false;
+
+		PFNBasedCancellableButton.Begin();
 
 		try
 		{
@@ -938,12 +848,16 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 			PFNInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPFNBasedDenyPolicy"));
 
+			PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 			// A list to store the selected PackagedAppView items
 			List<string> selectedAppsPFNs = [];
 
 			// Loop through the selected items
 			foreach (var selectedItem in PFNBasedAppsListItemsSourceSelectedItems)
 			{
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				if (selectedItem is PackagedAppView appView)
 				{
 					// Add the selected item's PFN to the list
@@ -959,6 +873,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Get the path to an empty policy file
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(level: ScanLevels.PFN, packageFamilyNames: selectedAppsPFNs);
 
@@ -966,6 +882,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName);
 
 				string OutputPath = Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedDenyPolicyName}.xml");
+
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Set policy name and reset the policy ID
 				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, PFNBasedDenyPolicyName, null, null);
@@ -976,6 +894,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Set policy version
 				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
 
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
 
@@ -985,6 +905,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (PFNBasedShouldDeploy)
@@ -1006,17 +928,23 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			ErrorsOccurred = true;
-			PFNInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"));
+			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
-			if (!ErrorsOccurred)
+
+			if (PFNBasedCancellableButton.wasCancelled)
+			{
+				PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
 			{
 				PFNInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("DenyPolicyCreated"));
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
+
+			PFNBasedCancellableButton.End();
 
 			PFNElementsAreEnabled = true;
 
@@ -1081,11 +1009,15 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal string? CustomPatternBasedFileRuleBasedDenyPolicyName { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Initialization details for the main Create button for the Pattern Based FileRule section
+	/// </summary>
+	internal readonly AnimatedCancellableButtonInitializer PatternBasedFileRuleCancellableButton;
+
+	/// <summary>
 	/// Event handler for the main button - to create Deny pattern based File path policy
 	/// </summary>
 	internal async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click()
 	{
-		bool errorsOccurred = false;
 
 		CustomFilePathRulesSettingsExpanderIsExpanded = true;
 
@@ -1105,7 +1037,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			return;
 		}
 
+		// All validation passed - NOW we set button state to indicate operation starting
 		_CustomPatternBasedFileRuleDenyPolicyPath = null;
+
+		bool errorsOccurred = false;
+
+		PatternBasedFileRuleCancellableButton.Begin();
 
 		try
 		{
@@ -1114,6 +1051,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			CustomFilePathRulesInfoBarIsClosable = false;
 
 			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPatternBasedFilePathRuleDenyPolicyMessage"));
+
+			PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 			await Task.Run(() =>
 			{
@@ -1125,6 +1064,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [DenyPolicyCustomPatternBasedCustomPatternTextBox]);
 
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Deny, stagingArea.FullName);
 
@@ -1133,11 +1074,15 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				// Set policy name and reset the policy ID
 				_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedDenyPolicyName, null, null);
 
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Configure policy rule options
 				CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Base);
 
 				// Set policy version
 				SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
+
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Copying the policy file to the User Config directory - outside of the temporary staging area
 				File.Copy(EmptyPolicyPath, OutputPath, true);
@@ -1146,8 +1091,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedDenyPolicyName}.cip");
 
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
@@ -1170,17 +1119,22 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
-			CustomFilePathRulesInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
+			if (PatternBasedFileRuleCancellableButton.wasCancelled)
+			{
+				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
 			{
 				CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage"));
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}
+
+			PatternBasedFileRuleCancellableButton.End();
 
 			CustomFilePathRulesElementsAreEnabled = true;
 

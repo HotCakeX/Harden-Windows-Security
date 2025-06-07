@@ -220,11 +220,24 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Uid="CreateSupplementalPolicyButton"
+                        <customUI:AnimatedCancellableButton x:Uid="CreateSupplementalPolicyButton"
                                 Style="{StaticResource AccentButtonStyle}"
                                 Margin="0,0,15,0"
-                                IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.CreateFilesAndFoldersSupplementalPolicyButton_Click}" />
+                                Click="{x:Bind ViewModel.CreateFilesAndFoldersSupplementalPolicyButton_Click}"
+                                CancelMethod="{x:Bind ViewModel.FilesAndFoldersCancellableButton.Cancel}"
+                                ExternalOperationInProgress="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                ExternalIsCancelState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsCancelState, Mode=OneWay}"
+                                ExternalIsCancellingState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsCancellingState, Mode=OneWay}"
+                                ExternalIsAnimating="{x:Bind ViewModel.FilesAndFoldersCancellableButton.IsAnimating, Mode=OneWay}"
+                                ExternalButtonContent="{x:Bind ViewModel.FilesAndFoldersCancellableButton.ButtonContent, Mode=OneWay}"
+                                ExternalOriginalText="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OriginalText, Mode=OneWay}"
+                                ExternalInternalIsCancelState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                ExternalInternalIsCancellingState="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                ExternalInternalIsAnimating="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                ExternalInternalIsOperationInProgress="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                ExternalInternalSuppressExternalClick="{x:Bind ViewModel.FilesAndFoldersCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                ExternalShadowAnimationRunning="{x:Bind ViewModel.FilesAndFoldersCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                ExternalOperationStarted="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.FilesAndFoldersDeployButton, Mode=TwoWay}"
                                       IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
@@ -793,10 +806,24 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button Click="{x:Bind ViewModel.CreatePFNSupplementalPolicyButton_Click}"
-                                IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
-                                x:Uid="CreateSupplementalPolicyButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <customUI:AnimatedCancellableButton x:Uid="CreateSupplementalPolicyButton"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,15,0"
+                                Click="{x:Bind ViewModel.CreatePFNSupplementalPolicyButton_Click}"
+                                CancelMethod="{x:Bind ViewModel.PFNBasedCancellableButton.Cancel}"
+                                ExternalOperationInProgress="{x:Bind ViewModel.PFNBasedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                ExternalIsCancelState="{x:Bind ViewModel.PFNBasedCancellableButton.IsCancelState, Mode=OneWay}"
+                                ExternalIsCancellingState="{x:Bind ViewModel.PFNBasedCancellableButton.IsCancellingState, Mode=OneWay}"
+                                ExternalIsAnimating="{x:Bind ViewModel.PFNBasedCancellableButton.IsAnimating, Mode=OneWay}"
+                                ExternalButtonContent="{x:Bind ViewModel.PFNBasedCancellableButton.ButtonContent, Mode=OneWay}"
+                                ExternalOriginalText="{x:Bind ViewModel.PFNBasedCancellableButton.OriginalText, Mode=OneWay}"
+                                ExternalInternalIsCancelState="{x:Bind ViewModel.PFNBasedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                ExternalInternalIsCancellingState="{x:Bind ViewModel.PFNBasedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                ExternalInternalIsAnimating="{x:Bind ViewModel.PFNBasedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                ExternalInternalIsOperationInProgress="{x:Bind ViewModel.PFNBasedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                ExternalInternalSuppressExternalClick="{x:Bind ViewModel.PFNBasedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                ExternalShadowAnimationRunning="{x:Bind ViewModel.PFNBasedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                ExternalOperationStarted="{x:Bind ViewModel.PFNBasedCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
                                       IsChecked="{x:Bind ViewModel.PFNBasedShouldDeploy, Mode=TwoWay}"
@@ -949,10 +976,24 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button Click="{x:Bind ViewModel.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click}"
-                                IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
-                                x:Uid="CreateSupplementalPolicyButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+                        <customUI:AnimatedCancellableButton x:Uid="CreateSupplementalPolicyButton"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Margin="0,0,15,0"
+                                    Click="{x:Bind ViewModel.CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click}"
+                                    CancelMethod="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.Cancel}"
+                                    ExternalOperationInProgress="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                    ExternalIsCancelState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsCancelState, Mode=OneWay}"
+                                    ExternalIsCancellingState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsCancellingState, Mode=OneWay}"
+                                    ExternalIsAnimating="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.IsAnimating, Mode=OneWay}"
+                                    ExternalButtonContent="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.ButtonContent, Mode=OneWay}"
+                                    ExternalOriginalText="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OriginalText, Mode=OneWay}"
+                                    ExternalInternalIsCancelState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                    ExternalInternalIsCancellingState="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                    ExternalInternalIsAnimating="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                    ExternalShadowAnimationRunning="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                    ExternalOperationStarted="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
                                       IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"

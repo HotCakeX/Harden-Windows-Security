@@ -21,6 +21,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Xml;
 using AppControlManager.Others;
@@ -940,6 +941,7 @@ internal static class GetEventLogsData
 	/// <param name="nsManager"></param>
 	/// <param name="xpath"></param>
 	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static int? GetIntValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
 	{
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
@@ -960,6 +962,7 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Returns null if the string is null, empty or whitespaces
 	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static string? GetStringValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
 	{
 		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);

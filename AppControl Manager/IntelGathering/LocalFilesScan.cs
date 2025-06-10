@@ -123,19 +123,16 @@ internal static class LocalFilesScan
 						// Once it's been set to true, it won't be changed to false anymore for the current file
 						bool IsECCSigned = false;
 
-						// String path of the current file
-						string fileString = file.ToString();
-
 						try
 						{
 
 							#region Gather File information
 
 							// Get the Code integrity hashes of the file
-							CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(fileString);
+							CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(file);
 
 							// Get the extended file attributes
-							ExFileInfo ExtendedFileInfo = GetExtendedFileAttrib.Get(fileString);
+							ExFileInfo ExtendedFileInfo = GetExtendedFileAttrib.Get(file);
 
 
 							// To store all certificates of the file
@@ -143,7 +140,7 @@ internal static class LocalFilesScan
 							try
 							{
 								// Get the certificate details of the file
-								FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(fileString);
+								FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(file);
 							}
 							// If the file has HashMismatch, Hash rule will be created for it since the FileSignatureResults will be empty and file will be detected as unsigned
 							catch (HashMismatchInCertificateException)
@@ -200,13 +197,13 @@ internal static class LocalFilesScan
 							{
 								Origin = FileIdentityOrigin.DirectFileScan,
 								SignatureStatus = fileIsSigned ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned,
-								FilePath = fileString,
+								FilePath = file,
 								FileName = Path.GetFileName(file),
 								SHA1Hash = fileHashes.SHa1Authenticode,
 								SHA256Hash = fileHashes.SHA256Authenticode,
 								SHA1PageHash = fileHashes.SHA1Page,
 								SHA256PageHash = fileHashes.SHA256Page,
-								SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(fileString).Verdict is SiPolicyIntel.SSType.UserMode ? 1 : 0,
+								SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(file).Verdict is SiPolicyIntel.SSType.UserMode ? 1 : 0,
 								OriginalFileName = ExtendedFileInfo.OriginalFileName,
 								InternalName = ExtendedFileInfo.InternalName,
 								FileDescription = ExtendedFileInfo.FileDescription,

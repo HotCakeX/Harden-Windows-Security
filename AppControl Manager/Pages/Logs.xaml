@@ -25,37 +25,53 @@
 
         <controls:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
             <!-- ComboBox for selecting log files -->
-            <ComboBox x:Name="LogFileComboBox" SelectionChanged="LogFileComboBox_SelectionChanged" />
+            <ComboBox ItemsSource="{x:Bind ViewModel.LogFiles}"
+                      SelectedItem="{x:Bind ViewModel.SelectedLogFile, Mode=TwoWay}" />
 
             <!-- Button to refresh the logs -->
             <Button x:Uid="RefreshLogFilesButton"
-            Click="{x:Bind LoadLogFiles}"
-            Style="{StaticResource AccentButtonStyle}" />
+                    Click="{x:Bind ViewModel.LoadLogFiles}"
+                    Style="{StaticResource AccentButtonStyle}" />
 
             <!-- Search TextBox -->
-            <TextBox x:Name="SearchTextBox"
-            PlaceholderText="Search in the logs..."
-            MinWidth="300" TextChanged="{x:Bind UpdateLogDisplay}"/>
+            <TextBox PlaceholderText="Search in the logs..."
+                     MinWidth="300" 
+                     Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!-- Progress Ring for loading indication -->
+            <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                          Visibility="{x:Bind ViewModel.LoadingVisibility, Mode=OneWay}"
+                          Width="24"
+                          Height="24"
+                          VerticalAlignment="Center" />
 
         </controls:WrapPanel>
 
-        <ItemsRepeaterScrollHost Grid.Row="2">
-            <ScrollViewer x:Name="LogScrollViewer">
-                <ItemsRepeater x:Name="LogItemsRepeater">
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate x:DataType="local:LogLine">
-
-                            <TextBlock Text="{x:Bind Text}"
-                            TextWrapping="Wrap" IsTextSelectionEnabled="True" FontSize="18"/>
-
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Vertical" Spacing="5" />
-                    </ItemsRepeater.Layout>
-                </ItemsRepeater>
-            </ScrollViewer>
-        </ItemsRepeaterScrollHost>
+        <ListView Grid.Row="2"
+                  ItemsSource="{x:Bind ViewModel.LogCollection, Mode=OneWay}"
+                  SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  ScrollViewer.HorizontalScrollMode="Disabled"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollMode="Auto"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ScrollViewer.ZoomMode="Disabled">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:LogLine">
+                    <TextBlock Text="{x:Bind Text}"
+                              TextWrapping="Wrap" 
+                              IsTextSelectionEnabled="True" 
+                              FontSize="18"
+                              Margin="5"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </Grid>
 </Page>

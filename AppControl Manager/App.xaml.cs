@@ -181,6 +181,7 @@ public partial class App : Application
 		_ = services.AddSingleton(sp => new PolicyEditorVM());
 		_ = services.AddSingleton(sp => new BuildNewCertificateVM());
 		_ = services.AddSingleton(sp => new GetSecurePolicySettingsVM());
+		_ = services.AddSingleton(sp => new LogsVM());
 
 		AppHost = builder.Build();
 

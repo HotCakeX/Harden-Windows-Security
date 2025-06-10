@@ -53,6 +53,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
 			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
+		FilesAndFoldersCancellableButton = new(GlobalVars.Rizz.GetString("CreateSupplementalPolicyButton/Content"));
+
 		// InfoBar manager for the CertificatesBased section
 		CertificatesBasedInfoBar = new InfoBarSettings(
 			() => CertificatesBasedInfoBarIsOpen, value => CertificatesBasedInfoBarIsOpen = value,
@@ -85,6 +87,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
 			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
 
+		PFNBasedCancellableButton = new(GlobalVars.Rizz.GetString("CreateSupplementalPolicyButton/Content"));
+
 		// InfoBar manager for the CustomFilePathRules section
 		CustomFilePathRulesInfoBar = new InfoBarSettings(
 			() => CustomFilePathRulesInfoBarIsOpen, value => CustomFilePathRulesInfoBarIsOpen = value,
@@ -92,6 +96,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
 			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
+
+		PatternBasedFileRuleCancellableButton = new(GlobalVars.Rizz.GetString("CreateSupplementalPolicyButton/Content"));
 	}
 
 	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -302,6 +308,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	} = Visibility.Collapsed;
 
 	/// <summary>
+	/// Initialization details for the main Create button for the Files and Folders section
+	/// </summary>
+	internal readonly AnimatedCancellableButtonInitializer FilesAndFoldersCancellableButton;
+
+	/// <summary>
 	/// Path to the Files and Folders Supplemental policy XML file.
 	/// </summary>
 	internal string? _FilesAndFoldersSupplementalPolicyPath;
@@ -454,7 +465,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			return;
 		}
 
+		// All validation passed - NOW we set button state to indicate operation starting
+
 		bool errorsOccurred = false;
+
+		FilesAndFoldersCancellableButton.Begin();
 
 		try
 		{
@@ -466,6 +481,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				filesAndFoldersFolderPaths.Count
 			));
 
+			FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 			await Task.Run(async () =>
 			{
 				IEnumerable<FileIdentity> LocalFilesResults = [];
@@ -475,7 +492,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 
 					// Collect all of the AppControl compatible files from user selected directories and files
-					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths, filesAndFoldersFilePaths, null);
+					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths, filesAndFoldersFilePaths, null, FilesAndFoldersCancellableButton.Cts?.Token);
 
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
@@ -491,6 +508,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 						return;
 					}
 
+					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					_ = Dispatcher.TryEnqueue(() =>
 					{
 						FilesAndFoldersInfoBar.WriteInfo(string.Format(
@@ -505,12 +524,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 						(ushort)FilesAndFoldersScalabilityRadialGaugeValue,
 						FilesAndFoldersProgressRingValueProgress,
 						this,
-						(fi, vm) => fi.ParentViewModelCreateSupplementalPolicyVM = vm);
+						(fi, vm) => fi.ParentViewModelCreateSupplementalPolicyVM = vm,
+						FilesAndFoldersCancellableButton.Cts?.Token);
 
 					// Clear variables responsible for the ListView
 					filesAndFoldersScanResultsList.Clear();
 
 					filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
+
+					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
@@ -529,6 +551,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 				}
 
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("FilesAndFoldersSupplementalPolicy");
 
 				// Get the path to an empty policy file
@@ -537,10 +561,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
 
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
 
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{FilesAndFoldersSupplementalPolicyName}.xml");
+
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				if (OperationModeComboBoxSelectedIndex is 1)
 				{
@@ -554,6 +584,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 					// Set the BasePolicyID of our new policy to the one from user selected policy
 					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, FilesAndFoldersSupplementalPolicyName, policyObj.BasePolicyID, null);
+
+					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Configure policy rule options
 					if (filesAndFoldersScanLevel is ScanLevels.FilePath || filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
@@ -570,6 +602,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 						CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
 					}
 
+					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					// Set policy version
 					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
 
@@ -581,12 +615,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				// Assign the supplemental policy file path to the local variable
 				_FilesAndFoldersSupplementalPolicyPath = OutputPath;
 
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
 				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : $"{FilesAndFoldersSupplementalPolicyName}.cip";
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+
+				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (FilesAndFoldersDeployButton)
@@ -609,12 +647,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			FilesAndFoldersInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
-			errorsOccurred = true;
+			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
+			if (FilesAndFoldersCancellableButton.wasCancelled)
+			{
+				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
 			{
 				FilesAndFoldersInfoBar.WriteSuccess(string.Format(
 					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
@@ -622,6 +663,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				));
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
 			}
+
+			FilesAndFoldersCancellableButton.End();
 
 			FilesAndFoldersInfoBarIsClosable = true;
 
@@ -1920,6 +1963,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal bool PFNBasedSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Initialization details for the main Create button for the PFN-Based section
+	/// </summary>
+	internal readonly AnimatedCancellableButtonInitializer PFNBasedCancellableButton;
+
+	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
 	/// </summary>
 	internal async void PFNRefreshAppsListButton_Click()
@@ -2095,9 +2143,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			return;
 		}
 
+		// All validation passed - NOW we set button state to indicate operation starting
 		_PFNSupplementalPolicyPath = null;
 
-		bool ErrorsOccurred = false;
+		bool errorsOccurred = false;
+
+		PFNBasedCancellableButton.Begin();
 
 		try
 		{
@@ -2106,6 +2157,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			PFNInfoBarIsClosable = false;
 
 			PFNInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPFNSupplementalPolicyMessage"));
+
+			PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 			// A list to store the selected PackagedAppView items
 			List<string> selectedAppsPFNs = [];
@@ -2120,6 +2173,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				}
 			}
 
+			PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 			await Task.Run(() =>
 			{
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PFNSupplementalPolicy");
@@ -2127,11 +2182,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				// Get the path to an empty policy file
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(level: ScanLevels.PFN, packageFamilyNames: selectedAppsPFNs);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{PFNBasedSupplementalPolicyName}.xml");
 
@@ -2151,6 +2210,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					// Configure policy rule options
 					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
+					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					// Set policy version
 					SetCiPolicyInfo.Set(EmptyPolicyPath, new Version("1.0.0.0"));
 
@@ -2164,6 +2225,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : Path.Combine(stagingArea.FullName, $"{PFNBasedSupplementalPolicyName}.cip");
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
+				PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
@@ -2174,6 +2237,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					{
 						PFNInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
 					});
+
+					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}
@@ -2187,17 +2252,22 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			ErrorsOccurred = true;
-			PFNInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
-			if (!ErrorsOccurred)
+			if (PFNBasedCancellableButton.wasCancelled)
+			{
+				PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
 			{
 				PFNInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
+
+			PFNBasedCancellableButton.End();
 
 			PFNElementsAreEnabled = true;
 
@@ -2258,6 +2328,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal string? SupplementalPolicyCustomPatternBasedCustomPatternTextBox { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Initialization details for the main Create button for the Pattern Based FileRule section
+	/// </summary>
+	internal readonly AnimatedCancellableButtonInitializer PatternBasedFileRuleCancellableButton;
+
+	/// <summary>
 	/// Selected Supplemental policy name
 	/// </summary>
 	internal string? CustomPatternBasedFileRuleBasedSupplementalPolicyName { get; set => SP(ref field, value); }
@@ -2287,8 +2362,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		CustomFilePathRulesSettingsExpanderIsExpanded = true;
 
 		CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Collapsed;
-
-		bool errorsOccurred = false;
 
 		// use the policy to merge with file if that option is enabled by the user
 		if (OperationModeComboBoxSelectedIndex is 1)
@@ -2322,7 +2395,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			return;
 		}
 
+		// All validation passed - NOW we set button state to indicate operation starting
 		_CustomPatternBasedFileRuleSupplementalPolicyPath = null;
+
+		bool errorsOccurred = false;
+
+		PatternBasedFileRuleCancellableButton.Begin();
 
 		try
 		{
@@ -2332,6 +2410,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			CustomFilePathRulesInfoBarIsClosable = false;
 
+			PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 			await Task.Run(() =>
 			{
 				DirectoryInfo stagingArea = StagingArea.NewStagingArea("PatternBasedFilePathRulePolicy");
@@ -2339,11 +2419,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				// Get the path to an empty policy file
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Separate the signed and unsigned data
 				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [SupplementalPolicyCustomPatternBasedCustomPatternTextBox]);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
+
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				string OutputPath = OperationModeComboBoxSelectedIndex is 1 ? PolicyFileToMergeWith! : Path.Combine(GlobalVars.UserConfigDir, $"{CustomPatternBasedFileRuleBasedSupplementalPolicyName}.xml");
 
@@ -2360,6 +2444,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					// Set the BasePolicyID of our new policy to the one from user selected policy
 					_ = SetCiPolicyInfo.Set(EmptyPolicyPath, true, CustomPatternBasedFileRuleBasedSupplementalPolicyName, policyObj.BasePolicyID, null);
 
+					PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					// Configure policy rule options
 					CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
 
@@ -2372,12 +2458,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 				_CustomPatternBasedFileRuleSupplementalPolicyPath = OutputPath;
 
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				// Use the name of the user selected file for CIP file name, otherwise use the name of the supplemental policy provided by the user
 				string CIPName = OperationModeComboBoxSelectedIndex is 1 ? $"{Path.GetFileNameWithoutExtension(PolicyFileToMergeWith!)}.cip" : Path.Combine(stagingArea.FullName, $"{CustomPatternBasedFileRuleBasedSupplementalPolicyName}.cip");
 				string CIPPath = Path.Combine(stagingArea.FullName, CIPName);
 
 				// Convert the XML file to CIP and save it in the defined path
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
+
+				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// If user selected to deploy the policy
 				if (CustomPatternBasedFileRuleBasedDeployButton)
@@ -2400,19 +2490,25 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			errorsOccurred = true;
-			CustomFilePathRulesInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
-			if (!errorsOccurred)
+			if (PatternBasedFileRuleCancellableButton.wasCancelled)
+			{
+				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
 			{
 				CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedPatternBasedFileRuleMessage"));
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}
 
+			PatternBasedFileRuleCancellableButton.End();
+
 			CustomFilePathRulesElementsAreEnabled = true;
+
 			CustomFilePathRulesInfoBarIsClosable = true;
 		}
 	}

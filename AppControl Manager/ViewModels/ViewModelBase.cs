@@ -149,4 +149,65 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		FileSignature,
 		FileHashes
 	}
+
+
+	/// <summary>
+	/// Handles different types of exceptions, used mainly by methods that deal with cancellable workflows.
+	/// </summary>
+	/// <param name="exception"></param>
+	/// <param name="errorsOccurred"></param>
+	/// <param name="wasCancelled"></param>
+	/// <param name="infoBarSettings"></param>
+	/// <param name="errorMessage"></param>
+	internal static void HandleExceptions(
+	   Exception exception,
+	   ref bool errorsOccurred,
+	   ref bool wasCancelled,
+	   InfoBarSettings infoBarSettings,
+	   string? errorMessage = null)
+	{
+
+		// Check if it's an OperationCanceledException directly
+		if (exception is OperationCanceledException)
+		{
+			wasCancelled = true;
+			// Don't log this as an error, it's expected behavior
+			return;
+		}
+
+		// Check if it's an AggregateException
+		else if (exception is AggregateException aggregateEx)
+		{
+
+			// Check if any of the inner exceptions is an OperationCanceledException
+			bool containsCancellation = false;
+			aggregateEx.Handle(innerEx =>
+			{
+				if (innerEx is OperationCanceledException)
+				{
+					containsCancellation = true;
+					return true; // Mark this exception as handled
+				}
+				return false; // Don't handle other exceptions
+			});
+
+			if (containsCancellation)
+			{
+				wasCancelled = true;
+				// Don't log this as an error, it's expected behavior
+			}
+			else
+			{
+				errorsOccurred = true;
+				infoBarSettings.WriteError(aggregateEx);
+			}
+		}
+		else
+		{
+			// Handle any other exception type
+			errorsOccurred = true;
+
+			infoBarSettings.WriteError(exception, errorMessage);
+		}
+	}
 }

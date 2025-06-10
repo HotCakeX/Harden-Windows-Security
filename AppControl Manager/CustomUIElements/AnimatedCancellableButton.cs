@@ -31,13 +31,23 @@ namespace AppControlManager.CustomUIElements;
 
 internal sealed partial class AnimatedCancellableButton : Button
 {
+	private const string ZeroOffsetString = "0";
+	private const string ButtonDefaultText = "Button";
+	private const string OpacityPropertyName = "Opacity";
+	private static readonly TimeSpan FiftyMsTimeSpan = TimeSpan.FromMilliseconds(50);
+	private static readonly TimeSpan OneHundredFiftyMsTimeSpan = TimeSpan.FromMilliseconds(150);
+	private static readonly Color TransparentColor = Color.FromArgb(0, 0, 0, 0);
+
+	// Static cached button styles
+	private static readonly Style DefaultButtonStyle = (Style)Application.Current.Resources["DefaultButtonStyle"];
+	private static readonly Style AccentButtonStyle = (Style)Application.Current.Resources["AccentButtonStyle"];
+
 	private Storyboard _fadeOutStoryboard = new();
 	private Storyboard _fadeInStoryboard = new();
 	private DoubleAnimation _fadeOutAnimation = new();
 	private DoubleAnimation _fadeInAnimation = new();
 	private Storyboard _shadowAnimationStoryboard = new();
 	private AttachedCardShadow? _attachedShadow;
-	private AttachedCardShadow? _transparentShadow;
 	private bool _isShadowAnimationRunning;
 	private bool _hasShadowApplied;
 	private DispatcherTimer? _shadowTimer;
@@ -64,6 +74,15 @@ internal sealed partial class AnimatedCancellableButton : Button
 	private bool _inColorTransition;
 	private const double SHADOW_OPACITY = 0.85;
 
+	private static readonly AttachedCardShadow TransparentShadow = new()
+	{
+		Color = TransparentColor,
+		Offset = ZeroOffsetString,
+		BlurRadius = 0.0,
+		Opacity = 0.0,
+		CornerRadius = 0.0
+	};
+
 	private static readonly Color[] _shadowColors = [
 		Color.FromArgb(255, 255, 192, 203), // Pink
 		Color.FromArgb(255, 255, 20, 147),  // Hot Pink
@@ -79,20 +98,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 			nameof(CancelMethod),
 			typeof(Func<Task>),
 			typeof(AnimatedCancellableButton),
-			new PropertyMetadata(null, OnCancelMethodChanged));
+			new PropertyMetadata(null));
 
 	public Func<Task>? CancelMethod
 	{
 		get => (Func<Task>?)GetValue(CancelMethodProperty);
 		set => SetValue(CancelMethodProperty, value);
-	}
-
-	private static void OnCancelMethodChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-	{
-		if (d is AnimatedCancellableButton button && !button._isDisposed && !button._isDisposing)
-		{
-			// No action needed for this property change
-		}
 	}
 
 	public static readonly DependencyProperty ExternalOperationInProgressProperty =
@@ -398,7 +409,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 	{
 		_clickDelayTimer = new DispatcherTimer
 		{
-			Interval = TimeSpan.FromMilliseconds(50)
+			Interval = FiftyMsTimeSpan
 		};
 		_clickDelayTimer.Tick += ClickDelayTimer_Tick;
 	}
@@ -439,107 +450,26 @@ internal sealed partial class AnimatedCancellableButton : Button
 					}
 				}
 				catch (Exception)
-				{
-				}
+				{ }
 			}, cts.Token);
-		}
-	}
-
-	private static AttachedCardShadow CreateTransparentShadow()
-	{
-		try
-		{
-			return new AttachedCardShadow
-			{
-				Color = Color.FromArgb(0, 0, 0, 0),
-				Offset = "0",
-				BlurRadius = 0.0,
-				Opacity = 0.0,
-				CornerRadius = 0.0
-			};
-		}
-		catch (Exception)
-		{
-			try
-			{
-				return new AttachedCardShadow
-				{
-					Offset = "0",
-					Color = Color.FromArgb(0, 0, 0, 0),
-					BlurRadius = 0.0,
-					Opacity = 0.0,
-					CornerRadius = 0.0
-				};
-			}
-			catch (Exception)
-			{
-				try
-				{
-					return new AttachedCardShadow
-					{
-						CornerRadius = 0.0,
-						BlurRadius = 0.0,
-						Color = Color.FromArgb(0, 0, 0, 0),
-						Opacity = 0.0
-					};
-				}
-				catch (Exception)
-				{
-					return new AttachedCardShadow();
-				}
-			}
 		}
 	}
 
 	private AttachedCardShadow? CreateShadow()
 	{
-		try
+		return new AttachedCardShadow
 		{
-			return new AttachedCardShadow
-			{
-				Color = GetCurrentShadowColor(),
-				Offset = "0",
-				BlurRadius = MIN_BLUR_RADIUS,
-				Opacity = SHADOW_OPACITY,
-				CornerRadius = 5.0
-			};
-		}
-		catch (Exception)
-		{
-			try
-			{
-				return new AttachedCardShadow
-				{
-					Offset = "0",
-					Color = GetCurrentShadowColor(),
-					BlurRadius = MIN_BLUR_RADIUS,
-					Opacity = SHADOW_OPACITY,
-					CornerRadius = 5.0
-				};
-			}
-			catch (Exception)
-			{
-				try
-				{
-					return new AttachedCardShadow
-					{
-						CornerRadius = 5.0,
-						BlurRadius = MIN_BLUR_RADIUS,
-						Color = GetCurrentShadowColor(),
-						Opacity = SHADOW_OPACITY
-					};
-				}
-				catch (Exception)
-				{
-					return null;
-				}
-			}
-		}
+			Color = GetCurrentShadowColor(),
+			Offset = ZeroOffsetString,
+			BlurRadius = MIN_BLUR_RADIUS,
+			Opacity = SHADOW_OPACITY,
+			CornerRadius = 5.0
+		};
 	}
 
 	private Color GetCurrentShadowColor()
 	{
-		if (_isDisposed || _isDisposing) return Color.FromArgb(0, 0, 0, 0);
+		if (_isDisposed || _isDisposing) return TransparentColor;
 
 		if (_currentColorIndex < 0 || _currentColorIndex >= _shadowColors.Length)
 		{
@@ -601,8 +531,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 				_attachedShadow.Color = GetCurrentShadowColor();
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 		}
 	}
 
@@ -614,7 +543,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 
 			_shadowTimer = new DispatcherTimer
 			{
-				Interval = TimeSpan.FromMilliseconds(50)
+				Interval = FiftyMsTimeSpan
 			};
 			_shadowTimer.Tick += ShadowTimer_Tick;
 
@@ -623,14 +552,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 			_colorTransitionCounter = 0;
 			_colorHoldCounter = 0;
 			_inColorTransition = false;
-
-			_transparentShadow = CreateTransparentShadow();
 		}
 		catch (Exception)
 		{
 			_shadowTimer = new DispatcherTimer
 			{
-				Interval = TimeSpan.FromMilliseconds(50)
+				Interval = FiftyMsTimeSpan
 			};
 			_shadowTimer.Tick += ShadowTimer_Tick;
 			_currentColorIndex = 0;
@@ -638,15 +565,6 @@ internal sealed partial class AnimatedCancellableButton : Button
 			_colorTransitionCounter = 0;
 			_colorHoldCounter = 0;
 			_inColorTransition = false;
-
-			try
-			{
-				_transparentShadow = CreateTransparentShadow();
-			}
-			catch (Exception)
-			{
-				_transparentShadow = new AttachedCardShadow();
-			}
 		}
 	}
 
@@ -708,8 +626,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 				}
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 		}
 	}
 
@@ -775,15 +692,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 
 			if (_hasShadowApplied)
 			{
-				if (_transparentShadow != null)
-				{
-					Effects.SetShadow(this, _transparentShadow);
-				}
-				else
-				{
-					AttachedCardShadow tempTransparentShadow = CreateTransparentShadow();
-					Effects.SetShadow(this, tempTransparentShadow);
-				}
+				Effects.SetShadow(this, TransparentShadow);
 				_hasShadowApplied = false;
 			}
 
@@ -805,10 +714,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 			if (ExternalInternalIsCancellingState)
 			{
 				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+				UpdateButtonStyle(true);
 			}
 			else if (ExternalInternalIsCancelState)
 			{
 				this.Content = GlobalVars.Rizz.GetString("Cancel");
+				UpdateButtonStyle(true);
 			}
 			else
 			{
@@ -822,13 +733,24 @@ internal sealed partial class AnimatedCancellableButton : Button
 				}
 				else
 				{
-					this.Content = "Button";
+					this.Content = ButtonDefaultText;
 				}
+				UpdateButtonStyle(false);
 			}
 		}
 		catch (Exception)
+		{ }
+	}
+
+	private void UpdateButtonStyle(bool isCancelState)
+	{
+		try
 		{
+			// Apply DefaultButtonStyle for Cancel/Cancelling, and AccentButtonStyle for ready/active states
+			this.Style = isCancelState ? DefaultButtonStyle : AccentButtonStyle;
 		}
+		catch (Exception)
+		{ }
 	}
 
 	private void ForceResetToOriginalState()
@@ -857,20 +779,13 @@ internal sealed partial class AnimatedCancellableButton : Button
 				}
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 
 			StopShadowAnimation();
 
 			UpdateButtonContentImmediately();
 
-			try
-			{
-				this.Opacity = 1.0;
-			}
-			catch (Exception)
-			{
-			}
+			this.Opacity = 1.0;
 		}
 	}
 
@@ -907,8 +822,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 					this.Opacity = 1.0;
 				}
 				catch (Exception)
-				{
-				}
+				{ }
 				return;
 			}
 
@@ -939,8 +853,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 				this.Opacity = 1.0;
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 		}
 	}
 
@@ -986,7 +899,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 		{
 			From = 1.0,
 			To = 0.0,
-			Duration = new Duration(TimeSpan.FromMilliseconds(150)),
+			Duration = new Duration(OneHundredFiftyMsTimeSpan),
 			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
 		};
 
@@ -998,13 +911,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 		{
 			From = 0.0,
 			To = 1.0,
-			Duration = new Duration(TimeSpan.FromMilliseconds(150)),
+			Duration = new Duration(OneHundredFiftyMsTimeSpan),
 			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
 		};
 
 		_fadeInStoryboard = new Storyboard();
 		_fadeInStoryboard.Children.Add(_fadeInAnimation);
-		_fadeInStoryboard.Completed += FadeInStoryboard_Completed;
 	}
 
 	private void AnimatedCancellableButton_BaseClick(object? sender, RoutedEventArgs e)
@@ -1102,8 +1014,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 				await CancelMethod.Invoke();
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 		}
 	}
 
@@ -1151,12 +1062,8 @@ internal sealed partial class AnimatedCancellableButton : Button
 				StopShadowAnimation();
 			}
 
-			Storyboard.SetTarget(_fadeOutAnimation, null);
-			Storyboard.SetTarget(_fadeInAnimation, null);
-
-			// Set new targets
 			Storyboard.SetTarget(_fadeOutAnimation, this);
-			Storyboard.SetTargetProperty(_fadeOutAnimation, "Opacity");
+			Storyboard.SetTargetProperty(_fadeOutAnimation, OpacityPropertyName);
 
 			_targetStateAfterFadeOut = toCancelState;
 			_targetCancellingStateAfterFadeOut = toCancellingState;
@@ -1164,8 +1071,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 			_fadeOutStoryboard.Begin();
 		}
 		catch (Exception)
-		{
-		}
+		{ }
 	}
 
 	private bool _targetStateAfterFadeOut;
@@ -1180,10 +1086,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 			if (_targetCancellingStateAfterFadeOut)
 			{
 				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+				UpdateButtonStyle(true);
 			}
 			else if (_targetStateAfterFadeOut)
 			{
 				this.Content = GlobalVars.Rizz.GetString("Cancel");
+				UpdateButtonStyle(true);
 			}
 			else
 			{
@@ -1197,8 +1105,9 @@ internal sealed partial class AnimatedCancellableButton : Button
 				}
 				else
 				{
-					this.Content = "Button";
+					this.Content = ButtonDefaultText;
 				}
+				UpdateButtonStyle(false);
 			}
 
 			if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
@@ -1206,21 +1115,13 @@ internal sealed partial class AnimatedCancellableButton : Button
 				_fadeInStoryboard.Stop();
 			}
 
-			Storyboard.SetTarget(_fadeInAnimation, null);
-
-			// Set new target
 			Storyboard.SetTarget(_fadeInAnimation, this);
-			Storyboard.SetTargetProperty(_fadeInAnimation, "Opacity");
+			Storyboard.SetTargetProperty(_fadeInAnimation, OpacityPropertyName);
 
 			_fadeInStoryboard.Begin();
 		}
 		catch (Exception)
-		{
-		}
-	}
-
-	private void FadeInStoryboard_Completed(object? sender, object? e)
-	{
+		{ }
 	}
 
 	public bool IsCancelState => !_isDisposed && !_isDisposing && ExternalInternalIsCancelState;
@@ -1243,234 +1144,6 @@ internal sealed partial class AnimatedCancellableButton : Button
 
 	public static double ShadowOpacity => SHADOW_OPACITY;
 
-	public void CompleteOperation()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			if (ExternalInternalIsOperationInProgress)
-			{
-				if ((ExternalInternalIsCancelState || ExternalInternalIsCancellingState) && !ExternalInternalIsAnimating)
-				{
-					StopShadowAnimation();
-					AnimateToState(false, false);
-					_operationStarted = false;
-					ExternalOperationStarted = false;
-				}
-			}
-		}
-	}
-
-	public void StartOperationProgrammatically()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			if (!ExternalInternalIsOperationInProgress && !ExternalInternalIsCancelState && !ExternalInternalIsCancellingState && !ExternalInternalIsAnimating)
-			{
-				_operationStarted = true;
-				ExternalOperationStarted = true;
-				StartOperation();
-			}
-		}
-	}
-
-	public async Task CancelOperationProgrammaticallyAsync()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		bool shouldCancel = false;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			if (ExternalInternalIsOperationInProgress && ExternalInternalIsCancelState && !ExternalInternalIsCancellingState && !ExternalInternalIsAnimating)
-			{
-				shouldCancel = true;
-			}
-		}
-
-		if (shouldCancel)
-		{
-			await CancelOperationAsync();
-		}
-	}
-
-	public async Task ResetToOriginalStateAsync()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			_operationStarted = false;
-			_isClickInProgress = false;
-
-			ExternalOperationStarted = false;
-			ExternalShadowAnimationRunning = false;
-
-			try
-			{
-				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeOutStoryboard.Stop();
-				}
-				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeInStoryboard.Stop();
-				}
-			}
-			catch (Exception)
-			{
-			}
-
-			StopShadowAnimation();
-
-			UpdateButtonContentImmediately();
-
-			try
-			{
-				this.Opacity = 1.0;
-			}
-			catch (Exception)
-			{
-			}
-		}
-
-		if (CancelMethod is not null)
-		{
-			try
-			{
-				await CancelMethod.Invoke();
-			}
-			catch (Exception)
-			{
-			}
-		}
-	}
-
-	public void ResetToOriginalState()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			_operationStarted = false;
-			_isClickInProgress = false;
-
-			ExternalOperationStarted = false;
-			ExternalShadowAnimationRunning = false;
-
-			try
-			{
-				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeOutStoryboard.Stop();
-				}
-				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeInStoryboard.Stop();
-				}
-			}
-			catch (Exception)
-			{
-			}
-
-			StopShadowAnimation();
-
-			UpdateButtonContentImmediately();
-
-			try
-			{
-				this.Opacity = 1.0;
-			}
-			catch (Exception)
-			{
-			}
-		}
-
-		InvokeCancelMethodSafely();
-	}
-
-	public void SetToCancelState()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			_operationStarted = true;
-			ExternalOperationStarted = true;
-
-			try
-			{
-				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeOutStoryboard.Stop();
-				}
-				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeInStoryboard.Stop();
-				}
-
-				StartShadowAnimation();
-
-				this.Content = GlobalVars.Rizz.GetString("Cancel");
-				this.Opacity = 1.0;
-			}
-			catch (Exception)
-			{
-			}
-		}
-	}
-
-	public void SetToCancellingState()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			_operationStarted = true;
-			ExternalOperationStarted = true;
-
-			try
-			{
-				if (_fadeOutStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeOutStoryboard.Stop();
-				}
-				if (_fadeInStoryboard.GetCurrentState() != ClockState.Stopped)
-				{
-					_fadeInStoryboard.Stop();
-				}
-
-				if (!_isShadowAnimationRunning)
-				{
-					StartShadowAnimation();
-				}
-
-				this.Content = GlobalVars.Rizz.GetString("Cancelling");
-				this.Opacity = 1.0;
-			}
-			catch (Exception)
-			{
-			}
-		}
-	}
-
 	public double AnimationDurationMilliseconds
 	{
 		get => _isDisposed || _isDisposing ? 150.0 : _fadeOutAnimation.Duration.TimeSpan.TotalMilliseconds;
@@ -1478,7 +1151,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 		{
 			if (_isDisposed || _isDisposing) return;
 
-			var duration = new Duration(TimeSpan.FromMilliseconds(Math.Max(50, value)));
+			Duration duration = new(TimeSpan.FromMilliseconds(Math.Max(50, value)));
 			_fadeOutAnimation.Duration = duration;
 			_fadeInAnimation.Duration = duration;
 		}
@@ -1546,8 +1219,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 				}
 			}
 			catch (Exception)
-			{
-			}
+			{ }
 
 			if (_shadowTimer != null && _shadowTimer.IsEnabled)
 			{
@@ -1559,19 +1231,10 @@ internal sealed partial class AnimatedCancellableButton : Button
 			{
 				try
 				{
-					if (_transparentShadow != null)
-					{
-						Effects.SetShadow(this, _transparentShadow);
-					}
-					else
-					{
-						AttachedCardShadow tempTransparentShadow = CreateTransparentShadow();
-						Effects.SetShadow(this, tempTransparentShadow);
-					}
+					Effects.SetShadow(this, TransparentShadow);
 				}
 				catch (Exception)
-				{
-				}
+				{ }
 				_hasShadowApplied = false;
 			}
 
@@ -1591,19 +1254,9 @@ internal sealed partial class AnimatedCancellableButton : Button
 				_clickDelayTimer = null;
 			}
 
-			try
-			{
-				Storyboard.SetTarget(_fadeOutAnimation, null);
-				Storyboard.SetTarget(_fadeInAnimation, null);
-			}
-			catch (Exception)
-			{
-			}
-
 			_fadeOutStoryboard.Completed -= FadeOutStoryboard_Completed;
 			_fadeOutStoryboard.Children.Clear();
 
-			_fadeInStoryboard.Completed -= FadeInStoryboard_Completed;
 			_fadeInStoryboard.Children.Clear();
 
 			InvokeCancelMethodSafely();
@@ -1622,7 +1275,6 @@ internal sealed partial class AnimatedCancellableButton : Button
 			this.Unloaded -= AnimatedCancellableButton_Unloaded;
 		}
 		catch (Exception)
-		{
-		}
+		{ }
 	}
 }

@@ -15,12 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -33,154 +28,45 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class Logs : Page
 {
-
 	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private LogsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<LogsVM>();
 
-	/// <summary>
-	/// Holds all lines from the currently loaded log file.
-	/// </summary>
-	private string[] _allLogLines = [];
-
-	/// <summary>
-	/// Initializes the Logs component and sets the navigation cache mode to disabled. This ensures the page reloads when
-	/// visited.
-	/// </summary>
 	internal Logs()
 	{
 		this.InitializeComponent();
-
-		// This forces the page to reload when user visits the page without the need to click on the refresh button
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		this.DataContext = ViewModel;
 	}
 
 	/// <summary>
-	/// Called when the page is navigated to. Invokes the base navigation logic
-	/// and updates the animated icons' visibility on the main window for the current content frame.
+	/// Called when the page is navigated to.
 	/// </summary>
 	/// <param name="e">The navigation event data.</param>
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{
 		base.OnNavigatedTo(e);
 
-		// Load log files
-		LoadLogFiles();
+		// Trigger log files loading and auto-selection when navigating to the page
+		ViewModel.LoadLogFiles();
 	}
 
 	/// <summary>
-	/// Loads log file names from the logs directory into the ComboBox.
-	/// Only files matching the name pattern are included.
+	/// Called when the page is navigated from.
 	/// </summary>
-	private void LoadLogFiles()
+	/// <param name="e">The navigation event data.</param>
+	protected async override void OnNavigatedFrom(NavigationEventArgs e)
 	{
-		// Get files matching the pattern;
-		FileInfo[] logFiles = Directory.GetFiles(App.LogsDirectory, "AppControlManager_Logs_*.txt")
-			.Select(f => new FileInfo(f))
-			.OrderByDescending(f => f.CreationTime).ToArray();
+		base.OnNavigatedFrom(e);
 
-		// Clear and fill the ComboBox with full file paths.
-		LogFileComboBox.Items.Clear();
-
-		foreach (FileInfo logFile in logFiles)
-		{
-			LogFileComboBox.Items.Add(logFile.FullName);
-		}
-
-		// If files were found, select the first one and display its content.
-		if (logFiles.Length > 0)
-		{
-			LogFileComboBox.SelectedIndex = 0;
-			_ = DisplayLogContentAsync(logFiles[0].FullName);
-		}
-	}
-
-
-	/// <summary>
-	/// Loads the selected log file’s content.
-	/// </summary>
-	private async void LogFileComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-		try
-		{
-
-			if (LogFileComboBox.SelectedItem is not null)
-			{
-				string? selectedFile = LogFileComboBox.SelectedItem.ToString();
-				if (!string.IsNullOrWhiteSpace(selectedFile))
-				{
-					await DisplayLogContentAsync(selectedFile);
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ErrorWriter.FormatException(ex));
-		}
-	}
-
-	/// <summary>
-	/// Reads the log file content asynchronously using a FileStream with FileShare.ReadWrite.
-	/// This allows reading even while the file is in use by the logger.
-	/// The file content is then split into lines and the ItemsRepeater updated.
-	/// </summary>
-	private async Task DisplayLogContentAsync(string filePath)
-	{
-		try
-		{
-
-			if (File.Exists(filePath))
-			{
-				// Since the logger might be writing to the file at the same time the UI is reading it, we open the file with FileShare.ReadWrite
-				// This allows concurrent read/write operations without file locking issues.
-				using FileStream stream = new(
-					filePath,
-					FileMode.Open,
-					FileAccess.Read,
-					FileShare.ReadWrite);
-				using StreamReader reader = new(stream);
-				string content = await reader.ReadToEndAsync();
-
-				// Split file content into individual lines.
-				_allLogLines = content.Split(["\r\n", "\n"], StringSplitOptions.None);
-
-				// Update the displayed log lines (filtered by search text if applicable).
-				UpdateLogDisplay();
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ErrorWriter.FormatException(ex));
-		}
-	}
-
-
-	/// <summary>
-	/// Updates the ItemsRepeater with the current log lines.
-	/// If a search term is entered, only lines containing that term (case-insensitive) are displayed.
-	/// </summary>
-	private void UpdateLogDisplay()
-	{
-		string? searchText = SearchTextBox.Text.Trim();
-
-		IEnumerable<string> filteredLines = string.IsNullOrWhiteSpace(searchText)
-			? _allLogLines
-			: _allLogLines.Where(line => line.Contains(searchText, StringComparison.OrdinalIgnoreCase));
-
-		// Create a list of LogLine objects.
-		List<LogLine> logLines = [];
-
-		foreach (string item in filteredLines)
-		{
-			logLines.Add(new LogLine(item));
-		}
-
-		LogItemsRepeater.ItemsSource = logLines;
+		// Clean up current session but keep ViewModel alive for DI container
+		await ViewModel.CleanupCurrentSession();
 	}
 }
 
 /// <summary>
 /// Represents one log line.
 /// </summary>
-internal readonly struct LogLine(string text)
+internal sealed class LogLine(string text)
 {
-	internal readonly string Text => text;
+	internal string Text => text;
 }

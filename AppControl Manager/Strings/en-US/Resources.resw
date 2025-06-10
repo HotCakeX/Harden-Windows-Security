@@ -5366,4 +5366,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <data name="Cancelling" xml:space="preserve">
     <value>Cancelling...</value>
   </data>
+  <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Your support helps me continue to create and maintain this project.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Your support helps me continue to create and maintain this project.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>Donate</value>
+  </data>
 </root>

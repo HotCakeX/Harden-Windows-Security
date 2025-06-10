@@ -80,6 +80,41 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		get; set => SP(ref field, value);
 	} = Visibility.Collapsed;
 
+	internal string? Sha384Authenticode { get; set => SP(ref field, value); }
+
+	internal Visibility Sha384AuthenticodeProgressRingVisibility
+	{
+		get; set => SP(ref field, value);
+	} = Visibility.Collapsed;
+
+	internal string? Sha512Authenticode { get; set => SP(ref field, value); }
+
+	internal Visibility Sha512AuthenticodeProgressRingVisibility
+	{
+		get; set => SP(ref field, value);
+	} = Visibility.Collapsed;
+
+	internal string? Sha3_256Authenticode { get; set => SP(ref field, value); }
+
+	internal Visibility Sha3_256AuthenticodeProgressRingVisibility
+	{
+		get; set => SP(ref field, value);
+	} = Visibility.Collapsed;
+
+	internal string? Sha3_384Authenticode { get; set => SP(ref field, value); }
+
+	internal Visibility Sha3_384AuthenticodeProgressRingVisibility
+	{
+		get; set => SP(ref field, value);
+	} = Visibility.Collapsed;
+
+	internal string? Sha3_512Authenticode { get; set => SP(ref field, value); }
+
+	internal Visibility Sha3_512AuthenticodeProgressRingVisibility
+	{
+		get; set => SP(ref field, value);
+	} = Visibility.Collapsed;
+
 	internal string? SHA3384FlatHash { get; set => SP(ref field, value); }
 
 	internal Visibility SHA3384FlatHashProgressRingVisibility
@@ -114,6 +149,11 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			Sha256Page = null;
 			Sha1Authenticode = null;
 			Sha256Authenticode = null;
+			Sha384Authenticode = null;
+			Sha512Authenticode = null;
+			Sha3_256Authenticode = null;
+			Sha3_384Authenticode = null;
+			Sha3_512Authenticode = null;
 			SHA3384FlatHash = null;
 			SHA3512FlatHash = null;
 
@@ -121,19 +161,34 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			Sha256PageProgressRingVisibility = Visibility.Visible;
 			Sha1AuthenticodeProgressRingVisibility = Visibility.Visible;
 			Sha256AuthenticodeProgressRingVisibility = Visibility.Visible;
+			Sha384AuthenticodeProgressRingVisibility = Visibility.Visible;
+			Sha512AuthenticodeProgressRingVisibility = Visibility.Visible;
+			Sha3_256AuthenticodeProgressRingVisibility = Visibility.Visible;
+			Sha3_384AuthenticodeProgressRingVisibility = Visibility.Visible;
+			Sha3_512AuthenticodeProgressRingVisibility = Visibility.Visible;
 
-			CodeIntegrityHashes hashes = await Task.Run(() => CiFileHash.GetCiFileHashes(selectedFile));
+			CodeIntegrityHashesV2 hashes = await Task.Run(() => CiFileHash.GetCiFileHashesV2(selectedFile));
 
 			// Display the hashes in the UI
 			Sha1Page = hashes.SHA1Page ?? "N/A";
 			Sha256Page = hashes.SHA256Page ?? "N/A";
 			Sha1Authenticode = hashes.SHa1Authenticode ?? "N/A";
 			Sha256Authenticode = hashes.SHA256Authenticode ?? "N/A";
+			Sha384Authenticode = hashes.SHA384Authenticode ?? "N/A";
+			Sha512Authenticode = hashes.SHA512Authenticode ?? "N/A";
+			Sha3_256Authenticode = hashes.SHA3_256Authenticode ?? "N/A";
+			Sha3_384Authenticode = hashes.SHA3_384Authenticode ?? "N/A";
+			Sha3_512Authenticode = hashes.SHA3_512Authenticode ?? "N/A";
 
 			Sha1PageProgressRingVisibility = Visibility.Collapsed;
 			Sha256PageProgressRingVisibility = Visibility.Collapsed;
 			Sha1AuthenticodeProgressRingVisibility = Visibility.Collapsed;
 			Sha256AuthenticodeProgressRingVisibility = Visibility.Collapsed;
+			Sha384AuthenticodeProgressRingVisibility = Visibility.Collapsed;
+			Sha512AuthenticodeProgressRingVisibility = Visibility.Collapsed;
+			Sha3_256AuthenticodeProgressRingVisibility = Visibility.Collapsed;
+			Sha3_384AuthenticodeProgressRingVisibility = Visibility.Collapsed;
+			Sha3_512AuthenticodeProgressRingVisibility = Visibility.Collapsed;
 
 			string? SHA3_512Hash = null;
 			string? SHA3_384Hash = null;

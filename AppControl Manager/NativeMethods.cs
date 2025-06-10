@@ -615,4 +615,55 @@ internal static partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GetWindowPlacement(IntPtr hWnd, ref Others.Win32InteropInternal.WINDOWPLACEMENT lpwndpl);
 
+
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptgetproperty
+	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptGetProperty", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptGetProperty(
+		IntPtr hObject,
+		string pszProperty,
+		IntPtr pbOutput,
+		uint cbOutput,
+		out uint pcbResult,
+		uint dwFlags);
+
+
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptcreatehash
+	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptCreateHash", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptCreateHash(
+		IntPtr hAlgorithm,
+		out IntPtr phHash,
+		IntPtr pbHashObject,
+		uint cbHashObject,
+		IntPtr pbSecret,
+		uint cbSecret,
+		uint dwFlags);
+
+
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcrypthashdata
+	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptHashData", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptHashData(
+		IntPtr hHash,
+		[In] byte[] pbInput,
+		uint cbInput,
+		uint dwFlags);
+
+
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptfinishhash
+	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptFinishHash", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptFinishHash(
+		IntPtr hHash,
+		IntPtr pbOutput,
+		uint cbOutput,
+		uint dwFlags);
+
+
+	// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptdestroyhash
+	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptDestroyHash", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptDestroyHash(IntPtr hHash);
+
 }

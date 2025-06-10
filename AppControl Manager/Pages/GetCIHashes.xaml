@@ -53,7 +53,14 @@
                         <!-- Takes space for ProgressRing -->
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA1 Page" Text="{x:Bind ViewModel.Sha1Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <TextBox Text="{x:Bind ViewModel.Sha1Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA1" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="160-Page"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
                     <ProgressRing Visibility="{x:Bind ViewModel.Sha1PageProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
@@ -64,7 +71,14 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA256 Page" Text="{x:Bind ViewModel.Sha256Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <TextBox Text="{x:Bind ViewModel.Sha256Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="256-Page"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
                     <ProgressRing Visibility="{x:Bind ViewModel.Sha256PageProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
@@ -75,7 +89,14 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA1 Authenticode" Text="{x:Bind ViewModel.Sha1Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <TextBox Text="{x:Bind ViewModel.Sha1Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA1" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="160-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
                     <ProgressRing Visibility="{x:Bind ViewModel.Sha1AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
@@ -86,8 +107,105 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA256 Authenticode" Text="{x:Bind ViewModel.Sha256Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <TextBox Text="{x:Bind ViewModel.Sha256Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="256-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
                     <ProgressRing Visibility="{x:Bind ViewModel.Sha256AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+                </Grid>
+
+                <!-- Grid for SHA384 Authenticode -->
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{x:Bind ViewModel.Sha384Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="384-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha384AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+                </Grid>
+
+                <!-- Grid for SHA512 Authenticode -->
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{x:Bind ViewModel.Sha512Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="512-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha512AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+                </Grid>
+
+                <!-- Grid for SHA3-256 Authenticode -->
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{x:Bind ViewModel.Sha3_256Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="256-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha3_256AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+                </Grid>
+
+                <!-- Grid for SHA3-384 Authenticode -->
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{x:Bind ViewModel.Sha3_384Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="384-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha3_384AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+                </Grid>
+
+                <!-- Grid for SHA3-512 Authenticode -->
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{x:Bind ViewModel.Sha3_512Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="512-Authenticode"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
+                    <ProgressRing Visibility="{x:Bind ViewModel.Sha3_512AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
                 <!-- Grid for SHA3 384 Flat -->
@@ -97,7 +215,14 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA3 384 Flat" Text="{x:Bind ViewModel.SHA3384FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <TextBox Text="{x:Bind ViewModel.SHA3384FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="384-Flat"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
                     <ProgressRing Visibility="{x:Bind ViewModel.SHA3384FlatHashProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 
@@ -108,7 +233,14 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Header="SHA3 512 Flat" Text="{x:Bind ViewModel.SHA3512FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0"/>
+                    <TextBox Text="{x:Bind ViewModel.SHA3512FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
+                        <TextBox.Header>
+                            <TextBlock>
+                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
+                                <Run Text="512-Flat"/>
+                            </TextBlock>
+                        </TextBox.Header>
+                    </TextBox>
                     <ProgressRing Visibility="{x:Bind ViewModel.SHA3512FlatHashProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
                 </Grid>
 

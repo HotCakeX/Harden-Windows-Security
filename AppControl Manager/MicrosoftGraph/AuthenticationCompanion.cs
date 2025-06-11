@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -35,7 +34,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 	private readonly InfoBarSettings _InfoBar;
 	private readonly AuthenticationContext _AuthContext;
 
-	private ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
+	private ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
 
 	/// <summary>
 	/// The constructor needs methods to run when the Active Account is updated

@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -25,9 +24,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class Settings : Page
 {
 
-	private SettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SettingsVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+	private SettingsVM ViewModel { get; } = ViewModelProvider.SettingsVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
 
 	internal Settings()
 	{

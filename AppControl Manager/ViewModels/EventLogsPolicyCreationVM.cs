@@ -25,7 +25,6 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.XMLOps;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -34,7 +33,7 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
 
-	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
 
 	internal EventLogsPolicyCreationVM()
 	{

@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -24,8 +23,8 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class GetSecurePolicySettings : Page
 {
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private GetSecurePolicySettingsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<GetSecurePolicySettingsVM>();
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private GetSecurePolicySettingsVM ViewModel { get; } = ViewModelProvider.GetSecurePolicySettingsVM;
 
 	internal GetSecurePolicySettings()
 	{

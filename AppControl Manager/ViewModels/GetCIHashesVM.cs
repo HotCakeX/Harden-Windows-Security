@@ -16,8 +16,6 @@
 //
 
 using System;
-using System.IO;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -144,118 +142,24 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 				return;
 			}
 
-			// Clear the UI text boxes
-			Sha1Page = null;
-			Sha256Page = null;
-			Sha1Authenticode = null;
-			Sha256Authenticode = null;
-			Sha384Authenticode = null;
-			Sha512Authenticode = null;
-			Sha3_256Authenticode = null;
-			Sha3_384Authenticode = null;
-			Sha3_512Authenticode = null;
-			SHA3384FlatHash = null;
-			SHA3512FlatHash = null;
+			ClearTextBoxes();
 
-			Sha1PageProgressRingVisibility = Visibility.Visible;
-			Sha256PageProgressRingVisibility = Visibility.Visible;
-			Sha1AuthenticodeProgressRingVisibility = Visibility.Visible;
-			Sha256AuthenticodeProgressRingVisibility = Visibility.Visible;
-			Sha384AuthenticodeProgressRingVisibility = Visibility.Visible;
-			Sha512AuthenticodeProgressRingVisibility = Visibility.Visible;
-			Sha3_256AuthenticodeProgressRingVisibility = Visibility.Visible;
-			Sha3_384AuthenticodeProgressRingVisibility = Visibility.Visible;
-			Sha3_512AuthenticodeProgressRingVisibility = Visibility.Visible;
+			ManageProgressRingVisibility(Visibility.Visible);
 
 			CodeIntegrityHashesV2 hashes = await Task.Run(() => CiFileHash.GetCiFileHashesV2(selectedFile));
 
 			// Display the hashes in the UI
-			Sha1Page = hashes.SHA1Page ?? "N/A";
-			Sha256Page = hashes.SHA256Page ?? "N/A";
-			Sha1Authenticode = hashes.SHa1Authenticode ?? "N/A";
-			Sha256Authenticode = hashes.SHA256Authenticode ?? "N/A";
-			Sha384Authenticode = hashes.SHA384Authenticode ?? "N/A";
-			Sha512Authenticode = hashes.SHA512Authenticode ?? "N/A";
-			Sha3_256Authenticode = hashes.SHA3_256Authenticode ?? "N/A";
-			Sha3_384Authenticode = hashes.SHA3_384Authenticode ?? "N/A";
-			Sha3_512Authenticode = hashes.SHA3_512Authenticode ?? "N/A";
-
-			Sha1PageProgressRingVisibility = Visibility.Collapsed;
-			Sha256PageProgressRingVisibility = Visibility.Collapsed;
-			Sha1AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-			Sha256AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-			Sha384AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-			Sha512AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-			Sha3_256AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-			Sha3_384AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-			Sha3_512AuthenticodeProgressRingVisibility = Visibility.Collapsed;
-
-			string? SHA3_512Hash = null;
-			string? SHA3_384Hash = null;
-
-			if (GlobalVars.IsOlderThan24H2)
-			{
-				SHA3_512Hash = "Requires Windows 11 24H2 or later";
-				SHA3_384Hash = "Requires Windows 11 24H2 or later";
-			}
-			else
-			{
-				SHA3384FlatHashProgressRingVisibility = Visibility.Visible;
-				SHA3512FlatHashProgressRingVisibility = Visibility.Visible;
-
-				await Task.Run(() =>
-				{
-
-					// Initializing the hash algorithms for SHA3-512 and SHA3-384
-					using SHA3_512 sha3_512 = SHA3_512.Create();
-					using SHA3_384 sha3_384 = SHA3_384.Create();
-
-					// Opening the file as a stream to read it in chunks, this way we can handle large files
-					using (FileStream fs = new(selectedFile, FileMode.Open, FileAccess.Read))
-					{
-						// Defining a buffer size of 4MB to read the file in manageable chunks
-						byte[] buffer = new byte[4 * 1024 * 1024];
-
-						int bytesRead;
-
-						// Read the file in chunks and update the hash algorithms with the chunk data
-						while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
-						{
-							// Update SHA3-512 hash with the current chunk
-							_ = sha3_512.TransformBlock(buffer, 0, bytesRead, null, 0);
-
-							// Update SHA3-384 hash with the current chunk
-							_ = sha3_384.TransformBlock(buffer, 0, bytesRead, null, 0);
-						}
-
-						// Finalize the SHA3-512 hash computation
-						_ = sha3_512.TransformFinalBlock([], 0, 0);
-
-						// Finalize the SHA3-384 hash computation
-						_ = sha3_384.TransformFinalBlock([], 0, 0);
-					}
-
-					if (sha3_512.Hash is not null)
-
-					{   // Convert the SHA3-512 hash bytes to a hexadecimal string
-						SHA3_512Hash = Convert.ToHexString(sha3_512.Hash);
-					}
-
-					if (sha3_384.Hash is not null)
-					{
-						// Convert the SHA3-384 hash bytes to a hexadecimal string
-						SHA3_384Hash = Convert.ToHexString(sha3_384.Hash);
-					}
-
-				});
-
-				SHA3384FlatHashProgressRingVisibility = Visibility.Collapsed;
-				SHA3512FlatHashProgressRingVisibility = Visibility.Collapsed;
-			}
-
-			// Display the rest of the hashes in the UI
-			SHA3384FlatHash = SHA3_384Hash ?? "N/A";
-			SHA3512FlatHash = SHA3_512Hash ?? "N/A";
+			Sha1Page = hashes.SHA1Page;
+			Sha256Page = hashes.SHA256Page;
+			Sha1Authenticode = hashes.SHa1Authenticode;
+			Sha256Authenticode = hashes.SHA256Authenticode;
+			Sha384Authenticode = hashes.SHA384Authenticode;
+			Sha512Authenticode = hashes.SHA512Authenticode;
+			Sha3_256Authenticode = hashes.SHA3_256Authenticode;
+			Sha3_384Authenticode = hashes.SHA3_384Authenticode;
+			Sha3_512Authenticode = hashes.SHA3_512Authenticode;
+			SHA3384FlatHash = hashes.SHA3_384_Flat;
+			SHA3512FlatHash = hashes.SHA3_512_Flat;
 
 			await PublishUserActivityAsync(LaunchProtocolActions.FileHashes,
 				selectedFile,
@@ -267,7 +171,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		}
 		finally
 		{
-
+			ManageProgressRingVisibility(Visibility.Collapsed);
 			PickFileButtonIsEnabled = true;
 		}
 	}
@@ -280,6 +184,20 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		await Calculate();
+	}
+
+	/// <summary>
+	/// Event handler for the clear button
+	/// </summary>
+	internal void Clear_Click()
+	{
+		ClearTextBoxes();
+
+		// Ensure all progress rings are hidden
+		ManageProgressRingVisibility(Visibility.Collapsed);
+
+		// Clear the selected file
+		selectedFile = null;
 	}
 
 	/// <summary>
@@ -302,5 +220,38 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		{
 			MainInfoBar.WriteError(ex);
 		}
+	}
+
+	/// <summary>
+	/// Clear all hash text boxes
+	/// </summary>
+	private void ClearTextBoxes()
+	{
+		Sha1Page = null;
+		Sha256Page = null;
+		Sha1Authenticode = null;
+		Sha256Authenticode = null;
+		Sha384Authenticode = null;
+		Sha512Authenticode = null;
+		Sha3_256Authenticode = null;
+		Sha3_384Authenticode = null;
+		Sha3_512Authenticode = null;
+		SHA3384FlatHash = null;
+		SHA3512FlatHash = null;
+	}
+
+	private void ManageProgressRingVisibility(Visibility visibility)
+	{
+		Sha1PageProgressRingVisibility = visibility;
+		Sha256PageProgressRingVisibility = visibility;
+		Sha1AuthenticodeProgressRingVisibility = visibility;
+		Sha256AuthenticodeProgressRingVisibility = visibility;
+		Sha384AuthenticodeProgressRingVisibility = visibility;
+		Sha512AuthenticodeProgressRingVisibility = visibility;
+		Sha3_256AuthenticodeProgressRingVisibility = visibility;
+		Sha3_384AuthenticodeProgressRingVisibility = visibility;
+		Sha3_512AuthenticodeProgressRingVisibility = visibility;
+		SHA3384FlatHashProgressRingVisibility = visibility;
+		SHA3512FlatHashProgressRingVisibility = visibility;
 	}
 }

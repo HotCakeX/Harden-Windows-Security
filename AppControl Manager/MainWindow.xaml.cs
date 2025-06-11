@@ -23,7 +23,6 @@ using AppControlManager.AppSettings;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -46,9 +45,9 @@ internal sealed partial class MainWindow : Window
 {
 
 #pragma warning disable CA1822
-	private MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private SidebarVM sidebarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
+	private MainWindowVM ViewModel { get; } = ViewModelProvider.MainWindowVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private SidebarVM sidebarVM { get; } = ViewModelProvider.SidebarVM;
 #pragma warning restore CA1822
 
 	private readonly AppWindow m_AppWindow;
@@ -78,7 +77,7 @@ internal sealed partial class MainWindow : Window
 		this.InitializeComponent();
 
 		// Grab the singleton navigation-service and give it the Frame
-		nav = App.AppHost.Services.GetRequiredService<NavigationService>();
+		nav = ViewModelProvider.NavigationService;
 		nav.Initialize(this.ContentFrame, this.MainNavigation);
 
 		RootGridPub = RootGrid;

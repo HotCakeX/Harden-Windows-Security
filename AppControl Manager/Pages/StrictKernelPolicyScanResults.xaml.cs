@@ -19,7 +19,6 @@ using System;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -33,8 +32,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class StrictKernelPolicyScanResults : Page
 {
-	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal StrictKernelPolicyScanResults()
 	{

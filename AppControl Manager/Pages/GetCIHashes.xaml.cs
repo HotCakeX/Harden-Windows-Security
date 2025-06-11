@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -27,8 +26,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class GetCIHashes : Page
 {
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private ViewModels.GetCIHashesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewModels.GetCIHashesVM>();
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private ViewModels.GetCIHashesVM ViewModel { get; } = ViewModelProvider.GetCIHashesVM;
 
 	/// <summary>
 	/// Initializes the component and sets the navigation cache mode to required for the GetCIHashes class.

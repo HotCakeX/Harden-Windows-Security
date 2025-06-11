@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -28,8 +27,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class MergePolicies : Page
 {
-	private MergePoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MergePoliciesVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private MergePoliciesVM ViewModel { get; } = ViewModelProvider.MergePoliciesVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// Initializes a new instance of the MergePolicies class. Sets up the navigation cache mode and binds the data context

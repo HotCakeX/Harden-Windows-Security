@@ -5,7 +5,7 @@
   <!-- Global -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
 
     <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->
@@ -257,7 +257,7 @@
   <ItemGroup>
 
     <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
-    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250609-build.2144" />
+    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250610-build.2151" />
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />
@@ -267,7 +267,6 @@
     <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0-preview.5.25277.114" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.72.1" />
     <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.72.1" />
@@ -294,8 +293,6 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
     <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.0-preview.5.25277.114" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
     <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.0" />
 
   </ItemGroup>

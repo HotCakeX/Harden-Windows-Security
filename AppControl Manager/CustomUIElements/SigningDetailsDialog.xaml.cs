@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -35,7 +34,7 @@ namespace AppControlManager.CustomUIElements;
 internal sealed partial class SigningDetailsDialog : ContentDialogV2
 {
 
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	// Properties to access the input value
 	internal string? CertificatePath { get; private set; }

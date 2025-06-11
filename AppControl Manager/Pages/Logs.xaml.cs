@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -28,8 +27,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class Logs : Page
 {
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private LogsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<LogsVM>();
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private LogsVM ViewModel { get; } = ViewModelProvider.LogsVM;
 
 	internal Logs()
 	{

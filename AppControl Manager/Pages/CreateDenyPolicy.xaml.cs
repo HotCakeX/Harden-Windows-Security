@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -27,8 +26,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class CreateDenyPolicy : Page
 {
-	private CreateDenyPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateDenyPolicyVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal CreateDenyPolicy()
 	{

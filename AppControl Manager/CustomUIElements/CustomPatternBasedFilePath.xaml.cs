@@ -18,7 +18,6 @@
 using System;
 using System.Collections.ObjectModel;
 using AppControlManager.Others;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -28,7 +27,7 @@ namespace AppControlManager.CustomUIElements;
 internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 {
 
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [];
 

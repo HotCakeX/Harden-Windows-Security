@@ -20,7 +20,6 @@ using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -81,8 +80,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			null, null);
 	}
 
-	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
-	internal EventLogUtility EventLogsUtil { get; } = App.AppHost.Services.GetRequiredService<EventLogUtility>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
+	internal EventLogUtility EventLogsUtil { get; } = ViewModelProvider.EventLogUtility;
 
 	#region Allow Microsoft
 
